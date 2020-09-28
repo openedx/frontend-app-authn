@@ -1,4 +1,5 @@
 coverage/*
 dist/
 node_modules/
-jest.config.js
+__mocks__/
+__snapshots__/

@@ -1,10 +1,10 @@
 {
-  "name": "@edx/frontend-template-application",
+  "name": "@edx/frontend-app-logistration",
   "version": "0.1.0",
   "description": "Frontend application template",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/frontend-template-application.git"
+    "url": "git+https://github.com/edx/frontend-app-logistration.git"
   },
   "browserslist": [
     "last 2 versions",
@@ -26,12 +26,12 @@
   },
   "author": "edX",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/edx/frontend-template-application#readme",
+  "homepage": "https://github.com/edx/frontend-app-logistration#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/edx/frontend-template-application/issues"
+    "url": "https://github.com/edx/frontend-app-logistration/issues"
   },
   "dependencies": {
     "@edx/frontend-component-footer": "10.0.11",
@@ -44,13 +44,22 @@
     "@fortawesome/free-solid-svg-icons": "5.11.2",
     "@fortawesome/react-fontawesome": "0.1.11",
     "babel-polyfill": "6.26.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
     "prop-types": "15.7.2",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-redux": "7.1.3",
     "react-router": "5.1.2",
-    "react-router-dom": "5.1.2",
-    "redux": "4.0.5"
+    "react-router-dom": "^5.2.0",
+    "react-test-renderer": "^16.13.1",
+    "redux": "4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-mock-store": "^1.5.4",
+    "redux-saga": "^1.1.3",
+    "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@edx/frontend-build": "3.0.0",

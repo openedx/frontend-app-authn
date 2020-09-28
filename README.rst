@@ -1,62 +1,49 @@
 |Build Status| |Codecov| |license|
 
-frontend-template-application
+frontend-app-logistration
 =================================
 
-Please tag **@edx/fedx-team** on any PRs or issues.  Thanks.
+This is a micro-frontend application responsible for the login, registration and password reset functionality.
 
-Introduction
-------------
+Development
+-----------
 
-This repository is a template for Open edX micro-frontend applications. It is flagged as a Template Repository, meaning it can be used as a basis for new GitHub repositories by clicking the green "Use this template" button above.  The rest of this document describes how to work with your new micro-frontend after you've created a new repository from the template.
+Start Devstack
+^^^^^^^^^^^^^^
 
-After Copying The Template
---------------------------
+To use this application `devstack <https://github.com/edx/devstack>`__ must be running and you must be logged into it.
 
-You'll want to do a find-and-replace to replace all instances of ``frontend-template-application`` with the name of your new repository.
+-  Start devstack
+-  Log in (http://localhost:18000/login)
 
-**Prerequisite**
+Start the development server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`Devstack <https://edx.readthedocs.io/projects/edx-installing-configuring-and-running/en/latest/installation/index.html>`_.  If you start Devstack with ``make dev.up.ecommerce`` that should give you everything you need as a companion to this frontend.
+In this project, install requirements and start the development server by running:
 
-**Installation and Startup**
+.. code:: bash
 
-In the following steps, replace "frontend-template-application' with the name of the repo you created when copying this template above.
+   npm install
+   npm start # The server will run on port 1999
 
-1. Clone your new repo:
+Once the dev server is up visit http://localhost:1999.
 
-  ``git clone https://github.com/edx/frontend-template-application.git``
+Configuration and Deployment
+----------------------------
 
-2. Install npm dependencies:
+This MFE is configured via node environment variables supplied at build time. See the .env file for the list of required environment variables. Example build syntax with a single environment variable:
 
-  ``cd frontend-template-application && npm install``
+.. code:: bash
 
-3. Start the dev server:
+   NODE_ENV=development ACCESS_TOKEN_COOKIE_NAME='edx-jwt-cookie-header-payload' npm run build
 
-  ``npm start``
 
-The dev server is running at `http://localhost:8080 <http://localhost:8080>`_.
+For more information see the document: `Micro-frontend applications in Open
+edX <https://github.com/edx/edx-developer-docs/blob/5191e800bf16cf42f25c58c58f983bdaf7f9305d/docs/micro-frontends-in-open-edx.rst>`__.
 
-Project Structure
------------------
-
-The source for this project is organized into nested submodules according to the ADR `Feature-based Application Organization <https://github.com/edx/frontend-template-application/blob/master/docs/decisions/0002-feature-based-application-organization.rst>`_.
-
-Build Process Notes
--------------------
-
-**Production Build**
-
-The production build is created with ``npm run build``.
-
-Internationalization
---------------------
-
-Please see `edx/frontend-platform's i18n module <https://edx.github.io/frontend-platform/module-Internationalization.html>`_ for documentation on internationalization.  The documentation explains how to use it, and the `How To <https://github.com/edx/frontend-i18n/blob/master/docs/how_tos/i18n.rst>`_ has more detail.
-
-.. |Build Status| image:: https://api.travis-ci.org/edx/frontend-template-application.svg?branch=master
-   :target: https://travis-ci.org/edx/frontend-template-application
-.. |Codecov| image:: https://codecov.io/gh/edx/frontend-template-application/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/edx/frontend-template-application
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-template-application.svg
-   :target: @edx/frontend-template-application
+.. |Build Status| image:: https://api.travis-ci.org/edx/frontend-app-account.svg?branch=master
+   :target: https://travis-ci.org/edx/frontend-app-account
+.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-account
+   :target: https://codecov.io/gh/edx/frontend-app-account
+.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-account.svg
+   :target: @edx/frontend-app-account
