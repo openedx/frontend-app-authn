@@ -11,10 +11,9 @@ Development
 Start Devstack
 ^^^^^^^^^^^^^^
 
-To use this application `devstack <https://github.com/edx/devstack>`__ must be running and you must be logged into it.
+To use this application `devstack <https://github.com/edx/devstack>`__ must be running.
 
 -  Start devstack
--  Log in (http://localhost:18000/login)
 
 Start the development server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -26,7 +25,7 @@ In this project, install requirements and start the development server by runnin
    npm install
    npm start # The server will run on port 1999
 
-Once the dev server is up visit http://localhost:1999.
+Once the dev server is up visit http://localhost:1999/login.
 
 Configuration and Deployment
 ----------------------------
