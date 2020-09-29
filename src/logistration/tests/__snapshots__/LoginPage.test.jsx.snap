@@ -79,20 +79,36 @@ exports[`LoginPage should match default section snapshot 1`] = `
         <div
           className="d-flex flex-column align-items-start"
         >
-          <label
-            className="h6 mr-1"
-            htmlFor="loginPassword"
+          <div
+            className="form-group mb-0"
           >
-            Password
-          </label>
-          <input
-            className="form-control"
-            id="loginPassword"
-            name="password"
-            onChange={[Function]}
-            type="password"
-            value=""
-          />
+            <label
+              className="h6 mr-1"
+              htmlFor="loginPassword"
+            >
+              Password
+            </label>
+            <input
+              aria-describedby=""
+              className="form-control"
+              id="loginPassword"
+              name="password"
+              onChange={[Function]}
+              style={
+                Object {
+                  "width": "400px",
+                }
+              }
+              type="password"
+              value=""
+            />
+            <strong
+              className="invalid-feedback"
+              id="password-invalid-feedback"
+            >
+              Please enter your password.
+            </strong>
+          </div>
         </div>
         <button
           className="btn mt-0 field-link"
@@ -159,6 +175,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
     >
       <button
         className="btn-social facebook"
+        type="button"
       >
         <svg
           aria-hidden="true"
@@ -181,6 +198,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
       </button>
       <button
         className="btn-social google"
+        type="button"
       >
         <svg
           aria-hidden="true"
@@ -203,6 +221,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
       </button>
       <button
         className="btn-social microsoft"
+        type="button"
       >
         <svg
           aria-hidden="true"

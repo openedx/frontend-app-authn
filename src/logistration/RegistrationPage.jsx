@@ -1,6 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Input, ValidationFormGroup, StatusAlert } from '@edx/paragon';
+import PropTypes from 'prop-types';
+import {
+  Button, Input, ValidationFormGroup, StatusAlert,
+} from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
@@ -9,26 +12,30 @@ import { getLocale, getCountryList } from '@edx/frontend-platform/i18n';
 import { registerNewUser } from './data/actions';
 
 class RegistrationPage extends React.Component {
-  state = {
-    email: '',
-    name: '',
-    username: '',
-    password: '',
-    country: '',
-    errors: {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
       email: '',
       name: '',
       username: '',
       password: '',
       country: '',
-    },
-    emailValid: false,
-    nameValid: false,
-    usernameValid: false,
-    passwordValid: false,
-    countryValid: false,
-    formValid: false,
-    open: false,
+      errors: {
+        email: '',
+        name: '',
+        username: '',
+        password: '',
+        country: '',
+      },
+      emailValid: false,
+      nameValid: false,
+      usernameValid: false,
+      passwordValid: false,
+      countryValid: false,
+      formValid: false,
+      open: false,
+    };
   }
 
   handleSubmit = (e) => {
@@ -66,40 +73,42 @@ class RegistrationPage extends React.Component {
   }
 
   validateInput(inputName, value) {
-    let inputErrors = this.state.errors;
-    let emailValid = this.state.emailValid;
-    let nameValid = this.state.nameValid;
-    let usernameValid = this.state.usernameValid;
-    let passwordValid = this.state.passwordValid;
-    let countryValid = this.state.countryValid;
+    const { errors } = this.state;
+    let {
+      emailValid,
+      nameValid,
+      usernameValid,
+      passwordValid,
+      countryValid,
+    } = this.state;
 
     switch (inputName) {
       case 'email':
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        inputErrors.email = emailValid ? '' : null;
+        errors.email = emailValid ? '' : null;
         break;
       case 'name':
         nameValid = value.length >= 1;
-        inputErrors.name = nameValid ? '' : null;
+        errors.name = nameValid ? '' : null;
         break;
       case 'username':
         usernameValid = value.length >= 2 && value.length <= 30;
-        inputErrors.username = usernameValid ? '' : null;
+        errors.username = usernameValid ? '' : null;
         break;
       case 'password':
         passwordValid = value.length >= 8 && value.match(/\d+/g);
-        inputErrors.password = passwordValid ? '' : null;
+        errors.password = passwordValid ? '' : null;
         break;
       case 'country':
         countryValid = value !== '';
-        inputErrors.country = countryValid ? '' : null;
+        errors.country = countryValid ? '' : null;
         break;
       default:
         break;
     }
 
     this.setState({
-      errors: inputErrors,
+      errors,
       emailValid,
       nameValid,
       usernameValid,
@@ -109,9 +118,15 @@ class RegistrationPage extends React.Component {
   }
 
   validateForm() {
+    const {
+      emailValid,
+      nameValid,
+      usernameValid,
+      passwordValid,
+      countryValid,
+    } = this.state;
     this.setState({
-      formValid: this.state.emailValid && this.state.nameValid &&
-      this.state.usernameValid && this.state.passwordValid && this.state.countryValid,
+      formValid: emailValid && nameValid && usernameValid && passwordValid && countryValid,
     });
   }
 
@@ -124,7 +139,7 @@ class RegistrationPage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className="logistration-container d-flex flex-column align-items-center mx-auto" style={{ width: '30rem' }}>
           <div className="mb-4">
             <FontAwesomeIcon className="d-block mx-auto fa-2x" icon={faGraduationCap} />
@@ -132,9 +147,9 @@ class RegistrationPage extends React.Component {
           </div>
           <div className="d-block mb-4">
             <span className="d-block mx-auto mb-4 section-heading-line">Create an account using</span>
-            <button className="btn-social facebook"><FontAwesomeIcon className="mr-2" icon={faFacebookF} />Facebook</button>
-            <button className="btn-social google"><FontAwesomeIcon className="mr-2" icon={faGoogle} />Google</button>
-            <button className="btn-social microsoft"><FontAwesomeIcon className="mr-2" icon={faMicrosoft} />Microsoft</button>
+            <button type="button" className="btn-social facebook"><FontAwesomeIcon className="mr-2" icon={faFacebookF} />Facebook</button>
+            <button type="button" className="btn-social google"><FontAwesomeIcon className="mr-2" icon={faGoogle} />Google</button>
+            <button type="button" className="btn-social microsoft"><FontAwesomeIcon className="mr-2" icon={faMicrosoft} />Microsoft</button>
             <span className="d-block mx-auto text-center mt-4 section-heading-line">or create a new one here</span>
           </div>
 
@@ -241,10 +256,14 @@ class RegistrationPage extends React.Component {
             <a href="/login"> Sign in.</a>
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
+
+RegistrationPage.propTypes = {
+  registerNewUser: PropTypes.func.isRequired,
+};
 
 export default connect(
   () => ({}),

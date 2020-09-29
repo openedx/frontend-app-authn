@@ -4,9 +4,9 @@ import {
   reducer as logistrationReducer,
   storeName as logistrationStoreName,
 } from '../logistration';
-import { 
+import {
   reducer as forgotPasswordReducer,
-  storeName as forgotPasswordStoreName, 
+  storeName as forgotPasswordStoreName,
 } from '../forgot-password';
 
 const createRootReducer = () => combineReducers({

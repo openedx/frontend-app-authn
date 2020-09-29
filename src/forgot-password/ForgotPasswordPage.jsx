@@ -12,20 +12,20 @@ import RequestInProgressAlert from './RequestInProgressAlert';
 import LoginHelpLinks from '../logistration/LoginHelpLinks';
 
 const ForgotPasswordPage = (props) => {
-  const { intl, forgotPassword, status } = props;
-  const [ emailInput, setEmailValue ] = useState('');
-  const [ emailValid, setEmailValidValue ] = useState(true);
-
-  const handleOnChange = (e) => {
-    const emailValue = e.target.value;
-    setEmailValue(emailValue)
-    validateEmail(emailValue);
-  }
+  const { intl, status } = props;
+  const [emailInput, setEmailValue] = useState('');
+  const [emailValid, setEmailValidValue] = useState(true);
 
   const validateEmail = (email) => {
     const isEmailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     setEmailValidValue(isEmailValid !== null);
-  }
+  };
+
+  const handleOnChange = (e) => {
+    const emailValue = e.target.value;
+    setEmailValue(emailValue);
+    validateEmail(emailValue);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,11 +33,12 @@ const ForgotPasswordPage = (props) => {
       setEmailValidValue(false);
     }
     if (emailValid && emailInput !== '') {
-      forgotPassword(emailInput);
+      props.forgotPassword(emailInput);
     }
-  }
+  };
+
   return (
-    <React.Fragment>
+    <>
       {status === 'complete' ? <Redirect to="/login" /> : null}
       <div className="d-flex justify-content-center forgot-password-container">
         <div className="d-flex flex-column" style={{ width: '450px' }}>
@@ -55,7 +56,7 @@ const ForgotPasswordPage = (props) => {
                   for="email"
                   invalid={!emailValid}
                   invalidMessage={intl.formatMessage(
-                    messages['logisration.forgot.password.page.invalid.email.message']
+                    messages['logisration.forgot.password.page.invalid.email.message'],
                   )}
                 >
                   <label htmlFor="forgot-password-input" className="h6 mr-1">
@@ -86,21 +87,23 @@ const ForgotPasswordPage = (props) => {
           </form>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
-}
+};
 
 ForgotPasswordPage.propTypes = {
   intl: intlShape.isRequired,
   forgotPassword: PropTypes.func.isRequired,
   status: PropTypes.string,
-}
+};
 
-
+ForgotPasswordPage.defaultProps = {
+  status: null,
+};
 
 export default connect(
   forgotPasswordResultSelector,
   {
-    forgotPassword
+    forgotPassword,
   },
 )(injectIntl(ForgotPasswordPage));

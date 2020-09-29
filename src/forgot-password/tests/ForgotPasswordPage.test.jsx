@@ -7,11 +7,9 @@ import configureStore from 'redux-mock-store';
 import { createMemoryHistory } from 'history';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
-import ForgotPasswordPage from '../ForgotPasswordPage'; // eslint-disable-line import/first
+import ForgotPasswordPage from '../ForgotPasswordPage';
 
-jest.mock('../data/selectors', () => {
-  return jest.fn().mockImplementation(() => ({ forgotPasswordSelector: () => ({}) })); 
-});
+jest.mock('../data/selectors', () => jest.fn().mockImplementation(() => ({ forgotPasswordSelector: () => ({}) })));
 
 const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
@@ -20,11 +18,11 @@ const history = createMemoryHistory();
 describe('ForgotPasswordPage', () => {
   let props = {};
   let store = {};
-    
+
   const reduxWrapper = children => (
-      <IntlProvider locale="en">
-          <Provider store={store}>{children}</Provider>
-      </IntlProvider>
+    <IntlProvider locale="en">
+      <Provider store={store}>{children}</Provider>
+    </IntlProvider>
   );
 
   beforeEach(() => {
@@ -45,7 +43,7 @@ describe('ForgotPasswordPage', () => {
     props = {
       ...props,
       status: 'forbidden',
-    }
+    };
     const tree = renderer.create(reduxWrapper(<IntlForgotPasswordPage {...props} />))
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -55,13 +53,13 @@ describe('ForgotPasswordPage', () => {
     props = {
       ...props,
       status: 'complete',
-    }
-    const tree = renderer.create(
+    };
+    renderer.create(
       reduxWrapper(
         <Router history={history}>
           <IntlForgotPasswordPage {...props} />
-        </Router>
-      )
+        </Router>,
+      ),
     );
     expect(history.location.pathname).toEqual('/login');
   });

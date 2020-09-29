@@ -19,7 +19,7 @@ import appMessages from './i18n';
 import './index.scss';
 import './assets/favicon.ico';
 
-const HeaderFooterLayout = ({ children }) => (
+const HeaderFooterLayout = ({ children }) => ( // eslint-disable-line react/prop-types
   <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
     <Header />
     <main className="flex-grow-1">
@@ -33,14 +33,14 @@ subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={configureStore()}>
       <HeaderFooterLayout>
-          <Switch>
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegistrationPage} />
-            <Route path="/reset" component={ForgotPasswordPage} />
-            <Route path="/notfound" component={NotFoundPage} />
-            <Route path="*" component={NotFoundPage} />
-          </Switch>
-        </HeaderFooterLayout>
+        <Switch>
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegistrationPage} />
+          <Route path="/reset" component={ForgotPasswordPage} />
+          <Route path="/notfound" component={NotFoundPage} />
+          <Route path="*" component={NotFoundPage} />
+        </Switch>
+      </HeaderFooterLayout>
     </AppProvider>,
     document.getElementById('root'),
   );

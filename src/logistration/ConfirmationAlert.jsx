@@ -20,7 +20,7 @@ const ConfirmationAlert = (props) => {
     </Hyperlink>
   );
 
-  const strongEmail = (<strong>{email}</strong>)
+  const strongEmail = (<strong>{email}</strong>);
 
   return (
     <Alert

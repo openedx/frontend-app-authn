@@ -5,7 +5,7 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
-import LoginPage from '../LoginPage'; // eslint-disable-line import/first
+import LoginPage from '../LoginPage';
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -58,4 +58,3 @@ describe('LoginPage', () => {
     expect(window.location.href).toBe(dasboardUrl);
   });
 });
-
