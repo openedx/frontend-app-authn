@@ -47,6 +47,7 @@
     "classnames": "^2.2.6",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.5",
+    "extract-react-intl-messages": "^4.1.1",
     "form-urlencoded": "^4.2.1",
     "history": "^5.0.0",
     "lodash.camelcase": "^4.3.0",
@@ -68,6 +69,7 @@
   },
   "devDependencies": {
     "@edx/frontend-build": "3.0.0",
+    "babel-plugin-react-intl": "^8.2.5",
     "codecov": "3.7.2",
     "es-check": "5.1.1",
     "glob": "7.1.6",
