@@ -38,7 +38,7 @@ export async function login(creds) {
     });
 
   return {
-    redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
+    redirectUrl: data.redirect_url || '/dashboard',
     success: data.success || false,
   };
 }

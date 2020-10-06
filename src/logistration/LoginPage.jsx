@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getConfig } from '@edx/frontend-platform';
 import { Button, Input, ValidationFormGroup } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
@@ -14,8 +15,12 @@ import LoginHelpLinks from './LoginHelpLinks';
 
 
 const LoginRedirect = (props) => {
-  const { success, redirectUrl } = props;
+  let { success, redirectUrl } = props;
   if (success) {
+    const lmsBaseUrl = getConfig().LMS_BASE_URL;
+    if (!redirectUrl.includes(lmsBaseUrl)) {
+      redirectUrl = lmsBaseUrl + redirectUrl;
+    }
     window.location.href = redirectUrl;
   }
   return <></>;
@@ -54,9 +59,14 @@ class LoginPage extends React.Component {
     const payload = {
       email: this.state.email,
       password: this.state.password,
-      next: params.next,
-      course_id: params.course_id,
     };
+    if (params.next) {
+      payload['next'] = params.next;
+    }
+    if (params.course_id) {
+      payload['course_id'] = params.course_id;
+    }
+
     if (!this.state.formValid) {
       this.validateInput('email', payload.email);
       this.validateInput('password', payload.password);
