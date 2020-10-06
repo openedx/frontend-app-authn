@@ -15,8 +15,8 @@ import LoginHelpLinks from './LoginHelpLinks';
 
 
 const LoginRedirect = (props) => {
-  let { success, redirectUrl } = props;
-  if (success) {
+  let { redirectUrl } = props;
+  if (props.success) {
     const lmsBaseUrl = getConfig().LMS_BASE_URL;
     if (!redirectUrl.includes(lmsBaseUrl)) {
       redirectUrl = lmsBaseUrl + redirectUrl;
@@ -61,10 +61,10 @@ class LoginPage extends React.Component {
       password: this.state.password,
     };
     if (params.next) {
-      payload['next'] = params.next;
+      payload.next = params.next;
     }
     if (params.course_id) {
-      payload['course_id'] = params.course_id;
+      payload.course_id = params.course_id;
     }
 
     if (!this.state.formValid) {
