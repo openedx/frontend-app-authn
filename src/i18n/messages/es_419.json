@@ -1,1 +1,18 @@
-{}
+{
+  "logisration.forgot.password.page.heading": "Password assistance",
+  "logisration.forgot.password.page.instructions": "Please enter your log-in or recovery email address below and we will send you an email with instructions.",
+  "logisration.forgot.password.page.invalid.email.message": "The email address you've provided isn't formatted correctly.",
+  "logisration.forgot.password.page.email.field.label": "Email",
+  "logisration.forgot.password.page.email.field.help.text": "The email address you used to register with edX.",
+  "logisration.forgot.password.page.submit.button": "Recover my password",
+  "logistration.forgot.password.request.inprogress.message": "Your previous request is still in progress, please try again in a few moments.",
+  "logistration.forgot.password.confirmation.support.link": "technical support",
+  "logistration.forgot.password.confirmation.title": "Check Your Email",
+  "logistration.forgot.password.confirmation.message": "You entered {strongEmail}. If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder. If you need further assistance, Contact {technicalSupportLink}.",
+  "logistration.need.help.signing.in.collapsible.menu": "Need help signing in?",
+  "logistration.need.other.help.signing.in.collapsible.menu": "Need other help signing in?",
+  "logistration.register.link": "Create an account",
+  "logistration.forgot.password.link": "Forgot password?",
+  "logistration.other.sign.in.issues": "Other sign-in issues",
+  "error.notfound.message": "The page you're looking for is unavailable or there's an error in the URL. Please check the URL and try again."
+}
