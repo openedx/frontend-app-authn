@@ -1,11 +1,12 @@
 import React from 'react';
-import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { act } from 'react-dom/test-utils';
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
+import { mount } from 'enzyme';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import * as auth from '@edx/frontend-platform/auth';
+import { resetPassword } from '../data/actions';
 
 import ResetPasswordPage from '../ResetPasswordPage';
 
@@ -14,6 +15,7 @@ jest.mock('@edx/frontend-platform/auth');
 
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
+
 
 describe('ResetPasswordPage', () => {
   let props = {};
@@ -34,6 +36,10 @@ describe('ResetPasswordPage', () => {
       token: null,
       errors: null,
     };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should match reset password default section snapshot', () => {
@@ -105,5 +111,47 @@ describe('ResetPasswordPage', () => {
     });
     resetPasswordPage.update();
     expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('with valid inputs resetPassword action is dispatch', () => {
+    const newPassword = 'test-password1';
+    store = mockStore({
+      ...store,
+    });
+
+    props = {
+      ...props,
+      token_status: 'valid',
+      token: 'token',
+    };
+
+    const formPayload = {
+      new_password1: newPassword,
+      new_password2: newPassword,
+    };
+
+    store.dispatch = jest.fn(store.dispatch);
+    const resetPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPage.find('input#reset-password-input').simulate('blur', { target: { value: newPassword } });
+    resetPage.find('input#confirm-password-input').simulate('change', { target: { value: newPassword } });
+    resetPage.find('button.submit').simulate('click');
+
+    expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
+    resetPage.unmount();
+  });
+
+  it('show spinner component during token validation', () => {
+    props = {
+      ...props,
+      token_status: 'pending',
+      match: {
+        params: {
+          token: 'test-token',
+        },
+      },
+    };
+    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

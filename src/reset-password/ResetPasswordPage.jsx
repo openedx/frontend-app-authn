@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Button, Input, ValidationFormGroup } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
+import { getQueryParameters } from '@edx/frontend-platform';
 import messages from './messages';
 import { resetPassword, validateToken } from './data/actions';
 import { resetPasswordResultSelector } from './data/selectors';
@@ -16,6 +17,7 @@ import Spinner from './Spinner';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
+  const params = getQueryParameters();
 
   const [newPasswordInput, setNewPasswordValue] = useState('');
   const [confirmPasswordInput, setConfirmPasswordValue] = useState('');
@@ -55,7 +57,7 @@ const ResetPasswordPage = (props) => {
         new_password1: newPasswordInput,
         new_password2: confirmPasswordInput,
       };
-      props.resetPassword(formPayload, props.token);
+      props.resetPassword(formPayload, props.token, params);
     }
   };
 

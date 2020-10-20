@@ -24,9 +24,9 @@ export const validateTokenFailure = (tokenStatus) => ({
 });
 
 // Reset Password
-export const resetPassword = (formPayload, token) => ({
+export const resetPassword = (formPayload, token, params) => ({
   type: RESET_PASSWORD.BASE,
-  payload: { formPayload, token },
+  payload: { formPayload, token, params },
 });
 
 export const resetPasswordBegin = () => ({
