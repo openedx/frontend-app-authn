@@ -72,7 +72,7 @@ describe('LoginPage', () => {
   });
 
   it('should match url after redirection', () => {
-    const dasboardUrl = 'http://test.com/dashboard/';
+    const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({
       ...store,
       logistration: {

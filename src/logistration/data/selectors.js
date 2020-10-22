@@ -8,3 +8,8 @@ export const loginRequestSelector = createSelector(
   logistrationSelector,
   logistration => logistration.loginResult,
 );
+
+export const registrationRequestSelector = createSelector(
+  logistrationSelector,
+  logistration => logistration.registrationResult,
+);

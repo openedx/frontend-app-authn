@@ -20,9 +20,12 @@ export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
 
-    yield call(postNewUser, action.payload.registrationInfo);
+    const { redirectUrl, success } = yield call(postNewUser, action.payload.registrationInfo);
 
-    yield put(registerNewUserSuccess());
+    yield put(registerNewUserSuccess(
+      redirectUrl,
+      success,
+    ));
   } catch (e) {
     yield put(registerNewUserFailure());
     throw e;
