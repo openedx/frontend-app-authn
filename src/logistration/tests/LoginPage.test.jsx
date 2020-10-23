@@ -40,20 +40,51 @@ describe('LoginPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('should match forget password alert message snapshot', () => {
+    props = {
+      ...props,
+      forgotPassword: { status: 'complete', email: 'test@example.com' },
+    };
+    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should display login help button', () => {
     const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(root.find('button.field-link').text()).toEqual('Need help signing in?');
   });
 
+  it('updates the error state for invalid email', () => {
+    const errorState = { email: null, password: null };
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('button.submit').simulate('click');
+    expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
+  });
+
+  it('updates the error state for invalid password', () => {
+    const errorState = { email: '', password: null };
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('input#loginEmail').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
+    loginPage.find('button.submit').simulate('click');
+    expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
+  });
+
   it('should match url after redirection', () => {
     const dasboardUrl = 'http://test.com/dashboard/';
-    props = {
-      ...props,
-      loginResult: { success: true, redirectUrl: dasboardUrl },
-    };
+    store = mockStore({
+      ...store,
+      logistration: {
+        ...store.logistration,
+        loginResult: {
+          success: true,
+          redirectUrl: dasboardUrl,
+        },
+      },
+    });
     delete window.location;
     window.location = { href: '' };
-    window.location.href = dasboardUrl;
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toBe(dasboardUrl);
   });
