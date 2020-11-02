@@ -111,10 +111,9 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </div>
         </div>
         <button
-          className="btn mt-0 field-link"
-          onBlur={[Function]}
+          className="mt-0 field-link btn btn-primary"
+          disabled={false}
           onClick={[Function]}
-          onKeyDown={[Function]}
           type="button"
         >
           <svg
@@ -154,10 +153,9 @@ exports[`LoginPage should match default section snapshot 1`] = `
         </div>
       </div>
       <button
-        className="btn btn-primary submit"
-        onBlur={[Function]}
+        className="btn-primary submit btn btn-primary"
+        disabled={false}
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
         Sign in
@@ -358,10 +356,9 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </div>
         </div>
         <button
-          className="btn mt-0 field-link"
-          onBlur={[Function]}
+          className="mt-0 field-link btn btn-primary"
+          disabled={false}
           onClick={[Function]}
-          onKeyDown={[Function]}
           type="button"
         >
           <svg
@@ -401,10 +398,9 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         </div>
       </div>
       <button
-        className="btn btn-primary submit"
-        onBlur={[Function]}
+        className="btn-primary submit btn btn-primary"
+        disabled={false}
         onClick={[Function]}
-        onKeyDown={[Function]}
         type="button"
       >
         Sign in

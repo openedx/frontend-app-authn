@@ -9,6 +9,7 @@ import RegistrationPage from '../RegistrationPage';
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
+
 describe('./RegistrationPage.js', () => {
   const initialState = {
     logistration: {
@@ -26,6 +27,7 @@ describe('./RegistrationPage.js', () => {
   );
 
   beforeEach(() => {
+    store = mockStore(initialState);
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -38,10 +40,13 @@ describe('./RegistrationPage.js', () => {
         'en-us': {},
       },
     });
-    store = mockStore(initialState);
     props = {
       registrationResult: jest.fn(),
     };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should match default section snapshot', () => {
@@ -65,5 +70,41 @@ describe('./RegistrationPage.js', () => {
     window.location = { href: '' };
     renderer.create(reduxWrapper(<IntlRegistrationPage />));
     expect(window.location.href).toBe(dasboardUrl);
+  });
+
+  it('should show error message on 409', () => {
+    const windowSpy = jest.spyOn(global, 'window', 'get');
+    windowSpy.mockImplementation(() => ({
+      scrollTo: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+    }));
+
+    store = mockStore({
+      ...store,
+      logistration: {
+        ...store.logistration,
+        registrationResult: {
+          success: false,
+          redirectUrl: '',
+        },
+        registrationError: {
+          email: [
+            {
+              user_message: 'It looks like test@gmail.com belongs to an existing account. Try again with a different email address.',
+            },
+          ],
+          username: [
+            {
+              user_message: 'It looks like test belongs to an existing account. Try again with a different username.',
+            },
+          ],
+        },
+        response_status: 'complete',
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

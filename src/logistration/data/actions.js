@@ -18,10 +18,12 @@ export const registerNewUserBegin = () => ({
 export const registerNewUserSuccess = (redirectUrl, success) => ({
   type: REGISTER_NEW_USER.SUCCESS,
   payload: { redirectUrl, success },
+
 });
 
-export const registerNewUserFailure = () => ({
+export const registerNewUserFailure = (error) => ({
   type: REGISTER_NEW_USER.FAILURE,
+  payload: { error },
 });
 
 // Login

@@ -7,6 +7,7 @@ import {
 export const defaultState = {
   registrationResult: {},
   loginResult: {},
+  registrationError: null,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -18,11 +19,13 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_NEW_USER.SUCCESS:
       return {
         ...state,
+
         registrationResult: action.payload,
       };
     case REGISTER_NEW_USER.FAILURE:
       return {
         ...state,
+        registrationError: action.payload.error,
       };
     case LOGIN_REQUEST.BEGIN:
       return {
