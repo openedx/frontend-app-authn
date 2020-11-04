@@ -88,4 +88,11 @@ describe('LoginPage', () => {
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toBe(dasboardUrl);
   });
+
+  it('should call the componentDidMount lifecycle method', () => {
+    const spy = jest.spyOn(LoginPage.WrappedComponent.prototype, 'componentDidMount');
+
+    mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(spy).toHaveBeenCalled();
+  });
 });

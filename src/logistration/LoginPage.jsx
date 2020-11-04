@@ -1,14 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 
-import { loginRequest } from './data/actions';
-import { loginRequestSelector } from './data/selectors';
+import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
+import { getThirdPartyAuthContext, loginRequest } from './data/actions';
+import { DEFAULT_REDIRECT_URL } from './data/constants';
+import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import LoginHelpLinks from './LoginHelpLinks';
 import RedirectLogistration from './RedirectLogistration';
 
@@ -27,6 +29,14 @@ class LoginPage extends React.Component {
       passwordValid: false,
       formValid: false,
     };
+  }
+
+  componentDidMount() {
+    const params = (new URL(document.location)).searchParams;
+    const payload = {
+      redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
+    };
+    this.props.getThirdPartyAuthContext(payload);
   }
 
   handleSubmit = (e) => {
@@ -174,9 +184,11 @@ class LoginPage extends React.Component {
 LoginPage.defaultProps = {
   loginResult: null,
   forgotPassword: null,
+  thirdPartyAuthContext: null,
 };
 
 LoginPage.propTypes = {
+  getThirdPartyAuthContext: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
@@ -186,17 +198,32 @@ LoginPage.propTypes = {
     email: PropTypes.string,
     status: PropTypes.string,
   }),
+  thirdPartyAuthContext: PropTypes.shape({
+    currentProvider: PropTypes.string,
+    providers: PropTypes.array,
+    secondaryProviders: PropTypes.array,
+    finishAuthUrl: PropTypes.string,
+    pipelineUserDetails: PropTypes.shape({
+      email: PropTypes.string,
+      fullname: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  }),
 };
 
 const mapStateToProps = state => {
   const forgotPassword = forgotPasswordResultSelector(state);
   const loginResult = loginRequestSelector(state);
-  return { forgotPassword, loginResult };
+  const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
+  return { forgotPassword, loginResult, thirdPartyAuthContext };
 };
 
 export default connect(
   mapStateToProps,
   {
+    getThirdPartyAuthContext,
     loginRequest,
   },
 )(LoginPage);

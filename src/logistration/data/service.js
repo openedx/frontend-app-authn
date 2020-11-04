@@ -1,5 +1,5 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { camelCaseObject, getConfig } from '@edx/frontend-platform';
+import { getAuthenticatedHttpClient, getHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
 export async function postNewUser(registrationInformation) {
@@ -43,5 +43,26 @@ export async function login(creds) {
   return {
     redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
     success: data.success || false,
+  };
+}
+
+
+export async function getThirdPartyAuthContext(urlParams) {
+  const requestConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  };
+
+  const { data } = await getHttpClient()
+    .get(
+      `${getConfig().LMS_BASE_URL}/api/third_party_auth_context`,
+      { params: urlParams },
+      requestConfig,
+    )
+    .catch((e) => {
+      throw (e);
+    });
+
+  return {
+    thirdPartyAuthContext: camelCaseObject(data),
   };
 }
