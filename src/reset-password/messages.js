@@ -11,11 +11,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter and confirm your new password.',
     description: 'Instructions message for reset password page.',
   },
-  'logistration.reset.password.page.invalid.password.message': {
-    id: 'logistration.reset.password.page.invalid.password.message',
-    defaultMessage: 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number',
-    description: 'Password format error.',
-  },
   'logistration.reset.password.page.invalid.match.message': {
     id: 'logistration.reset.password.page.invalid.match.message',
     defaultMessage: 'Passwords do not match.',

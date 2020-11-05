@@ -7,6 +7,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 import { resetPassword, validateToken } from './data/actions';
 import { resetPasswordResultSelector } from './data/selectors';
+import { validatePassword } from './data/service';
 import InvalidTokenMessage from './InvalidToken';
 import ResetSuccessMessage from './ResetSuccess';
 import ResetFailureMessage from './ResetFailure';
@@ -20,12 +21,18 @@ const ResetPasswordPage = (props) => {
   const [confirmPasswordInput, setConfirmPasswordValue] = useState('');
   const [passwordValid, setPasswordValidValue] = useState(true);
   const [passwordMatch, setPasswordMatchValue] = useState(true);
+  const [validationMessage, setvalidationMessage] = useState('');
+
+  const validatePasswordFromBackend = async (newPassword) => {
+    const errorMessage = await validatePassword(newPassword);
+    setPasswordValidValue(!errorMessage);
+    setvalidationMessage(errorMessage);
+  };
 
   const handleNewPasswordChange = (e) => {
     const newPassword = e.target.value;
     setNewPasswordValue(newPassword);
-    const isValid = newPassword.length >= 8 && newPassword.match(/\d+/g);
-    setPasswordValidValue(isValid !== false);
+    validatePasswordFromBackend(newPassword);
   };
   const handleConfirmPasswordChange = (e) => {
     const confirmPassword = e.target.value;
@@ -78,11 +85,9 @@ const ResetPasswordPage = (props) => {
                 </p>
                 <div className="d-flex flex-column align-items-start">
                   <ValidationFormGroup
-                    for="new-password"
+                    for="reset-password-input"
                     invalid={!passwordValid}
-                    invalidMessage={intl.formatMessage(
-                      messages['logistration.reset.password.page.invalid.password.message'],
-                    )}
+                    invalidMessage={validationMessage}
                   >
                     <label htmlFor="reset-password-input" className="h6 mr-1">
                       {intl.formatMessage(messages['logistration.reset.password.page.new.field.label'])}
@@ -92,13 +97,12 @@ const ResetPasswordPage = (props) => {
                       id="reset-password-input"
                       type="password"
                       placeholder=""
-                      value={newPasswordInput}
-                      onChange={e => handleNewPasswordChange(e)}
+                      onBlur={e => handleNewPasswordChange(e)}
                       style={{ width: '400px' }}
                     />
                   </ValidationFormGroup>
                   <ValidationFormGroup
-                    for="confirm-password"
+                    for="confirm-password-input"
                     invalid={!passwordMatch}
                     invalidMessage={intl.formatMessage(messages['logistration.reset.password.page.invalid.match.message'])}
                   >
