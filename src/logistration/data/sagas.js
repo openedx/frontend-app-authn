@@ -10,11 +10,16 @@ import {
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  TPA_PROVIDERS,
+  tpaProvidersRequestBegin,
+  tpaProvidersRequestSuccess,
+  tpaProvidersRequestFailure,
+
 } from './actions';
 
 
 // Services
-import { postNewUser, login } from './service';
+import { postNewUser, login, tpaProviders } from './service';
 
 export function* handleNewUserRegistration(action) {
   try {
@@ -45,7 +50,23 @@ export function* handleLoginRequest(action) {
   }
 }
 
+export function* handleTpaProvidersRequest() {
+  try {
+    yield put(tpaProvidersRequestBegin());
+
+    const { secondaryProviders } = yield call(tpaProviders);
+
+    yield put(tpaProvidersRequestSuccess(
+      secondaryProviders,
+    ));
+  } catch (e) {
+    yield put(tpaProvidersRequestFailure());
+    throw e;
+  }
+}
+
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
   yield takeEvery(LOGIN_REQUEST.BASE, handleLoginRequest);
+  yield takeEvery(TPA_PROVIDERS.BASE, handleTpaProvidersRequest);
 }

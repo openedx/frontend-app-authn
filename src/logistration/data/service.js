@@ -42,3 +42,26 @@ export async function login(creds) {
     success: data.success || false,
   };
 }
+
+export async function tpaProviders() {
+  const requestConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    isPublic: true,
+  };
+
+  // const { data } = await getAuthenticatedHttpClient()
+  //   .post(
+  //     `${getConfig().LMS_BASE_URL}/login_ajax`,
+  //     requestConfig,
+  //   )
+  //   .catch((e) => {
+  //     throw (e);
+  //   });
+
+  // return {
+  //   secondaryProviders: data.secondary_providers || [1, 2, 3, 4, 5, 6, 7],
+  // };
+  return {
+    secondaryProviders: [1, 2, 3, 4, 5, 6, 7],
+  };
+}

@@ -1,16 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import {
+  Button, Input, ValidationFormGroup, ProgressBar,
+} from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { getQueryParameters } from '@edx/frontend-platform';
 
-import { loginRequest } from './data/actions';
-import { loginRequestSelector } from './data/selectors';
+import { loginRequest, tpaProvidersRequest } from './data/actions';
+import { loginRequestSelector, tpaProvidersSelector } from './data/selectors';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
 import LoginHelpLinks from './LoginHelpLinks';
+import InstitutionLogin from './InstitutionLogin';
 
 
 const LoginRedirect = (props) => {
@@ -45,7 +48,13 @@ class LoginPage extends React.Component {
       emailValid: false,
       passwordValid: false,
       formValid: false,
+      institutionLogin: false,
+      secondaryProviders: [1, 2, 3],
     };
+  }
+
+  componentDidMount() { // use hooks
+    this.props.tpaProvidersRequest();
   }
 
   handleSubmit = (e) => {
@@ -64,6 +73,12 @@ class LoginPage extends React.Component {
     }
 
     this.props.loginRequest(payload);
+  }
+
+  handleInstitutionLogin = () => {
+    this.setState({
+      institutionLogin: !this.state.institutionLogin,
+    });
   }
 
   validateInput(inputName, value) {
@@ -105,6 +120,10 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    console.log(this.props.providers);
+    if (this.state.institutionLogin) {
+      return <InstitutionLogin onSubmitHandler={this.handleInstitutionLogin} secondaryProviders={this.props.providers.secondaryProviders} />;
+    }
     return (
       <>
         <LoginRedirect success={this.props.loginResult.success} redirectUrl={this.props.loginResult.redirectUrl} />
@@ -116,10 +135,18 @@ class LoginPage extends React.Component {
                 First time here?<a className="ml-1" href="/register">Create an Account.</a>
               </p>
             </div>
+            <h3 className="text-left mt-3">Sign In</h3>
+            <Button
+              className="btn-outline-primary submit"
+              onClick={this.handleInstitutionLogin}
+            >
+              Use my university info
+            </Button>
+            <div className="section-heading-line mb-4">
+              <h4>or sign in with</h4>
+            </div>
             <form className="m-0">
               <div className="form-group">
-                <h3 className="text-center mt-3">Sign In</h3>
-
                 <div className="d-flex flex-column align-items-start">
                   <ValidationFormGroup
                     for="email"
@@ -184,13 +211,18 @@ class LoginPage extends React.Component {
 LoginPage.defaultProps = {
   loginResult: null,
   forgotPassword: null,
+  providers: null
 };
 
 LoginPage.propTypes = {
   loginRequest: PropTypes.func.isRequired,
+  tpaProvidersRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
+  }),
+  providers: PropTypes.shape({
+    secondaryProviders: PropTypes.array,
   }),
   forgotPassword: PropTypes.shape({
     email: PropTypes.string,
@@ -201,12 +233,14 @@ LoginPage.propTypes = {
 const mapStateToProps = state => {
   const forgotPassword = forgotPasswordResultSelector(state);
   const loginResult = loginRequestSelector(state);
-  return { forgotPassword, loginResult };
+  const providers = tpaProvidersSelector(state);
+  return { forgotPassword, loginResult, providers };
 };
 
 export default connect(
   mapStateToProps,
   {
     loginRequest,
+    tpaProvidersRequest,
   },
 )(LoginPage);
