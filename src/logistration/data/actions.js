@@ -14,8 +14,9 @@ export const registerNewUserBegin = () => ({
   type: REGISTER_NEW_USER.BEGIN,
 });
 
-export const registerNewUserSuccess = () => ({
+export const registerNewUserSuccess = (redirectUrl, success) => ({
   type: REGISTER_NEW_USER.SUCCESS,
+  payload: { redirectUrl, success },
 });
 
 export const registerNewUserFailure = () => ({

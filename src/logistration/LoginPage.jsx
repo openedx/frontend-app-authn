@@ -4,32 +4,13 @@ import PropTypes from 'prop-types';
 import { Button, Input, ValidationFormGroup } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import { getQueryParameters } from '@edx/frontend-platform';
 
 import { loginRequest } from './data/actions';
 import { loginRequestSelector } from './data/selectors';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
 import LoginHelpLinks from './LoginHelpLinks';
-
-
-const LoginRedirect = (props) => {
-  const { success, redirectUrl } = props;
-  if (success) {
-    window.location.href = redirectUrl;
-  }
-  return <></>;
-};
-
-LoginRedirect.defaultProps = {
-  redirectUrl: '',
-  success: false,
-};
-
-LoginRedirect.propTypes = {
-  redirectUrl: PropTypes.string,
-  success: PropTypes.bool,
-};
+import RedirectLogistration from './RedirectLogistration';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -50,13 +31,19 @@ class LoginPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const params = getQueryParameters();
+    const params = (new URL(document.location)).searchParams;
     const payload = {
       email: this.state.email,
       password: this.state.password,
-      next: params.next,
-      course_id: params.course_id,
     };
+    const next = params.get('next');
+    const courseId = params.get('course_id');
+    if (next) {
+      payload.next = params.next;
+    }
+    if (courseId) {
+      payload.course_id = params.course_id;
+    }
     if (!this.state.formValid) {
       this.validateInput('email', payload.email);
       this.validateInput('password', payload.password);
@@ -107,7 +94,10 @@ class LoginPage extends React.Component {
   render() {
     return (
       <>
-        <LoginRedirect success={this.props.loginResult.success} redirectUrl={this.props.loginResult.redirectUrl} />
+        <RedirectLogistration
+          success={this.props.loginResult.success}
+          redirectUrl={this.props.loginResult.redirectUrl}
+        />
         <div className="d-flex justify-content-center logistration-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}

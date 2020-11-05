@@ -17,6 +17,7 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_NEW_USER.SUCCESS:
       return {
         ...state,
+        registrationResult: action.payload,
       };
     case REGISTER_NEW_USER.FAILURE:
       return {

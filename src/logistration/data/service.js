@@ -18,7 +18,10 @@ export async function postNewUser(registrationInformation) {
       throw (e);
     });
 
-  return data;
+  return {
+    redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
+    success: data.success || false,
+  };
 }
 
 export async function login(creds) {

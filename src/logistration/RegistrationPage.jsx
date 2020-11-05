@@ -10,6 +10,8 @@ import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { getLocale, getCountryList } from '@edx/frontend-platform/i18n';
 
 import { registerNewUser } from './data/actions';
+import { registrationRequestSelector } from './data/selectors';
+import RedirectLogistration from './RedirectLogistration';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -40,6 +42,7 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const params = (new URL(document.location)).searchParams;
     const payload = {
       email: this.state.email,
       username: this.state.username,
@@ -48,6 +51,14 @@ class RegistrationPage extends React.Component {
       honor_code: true,
       country: this.state.country,
     };
+    const next = params.get('next');
+    const courseId = params.get('course_id');
+    if (next) {
+      payload.next = params.next;
+    }
+    if (courseId) {
+      payload.course_id = params.course_id;
+    }
 
     if (!this.state.formValid) {
       Object.entries(payload).forEach(([key, value]) => {
@@ -140,6 +151,10 @@ class RegistrationPage extends React.Component {
   render() {
     return (
       <>
+        <RedirectLogistration
+          success={this.props.registrationResult.success}
+          redirectUrl={this.props.registrationResult.redirectUrl}
+        />
         <div className="logistration-container d-flex flex-column align-items-center mx-auto" style={{ width: '30rem' }}>
           <div className="mb-4">
             <FontAwesomeIcon className="d-block mx-auto fa-2x" icon={faGraduationCap} />
@@ -261,12 +276,25 @@ class RegistrationPage extends React.Component {
   }
 }
 
+RegistrationPage.defaultProps = {
+  registrationResult: null,
+};
+
 RegistrationPage.propTypes = {
   registerNewUser: PropTypes.func.isRequired,
+  registrationResult: PropTypes.shape({
+    redirectUrl: PropTypes.string,
+    success: PropTypes.bool,
+  }),
+};
+
+const mapStateToProps = state => {
+  const registrationResult = registrationRequestSelector(state);
+  return { registrationResult };
 };
 
 export default connect(
-  () => ({}),
+  mapStateToProps,
   {
     registerNewUser,
   },
