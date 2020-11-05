@@ -53,6 +53,7 @@ const ForgotPasswordPage = (props) => {
               </p>
               <div className="d-flex flex-column align-items-start">
                 <ValidationFormGroup
+                  className="mb-0"
                   for="email"
                   invalid={!emailValid}
                   invalidMessage={intl.formatMessage(
@@ -73,7 +74,7 @@ const ForgotPasswordPage = (props) => {
                   />
                 </ValidationFormGroup>
               </div>
-              <p className="mb-0">
+              <p className="mb-2">
                 {intl.formatMessage(messages['logisration.forgot.password.page.email.field.help.text'])}
               </p>
               <LoginHelpLinks page="forgot-password" />
