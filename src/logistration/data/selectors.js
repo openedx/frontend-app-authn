@@ -13,3 +13,8 @@ export const registrationRequestSelector = createSelector(
   logistrationSelector,
   logistration => logistration.registrationResult,
 );
+
+export const thirdPartyAuthContextSelector = createSelector(
+  logistrationSelector,
+  logistration => logistration.thirdPartyAuthContext,
+);

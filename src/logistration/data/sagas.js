@@ -10,11 +10,15 @@ import {
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  THIRD_PARTY_AUTH_CONTEXT,
+  getThirdPartyAuthContextBegin,
+  getThirdPartyAuthContextSuccess,
+  getThirdPartyAuthContextFailure,
 } from './actions';
 
 
 // Services
-import { postNewUser, login } from './service';
+import { getThirdPartyAuthContext, postNewUser, login } from './service';
 
 export function* handleNewUserRegistration(action) {
   try {
@@ -48,7 +52,22 @@ export function* handleLoginRequest(action) {
   }
 }
 
+export function* fetchThirdPartyAuthContext(action) {
+  try {
+    yield put(getThirdPartyAuthContextBegin());
+    const { thirdPartyAuthContext } = yield call(getThirdPartyAuthContext, action.payload.urlParams);
+
+    yield put(getThirdPartyAuthContextSuccess(
+      thirdPartyAuthContext,
+    ));
+  } catch (e) {
+    yield put(getThirdPartyAuthContextFailure());
+    throw e;
+  }
+}
+
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
   yield takeEvery(LOGIN_REQUEST.BASE, handleLoginRequest);
+  yield takeEvery(THIRD_PARTY_AUTH_CONTEXT.BASE, fetchThirdPartyAuthContext);
 }
