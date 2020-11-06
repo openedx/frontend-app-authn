@@ -16,7 +16,7 @@ const ResetFailureMessage = (props) => {
                 <FormattedMessage
                   id="logistration.reset.password.request.failure.header.message"
                   defaultMessage="{errorMessage} "
-                  description="whatever"
+                  description="error message when password reset failure."
                   values={{
                     errorMessage,
                   }}

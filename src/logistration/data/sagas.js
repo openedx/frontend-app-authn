@@ -31,8 +31,10 @@ export function* handleNewUserRegistration(action) {
       success,
     ));
   } catch (e) {
-    yield put(registerNewUserFailure());
-    throw e;
+    const statusCodes = [400, 409, 403];
+    if (e.response && statusCodes.includes(e.response.status)) {
+      yield put(registerNewUserFailure(e.response.data));
+    }
   }
 }
 
