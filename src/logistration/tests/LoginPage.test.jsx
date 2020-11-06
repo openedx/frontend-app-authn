@@ -6,8 +6,8 @@ import configureStore from 'redux-mock-store';
 
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
-
 import LoginPage from '../LoginPage';
+import { RenderInstitutionButton } from '../InstitutionLogistration';
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -22,12 +22,20 @@ describe('LoginPage', () => {
         currentProvider: null,
         finishAuthUrl: null,
         providers: [],
+        secondaryProviders: [],
       },
     },
   };
 
   let props = {};
   let store = {};
+
+  const secondaryProviders = {
+    id: 'saml-test',
+    name: 'Test University',
+    loginUrl: '/dummy-auth',
+    registerUrl: '/dummy_auth',
+  };
 
   const appleProvider = {
     id: 'oa2-apple-id',
@@ -169,13 +177,6 @@ describe('LoginPage', () => {
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
   });
 
-  it('should call the componentDidMount lifecycle method', () => {
-    const spy = jest.spyOn(LoginPage.WrappedComponent.prototype, 'componentDidMount');
-
-    mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(spy).toHaveBeenCalled();
-  });
-
   it('should redirect to social auth provider url', () => {
     const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
@@ -218,5 +219,41 @@ describe('LoginPage', () => {
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should display institution login button', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(root.text().includes('Use my university info')).toBe(true);
+  });
+
+  it('should not display institution login button', () => {
+    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(root.text().includes('Use my university info')).toBe(false);
+  });
+
+  it('should display institution login page', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(loginPage.text().includes('Test University')).toBe(true);
   });
 });
