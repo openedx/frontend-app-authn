@@ -19,7 +19,6 @@
   "logistration.reset.password.request.invalid.token.description.message": "This password reset link is invalid. It may have been used already. To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}",
   "logistration.reset.password.page.heading": "Reset Your Password",
   "logistration.reset.password.page.instructions": "Enter and confirm your new password.",
-  "logistration.reset.password.page.invalid.password.message": "This password is too short. It must contain at least 8 characters. This password must contain at least 1 number",
   "logistration.reset.password.page.invalid.match.message": "Passwords do not match.",
   "logistration.forgot.password.page.new.field.label": "New Password",
   "logistration.forgot.password.page.confirm.field.label": "Confirm Password",

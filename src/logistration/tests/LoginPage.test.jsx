@@ -72,7 +72,7 @@ describe('LoginPage', () => {
   });
 
   it('should match url after redirection', () => {
-    const dasboardUrl = 'http://test.com/dashboard/';
+    const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({
       ...store,
       logistration: {
@@ -87,5 +87,12 @@ describe('LoginPage', () => {
     window.location = { href: '' };
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toBe(dasboardUrl);
+  });
+
+  it('should call the componentDidMount lifecycle method', () => {
+    const spy = jest.spyOn(LoginPage.WrappedComponent.prototype, 'componentDidMount');
+
+    mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(spy).toHaveBeenCalled();
   });
 });
