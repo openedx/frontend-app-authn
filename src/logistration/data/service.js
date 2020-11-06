@@ -43,6 +43,11 @@ export async function login(creds) {
   };
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 export async function tpaProviders() {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -61,7 +66,73 @@ export async function tpaProviders() {
   // return {
   //   secondaryProviders: data.secondary_providers || [1, 2, 3, 4, 5, 6, 7],
   // };
+  await sleep(3000);
   return {
-    secondaryProviders: [1, 2, 3, 4, 5, 6, 7],
+    secondaryProviders: [
+      {
+        "id": "saml-chalmers",
+        "name": "Chalmers University",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=chalmers",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=chalmers"
+      },
+      {
+        "id": "saml-curtin-sso",
+        "name": "Curtin University",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=curtin-sso",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=curtin-sso"
+      },
+      {
+        "id": "saml-gatech",
+        "name": "Georgia Tech",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=gatech",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=gatech"
+      },
+      {
+        "id": "saml-princeton",
+        "name": "Princeton University",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=princeton",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=princeton"
+      },
+      {
+        "id": "saml-berkeley-staging",
+        "name": "University of California, Berkeley",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=berkeley-staging",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=berkeley-staging"
+      },
+      {
+        "id": "saml-uq-staging",
+        "name": "University of Queensland",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=uq-staging",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=uq-staging"
+      },
+      {
+        "id": "saml-rotman-stg",
+        "name": "University of Toronto Rotman School of Management",
+        "iconClass": "fa-university",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=rotman-stg",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=rotman-stg"
+      },
+      {
+        "id": "saml-testshib",
+        "name": "testshib",
+        "iconClass": "fa-sign-in",
+        "iconImage": null,
+        "loginUrl": "/auth/login/tpa-saml/?auth_entry=login\u0026next=%2Fdashboard\u0026idp=testshib",
+        "registerUrl": "/auth/login/tpa-saml/?auth_entry=register\u0026next=%2Fdashboard\u0026idp=testshib"
+      }
+    ] || [],
   };
 }

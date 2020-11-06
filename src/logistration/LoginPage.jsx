@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  Button, Input, ValidationFormGroup, ProgressBar,
-} from '@edx/paragon';
+import { Button, Input, ValidationFormGroup } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { getQueryParameters } from '@edx/frontend-platform';
@@ -13,7 +11,7 @@ import { loginRequestSelector, tpaProvidersSelector } from './data/selectors';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
 import LoginHelpLinks from './LoginHelpLinks';
-import InstitutionLogin from './InstitutionLogin';
+import InstitutionLogin, { RenderInstitutionLogin } from './InstitutionLogin';
 
 
 const LoginRedirect = (props) => {
@@ -49,12 +47,17 @@ class LoginPage extends React.Component {
       passwordValid: false,
       formValid: false,
       institutionLogin: false,
-      secondaryProviders: [1, 2, 3],
+      secondaryProviders: [],
     };
   }
 
   componentDidMount() { // use hooks
-    this.props.tpaProvidersRequest();
+    const data = this.props.tpaProvidersRequest();
+    console.log('logging data');
+    console.log(data);
+    this.setState({
+      secondaryProviders: data.secondaryProviders,
+    });
   }
 
   handleSubmit = (e) => {
@@ -120,9 +123,13 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    console.log(this.props.providers);
     if (this.state.institutionLogin) {
-      return <InstitutionLogin onSubmitHandler={this.handleInstitutionLogin} secondaryProviders={this.props.providers.secondaryProviders} />;
+      return (
+        <InstitutionLogin
+          onSubmitHandler={this.handleInstitutionLogin}
+          secondaryProviders={this.props.providers.secondaryProviders}
+        />
+      );
     }
     return (
       <>
@@ -136,12 +143,10 @@ class LoginPage extends React.Component {
               </p>
             </div>
             <h3 className="text-left mt-3">Sign In</h3>
-            <Button
-              className="btn-outline-primary submit"
-              onClick={this.handleInstitutionLogin}
-            >
-              Use my university info
-            </Button>
+            <RenderInstitutionLogin
+              onSubmitHandler={this.handleInstitutionLogin}
+              secondaryProviders={this.props.providers.secondaryProviders}
+            />
             <div className="section-heading-line mb-4">
               <h4>or sign in with</h4>
             </div>
