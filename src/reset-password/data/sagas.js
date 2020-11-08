@@ -34,7 +34,7 @@ export function* handleValidateToken(action) {
 export function* handleResetPassword(action) {
   try {
     yield put(resetPasswordBegin());
-    const data = yield call(resetPassword, action.payload.formPayload, action.payload.token);
+    const data = yield call(resetPassword, action.payload.formPayload, action.payload.token, action.payload.params);
     const resetStatus = data.reset_status;
     const resetErrors = data.err_msg;
 
