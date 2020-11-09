@@ -8,6 +8,7 @@ export const defaultState = {
   registrationResult: {},
   loginResult: {},
   registrationError: null,
+  loginError: null,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -39,6 +40,7 @@ const reducer = (state = defaultState, action) => {
     case LOGIN_REQUEST.FAILURE:
       return {
         ...state,
+        loginError: action.payload.loginError,
       };
     case THIRD_PARTY_AUTH_CONTEXT.BEGIN:
       return {

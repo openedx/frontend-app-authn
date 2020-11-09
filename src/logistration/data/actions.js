@@ -41,8 +41,9 @@ export const loginRequestSuccess = (redirectUrl, success) => ({
   payload: { redirectUrl, success },
 });
 
-export const loginRequestFailure = () => ({
+export const loginRequestFailure = (loginError) => ({
   type: LOGIN_REQUEST.FAILURE,
+  payload: { loginError },
 });
 
 // Third party auth context

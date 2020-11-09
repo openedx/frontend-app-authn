@@ -49,8 +49,10 @@ export function* handleLoginRequest(action) {
       success,
     ));
   } catch (e) {
-    yield put(loginRequestFailure());
-    throw e;
+    const statusCodes = [400];
+    if (e.response && statusCodes.includes(e.response.status)) {
+      yield put(loginRequestFailure(e.response.data.value));
+    }
   }
 }
 

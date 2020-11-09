@@ -15,6 +15,7 @@ describe('LoginPage', () => {
     logistration: {
       forgotPassword: { status: null },
       loginResult: { success: false, redirectUrl: '' },
+      response_error: null,
     },
   };
 
@@ -94,5 +95,39 @@ describe('LoginPage', () => {
 
     mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should show error message on 400', () => {
+    store = mockStore({
+      ...store,
+      logistration: {
+        ...store.logistration,
+        loginResult: {
+          success: false,
+          redirectUrl: '',
+        },
+        loginError: 'Email or password is incorrect.',
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should show error message on 400 on receiving link', () => {
+    store = mockStore({
+      ...store,
+      logistration: {
+        ...store.logistration,
+        loginResult: {
+          success: false,
+          redirectUrl: '',
+        },
+        loginError: 'To be on the safe side, you can reset your password <a href="/reset">here</a> before you try again.\n',
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

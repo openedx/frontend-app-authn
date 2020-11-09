@@ -13,6 +13,8 @@ import { DEFAULT_REDIRECT_URL } from './data/constants';
 import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import LoginHelpLinks from './LoginHelpLinks';
 import RedirectLogistration from './RedirectLogistration';
+import LoginFailureMessage from './LoginFailure';
+
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -110,6 +112,7 @@ class LoginPage extends React.Component {
         />
         <div className="d-flex justify-content-center logistration-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
+            {this.props.loginError ? <LoginFailureMessage errors={this.props.loginError} /> : null}
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
             <div className="d-flex flex-row">
               <p>
@@ -185,6 +188,7 @@ LoginPage.defaultProps = {
   loginResult: null,
   forgotPassword: null,
   thirdPartyAuthContext: null,
+  loginError: null,
 };
 
 LoginPage.propTypes = {
@@ -211,13 +215,19 @@ LoginPage.propTypes = {
       username: PropTypes.string,
     }),
   }),
+  loginError: PropTypes.string,
 };
 
 const mapStateToProps = state => {
   const forgotPassword = forgotPasswordResultSelector(state);
   const loginResult = loginRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
-  return { forgotPassword, loginResult, thirdPartyAuthContext };
+  return {
+    forgotPassword,
+    loginResult,
+    thirdPartyAuthContext,
+    loginError: state.logistration.loginError,
+  };
 };
 
 export default connect(
