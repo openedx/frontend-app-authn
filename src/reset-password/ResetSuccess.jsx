@@ -1,8 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Hyperlink } from '@edx/paragon';
+import { Alert, Hyperlink } from '@edx/paragon';
 
-import Alert from '../logistration/Alert';
 
 const ResetSuccessMessage = () => {
   const loginPasswordLink = (
@@ -20,7 +19,7 @@ const ResetSuccessMessage = () => {
       <div className="d-flex flex-column" style={{ width: '400px' }}>
         <div className="form-group">
           <div className="text-center mt-3">
-            <Alert className="alert-warning mt-n2">
+            <Alert variant="success">
               <h4 style={{ color: 'green' }}>
                 <FormattedMessage
                   id="logistration.reset.password.request.success.header.message"
