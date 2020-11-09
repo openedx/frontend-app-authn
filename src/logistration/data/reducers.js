@@ -1,11 +1,13 @@
 import {
   REGISTER_NEW_USER,
   LOGIN_REQUEST,
+  THIRD_PARTY_AUTH_CONTEXT,
 } from './actions';
 
 export const defaultState = {
   registrationResult: {},
   loginResult: {},
+  registrationError: null,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -17,10 +19,13 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_NEW_USER.SUCCESS:
       return {
         ...state,
+
+        registrationResult: action.payload,
       };
     case REGISTER_NEW_USER.FAILURE:
       return {
         ...state,
+        registrationError: action.payload.error,
       };
     case LOGIN_REQUEST.BEGIN:
       return {
@@ -32,6 +37,19 @@ const reducer = (state = defaultState, action) => {
         loginResult: action.payload,
       };
     case LOGIN_REQUEST.FAILURE:
+      return {
+        ...state,
+      };
+    case THIRD_PARTY_AUTH_CONTEXT.BEGIN:
+      return {
+        ...state,
+      };
+    case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
+      return {
+        ...state,
+        thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
+      };
+    case THIRD_PARTY_AUTH_CONTEXT.FAILURE:
       return {
         ...state,
       };

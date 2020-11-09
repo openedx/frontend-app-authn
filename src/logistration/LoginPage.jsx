@@ -1,35 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import { getQueryParameters } from '@edx/frontend-platform';
 
-import { loginRequest } from './data/actions';
-import { loginRequestSelector } from './data/selectors';
+import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
+import { getThirdPartyAuthContext, loginRequest } from './data/actions';
+import { DEFAULT_REDIRECT_URL } from './data/constants';
+import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import LoginHelpLinks from './LoginHelpLinks';
-
-
-const LoginRedirect = (props) => {
-  const { success, redirectUrl } = props;
-  if (success) {
-    window.location.href = redirectUrl;
-  }
-  return <></>;
-};
-
-LoginRedirect.defaultProps = {
-  redirectUrl: '',
-  success: false,
-};
-
-LoginRedirect.propTypes = {
-  redirectUrl: PropTypes.string,
-  success: PropTypes.bool,
-};
+import RedirectLogistration from './RedirectLogistration';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -48,15 +31,29 @@ class LoginPage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const params = (new URL(document.location)).searchParams;
+    const payload = {
+      redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
+    };
+    this.props.getThirdPartyAuthContext(payload);
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
-    const params = getQueryParameters();
+    const params = (new URL(document.location)).searchParams;
     const payload = {
       email: this.state.email,
       password: this.state.password,
-      next: params.next,
-      course_id: params.course_id,
     };
+    const next = params.get('next');
+    const courseId = params.get('course_id');
+    if (next) {
+      payload.next = params.next;
+    }
+    if (courseId) {
+      payload.course_id = params.course_id;
+    }
     if (!this.state.formValid) {
       this.validateInput('email', payload.email);
       this.validateInput('password', payload.password);
@@ -107,7 +104,10 @@ class LoginPage extends React.Component {
   render() {
     return (
       <>
-        <LoginRedirect success={this.props.loginResult.success} redirectUrl={this.props.loginResult.redirectUrl} />
+        <RedirectLogistration
+          success={this.props.loginResult.success}
+          redirectUrl={this.props.loginResult.redirectUrl}
+        />
         <div className="d-flex justify-content-center logistration-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
@@ -184,9 +184,11 @@ class LoginPage extends React.Component {
 LoginPage.defaultProps = {
   loginResult: null,
   forgotPassword: null,
+  thirdPartyAuthContext: null,
 };
 
 LoginPage.propTypes = {
+  getThirdPartyAuthContext: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
@@ -196,17 +198,32 @@ LoginPage.propTypes = {
     email: PropTypes.string,
     status: PropTypes.string,
   }),
+  thirdPartyAuthContext: PropTypes.shape({
+    currentProvider: PropTypes.string,
+    providers: PropTypes.array,
+    secondaryProviders: PropTypes.array,
+    finishAuthUrl: PropTypes.string,
+    pipelineUserDetails: PropTypes.shape({
+      email: PropTypes.string,
+      fullname: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  }),
 };
 
 const mapStateToProps = state => {
   const forgotPassword = forgotPasswordResultSelector(state);
   const loginResult = loginRequestSelector(state);
-  return { forgotPassword, loginResult };
+  const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
+  return { forgotPassword, loginResult, thirdPartyAuthContext };
 };
 
 export default connect(
   mapStateToProps,
   {
+    getThirdPartyAuthContext,
     loginRequest,
   },
 )(LoginPage);

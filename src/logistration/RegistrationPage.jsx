@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Button, Input, ValidationFormGroup, StatusAlert,
+  Button, Input, ValidationFormGroup,
 } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
@@ -10,6 +10,9 @@ import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import { getLocale, getCountryList } from '@edx/frontend-platform/i18n';
 
 import { registerNewUser } from './data/actions';
+import { registrationRequestSelector } from './data/selectors';
+import RedirectLogistration from './RedirectLogistration';
+import RegistrationFailure from './RegistrationFailure';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -34,12 +37,12 @@ class RegistrationPage extends React.Component {
       passwordValid: false,
       countryValid: false,
       formValid: false,
-      open: false,
     };
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const params = (new URL(document.location)).searchParams;
     const payload = {
       email: this.state.email,
       username: this.state.username,
@@ -48,6 +51,14 @@ class RegistrationPage extends React.Component {
       honor_code: true,
       country: this.state.country,
     };
+    const next = params.get('next');
+    const courseId = params.get('course_id');
+    if (next) {
+      payload.next = params.next;
+    }
+    if (courseId) {
+      payload.course_id = params.course_id;
+    }
 
     if (!this.state.formValid) {
       Object.entries(payload).forEach(([key, value]) => {
@@ -55,14 +66,7 @@ class RegistrationPage extends React.Component {
       });
       return;
     }
-
-    this.setState({ open: true });
     this.props.registerNewUser(payload);
-  }
-
-  resetStatusAlertWrapperState() {
-    this.setState({ open: false });
-    this.button.focus();
   }
 
   handleOnChange(e) {
@@ -140,7 +144,12 @@ class RegistrationPage extends React.Component {
   render() {
     return (
       <>
+        <RedirectLogistration
+          success={this.props.registrationResult.success}
+          redirectUrl={this.props.registrationResult.redirectUrl}
+        />
         <div className="logistration-container d-flex flex-column align-items-center mx-auto" style={{ width: '30rem' }}>
+          {this.props.registrationError ? <RegistrationFailure errors={this.props.registrationError} /> : null}
           <div className="mb-4">
             <FontAwesomeIcon className="d-block mx-auto fa-2x" icon={faGraduationCap} />
             <h4 className="d-block mx-auto">Start learning now!</h4>
@@ -244,12 +253,6 @@ class RegistrationPage extends React.Component {
             >
               Create Account
             </Button>
-            <StatusAlert
-              alertType="danger"
-              open={this.state.open}
-              dialog="❤️❤️❤️ Your account was has been created! Welcome to our learning community! ❤️❤️❤️"
-              onClose={this.resetStatusAlertWrapperState}
-            />
           </form>
           <div className="text-center mb-2 pt-2">
             <span>Already have an edX account?</span>
@@ -260,13 +263,35 @@ class RegistrationPage extends React.Component {
     );
   }
 }
+RegistrationPage.defaultProps = {
+  registrationResult: null,
+  registerNewUser: null,
+  registrationError: null,
+};
+
 
 RegistrationPage.propTypes = {
-  registerNewUser: PropTypes.func.isRequired,
+  registerNewUser: PropTypes.func,
+  registrationResult: PropTypes.shape({
+    redirectUrl: PropTypes.string,
+    success: PropTypes.bool,
+  }),
+  registrationError: PropTypes.shape({
+    email: PropTypes.array,
+    username: PropTypes.array,
+  }),
+};
+
+const mapStateToProps = state => {
+  const registrationResult = registrationRequestSelector(state);
+  return {
+    registrationResult,
+    registrationError: state.logistration.registrationError,
+  };
 };
 
 export default connect(
-  () => ({}),
+  mapStateToProps,
   {
     registerNewUser,
   },

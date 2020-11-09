@@ -14,13 +14,14 @@ const ConfirmationAlert = (props) => {
     >
       <FormattedMessage
         id="logistration.forgot.password.confirmation.support.link"
-        defaultMessage="technical support"
-        description="link text used in message: logistration.forgot.password.confirmation.support.link 'Contact technical support.'"
+        defaultMessage="contact technical support"
+        description="link text used in message: logistration.forgot.password.confirmation.support.link 'contact technical support.'"
       />
     </Hyperlink>
   );
 
   const strongEmail = (<strong>{email}</strong>);
+  const lineBreak = (<br />);
 
   return (
     <Alert
@@ -35,11 +36,12 @@ const ConfirmationAlert = (props) => {
       </h4>
       <FormattedMessage
         id="logistration.forgot.password.confirmation.message"
-        defaultMessage="You entered {strongEmail}. If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder. If you need further assistance, Contact {technicalSupportLink}."
+        defaultMessage="You entered {strongEmail}. If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. {lineBreak}If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.{lineBreak} If you need further assistance, {technicalSupportLink}."
         description="Forgot password confirmation message"
         values={{
           strongEmail,
           technicalSupportLink,
+          lineBreak,
         }}
       />
     </Alert>

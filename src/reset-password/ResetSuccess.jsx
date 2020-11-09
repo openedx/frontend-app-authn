@@ -25,13 +25,13 @@ const ResetSuccessMessage = () => {
                 <FormattedMessage
                   id="logistration.reset.password.request.success.header.message"
                   defaultMessage="Password Reset Complete."
-                  description="whatever"
+                  description="header message when reset is successful."
                 />
               </h4>
               <FormattedMessage
                 id="logistration.reset.password.request.success.header.description.message"
                 defaultMessage="Your password has been reset. {loginPasswordLink} to your account."
-                description="whatever"
+                description="message when reset password is successful."
                 values={{
                   loginPasswordLink,
                 }}
