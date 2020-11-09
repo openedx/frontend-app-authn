@@ -2,42 +2,40 @@
 
 exports[`ConfirmationAlert should match default confirmation message snapshot 1`] = `
 <div
-  className="alert d-flex align-items-start alert-success mt-n2"
+  className="fade alert alert-success show"
+  role="alert"
 >
-  <div />
-  <div>
-    <h4
-      style={
-        Object {
-          "color": "green",
-        }
+  <h4
+    style={
+      Object {
+        "color": "green",
       }
+    }
+  >
+    <span>
+      Check Your Email
+    </span>
+  </h4>
+  <span>
+    You entered 
+    <strong>
+      test@example.com
+    </strong>
+    . If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. 
+    <br />
+    If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.
+    <br />
+     If you need further assistance, 
+    <a
+      href="https://support.edx.org/hc/en-us/articles/206212088-What-if-I-did-not-receive-a-password-reset-message-"
+      onClick={[Function]}
+      target="_self"
     >
       <span>
-        Check Your Email
+        contact technical support
       </span>
-    </h4>
-    <span>
-      You entered 
-      <strong>
-        test@example.com
-      </strong>
-      . If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. 
-      <br />
-      If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.
-      <br />
-       If you need further assistance, 
-      <a
-        href="https://support.edx.org/hc/en-us/articles/206212088-What-if-I-did-not-receive-a-password-reset-message-"
-        onClick={[Function]}
-        target="_self"
-      >
-        <span>
-          contact technical support
-        </span>
-      </a>
-      .
-    </span>
-  </div>
+    </a>
+    .
+  </span>
 </div>
 `;

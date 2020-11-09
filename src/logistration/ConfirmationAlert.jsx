@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Hyperlink } from '@edx/paragon';
+import { Alert, Hyperlink } from '@edx/paragon';
 
-import Alert from './Alert';
 
 const ConfirmationAlert = (props) => {
   const { email } = props;
@@ -25,7 +24,7 @@ const ConfirmationAlert = (props) => {
 
   return (
     <Alert
-      className="alert-success mt-n2"
+      variant="success"
     >
       <h4 style={{ color: 'green' }}>
         <FormattedMessage
