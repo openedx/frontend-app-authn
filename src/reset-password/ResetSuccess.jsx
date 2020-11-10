@@ -1,17 +1,17 @@
 import React from 'react';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
+import { Alert } from '@edx/paragon';
 
 
 const ResetSuccessMessage = () => {
   const loginPasswordLink = (
-    <Hyperlink destination="/login">
+    <Alert.Link href="/login" className="font-weight-normal" style={{ color: '#0075b4' }}>
       <FormattedMessage
         id="logistration.reset.password.confirmation.support.link"
-        defaultMessage="Sign-in"
+        defaultMessage="Sign-in to your account."
         description="link text used in message: logistration.reset.password.invalid.token.description.message link 'sign-in.'"
       />
-    </Hyperlink>
+    </Alert.Link>
   );
 
   return (
@@ -19,17 +19,17 @@ const ResetSuccessMessage = () => {
       <div className="d-flex flex-column" style={{ width: '400px' }}>
         <div className="form-group">
           <div className="text-center mt-3">
-            <Alert variant="success">
-              <h4 style={{ color: 'green' }}>
+            <Alert variant="success mt-n2">
+              <Alert.Heading style={{ color: 'green' }}>
                 <FormattedMessage
                   id="logistration.reset.password.request.success.header.message"
                   defaultMessage="Password Reset Complete."
                   description="header message when reset is successful."
                 />
-              </h4>
+              </Alert.Heading>
               <FormattedMessage
                 id="logistration.reset.password.request.success.header.description.message"
-                defaultMessage="Your password has been reset. {loginPasswordLink} to your account."
+                defaultMessage="Your password has been reset. {loginPasswordLink}"
                 description="message when reset password is successful."
                 values={{
                   loginPasswordLink,
