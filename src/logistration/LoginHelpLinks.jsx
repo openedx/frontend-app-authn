@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -49,11 +48,11 @@ const LoginHelpLinks = (props) => {
 
   return (
     <>
-      <Button className="mt-0 field-link" onClick={toggleLoginHelp}>
+      <button type="button" className="mt-1 field-link" onClick={toggleLoginHelp}>
         <FontAwesomeIcon className="mr-1" icon={showLoginHelp ? faCaretDown : faCaretRight} />
         {getHelpButtonMessage()}
 
-      </Button>
+      </button>
       <SwitchContent
         expression={showLoginHelp ? 'showHelp' : 'default'}
         cases={{
