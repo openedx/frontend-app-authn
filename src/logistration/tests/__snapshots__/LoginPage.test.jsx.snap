@@ -111,8 +111,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </div>
         </div>
         <button
-          className="mt-0 field-link btn btn-primary"
-          disabled={false}
+          className="mt-1 field-link"
           onClick={[Function]}
           type="button"
         >
@@ -356,8 +355,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </div>
         </div>
         <button
-          className="mt-0 field-link btn btn-primary"
-          disabled={false}
+          className="mt-1 field-link"
           onClick={[Function]}
           type="button"
         >
@@ -624,8 +622,7 @@ exports[`LoginPage should show error message on 400 1`] = `
           </div>
         </div>
         <button
-          className="mt-0 field-link btn btn-primary"
-          disabled={false}
+          className="mt-1 field-link"
           onClick={[Function]}
           type="button"
         >
@@ -900,8 +897,7 @@ exports[`LoginPage should show error message on 400 on receiving link 1`] = `
           </div>
         </div>
         <button
-          className="mt-0 field-link btn btn-primary"
-          disabled={false}
+          className="mt-1 field-link"
           onClick={[Function]}
           type="button"
         >
