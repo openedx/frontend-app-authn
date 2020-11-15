@@ -9,7 +9,6 @@ import ReactDOM from 'react-dom';
 import { Route, Switch } from 'react-router-dom';
 
 import Header, { messages as headerMessages } from '@edx/frontend-component-header';
-import Footer, { messages as footerMessages } from '@edx/frontend-component-footer';
 
 import configureStore from './data/configureStore';
 import { LoginPage, RegistrationPage, NotFoundPage } from './logistration';
@@ -24,20 +23,19 @@ import './assets/favicon.ico';
 
 registerIcons();
 
-const HeaderFooterLayout = ({ children }) => ( // eslint-disable-line react/prop-types
+const HeaderLayout = ({ children }) => ( // eslint-disable-line react/prop-types
   <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
     <Header />
     <main className="flex-grow-1">
       {children}
     </main>
-    <Footer />
   </div>
 );
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={configureStore()}>
-      <HeaderFooterLayout>
+      <HeaderLayout>
         <Switch>
           <Route path={LOGIN_PAGE} component={LoginPage} />
           <Route path={REGISTER_PAGE} component={RegistrationPage} />
@@ -46,7 +44,7 @@ subscribe(APP_READY, () => {
           <Route path="/notfound" component={NotFoundPage} />
           <Route path="*" component={NotFoundPage} />
         </Switch>
-      </HeaderFooterLayout>
+      </HeaderLayout>
     </AppProvider>,
     document.getElementById('root'),
   );
@@ -60,6 +58,5 @@ initialize({
   messages: [
     appMessages,
     headerMessages,
-    footerMessages,
   ],
 });
