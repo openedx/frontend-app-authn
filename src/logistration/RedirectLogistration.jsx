@@ -1,22 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { getConfig } from '@edx/frontend-platform';
+
 function RedirectLogistration(props) {
-  const { success, redirectUrl } = props;
+  const { finishAuthUrl, success, redirectUrl } = props;
+
   if (success) {
-    window.location.href = redirectUrl;
+    // If we're in a third party auth pipeline, we must complete the pipeline
+    // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
+    if (finishAuthUrl) {
+      window.location.href = getConfig().LMS_BASE_URL + finishAuthUrl;
+    } else {
+      window.location.href = redirectUrl;
+    }
   }
   return <></>;
 }
 
 RedirectLogistration.defaultProps = {
-  redirectUrl: '',
+  finishAuthUrl: null,
   success: false,
+  redirectUrl: '',
 };
 
 RedirectLogistration.propTypes = {
-  redirectUrl: PropTypes.string,
+  finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
+  redirectUrl: PropTypes.string,
 };
 
 

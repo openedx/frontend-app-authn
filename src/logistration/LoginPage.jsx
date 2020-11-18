@@ -1,19 +1,19 @@
 import React from 'react';
 
 import { Button, Input, ValidationFormGroup } from '@edx/paragon';
-import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
-import { DEFAULT_REDIRECT_URL } from './data/constants';
+import { DEFAULT_REDIRECT_URL, REGISTER_PAGE } from '../data/constants';
 import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import LoginHelpLinks from './LoginHelpLinks';
-import RedirectLogistration from './RedirectLogistration';
 import LoginFailureMessage from './LoginFailure';
+import RedirectLogistration from './RedirectLogistration';
+import SocialAuthProviders from './SocialAuthProviders';
+import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
 
 class LoginPage extends React.Component {
@@ -104,19 +104,29 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    const { currentProvider, finishAuthUrl, providers } = this.props.thirdPartyAuthContext;
+
     return (
       <>
         <RedirectLogistration
           success={this.props.loginResult.success}
           redirectUrl={this.props.loginResult.redirectUrl}
+          finishAuthUrl={finishAuthUrl}
         />
         <div className="d-flex justify-content-center logistration-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
+            {currentProvider
+            && (
+              <ThirdPartyAuthAlert
+                currentProvider={currentProvider}
+                platformName={this.props.thirdPartyAuthContext.platformName}
+              />
+            )}
             {this.props.loginError ? <LoginFailureMessage errors={this.props.loginError} /> : null}
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
             <div className="d-flex flex-row">
               <p>
-                First time here?<a className="ml-1" href="/register">Create an Account.</a>
+                First time here?<a className="ml-1" href={REGISTER_PAGE}>Create an Account.</a>
               </p>
             </div>
             <form className="m-0">
@@ -169,14 +179,16 @@ class LoginPage extends React.Component {
                 Sign in
               </Button>
             </form>
-            <div className="section-heading-line mb-4">
-              <h4>or sign in with</h4>
-            </div>
-            <div className="row text-center d-block mb-4">
-              <button type="button" className="btn-social facebook"><FontAwesomeIcon className="mr-2" icon={faFacebookF} />Facebook</button>
-              <button type="button" className="btn-social google"><FontAwesomeIcon className="mr-2" icon={faGoogle} />Google</button>
-              <button type="button" className="btn-social microsoft"><FontAwesomeIcon className="mr-2" icon={faMicrosoft} />Microsoft</button>
-            </div>
+            {providers.length && !currentProvider ? (
+              <>
+                <div className="section-heading-line mb-4">
+                  <h4>or sign in with</h4>
+                </div>
+                <div className="row tpa-container">
+                  <SocialAuthProviders socialAuthProviders={providers} />
+                </div>
+              </>
+            ) : null}
           </div>
         </div>
       </>
@@ -187,8 +199,12 @@ class LoginPage extends React.Component {
 LoginPage.defaultProps = {
   loginResult: null,
   forgotPassword: null,
-  thirdPartyAuthContext: null,
   loginError: null,
+  thirdPartyAuthContext: {
+    currentProvider: null,
+    finishAuthUrl: null,
+    providers: [],
+  },
 };
 
 LoginPage.propTypes = {
@@ -204,16 +220,10 @@ LoginPage.propTypes = {
   }),
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
+    platformName: PropTypes.string,
     providers: PropTypes.array,
     secondaryProviders: PropTypes.array,
     finishAuthUrl: PropTypes.string,
-    pipelineUserDetails: PropTypes.shape({
-      email: PropTypes.string,
-      fullname: PropTypes.string,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      username: PropTypes.string,
-    }),
   }),
   loginError: PropTypes.string,
 };

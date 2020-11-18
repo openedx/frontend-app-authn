@@ -1,5 +1,5 @@
 import { camelCaseObject, getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient, getHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
 export async function postNewUser(registrationInformation) {
@@ -50,9 +50,10 @@ export async function login(creds) {
 export async function getThirdPartyAuthContext(urlParams) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    isPublic: true,
   };
 
-  const { data } = await getHttpClient()
+  const { data } = await getAuthenticatedHttpClient()
     .get(
       `${getConfig().LMS_BASE_URL}/api/third_party_auth_context`,
       { params: urlParams },

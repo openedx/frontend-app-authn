@@ -6,6 +6,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import SwitchContent from './SwitchContent';
 import messages from './LoginHelpLinks.messages';
+import { REGISTER_PAGE, RESET_PAGE } from '../data/constants';
 
 const LoginHelpLinks = (props) => {
   const { intl, page } = props;
@@ -17,13 +18,13 @@ const LoginHelpLinks = (props) => {
   };
 
   const forgotPasswordLink = () => (
-    <a className="field-link" href="/reset">
+    <a className="field-link" href={RESET_PAGE}>
       {intl.formatMessage(messages['logistration.forgot.password.link'])}
     </a>
   );
 
   const signUpLink = () => (
-    <a className="field-link" href="/register">
+    <a className="field-link" href={REGISTER_PAGE}>
       {intl.formatMessage(messages['logistration.register.link'])}
     </a>
   );
