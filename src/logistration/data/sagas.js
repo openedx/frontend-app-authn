@@ -12,6 +12,10 @@ import {
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  REGISTER_FORM_VALIDATIONS,
+  fetchRealtimeValidationsBegin,
+  fetchRealtimeValidationsSuccess,
+  fetchRealtimeValidationsFailure,
   THIRD_PARTY_AUTH_CONTEXT,
   getThirdPartyAuthContextBegin,
   getThirdPartyAuthContextSuccess,
@@ -24,6 +28,7 @@ import {
 
 // Services
 import {
+  getFieldsValidations,
   getRegistrationForm,
   getThirdPartyAuthContext,
   postNewUser,
@@ -94,9 +99,24 @@ export function* fetchRegistrationForm() {
   }
 }
 
+export function* fetchRealtimeValidations(action) {
+  try {
+    yield put(fetchRealtimeValidationsBegin());
+    const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);
+
+    yield put(fetchRealtimeValidationsSuccess(
+      fieldValidations,
+    ));
+  } catch (e) {
+    yield put(fetchRealtimeValidationsFailure());
+    throw e;
+  }
+}
+
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
   yield takeEvery(LOGIN_REQUEST.BASE, handleLoginRequest);
   yield takeEvery(THIRD_PARTY_AUTH_CONTEXT.BASE, fetchThirdPartyAuthContext);
   yield takeEvery(REGISTER_FORM.BASE, fetchRegistrationForm);
+  yield takeEvery(REGISTER_FORM_VALIDATIONS.BASE, fetchRealtimeValidations);
 }

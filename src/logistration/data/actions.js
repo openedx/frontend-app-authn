@@ -4,6 +4,7 @@ export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_N
 export const LOGIN_REQUEST = new AsyncActionType('LOGIN', 'REQUEST');
 export const THIRD_PARTY_AUTH_CONTEXT = new AsyncActionType('THIRD_PARTY_AUTH', 'GET_THIRD_PARTY_AUTH_CONTEXT');
 export const REGISTER_FORM = new AsyncActionType('REGISTRATION', 'GET_FORM_FIELDS');
+export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 
 // Register
 
@@ -82,4 +83,23 @@ export const fetchRegistrationFormSuccess = (formData) => ({
 
 export const fetchRegistrationFormFailure = () => ({
   type: REGISTER_FORM.FAILURE,
+});
+
+// Realtime Field validations
+export const fetchRealtimeValidations = (formPayload) => ({
+  type: REGISTER_FORM_VALIDATIONS.BASE,
+  payload: { formPayload },
+});
+
+export const fetchRealtimeValidationsBegin = () => ({
+  type: REGISTER_FORM_VALIDATIONS.BEGIN,
+});
+
+export const fetchRealtimeValidationsSuccess = (validations) => ({
+  type: REGISTER_FORM_VALIDATIONS.SUCCESS,
+  payload: { validations },
+});
+
+export const fetchRealtimeValidationsFailure = () => ({
+  type: REGISTER_FORM_VALIDATIONS.FAILURE,
 });

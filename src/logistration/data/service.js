@@ -85,3 +85,24 @@ export async function getRegistrationForm() {
     registrationForm: data,
   };
 }
+
+export async function getFieldsValidations(formPayload) {
+  const requestConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    isPublic: true,
+  };
+
+  const { data } = await getAuthenticatedHttpClient()
+    .post(
+      `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
+      querystring.stringify(formPayload),
+      requestConfig,
+    )
+    .catch((e) => {
+      throw (e);
+    });
+
+  return {
+    fieldValidations: data,
+  };
+}

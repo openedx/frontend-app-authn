@@ -73,18 +73,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -100,18 +95,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -127,18 +117,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -154,18 +139,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -270,18 +250,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -297,18 +272,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -324,18 +294,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -351,18 +316,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -467,18 +427,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -494,18 +449,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -521,18 +471,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -548,18 +493,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -711,18 +651,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -738,18 +673,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -765,18 +695,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -792,18 +717,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
