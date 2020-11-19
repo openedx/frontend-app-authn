@@ -65,3 +65,23 @@ export async function getThirdPartyAuthContext(urlParams) {
     thirdPartyAuthContext: camelCaseObject(data),
   };
 }
+
+export async function getRegistrationForm() {
+  const requestConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    isPublic: true,
+  };
+
+  const { data } = await getAuthenticatedHttpClient()
+    .get(
+      `${getConfig().LMS_BASE_URL}/user_api/v1/account/registration/`,
+      requestConfig,
+    )
+    .catch((e) => {
+      throw (e);
+    });
+
+  return {
+    registrationForm: data,
+  };
+}

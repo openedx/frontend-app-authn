@@ -3,6 +3,7 @@ import { AsyncActionType } from '../../data/utils';
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const LOGIN_REQUEST = new AsyncActionType('LOGIN', 'REQUEST');
 export const THIRD_PARTY_AUTH_CONTEXT = new AsyncActionType('THIRD_PARTY_AUTH', 'GET_THIRD_PARTY_AUTH_CONTEXT');
+export const REGISTER_FORM = new AsyncActionType('REGISTRATION', 'GET_FORM_FIELDS');
 
 // Register
 
@@ -63,4 +64,22 @@ export const getThirdPartyAuthContextSuccess = (thirdPartyAuthContext) => ({
 
 export const getThirdPartyAuthContextFailure = () => ({
   type: THIRD_PARTY_AUTH_CONTEXT.FAILURE,
+});
+
+// Registration Form Fields
+export const fetchRegistrationForm = () => ({
+  type: REGISTER_FORM.BASE,
+});
+
+export const fetchRegistrationFormBegin = () => ({
+  type: REGISTER_FORM.BEGIN,
+});
+
+export const fetchRegistrationFormSuccess = (formData) => ({
+  type: REGISTER_FORM.SUCCESS,
+  payload: { formData },
+});
+
+export const fetchRegistrationFormFailure = () => ({
+  type: REGISTER_FORM.FAILURE,
 });

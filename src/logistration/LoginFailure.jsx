@@ -4,30 +4,13 @@ import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/
 import { Alert, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { processLink } from '../data/utils/dataUtils';
 import { NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
 import messages from './messages';
-
-const processLink = (link) => {
-  let matches;
-  link.replace(/(.*)<a href=["']([^"']*).*>([^<]+)<\/a>(.*)/g, function () { // eslint-disable-line func-names
-    matches = Array.prototype.slice.call(arguments, 1, 5); // eslint-disable-line  prefer-rest-params
-  });
-  return matches;
-};
 
 const LoginFailureMessage = (props) => {
   const errorMessage = props.errors;
   const { errorCode, intl } = props;
-
-  const Link = (args) => (
-    <>
-      {args.beforeLink}
-      <Hyperlink destination={args.link}>
-        {args.linkText}
-      </Hyperlink>
-      {args.afterLink}
-    </>
-  );
 
   let errorList;
 
@@ -58,12 +41,9 @@ const LoginFailureMessage = (props) => {
           const [beforeLink, link, linkText, afterLink] = matches;
           return (
             <li key={error}>
-              <Link // eslint-disable-line  jsx-a11y/anchor-is-valid
-                beforeLink={beforeLink}
-                link={link}
-                linkText={linkText}
-                afterLink={afterLink}
-              />
+              {beforeLink}
+              <Hyperlink destination={link}>{linkText}</Hyperlink>
+              {afterLink}
             </li>
           );
         }
