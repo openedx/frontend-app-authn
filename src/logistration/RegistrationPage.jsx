@@ -4,21 +4,17 @@ import PropTypes from 'prop-types';
 import {
   Button, Input, ValidationFormGroup,
 } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebookF, faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 import {
-  getLocale,
-  getCountryList,
-  injectIntl,
-  intlShape,
+  getLocale, getCountryList, injectIntl, intlShape,
 } from '@edx/frontend-platform/i18n';
 
 import { getThirdPartyAuthContext, registerNewUser } from './data/actions';
 import { registrationRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
-import { DEFAULT_REDIRECT_URL } from '../data/constants';
 import RedirectLogistration from './RedirectLogistration';
 import RegistrationFailure from './RegistrationFailure';
+import { DEFAULT_REDIRECT_URL, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import SocialAuthProviders from './SocialAuthProviders';
+import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
 import messages from './messages';
 
@@ -28,13 +24,13 @@ class RegistrationPage extends React.Component {
 
     this.state = {
       email: '',
-      name: '',
+      fullname: '',
       username: '',
       password: '',
       country: '',
       errors: {
         email: '',
-        name: '',
+        fullname: '',
         username: '',
         password: '',
         country: '',
@@ -68,7 +64,7 @@ class RegistrationPage extends React.Component {
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
-      name: this.state.name,
+      name: this.state.fullname,
       honor_code: true,
       country: this.state.country,
     };
@@ -112,9 +108,9 @@ class RegistrationPage extends React.Component {
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
         errors.email = emailValid ? '' : null;
         break;
-      case 'name':
+      case 'fullname':
         nameValid = value.length >= 1;
-        errors.name = nameValid ? '' : null;
+        errors.fullname = nameValid ? '' : null;
         break;
       case 'username':
         usernameValid = value.length >= 2 && value.length <= 30;
@@ -163,41 +159,60 @@ class RegistrationPage extends React.Component {
   }
 
   render() {
+    const { intl } = this.props;
+    const {
+      currentProvider, finishAuthUrl, providers, secondaryProviders,
+    } = this.props.thirdPartyAuthContext;
+
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
           onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-          headingTitle={this.props.intl.formatMessage(messages['logistration.register.institution.login.page.title'])}
-          buttonTitle={this.props.intl.formatMessage(messages['logistration.register.institution.login.page.back.button'])}
+          headingTitle={intl.formatMessage(messages['logistration.register.institution.login.page.title'])}
+          buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.page.back.button'])}
         />
       );
     }
+
     return (
       <>
         <RedirectLogistration
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
+          finishAuthUrl={finishAuthUrl}
         />
-        <div className="logistration-container d-flex flex-column align-items-center mx-auto" style={{ width: '30rem' }}>
+        <div className="register-container mx-auto">
           {this.props.registrationError ? <RegistrationFailure errors={this.props.registrationError} /> : null}
-          <div className="mb-4">
-            <FontAwesomeIcon className="d-block mx-auto fa-2x" icon={faGraduationCap} />
-            <h4 className="d-block mx-auto">Start learning now!</h4>
-          </div>
-          <div className="d-block mb-4">
-            <span className="d-block mx-auto mb-4 section-heading-line">Create an account using</span>
-            <button type="button" className="btn-social facebook"><FontAwesomeIcon className="mr-2" icon={faFacebookF} />Facebook</button>
-            <button type="button" className="btn-social google"><FontAwesomeIcon className="mr-2" icon={faGoogle} />Google</button>
-            <button type="button" className="btn-social microsoft mb-3"><FontAwesomeIcon className="mr-2" icon={faMicrosoft} />Microsoft</button>
-            <RenderInstitutionButton
-              onSubmitHandler={this.handleInstitutionLogin}
-              secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-              buttonTitle={this.props.intl.formatMessage(messages['logistration.register.institution.login.button'])}
+          {currentProvider && (
+            <ThirdPartyAuthAlert
+              currentProvider={currentProvider}
+              platformName={this.props.thirdPartyAuthContext.platformName}
+              referrer="register"
             />
-            <span className="d-block mx-auto text-center mt-4 section-heading-line">or create a new one here</span>
+          )}
+          <div className="text-left">
+            <span>{intl.formatMessage(messages['logistration.already.have.an.edx.account'])}</span>
+            <a href={LOGIN_PAGE}>{intl.formatMessage(messages['logistration.sign.in.hyperlink'])}</a>
           </div>
-
+          {(providers.length || secondaryProviders.length) && !currentProvider ? (
+            <div className="d-block mb-4 mt-4">
+              <span className="d-block mx-auto mb-4 section-heading-line">
+                {intl.formatMessage(messages['logistration.create.an.account.using'])}
+              </span>
+              <div className="row tpa-container">
+                <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+              </div>
+              <RenderInstitutionButton
+                onSubmitHandler={this.handleInstitutionLogin}
+                secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+                buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
+              />
+              <span className="d-block mx-auto text-center mt-4 section-heading-line">
+                {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
+              </span>
+            </div>
+          ) : null}
           <form className="mb-4 mx-auto form-group">
             <ValidationFormGroup
               for="email"
@@ -216,17 +231,17 @@ class RegistrationPage extends React.Component {
               />
             </ValidationFormGroup>
             <ValidationFormGroup
-              for="name"
-              invalid={this.state.errors.name !== ''}
+              for="fullname"
+              invalid={this.state.errors.fullname !== ''}
               invalidMessage="Enter your full name."
             >
               <label htmlFor="registrationName" className="h6 pt-3">Full Name (required)</label>
               <Input
-                name="name"
+                name="fullname"
                 id="registrationName"
                 type="text"
                 placeholder="Name"
-                value={this.state.name}
+                value={this.state.fullname}
                 onChange={e => this.handleOnChange(e)}
                 required
               />
@@ -283,34 +298,33 @@ class RegistrationPage extends React.Component {
             <Button
               className="btn-primary mt-4 submit"
               onClick={this.handleSubmit}
-              inputRef={(input) => {
-                this.button = input;
-              }}
             >
               Create Account
             </Button>
           </form>
-          <div className="text-center mb-2 pt-2">
-            <span>Already have an edX account?</span>
-            <a href="/login"> Sign in.</a>
-          </div>
         </div>
       </>
     );
   }
 }
+
 RegistrationPage.defaultProps = {
   registrationResult: null,
   registerNewUser: null,
   registrationError: null,
-  thirdPartyAuthContext: {},
+  thirdPartyAuthContext: {
+    currentProvider: null,
+    finishAuthUrl: null,
+    providers: [],
+    secondaryProviders: [],
+  },
 };
 
 
 RegistrationPage.propTypes = {
   intl: intlShape.isRequired,
-  registerNewUser: PropTypes.func,
   getThirdPartyAuthContext: PropTypes.func.isRequired,
+  registerNewUser: PropTypes.func,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -321,6 +335,7 @@ RegistrationPage.propTypes = {
   }),
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
+    platformName: PropTypes.string,
     providers: PropTypes.array,
     secondaryProviders: PropTypes.array,
     finishAuthUrl: PropTypes.string,
@@ -339,8 +354,8 @@ const mapStateToProps = state => {
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   return {
     registrationResult,
-    thirdPartyAuthContext,
     registrationError: state.logistration.registrationError,
+    thirdPartyAuthContext,
   };
 };
 

@@ -130,7 +130,7 @@ class LoginPage extends React.Component {
           redirectUrl={this.props.loginResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
         />
-        <div className="d-flex justify-content-center logistration-container">
+        <div className="d-flex justify-content-center login-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
             {currentProvider
             && (

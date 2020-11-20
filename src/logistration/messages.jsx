@@ -22,6 +22,26 @@ const messages = defineMessages({
     defaultMessage: 'Forgot password?',
     description: 'Forgot password link',
   },
+  'logistration.already.have.an.edx.account': {
+    id: 'logistration.already.have.an.edx.account',
+    defaultMessage: 'Already have an edX account?',
+    description: 'A message on registration page asking the user if he already has an edX account',
+  },
+  'logistration.sign.in.hyperlink': {
+    id: 'logistration.sign.in.hyperlink',
+    defaultMessage: ' Sign in.',
+    description: 'Text for the hyperlink that takes user to login page',
+  },
+  'logistration.create.an.account.using': {
+    id: 'logistration.create.an.account.using',
+    defaultMessage: 'Create an account using',
+    description: 'A message that appears before social auth buttons',
+  },
+  'logistration.create.a.new.one.here': {
+    id: 'logistration.create.a.new.one.here',
+    defaultMessage: 'or create a new one here',
+    description: 'Text that appears after social auth buttons and before the registration form',
+  },
   'logistration.other.sign.in.issues': {
     id: 'logistration.other.sign.in.issues',
     defaultMessage: 'Other sign-in issues',

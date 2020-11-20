@@ -2,6 +2,7 @@
 // #COLORS
 // ----------------------------
 $link-blue: #23419f;
+$font-blue: #126f9a;
 $white: #FFFFFF;
 
 // social platforms
@@ -14,9 +15,19 @@ $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
 
-.logistration-container {
+.font-color {
+  color: $font-blue;
+}
+
+.login-container {
   margin: 4rem;
   line-height: 1.5;
+}
+
+.register-container {
+  @extend .login-container;
+
+  width: 30rem;
 }
 
 .logistration-header {
@@ -45,13 +56,13 @@ $apple-focus-black: $apple-black;
   font-size: 14px;
 
   background-color: $white;
-  border: 1px solid #126f9a;
+  border: 1px solid $font-blue;
   width: 130px;
   height: 36px;
-  color: #126f9a;
+  color: $font-blue;
 
   .icon-image {
-    background-color: #126f9a;
+    background-color: $font-blue;
     max-height: 1.4em;
     max-width: 1.4em;
   }
@@ -64,7 +75,7 @@ $apple-focus-black: $apple-black;
 }
 
 .font-container {
-  background-color: #126f9a;
+  background-color: $font-blue;
   color: $white;
   font-size: 11px;
 
