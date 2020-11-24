@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, Input, ValidationFormGroup } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
@@ -14,7 +15,8 @@ import LoginFailureMessage from './LoginFailure';
 import RedirectLogistration from './RedirectLogistration';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
-
+import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
+import messages from './messages';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -30,6 +32,7 @@ class LoginPage extends React.Component {
       emailValid: false,
       passwordValid: false,
       formValid: false,
+      institutionLogin: false,
     };
   }
 
@@ -39,6 +42,10 @@ class LoginPage extends React.Component {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
     this.props.getThirdPartyAuthContext(payload);
+  }
+
+  handleInstitutionLogin = () => {
+    this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
   handleSubmit = (e) => {
@@ -104,8 +111,18 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    const { intl } = this.props;
     const { currentProvider, finishAuthUrl, providers } = this.props.thirdPartyAuthContext;
-
+    if (this.state.institutionLogin) {
+      return (
+        <InstitutionLogistration
+          onSubmitHandler={this.handleInstitutionLogin}
+          secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+          headingTitle={intl.formatMessage(messages['logistration.login.institution.login.page.title'])}
+          buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.page.back.button'])}
+        />
+      );
+    }
     return (
       <>
         <RedirectLogistration
@@ -129,10 +146,17 @@ class LoginPage extends React.Component {
                 First time here?<a className="ml-1" href={REGISTER_PAGE}>Create an Account.</a>
               </p>
             </div>
+            <h3 className="text-left mt-3">{intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}</h3>
+            <RenderInstitutionButton
+              onSubmitHandler={this.handleInstitutionLogin}
+              secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+              buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
+            />
+            <div className="section-heading-line mb-4">
+              <h4>{intl.formatMessage(messages['logistration.login.institution.login.sign.in.with'])}</h4>
+            </div>
             <form className="m-0">
               <div className="form-group">
-                <h3 className="text-center mt-3">Sign In</h3>
-
                 <div className="d-flex flex-column align-items-start">
                   <ValidationFormGroup
                     for="email"
@@ -208,6 +232,7 @@ LoginPage.defaultProps = {
 };
 
 LoginPage.propTypes = {
+  intl: intlShape.isRequired,
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
@@ -246,4 +271,4 @@ export default connect(
     getThirdPartyAuthContext,
     loginRequest,
   },
-)(LoginPage);
+)(injectIntl(LoginPage));

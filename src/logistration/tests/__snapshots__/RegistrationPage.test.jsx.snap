@@ -90,7 +90,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
       Google
     </button>
     <button
-      className="btn-social microsoft"
+      className="btn-social microsoft mb-3"
       type="button"
     >
       <svg
@@ -1678,7 +1678,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
       Google
     </button>
     <button
-      className="btn-social microsoft"
+      className="btn-social microsoft mb-3"
       type="button"
     >
       <svg

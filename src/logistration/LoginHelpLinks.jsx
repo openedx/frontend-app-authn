@@ -5,8 +5,8 @@ import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import SwitchContent from './SwitchContent';
-import messages from './LoginHelpLinks.messages';
 import { REGISTER_PAGE, RESET_PAGE } from '../data/constants';
+import messages from './messages';
 
 const LoginHelpLinks = (props) => {
   const { intl, page } = props;
