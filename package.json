@@ -34,7 +34,6 @@
     "url": "https://github.com/edx/frontend-app-logistration/issues"
   },
   "dependencies": {
-    "@edx/frontend-component-footer": "10.0.11",
     "@edx/frontend-component-header": "2.0.5",
     "@edx/frontend-platform": "1.3.7",
     "@edx/paragon": "^12.0.5",
