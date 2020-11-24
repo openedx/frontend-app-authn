@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   'logistration.forgot.password.link': {
     id: 'logistration.forgot.password.link',
-    defaultMessage: 'Forgot password?',
+    defaultMessage: 'Forgot my password',
     description: 'Forgot password link',
   },
   'logistration.already.have.an.edx.account': {
