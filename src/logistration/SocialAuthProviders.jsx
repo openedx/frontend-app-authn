@@ -5,11 +5,11 @@ import { getConfig } from '@edx/frontend-platform';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 
 
 function SocialAuthProviders(props) {
-  const { socialAuthProviders } = props;
+  const { referrer, socialAuthProviders } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -24,7 +24,7 @@ function SocialAuthProviders(props) {
       key={provider.id}
       type="button"
       className={`btn-social btn-${provider.id}`}
-      data-provider-url={`${provider.loginUrl}`}
+      data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
       onClick={handleSubmit}
     >
       {provider.iconImage ? (
@@ -53,10 +53,12 @@ function SocialAuthProviders(props) {
 }
 
 SocialAuthProviders.defaultProps = {
+  referrer: LOGIN_PAGE,
   socialAuthProviders: [],
 };
 
 SocialAuthProviders.propTypes = {
+  referrer: PropTypes.string,
   socialAuthProviders: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,

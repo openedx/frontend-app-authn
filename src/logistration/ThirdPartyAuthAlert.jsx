@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
+import { LOGIN_PAGE } from '../data/constants';
 
 const ThirdPartyAuthAlert = (props) => {
   const { currentProvider, referrer, platformName } = props;
   let message;
 
-  if (referrer === 'login') {
+  if (referrer === LOGIN_PAGE) {
     message = (
       <FormattedMessage
         id="login.third.party.auth.account.not.linked.message"
@@ -32,7 +33,7 @@ const ThirdPartyAuthAlert = (props) => {
 };
 
 ThirdPartyAuthAlert.defaultProps = {
-  referrer: 'login',
+  referrer: LOGIN_PAGE,
 };
 
 ThirdPartyAuthAlert.propTypes = {

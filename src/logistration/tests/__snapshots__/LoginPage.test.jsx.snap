@@ -2,7 +2,7 @@
 
 exports[`LoginPage should match TPA provider snapshot 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -207,7 +207,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
 
 exports[`LoginPage should match default section snapshot 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -378,7 +378,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
 
 exports[`LoginPage should match forget password alert message snapshot 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -549,7 +549,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
 
 exports[`LoginPage should show error message on 400 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -743,7 +743,7 @@ exports[`LoginPage should show error message on 400 1`] = `
 
 exports[`LoginPage should show error message on 400 on receiving link 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
