@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  Button, Input, ValidationFormGroup,
-} from '@edx/paragon';
+import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
 import {
   getLocale, getCountryList, injectIntl, intlShape,
 } from '@edx/frontend-platform/i18n';
@@ -12,7 +10,9 @@ import { getThirdPartyAuthContext, registerNewUser } from './data/actions';
 import { registrationRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import RedirectLogistration from './RedirectLogistration';
 import RegistrationFailure from './RegistrationFailure';
-import { DEFAULT_REDIRECT_URL, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import {
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE,
+} from '../data/constants';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
@@ -159,7 +159,7 @@ class RegistrationPage extends React.Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, submitState } = this.props;
     const {
       currentProvider, finishAuthUrl, providers, secondaryProviders,
     } = this.props.thirdPartyAuthContext;
@@ -295,12 +295,15 @@ class RegistrationPage extends React.Component {
               />
             </ValidationFormGroup>
             <span>By creating an account, you agree to the <a href="https://www.edx.org/edx-terms-service">Terms of Service and Honor Code</a> and you acknowledge that edX and each Member process your personal data in accordance with the <a href="https://www.edx.org/edx-privacy-policy">Privacy Policy</a>.</span>
-            <Button
-              className="btn-primary mt-4 submit"
+            <StatefulButton
+              type="submit"
+              className="btn-primary submit mt-4"
+              state={submitState}
+              labels={{
+                default: intl.formatMessage(messages['logistration.create.account.button']),
+              }}
               onClick={this.handleSubmit}
-            >
-              Create Account
-            </Button>
+            />
           </form>
         </div>
       </>
@@ -312,6 +315,7 @@ RegistrationPage.defaultProps = {
   registrationResult: null,
   registerNewUser: null,
   registrationError: null,
+  submitState: DEFAULT_STATE,
   thirdPartyAuthContext: {
     currentProvider: null,
     finishAuthUrl: null,
@@ -333,6 +337,7 @@ RegistrationPage.propTypes = {
     email: PropTypes.array,
     username: PropTypes.array,
   }),
+  submitState: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -353,8 +358,9 @@ const mapStateToProps = state => {
   const registrationResult = registrationRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   return {
-    registrationResult,
     registrationError: state.logistration.registrationError,
+    submitState: state.logistration.submitState,
+    registrationResult,
     thirdPartyAuthContext,
   };
 };

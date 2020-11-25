@@ -49,6 +49,16 @@ describe('ForgotPasswordPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('should match pending section snapshot', () => {
+    props = {
+      ...props,
+      status: 'pending',
+    };
+    const tree = renderer.create(reduxWrapper(<IntlForgotPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should match success section snapshot', () => {
     props = {
       ...props,

@@ -4,11 +4,13 @@ import {
   THIRD_PARTY_AUTH_CONTEXT,
 } from './actions';
 
+import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
+
 export const defaultState = {
-  registrationResult: {},
+  loginError: null,
   loginResult: {},
   registrationError: null,
-  loginError: null,
+  registrationResult: {},
 };
 
 const reducer = (state = defaultState, action) => {
@@ -16,21 +18,23 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_NEW_USER.BEGIN:
       return {
         ...state,
+        submitState: PENDING_STATE,
       };
     case REGISTER_NEW_USER.SUCCESS:
       return {
         ...state,
-
         registrationResult: action.payload,
       };
     case REGISTER_NEW_USER.FAILURE:
       return {
         ...state,
         registrationError: action.payload.error,
+        submitState: DEFAULT_STATE,
       };
     case LOGIN_REQUEST.BEGIN:
       return {
         ...state,
+        submitState: PENDING_STATE,
       };
     case LOGIN_REQUEST.SUCCESS:
       return {
@@ -41,6 +45,7 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         loginError: action.payload.loginError,
+        submitState: DEFAULT_STATE,
       };
     case THIRD_PARTY_AUTH_CONTEXT.BEGIN:
       return {

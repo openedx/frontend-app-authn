@@ -1,22 +1,23 @@
 import React from 'react';
 
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { forgotPasswordResultSelector } from '../forgot-password';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
-import { DEFAULT_REDIRECT_URL, REGISTER_PAGE } from '../data/constants';
 import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
+import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
+import messages from './messages';
 import RedirectLogistration from './RedirectLogistration';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
-import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
-import messages from './messages';
+
+import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, REGISTER_PAGE } from '../data/constants';
+import { forgotPasswordResultSelector } from '../forgot-password';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -111,13 +112,13 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    const { intl } = this.props;
-    const { currentProvider, finishAuthUrl, providers } = this.props.thirdPartyAuthContext;
+    const { intl, submitState, thirdPartyAuthContext } = this.props;
+
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
           onSubmitHandler={this.handleInstitutionLogin}
-          secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+          secondaryProviders={thirdPartyAuthContext.secondaryProviders}
           headingTitle={intl.formatMessage(messages['logistration.login.institution.login.page.title'])}
           buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.page.back.button'])}
         />
@@ -128,15 +129,15 @@ class LoginPage extends React.Component {
         <RedirectLogistration
           success={this.props.loginResult.success}
           redirectUrl={this.props.loginResult.redirectUrl}
-          finishAuthUrl={finishAuthUrl}
+          finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
         />
         <div className="d-flex justify-content-center login-container">
           <div className="d-flex flex-column" style={{ width: '400px' }}>
-            {currentProvider
+            {thirdPartyAuthContext.currentProvider
             && (
               <ThirdPartyAuthAlert
-                currentProvider={currentProvider}
-                platformName={this.props.thirdPartyAuthContext.platformName}
+                currentProvider={thirdPartyAuthContext.currentProvider}
+                platformName={thirdPartyAuthContext.platformName}
               />
             )}
             {this.props.loginError ? <LoginFailureMessage errors={this.props.loginError} /> : null}
@@ -146,15 +147,21 @@ class LoginPage extends React.Component {
                 First time here?<a className="ml-1" href={REGISTER_PAGE}>Create an Account.</a>
               </p>
             </div>
-            <h3 className="text-left mt-3">{intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}</h3>
-            <RenderInstitutionButton
-              onSubmitHandler={this.handleInstitutionLogin}
-              secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-              buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
-            />
-            <div className="section-heading-line mb-4">
-              <h4>{intl.formatMessage(messages['logistration.login.institution.login.sign.in.with'])}</h4>
-            </div>
+            <h2 className="font-color text-left mt-2 mb-3">
+              {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
+            </h2>
+            {thirdPartyAuthContext.secondaryProviders.length ? (
+              <>
+                <RenderInstitutionButton
+                  onSubmitHandler={this.handleInstitutionLogin}
+                  secondaryProviders={thirdPartyAuthContext.secondaryProviders}
+                  buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
+                />
+                <div className="section-heading-line mb-4">
+                  <h4>{intl.formatMessage(messages['logistration.login.institution.login.sign.in.with'])}</h4>
+                </div>
+              </>
+            ) : null }
             <form className="m-0">
               <div className="form-group">
                 <div className="d-flex flex-column align-items-start">
@@ -196,20 +203,23 @@ class LoginPage extends React.Component {
                 </div>
                 <LoginHelpLinks page="login" />
               </div>
-              <Button
+              <StatefulButton
+                type="submit"
                 className="btn-primary submit"
+                state={submitState}
+                labels={{
+                  default: intl.formatMessage(messages['logistration.sign.in.button']),
+                }}
                 onClick={this.handleSubmit}
-              >
-                Sign in
-              </Button>
+              />
             </form>
-            {providers.length && !currentProvider ? (
+            {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
               <>
                 <div className="section-heading-line mb-4">
                   <h4>or sign in with</h4>
                 </div>
                 <div className="row tpa-container">
-                  <SocialAuthProviders socialAuthProviders={providers} />
+                  <SocialAuthProviders socialAuthProviders={thirdPartyAuthContext.providers} />
                 </div>
               </>
             ) : null}
@@ -221,28 +231,32 @@ class LoginPage extends React.Component {
 }
 
 LoginPage.defaultProps = {
-  loginResult: null,
   forgotPassword: null,
+  loginResult: null,
   loginError: null,
+  submitState: DEFAULT_STATE,
   thirdPartyAuthContext: {
     currentProvider: null,
     finishAuthUrl: null,
     providers: [],
+    secondaryProviders: [],
   },
 };
 
 LoginPage.propTypes = {
-  intl: intlShape.isRequired,
+  forgotPassword: PropTypes.shape({
+    email: PropTypes.string,
+    status: PropTypes.string,
+  }),
   getThirdPartyAuthContext: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
+  loginError: PropTypes.string,
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),
-  forgotPassword: PropTypes.shape({
-    email: PropTypes.string,
-    status: PropTypes.string,
-  }),
+  submitState: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -250,7 +264,6 @@ LoginPage.propTypes = {
     secondaryProviders: PropTypes.array,
     finishAuthUrl: PropTypes.string,
   }),
-  loginError: PropTypes.string,
 };
 
 const mapStateToProps = state => {
@@ -258,10 +271,11 @@ const mapStateToProps = state => {
   const loginResult = loginRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   return {
+    loginError: state.logistration.loginError,
+    submitState: state.logistration.submitState,
     forgotPassword,
     loginResult,
     thirdPartyAuthContext,
-    loginError: state.logistration.loginError,
   };
 };
 
