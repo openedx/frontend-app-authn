@@ -53,10 +53,36 @@ describe('ResetPasswordPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('show spinner component during token validation', () => {
+    props = {
+      ...props,
+      token_status: 'pending',
+      match: {
+        params: {
+          token: 'test-token',
+        },
+      },
+    };
+    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should match invalid token message section snapshot', () => {
     props = {
       ...props,
       token_status: 'invalid',
+    };
+    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should match pending reset message section snapshot', () => {
+    props = {
+      ...props,
+      token_status: 'valid',
+      status: 'pending',
     };
     const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
       .toJSON();
@@ -138,20 +164,5 @@ describe('ResetPasswordPage', () => {
 
     expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
     resetPage.unmount();
-  });
-
-  it('show spinner component during token validation', () => {
-    props = {
-      ...props,
-      token_status: 'pending',
-      match: {
-        params: {
-          token: 'test-token',
-        },
-      },
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
   });
 });

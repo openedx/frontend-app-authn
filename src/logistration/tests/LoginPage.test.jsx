@@ -8,6 +8,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import LoginPage from '../LoginPage';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
+import { PENDING_STATE } from '../../data/constants';
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -64,6 +65,20 @@ describe('LoginPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('should match pending button state snapshot', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        submitState: PENDING_STATE,
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should match forget password alert message snapshot', () => {
     props = {
       ...props,
@@ -79,6 +94,7 @@ describe('LoginPage', () => {
       logistration: {
         ...initialState.logistration,
         thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
           providers: [appleProvider],
         },
       },
@@ -184,6 +200,7 @@ describe('LoginPage', () => {
       logistration: {
         ...initialState.logistration,
         thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
           providers: [{
             ...appleProvider,
             loginUrl,

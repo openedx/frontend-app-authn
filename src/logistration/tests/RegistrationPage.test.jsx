@@ -8,6 +8,7 @@ import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n
 
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
+import { PENDING_STATE } from '../../data/constants';
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -74,6 +75,19 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('should match default section snapshot', () => {
+    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(tree.toJSON()).toMatchSnapshot();
+  });
+
+  it('should match pending button state snapshot', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        submitState: PENDING_STATE,
+      },
+    });
+
     const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(tree.toJSON()).toMatchSnapshot();
   });

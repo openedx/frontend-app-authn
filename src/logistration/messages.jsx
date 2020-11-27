@@ -2,6 +2,16 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  'logistration.sign.in.button': {
+    id: 'logistration.sign.in.button',
+    defaultMessage: 'Sign in',
+    description: 'Button label that appears on login page',
+  },
+  'logistration.create.account.button': {
+    id: 'ogistration.create.account.button',
+    defaultMessage: 'Create Account',
+    description: 'Button label that appears on register page',
+  },
   'logistration.need.help.signing.in.collapsible.menu': {
     id: 'logistration.need.help.signing.in.collapsible.menu',
     defaultMessage: 'Need help signing in?',
