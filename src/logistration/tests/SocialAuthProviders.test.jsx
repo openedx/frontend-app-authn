@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
 import SocialAuthProviders from '../SocialAuthProviders';
-import registerIcons from '../../RegisterFaIcons';
+import { registerIcons } from '../../common-components';
 
 registerIcons();
 

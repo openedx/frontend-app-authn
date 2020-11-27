@@ -8,7 +8,7 @@ import {
 
 import { getThirdPartyAuthContext, registerNewUser } from './data/actions';
 import { registrationRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
-import RedirectLogistration from './RedirectLogistration';
+import { RedirectLogistration } from '../common-components';
 import RegistrationFailure from './RegistrationFailure';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE,
