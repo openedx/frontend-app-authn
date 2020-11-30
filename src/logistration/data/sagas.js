@@ -1,5 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
+import { camelCaseObject } from '@edx/frontend-platform';
+
 // Actions
 import {
   REGISTER_NEW_USER,
@@ -51,7 +53,7 @@ export function* handleLoginRequest(action) {
   } catch (e) {
     const statusCodes = [400];
     if (e.response && statusCodes.includes(e.response.status)) {
-      yield put(loginRequestFailure(e.response.data.value));
+      yield put(loginRequestFailure(camelCaseObject(e.response.data)));
     }
   }
 }

@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginFailureMessage should match direct render of error message snapshot 1`] = `
+<div
+  className="fade alert alert-danger show"
+  role="alert"
+>
+  <div>
+    <h4
+      style={
+        Object {
+          "color": "#a0050e",
+        }
+      }
+    >
+      <span>
+        We couldn't sign you in.
+      </span>
+    </h4>
+    <ul>
+      <li>
+        Some error occurred logging you in.
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`LoginFailureMessage should match non compliant password error message snapshot 1`] = `
+<div
+  className="fade alert alert-danger show"
+  role="alert"
+>
+  <div>
+    <h4
+      style={
+        Object {
+          "color": "#a0050e",
+        }
+      }
+    >
+      <span>
+        We couldn't sign you in.
+      </span>
+    </h4>
+    <ul>
+      <li>
+        <span>
+          <strong>
+            We recently changed our password requirements
+          </strong>
+           
+          <br />
+          Your current password does not meet the new security requirements. We just sent a password-reset message to the email address associated with this account. Thank you for helping us keep your data safe.
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+`;

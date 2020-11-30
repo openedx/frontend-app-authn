@@ -9,6 +9,11 @@ export const loginRequestSelector = createSelector(
   logistration => logistration.loginResult,
 );
 
+export const loginErrorSelector = createSelector(
+  logistrationSelector,
+  logistration => logistration.loginError,
+);
+
 export const registrationRequestSelector = createSelector(
   logistrationSelector,
   logistration => logistration.registrationResult,

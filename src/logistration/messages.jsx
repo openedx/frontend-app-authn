@@ -100,7 +100,12 @@ const messages = defineMessages({
   'logistration.login.institution.login.sign.in.with': {
     id: 'logistration.login.institution.login.sign.in.with',
     defaultMessage: 'or sign in with',
-    description: 'gives hint about other sign options ',
+    description: 'gives hint about other sign options',
+  },
+  'logistration.non.compliant.password.title': {
+    id: 'logistration.non.compliant.password.title',
+    defaultMessage: 'We recently changed our password requirements',
+    description: 'A title that appears in bold before error message for non-compliant password',
   },
 });
 
