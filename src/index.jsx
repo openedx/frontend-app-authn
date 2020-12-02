@@ -6,15 +6,15 @@ import {
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
-import Header, { messages as headerMessages } from '@edx/frontend-component-header';
+import { messages as headerMessages } from '@edx/frontend-component-header';
 
 import configureStore from './data/configureStore';
 import { LoginPage, RegistrationPage, NotFoundPage } from './logistration';
 import { LOGIN_PAGE, REGISTER_PAGE, RESET_PAGE } from './data/constants';
 import ForgotPasswordPage from './forgot-password';
-import registerIcons from './RegisterFaIcons';
+import { HeaderLayout, LoggedInRedirect, registerIcons } from './common-components';
 import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
 
@@ -23,28 +23,24 @@ import './assets/favicon.ico';
 
 registerIcons();
 
-const HeaderLayout = ({ children }) => ( // eslint-disable-line react/prop-types
-  <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
-    <Header />
-    <main className="flex-grow-1">
-      {children}
-    </main>
-  </div>
-);
-
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={configureStore()}>
-      <HeaderLayout>
-        <Switch>
-          <Route path={LOGIN_PAGE} component={LoginPage} />
-          <Route path={REGISTER_PAGE} component={RegistrationPage} />
-          <Route path={RESET_PAGE} component={ForgotPasswordPage} />
-          <Route path="/password_reset_confirm/:token/" component={ResetPasswordPage} />
-          <Route path="/notfound" component={NotFoundPage} />
-          <Route path="*" component={NotFoundPage} />
-        </Switch>
-      </HeaderLayout>
+      <LoggedInRedirect>
+        <HeaderLayout>
+          <Switch>
+            <Route exact path="/">
+              <Redirect to={LOGIN_PAGE} />
+            </Route>
+            <Route exact path={LOGIN_PAGE} component={LoginPage} />
+            <Route exact path={REGISTER_PAGE} component={RegistrationPage} />
+            <Route exact path={RESET_PAGE} component={ForgotPasswordPage} />
+            <Route exact path="/password_reset_confirm/:token/" component={ResetPasswordPage} />
+            <Route path="/notfound" component={NotFoundPage} />
+            <Route path="*" component={NotFoundPage} />
+          </Switch>
+        </HeaderLayout>
+      </LoggedInRedirect>
     </AppProvider>,
     document.getElementById('root'),
   );

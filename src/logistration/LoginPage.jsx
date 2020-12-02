@@ -12,7 +12,7 @@ import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionL
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
-import RedirectLogistration from './RedirectLogistration';
+import { RedirectLogistration } from '../common-components';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
