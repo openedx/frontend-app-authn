@@ -2,6 +2,7 @@
 // #COLORS
 // ----------------------------
 $link-blue: #23419f;
+$mfe-font-color: #23419f;
 $font-blue: #126f9a;
 $white: #FFFFFF;
 
@@ -16,7 +17,7 @@ $apple-black: #000000;
 $apple-focus-black: $apple-black;
 
 .font-color {
-  color: $font-blue;
+  color: $mfe-font-color;
 }
 
 .login-container {

@@ -109,7 +109,7 @@ describe('LoginPage', () => {
       ...initialState,
       logistration: {
         ...initialState.logistration,
-        loginError: 'Email or password is incorrect.',
+        loginError: { value: 'Email or password is incorrect.' },
       },
     });
 
@@ -122,7 +122,7 @@ describe('LoginPage', () => {
       ...initialState,
       logistration: {
         ...initialState.logistration,
-        loginError: 'To be on the safe side, you can reset your password <a href="/reset">here</a> before you try again.\n',
+        loginError: { value: 'To be on the safe side, you can reset your password <a href="/reset">here</a> before you try again.\n' },
       },
     });
 

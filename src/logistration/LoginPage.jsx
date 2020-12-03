@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
-import { loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
+import { loginErrorSelector, loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
@@ -140,7 +140,9 @@ class LoginPage extends React.Component {
                 platformName={thirdPartyAuthContext.platformName}
               />
             )}
-            {this.props.loginError ? <LoginFailureMessage errors={this.props.loginError} /> : null}
+            {this.props.loginError
+              ? <LoginFailureMessage errors={this.props.loginError.value} errorCode={this.props.loginError.errorCode} />
+              : null}
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
             <div className="d-flex flex-row">
               <p>
@@ -250,7 +252,10 @@ LoginPage.propTypes = {
   }),
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  loginError: PropTypes.string,
+  loginError: PropTypes.shape({
+    value: PropTypes.string,
+    errorCode: PropTypes.string,
+  }),
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
@@ -270,10 +275,11 @@ const mapStateToProps = state => {
   const forgotPassword = forgotPasswordResultSelector(state);
   const loginResult = loginRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
+  const loginError = loginErrorSelector(state);
   return {
-    loginError: state.logistration.loginError,
     submitState: state.logistration.submitState,
     forgotPassword,
+    loginError,
     loginResult,
     thirdPartyAuthContext,
   };
