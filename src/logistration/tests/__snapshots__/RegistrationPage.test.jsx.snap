@@ -64,33 +64,6 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
         htmlFor="registrationName"
       >
         Full Name (required)
@@ -101,7 +74,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         id="registrationName"
         name="fullname"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder="Full Name"
         required={true}
         type="text"
         value=""
@@ -128,7 +101,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         id="registrationUsername"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder="Public Username"
         required={true}
         type="text"
         value=""
@@ -138,6 +111,33 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         id="username-invalid-feedback"
       >
         Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="registrationEmail"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="registrationEmail"
+        name="email"
+        onChange={[Function]}
+        placeholder="username@domain.com"
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
       </strong>
     </div>
     <div
@@ -1505,33 +1505,6 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
         htmlFor="registrationName"
       >
         Full Name (required)
@@ -1542,7 +1515,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         id="registrationName"
         name="fullname"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder="Full Name"
         required={true}
         type="text"
         value=""
@@ -1569,7 +1542,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         id="registrationUsername"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder="Public Username"
         required={true}
         type="text"
         value=""
@@ -1579,6 +1552,33 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         id="username-invalid-feedback"
       >
         Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="registrationEmail"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="registrationEmail"
+        name="email"
+        onChange={[Function]}
+        placeholder="username@domain.com"
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
       </strong>
     </div>
     <div
@@ -2946,33 +2946,6 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
         htmlFor="registrationName"
       >
         Full Name (required)
@@ -2983,7 +2956,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         id="registrationName"
         name="fullname"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder="Full Name"
         required={true}
         type="text"
         value=""
@@ -3010,7 +2983,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         id="registrationUsername"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder="Public Username"
         required={true}
         type="text"
         value=""
@@ -3020,6 +2993,33 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         id="username-invalid-feedback"
       >
         Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="registrationEmail"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="registrationEmail"
+        name="email"
+        onChange={[Function]}
+        placeholder="username@domain.com"
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
       </strong>
     </div>
     <div
@@ -4434,33 +4434,6 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
         htmlFor="registrationName"
       >
         Full Name (required)
@@ -4471,7 +4444,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         id="registrationName"
         name="fullname"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder="Full Name"
         required={true}
         type="text"
         value=""
@@ -4498,7 +4471,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         id="registrationUsername"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder="Public Username"
         required={true}
         type="text"
         value=""
@@ -4508,6 +4481,33 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         id="username-invalid-feedback"
       >
         Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="registrationEmail"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="registrationEmail"
+        name="email"
+        onChange={[Function]}
+        placeholder="username@domain.com"
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
       </strong>
     </div>
     <div

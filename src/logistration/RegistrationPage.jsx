@@ -215,22 +215,6 @@ class RegistrationPage extends React.Component {
           ) : null}
           <form className="mb-4 mx-auto form-group">
             <ValidationFormGroup
-              for="email"
-              invalid={this.state.errors.email !== ''}
-              invalidMessage="Enter a valid email address that contains at least 3 characters."
-            >
-              <label htmlFor="registrationEmail" className="h6 pt-3">Email (required)</label>
-              <Input
-                name="email"
-                id="registrationEmail"
-                type="email"
-                placeholder="username@domain.com"
-                value={this.state.email}
-                onChange={e => this.handleOnChange(e)}
-                required
-              />
-            </ValidationFormGroup>
-            <ValidationFormGroup
               for="fullname"
               invalid={this.state.errors.fullname !== ''}
               invalidMessage="Enter your full name."
@@ -240,7 +224,7 @@ class RegistrationPage extends React.Component {
                 name="fullname"
                 id="registrationName"
                 type="text"
-                placeholder="Name"
+                placeholder="Full Name"
                 value={this.state.fullname}
                 onChange={e => this.handleOnChange(e)}
                 required
@@ -256,8 +240,24 @@ class RegistrationPage extends React.Component {
                 name="username"
                 id="registrationUsername"
                 type="text"
-                placeholder="Username"
+                placeholder="Public Username"
                 value={this.state.username}
+                onChange={e => this.handleOnChange(e)}
+                required
+              />
+            </ValidationFormGroup>
+            <ValidationFormGroup
+              for="email"
+              invalid={this.state.errors.email !== ''}
+              invalidMessage="Enter a valid email address that contains at least 3 characters."
+            >
+              <label htmlFor="registrationEmail" className="h6 pt-3">Email (required)</label>
+              <Input
+                name="email"
+                id="registrationEmail"
+                type="email"
+                placeholder="username@domain.com"
+                value={this.state.email}
                 onChange={e => this.handleOnChange(e)}
                 required
               />
