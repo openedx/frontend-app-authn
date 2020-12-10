@@ -19,7 +19,6 @@ import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
 
 import './index.scss';
-import './assets/favicon.ico';
 
 registerIcons();
 

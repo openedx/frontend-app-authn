@@ -324,7 +324,6 @@ RegistrationPage.defaultProps = {
   },
 };
 
-
 RegistrationPage.propTypes = {
   intl: intlShape.isRequired,
   getThirdPartyAuthContext: PropTypes.func.isRequired,

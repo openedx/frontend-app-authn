@@ -30,5 +30,4 @@ RedirectLogistration.propTypes = {
   redirectUrl: PropTypes.string,
 };
 
-
 export default RedirectLogistration;

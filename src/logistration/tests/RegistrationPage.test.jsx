@@ -13,7 +13,6 @@ import { PENDING_STATE } from '../../data/constants';
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
-
 describe('./RegistrationPage.js', () => {
   const initialState = {
     logistration: {
@@ -219,7 +218,6 @@ describe('./RegistrationPage.js', () => {
 
     const expectedMessage = 'You\'ve successfully signed into Apple. We just need a little more information before '
                             + 'you start learning with edX.';
-
 
     const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);

@@ -1,8 +1,6 @@
 // ----------------------------
 // #COLORS
 // ----------------------------
-$link-blue: #23419f;
-$mfe-font-color: #23419f;
 $font-blue: #126f9a;
 $white: #FFFFFF;
 
@@ -15,10 +13,6 @@ $microsoft-black: #2f2f2f;
 $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
-
-.font-color {
-  color: $mfe-font-color;
-}
 
 .login-container {
   margin: 4rem;
@@ -194,7 +188,7 @@ $apple-focus-black: $apple-black;
 .field-link {
   font-weight: normal;
   display: block;
-  color: $link-blue;
+  color: $primary;
   margin-bottom: 5px;
   margin-top: 5px;
   border: none;
@@ -205,6 +199,11 @@ $apple-focus-black: $apple-black;
   letter-spacing: normal;
   text-decoration: none;
   text-shadow: none;
+
+  &:focus,
+  &:hover {
+    color: $primary;
+  }
 }
 
 .login-help {

@@ -10,7 +10,6 @@ import {
 
 import { forgotPassword } from './service';
 
-
 // Services
 export function* handleForgotPassword(action) {
   try {

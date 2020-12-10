@@ -16,7 +16,6 @@ jest.mock('@edx/frontend-platform/auth');
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
 
-
 describe('ResetPasswordPage', () => {
   let props = {};
   let store = {};

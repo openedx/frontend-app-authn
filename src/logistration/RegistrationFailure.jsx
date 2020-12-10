@@ -4,7 +4,6 @@ import { FormattedMessage } from '@edx/frontend-platform/i18n';
 
 import { Alert } from '@edx/paragon';
 
-
 const RegistrationFailureMessage = (props) => {
   const errorMessage = props.errors;
   const userErrors = [];
