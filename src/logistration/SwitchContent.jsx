@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TransitionReplace } from '@edx/paragon';
 
-
 const onChildExit = (htmlNode) => {
   // If the leaving child has focus, take control and redirect it
   if (htmlNode.contains(document.activeElement)) {
@@ -20,7 +19,6 @@ const onChildExit = (htmlNode) => {
     }
   }
 };
-
 
 function SwitchContent({ expression, cases, className }) {
   const getContent = (caseKey) => {
@@ -49,7 +47,6 @@ function SwitchContent({ expression, cases, className }) {
   );
 }
 
-
 SwitchContent.propTypes = {
   expression: PropTypes.string,
   cases: PropTypes.objectOf(PropTypes.node).isRequired,
@@ -60,6 +57,5 @@ SwitchContent.defaultProps = {
   expression: null,
   className: null,
 };
-
 
 export default SwitchContent;

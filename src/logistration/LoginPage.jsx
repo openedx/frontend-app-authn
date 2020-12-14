@@ -149,7 +149,7 @@ class LoginPage extends React.Component {
                 First time here?<a className="ml-1" href={REGISTER_PAGE}>Create an Account.</a>
               </p>
             </div>
-            <h2 className="font-color text-left mt-2 mb-3">
+            <h2 className="text-left mt-2 mb-3">
               {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
             </h2>
             {thirdPartyAuthContext.secondaryProviders.length ? (

@@ -26,7 +26,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>
@@ -230,7 +230,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>
@@ -400,7 +400,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>
@@ -570,7 +570,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>
@@ -772,7 +772,7 @@ exports[`LoginPage should show error message on 400 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>
@@ -973,7 +973,7 @@ exports[`LoginPage should show error message on 400 on receiving link 1`] = `
       </p>
     </div>
     <h2
-      className="font-color text-left mt-2 mb-3"
+      className="text-left mt-2 mb-3"
     >
       Sign In
     </h2>

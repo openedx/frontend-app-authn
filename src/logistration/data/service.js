@@ -46,7 +46,6 @@ export async function login(creds) {
   };
 }
 
-
 export async function getThirdPartyAuthContext(urlParams) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

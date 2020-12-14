@@ -7,7 +7,6 @@ import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 
-
 function SocialAuthProviders(props) {
   const { referrer, socialAuthProviders } = props;
 

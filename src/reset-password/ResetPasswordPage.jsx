@@ -14,7 +14,6 @@ import ResetSuccessMessage from './ResetSuccess';
 import ResetFailureMessage from './ResetFailure';
 import Spinner from './Spinner';
 
-
 const ResetPasswordPage = (props) => {
   const { intl } = props;
   const params = getQueryParameters();

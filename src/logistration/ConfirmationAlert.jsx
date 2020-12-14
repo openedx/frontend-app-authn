@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Alert, Hyperlink } from '@edx/paragon';
 
-
 const ConfirmationAlert = (props) => {
   const { email } = props;
 

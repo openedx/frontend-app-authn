@@ -18,7 +18,6 @@ import {
   getThirdPartyAuthContextFailure,
 } from './actions';
 
-
 // Services
 import { getThirdPartyAuthContext, postNewUser, login } from './service';
 

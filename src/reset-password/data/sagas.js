@@ -14,7 +14,6 @@ import {
 
 import { validateToken, resetPassword } from './service';
 
-
 // Services
 export function* handleValidateToken(action) {
   try {

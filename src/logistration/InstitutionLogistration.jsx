@@ -22,7 +22,6 @@ export const RenderInstitutionButton = props => {
   return <></>;
 };
 
-
 const InstitutionLogistration = props => {
   const lmsBaseUrl = getConfig().LMS_BASE_URL;
   const {
