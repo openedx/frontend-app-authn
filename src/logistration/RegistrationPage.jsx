@@ -103,6 +103,7 @@ class RegistrationPage extends React.Component {
         payload[key] = this.state[camelCase(key)];
       }
     });
+
     const next = params.get('next');
     const courseId = params.get('course_id');
     if (next) {
@@ -363,7 +364,7 @@ class RegistrationPage extends React.Component {
           onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
           headingTitle={intl.formatMessage(messages['logistration.register.institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.page.back.button'])}
+          buttonTitle={intl.formatMessage(messages['logistration.create.an.account'])}
         />
       );
     }
@@ -410,9 +411,11 @@ class RegistrationPage extends React.Component {
             <ValidationFormGroup
               for="name"
               invalid={this.state.errors.name !== ''}
-              invalidMessage="Enter your full name."
+              invalidMessage={intl.formatMessage(messages['logistration.fullname.validation.message'])}
             >
-              <label htmlFor="name" className="h6 pt-3">Full Name (required)</label>
+              <label htmlFor="name" className="h6 pt-3">
+                {intl.formatMessage(messages['logistration.fullname.label'])}
+              </label>
               <Input
                 name="name"
                 id="name"
@@ -426,9 +429,11 @@ class RegistrationPage extends React.Component {
             <ValidationFormGroup
               for="username"
               invalid={this.state.errors.username !== ''}
-              invalidMessage="Username must be between 2 and 30 characters long."
+              invalidMessage={intl.formatMessage(messages['logistration.username.validation.message'])}
             >
-              <label htmlFor="username" className="h6 pt-3">Public Username (required)</label>
+              <label htmlFor="username" className="h6 pt-3">
+                {intl.formatMessage(messages['logistration.username.label'])}
+              </label>
               <Input
                 name="username"
                 id="username"
@@ -442,9 +447,11 @@ class RegistrationPage extends React.Component {
             <ValidationFormGroup
               for="email"
               invalid={this.state.errors.email !== ''}
-              invalidMessage="Enter a valid email address that contains at least 3 characters."
+              invalidMessage={intl.formatMessage(messages['logistration.email.validation.message'])}
             >
-              <label htmlFor="email" className="h6 pt-3">Email (required)</label>
+              <label htmlFor="email" className="h6 pt-3">
+                {intl.formatMessage(messages['logistration.register.page.email.label'])}
+              </label>
               <Input
                 name="email"
                 id="email"
@@ -458,9 +465,11 @@ class RegistrationPage extends React.Component {
             <ValidationFormGroup
               for="password"
               invalid={this.state.errors.password !== ''}
-              invalidMessage="This password is too short. It must contain at least 8 characters. This password must contain at least 1 number."
+              invalidMessage={intl.formatMessage(messages['logistration.register.page.password.validation.message'])}
             >
-              <label htmlFor="password" className="h6 pt-3">Password (required)</label>
+              <label htmlFor="password" className="h6 pt-3">
+                {intl.formatMessage(messages['logistration.password.label'])}
+              </label>
               <Input
                 name="password"
                 id="password"
@@ -485,7 +494,9 @@ class RegistrationPage extends React.Component {
                 onChange={e => this.handleOnOptional(e)}
                 required
               />
-              <p role="presentation" id="additionalFields" onClick={e => this.handleOnOptional(e)}>Support education research by providing additional information</p>
+              <p role="presentation" id="additionalFields" onClick={e => this.handleOnOptional(e)}>
+                {intl.formatMessage(messages['logistration.support.education.research'])}
+              </p>
             </ValidationFormGroup>
             { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
             <StatefulButton

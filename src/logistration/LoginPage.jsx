@@ -16,7 +16,9 @@ import { RedirectLogistration } from '../common-components';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
-import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, REGISTER_PAGE } from '../data/constants';
+import {
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE,
+} from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 
 class LoginPage extends React.Component {
@@ -146,7 +148,10 @@ class LoginPage extends React.Component {
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
             <div className="d-flex flex-row">
               <p>
-                First time here?<a className="ml-1" href={REGISTER_PAGE}>Create an Account.</a>
+                {intl.formatMessage(messages['logistration.first.time.here'])}
+                <a className="ml-1" href={REGISTER_PAGE}>
+                  {intl.formatMessage(messages['logistration.create.an.account'])}.
+                </a>
               </p>
             </div>
             <h2 className="text-left mt-2 mb-3">
@@ -160,7 +165,7 @@ class LoginPage extends React.Component {
                   buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
                 />
                 <div className="section-heading-line mb-4">
-                  <h4>{intl.formatMessage(messages['logistration.login.institution.login.sign.in.with'])}</h4>
+                  <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                 </div>
               </>
             ) : null }
@@ -170,9 +175,11 @@ class LoginPage extends React.Component {
                   <ValidationFormGroup
                     for="email"
                     invalid={this.state.errors.email !== ''}
-                    invalidMessage="The email address you've provided isn't formatted correctly."
+                    invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
                   >
-                    <label htmlFor="loginEmail" className="h6 mr-1">Email</label>
+                    <label htmlFor="loginEmail" className="h6 mr-1">
+                      {intl.formatMessage(messages['logistration.login.page.email.label'])}
+                    </label>
                     <Input
                       name="email"
                       id="loginEmail"
@@ -184,15 +191,17 @@ class LoginPage extends React.Component {
                     />
                   </ValidationFormGroup>
                 </div>
-                <p className="mb-4">The email address you used to register with edX.</p>
+                <p className="mb-4">{intl.formatMessage(messages['logistration.email.help.message'])}</p>
                 <div className="d-flex flex-column align-items-start">
                   <ValidationFormGroup
                     for="password"
                     invalid={this.state.errors.password !== ''}
-                    invalidMessage="Please enter your password."
+                    invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
                     className="mb-0"
                   >
-                    <label htmlFor="loginPassword" className="h6 mr-1">Password</label>
+                    <label htmlFor="loginPassword" className="h6 mr-1">
+                      {intl.formatMessage(messages['logistration.password'])}
+                    </label>
                     <Input
                       name="password"
                       id="loginPassword"
@@ -203,7 +212,7 @@ class LoginPage extends React.Component {
                     />
                   </ValidationFormGroup>
                 </div>
-                <LoginHelpLinks page="login" />
+                <LoginHelpLinks page={LOGIN_PAGE} />
               </div>
               <StatefulButton
                 type="submit"
@@ -218,7 +227,7 @@ class LoginPage extends React.Component {
             {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
               <>
                 <div className="section-heading-line mb-4">
-                  <h4>or sign in with</h4>
+                  <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                 </div>
                 <div className="row tpa-container">
                   <SocialAuthProviders socialAuthProviders={thirdPartyAuthContext.providers} />
