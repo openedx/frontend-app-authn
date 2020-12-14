@@ -1,14 +1,15 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
-import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
+import configureStore from 'redux-mock-store';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
 
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import { PENDING_STATE } from '../../data/constants';
+import { fetchRegistrationForm } from '../data/actions';
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -22,6 +23,17 @@ describe('./RegistrationPage.js', () => {
         finishAuthUrl: null,
         providers: [],
         secondaryProviders: [],
+      },
+      registrationError: null,
+      formData: {
+        fields: [{
+          label: 'I agree to the Your Platform Name Here <a href="/honor" rel="noopener" target="_blank">Honor Code</a>',
+          name: 'honor_code',
+          type: 'checkbox',
+          errorMessages: {
+            required: 'You must agree to the Your Platform Name Here Honor Code',
+          },
+        }],
       },
     },
   };
@@ -71,6 +83,170 @@ describe('./RegistrationPage.js', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  it('should show error message on invalid email', () => {
+    const validationMessage = 'Enter a valid email address that contains at least 3 characters.';
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#email').simulate('change', { target: { value: '', name: 'email' } });
+    registrationPage.update();
+    expect(registrationPage.find('#email-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should show error message on invalid username', () => {
+    const validationMessage = 'Username must be between 2 and 30 characters long.';
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#username').simulate('change', { target: { value: '', name: 'username' } });
+    registrationPage.update();
+    expect(registrationPage.find('#username-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should show error message on invalid name', () => {
+    const validationMessage = 'Enter your full name.';
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#name').simulate('change', { target: { value: '', name: 'name' } });
+    registrationPage.update();
+    expect(registrationPage.find('#name-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should show error message on invalid password', () => {
+    const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#password').simulate('change', { target: { value: '', name: 'password' } });
+    registrationPage.update();
+    expect(registrationPage.find('#password-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should show error messages on invalid extra fields', () => {
+    const validationMessage = {
+      honorCode: 'You must agree to the Your Platform Name Here Honor Code',
+      country: 'Select your country or region of residence.',
+    };
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        formData: {
+          fields: [
+            {
+              label: 'I agree to the Your Platform Name Here <a href="/honor" rel="noopener" target="_blank">Honor Code</a>',
+              name: 'honor_code',
+              type: 'checkbox',
+              errorMessages: {
+                required: validationMessage.honorCode,
+              },
+              required: true,
+            },
+            {
+              label: 'The country or region where you live.',
+              name: 'country',
+              type: 'select',
+              options: [{
+                value: '', name: '--',
+              },
+              {
+                value: 'AF', name: 'Afghanistan',
+              }],
+              errorMessages: {
+                required: validationMessage.country,
+              },
+              required: true,
+            },
+          ],
+        },
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('input#honor_code').simulate('change', { target: { checked: false, name: 'honor_code', type: 'checkbox' } });
+    registrationPage.update();
+    expect(registrationPage.find('#honor_code-invalid-feedback').text()).toEqual(validationMessage.honorCode);
+
+    registrationPage.find('select#country').simulate('change', { target: { checked: false, name: 'country', type: 'checkbox' } });
+    registrationPage.update();
+    expect(registrationPage.find('#country-invalid-feedback').text()).toEqual(validationMessage.country);
+  });
+
+  it('should toggle optional fields state on checkbox click', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
+    registrationPage.update();
+    expect(registrationPage.find('RegistrationPage').state('enableOptionalField')).toEqual(true);
+  });
+
+  it('should show optional fields section on optional check enabled', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        formData: {
+          fields: [{
+            label: 'Tell us why you\'re interested in edX',
+            name: 'goals',
+            type: 'textarea',
+            required: false,
+          },
+          {
+            label: 'Highest level of Education completed.',
+            name: 'level_of_education',
+            type: 'select',
+            options: [{
+              value: '', name: '--',
+            },
+            {
+              value: 'p', name: 'Doctorate',
+            }],
+            required: false,
+          }],
+        },
+      },
+    });
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
+    registrationPage.update();
+    expect(registrationPage.find('textarea#goals').length).toEqual(1);
+    expect(registrationPage.find('select#level_of_education').length).toEqual(1);
+  });
+
+  it('should dispatch fetchRegistrationForm on ComponentDidMount', () => {
+    store = mockStore({
+      ...initialState,
+    });
+
+    store.dispatch = jest.fn(store.dispatch);
+    mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRegistrationForm());
   });
 
   it('should match default section snapshot', () => {
@@ -191,6 +367,16 @@ describe('./RegistrationPage.js', () => {
             registerUrl,
           }],
         },
+        formData: {
+          fields: [{
+            label: 'I agree to the Your Platform Name Here <a href="/honor" rel="noopener" target="_blank">Honor Code</a>',
+            name: 'honor_code',
+            type: 'checkbox',
+            errorMessages: {
+              required: 'You must agree to the Your Platform Name Here Honor Code',
+            },
+          }],
+        },
       },
     });
 
@@ -247,11 +433,11 @@ describe('./RegistrationPage.js', () => {
             },
           ],
         },
-        response_status: 'complete',
       },
     });
 
     const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />)).toJSON();
     expect(tree).toMatchSnapshot();
+    windowSpy.mockClear();
   });
 });

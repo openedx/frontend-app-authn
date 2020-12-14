@@ -2,6 +2,7 @@ import {
   REGISTER_NEW_USER,
   LOGIN_REQUEST,
   THIRD_PARTY_AUTH_CONTEXT,
+  REGISTER_FORM,
 } from './actions';
 
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
@@ -11,6 +12,7 @@ export const defaultState = {
   loginResult: {},
   registrationError: null,
   registrationResult: {},
+  formData: null,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -57,6 +59,19 @@ const reducer = (state = defaultState, action) => {
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
       };
     case THIRD_PARTY_AUTH_CONTEXT.FAILURE:
+      return {
+        ...state,
+      };
+    case REGISTER_FORM.BEGIN:
+      return {
+        ...state,
+      };
+    case REGISTER_FORM.SUCCESS:
+      return {
+        ...state,
+        formData: action.payload.formData,
+      };
+    case REGISTER_FORM.FAILURE:
       return {
         ...state,
       };
