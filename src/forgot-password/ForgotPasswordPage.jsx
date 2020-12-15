@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import messages from './messages';
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
+import { LOGIN_PAGE } from '../data/constants';
 import LoginHelpLinks from '../logistration/LoginHelpLinks';
 
 const ForgotPasswordPage = (props) => {
@@ -39,7 +40,7 @@ const ForgotPasswordPage = (props) => {
 
   return (
     <>
-      {status === 'complete' ? <Redirect to="/login" /> : null}
+      {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
       <div className="d-flex justify-content-center forgot-password-container">
         <div className="d-flex flex-column" style={{ width: '450px' }}>
           <form className="m-4">
@@ -79,12 +80,15 @@ const ForgotPasswordPage = (props) => {
               </p>
               <LoginHelpLinks page="forgot-password" />
             </div>
-            <Button
+            <StatefulButton
+              type="submit"
               className="btn-primary submit"
+              state={status}
+              labels={{
+                default: intl.formatMessage(messages['logisration.forgot.password.page.submit.button']),
+              }}
               onClick={e => handleSubmit(e)}
-            >
-              {intl.formatMessage(messages['logisration.forgot.password.page.submit.button'])}
-            </Button>
+            />
           </form>
         </div>
       </div>

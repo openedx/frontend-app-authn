@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LoginPage should match default section snapshot 1`] = `
+exports[`LoginPage should match TPA provider snapshot 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -21,21 +21,22 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
+    <h2
+      className="text-left mt-2 mb-3"
+    >
+      Sign In
+    </h2>
     <form
       className="m-0"
     >
       <div
         className="form-group"
       >
-        <h3
-          className="text-center mt-3"
-        >
-          Sign In
-        </h3>
         <div
           className="d-flex flex-column align-items-start"
         >
@@ -152,12 +153,18 @@ exports[`LoginPage should match default section snapshot 1`] = `
         </div>
       </div>
       <button
-        className="btn-primary submit btn btn-primary"
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
         disabled={false}
         onClick={[Function]}
-        type="button"
+        type="submit"
       >
-        Sign in
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Sign in
+        </span>
       </button>
     </form>
     <div
@@ -168,85 +175,210 @@ exports[`LoginPage should match default section snapshot 1`] = `
       </h4>
     </div>
     <div
-      className="row text-center d-block mb-4"
+      className="row tpa-container"
     >
       <button
-        className="btn-social facebook"
+        className="btn-social btn-oa2-apple-id"
+        data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
+        id="oa2-apple-id"
+        onClick={[Function]}
         type="button"
       >
-        <svg
+        <div
           aria-hidden="true"
-          className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-          data-icon="facebook-f"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 320 512"
-          xmlns="http://www.w3.org/2000/svg"
         >
-          <path
-            d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-            fill="currentColor"
-            style={Object {}}
+          <img
+            alt="icon Apple"
+            className="icon-image"
+            src="https://edx.devstack.lms/logo.png"
           />
-        </svg>
-        Facebook
-      </button>
-      <button
-        className="btn-social google"
-        type="button"
-      >
-        <svg
+        </div>
+        <span
           aria-hidden="true"
-          className="svg-inline--fa fa-google fa-w-16 mr-2"
-          data-icon="google"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 488 512"
-          xmlns="http://www.w3.org/2000/svg"
+          className="pl-2"
         >
-          <path
-            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Google
-      </button>
-      <button
-        className="btn-social microsoft"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-          data-icon="microsoft"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 448 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Microsoft
+          Apple
+        </span>
       </button>
     </div>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should match default section snapshot 1`] = `
+<div
+  className="d-flex justify-content-center login-container"
+>
+  <div
+    className="d-flex flex-column"
+    style={
+      Object {
+        "width": "400px",
+      }
+    }
+  >
+    <div
+      className="d-flex flex-row"
+    >
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
+    </div>
+    <h2
+      className="text-left mt-2 mb-3"
+    >
+      Sign In
+    </h2>
+    <form
+      className="m-0"
+    >
+      <div
+        className="form-group"
+      >
+        <div
+          className="d-flex flex-column align-items-start"
+        >
+          <div
+            className="form-group"
+          >
+            <label
+              className="h6 mr-1"
+              htmlFor="loginEmail"
+            >
+              Email
+            </label>
+            <input
+              aria-describedby=""
+              className="form-control"
+              id="loginEmail"
+              name="email"
+              onChange={[Function]}
+              placeholder="username@domain.com"
+              style={
+                Object {
+                  "width": "400px",
+                }
+              }
+              type="email"
+              value=""
+            />
+            <strong
+              className="invalid-feedback"
+              id="email-invalid-feedback"
+            >
+              The email address you've provided isn't formatted correctly.
+            </strong>
+          </div>
+        </div>
+        <p
+          className="mb-4"
+        >
+          The email address you used to register with edX.
+        </p>
+        <div
+          className="d-flex flex-column align-items-start"
+        >
+          <div
+            className="form-group mb-0"
+          >
+            <label
+              className="h6 mr-1"
+              htmlFor="loginPassword"
+            >
+              Password
+            </label>
+            <input
+              aria-describedby=""
+              className="form-control"
+              id="loginPassword"
+              name="password"
+              onChange={[Function]}
+              style={
+                Object {
+                  "width": "400px",
+                }
+              }
+              type="password"
+              value=""
+            />
+            <strong
+              className="invalid-feedback"
+              id="password-invalid-feedback"
+            >
+              Please enter your password.
+            </strong>
+          </div>
+        </div>
+        <button
+          className="mt-1 field-link"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+      </div>
+      <button
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="submit"
+      >
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Sign in
+        </span>
+      </button>
+    </form>
   </div>
 </div>
 `;
 
 exports[`LoginPage should match forget password alert message snapshot 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -265,21 +397,22 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
+    <h2
+      className="text-left mt-2 mb-3"
+    >
+      Sign In
+    </h2>
     <form
       className="m-0"
     >
       <div
         className="form-group"
       >
-        <h3
-          className="text-center mt-3"
-        >
-          Sign In
-        </h3>
         <div
           className="d-flex flex-column align-items-start"
         >
@@ -396,101 +529,207 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         </div>
       </div>
       <button
-        className="btn-primary submit btn btn-primary"
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
         disabled={false}
         onClick={[Function]}
-        type="button"
+        type="submit"
       >
-        Sign in
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Sign in
+        </span>
       </button>
     </form>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should match pending button state snapshot 1`] = `
+<div
+  className="d-flex justify-content-center login-container"
+>
+  <div
+    className="d-flex flex-column"
+    style={
+      Object {
+        "width": "400px",
+      }
+    }
+  >
     <div
-      className="section-heading-line mb-4"
+      className="d-flex flex-row"
     >
-      <h4>
-        or sign in with
-      </h4>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
     </div>
-    <div
-      className="row text-center d-block mb-4"
+    <h2
+      className="text-left mt-2 mb-3"
     >
-      <button
-        className="btn-social facebook"
-        type="button"
+      Sign In
+    </h2>
+    <form
+      className="m-0"
+    >
+      <div
+        className="form-group"
       >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-          data-icon="facebook-f"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 320 512"
-          xmlns="http://www.w3.org/2000/svg"
+        <div
+          className="d-flex flex-column align-items-start"
         >
-          <path
-            d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-            fill="currentColor"
+          <div
+            className="form-group"
+          >
+            <label
+              className="h6 mr-1"
+              htmlFor="loginEmail"
+            >
+              Email
+            </label>
+            <input
+              aria-describedby=""
+              className="form-control"
+              id="loginEmail"
+              name="email"
+              onChange={[Function]}
+              placeholder="username@domain.com"
+              style={
+                Object {
+                  "width": "400px",
+                }
+              }
+              type="email"
+              value=""
+            />
+            <strong
+              className="invalid-feedback"
+              id="email-invalid-feedback"
+            >
+              The email address you've provided isn't formatted correctly.
+            </strong>
+          </div>
+        </div>
+        <p
+          className="mb-4"
+        >
+          The email address you used to register with edX.
+        </p>
+        <div
+          className="d-flex flex-column align-items-start"
+        >
+          <div
+            className="form-group mb-0"
+          >
+            <label
+              className="h6 mr-1"
+              htmlFor="loginPassword"
+            >
+              Password
+            </label>
+            <input
+              aria-describedby=""
+              className="form-control"
+              id="loginPassword"
+              name="password"
+              onChange={[Function]}
+              style={
+                Object {
+                  "width": "400px",
+                }
+              }
+              type="password"
+              value=""
+            />
+            <strong
+              className="invalid-feedback"
+              id="password-invalid-feedback"
+            >
+              Please enter your password.
+            </strong>
+          </div>
+        </div>
+        <button
+          className="mt-1 field-link"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
             style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
           />
-        </svg>
-        Facebook
-      </button>
+        </div>
+      </div>
       <button
-        className="btn-social google"
-        type="button"
+        aria-disabled={true}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit disabled btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="submit"
       >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-google fa-w-16 mr-2"
-          data-icon="google"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 488 512"
-          xmlns="http://www.w3.org/2000/svg"
+        <span
+          className="d-flex align-items-center justify-content-center"
         >
-          <path
-            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Google
+          <span
+            className="pgn__stateful-btn-icon"
+          >
+            <span
+              aria-hidden={true}
+              className="icon fa fa-spinner fa-spin"
+              id="Icon1"
+            />
+          </span>
+          Sign in
+        </span>
       </button>
-      <button
-        className="btn-social microsoft"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-          data-icon="microsoft"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 448 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Microsoft
-      </button>
-    </div>
+    </form>
   </div>
 </div>
 `;
 
 exports[`LoginPage should show error message on 400 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -532,21 +771,22 @@ exports[`LoginPage should show error message on 400 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
+    <h2
+      className="text-left mt-2 mb-3"
+    >
+      Sign In
+    </h2>
     <form
       className="m-0"
     >
       <div
         className="form-group"
       >
-        <h3
-          className="text-center mt-3"
-        >
-          Sign In
-        </h3>
         <div
           className="d-flex flex-column align-items-start"
         >
@@ -663,101 +903,27 @@ exports[`LoginPage should show error message on 400 1`] = `
         </div>
       </div>
       <button
-        className="btn-primary submit btn btn-primary"
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
         disabled={false}
         onClick={[Function]}
-        type="button"
+        type="submit"
       >
-        Sign in
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Sign in
+        </span>
       </button>
     </form>
-    <div
-      className="section-heading-line mb-4"
-    >
-      <h4>
-        or sign in with
-      </h4>
-    </div>
-    <div
-      className="row text-center d-block mb-4"
-    >
-      <button
-        className="btn-social facebook"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-          data-icon="facebook-f"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 320 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Facebook
-      </button>
-      <button
-        className="btn-social google"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-google fa-w-16 mr-2"
-          data-icon="google"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 488 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Google
-      </button>
-      <button
-        className="btn-social microsoft"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-          data-icon="microsoft"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 448 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Microsoft
-      </button>
-    </div>
   </div>
 </div>
 `;
 
 exports[`LoginPage should show error message on 400 on receiving link 1`] = `
 <div
-  className="d-flex justify-content-center logistration-container"
+  className="d-flex justify-content-center login-container"
 >
   <div
     className="d-flex flex-column"
@@ -807,21 +973,22 @@ exports[`LoginPage should show error message on 400 on receiving link 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
+    <h2
+      className="text-left mt-2 mb-3"
+    >
+      Sign In
+    </h2>
     <form
       className="m-0"
     >
       <div
         className="form-group"
       >
-        <h3
-          className="text-center mt-3"
-        >
-          Sign In
-        </h3>
         <div
           className="d-flex flex-column align-items-start"
         >
@@ -938,94 +1105,20 @@ exports[`LoginPage should show error message on 400 on receiving link 1`] = `
         </div>
       </div>
       <button
-        className="btn-primary submit btn btn-primary"
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
         disabled={false}
         onClick={[Function]}
-        type="button"
+        type="submit"
       >
-        Sign in
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Sign in
+        </span>
       </button>
     </form>
-    <div
-      className="section-heading-line mb-4"
-    >
-      <h4>
-        or sign in with
-      </h4>
-    </div>
-    <div
-      className="row text-center d-block mb-4"
-    >
-      <button
-        className="btn-social facebook"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-          data-icon="facebook-f"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 320 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Facebook
-      </button>
-      <button
-        className="btn-social google"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-google fa-w-16 mr-2"
-          data-icon="google"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 488 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Google
-      </button>
-      <button
-        className="btn-social microsoft"
-        type="button"
-      >
-        <svg
-          aria-hidden="true"
-          className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-          data-icon="microsoft"
-          data-prefix="fab"
-          focusable="false"
-          role="img"
-          style={Object {}}
-          viewBox="0 0 448 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-            fill="currentColor"
-            style={Object {}}
-          />
-        </svg>
-        Microsoft
-      </button>
-    </div>
   </div>
 </div>
 `;

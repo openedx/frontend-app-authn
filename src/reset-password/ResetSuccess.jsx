@@ -2,7 +2,6 @@ import React from 'react';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 
-
 const ResetSuccessMessage = () => {
   const loginPasswordLink = (
     <Alert.Link href="/login" className="font-weight-normal" style={{ color: '#0075b4' }}>

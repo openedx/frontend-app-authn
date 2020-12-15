@@ -40,9 +40,10 @@ This MFE is configured via node environment variables supplied at build time. Se
 For more information see the document: `Micro-frontend applications in Open
 edX <https://github.com/edx/edx-developer-docs/blob/5191e800bf16cf42f25c58c58f983bdaf7f9305d/docs/micro-frontends-in-open-edx.rst>`__.
 
-.. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-account.svg?branch=master
-   :target: https://travis-ci.com/edx/frontend-app-account
-.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-account
-   :target: https://codecov.io/gh/edx/frontend-app-account
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-account.svg
-   :target: @edx/frontend-app-account
+
+.. |Build Status| image:: https://api.travis-ci.org/edx/frontend-app-logistration.svg?branch=master
+   :target: https://travis-ci.org/edx/frontend-app-logistration
+.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-logistration
+   :target: https://codecov.io/gh/edx/frontend-app-logistration
+.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-logistration.svg
+   :target: @edx/frontend-app-logistration

@@ -1,117 +1,55 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`./RegistrationPage.js should match default section snapshot 1`] = `
+exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
 <div
-  className="logistration-container d-flex flex-column align-items-center mx-auto"
-  style={
-    Object {
-      "width": "30rem",
-    }
-  }
+  className="register-container mx-auto"
 >
   <div
-    className="mb-4"
+    className="text-left"
   >
-    <svg
-      aria-hidden="true"
-      className="svg-inline--fa fa-graduation-cap fa-w-20 d-block mx-auto fa-2x"
-      data-icon="graduation-cap"
-      data-prefix="fas"
-      focusable="false"
-      role="img"
-      style={Object {}}
-      viewBox="0 0 640 512"
-      xmlns="http://www.w3.org/2000/svg"
+    <span>
+      Already have an edX account?
+    </span>
+    <a
+      href="/login"
     >
-      <path
-        d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"
-        fill="currentColor"
-        style={Object {}}
-      />
-    </svg>
-    <h4
-      className="d-block mx-auto"
-    >
-      Start learning now!
-    </h4>
+       Sign in.
+    </a>
   </div>
   <div
-    className="d-block mb-4"
+    className="d-block mb-4 mt-4"
   >
     <span
       className="d-block mx-auto mb-4 section-heading-line"
     >
       Create an account using
     </span>
-    <button
-      className="btn-social facebook"
-      type="button"
+    <div
+      className="row tpa-container"
     >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-        data-icon="facebook-f"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 320 512"
-        xmlns="http://www.w3.org/2000/svg"
+      <button
+        className="btn-social btn-oa2-apple-id"
+        id="oa2-apple-id"
+        onClick={[Function]}
+        type="button"
       >
-        <path
-          d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Facebook
-    </button>
-    <button
-      className="btn-social google"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-google fa-w-16 mr-2"
-        data-icon="google"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 488 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Google
-    </button>
-    <button
-      className="btn-social microsoft"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-        data-icon="microsoft"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 448 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Microsoft
-    </button>
+        <div
+          aria-hidden="true"
+        >
+          <img
+            alt="icon Apple"
+            className="icon-image"
+            src="https://edx.devstack.lms/logo.png"
+          />
+        </div>
+        <span
+          aria-hidden="true"
+          className="pl-2"
+        >
+          Apple
+        </span>
+      </button>
+    </div>
     <span
       className="d-block mx-auto text-center mt-4 section-heading-line"
     >
@@ -126,44 +64,17 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="registrationName"
+        htmlFor="name"
       >
         Full Name (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationName"
+        id="name"
         name="name"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder=""
         required={true}
         type="text"
         value=""
@@ -180,17 +91,17 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationUsername"
+        htmlFor="username"
       >
         Public Username (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationUsername"
+        id="username"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder=""
         required={true}
         type="text"
         value=""
@@ -207,17 +118,44 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationPassword"
+        htmlFor="email"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="email"
+        name="email"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="password"
       >
         Password (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationPassword"
+        id="password"
         name="password"
         onChange={[Function]}
-        placeholder="Password"
+        placeholder=""
         required={true}
         type="password"
         value=""
@@ -230,1313 +168,81 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
       </strong>
     </div>
     <div
-      className="form-group"
+      className="form-group custom-control"
     >
-      <label
-        className="h6 pt-3"
-        htmlFor="registrationCountry"
-      >
-        Country (required)
-      </label>
-      <select
+      <input
         aria-describedby=""
-        className="form-control"
-        name="country"
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
         onChange={[Function]}
-        placeholder="Country or Region of Residence"
         required={true}
-        value=""
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
       >
-        <option
-          value=""
-        >
-          Country or Region of Residence (required)
-        </option>
-        <option
-          value="AF"
-        >
-          Afghanistan
-        </option>
-        <option
-          value="AL"
-        >
-          Albania
-        </option>
-        <option
-          value="DZ"
-        >
-          Algeria
-        </option>
-        <option
-          value="AS"
-        >
-          American Samoa
-        </option>
-        <option
-          value="AD"
-        >
-          Andorra
-        </option>
-        <option
-          value="AO"
-        >
-          Angola
-        </option>
-        <option
-          value="AI"
-        >
-          Anguilla
-        </option>
-        <option
-          value="AQ"
-        >
-          Antarctica
-        </option>
-        <option
-          value="AG"
-        >
-          Antigua and Barbuda
-        </option>
-        <option
-          value="AR"
-        >
-          Argentina
-        </option>
-        <option
-          value="AM"
-        >
-          Armenia
-        </option>
-        <option
-          value="AW"
-        >
-          Aruba
-        </option>
-        <option
-          value="AU"
-        >
-          Australia
-        </option>
-        <option
-          value="AT"
-        >
-          Austria
-        </option>
-        <option
-          value="AZ"
-        >
-          Azerbaijan
-        </option>
-        <option
-          value="BS"
-        >
-          Bahamas
-        </option>
-        <option
-          value="BH"
-        >
-          Bahrain
-        </option>
-        <option
-          value="BD"
-        >
-          Bangladesh
-        </option>
-        <option
-          value="BB"
-        >
-          Barbados
-        </option>
-        <option
-          value="BY"
-        >
-          Belarus
-        </option>
-        <option
-          value="BE"
-        >
-          Belgium
-        </option>
-        <option
-          value="BZ"
-        >
-          Belize
-        </option>
-        <option
-          value="BJ"
-        >
-          Benin
-        </option>
-        <option
-          value="BM"
-        >
-          Bermuda
-        </option>
-        <option
-          value="BT"
-        >
-          Bhutan
-        </option>
-        <option
-          value="BO"
-        >
-          Bolivia
-        </option>
-        <option
-          value="BA"
-        >
-          Bosnia and Herzegovina
-        </option>
-        <option
-          value="BW"
-        >
-          Botswana
-        </option>
-        <option
-          value="BV"
-        >
-          Bouvet Island
-        </option>
-        <option
-          value="BR"
-        >
-          Brazil
-        </option>
-        <option
-          value="IO"
-        >
-          British Indian Ocean Territory
-        </option>
-        <option
-          value="BN"
-        >
-          Brunei Darussalam
-        </option>
-        <option
-          value="BG"
-        >
-          Bulgaria
-        </option>
-        <option
-          value="BF"
-        >
-          Burkina Faso
-        </option>
-        <option
-          value="BI"
-        >
-          Burundi
-        </option>
-        <option
-          value="KH"
-        >
-          Cambodia
-        </option>
-        <option
-          value="CM"
-        >
-          Cameroon
-        </option>
-        <option
-          value="CA"
-        >
-          Canada
-        </option>
-        <option
-          value="CV"
-        >
-          Cape Verde
-        </option>
-        <option
-          value="KY"
-        >
-          Cayman Islands
-        </option>
-        <option
-          value="CF"
-        >
-          Central African Republic
-        </option>
-        <option
-          value="TD"
-        >
-          Chad
-        </option>
-        <option
-          value="CL"
-        >
-          Chile
-        </option>
-        <option
-          value="CN"
-        >
-          China
-        </option>
-        <option
-          value="CX"
-        >
-          Christmas Island
-        </option>
-        <option
-          value="CC"
-        >
-          Cocos (Keeling) Islands
-        </option>
-        <option
-          value="CO"
-        >
-          Colombia
-        </option>
-        <option
-          value="KM"
-        >
-          Comoros
-        </option>
-        <option
-          value="CG"
-        >
-          Congo
-        </option>
-        <option
-          value="CD"
-        >
-          Congo, the Democratic Republic of the
-        </option>
-        <option
-          value="CK"
-        >
-          Cook Islands
-        </option>
-        <option
-          value="CR"
-        >
-          Costa Rica
-        </option>
-        <option
-          value="CI"
-        >
-          Cote D'Ivoire
-        </option>
-        <option
-          value="HR"
-        >
-          Croatia
-        </option>
-        <option
-          value="CU"
-        >
-          Cuba
-        </option>
-        <option
-          value="CY"
-        >
-          Cyprus
-        </option>
-        <option
-          value="CZ"
-        >
-          Czech Republic
-        </option>
-        <option
-          value="DK"
-        >
-          Denmark
-        </option>
-        <option
-          value="DJ"
-        >
-          Djibouti
-        </option>
-        <option
-          value="DM"
-        >
-          Dominica
-        </option>
-        <option
-          value="DO"
-        >
-          Dominican Republic
-        </option>
-        <option
-          value="EC"
-        >
-          Ecuador
-        </option>
-        <option
-          value="EG"
-        >
-          Egypt
-        </option>
-        <option
-          value="SV"
-        >
-          El Salvador
-        </option>
-        <option
-          value="GQ"
-        >
-          Equatorial Guinea
-        </option>
-        <option
-          value="ER"
-        >
-          Eritrea
-        </option>
-        <option
-          value="EE"
-        >
-          Estonia
-        </option>
-        <option
-          value="ET"
-        >
-          Ethiopia
-        </option>
-        <option
-          value="FK"
-        >
-          Falkland Islands (Malvinas)
-        </option>
-        <option
-          value="FO"
-        >
-          Faroe Islands
-        </option>
-        <option
-          value="FJ"
-        >
-          Fiji
-        </option>
-        <option
-          value="FI"
-        >
-          Finland
-        </option>
-        <option
-          value="FR"
-        >
-          France
-        </option>
-        <option
-          value="GF"
-        >
-          French Guiana
-        </option>
-        <option
-          value="PF"
-        >
-          French Polynesia
-        </option>
-        <option
-          value="TF"
-        >
-          French Southern Territories
-        </option>
-        <option
-          value="GA"
-        >
-          Gabon
-        </option>
-        <option
-          value="GM"
-        >
-          Gambia
-        </option>
-        <option
-          value="GE"
-        >
-          Georgia
-        </option>
-        <option
-          value="DE"
-        >
-          Germany
-        </option>
-        <option
-          value="GH"
-        >
-          Ghana
-        </option>
-        <option
-          value="GI"
-        >
-          Gibraltar
-        </option>
-        <option
-          value="GR"
-        >
-          Greece
-        </option>
-        <option
-          value="GL"
-        >
-          Greenland
-        </option>
-        <option
-          value="GD"
-        >
-          Grenada
-        </option>
-        <option
-          value="GP"
-        >
-          Guadeloupe
-        </option>
-        <option
-          value="GU"
-        >
-          Guam
-        </option>
-        <option
-          value="GT"
-        >
-          Guatemala
-        </option>
-        <option
-          value="GN"
-        >
-          Guinea
-        </option>
-        <option
-          value="GW"
-        >
-          Guinea-Bissau
-        </option>
-        <option
-          value="GY"
-        >
-          Guyana
-        </option>
-        <option
-          value="HT"
-        >
-          Haiti
-        </option>
-        <option
-          value="HM"
-        >
-          Heard Island and Mcdonald Islands
-        </option>
-        <option
-          value="VA"
-        >
-          Holy See (Vatican City State)
-        </option>
-        <option
-          value="HN"
-        >
-          Honduras
-        </option>
-        <option
-          value="HK"
-        >
-          Hong Kong
-        </option>
-        <option
-          value="HU"
-        >
-          Hungary
-        </option>
-        <option
-          value="IS"
-        >
-          Iceland
-        </option>
-        <option
-          value="IN"
-        >
-          India
-        </option>
-        <option
-          value="ID"
-        >
-          Indonesia
-        </option>
-        <option
-          value="IR"
-        >
-          Iran, Islamic Republic of
-        </option>
-        <option
-          value="IQ"
-        >
-          Iraq
-        </option>
-        <option
-          value="IE"
-        >
-          Ireland
-        </option>
-        <option
-          value="IL"
-        >
-          Israel
-        </option>
-        <option
-          value="IT"
-        >
-          Italy
-        </option>
-        <option
-          value="JM"
-        >
-          Jamaica
-        </option>
-        <option
-          value="JP"
-        >
-          Japan
-        </option>
-        <option
-          value="JO"
-        >
-          Jordan
-        </option>
-        <option
-          value="KZ"
-        >
-          Kazakhstan
-        </option>
-        <option
-          value="KE"
-        >
-          Kenya
-        </option>
-        <option
-          value="KI"
-        >
-          Kiribati
-        </option>
-        <option
-          value="KP"
-        >
-          North Korea
-        </option>
-        <option
-          value="KR"
-        >
-          South Korea
-        </option>
-        <option
-          value="KW"
-        >
-          Kuwait
-        </option>
-        <option
-          value="KG"
-        >
-          Kyrgyzstan
-        </option>
-        <option
-          value="LA"
-        >
-          Lao People's Democratic Republic
-        </option>
-        <option
-          value="LV"
-        >
-          Latvia
-        </option>
-        <option
-          value="LB"
-        >
-          Lebanon
-        </option>
-        <option
-          value="LS"
-        >
-          Lesotho
-        </option>
-        <option
-          value="LR"
-        >
-          Liberia
-        </option>
-        <option
-          value="LY"
-        >
-          Libya
-        </option>
-        <option
-          value="LI"
-        >
-          Liechtenstein
-        </option>
-        <option
-          value="LT"
-        >
-          Lithuania
-        </option>
-        <option
-          value="LU"
-        >
-          Luxembourg
-        </option>
-        <option
-          value="MO"
-        >
-          Macao
-        </option>
-        <option
-          value="MG"
-        >
-          Madagascar
-        </option>
-        <option
-          value="MW"
-        >
-          Malawi
-        </option>
-        <option
-          value="MY"
-        >
-          Malaysia
-        </option>
-        <option
-          value="MV"
-        >
-          Maldives
-        </option>
-        <option
-          value="ML"
-        >
-          Mali
-        </option>
-        <option
-          value="MT"
-        >
-          Malta
-        </option>
-        <option
-          value="MH"
-        >
-          Marshall Islands
-        </option>
-        <option
-          value="MQ"
-        >
-          Martinique
-        </option>
-        <option
-          value="MR"
-        >
-          Mauritania
-        </option>
-        <option
-          value="MU"
-        >
-          Mauritius
-        </option>
-        <option
-          value="YT"
-        >
-          Mayotte
-        </option>
-        <option
-          value="MX"
-        >
-          Mexico
-        </option>
-        <option
-          value="FM"
-        >
-          Micronesia, Federated States of
-        </option>
-        <option
-          value="MD"
-        >
-          Moldova, Republic of
-        </option>
-        <option
-          value="MC"
-        >
-          Monaco
-        </option>
-        <option
-          value="MN"
-        >
-          Mongolia
-        </option>
-        <option
-          value="MS"
-        >
-          Montserrat
-        </option>
-        <option
-          value="MA"
-        >
-          Morocco
-        </option>
-        <option
-          value="MZ"
-        >
-          Mozambique
-        </option>
-        <option
-          value="MM"
-        >
-          Myanmar
-        </option>
-        <option
-          value="NA"
-        >
-          Namibia
-        </option>
-        <option
-          value="NR"
-        >
-          Nauru
-        </option>
-        <option
-          value="NP"
-        >
-          Nepal
-        </option>
-        <option
-          value="NL"
-        >
-          Netherlands
-        </option>
-        <option
-          value="NC"
-        >
-          New Caledonia
-        </option>
-        <option
-          value="NZ"
-        >
-          New Zealand
-        </option>
-        <option
-          value="NI"
-        >
-          Nicaragua
-        </option>
-        <option
-          value="NE"
-        >
-          Niger
-        </option>
-        <option
-          value="NG"
-        >
-          Nigeria
-        </option>
-        <option
-          value="NU"
-        >
-          Niue
-        </option>
-        <option
-          value="NF"
-        >
-          Norfolk Island
-        </option>
-        <option
-          value="MK"
-        >
-          North Macedonia, Republic of
-        </option>
-        <option
-          value="MP"
-        >
-          Northern Mariana Islands
-        </option>
-        <option
-          value="NO"
-        >
-          Norway
-        </option>
-        <option
-          value="OM"
-        >
-          Oman
-        </option>
-        <option
-          value="PK"
-        >
-          Pakistan
-        </option>
-        <option
-          value="PW"
-        >
-          Palau
-        </option>
-        <option
-          value="PS"
-        >
-          Palestinian Territory, Occupied
-        </option>
-        <option
-          value="PA"
-        >
-          Panama
-        </option>
-        <option
-          value="PG"
-        >
-          Papua New Guinea
-        </option>
-        <option
-          value="PY"
-        >
-          Paraguay
-        </option>
-        <option
-          value="PE"
-        >
-          Peru
-        </option>
-        <option
-          value="PH"
-        >
-          Philippines
-        </option>
-        <option
-          value="PN"
-        >
-          Pitcairn
-        </option>
-        <option
-          value="PL"
-        >
-          Poland
-        </option>
-        <option
-          value="PT"
-        >
-          Portugal
-        </option>
-        <option
-          value="PR"
-        >
-          Puerto Rico
-        </option>
-        <option
-          value="QA"
-        >
-          Qatar
-        </option>
-        <option
-          value="RE"
-        >
-          Reunion
-        </option>
-        <option
-          value="RO"
-        >
-          Romania
-        </option>
-        <option
-          value="RU"
-        >
-          Russian Federation
-        </option>
-        <option
-          value="RW"
-        >
-          Rwanda
-        </option>
-        <option
-          value="SH"
-        >
-          Saint Helena
-        </option>
-        <option
-          value="KN"
-        >
-          Saint Kitts and Nevis
-        </option>
-        <option
-          value="LC"
-        >
-          Saint Lucia
-        </option>
-        <option
-          value="PM"
-        >
-          Saint Pierre and Miquelon
-        </option>
-        <option
-          value="VC"
-        >
-          Saint Vincent and the Grenadines
-        </option>
-        <option
-          value="WS"
-        >
-          Samoa
-        </option>
-        <option
-          value="SM"
-        >
-          San Marino
-        </option>
-        <option
-          value="ST"
-        >
-          Sao Tome and Principe
-        </option>
-        <option
-          value="SA"
-        >
-          Saudi Arabia
-        </option>
-        <option
-          value="SN"
-        >
-          Senegal
-        </option>
-        <option
-          value="SC"
-        >
-          Seychelles
-        </option>
-        <option
-          value="SL"
-        >
-          Sierra Leone
-        </option>
-        <option
-          value="SG"
-        >
-          Singapore
-        </option>
-        <option
-          value="SK"
-        >
-          Slovakia
-        </option>
-        <option
-          value="SI"
-        >
-          Slovenia
-        </option>
-        <option
-          value="SB"
-        >
-          Solomon Islands
-        </option>
-        <option
-          value="SO"
-        >
-          Somalia
-        </option>
-        <option
-          value="ZA"
-        >
-          South Africa
-        </option>
-        <option
-          value="GS"
-        >
-          South Georgia and the South Sandwich Islands
-        </option>
-        <option
-          value="ES"
-        >
-          Spain
-        </option>
-        <option
-          value="LK"
-        >
-          Sri Lanka
-        </option>
-        <option
-          value="SD"
-        >
-          Sudan
-        </option>
-        <option
-          value="SR"
-        >
-          Suriname
-        </option>
-        <option
-          value="SJ"
-        >
-          Svalbard and Jan Mayen
-        </option>
-        <option
-          value="SZ"
-        >
-          Swaziland
-        </option>
-        <option
-          value="SE"
-        >
-          Sweden
-        </option>
-        <option
-          value="CH"
-        >
-          Switzerland
-        </option>
-        <option
-          value="SY"
-        >
-          Syrian Arab Republic
-        </option>
-        <option
-          value="TW"
-        >
-          Taiwan
-        </option>
-        <option
-          value="TJ"
-        >
-          Tajikistan
-        </option>
-        <option
-          value="TZ"
-        >
-          Tanzania, United Republic of
-        </option>
-        <option
-          value="TH"
-        >
-          Thailand
-        </option>
-        <option
-          value="TL"
-        >
-          Timor-Leste
-        </option>
-        <option
-          value="TG"
-        >
-          Togo
-        </option>
-        <option
-          value="TK"
-        >
-          Tokelau
-        </option>
-        <option
-          value="TO"
-        >
-          Tonga
-        </option>
-        <option
-          value="TT"
-        >
-          Trinidad and Tobago
-        </option>
-        <option
-          value="TN"
-        >
-          Tunisia
-        </option>
-        <option
-          value="TR"
-        >
-          Turkey
-        </option>
-        <option
-          value="TM"
-        >
-          Turkmenistan
-        </option>
-        <option
-          value="TC"
-        >
-          Turks and Caicos Islands
-        </option>
-        <option
-          value="TV"
-        >
-          Tuvalu
-        </option>
-        <option
-          value="UG"
-        >
-          Uganda
-        </option>
-        <option
-          value="UA"
-        >
-          Ukraine
-        </option>
-        <option
-          value="AE"
-        >
-          United Arab Emirates
-        </option>
-        <option
-          value="GB"
-        >
-          United Kingdom
-        </option>
-        <option
-          value="US"
-        >
-          United States of America
-        </option>
-        <option
-          value="UM"
-        >
-          United States Minor Outlying Islands
-        </option>
-        <option
-          value="UY"
-        >
-          Uruguay
-        </option>
-        <option
-          value="UZ"
-        >
-          Uzbekistan
-        </option>
-        <option
-          value="VU"
-        >
-          Vanuatu
-        </option>
-        <option
-          value="VE"
-        >
-          Venezuela
-        </option>
-        <option
-          value="VN"
-        >
-          Viet Nam
-        </option>
-        <option
-          value="VG"
-        >
-          Virgin Islands, British
-        </option>
-        <option
-          value="VI"
-        >
-          Virgin Islands, U.S.
-        </option>
-        <option
-          value="WF"
-        >
-          Wallis and Futuna
-        </option>
-        <option
-          value="EH"
-        >
-          Western Sahara
-        </option>
-        <option
-          value="YE"
-        >
-          Yemen
-        </option>
-        <option
-          value="ZM"
-        >
-          Zambia
-        </option>
-        <option
-          value="ZW"
-        >
-          Zimbabwe
-        </option>
-        <option
-          value="AX"
-        >
-          Åland Islands
-        </option>
-        <option
-          value="BQ"
-        >
-          Bonaire, Sint Eustatius and Saba
-        </option>
-        <option
-          value="CW"
-        >
-          Curaçao
-        </option>
-        <option
-          value="GG"
-        >
-          Guernsey
-        </option>
-        <option
-          value="IM"
-        >
-          Isle of Man
-        </option>
-        <option
-          value="JE"
-        >
-          Jersey
-        </option>
-        <option
-          value="ME"
-        >
-          Montenegro
-        </option>
-        <option
-          value="BL"
-        >
-          Saint Barthélemy
-        </option>
-        <option
-          value="MF"
-        >
-          Saint Martin (French part)
-        </option>
-        <option
-          value="RS"
-        >
-          Serbia
-        </option>
-        <option
-          value="SX"
-        >
-          Sint Maarten (Dutch part)
-        </option>
-        <option
-          value="SS"
-        >
-          South Sudan
-        </option>
-        <option
-          value="XK"
-        >
-          Kosovo
-        </option>
-      </select>
+        Honor Code
+      </a>
+      
       <strong
         className="invalid-feedback"
-        id="country-invalid-feedback"
+        id="honor_code-invalid-feedback"
       >
-        Select your country or region of residence.
+        You must agree to the Your Platform Name Here Honor Code
       </strong>
     </div>
-    <span>
-      By creating an account, you agree to the 
-      <a
-        href="https://www.edx.org/edx-terms-service"
-      >
-        Terms of Service and Honor Code
-      </a>
-       and you acknowledge that edX and each Member process your personal data in accordance with the 
-      <a
-        href="https://www.edx.org/edx-privacy-policy"
-      >
-        Privacy Policy
-      </a>
-      .
-    </span>
-    <button
-      className="btn-primary mt-4 submit btn btn-primary"
-      disabled={false}
-      inputRef={[Function]}
-      onClick={[Function]}
-      type="button"
+    <div
+      className="form-group custom-control"
     >
-      Create Account
+      <input
+        aria-describedby=""
+        checked={false}
+        className="form-check-input"
+        id="optional"
+        name="optional"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={false}
+      />
+      <p
+        id="additionalFields"
+        onClick={[Function]}
+        role="presentation"
+      >
+        Support education research by providing additional information
+      </p>
+    </div>
+    <button
+      aria-disabled={false}
+      aria-live="assertive"
+      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      <span
+        className="d-flex align-items-center justify-content-center"
+      >
+        Create Account
+      </span>
     </button>
   </form>
+</div>
+`;
+
+exports[`./RegistrationPage.js should match default section snapshot 1`] = `
+<div
+  className="register-container mx-auto"
+>
   <div
-    className="text-center mb-2 pt-2"
+    className="text-left"
   >
     <span>
       Already have an edX account?
@@ -1547,17 +253,396 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
        Sign in.
     </a>
   </div>
+  <form
+    className="mb-4 mx-auto form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="name"
+      >
+        Full Name (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="name"
+        name="name"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="name-invalid-feedback"
+      >
+        Enter your full name.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="username"
+      >
+        Public Username (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="username"
+        name="username"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="username-invalid-feedback"
+      >
+        Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="email"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="email"
+        name="email"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="password"
+      >
+        Password (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="password"
+        name="password"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="password"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="password-invalid-feedback"
+      >
+        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={false}
+        className="form-check-input"
+        id="optional"
+        name="optional"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={false}
+      />
+      <p
+        id="additionalFields"
+        onClick={[Function]}
+        role="presentation"
+      >
+        Support education research by providing additional information
+      </p>
+    </div>
+    <button
+      aria-disabled={false}
+      aria-live="assertive"
+      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      <span
+        className="d-flex align-items-center justify-content-center"
+      >
+        Create Account
+      </span>
+    </button>
+  </form>
+</div>
+`;
+
+exports[`./RegistrationPage.js should match pending button state snapshot 1`] = `
+<div
+  className="register-container mx-auto"
+>
+  <div
+    className="text-left"
+  >
+    <span>
+      Already have an edX account?
+    </span>
+    <a
+      href="/login"
+    >
+       Sign in.
+    </a>
+  </div>
+  <form
+    className="mb-4 mx-auto form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="name"
+      >
+        Full Name (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="name"
+        name="name"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="name-invalid-feedback"
+      >
+        Enter your full name.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="username"
+      >
+        Public Username (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="username"
+        name="username"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="username-invalid-feedback"
+      >
+        Username must be between 2 and 30 characters long.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="email"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="email"
+        name="email"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="password"
+      >
+        Password (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="password"
+        name="password"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="password"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="password-invalid-feedback"
+      >
+        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={false}
+        className="form-check-input"
+        id="optional"
+        name="optional"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={false}
+      />
+      <p
+        id="additionalFields"
+        onClick={[Function]}
+        role="presentation"
+      >
+        Support education research by providing additional information
+      </p>
+    </div>
+    <button
+      aria-disabled={true}
+      aria-live="assertive"
+      className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      <span
+        className="d-flex align-items-center justify-content-center"
+      >
+        <span
+          className="pgn__stateful-btn-icon"
+        >
+          <span
+            aria-hidden={true}
+            className="icon fa fa-spinner fa-spin"
+            id="Icon1"
+          />
+        </span>
+        Create Account
+      </span>
+    </button>
+  </form>
 </div>
 `;
 
 exports[`./RegistrationPage.js should show error message on 409 1`] = `
 <div
-  className="logistration-container d-flex flex-column align-items-center mx-auto"
-  style={
-    Object {
-      "width": "30rem",
-    }
-  }
+  className="register-container mx-auto"
 >
   <div
     className="fade alert alert-danger show"
@@ -1598,113 +683,16 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
     </div>
   </div>
   <div
-    className="mb-4"
+    className="text-left"
   >
-    <svg
-      aria-hidden="true"
-      className="svg-inline--fa fa-graduation-cap fa-w-20 d-block mx-auto fa-2x"
-      data-icon="graduation-cap"
-      data-prefix="fas"
-      focusable="false"
-      role="img"
-      style={Object {}}
-      viewBox="0 0 640 512"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"
-        fill="currentColor"
-        style={Object {}}
-      />
-    </svg>
-    <h4
-      className="d-block mx-auto"
-    >
-      Start learning now!
-    </h4>
-  </div>
-  <div
-    className="d-block mb-4"
-  >
-    <span
-      className="d-block mx-auto mb-4 section-heading-line"
-    >
-      Create an account using
+    <span>
+      Already have an edX account?
     </span>
-    <button
-      className="btn-social facebook"
-      type="button"
+    <a
+      href="/login"
     >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-facebook-f fa-w-10 mr-2"
-        data-icon="facebook-f"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 320 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Facebook
-    </button>
-    <button
-      className="btn-social google"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-google fa-w-16 mr-2"
-        data-icon="google"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 488 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Google
-    </button>
-    <button
-      className="btn-social microsoft"
-      type="button"
-    >
-      <svg
-        aria-hidden="true"
-        className="svg-inline--fa fa-microsoft fa-w-14 mr-2"
-        data-icon="microsoft"
-        data-prefix="fab"
-        focusable="false"
-        role="img"
-        style={Object {}}
-        viewBox="0 0 448 512"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0 32h214.6v214.6H0V32zm233.4 0H448v214.6H233.4V32zM0 265.4h214.6V480H0V265.4zm233.4 0H448V480H233.4V265.4z"
-          fill="currentColor"
-          style={Object {}}
-        />
-      </svg>
-      Microsoft
-    </button>
-    <span
-      className="d-block mx-auto text-center mt-4 section-heading-line"
-    >
-      or create a new one here
-    </span>
+       Sign in.
+    </a>
   </div>
   <form
     className="mb-4 mx-auto form-group"
@@ -1714,44 +702,17 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationEmail"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="registrationEmail"
-        name="email"
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="registrationName"
+        htmlFor="name"
       >
         Full Name (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationName"
+        id="name"
         name="name"
         onChange={[Function]}
-        placeholder="Name"
+        placeholder=""
         required={true}
         type="text"
         value=""
@@ -1768,17 +729,17 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationUsername"
+        htmlFor="username"
       >
         Public Username (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationUsername"
+        id="username"
         name="username"
         onChange={[Function]}
-        placeholder="Username"
+        placeholder=""
         required={true}
         type="text"
         value=""
@@ -1795,17 +756,44 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
     >
       <label
         className="h6 pt-3"
-        htmlFor="registrationPassword"
+        htmlFor="email"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="email"
+        name="email"
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="email"
+        value=""
+      />
+      <strong
+        className="invalid-feedback"
+        id="email-invalid-feedback"
+      >
+        Enter a valid email address that contains at least 3 characters.
+      </strong>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="password"
       >
         Password (required)
       </label>
       <input
         aria-describedby=""
         className="form-control"
-        id="registrationPassword"
+        id="password"
         name="password"
         onChange={[Function]}
-        placeholder="Password"
+        placeholder=""
         required={true}
         type="password"
         value=""
@@ -1818,1322 +806,71 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
       </strong>
     </div>
     <div
-      className="form-group"
+      className="form-group custom-control"
     >
-      <label
-        className="h6 pt-3"
-        htmlFor="registrationCountry"
-      >
-        Country (required)
-      </label>
-      <select
+      <input
         aria-describedby=""
-        className="form-control"
-        name="country"
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
         onChange={[Function]}
-        placeholder="Country or Region of Residence"
         required={true}
-        value=""
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
       >
-        <option
-          value=""
-        >
-          Country or Region of Residence (required)
-        </option>
-        <option
-          value="AF"
-        >
-          Afghanistan
-        </option>
-        <option
-          value="AL"
-        >
-          Albania
-        </option>
-        <option
-          value="DZ"
-        >
-          Algeria
-        </option>
-        <option
-          value="AS"
-        >
-          American Samoa
-        </option>
-        <option
-          value="AD"
-        >
-          Andorra
-        </option>
-        <option
-          value="AO"
-        >
-          Angola
-        </option>
-        <option
-          value="AI"
-        >
-          Anguilla
-        </option>
-        <option
-          value="AQ"
-        >
-          Antarctica
-        </option>
-        <option
-          value="AG"
-        >
-          Antigua and Barbuda
-        </option>
-        <option
-          value="AR"
-        >
-          Argentina
-        </option>
-        <option
-          value="AM"
-        >
-          Armenia
-        </option>
-        <option
-          value="AW"
-        >
-          Aruba
-        </option>
-        <option
-          value="AU"
-        >
-          Australia
-        </option>
-        <option
-          value="AT"
-        >
-          Austria
-        </option>
-        <option
-          value="AZ"
-        >
-          Azerbaijan
-        </option>
-        <option
-          value="BS"
-        >
-          Bahamas
-        </option>
-        <option
-          value="BH"
-        >
-          Bahrain
-        </option>
-        <option
-          value="BD"
-        >
-          Bangladesh
-        </option>
-        <option
-          value="BB"
-        >
-          Barbados
-        </option>
-        <option
-          value="BY"
-        >
-          Belarus
-        </option>
-        <option
-          value="BE"
-        >
-          Belgium
-        </option>
-        <option
-          value="BZ"
-        >
-          Belize
-        </option>
-        <option
-          value="BJ"
-        >
-          Benin
-        </option>
-        <option
-          value="BM"
-        >
-          Bermuda
-        </option>
-        <option
-          value="BT"
-        >
-          Bhutan
-        </option>
-        <option
-          value="BO"
-        >
-          Bolivia
-        </option>
-        <option
-          value="BA"
-        >
-          Bosnia and Herzegovina
-        </option>
-        <option
-          value="BW"
-        >
-          Botswana
-        </option>
-        <option
-          value="BV"
-        >
-          Bouvet Island
-        </option>
-        <option
-          value="BR"
-        >
-          Brazil
-        </option>
-        <option
-          value="IO"
-        >
-          British Indian Ocean Territory
-        </option>
-        <option
-          value="BN"
-        >
-          Brunei Darussalam
-        </option>
-        <option
-          value="BG"
-        >
-          Bulgaria
-        </option>
-        <option
-          value="BF"
-        >
-          Burkina Faso
-        </option>
-        <option
-          value="BI"
-        >
-          Burundi
-        </option>
-        <option
-          value="KH"
-        >
-          Cambodia
-        </option>
-        <option
-          value="CM"
-        >
-          Cameroon
-        </option>
-        <option
-          value="CA"
-        >
-          Canada
-        </option>
-        <option
-          value="CV"
-        >
-          Cape Verde
-        </option>
-        <option
-          value="KY"
-        >
-          Cayman Islands
-        </option>
-        <option
-          value="CF"
-        >
-          Central African Republic
-        </option>
-        <option
-          value="TD"
-        >
-          Chad
-        </option>
-        <option
-          value="CL"
-        >
-          Chile
-        </option>
-        <option
-          value="CN"
-        >
-          China
-        </option>
-        <option
-          value="CX"
-        >
-          Christmas Island
-        </option>
-        <option
-          value="CC"
-        >
-          Cocos (Keeling) Islands
-        </option>
-        <option
-          value="CO"
-        >
-          Colombia
-        </option>
-        <option
-          value="KM"
-        >
-          Comoros
-        </option>
-        <option
-          value="CG"
-        >
-          Congo
-        </option>
-        <option
-          value="CD"
-        >
-          Congo, the Democratic Republic of the
-        </option>
-        <option
-          value="CK"
-        >
-          Cook Islands
-        </option>
-        <option
-          value="CR"
-        >
-          Costa Rica
-        </option>
-        <option
-          value="CI"
-        >
-          Cote D'Ivoire
-        </option>
-        <option
-          value="HR"
-        >
-          Croatia
-        </option>
-        <option
-          value="CU"
-        >
-          Cuba
-        </option>
-        <option
-          value="CY"
-        >
-          Cyprus
-        </option>
-        <option
-          value="CZ"
-        >
-          Czech Republic
-        </option>
-        <option
-          value="DK"
-        >
-          Denmark
-        </option>
-        <option
-          value="DJ"
-        >
-          Djibouti
-        </option>
-        <option
-          value="DM"
-        >
-          Dominica
-        </option>
-        <option
-          value="DO"
-        >
-          Dominican Republic
-        </option>
-        <option
-          value="EC"
-        >
-          Ecuador
-        </option>
-        <option
-          value="EG"
-        >
-          Egypt
-        </option>
-        <option
-          value="SV"
-        >
-          El Salvador
-        </option>
-        <option
-          value="GQ"
-        >
-          Equatorial Guinea
-        </option>
-        <option
-          value="ER"
-        >
-          Eritrea
-        </option>
-        <option
-          value="EE"
-        >
-          Estonia
-        </option>
-        <option
-          value="ET"
-        >
-          Ethiopia
-        </option>
-        <option
-          value="FK"
-        >
-          Falkland Islands (Malvinas)
-        </option>
-        <option
-          value="FO"
-        >
-          Faroe Islands
-        </option>
-        <option
-          value="FJ"
-        >
-          Fiji
-        </option>
-        <option
-          value="FI"
-        >
-          Finland
-        </option>
-        <option
-          value="FR"
-        >
-          France
-        </option>
-        <option
-          value="GF"
-        >
-          French Guiana
-        </option>
-        <option
-          value="PF"
-        >
-          French Polynesia
-        </option>
-        <option
-          value="TF"
-        >
-          French Southern Territories
-        </option>
-        <option
-          value="GA"
-        >
-          Gabon
-        </option>
-        <option
-          value="GM"
-        >
-          Gambia
-        </option>
-        <option
-          value="GE"
-        >
-          Georgia
-        </option>
-        <option
-          value="DE"
-        >
-          Germany
-        </option>
-        <option
-          value="GH"
-        >
-          Ghana
-        </option>
-        <option
-          value="GI"
-        >
-          Gibraltar
-        </option>
-        <option
-          value="GR"
-        >
-          Greece
-        </option>
-        <option
-          value="GL"
-        >
-          Greenland
-        </option>
-        <option
-          value="GD"
-        >
-          Grenada
-        </option>
-        <option
-          value="GP"
-        >
-          Guadeloupe
-        </option>
-        <option
-          value="GU"
-        >
-          Guam
-        </option>
-        <option
-          value="GT"
-        >
-          Guatemala
-        </option>
-        <option
-          value="GN"
-        >
-          Guinea
-        </option>
-        <option
-          value="GW"
-        >
-          Guinea-Bissau
-        </option>
-        <option
-          value="GY"
-        >
-          Guyana
-        </option>
-        <option
-          value="HT"
-        >
-          Haiti
-        </option>
-        <option
-          value="HM"
-        >
-          Heard Island and Mcdonald Islands
-        </option>
-        <option
-          value="VA"
-        >
-          Holy See (Vatican City State)
-        </option>
-        <option
-          value="HN"
-        >
-          Honduras
-        </option>
-        <option
-          value="HK"
-        >
-          Hong Kong
-        </option>
-        <option
-          value="HU"
-        >
-          Hungary
-        </option>
-        <option
-          value="IS"
-        >
-          Iceland
-        </option>
-        <option
-          value="IN"
-        >
-          India
-        </option>
-        <option
-          value="ID"
-        >
-          Indonesia
-        </option>
-        <option
-          value="IR"
-        >
-          Iran, Islamic Republic of
-        </option>
-        <option
-          value="IQ"
-        >
-          Iraq
-        </option>
-        <option
-          value="IE"
-        >
-          Ireland
-        </option>
-        <option
-          value="IL"
-        >
-          Israel
-        </option>
-        <option
-          value="IT"
-        >
-          Italy
-        </option>
-        <option
-          value="JM"
-        >
-          Jamaica
-        </option>
-        <option
-          value="JP"
-        >
-          Japan
-        </option>
-        <option
-          value="JO"
-        >
-          Jordan
-        </option>
-        <option
-          value="KZ"
-        >
-          Kazakhstan
-        </option>
-        <option
-          value="KE"
-        >
-          Kenya
-        </option>
-        <option
-          value="KI"
-        >
-          Kiribati
-        </option>
-        <option
-          value="KP"
-        >
-          North Korea
-        </option>
-        <option
-          value="KR"
-        >
-          South Korea
-        </option>
-        <option
-          value="KW"
-        >
-          Kuwait
-        </option>
-        <option
-          value="KG"
-        >
-          Kyrgyzstan
-        </option>
-        <option
-          value="LA"
-        >
-          Lao People's Democratic Republic
-        </option>
-        <option
-          value="LV"
-        >
-          Latvia
-        </option>
-        <option
-          value="LB"
-        >
-          Lebanon
-        </option>
-        <option
-          value="LS"
-        >
-          Lesotho
-        </option>
-        <option
-          value="LR"
-        >
-          Liberia
-        </option>
-        <option
-          value="LY"
-        >
-          Libya
-        </option>
-        <option
-          value="LI"
-        >
-          Liechtenstein
-        </option>
-        <option
-          value="LT"
-        >
-          Lithuania
-        </option>
-        <option
-          value="LU"
-        >
-          Luxembourg
-        </option>
-        <option
-          value="MO"
-        >
-          Macao
-        </option>
-        <option
-          value="MG"
-        >
-          Madagascar
-        </option>
-        <option
-          value="MW"
-        >
-          Malawi
-        </option>
-        <option
-          value="MY"
-        >
-          Malaysia
-        </option>
-        <option
-          value="MV"
-        >
-          Maldives
-        </option>
-        <option
-          value="ML"
-        >
-          Mali
-        </option>
-        <option
-          value="MT"
-        >
-          Malta
-        </option>
-        <option
-          value="MH"
-        >
-          Marshall Islands
-        </option>
-        <option
-          value="MQ"
-        >
-          Martinique
-        </option>
-        <option
-          value="MR"
-        >
-          Mauritania
-        </option>
-        <option
-          value="MU"
-        >
-          Mauritius
-        </option>
-        <option
-          value="YT"
-        >
-          Mayotte
-        </option>
-        <option
-          value="MX"
-        >
-          Mexico
-        </option>
-        <option
-          value="FM"
-        >
-          Micronesia, Federated States of
-        </option>
-        <option
-          value="MD"
-        >
-          Moldova, Republic of
-        </option>
-        <option
-          value="MC"
-        >
-          Monaco
-        </option>
-        <option
-          value="MN"
-        >
-          Mongolia
-        </option>
-        <option
-          value="MS"
-        >
-          Montserrat
-        </option>
-        <option
-          value="MA"
-        >
-          Morocco
-        </option>
-        <option
-          value="MZ"
-        >
-          Mozambique
-        </option>
-        <option
-          value="MM"
-        >
-          Myanmar
-        </option>
-        <option
-          value="NA"
-        >
-          Namibia
-        </option>
-        <option
-          value="NR"
-        >
-          Nauru
-        </option>
-        <option
-          value="NP"
-        >
-          Nepal
-        </option>
-        <option
-          value="NL"
-        >
-          Netherlands
-        </option>
-        <option
-          value="NC"
-        >
-          New Caledonia
-        </option>
-        <option
-          value="NZ"
-        >
-          New Zealand
-        </option>
-        <option
-          value="NI"
-        >
-          Nicaragua
-        </option>
-        <option
-          value="NE"
-        >
-          Niger
-        </option>
-        <option
-          value="NG"
-        >
-          Nigeria
-        </option>
-        <option
-          value="NU"
-        >
-          Niue
-        </option>
-        <option
-          value="NF"
-        >
-          Norfolk Island
-        </option>
-        <option
-          value="MK"
-        >
-          North Macedonia, Republic of
-        </option>
-        <option
-          value="MP"
-        >
-          Northern Mariana Islands
-        </option>
-        <option
-          value="NO"
-        >
-          Norway
-        </option>
-        <option
-          value="OM"
-        >
-          Oman
-        </option>
-        <option
-          value="PK"
-        >
-          Pakistan
-        </option>
-        <option
-          value="PW"
-        >
-          Palau
-        </option>
-        <option
-          value="PS"
-        >
-          Palestinian Territory, Occupied
-        </option>
-        <option
-          value="PA"
-        >
-          Panama
-        </option>
-        <option
-          value="PG"
-        >
-          Papua New Guinea
-        </option>
-        <option
-          value="PY"
-        >
-          Paraguay
-        </option>
-        <option
-          value="PE"
-        >
-          Peru
-        </option>
-        <option
-          value="PH"
-        >
-          Philippines
-        </option>
-        <option
-          value="PN"
-        >
-          Pitcairn
-        </option>
-        <option
-          value="PL"
-        >
-          Poland
-        </option>
-        <option
-          value="PT"
-        >
-          Portugal
-        </option>
-        <option
-          value="PR"
-        >
-          Puerto Rico
-        </option>
-        <option
-          value="QA"
-        >
-          Qatar
-        </option>
-        <option
-          value="RE"
-        >
-          Reunion
-        </option>
-        <option
-          value="RO"
-        >
-          Romania
-        </option>
-        <option
-          value="RU"
-        >
-          Russian Federation
-        </option>
-        <option
-          value="RW"
-        >
-          Rwanda
-        </option>
-        <option
-          value="SH"
-        >
-          Saint Helena
-        </option>
-        <option
-          value="KN"
-        >
-          Saint Kitts and Nevis
-        </option>
-        <option
-          value="LC"
-        >
-          Saint Lucia
-        </option>
-        <option
-          value="PM"
-        >
-          Saint Pierre and Miquelon
-        </option>
-        <option
-          value="VC"
-        >
-          Saint Vincent and the Grenadines
-        </option>
-        <option
-          value="WS"
-        >
-          Samoa
-        </option>
-        <option
-          value="SM"
-        >
-          San Marino
-        </option>
-        <option
-          value="ST"
-        >
-          Sao Tome and Principe
-        </option>
-        <option
-          value="SA"
-        >
-          Saudi Arabia
-        </option>
-        <option
-          value="SN"
-        >
-          Senegal
-        </option>
-        <option
-          value="SC"
-        >
-          Seychelles
-        </option>
-        <option
-          value="SL"
-        >
-          Sierra Leone
-        </option>
-        <option
-          value="SG"
-        >
-          Singapore
-        </option>
-        <option
-          value="SK"
-        >
-          Slovakia
-        </option>
-        <option
-          value="SI"
-        >
-          Slovenia
-        </option>
-        <option
-          value="SB"
-        >
-          Solomon Islands
-        </option>
-        <option
-          value="SO"
-        >
-          Somalia
-        </option>
-        <option
-          value="ZA"
-        >
-          South Africa
-        </option>
-        <option
-          value="GS"
-        >
-          South Georgia and the South Sandwich Islands
-        </option>
-        <option
-          value="ES"
-        >
-          Spain
-        </option>
-        <option
-          value="LK"
-        >
-          Sri Lanka
-        </option>
-        <option
-          value="SD"
-        >
-          Sudan
-        </option>
-        <option
-          value="SR"
-        >
-          Suriname
-        </option>
-        <option
-          value="SJ"
-        >
-          Svalbard and Jan Mayen
-        </option>
-        <option
-          value="SZ"
-        >
-          Swaziland
-        </option>
-        <option
-          value="SE"
-        >
-          Sweden
-        </option>
-        <option
-          value="CH"
-        >
-          Switzerland
-        </option>
-        <option
-          value="SY"
-        >
-          Syrian Arab Republic
-        </option>
-        <option
-          value="TW"
-        >
-          Taiwan
-        </option>
-        <option
-          value="TJ"
-        >
-          Tajikistan
-        </option>
-        <option
-          value="TZ"
-        >
-          Tanzania, United Republic of
-        </option>
-        <option
-          value="TH"
-        >
-          Thailand
-        </option>
-        <option
-          value="TL"
-        >
-          Timor-Leste
-        </option>
-        <option
-          value="TG"
-        >
-          Togo
-        </option>
-        <option
-          value="TK"
-        >
-          Tokelau
-        </option>
-        <option
-          value="TO"
-        >
-          Tonga
-        </option>
-        <option
-          value="TT"
-        >
-          Trinidad and Tobago
-        </option>
-        <option
-          value="TN"
-        >
-          Tunisia
-        </option>
-        <option
-          value="TR"
-        >
-          Turkey
-        </option>
-        <option
-          value="TM"
-        >
-          Turkmenistan
-        </option>
-        <option
-          value="TC"
-        >
-          Turks and Caicos Islands
-        </option>
-        <option
-          value="TV"
-        >
-          Tuvalu
-        </option>
-        <option
-          value="UG"
-        >
-          Uganda
-        </option>
-        <option
-          value="UA"
-        >
-          Ukraine
-        </option>
-        <option
-          value="AE"
-        >
-          United Arab Emirates
-        </option>
-        <option
-          value="GB"
-        >
-          United Kingdom
-        </option>
-        <option
-          value="US"
-        >
-          United States of America
-        </option>
-        <option
-          value="UM"
-        >
-          United States Minor Outlying Islands
-        </option>
-        <option
-          value="UY"
-        >
-          Uruguay
-        </option>
-        <option
-          value="UZ"
-        >
-          Uzbekistan
-        </option>
-        <option
-          value="VU"
-        >
-          Vanuatu
-        </option>
-        <option
-          value="VE"
-        >
-          Venezuela
-        </option>
-        <option
-          value="VN"
-        >
-          Viet Nam
-        </option>
-        <option
-          value="VG"
-        >
-          Virgin Islands, British
-        </option>
-        <option
-          value="VI"
-        >
-          Virgin Islands, U.S.
-        </option>
-        <option
-          value="WF"
-        >
-          Wallis and Futuna
-        </option>
-        <option
-          value="EH"
-        >
-          Western Sahara
-        </option>
-        <option
-          value="YE"
-        >
-          Yemen
-        </option>
-        <option
-          value="ZM"
-        >
-          Zambia
-        </option>
-        <option
-          value="ZW"
-        >
-          Zimbabwe
-        </option>
-        <option
-          value="AX"
-        >
-          Åland Islands
-        </option>
-        <option
-          value="BQ"
-        >
-          Bonaire, Sint Eustatius and Saba
-        </option>
-        <option
-          value="CW"
-        >
-          Curaçao
-        </option>
-        <option
-          value="GG"
-        >
-          Guernsey
-        </option>
-        <option
-          value="IM"
-        >
-          Isle of Man
-        </option>
-        <option
-          value="JE"
-        >
-          Jersey
-        </option>
-        <option
-          value="ME"
-        >
-          Montenegro
-        </option>
-        <option
-          value="BL"
-        >
-          Saint Barthélemy
-        </option>
-        <option
-          value="MF"
-        >
-          Saint Martin (French part)
-        </option>
-        <option
-          value="RS"
-        >
-          Serbia
-        </option>
-        <option
-          value="SX"
-        >
-          Sint Maarten (Dutch part)
-        </option>
-        <option
-          value="SS"
-        >
-          South Sudan
-        </option>
-        <option
-          value="XK"
-        >
-          Kosovo
-        </option>
-      </select>
+        Honor Code
+      </a>
+      
       <strong
         className="invalid-feedback"
-        id="country-invalid-feedback"
+        id="honor_code-invalid-feedback"
       >
-        Select your country or region of residence.
+        You must agree to the Your Platform Name Here Honor Code
       </strong>
     </div>
-    <span>
-      By creating an account, you agree to the 
-      <a
-        href="https://www.edx.org/edx-terms-service"
-      >
-        Terms of Service and Honor Code
-      </a>
-       and you acknowledge that edX and each Member process your personal data in accordance with the 
-      <a
-        href="https://www.edx.org/edx-privacy-policy"
-      >
-        Privacy Policy
-      </a>
-      .
-    </span>
-    <button
-      className="btn-primary mt-4 submit btn btn-primary"
-      disabled={false}
-      inputRef={[Function]}
-      onClick={[Function]}
-      type="button"
+    <div
+      className="form-group custom-control"
     >
-      Create Account
+      <input
+        aria-describedby=""
+        checked={false}
+        className="form-check-input"
+        id="optional"
+        name="optional"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={false}
+      />
+      <p
+        id="additionalFields"
+        onClick={[Function]}
+        role="presentation"
+      >
+        Support education research by providing additional information
+      </p>
+    </div>
+    <button
+      aria-disabled={false}
+      aria-live="assertive"
+      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+    >
+      <span
+        className="d-flex align-items-center justify-content-center"
+      >
+        Create Account
+      </span>
     </button>
   </form>
-  <div
-    className="text-center mb-2 pt-2"
-  >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
 </div>
 `;

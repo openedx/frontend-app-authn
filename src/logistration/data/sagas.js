@@ -1,5 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
+import { camelCaseObject } from '@edx/frontend-platform';
+
 // Actions
 import {
   REGISTER_NEW_USER,
@@ -14,11 +16,19 @@ import {
   getThirdPartyAuthContextBegin,
   getThirdPartyAuthContextSuccess,
   getThirdPartyAuthContextFailure,
+  REGISTER_FORM,
+  fetchRegistrationFormBegin,
+  fetchRegistrationFormSuccess,
+  fetchRegistrationFormFailure,
 } from './actions';
 
-
 // Services
-import { getThirdPartyAuthContext, postNewUser, login } from './service';
+import {
+  getRegistrationForm,
+  getThirdPartyAuthContext,
+  postNewUser,
+  login,
+} from './service';
 
 export function* handleNewUserRegistration(action) {
   try {
@@ -51,7 +61,7 @@ export function* handleLoginRequest(action) {
   } catch (e) {
     const statusCodes = [400];
     if (e.response && statusCodes.includes(e.response.status)) {
-      yield put(loginRequestFailure(e.response.data.value));
+      yield put(loginRequestFailure(camelCaseObject(e.response.data)));
     }
   }
 }
@@ -70,8 +80,23 @@ export function* fetchThirdPartyAuthContext(action) {
   }
 }
 
+export function* fetchRegistrationForm() {
+  try {
+    yield put(fetchRegistrationFormBegin());
+    const { registrationForm } = yield call(getRegistrationForm);
+
+    yield put(fetchRegistrationFormSuccess(
+      registrationForm,
+    ));
+  } catch (e) {
+    yield put(fetchRegistrationFormFailure());
+    throw e;
+  }
+}
+
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
   yield takeEvery(LOGIN_REQUEST.BASE, handleLoginRequest);
   yield takeEvery(THIRD_PARTY_AUTH_CONTEXT.BASE, fetchThirdPartyAuthContext);
+  yield takeEvery(REGISTER_FORM.BASE, fetchRegistrationForm);
 }

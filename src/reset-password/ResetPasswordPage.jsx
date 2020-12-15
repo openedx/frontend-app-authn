@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Input, ValidationFormGroup } from '@edx/paragon';
+import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { getQueryParameters } from '@edx/frontend-platform';
@@ -13,7 +13,6 @@ import InvalidTokenMessage from './InvalidToken';
 import ResetSuccessMessage from './ResetSuccess';
 import ResetFailureMessage from './ResetFailure';
 import Spinner from './Spinner';
-
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
@@ -123,12 +122,15 @@ const ResetPasswordPage = (props) => {
                   </ValidationFormGroup>
                 </div>
               </div>
-              <Button
+              <StatefulButton
+                type="submit"
                 className="btn-primary submit"
+                state={props.status}
+                labels={{
+                  default: intl.formatMessage(messages['logistration.reset.password.page.submit.button']),
+                }}
                 onClick={e => handleSubmit(e)}
-              >
-                {intl.formatMessage(messages['logistration.reset.password.page.submit.button'])}
-              </Button>
+              />
             </form>
           </div>
         </div>

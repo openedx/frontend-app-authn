@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ThirdPartyAuthAlert should match login page third party auth alert message snapshot 1`] = `
+<div
+  className="fade alert-warning mt-n2 alert show"
+  id="tpa-alert"
+  role="alert"
+>
+  <span>
+    You have successfully signed into Google, but your Google account does not have a linked edX account. To link your accounts, sign in now using your edX password.
+  </span>
+</div>
+`;
+
+exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
+<div
+  className="fade alert-warning mt-n2 alert show"
+  id="tpa-alert"
+  role="alert"
+>
+  <span>
+    You've successfully signed into Google. We just need a little more information before you start learning with edX.
+  </span>
+</div>
+`;

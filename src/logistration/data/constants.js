@@ -1,2 +1,2 @@
 // eslint-disable-next-line import/prefer-default-export
-export const DEFAULT_REDIRECT_URL = '/dashboard';
+export const NON_COMPLIANT_PASSWORD_EXCEPTION = 'NonCompliantPasswordException';

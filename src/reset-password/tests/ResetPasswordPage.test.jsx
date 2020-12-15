@@ -16,7 +16,6 @@ jest.mock('@edx/frontend-platform/auth');
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
 
-
 describe('ResetPasswordPage', () => {
   let props = {};
   let store = {};
@@ -53,10 +52,36 @@ describe('ResetPasswordPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('show spinner component during token validation', () => {
+    props = {
+      ...props,
+      token_status: 'pending',
+      match: {
+        params: {
+          token: 'test-token',
+        },
+      },
+    };
+    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should match invalid token message section snapshot', () => {
     props = {
       ...props,
       token_status: 'invalid',
+    };
+    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
+      .toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should match pending reset message section snapshot', () => {
+    props = {
+      ...props,
+      token_status: 'valid',
+      status: 'pending',
     };
     const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
       .toJSON();
@@ -113,7 +138,7 @@ describe('ResetPasswordPage', () => {
     expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
   });
 
-  it('with valid inputs resetPassword action is dispatch', () => {
+  it('with valid inputs resetPassword action is dispatch', async () => {
     const newPassword = 'test-password1';
     store = mockStore({
       ...store,
@@ -125,6 +150,13 @@ describe('ResetPasswordPage', () => {
       token: 'token',
     };
 
+    auth.getHttpClient = jest.fn(() => ({
+      post: async () => ({
+        data: {},
+        catch: () => {},
+      }),
+    }));
+
     const formPayload = {
       new_password1: newPassword,
       new_password2: newPassword,
@@ -132,26 +164,13 @@ describe('ResetPasswordPage', () => {
 
     store.dispatch = jest.fn(store.dispatch);
     const resetPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPage.find('input#reset-password-input').simulate('blur', { target: { value: newPassword } });
+    await act(async () => {
+      resetPage.find('input#reset-password-input').simulate('blur', { target: { value: newPassword } });
+    });
     resetPage.find('input#confirm-password-input').simulate('change', { target: { value: newPassword } });
     resetPage.find('button.submit').simulate('click');
 
     expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
     resetPage.unmount();
-  });
-
-  it('show spinner component during token validation', () => {
-    props = {
-      ...props,
-      token_status: 'pending',
-      match: {
-        params: {
-          token: 'test-token',
-        },
-      },
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
   });
 });
