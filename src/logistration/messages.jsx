@@ -86,25 +86,100 @@ const messages = defineMessages({
     defaultMessage: 'Register with Institution/Campus Credentials',
     description: 'Heading of institution page',
   },
-  'logistration.register.institution.login.page.back.button': {
-    id: 'logistration.register.institution.login.page.back.button',
+  'logistration.create.an.account': {
+    id: 'logistration.create.an.account',
     defaultMessage: 'Create an Account',
-    description: 'return to login page',
+    description: 'Message on button to return to register page',
   },
   'logistration.login.institution.login.sign.in': {
     id: 'logistration.login.institution.login.sign.in',
     defaultMessage: 'Sign In',
     description: 'Sign In text',
   },
-  'logistration.login.institution.login.sign.in.with': {
-    id: 'logistration.login.institution.login.sign.in.with',
+  'logistration.or.sign.in.with': {
+    id: 'logistration.or.sign.in.with',
     defaultMessage: 'or sign in with',
-    description: 'gives hint about other sign options',
+    description: 'gives hint about other sign in options',
   },
   'logistration.non.compliant.password.title': {
     id: 'logistration.non.compliant.password.title',
     defaultMessage: 'We recently changed our password requirements',
     description: 'A title that appears in bold before error message for non-compliant password',
+  },
+  'logistration.first.time.here': {
+    id: 'logistration.first.time.here',
+    defaultMessage: 'First time here?',
+    description: 'A question that appears before sign up link',
+  },
+  'logistration.login.page.email.label': {
+    id: 'logistration.login.page.email.label',
+    defaultMessage: 'Email',
+    description: 'Label that appears above email field',
+  },
+  'logistration.register.page.email.label': {
+    id: 'logistration.register.page.email.label',
+    defaultMessage: 'Email (required)',
+    description: 'Label that appears above email field on register page',
+  },
+  'logistration.email.format.validation.message': {
+    id: 'logistration.email.format.validation.message',
+    defaultMessage: 'The email address you\'ve provided isn\'t formatted correctly.',
+    description: 'Validation message that appears when email address format is incorrect',
+  },
+  'logistration.email.validation.message': {
+    id: 'logistration.email.validation.message',
+    defaultMessage: 'Enter a valid email address that contains at least 3 characters.',
+    description: 'Validation message that appears when email address is empty',
+  },
+  'logistration.email.help.message': {
+    id: 'logistration.email.help.message',
+    defaultMessage: 'The email address you used to register with edX.',
+    description: 'Message that appears below email field on login page',
+  },
+  'logistration.password': {
+    id: 'logistration.password',
+    defaultMessage: 'Password',
+    description: 'Text that appears above password field or as a placeholder',
+  },
+  'logistration.password.label': {
+    id: 'logistration.password.label',
+    defaultMessage: 'Password (required)',
+    description: 'Label that appears above password field',
+  },
+  'logistration.login.page.password.validation.message': {
+    id: 'logistration.login.page.password.validation.message',
+    defaultMessage: 'Please enter your password.',
+    description: 'Validation message that appears when password is empty',
+  },
+  'logistration.register.page.password.validation.message': {
+    id: 'logistration.register.page.password.validation.message',
+    defaultMessage: 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.',
+    description: 'Validation message that appears when password is non compliant with edX requirement',
+  },
+  'logistration.fullname.label': {
+    id: 'logistration.fullname.label',
+    defaultMessage: 'Full Name (required)',
+    description: 'Label that appears above fullname field',
+  },
+  'logistration.fullname.validation.message': {
+    id: 'logistration.fullname.validation.message',
+    defaultMessage: 'Enter your full name.',
+    description: 'Validation message that appears when fullname is empty',
+  },
+  'logistration.username.label': {
+    id: 'logistration.username.label',
+    defaultMessage: 'Public Username (required)',
+    description: 'Label that appears above username field',
+  },
+  'logistration.username.validation.message': {
+    id: 'logistration.username.validation.message',
+    defaultMessage: 'Username must be between 2 and 30 characters long.',
+    description: 'Validation message that appears when username is invalid',
+  },
+  'logistration.support.education.research': {
+    id: 'logistration.support.education.research',
+    defaultMessage: 'Support education research by providing additional information',
+    description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
   },
 });
 

@@ -3,6 +3,7 @@ import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
 import LoginHelpLinks from '../LoginHelpLinks';
+import { LOGIN_PAGE } from '../../data/constants';
 
 describe('LoginHelpLinks', () => {
   let props = {};
@@ -17,7 +18,7 @@ describe('LoginHelpLinks', () => {
   it('renders help links on button click', () => {
     props = {
       ...props,
-      page: 'login',
+      page: LOGIN_PAGE,
     };
     const loginHelpLinks = mount(reduxWrapper(<LoginHelpLinks {...props} />));
 
@@ -29,7 +30,7 @@ describe('LoginHelpLinks', () => {
   it('should display login page help links', () => {
     props = {
       ...props,
-      page: 'login',
+      page: LOGIN_PAGE,
     };
 
     const wrapper = mount(reduxWrapper(<LoginHelpLinks {...props} />));

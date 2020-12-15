@@ -71,6 +71,7 @@ LoginFailureMessage.defaultProps = {
   errors: '',
   errorCode: null,
 };
+
 LoginFailureMessage.propTypes = {
   errors: PropTypes.string,
   errorCode: PropTypes.string,

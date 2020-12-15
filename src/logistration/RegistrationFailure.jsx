@@ -46,6 +46,7 @@ const RegistrationFailureMessage = (props) => {
 RegistrationFailureMessage.defaultProps = {
   errors: '',
 };
+
 RegistrationFailureMessage.propTypes = {
   errors: PropTypes.shape({
     email: PropTypes.array,

@@ -21,7 +21,8 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
@@ -225,7 +226,8 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
@@ -395,7 +397,8 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
@@ -565,7 +568,8 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
@@ -767,7 +771,8 @@ exports[`LoginPage should show error message on 400 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>
@@ -968,7 +973,8 @@ exports[`LoginPage should show error message on 400 on receiving link 1`] = `
           className="ml-1"
           href="/register"
         >
-          Create an Account.
+          Create an Account
+          .
         </a>
       </p>
     </div>

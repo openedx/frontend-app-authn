@@ -33,6 +33,7 @@ describe('./RegistrationPage.js', () => {
           errorMessages: {
             required: 'You must agree to the Your Platform Name Here Honor Code',
           },
+          required: true,
         }],
       },
     },
@@ -153,25 +154,12 @@ describe('./RegistrationPage.js', () => {
         ...initialState.logistration,
         formData: {
           fields: [
-            {
-              label: 'I agree to the Your Platform Name Here <a href="/honor" rel="noopener" target="_blank">Honor Code</a>',
-              name: 'honor_code',
-              type: 'checkbox',
-              errorMessages: {
-                required: validationMessage.honorCode,
-              },
-              required: true,
-            },
+            ...initialState.logistration.formData.fields,
             {
               label: 'The country or region where you live.',
               name: 'country',
               type: 'select',
-              options: [{
-                value: '', name: '--',
-              },
-              {
-                value: 'AF', name: 'Afghanistan',
-              }],
+              options: [{ value: '', name: '--' }, { value: 'AF', name: 'Afghanistan' }],
               errorMessages: {
                 required: validationMessage.country,
               },
@@ -193,15 +181,16 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('should toggle optional fields state on checkbox click', () => {
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
     registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
-    registrationPage.update();
+    expect(registrationPage.find('RegistrationPage').state('enableOptionalField')).toEqual(true);
+  });
+
+  it('should toggle optional fields state on text click', () => {
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('#additionalFields').simulate('click');
     expect(registrationPage.find('RegistrationPage').state('enableOptionalField')).toEqual(true);
   });
 
@@ -211,28 +200,27 @@ describe('./RegistrationPage.js', () => {
       logistration: {
         ...initialState.logistration,
         formData: {
-          fields: [{
-            label: 'Tell us why you\'re interested in edX',
-            name: 'goals',
-            type: 'textarea',
-            required: false,
-          },
-          {
-            label: 'Highest level of Education completed.',
-            name: 'level_of_education',
-            type: 'select',
-            options: [{
-              value: '', name: '--',
+          fields: [
+            {
+              label: 'Tell us why you\'re interested in edX',
+              name: 'goals',
+              type: 'textarea',
+              required: false,
             },
             {
-              value: 'p', name: 'Doctorate',
-            }],
-            required: false,
-          }],
+              label: 'Highest level of Education completed.',
+              name: 'level_of_education',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: 'p', name: 'Doctorate' }],
+              required: false,
+            },
+          ],
         },
       },
     });
+
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
     registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
     registrationPage.update();
     expect(registrationPage.find('textarea#goals').length).toEqual(1);

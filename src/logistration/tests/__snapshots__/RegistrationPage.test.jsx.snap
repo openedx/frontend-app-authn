@@ -172,6 +172,36 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
     >
       <input
         aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
         checked={false}
         className="form-check-input"
         id="optional"
@@ -339,6 +369,36 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     >
       <input
         aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
         checked={false}
         className="form-check-input"
         id="optional"
@@ -499,6 +559,36 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         id="password-invalid-feedback"
       >
         This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
       </strong>
     </div>
     <div
@@ -713,6 +803,36 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         id="password-invalid-feedback"
       >
         This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
       </strong>
     </div>
     <div

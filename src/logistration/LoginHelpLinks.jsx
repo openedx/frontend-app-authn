@@ -5,7 +5,7 @@ import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import SwitchContent from './SwitchContent';
-import { REGISTER_PAGE, RESET_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE, RESET_PAGE } from '../data/constants';
 import messages from './messages';
 
 const LoginHelpLinks = (props) => {
@@ -31,7 +31,7 @@ const LoginHelpLinks = (props) => {
 
   const getHelpButtonMessage = () => {
     let mid = 'logistration.need.other.help.signing.in.collapsible.menu';
-    if (page === 'login') {
+    if (page === LOGIN_PAGE) {
       mid = 'logistration.need.help.signing.in.collapsible.menu';
     }
 
@@ -40,7 +40,7 @@ const LoginHelpLinks = (props) => {
 
   const renderLoginHelp = () => (
     <div className="login-help">
-      { page === 'login' ? forgotPasswordLink() : signUpLink()}
+      { page === LOGIN_PAGE ? forgotPasswordLink() : signUpLink()}
       <a className="field-link" href="https://support.edx.org/hc/en-us/sections/115004153367-Solve-a-Sign-in-Problem">
         {intl.formatMessage(messages['logistration.other.sign.in.issues'])}
       </a>
