@@ -104,25 +104,12 @@ describe('LoginPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('should show error message on 400', () => {
+  it('should show error message', () => {
     store = mockStore({
       ...initialState,
       logistration: {
         ...initialState.logistration,
         loginError: { value: 'Email or password is incorrect.' },
-      },
-    });
-
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should show error message on 400 on receiving link', () => {
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-        loginError: { value: 'To be on the safe side, you can reset your password <a href="/reset">here</a> before you try again.\n' },
       },
     });
 

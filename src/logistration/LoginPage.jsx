@@ -142,9 +142,7 @@ class LoginPage extends React.Component {
                 platformName={thirdPartyAuthContext.platformName}
               />
             )}
-            {this.props.loginError
-              ? <LoginFailureMessage errors={this.props.loginError.value} errorCode={this.props.loginError.errorCode} />
-              : null}
+            {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
             {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
             <div className="d-flex flex-row">
               <p>
@@ -261,10 +259,7 @@ LoginPage.propTypes = {
   }),
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   intl: intlShape.isRequired,
-  loginError: PropTypes.shape({
-    value: PropTypes.string,
-    errorCode: PropTypes.string,
-  }),
+  loginError: PropTypes.objectOf(PropTypes.any),
   loginRequest: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
