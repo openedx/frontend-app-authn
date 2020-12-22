@@ -5,17 +5,17 @@ import { Alert, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import { processLink } from '../data/utils/dataUtils';
-import { NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
+import { INACTIVE_USER, NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
 import messages from './messages';
 
 const LoginFailureMessage = (props) => {
-  const errorMessage = props.errors;
-  const { errorCode, intl } = props;
+  const { intl } = props;
+  const { context, errorCode, value } = props.loginError;
 
   let errorList;
 
   switch (errorCode) {
-    case NON_COMPLIANT_PASSWORD_EXCEPTION:
+    case NON_COMPLIANT_PASSWORD_EXCEPTION: {
       errorList = (
         <li key="password-non-compliance">
           <FormattedMessage
@@ -31,9 +31,38 @@ const LoginFailureMessage = (props) => {
         </li>
       );
       break;
+    }
+    case INACTIVE_USER: {
+      const supportLink = (
+        <Alert.Link href={context.supportLink}>
+          <FormattedMessage
+            id="logistration.contact.support.link"
+            defaultMessage="contact {platformName} Support"
+            description="Link text used in inactive user error message to go to learner help center"
+            values={{ platformName: context.platformName }}
+          />
+        </Alert.Link>
+      );
+      errorList = (
+        <li key={INACTIVE_USER}>
+          <FormattedMessage
+            id="login.inactive.user.error"
+            defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
+            {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
+            check your spam folders or {supportLink}."
+            values={{
+              lineBreak: <br />,
+              email: <strong>{props.loginError.email}</strong>,
+              supportLink,
+            }}
+          />
+        </li>
+      );
+      break;
+    }
     default:
-      // TODO: use errorCode instead of processing errorMessages on frontend
-      errorList = errorMessage.trim().split('\n');
+      // TODO: use errorCode instead of processing error messages on frontend
+      errorList = value.trim().split('\n');
       errorList = errorList.map((error) => {
         let matches;
         if (error.includes('a href')) {
@@ -53,28 +82,32 @@ const LoginFailureMessage = (props) => {
 
   return (
     <Alert variant="danger">
-      <div>
-        <h4 style={{ color: '#a0050e' }}>
-          <FormattedMessage
-            id="logistration.login.failure.header.title"
-            defaultMessage="We couldn't sign you in."
-            description="login failure header message."
-          />
-        </h4>
-        <ul>{errorList}</ul>
-      </div>
+      <Alert.Heading>
+        <FormattedMessage
+          id="logistration.login.failure.header.title"
+          defaultMessage="We couldn't sign you in."
+          description="login failure header message."
+        />
+      </Alert.Heading>
+      <ul>{errorList}</ul>
     </Alert>
   );
 };
 
 LoginFailureMessage.defaultProps = {
-  errors: '',
-  errorCode: null,
+  loginError: {
+    errorCode: null,
+    value: '',
+  },
 };
 
 LoginFailureMessage.propTypes = {
-  errors: PropTypes.string,
-  errorCode: PropTypes.string,
+  loginError: PropTypes.shape({
+    context: PropTypes.objectOf(PropTypes.string),
+    email: PropTypes.string,
+    errorCode: PropTypes.string,
+    value: PropTypes.string,
+  }),
   intl: intlShape.isRequired,
 };
 
