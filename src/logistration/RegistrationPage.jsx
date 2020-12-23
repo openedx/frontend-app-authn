@@ -352,6 +352,7 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
+      let cssClass = null;
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
         if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
@@ -361,6 +362,7 @@ class RegistrationPage extends React.Component {
             type: field.type,
             onChange: e => this.handleOnChange(e),
           };
+
           if (field.type === 'select') {
             options = field.options.map((item) => ({
               value: item.value,
@@ -368,13 +370,22 @@ class RegistrationPage extends React.Component {
             }));
             props.options = options;
           }
+          if (field.name === 'gender') {
+            cssClass = 'opt-inline-field';
+          }
+
+          if (field.name === 'year_of_birth') {
+            cssClass = 'opt-inline-field opt-year-field';
+          }
+
           return (
             <ValidationFormGroup
               for={field.name}
               key={field.name}
+              className={cssClass}
             >
               <label htmlFor={field.name} className="h6 pt-3">
-                {field.label} {this.props.intl.formatMessage(messages['logistration.register.potional.label'])}
+                {field.label} {this.props.intl.formatMessage(messages['logistration.register.optional.label'])}
               </label>
               <Input {...props} />
             </ValidationFormGroup>
