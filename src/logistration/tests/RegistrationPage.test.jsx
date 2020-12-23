@@ -9,7 +9,7 @@ import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import { PENDING_STATE } from '../../data/constants';
-import { fetchRegistrationForm } from '../data/actions';
+import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -235,6 +235,62 @@ describe('./RegistrationPage.js', () => {
     store.dispatch = jest.fn(store.dispatch);
     mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(store.dispatch).toHaveBeenCalledWith(fetchRegistrationForm());
+  });
+
+  it('should dispatch fetchRealtimeValidations on Blur', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+
+    const formPayload = {
+      email: '',
+      username: '',
+      password: '',
+      name: '',
+      honor_code: true,
+      country: '',
+    };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+  });
+
+  it('should not dispatch registerNewUser on Submit', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+      },
+    });
+
+    const formPayload = {
+      email: '',
+      username: '',
+      password: '',
+      name: '',
+      honor_code: true,
+      country: '',
+    };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('button.submit').simulate('click');
+    expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser(formPayload));
   });
 
   it('should match default section snapshot', () => {

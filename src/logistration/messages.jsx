@@ -176,6 +176,11 @@ const messages = defineMessages({
     defaultMessage: 'Username must be between 2 and 30 characters long.',
     description: 'Validation message that appears when username is invalid',
   },
+  'logistration.country.validation.message': {
+    id: 'logistration.country.validation.message',
+    defaultMessage: 'Select your country or region of residence.',
+    description: 'Validation message that appears when country is not selected',
+  },
   'logistration.support.education.research': {
     id: 'logistration.support.education.research',
     defaultMessage: 'Support education research by providing additional information',
