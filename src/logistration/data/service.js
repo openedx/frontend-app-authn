@@ -2,7 +2,7 @@ import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
-export async function postNewUser(registrationInformation) {
+export async function registerRequest(registrationInformation) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
@@ -24,7 +24,7 @@ export async function postNewUser(registrationInformation) {
   };
 }
 
-export async function login(creds) {
+export async function loginRequest(creds) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,

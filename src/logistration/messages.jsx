@@ -186,6 +186,11 @@ const messages = defineMessages({
     defaultMessage: 'Support education research by providing additional information',
     description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
   },
+  'logistration.register.potional.label': {
+    id: 'logistration.register.potional.label',
+    defaultMessage: '(optional)',
+    description: 'Text that appears with potional field labels',
+  },
 });
 
 export default messages;

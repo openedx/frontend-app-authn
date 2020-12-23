@@ -1,18 +1,19 @@
 import { runSaga } from 'redux-saga';
 
+import { camelCaseObject } from '@edx/frontend-platform';
+
+import * as actions from '../actions';
 import {
-  fetchRealtimeValidationsBegin,
-  fetchRealtimeValidationsSuccess,
-  fetchRealtimeValidationsFailure,
-  getThirdPartyAuthContextBegin,
-  getThirdPartyAuthContextSuccess,
-  getThirdPartyAuthContextFailure,
-  fetchRegistrationFormBegin,
-  fetchRegistrationFormSuccess,
-  fetchRegistrationFormFailure,
-} from '../actions';
-import { fetchRealtimeValidations, fetchThirdPartyAuthContext, fetchRegistrationForm } from '../sagas';
+  fetchRealtimeValidations,
+  fetchThirdPartyAuthContext,
+  fetchRegistrationForm,
+  handleLoginRequest,
+  handleNewUserRegistration,
+} from '../sagas';
 import * as api from '../service';
+import initializeMockLogging from '../../../setupTest';
+
+const { loggingService } = initializeMockLogging();
 
 describe('fetchThirdPartyAuthContext', () => {
   const params = {
@@ -27,6 +28,10 @@ describe('fetchThirdPartyAuthContext', () => {
     pipelineUserDetails: {},
   };
 
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
+
   it('should call service and dispatch success action', async () => {
     const getThirdPartyAuthContext = jest.spyOn(api, 'getThirdPartyAuthContext')
       .mockImplementation(() => Promise.resolve({ thirdPartyAuthContext: data }));
@@ -39,13 +44,16 @@ describe('fetchThirdPartyAuthContext', () => {
     );
 
     expect(getThirdPartyAuthContext).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([getThirdPartyAuthContextBegin(), getThirdPartyAuthContextSuccess(data)]);
+    expect(dispatched).toEqual([
+      actions.getThirdPartyAuthContextBegin(),
+      actions.getThirdPartyAuthContextSuccess(data),
+    ]);
     getThirdPartyAuthContext.mockClear();
   });
 
   it('should call service and dispatch error action', async () => {
     const getThirdPartyAuthContext = jest.spyOn(api, 'getThirdPartyAuthContext')
-      .mockImplementation(() => Promise.reject());
+      .mockImplementation(() => Promise.reject(new Error('something went wrong')));
 
     const dispatched = [];
     await runSaga(
@@ -55,7 +63,11 @@ describe('fetchThirdPartyAuthContext', () => {
     );
 
     expect(getThirdPartyAuthContext).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([getThirdPartyAuthContextBegin(), getThirdPartyAuthContextFailure()]);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.getThirdPartyAuthContextBegin(),
+      actions.getThirdPartyAuthContextFailure(),
+    ]);
     getThirdPartyAuthContext.mockClear();
   });
 });
@@ -82,6 +94,10 @@ describe('fetchRegistrationForm', () => {
     }],
   };
 
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
+
   it('should call service and dispatch success action', async () => {
     const getRegistrationForm = jest.spyOn(api, 'getRegistrationForm')
       .mockImplementation(() => Promise.resolve({ registrationForm: data }));
@@ -93,13 +109,16 @@ describe('fetchRegistrationForm', () => {
     );
 
     expect(getRegistrationForm).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([fetchRegistrationFormBegin(), fetchRegistrationFormSuccess(data)]);
+    expect(dispatched).toEqual([
+      actions.fetchRegistrationFormBegin(),
+      actions.fetchRegistrationFormSuccess(data),
+    ]);
     getRegistrationForm.mockClear();
   });
 
   it('should call service and dispatch error action', async () => {
     const getRegistrationForm = jest.spyOn(api, 'getRegistrationForm')
-      .mockImplementation(() => Promise.reject());
+      .mockImplementation(() => Promise.reject(new Error('something went wrong')));
 
     const dispatched = [];
     await runSaga(
@@ -108,7 +127,11 @@ describe('fetchRegistrationForm', () => {
     );
 
     expect(getRegistrationForm).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([fetchRegistrationFormBegin(), fetchRegistrationFormFailure()]);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.fetchRegistrationFormBegin(),
+      actions.fetchRegistrationFormFailure(),
+    ]);
     getRegistrationForm.mockClear();
   });
 });
@@ -126,6 +149,10 @@ describe('fetchRealtimeValidations', () => {
       },
     },
   };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
 
   const data = {
     validation_decisions: {
@@ -145,13 +172,16 @@ describe('fetchRealtimeValidations', () => {
     );
 
     expect(getFieldsValidations).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([fetchRealtimeValidationsBegin(), fetchRealtimeValidationsSuccess(data)]);
+    expect(dispatched).toEqual([
+      actions.fetchRealtimeValidationsBegin(),
+      actions.fetchRealtimeValidationsSuccess(data),
+    ]);
     getFieldsValidations.mockClear();
   });
 
   it('should call service and dispatch error action', async () => {
     const getFieldsValidations = jest.spyOn(api, 'getFieldsValidations')
-      .mockImplementation(() => Promise.reject());
+      .mockImplementation(() => Promise.reject(new Error('something went wrong')));
 
     const dispatched = [];
     await runSaga(
@@ -161,7 +191,141 @@ describe('fetchRealtimeValidations', () => {
     );
 
     expect(getFieldsValidations).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([fetchRealtimeValidationsBegin(), fetchRealtimeValidationsFailure()]);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.fetchRealtimeValidationsBegin(),
+      actions.fetchRealtimeValidationsFailure(),
+    ]);
     getFieldsValidations.mockClear();
+  });
+});
+
+describe('handleLoginRequest', () => {
+  const params = {
+    payload: {
+      formData: {
+        email: 'test@test.com',
+        password: 'test-password',
+      },
+    },
+  };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
+
+  it('should call service and dispatch success action', async () => {
+    const data = { redirectUrl: '/dashboard', success: true };
+    const loginRequest = jest.spyOn(api, 'loginRequest')
+      .mockImplementation(() => Promise.resolve(data));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleLoginRequest,
+      params,
+    );
+
+    expect(loginRequest).toHaveBeenCalledTimes(1);
+    expect(dispatched).toEqual([
+      actions.loginRequestBegin(),
+      actions.loginRequestSuccess(data.redirectUrl, data.success),
+    ]);
+    loginRequest.mockClear();
+  });
+
+  it('should call service and dispatch error action', async () => {
+    const loginErrorRespinse = {
+      response: {
+        status: 400,
+        data: {
+          login_error: 'something went wrong',
+        },
+      },
+    };
+    const loginRequest = jest.spyOn(api, 'loginRequest')
+      .mockImplementation(() => Promise.reject(loginErrorRespinse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleLoginRequest,
+      params,
+    );
+
+    expect(loginRequest).toHaveBeenCalledTimes(1);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.loginRequestBegin(),
+      actions.loginRequestFailure(camelCaseObject(loginErrorRespinse.response.data)),
+    ]);
+    loginRequest.mockClear();
+  });
+});
+
+describe('handleNewUserRegistration', () => {
+  const params = {
+    payload: {
+      formData: {
+        email: 'test@test.com',
+        username: 'test-username',
+        password: 'test-password',
+        name: 'test-name',
+        honor_code: true,
+        country: 'test-country',
+      },
+    },
+  };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
+
+  it('should call service and dispatch success action', async () => {
+    const data = { redirectUrl: '/dashboard', success: true };
+    const registerRequest = jest.spyOn(api, 'registerRequest')
+      .mockImplementation(() => Promise.resolve(data));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleNewUserRegistration,
+      params,
+    );
+
+    expect(registerRequest).toHaveBeenCalledTimes(1);
+    expect(dispatched).toEqual([
+      actions.registerNewUserBegin(),
+      actions.registerNewUserSuccess(data.redirectUrl, data.success),
+    ]);
+    registerRequest.mockClear();
+  });
+
+  it('should call service and dispatch error action', async () => {
+    const loginErrorRespinse = {
+      response: {
+        status: 400,
+        data: {
+          error: 'something went wrong',
+        },
+      },
+    };
+    const registerRequest = jest.spyOn(api, 'registerRequest')
+      .mockImplementation(() => Promise.reject(loginErrorRespinse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleNewUserRegistration,
+      params,
+    );
+
+    expect(registerRequest).toHaveBeenCalledTimes(1);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.registerNewUserBegin(),
+      actions.registerNewUserFailure(loginErrorRespinse.response.data),
+    ]);
+    registerRequest.mockClear();
   });
 });

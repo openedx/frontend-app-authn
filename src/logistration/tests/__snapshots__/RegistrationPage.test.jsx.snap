@@ -205,7 +205,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -382,7 +382,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -559,7 +559,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
       className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -783,7 +783,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
