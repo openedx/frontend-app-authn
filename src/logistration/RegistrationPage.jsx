@@ -369,7 +369,9 @@ class RegistrationPage extends React.Component {
               for={field.name}
               key={field.name}
             >
-              <label htmlFor={field.name} className="h6 pt-3">{field.label} (optional)</label>
+              <label htmlFor={field.name} className="h6 pt-3">
+                {field.label} {this.props.intl.formatMessage(messages['logistration.register.potional.label'])}
+              </label>
               <Input {...props} />
             </ValidationFormGroup>
           );

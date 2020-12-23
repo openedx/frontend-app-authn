@@ -32,15 +32,15 @@ import {
   getFieldsValidations,
   getRegistrationForm,
   getThirdPartyAuthContext,
-  postNewUser,
-  login,
+  registerRequest,
+  loginRequest,
 } from './service';
 
 export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
 
-    const { redirectUrl, success } = yield call(postNewUser, action.payload.registrationInfo);
+    const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
 
     yield put(registerNewUserSuccess(
       redirectUrl,
@@ -51,6 +51,7 @@ export function* handleNewUserRegistration(action) {
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(registerNewUserFailure(e.response.data));
     }
+    logError(e);
   }
 }
 
@@ -58,7 +59,7 @@ export function* handleLoginRequest(action) {
   try {
     yield put(loginRequestBegin());
 
-    const { redirectUrl, success } = yield call(login, action.payload.creds);
+    const { redirectUrl, success } = yield call(loginRequest, action.payload.creds);
 
     yield put(loginRequestSuccess(
       redirectUrl,
@@ -69,6 +70,7 @@ export function* handleLoginRequest(action) {
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(loginRequestFailure(camelCaseObject(e.response.data)));
     }
+    logError(e);
   }
 }
 
