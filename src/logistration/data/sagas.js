@@ -1,6 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { camelCaseObject } from '@edx/frontend-platform';
+import { logError } from '@edx/frontend-platform/logging';
 
 // Actions
 import {
@@ -81,7 +82,7 @@ export function* fetchThirdPartyAuthContext(action) {
     ));
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());
-    throw e;
+    logError(e);
   }
 }
 
@@ -95,7 +96,7 @@ export function* fetchRegistrationForm() {
     ));
   } catch (e) {
     yield put(fetchRegistrationFormFailure());
-    throw e;
+    logError(e);
   }
 }
 
@@ -109,7 +110,7 @@ export function* fetchRealtimeValidations(action) {
     ));
   } catch (e) {
     yield put(fetchRealtimeValidationsFailure());
-    throw e;
+    logError(e);
   }
 }
 

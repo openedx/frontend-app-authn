@@ -74,7 +74,7 @@ class RegistrationPage extends React.Component {
       usernameValid: false,
       passwordValid: false,
       countryValid: false,
-      honorCodeValid: false,
+      honorCodeValid: true,
       termsOfServiceValid: false,
       formValid: false,
       institutionLogin: false,
@@ -118,8 +118,7 @@ class RegistrationPage extends React.Component {
     };
 
     const fieldMap = { ...REGISTRATION_VALIDITY_MAP, ...REGISTRATION_OPTIONAL_MAP };
-    Object.keys(fieldMap).forEach((key) => {
-      const value = fieldMap[key];
+    Object.entries(fieldMap).forEach(([key, value]) => {
       if (value) {
         payload[key] = this.state[camelCase(key)];
       }
@@ -244,18 +243,12 @@ class RegistrationPage extends React.Component {
     } = this.state;
 
     const validityMap = REGISTRATION_VALIDITY_MAP;
-    const validStates = [];
-    Object.keys(validityMap).forEach((key) => {
-      const value = validityMap[key];
-      if (value) {
-        const state = camelCase(key);
-        const stateValid = `${state}Valid`;
-        validStates.push(stateValid);
-      }
-    });
     let extraFieldsValid = true;
-    validStates.forEach((value) => {
-      extraFieldsValid = extraFieldsValid && this.state[value];
+    Object.entries(validityMap).forEach(([key, value]) => {
+      if (value) {
+        const stateValid = `${camelCase(key)}Valid`;
+        extraFieldsValid = extraFieldsValid && this.state[stateValid];
+      }
     });
 
     this.setState({
@@ -287,24 +280,25 @@ class RegistrationPage extends React.Component {
           REGISTRATION_VALIDITY_MAP[field.name] = true;
           if (field.type === 'plaintext' && field.name === 'honor_code') { // special case where honor code and tos are combined
             afterLink = field.label;
+            props.type = 'hidden';
             const nodes = [];
             do {
               const matches = processLink(afterLink);
               [beforeLink, link, linkText, afterLink] = matches;
               nodes.push(
-                <>
+                <React.Fragment key={link}>
                   {beforeLink}
                   <Hyperlink destination={link}>{linkText}</Hyperlink>
-                </>,
+                </React.Fragment>,
               );
             } while (afterLink.includes('a href'));
-            nodes.push(<>{afterLink}</>);
+            nodes.push(<React.Fragment key={afterLink}>{afterLink}</React.Fragment>);
 
             return (
-              <>
-                <p {...props} />
+              <React.Fragment key={field.type}>
+                <input {...props} />
                 { nodes }
-              </>
+              </React.Fragment>
             );
           }
           if (field.type === 'checkbox') {
@@ -314,6 +308,7 @@ class RegistrationPage extends React.Component {
             return (
               <ValidationFormGroup
                 for={field.name}
+                key={field.name}
                 invalid={this.state.errors[stateVar] !== ''}
                 invalidMessage={field.errorMessages.required}
                 className="custom-control"
@@ -335,6 +330,7 @@ class RegistrationPage extends React.Component {
           return (
             <ValidationFormGroup
               for={field.name}
+              key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
             >
@@ -344,7 +340,7 @@ class RegistrationPage extends React.Component {
           );
         }
       }
-      return (<></>);
+      return null;
     });
     return fields;
   }
@@ -353,7 +349,7 @@ class RegistrationPage extends React.Component {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
-        if (!field.required) {
+        if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
           const props = {
             id: field.name,
@@ -361,26 +357,25 @@ class RegistrationPage extends React.Component {
             type: field.type,
             onChange: e => this.handleOnChange(e),
           };
-          if (field.name !== 'honor_code' && field.name !== 'country') {
-            if (field.type === 'select') {
-              options = field.options.map((item) => ({
-                value: item.value,
-                label: item.name,
-              }));
-              props.options = options;
-            }
-            return (
-              <ValidationFormGroup
-                for={field.name}
-              >
-                <label htmlFor={field.name} className="h6 pt-3">{field.label} (optional)</label>
-                <Input {...props} />
-              </ValidationFormGroup>
-            );
+          if (field.type === 'select') {
+            options = field.options.map((item) => ({
+              value: item.value,
+              label: item.name,
+            }));
+            props.options = options;
           }
+          return (
+            <ValidationFormGroup
+              for={field.name}
+              key={field.name}
+            >
+              <label htmlFor={field.name} className="h6 pt-3">{field.label} (optional)</label>
+              <Input {...props} />
+            </ValidationFormGroup>
+          );
         }
       }
-      return (<></>);
+      return null;
     });
     return fields;
   }
@@ -541,7 +536,7 @@ class RegistrationPage extends React.Component {
             </ValidationFormGroup>
             { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
             <StatefulButton
-              type="submit"
+              type="button"
               className="btn-primary submit mt-4"
               state={submitState}
               labels={{

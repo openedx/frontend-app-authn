@@ -88,12 +88,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid email', () => {
     const validationMessage = 'Enter a valid email address that contains at least 3 characters.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
 
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#email').simulate('change', { target: { value: '', name: 'email' } });
@@ -103,12 +97,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid username', () => {
     const validationMessage = 'Username must be between 2 and 30 characters long.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#username').simulate('change', { target: { value: '', name: 'username' } });
     registrationPage.update();
@@ -117,12 +105,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid name', () => {
     const validationMessage = 'Enter your full name.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#name').simulate('change', { target: { value: '', name: 'name' } });
     registrationPage.update();
@@ -131,12 +113,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid password', () => {
     const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#password').simulate('change', { target: { value: '', name: 'password' } });
     registrationPage.update();
@@ -238,13 +214,6 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('should dispatch fetchRealtimeValidations on Blur', () => {
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
-
     const formPayload = {
       email: '',
       username: '',
@@ -271,13 +240,6 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('should not dispatch registerNewUser on Submit', () => {
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
-
     const formPayload = {
       email: '',
       username: '',
