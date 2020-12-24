@@ -19,6 +19,7 @@ describe('./RegistrationPage.js', () => {
     logistration: {
       registrationResult: { success: false, redirectUrl: '' },
       thirdPartyAuthContext: {
+        platformName: 'openedX',
         currentProvider: null,
         finishAuthUrl: null,
         providers: [],
@@ -288,6 +289,22 @@ describe('./RegistrationPage.js', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('should display no password field when current provider is present', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
+          currentProvider: 'Google',
+        },
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   it('should match url after redirection', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({
@@ -403,13 +420,12 @@ describe('./RegistrationPage.js', () => {
         thirdPartyAuthContext: {
           ...initialState.logistration.thirdPartyAuthContext,
           currentProvider: 'Apple',
-          platformName: 'edX',
         },
       },
     });
 
     const expectedMessage = 'You\'ve successfully signed into Apple. We just need a little more information before '
-                            + 'you start learning with edX.';
+                            + 'you start learning with openedX.';
 
     const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
