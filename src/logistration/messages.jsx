@@ -128,7 +128,7 @@ const messages = defineMessages({
   },
   'logistration.email.validation.message': {
     id: 'logistration.email.validation.message',
-    defaultMessage: 'Enter a valid email address that contains at least 3 characters.',
+    defaultMessage: 'Please enter your Email.',
     description: 'Validation message that appears when email address is empty',
   },
   'logistration.email.help.message': {
@@ -153,7 +153,7 @@ const messages = defineMessages({
   },
   'logistration.register.page.password.validation.message': {
     id: 'logistration.register.page.password.validation.message',
-    defaultMessage: 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.',
+    defaultMessage: 'Please enter your Password.',
     description: 'Validation message that appears when password is non compliant with edX requirement',
   },
   'logistration.fullname.label': {
@@ -163,7 +163,7 @@ const messages = defineMessages({
   },
   'logistration.fullname.validation.message': {
     id: 'logistration.fullname.validation.message',
-    defaultMessage: 'Enter your full name.',
+    defaultMessage: 'Please enter your Full Name.',
     description: 'Validation message that appears when fullname is empty',
   },
   'logistration.username.label': {
@@ -173,7 +173,7 @@ const messages = defineMessages({
   },
   'logistration.username.validation.message': {
     id: 'logistration.username.validation.message',
-    defaultMessage: 'Username must be between 2 and 30 characters long.',
+    defaultMessage: 'Please enter your Public Username.',
     description: 'Validation message that appears when username is invalid',
   },
   'logistration.country.validation.message': {

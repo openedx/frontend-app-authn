@@ -14,14 +14,13 @@ const RegistrationFailureMessage = (props) => {
 
   Object.keys(errorMessage).forEach((key) => {
     const errors = errorMessage[key];
-    const errorList = errors.map((error) => {
-      const errorMsg = error.user_message;
-      return (
+    const errorList = errors.map((error) => (
+      (error.user_message) ? (
         <li key={error} style={{ textAlign: 'left' }}>
-          {errorMsg}
+          {error.user_message}
         </li>
-      );
-    });
+      ) : null
+    ));
     userErrors.push(errorList);
   });
 

@@ -61,6 +61,7 @@ class RegistrationPage extends React.Component {
       confirmEmail: '',
       enableOptionalField: false,
       validationFieldName: '',
+      emptyFields: {},
       errors: {
         email: '',
         name: '',
@@ -96,8 +97,31 @@ class RegistrationPage extends React.Component {
       const { errors } = this.state;
       const errorMsg = nextProps.validations.validation_decisions[this.state.validationFieldName];
       errors[this.state.validationFieldName] = errorMsg;
-      this.setState({
-        errors,
+      const stateValidKey = `${camelCase(this.state.validationFieldName)}Valid`;
+      const stateValidValue = !errorMsg;
+
+      this.setState(({ [stateValidKey]: stateValidValue }), () => {
+        const {
+          emailValid,
+          nameValid,
+          usernameValid,
+          passwordValid,
+        } = this.state;
+
+        const validityMap = REGISTRATION_VALIDITY_MAP;
+        let extraFieldsValid = true;
+        Object.entries(validityMap).forEach(([key, value]) => {
+          if (value) {
+            const stateValid = `${camelCase(key)}Valid`;
+            extraFieldsValid = extraFieldsValid && this.state[stateValid];
+          }
+        });
+
+        const formValid = emailValid && nameValid && usernameValid && passwordValid && extraFieldsValid;
+        this.setState({
+          errors,
+          formValid,
+        });
       });
       return false;
     }
@@ -112,10 +136,10 @@ class RegistrationPage extends React.Component {
     e.preventDefault();
     const params = (new URL(document.location)).searchParams;
     const payload = {
-      email: this.state.email,
-      username: this.state.username,
-      password: this.state.password,
       name: this.state.name,
+      username: this.state.username,
+      email: this.state.email,
+      password: this.state.password,
     };
 
     const fieldMap = { ...REGISTRATION_VALIDITY_MAP, ...REGISTRATION_OPTIONAL_MAP };
@@ -133,11 +157,10 @@ class RegistrationPage extends React.Component {
     if (courseId) {
       payload.course_id = params.course_id;
     }
-
     if (!this.state.formValid) {
       // Special case where honor code and tos is a single field, true by default. We don't need
       // to validate this field
-      Object.entries(payload).filter(([key]) => (key !== 'honor_code' || !('terms_of_service' in REGISTRATION_EXTRA_FIELDS)))
+      Object.entries(payload).filter(([key]) => (key !== 'honor_code' || 'terms_of_service' in REGISTRATION_VALIDITY_MAP))
         .forEach(([key, value]) => {
           this.validateInput(key, value);
         });
@@ -167,7 +190,6 @@ class RegistrationPage extends React.Component {
     this.setState({
       [camelCase(e.target.name)]: targetValue,
     });
-    this.validateInput(e.target.name, targetValue);
   }
 
   handleOnOptional(e) {
@@ -180,6 +202,7 @@ class RegistrationPage extends React.Component {
 
   validateInput(inputName, value) {
     const { errors } = this.state;
+    const { emptyFields } = this.state;
     let {
       emailValid,
       nameValid,
@@ -192,24 +215,24 @@ class RegistrationPage extends React.Component {
 
     switch (inputName) {
       case 'email':
-        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        errors.email = emailValid ? '' : this.intl.formatMessage(messages['logistration.email.validation.message']);
+        emailValid = value.length >= 1;
+        emptyFields.email = this.generateUserMessage(emailValid, 'logistration.email.validation.message');
         break;
       case 'name':
         nameValid = value.length >= 1;
-        errors.name = nameValid ? '' : this.intl.formatMessage(messages['logistration.fullname.validation.message']);
+        emptyFields.name = this.generateUserMessage(nameValid, 'logistration.fullname.validation.message');
         break;
       case 'username':
-        usernameValid = value.length >= 2 && value.length <= 30;
-        errors.username = usernameValid ? '' : this.intl.formatMessage(messages['logistration.username.validation.message']);
+        usernameValid = value.length >= 1;
+        emptyFields.username = this.generateUserMessage(usernameValid, 'logistration.username.validation.message');
         break;
       case 'password':
-        passwordValid = !!(value.length >= 8 && value.match(/\d+/g));
-        errors.password = passwordValid ? '' : this.intl.formatMessage(messages['logistration.register.page.password.validation.message']);
+        passwordValid = value.length >= 1;
+        emptyFields.password = this.generateUserMessage(passwordValid, 'logistration.register.page.password.validation.message');
         break;
       case 'country':
         countryValid = value !== '';
-        errors.country = countryValid ? '' : this.intl.formatMessage(messages['logistration.country.validation.message']);
+        emptyFields.country = this.generateUserMessage(countryValid, 'logistration.country.validation.message');
         break;
       case 'honor_code':
         honorCodeValid = value !== false;
@@ -224,7 +247,7 @@ class RegistrationPage extends React.Component {
     }
 
     this.setState({
-      errors,
+      emptyFields,
       emailValid,
       nameValid,
       usernameValid,
@@ -232,32 +255,7 @@ class RegistrationPage extends React.Component {
       countryValid,
       honorCodeValid,
       termsOfServiceValid,
-    }, this.validateForm);
-  }
-
-  validateForm() {
-    const {
-      emailValid,
-      nameValid,
-      usernameValid,
-      passwordValid,
-    } = this.state;
-
-    const validityMap = REGISTRATION_VALIDITY_MAP;
-    let extraFieldsValid = true;
-    Object.entries(validityMap).forEach(([key, value]) => {
-      if (value) {
-        const stateValid = `${camelCase(key)}Valid`;
-        extraFieldsValid = extraFieldsValid && this.state[stateValid];
-      }
     });
-
-    let formValid = emailValid && nameValid && usernameValid && extraFieldsValid;
-    if (!this.props.thirdPartyAuthContext.currentProvider) {
-      formValid = formValid && passwordValid;
-    }
-
-    this.setState({ formValid });
   }
 
   addExtraRequiredFields() {
@@ -330,6 +328,7 @@ class RegistrationPage extends React.Component {
               label: item.name,
             }));
             props.options = options;
+            props.onBlur = e => this.handleOnBlur(e);
           }
           return (
             <ValidationFormGroup
@@ -397,6 +396,22 @@ class RegistrationPage extends React.Component {
     return fields;
   }
 
+  generateUserMessage(isFieldValid, messageID) {
+    return [{ user_message: isFieldValid ? '' : this.intl.formatMessage(messages[messageID]) }];
+  }
+
+  renderErrors() {
+    let errorsObject = null;
+    if (Object.keys(this.state.emptyFields).length > 0) {
+      errorsObject = this.state.emptyFields;
+    } else if (this.props.registrationError) {
+      errorsObject = this.props.registrationError;
+    } else {
+      return null;
+    }
+    return <RegistrationFailure errors={errorsObject} />;
+  }
+
   render() {
     const { intl, submitState } = this.props;
     const {
@@ -426,7 +441,7 @@ class RegistrationPage extends React.Component {
           finishAuthUrl={finishAuthUrl}
         />
         <div className="register-container mx-auto">
-          {this.props.registrationError ? <RegistrationFailure errors={this.props.registrationError} /> : null}
+          {this.renderErrors()}
           {currentProvider && (
             <ThirdPartyAuthAlert
               currentProvider={currentProvider}
