@@ -251,9 +251,12 @@ class RegistrationPage extends React.Component {
       }
     });
 
-    this.setState({
-      formValid: emailValid && nameValid && usernameValid && passwordValid && extraFieldsValid,
-    });
+    let formValid = emailValid && nameValid && usernameValid && extraFieldsValid;
+    if (!this.props.thirdPartyAuthContext.currentProvider) {
+      formValid = formValid && passwordValid;
+    }
+
+    this.setState({ formValid });
   }
 
   addExtraRequiredFields() {
@@ -499,25 +502,27 @@ class RegistrationPage extends React.Component {
                 required
               />
             </ValidationFormGroup>
-            <ValidationFormGroup
-              for="password"
-              invalid={this.state.errors.password !== ''}
-              invalidMessage={this.state.errors.password}
-            >
-              <label htmlFor="password" className="h6 pt-3">
-                {intl.formatMessage(messages['logistration.password.label'])}
-              </label>
-              <Input
-                name="password"
-                id="password"
-                type="password"
-                placeholder=""
-                value={this.state.password}
-                onChange={e => this.handleOnChange(e)}
-                onBlur={e => this.handleOnBlur(e)}
-                required
-              />
-            </ValidationFormGroup>
+            {!currentProvider && (
+              <ValidationFormGroup
+                for="password"
+                invalid={this.state.errors.password !== ''}
+                invalidMessage={this.state.errors.password}
+              >
+                <label htmlFor="password" className="h6 pt-3">
+                  {intl.formatMessage(messages['logistration.password.label'])}
+                </label>
+                <Input
+                  name="password"
+                  id="password"
+                  type="password"
+                  placeholder=""
+                  value={this.state.password}
+                  onChange={e => this.handleOnChange(e)}
+                  onBlur={e => this.handleOnBlur(e)}
+                  required
+                />
+              </ValidationFormGroup>
+            )}
             { this.addExtraRequiredFields() }
             <ValidationFormGroup
               for="optional"
