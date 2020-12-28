@@ -507,7 +507,7 @@ class RegistrationPage extends React.Component {
                 name="email"
                 id="email"
                 type="email"
-                placeholder=""
+                placeholder="username@domain.com"
                 value={this.state.email}
                 onChange={e => this.handleOnChange(e)}
                 onBlur={e => this.handleOnBlur(e)}
