@@ -6,6 +6,7 @@ import {
   StatefulButton,
   Hyperlink,
   ValidationFormGroup,
+  Form,
 } from '@edx/paragon';
 
 import {
@@ -444,7 +445,7 @@ class RegistrationPage extends React.Component {
               </span>
             </div>
           ) : null}
-          <form className="mb-4 mx-auto form-group">
+          <Form className="mb-4 mx-auto form-group">
             <ValidationFormGroup
               for="name"
               invalid={this.state.errors.name !== ''}
@@ -551,7 +552,7 @@ class RegistrationPage extends React.Component {
               }}
               onClick={this.handleSubmit}
             />
-          </form>
+          </Form>
         </div>
       </>
     );
