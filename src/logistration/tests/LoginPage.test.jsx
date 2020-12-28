@@ -119,7 +119,7 @@ describe('LoginPage', () => {
 
   it('should display login help button', () => {
     const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(root.find('button.field-link').text()).toEqual('Need help signing in?');
+    expect(root.find('button.field-link').first().text()).toEqual('Need help signing in?');
   });
 
   it('updates the error state for invalid email', () => {

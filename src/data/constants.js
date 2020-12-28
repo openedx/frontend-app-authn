@@ -5,13 +5,15 @@ export const RESET_PAGE = '/reset';
 export const DEFAULT_REDIRECT_URL = '/dashboard';
 export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
 export const PAGE_NOT_FOUND = '/notfound';
+export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
+
+// Constants
+export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 
 // Stateful Submit Button States
 export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';
 
-// Constants
-export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 export const REGISTRATION_VALIDITY_MAP = {};
 export const REGISTRATION_OPTIONAL_MAP = {};
 export const REGISTRATION_EXTRA_FIELDS = [
