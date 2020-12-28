@@ -64,7 +64,7 @@ const ResetPasswordPage = (props) => {
     const { token } = props.match.params;
     if (token) {
       props.validateToken(token);
-      return <Spinner text="Token validation in progress .. " />;
+      return <Spinner />;
     }
   } else if (props.token_status === 'invalid') {
     return (<InvalidTokenMessage />);
