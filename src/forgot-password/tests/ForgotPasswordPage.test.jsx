@@ -1,4 +1,5 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
@@ -77,5 +78,15 @@ describe('ForgotPasswordPage', () => {
   it('should display need other help signing in button', () => {
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     expect(wrapper.find('button.field-link').text()).toEqual('Need other help signing in?');
+  });
+
+  it('should display email validation error message', async () => {
+    const validationMessage = "Email must have at least 3 characters. The email address you've provided isn't formatted correctly.";
+    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    await act(async () => {
+      await wrapper.find('input#forgot-password-input').simulate('change', { target: { value: '', name: 'a' } });
+    });
+    wrapper.update();
+    expect(wrapper.find('#email-invalid-feedback').text()).toEqual(validationMessage);
   });
 });
