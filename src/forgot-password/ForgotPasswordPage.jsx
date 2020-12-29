@@ -18,15 +18,20 @@ import RequestInProgressAlert from './RequestInProgressAlert';
 import { LOGIN_PAGE } from '../data/constants';
 import LoginHelpLinks from '../logistration/LoginHelpLinks';
 
-const validateEmail = (e, values, setFieldValue) => {
-  const inputEmail = e.target.value;
-  const isEmailValid = inputEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-  setFieldValue('email', inputEmail);
-  setFieldValue('isEmailValid', isEmailValid !== null);
-};
-
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
+  let invalidEmailMessage;
+
+  const validateEmail = (e, setFieldValue) => {
+    invalidEmailMessage = intl.formatMessage(messages['logisration.forgot.password.page.invalid.email.message']);
+    const inputEmail = e.target.value;
+    const isEmailValid = inputEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    setFieldValue('email', inputEmail);
+    setFieldValue('isEmailValid', isEmailValid !== null);
+    if (inputEmail.length < 3) {
+      invalidEmailMessage = `${intl.formatMessage(messages['logisration.forgot.password.page.email.invalid.length.message'])} ${invalidEmailMessage}`;
+    }
+  };
 
   return (
     <Formik
@@ -63,9 +68,7 @@ const ForgotPasswordPage = (props) => {
                       className="mb-0"
                       for="email"
                       invalid={!values.isEmailValid}
-                      invalidMessage={intl.formatMessage(
-                        messages['logisration.forgot.password.page.invalid.email.message'],
-                      )}
+                      invalidMessage={invalidEmailMessage}
                     >
                       <label htmlFor="forgot-password-input" className="h6 mr-1">
                         {intl.formatMessage(messages['logisration.forgot.password.page.email.field.label'])}
@@ -76,7 +79,7 @@ const ForgotPasswordPage = (props) => {
                         type="email"
                         placeholder="username@domain.com"
                         value={values.email}
-                        onChange={e => validateEmail(e, values, setFieldValue)}
+                        onChange={e => validateEmail(e, setFieldValue)}
                         style={{ width: '400px' }}
                       />
                     </ValidationFormGroup>

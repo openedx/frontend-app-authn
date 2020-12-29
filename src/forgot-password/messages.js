@@ -31,6 +31,11 @@ const messages = defineMessages({
     defaultMessage: 'Recover my password',
     description: 'Submit button text for the forgot password page.',
   },
+  'logisration.forgot.password.page.email.invalid.length.message': {
+    id: 'logisration.forgot.password.page.email.invalid.length.message',
+    defaultMessage: 'Email must have at least 3 characters.',
+    description: 'Invalid email address length message for the forgot password page.',
+  },
 });
 
 export default messages;
