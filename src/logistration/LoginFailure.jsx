@@ -5,7 +5,7 @@ import { Alert, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import { processLink } from '../data/utils/dataUtils';
-import { INTERNAL_SERVER_ERROR, INACTIVE_USER, NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
+import { INACTIVE_USER, INTERNAL_SERVER_ERROR, NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
 import messages from './messages';
 
 const LoginFailureMessage = (props) => {
@@ -64,7 +64,7 @@ const LoginFailureMessage = (props) => {
       errorList = (
         <li key={INTERNAL_SERVER_ERROR}>
           <FormattedMessage
-            id="login.non.compliant.password.error"
+            id="login.internal.server.error.message"
             defaultMessage="An error has occurred. Try refreshing the page, or check your Internet connection."
             description="Error message that appears when server responds with 500 error code"
           />
