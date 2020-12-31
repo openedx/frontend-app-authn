@@ -2,6 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
+import { INTERNAL_SERVER_ERROR } from './constants';
 
 // Actions
 import {
@@ -67,8 +68,12 @@ export function* handleLoginRequest(action) {
     ));
   } catch (e) {
     const statusCodes = [400];
-    if (e.response && statusCodes.includes(e.response.status)) {
-      yield put(loginRequestFailure(camelCaseObject(e.response.data)));
+    if (e.response) {
+      if (statusCodes.includes(e.response.status)) {
+        yield put(loginRequestFailure(camelCaseObject(e.response.data)));
+      } else {
+        yield put(loginRequestFailure(camelCaseObject({ errorCode: INTERNAL_SERVER_ERROR })));
+      }
     }
     logError(e);
   }

@@ -89,6 +89,28 @@ exports[`LoginFailureMessage should match inactive user error message snapshot 1
 </div>
 `;
 
+exports[`LoginFailureMessage should match internal server error message snapshot 1`] = `
+<div
+  className="fade alert alert-danger show"
+  role="alert"
+>
+  <div
+    className="alert-heading h4"
+  >
+    <span>
+      We couldn't sign you in.
+    </span>
+  </div>
+  <ul>
+    <li>
+      <span>
+        An error has occurred. Try refreshing the page, or check your Internet connection.
+      </span>
+    </li>
+  </ul>
+</div>
+`;
+
 exports[`LoginFailureMessage should match non compliant password error message snapshot 1`] = `
 <div
   className="fade alert alert-danger show"
