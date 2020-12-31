@@ -235,7 +235,7 @@ describe('handleLoginRequest', () => {
   });
 
   it('should call service and dispatch error action', async () => {
-    const loginErrorRespinse = {
+    const loginErrorResponse = {
       response: {
         status: 400,
         data: {
@@ -244,7 +244,7 @@ describe('handleLoginRequest', () => {
       },
     };
     const loginRequest = jest.spyOn(api, 'loginRequest')
-      .mockImplementation(() => Promise.reject(loginErrorRespinse));
+      .mockImplementation(() => Promise.reject(loginErrorResponse));
 
     const dispatched = [];
     await runSaga(
@@ -257,7 +257,33 @@ describe('handleLoginRequest', () => {
     expect(loggingService.logError).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.loginRequestBegin(),
-      actions.loginRequestFailure(camelCaseObject(loginErrorRespinse.response.data)),
+      actions.loginRequestFailure(camelCaseObject(loginErrorResponse.response.data)),
+    ]);
+    loginRequest.mockClear();
+  });
+
+  it('should handle 500 error code', async () => {
+    const loginErrorResponse = {
+      response: {
+        status: 500,
+        data: {
+          errorCode: 'internal-server-error',
+        },
+      },
+    };
+
+    const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleLoginRequest,
+      params,
+    );
+
+    expect(dispatched).toEqual([
+      actions.loginRequestBegin(),
+      actions.loginRequestFailure(camelCaseObject(loginErrorResponse.response.data)),
     ]);
     loginRequest.mockClear();
   });
@@ -302,7 +328,7 @@ describe('handleNewUserRegistration', () => {
   });
 
   it('should call service and dispatch error action', async () => {
-    const loginErrorRespinse = {
+    const loginErrorResponse = {
       response: {
         status: 400,
         data: {
@@ -311,7 +337,7 @@ describe('handleNewUserRegistration', () => {
       },
     };
     const registerRequest = jest.spyOn(api, 'registerRequest')
-      .mockImplementation(() => Promise.reject(loginErrorRespinse));
+      .mockImplementation(() => Promise.reject(loginErrorResponse));
 
     const dispatched = [];
     await runSaga(
@@ -324,7 +350,7 @@ describe('handleNewUserRegistration', () => {
     expect(loggingService.logError).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
-      actions.registerNewUserFailure(loginErrorRespinse.response.data),
+      actions.registerNewUserFailure(loginErrorResponse.response.data),
     ]);
     registerRequest.mockClear();
   });
