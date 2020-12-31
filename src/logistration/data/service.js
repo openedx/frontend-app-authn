@@ -2,7 +2,7 @@ import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
-export async function postNewUser(registrationInformation) {
+export async function registerRequest(registrationInformation) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
@@ -24,7 +24,7 @@ export async function postNewUser(registrationInformation) {
   };
 }
 
-export async function login(creds) {
+export async function loginRequest(creds) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
@@ -83,5 +83,26 @@ export async function getRegistrationForm() {
 
   return {
     registrationForm: data,
+  };
+}
+
+export async function getFieldsValidations(formPayload) {
+  const requestConfig = {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    isPublic: true,
+  };
+
+  const { data } = await getAuthenticatedHttpClient()
+    .post(
+      `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
+      querystring.stringify(formPayload),
+      requestConfig,
+    )
+    .catch((e) => {
+      throw (e);
+    });
+
+  return {
+    fieldValidations: data,
   };
 }

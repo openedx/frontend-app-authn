@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
-    "@edx/frontend-component-header": "^2.2.1",
+    "@edx/frontend-component-header": "^2.2.2",
     "@edx/frontend-platform": "^1.8.0",
     "@edx/paragon": "^12.4.1",
     "@fortawesome/fontawesome-svg-core": "1.2.32",
@@ -47,6 +47,7 @@
     "classnames": "^2.2.6",
     "extract-react-intl-messages": "^4.1.1",
     "form-urlencoded": "^4.2.1",
+    "formik": "^2.2.6",
     "lodash.camelcase": "^4.3.0",
     "lodash.snakecase": "^4.1.1",
     "prop-types": "15.7.2",

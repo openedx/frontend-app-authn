@@ -1,6 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { camelCaseObject } from '@edx/frontend-platform';
+import { logError } from '@edx/frontend-platform/logging';
 
 // Actions
 import {
@@ -12,6 +13,10 @@ import {
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
+  REGISTER_FORM_VALIDATIONS,
+  fetchRealtimeValidationsBegin,
+  fetchRealtimeValidationsSuccess,
+  fetchRealtimeValidationsFailure,
   THIRD_PARTY_AUTH_CONTEXT,
   getThirdPartyAuthContextBegin,
   getThirdPartyAuthContextSuccess,
@@ -24,17 +29,18 @@ import {
 
 // Services
 import {
+  getFieldsValidations,
   getRegistrationForm,
   getThirdPartyAuthContext,
-  postNewUser,
-  login,
+  registerRequest,
+  loginRequest,
 } from './service';
 
 export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
 
-    const { redirectUrl, success } = yield call(postNewUser, action.payload.registrationInfo);
+    const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
 
     yield put(registerNewUserSuccess(
       redirectUrl,
@@ -45,6 +51,7 @@ export function* handleNewUserRegistration(action) {
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(registerNewUserFailure(e.response.data));
     }
+    logError(e);
   }
 }
 
@@ -52,7 +59,7 @@ export function* handleLoginRequest(action) {
   try {
     yield put(loginRequestBegin());
 
-    const { redirectUrl, success } = yield call(login, action.payload.creds);
+    const { redirectUrl, success } = yield call(loginRequest, action.payload.creds);
 
     yield put(loginRequestSuccess(
       redirectUrl,
@@ -63,6 +70,7 @@ export function* handleLoginRequest(action) {
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(loginRequestFailure(camelCaseObject(e.response.data)));
     }
+    logError(e);
   }
 }
 
@@ -76,7 +84,7 @@ export function* fetchThirdPartyAuthContext(action) {
     ));
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());
-    throw e;
+    logError(e);
   }
 }
 
@@ -90,7 +98,21 @@ export function* fetchRegistrationForm() {
     ));
   } catch (e) {
     yield put(fetchRegistrationFormFailure());
-    throw e;
+    logError(e);
+  }
+}
+
+export function* fetchRealtimeValidations(action) {
+  try {
+    yield put(fetchRealtimeValidationsBegin());
+    const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);
+
+    yield put(fetchRealtimeValidationsSuccess(
+      fieldValidations,
+    ));
+  } catch (e) {
+    yield put(fetchRealtimeValidationsFailure());
+    logError(e);
   }
 }
 
@@ -99,4 +121,5 @@ export default function* saga() {
   yield takeEvery(LOGIN_REQUEST.BASE, handleLoginRequest);
   yield takeEvery(THIRD_PARTY_AUTH_CONTEXT.BASE, fetchThirdPartyAuthContext);
   yield takeEvery(REGISTER_FORM.BASE, fetchRegistrationForm);
+  yield takeEvery(REGISTER_FORM_VALIDATIONS.BASE, fetchRealtimeValidations);
 }

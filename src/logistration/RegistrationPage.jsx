@@ -6,6 +6,7 @@ import {
   StatefulButton,
   Hyperlink,
   ValidationFormGroup,
+  Form,
 } from '@edx/paragon';
 
 import {
@@ -13,7 +14,12 @@ import {
 } from '@edx/frontend-platform/i18n';
 
 import camelCase from 'lodash.camelcase';
-import { getThirdPartyAuthContext, registerNewUser, fetchRegistrationForm } from './data/actions';
+import {
+  getThirdPartyAuthContext,
+  registerNewUser,
+  fetchRegistrationForm,
+  fetchRealtimeValidations,
+} from './data/actions';
 import { registrationRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
 import { RedirectLogistration } from '../common-components';
 import RegistrationFailure from './RegistrationFailure';
@@ -36,6 +42,8 @@ class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.intl = props.intl;
+
     this.state = {
       email: '',
       name: '',
@@ -52,6 +60,7 @@ class RegistrationPage extends React.Component {
       levelOfEducation: '',
       confirmEmail: '',
       enableOptionalField: false,
+      validationFieldName: '',
       errors: {
         email: '',
         name: '',
@@ -66,7 +75,7 @@ class RegistrationPage extends React.Component {
       usernameValid: false,
       passwordValid: false,
       countryValid: false,
-      honorCodeValid: false,
+      honorCodeValid: true,
       termsOfServiceValid: false,
       formValid: false,
       institutionLogin: false,
@@ -80,6 +89,19 @@ class RegistrationPage extends React.Component {
     };
     this.props.getThirdPartyAuthContext(payload);
     this.props.fetchRegistrationForm();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.validations !== nextProps.validations) {
+      const { errors } = this.state;
+      const errorMsg = nextProps.validations.validation_decisions[this.state.validationFieldName];
+      errors[this.state.validationFieldName] = errorMsg;
+      this.setState({
+        errors,
+      });
+      return false;
+    }
+    return true;
   }
 
   handleInstitutionLogin = () => {
@@ -97,8 +119,7 @@ class RegistrationPage extends React.Component {
     };
 
     const fieldMap = { ...REGISTRATION_VALIDITY_MAP, ...REGISTRATION_OPTIONAL_MAP };
-    Object.keys(fieldMap).forEach((key) => {
-      const value = fieldMap[key];
+    Object.entries(fieldMap).forEach(([key, value]) => {
       if (value) {
         payload[key] = this.state[camelCase(key)];
       }
@@ -115,7 +136,7 @@ class RegistrationPage extends React.Component {
 
     if (!this.state.formValid) {
       // Special case where honor code and tos is a single field, true by default. We don't need
-      // to validate this field.
+      // to validate this field
       Object.entries(payload).filter(([key]) => (key !== 'honor_code' || !('terms_of_service' in REGISTRATION_EXTRA_FIELDS)))
         .forEach(([key, value]) => {
           this.validateInput(key, value);
@@ -123,6 +144,22 @@ class RegistrationPage extends React.Component {
       return;
     }
     this.props.registerNewUser(payload);
+  }
+
+  handleOnBlur(e) {
+    this.setState({
+      validationFieldName: e.target.name,
+    });
+
+    const payload = {
+      email: this.state.email,
+      username: this.state.username,
+      password: this.state.password,
+      name: this.state.name,
+      honor_code: this.state.honorCode,
+      country: this.state.country,
+    };
+    this.props.fetchRealtimeValidations(payload);
   }
 
   handleOnChange(e) {
@@ -156,23 +193,23 @@ class RegistrationPage extends React.Component {
     switch (inputName) {
       case 'email':
         emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        errors.email = emailValid ? '' : null;
+        errors.email = emailValid ? '' : this.intl.formatMessage(messages['logistration.email.validation.message']);
         break;
       case 'name':
         nameValid = value.length >= 1;
-        errors.name = nameValid ? '' : null;
+        errors.name = nameValid ? '' : this.intl.formatMessage(messages['logistration.fullname.validation.message']);
         break;
       case 'username':
         usernameValid = value.length >= 2 && value.length <= 30;
-        errors.username = usernameValid ? '' : null;
+        errors.username = usernameValid ? '' : this.intl.formatMessage(messages['logistration.username.validation.message']);
         break;
       case 'password':
         passwordValid = !!(value.length >= 8 && value.match(/\d+/g));
-        errors.password = passwordValid ? '' : null;
+        errors.password = passwordValid ? '' : this.intl.formatMessage(messages['logistration.register.page.password.validation.message']);
         break;
       case 'country':
         countryValid = value !== '';
-        errors.country = countryValid ? '' : null;
+        errors.country = countryValid ? '' : this.intl.formatMessage(messages['logistration.country.validation.message']);
         break;
       case 'honor_code':
         honorCodeValid = value !== false;
@@ -207,23 +244,20 @@ class RegistrationPage extends React.Component {
     } = this.state;
 
     const validityMap = REGISTRATION_VALIDITY_MAP;
-    const validStates = [];
-    Object.keys(validityMap).forEach((key) => {
-      const value = validityMap[key];
+    let extraFieldsValid = true;
+    Object.entries(validityMap).forEach(([key, value]) => {
       if (value) {
-        const state = camelCase(key);
-        const stateValid = `${state}Valid`;
-        validStates.push(stateValid);
+        const stateValid = `${camelCase(key)}Valid`;
+        extraFieldsValid = extraFieldsValid && this.state[stateValid];
       }
     });
-    let extraFieldsValid = true;
-    validStates.forEach((value) => {
-      extraFieldsValid = extraFieldsValid && this.state[value];
-    });
 
-    this.setState({
-      formValid: emailValid && nameValid && usernameValid && passwordValid && extraFieldsValid,
-    });
+    let formValid = emailValid && nameValid && usernameValid && extraFieldsValid;
+    if (!this.props.thirdPartyAuthContext.currentProvider) {
+      formValid = formValid && passwordValid;
+    }
+
+    this.setState({ formValid });
   }
 
   addExtraRequiredFields() {
@@ -250,24 +284,25 @@ class RegistrationPage extends React.Component {
           REGISTRATION_VALIDITY_MAP[field.name] = true;
           if (field.type === 'plaintext' && field.name === 'honor_code') { // special case where honor code and tos are combined
             afterLink = field.label;
+            props.type = 'hidden';
             const nodes = [];
             do {
               const matches = processLink(afterLink);
               [beforeLink, link, linkText, afterLink] = matches;
               nodes.push(
-                <>
+                <React.Fragment key={link}>
                   {beforeLink}
                   <Hyperlink destination={link}>{linkText}</Hyperlink>
-                </>,
+                </React.Fragment>,
               );
             } while (afterLink.includes('a href'));
-            nodes.push(<>{afterLink}</>);
+            nodes.push(<React.Fragment key={afterLink}>{afterLink}</React.Fragment>);
 
             return (
-              <>
-                <p {...props} />
+              <React.Fragment key={field.type}>
+                <input {...props} />
                 { nodes }
-              </>
+              </React.Fragment>
             );
           }
           if (field.type === 'checkbox') {
@@ -277,6 +312,7 @@ class RegistrationPage extends React.Component {
             return (
               <ValidationFormGroup
                 for={field.name}
+                key={field.name}
                 invalid={this.state.errors[stateVar] !== ''}
                 invalidMessage={field.errorMessages.required}
                 className="custom-control"
@@ -298,6 +334,7 @@ class RegistrationPage extends React.Component {
           return (
             <ValidationFormGroup
               for={field.name}
+              key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
             >
@@ -307,7 +344,7 @@ class RegistrationPage extends React.Component {
           );
         }
       }
-      return (<></>);
+      return null;
     });
     return fields;
   }
@@ -315,8 +352,9 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
+      let cssClass = null;
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
-        if (!field.required) {
+        if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
           const props = {
             id: field.name,
@@ -324,26 +362,37 @@ class RegistrationPage extends React.Component {
             type: field.type,
             onChange: e => this.handleOnChange(e),
           };
-          if (field.name !== 'honor_code' && field.name !== 'country') {
-            if (field.type === 'select') {
-              options = field.options.map((item) => ({
-                value: item.value,
-                label: item.name,
-              }));
-              props.options = options;
-            }
-            return (
-              <ValidationFormGroup
-                for={field.name}
-              >
-                <label htmlFor={field.name} className="h6 pt-3">{field.label} (optional)</label>
-                <Input {...props} />
-              </ValidationFormGroup>
-            );
+
+          if (field.type === 'select') {
+            options = field.options.map((item) => ({
+              value: item.value,
+              label: item.name,
+            }));
+            props.options = options;
           }
+          if (field.name === 'gender') {
+            cssClass = 'opt-inline-field';
+          }
+
+          if (field.name === 'year_of_birth') {
+            cssClass = 'opt-inline-field opt-year-field';
+          }
+
+          return (
+            <ValidationFormGroup
+              for={field.name}
+              key={field.name}
+              className={cssClass}
+            >
+              <label htmlFor={field.name} className="h6 pt-3">
+                {field.label} {this.props.intl.formatMessage(messages['logistration.register.optional.label'])}
+              </label>
+              <Input {...props} />
+            </ValidationFormGroup>
+          );
         }
       }
-      return (<></>);
+      return null;
     });
     return fields;
   }
@@ -407,11 +456,11 @@ class RegistrationPage extends React.Component {
               </span>
             </div>
           ) : null}
-          <form className="mb-4 mx-auto form-group">
+          <Form className="mb-4 mx-auto form-group">
             <ValidationFormGroup
               for="name"
               invalid={this.state.errors.name !== ''}
-              invalidMessage={intl.formatMessage(messages['logistration.fullname.validation.message'])}
+              invalidMessage={this.state.errors.name}
             >
               <label htmlFor="name" className="h6 pt-3">
                 {intl.formatMessage(messages['logistration.fullname.label'])}
@@ -423,13 +472,14 @@ class RegistrationPage extends React.Component {
                 placeholder=""
                 value={this.state.name}
                 onChange={e => this.handleOnChange(e)}
+                onBlur={e => this.handleOnBlur(e)}
                 required
               />
             </ValidationFormGroup>
             <ValidationFormGroup
               for="username"
               invalid={this.state.errors.username !== ''}
-              invalidMessage={intl.formatMessage(messages['logistration.username.validation.message'])}
+              invalidMessage={this.state.errors.username}
             >
               <label htmlFor="username" className="h6 pt-3">
                 {intl.formatMessage(messages['logistration.username.label'])}
@@ -441,13 +491,14 @@ class RegistrationPage extends React.Component {
                 placeholder=""
                 value={this.state.username}
                 onChange={e => this.handleOnChange(e)}
+                onBlur={e => this.handleOnBlur(e)}
                 required
               />
             </ValidationFormGroup>
             <ValidationFormGroup
               for="email"
               invalid={this.state.errors.email !== ''}
-              invalidMessage={intl.formatMessage(messages['logistration.email.validation.message'])}
+              invalidMessage={this.state.errors.email}
             >
               <label htmlFor="email" className="h6 pt-3">
                 {intl.formatMessage(messages['logistration.register.page.email.label'])}
@@ -459,27 +510,31 @@ class RegistrationPage extends React.Component {
                 placeholder=""
                 value={this.state.email}
                 onChange={e => this.handleOnChange(e)}
+                onBlur={e => this.handleOnBlur(e)}
                 required
               />
             </ValidationFormGroup>
-            <ValidationFormGroup
-              for="password"
-              invalid={this.state.errors.password !== ''}
-              invalidMessage={intl.formatMessage(messages['logistration.register.page.password.validation.message'])}
-            >
-              <label htmlFor="password" className="h6 pt-3">
-                {intl.formatMessage(messages['logistration.password.label'])}
-              </label>
-              <Input
-                name="password"
-                id="password"
-                type="password"
-                placeholder=""
-                value={this.state.password}
-                onChange={e => this.handleOnChange(e)}
-                required
-              />
-            </ValidationFormGroup>
+            {!currentProvider && (
+              <ValidationFormGroup
+                for="password"
+                invalid={this.state.errors.password !== ''}
+                invalidMessage={this.state.errors.password}
+              >
+                <label htmlFor="password" className="h6 pt-3">
+                  {intl.formatMessage(messages['logistration.password.label'])}
+                </label>
+                <Input
+                  name="password"
+                  id="password"
+                  type="password"
+                  placeholder=""
+                  value={this.state.password}
+                  onChange={e => this.handleOnChange(e)}
+                  onBlur={e => this.handleOnBlur(e)}
+                  required
+                />
+              </ValidationFormGroup>
+            )}
             { this.addExtraRequiredFields() }
             <ValidationFormGroup
               for="optional"
@@ -500,7 +555,7 @@ class RegistrationPage extends React.Component {
             </ValidationFormGroup>
             { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
             <StatefulButton
-              type="submit"
+              type="button"
               className="btn-primary submit mt-4"
               state={submitState}
               labels={{
@@ -508,7 +563,7 @@ class RegistrationPage extends React.Component {
               }}
               onClick={this.handleSubmit}
             />
-          </form>
+          </Form>
         </div>
       </>
     );
@@ -527,6 +582,7 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
   },
   formData: null,
+  validations: null,
 };
 
 RegistrationPage.propTypes = {
@@ -561,6 +617,16 @@ RegistrationPage.propTypes = {
   formData: PropTypes.shape({
     fields: PropTypes.array,
   }),
+  fetchRealtimeValidations: PropTypes.func.isRequired,
+  validations: PropTypes.shape({
+    validation_decisions: PropTypes.shape({
+      country: PropTypes.string,
+      email: PropTypes.string,
+      name: PropTypes.string,
+      password: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  }),
 };
 
 const mapStateToProps = state => {
@@ -572,6 +638,7 @@ const mapStateToProps = state => {
     registrationResult,
     thirdPartyAuthContext,
     formData: state.logistration.formData,
+    validations: state.logistration.validations,
   };
 };
 
@@ -580,6 +647,7 @@ export default connect(
   {
     getThirdPartyAuthContext,
     fetchRegistrationForm,
+    fetchRealtimeValidations,
     registerNewUser,
   },
 )(injectIntl(RegistrationPage));

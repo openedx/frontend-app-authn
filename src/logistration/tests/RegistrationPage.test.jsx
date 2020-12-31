@@ -9,7 +9,7 @@ import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import { PENDING_STATE } from '../../data/constants';
-import { fetchRegistrationForm } from '../data/actions';
+import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -19,6 +19,7 @@ describe('./RegistrationPage.js', () => {
     logistration: {
       registrationResult: { success: false, redirectUrl: '' },
       thirdPartyAuthContext: {
+        platformName: 'openedX',
         currentProvider: null,
         finishAuthUrl: null,
         providers: [],
@@ -88,12 +89,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid email', () => {
     const validationMessage = 'Enter a valid email address that contains at least 3 characters.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
 
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#email').simulate('change', { target: { value: '', name: 'email' } });
@@ -103,12 +98,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid username', () => {
     const validationMessage = 'Username must be between 2 and 30 characters long.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#username').simulate('change', { target: { value: '', name: 'username' } });
     registrationPage.update();
@@ -117,12 +106,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid name', () => {
     const validationMessage = 'Enter your full name.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#name').simulate('change', { target: { value: '', name: 'name' } });
     registrationPage.update();
@@ -131,12 +114,6 @@ describe('./RegistrationPage.js', () => {
 
   it('should show error message on invalid password', () => {
     const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-      },
-    });
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('input#password').simulate('change', { target: { value: '', name: 'password' } });
     registrationPage.update();
@@ -237,6 +214,48 @@ describe('./RegistrationPage.js', () => {
     expect(store.dispatch).toHaveBeenCalledWith(fetchRegistrationForm());
   });
 
+  it('should dispatch fetchRealtimeValidations on Blur', () => {
+    const formPayload = {
+      email: '',
+      username: '',
+      password: '',
+      name: '',
+      honor_code: true,
+      country: '',
+    };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+
+    registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+  });
+
+  it('should not dispatch registerNewUser on Submit', () => {
+    const formPayload = {
+      email: '',
+      username: '',
+      password: '',
+      name: '',
+      honor_code: true,
+      country: '',
+    };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('button.submit').simulate('click');
+    expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser(formPayload));
+  });
+
   it('should match default section snapshot', () => {
     const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(tree.toJSON()).toMatchSnapshot();
@@ -262,6 +281,22 @@ describe('./RegistrationPage.js', () => {
         ...initialState.logistration,
         thirdPartyAuthContext: {
           providers: [appleProvider],
+        },
+      },
+    });
+
+    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />)).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should display no password field when current provider is present', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        thirdPartyAuthContext: {
+          ...initialState.logistration.thirdPartyAuthContext,
+          currentProvider: 'Google',
         },
       },
     });
@@ -385,13 +420,12 @@ describe('./RegistrationPage.js', () => {
         thirdPartyAuthContext: {
           ...initialState.logistration.thirdPartyAuthContext,
           currentProvider: 'Apple',
-          platformName: 'edX',
         },
       },
     });
 
     const expectedMessage = 'You\'ve successfully signed into Apple. We just need a little more information before '
-                            + 'you start learning with edX.';
+                            + 'you start learning with openedX.';
 
     const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);

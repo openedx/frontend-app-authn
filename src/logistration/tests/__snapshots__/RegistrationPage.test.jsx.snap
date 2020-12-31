@@ -1,5 +1,169 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`./RegistrationPage.js should display no password field when current provider is present 1`] = `
+<div
+  className="register-container mx-auto"
+>
+  <div
+    className="fade alert-warning mt-n2 alert show"
+    id="tpa-alert"
+    role="alert"
+  >
+    <span>
+      You've successfully signed into Google. We just need a little more information before you start learning with openedX.
+    </span>
+  </div>
+  <div
+    className="text-left"
+  >
+    <span>
+      Already have an edX account?
+    </span>
+    <a
+      href="/login"
+    >
+       Sign in.
+    </a>
+  </div>
+  <form
+    className="mb-4 mx-auto form-group"
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="name"
+      >
+        Full Name (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="name"
+        name="name"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="username"
+      >
+        Public Username (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="username"
+        name="username"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="h6 pt-3"
+        htmlFor="email"
+      >
+        Email (required)
+      </label>
+      <input
+        aria-describedby=""
+        className="form-control"
+        id="email"
+        name="email"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder=""
+        required={true}
+        type="email"
+        value=""
+      />
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={true}
+        className="form-check-input"
+        id="honor_code"
+        name="honor_code"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={true}
+      />
+      I agree to the Your Platform Name Here 
+      <a
+        href="/honor"
+        onClick={[Function]}
+        target="_self"
+      >
+        Honor Code
+      </a>
+      
+      <strong
+        className="invalid-feedback"
+        id="honor_code-invalid-feedback"
+      >
+        You must agree to the Your Platform Name Here Honor Code
+      </strong>
+    </div>
+    <div
+      className="form-group custom-control"
+    >
+      <input
+        aria-describedby=""
+        checked={false}
+        className="form-check-input"
+        id="optional"
+        name="optional"
+        onChange={[Function]}
+        required={true}
+        type="checkbox"
+        value={false}
+      />
+      <p
+        id="additionalFields"
+        onClick={[Function]}
+        role="presentation"
+      >
+        Support education research by providing additional information
+      </p>
+    </div>
+    <button
+      aria-disabled={false}
+      aria-live="assertive"
+      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="d-flex align-items-center justify-content-center"
+      >
+        Create Account
+      </span>
+    </button>
+  </form>
+</div>
+`;
+
 exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
 <div
   className="register-container mx-auto"
@@ -73,18 +237,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -100,18 +259,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -127,18 +281,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -154,18 +303,13 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -225,7 +369,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -270,18 +414,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -297,18 +436,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -324,18 +458,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -351,18 +480,13 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -422,7 +546,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -467,18 +591,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -494,18 +613,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -521,18 +635,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -548,18 +657,13 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -619,7 +723,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
       className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
@@ -711,18 +815,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="name"
         name="name"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="name-invalid-feedback"
-      >
-        Enter your full name.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -738,18 +837,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="username"
         name="username"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="text"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="username-invalid-feedback"
-      >
-        Username must be between 2 and 30 characters long.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -765,18 +859,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="email"
         name="email"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="email"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="email-invalid-feedback"
-      >
-        Enter a valid email address that contains at least 3 characters.
-      </strong>
     </div>
     <div
       className="form-group"
@@ -792,18 +881,13 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="form-control"
         id="password"
         name="password"
+        onBlur={[Function]}
         onChange={[Function]}
         placeholder=""
         required={true}
         type="password"
         value=""
       />
-      <strong
-        className="invalid-feedback"
-        id="password-invalid-feedback"
-      >
-        This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.
-      </strong>
     </div>
     <div
       className="form-group custom-control"
@@ -863,7 +947,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
       className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
       disabled={false}
       onClick={[Function]}
-      type="submit"
+      type="button"
     >
       <span
         className="d-flex align-items-center justify-content-center"
