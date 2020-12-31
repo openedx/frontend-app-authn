@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
 import LoginFailureMessage from '../LoginFailure';
-import { INACTIVE_USER, NON_COMPLIANT_PASSWORD_EXCEPTION } from '../data/constants';
+import { INACTIVE_USER, INTERNAL_SERVER_ERROR, NON_COMPLIANT_PASSWORD_EXCEPTION } from '../data/constants';
 
 describe('LoginFailureMessage', () => {
   let props = {};
@@ -33,6 +33,22 @@ describe('LoginFailureMessage', () => {
           platformName: 'openedX',
           supportLink: 'https://support.edx.org/',
         },
+      },
+    };
+
+    const tree = renderer.create(
+      <IntlProvider locale="en">
+        <LoginFailureMessage {...props} />
+      </IntlProvider>,
+    ).toJSON();
+
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('should match internal server error message snapshot', () => {
+    props = {
+      loginError: {
+        errorCode: INTERNAL_SERVER_ERROR,
       },
     };
 
