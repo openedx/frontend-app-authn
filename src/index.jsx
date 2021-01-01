@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 
 import {
-  APP_INIT_ERROR, APP_READY, subscribe, initialize,
+  APP_INIT_ERROR, APP_READY, subscribe, initialize, mergeConfig,
 } from '@edx/frontend-platform';
 import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import React from 'react';
@@ -52,6 +52,13 @@ subscribe(APP_INIT_ERROR, (error) => {
 });
 
 initialize({
+  handlers: {
+    config: () => {
+      mergeConfig({
+        LOGIN_ISSUE_SUPPORT_LINK: process.env.LOGIN_ISSUE_SUPPORT_LINK || null,
+      });
+    },
+  },
   messages: [
     appMessages,
     headerMessages,

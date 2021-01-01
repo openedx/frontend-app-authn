@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 
 import SwitchContent from './SwitchContent';
 import {
@@ -33,6 +34,14 @@ const LoginHelpLinks = (props) => {
     </a>
   );
 
+  const loginIssueSupportURL = (config) => (config.LOGIN_ISSUE_SUPPORT_LINK
+    ? (
+      <a className="field-link" href={config.LOGIN_ISSUE_SUPPORT_LINK}>
+        {intl.formatMessage(messages['logistration.other.sign.in.issues'])}
+      </a>
+    )
+    : null);
+
   const getHelpButtonMessage = () => {
     let mid = 'logistration.need.other.help.signing.in.collapsible.menu';
     if (page === LOGIN_PAGE) {
@@ -44,10 +53,8 @@ const LoginHelpLinks = (props) => {
 
   const renderLoginHelp = () => (
     <div className="login-help">
-      { page === LOGIN_PAGE ? forgotPasswordLink() : signUpLink()}
-      <a className="field-link" href="https://support.edx.org/hc/en-us/sections/115004153367-Solve-a-Sign-in-Problem">
-        {intl.formatMessage(messages['logistration.other.sign.in.issues'])}
-      </a>
+      { page === LOGIN_PAGE ? forgotPasswordLink() : signUpLink() }
+      { loginIssueSupportURL(getConfig()) }
     </div>
   );
 

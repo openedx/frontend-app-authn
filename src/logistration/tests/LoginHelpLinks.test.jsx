@@ -5,9 +5,14 @@ import { mount } from 'enzyme';
 import LoginHelpLinks from '../LoginHelpLinks';
 import { LOGIN_PAGE } from '../../data/constants';
 
+const otherSignInIssues = 'https://login-issue-support-url.com';
+
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn().mockReturnValue({ LOGIN_ISSUE_SUPPORT_LINK: otherSignInIssues }),
+}));
+
 describe('LoginHelpLinks', () => {
   let props = {};
-  const otherSignInIssues = 'https://support.edx.org/hc/en-us/sections/115004153367-Solve-a-Sign-in-Problem';
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
