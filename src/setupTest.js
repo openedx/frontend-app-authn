@@ -20,3 +20,7 @@ export default function initializeMockLogging() {
 
   return { loggingService };
 }
+
+window.scrollTo = (x, y) => {
+  document.documentElement.scrollTop = y;
+};
