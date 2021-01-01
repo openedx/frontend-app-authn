@@ -191,6 +191,11 @@ const messages = defineMessages({
     defaultMessage: '(optional)',
     description: 'Text that appears with optional field labels',
   },
+  'logistration.enterprise.login.link.text': {
+    id: 'logistration.enterprise.login.link.text',
+    defaultMessage: 'Sign in with your company or school',
+    description: 'Company or school login link text.',
+  },
 });
 
 export default messages;

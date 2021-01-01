@@ -5,6 +5,7 @@ import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { getConfig } from '@edx/frontend-platform';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
 import { loginErrorSelector, loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
@@ -17,7 +18,7 @@ import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE,
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 
@@ -45,6 +46,10 @@ class LoginPage extends React.Component {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
     this.props.getThirdPartyAuthContext(payload);
+  }
+
+  getEnterPriseLoginURL() {
+    return getConfig().LMS_BASE_URL + ENTERPRISE_LOGIN_URL;
   }
 
   handleInstitutionLogin = () => {
@@ -211,6 +216,9 @@ class LoginPage extends React.Component {
                   </ValidationFormGroup>
                 </div>
                 <LoginHelpLinks page={LOGIN_PAGE} />
+                <a className="field-link mt-0" href={this.getEnterPriseLoginURL()}>
+                  {intl.formatMessage(messages['logistration.enterprise.login.help.message'])}
+                </a>
               </div>
               <StatefulButton
                 type="submit"

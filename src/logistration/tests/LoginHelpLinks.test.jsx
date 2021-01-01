@@ -23,7 +23,7 @@ describe('LoginHelpLinks', () => {
     const loginHelpLinks = mount(reduxWrapper(<LoginHelpLinks {...props} />));
 
     expect(loginHelpLinks.find('.login-help').length).toBe(0);
-    loginHelpLinks.find('button').simulate('click');
+    loginHelpLinks.find('button').first().simulate('click');
     expect(loginHelpLinks.find('.login-help').length).toBe(1);
   });
 
@@ -34,7 +34,7 @@ describe('LoginHelpLinks', () => {
     };
 
     const wrapper = mount(reduxWrapper(<LoginHelpLinks {...props} />));
-    wrapper.find('button').simulate('click');
+    wrapper.find('button').first().simulate('click');
 
     const loginHelpLinks = wrapper.find('a');
 
@@ -49,7 +49,7 @@ describe('LoginHelpLinks', () => {
     };
 
     const wrapper = mount(reduxWrapper(<LoginHelpLinks {...props} />));
-    wrapper.find('button').simulate('click');
+    wrapper.find('button').first().simulate('click');
 
     const loginHelpLinks = wrapper.find('a');
 
