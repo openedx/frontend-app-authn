@@ -15,7 +15,7 @@ import messages from './messages';
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
-import { LOGIN_PAGE } from '../data/constants';
+import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../logistration/LoginHelpLinks';
 
 const ForgotPasswordPage = (props) => {
@@ -24,10 +24,12 @@ const ForgotPasswordPage = (props) => {
 
   const validateEmail = (e, setFieldValue) => {
     invalidEmailMessage = intl.formatMessage(messages['logisration.forgot.password.page.invalid.email.message']);
+    const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
+
     const inputEmail = e.target.value;
-    const isEmailValid = inputEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    const isEmailValid = regex.test(inputEmail);
     setFieldValue('email', inputEmail);
-    setFieldValue('isEmailValid', isEmailValid !== null);
+    setFieldValue('isEmailValid', isEmailValid);
     if (inputEmail.length < 3) {
       invalidEmailMessage = `${intl.formatMessage(messages['logisration.forgot.password.page.email.invalid.length.message'])} ${invalidEmailMessage}`;
     }

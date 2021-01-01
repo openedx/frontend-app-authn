@@ -84,7 +84,7 @@ describe('ForgotPasswordPage', () => {
     const validationMessage = "Email must have at least 3 characters. The email address you've provided isn't formatted correctly.";
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     await act(async () => {
-      await wrapper.find('input#forgot-password-input').simulate('change', { target: { value: '', name: 'a' } });
+      await wrapper.find('input#forgot-password-input').simulate('change', { target: { value: '', name: 'email' } });
     });
     wrapper.update();
     expect(wrapper.find('#email-invalid-feedback').text()).toEqual(validationMessage);
