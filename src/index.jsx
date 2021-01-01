@@ -12,9 +12,11 @@ import { messages as headerMessages } from '@edx/frontend-component-header';
 
 import configureStore from './data/configureStore';
 import { LoginPage, RegistrationPage, NotFoundPage } from './logistration';
-import { LOGIN_PAGE, REGISTER_PAGE, RESET_PAGE } from './data/constants';
+import {
+  LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
+} from './data/constants';
 import ForgotPasswordPage from './forgot-password';
-import { HeaderLayout, LoggedInRedirect, registerIcons } from './common-components';
+import { HeaderLayout, UnAuthOnlyRoute, registerIcons } from './common-components';
 import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
 
@@ -25,21 +27,21 @@ registerIcons();
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={configureStore()}>
-      <LoggedInRedirect>
-        <HeaderLayout>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to={LOGIN_PAGE} />
-            </Route>
-            <Route exact path={LOGIN_PAGE} component={LoginPage} />
-            <Route exact path={REGISTER_PAGE} component={RegistrationPage} />
-            <Route exact path={RESET_PAGE} component={ForgotPasswordPage} />
-            <Route exact path="/password_reset_confirm/:token/" component={ResetPasswordPage} />
-            <Route path="/notfound" component={NotFoundPage} />
-            <Route path="*" component={NotFoundPage} />
-          </Switch>
-        </HeaderLayout>
-      </LoggedInRedirect>
+      <HeaderLayout>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to={PAGE_NOT_FOUND} />
+          </Route>
+          <UnAuthOnlyRoute exact path={LOGIN_PAGE} component={LoginPage} />
+          <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={RegistrationPage} />
+          <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
+          <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
+          <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
+          <Route path="*">
+            <Redirect to={PAGE_NOT_FOUND} />
+          </Route>
+        </Switch>
+      </HeaderLayout>
     </AppProvider>,
     document.getElementById('root'),
   );
