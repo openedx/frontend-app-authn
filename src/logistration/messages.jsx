@@ -131,6 +131,21 @@ const messages = defineMessages({
     defaultMessage: 'Please enter your Email.',
     description: 'Validation message that appears when email address is empty',
   },
+  'logistration.email.ratelimit.less.chars.validation.message': {
+    id: 'logistration.email.ratelimit.less.chars.validation.message',
+    defaultMessage: 'Email must have 3 characters.',
+    description: 'Validation message that appears when email address is less than 3 characters',
+  },
+  'logistration.email.ratelimit.incorrect.format.validation.message': {
+    id: 'logistration.email.ratelimit.incorrect.format.validation.message',
+    defaultMessage: 'The email address you provided isn\'t formatted correctly.',
+    description: 'Validation message that appears when email address is not formatted correctly with no backend validations available.',
+  },
+  'logistration.email.ratelimit.password.validation.message': {
+    id: 'logistration.email.ratelimit.password.validation.message',
+    defaultMessage: 'Your password must contain at least 8 characters',
+    description: 'Validation message that appears when password is not formatted correctly with no backend validations available.',
+  },
   'logistration.email.help.message': {
     id: 'logistration.email.help.message',
     defaultMessage: 'The email address you used to register with edX.',
@@ -175,6 +190,11 @@ const messages = defineMessages({
     id: 'logistration.username.validation.message',
     defaultMessage: 'Please enter your Public Username.',
     description: 'Validation message that appears when username is invalid',
+  },
+  'logistration.username.ratelimit.less.chars.message': {
+    id: 'logistration.username.ratelimit.less.chars.message',
+    defaultMessage: 'Public Username must have atleast 2 characters.',
+    description: 'Validation message that appears when username is less than 2 characters and with no backend validations available.',
   },
   'logistration.country.validation.message': {
     id: 'logistration.country.validation.message',

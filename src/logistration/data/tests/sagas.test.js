@@ -180,8 +180,16 @@ describe('fetchRealtimeValidations', () => {
   });
 
   it('should call service and dispatch error action', async () => {
+    const validationRatelimitResponse = {
+      response: {
+        status: 403,
+        data: {
+          detail: 'You do not have permission to perform this action.',
+        },
+      },
+    };
     const getFieldsValidations = jest.spyOn(api, 'getFieldsValidations')
-      .mockImplementation(() => Promise.reject(new Error('something went wrong')));
+      .mockImplementation(() => Promise.reject(validationRatelimitResponse));
 
     const dispatched = [];
     await runSaga(
@@ -194,7 +202,10 @@ describe('fetchRealtimeValidations', () => {
     expect(loggingService.logError).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.fetchRealtimeValidationsBegin(),
-      actions.fetchRealtimeValidationsFailure(),
+      actions.fetchRealtimeValidationsFailure(
+        validationRatelimitResponse.response.data,
+        validationRatelimitResponse.response.status,
+      ),
     ]);
     getFieldsValidations.mockClear();
   });

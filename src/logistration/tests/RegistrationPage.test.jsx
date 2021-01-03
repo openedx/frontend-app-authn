@@ -223,6 +223,58 @@ describe('./RegistrationPage.js', () => {
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
   });
 
+  it('tests shouldComponentUpdate change validations and formValid state', () => {
+    const nextProps = {
+      validations: {
+        validation_decisions: {
+          username: 'Username must be between 2 and 30 characters long.',
+        },
+      },
+      thirdPartyAuthContext: {
+        pipelineUserDetails: {
+          name: 'test',
+          email: 'test@example.com',
+          username: 'test-username',
+        },
+      },
+      registrationError: {
+        username: [{ username: 'Username must be between 2 and 30 characters long.' }],
+      },
+    };
+
+    const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    const shouldUpdate = root.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
+    expect(root.find('RegistrationPage').state('currentValidations')).not.toEqual(null);
+    expect(root.find('RegistrationPage').state('formValid')).not.toEqual(true);
+    expect(shouldUpdate).toBe(false);
+  });
+
+  it('tests onClick should change errors state via realtime validation', () => {
+    const nextProps = {
+      validations: {
+        validation_decisions: {
+          username: 'Username must be between 2 and 30 characters long.',
+        },
+      },
+    };
+
+    const errors = {
+      email: '',
+      name: '',
+      username: 'Username must be between 2 and 30 characters long.',
+      password: '',
+      country: '',
+      honorCode: '',
+      termsOfService: '',
+    };
+
+    const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    root.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
+    root.find('input#username').simulate('click', { target: { value: '', name: 'username' } });
+    expect(root.find('RegistrationPage').state('errors')).toEqual(errors);
+  });
+
   it('should not dispatch registerNewUser on Submit', () => {
     const formPayload = {
       email: '',

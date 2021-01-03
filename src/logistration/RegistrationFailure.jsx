@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 
+const hasNoErrors = (userErrors) => (
+  userErrors.every((errorList) => (!errorList[0]))
+);
+
 const RegistrationFailureMessage = (props) => {
   const errorMessage = props.errors;
   const userErrors = [];
@@ -24,20 +28,22 @@ const RegistrationFailureMessage = (props) => {
   });
 
   return (
-    <Alert variant="danger">
-      <Alert.Heading className="text-danger">
-        <FormattedMessage
-          id="logistration.registration.request.failure.header.description.message"
-          defaultMessage="We couldn't create your account."
-          description="error message when registration failure."
-        />
-      </Alert.Heading>
-      <div>
-        <ul>
-          {userErrors}
-        </ul>
-      </div>
-    </Alert>
+    hasNoErrors(userErrors) ? null : (
+      <Alert variant="danger">
+        <Alert.Heading className="text-danger">
+          <FormattedMessage
+            id="logistration.registration.request.failure.header.description.message"
+            defaultMessage="We couldn't create your account."
+            description="error message when registration failure."
+          />
+        </Alert.Heading>
+        <div>
+          <ul>
+            {userErrors}
+          </ul>
+        </div>
+      </Alert>
+    )
   );
 };
 
