@@ -155,7 +155,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           className="field-link mt-0"
           href="http://localhost:18000/enterprise/login"
         >
-          !!! Missing message supplied to intl.formatMessage !!!
+          Sign in with your company or school
         </a>
       </div>
       <button
@@ -366,7 +366,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="field-link mt-0"
           href="http://localhost:18000/enterprise/login"
         >
-          !!! Missing message supplied to intl.formatMessage !!!
+          Sign in with your company or school
         </a>
       </div>
       <button
@@ -543,7 +543,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="field-link mt-0"
           href="http://localhost:18000/enterprise/login"
         >
-          !!! Missing message supplied to intl.formatMessage !!!
+          Sign in with your company or school
         </a>
       </div>
       <button
@@ -720,7 +720,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           className="field-link mt-0"
           href="http://localhost:18000/enterprise/login"
         >
-          !!! Missing message supplied to intl.formatMessage !!!
+          Sign in with your company or school
         </a>
       </div>
       <button
@@ -923,7 +923,7 @@ exports[`LoginPage should show error message 1`] = `
           className="field-link mt-0"
           href="http://localhost:18000/enterprise/login"
         >
-          !!! Missing message supplied to intl.formatMessage !!!
+          Sign in with your company or school
         </a>
       </div>
       <button
