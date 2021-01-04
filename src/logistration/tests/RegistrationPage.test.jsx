@@ -272,6 +272,24 @@ describe('./RegistrationPage.js', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('tests shouldComponentUpdate with pipeline user data', () => {
+    const nextProps = {
+      validations: null,
+      thirdPartyAuthContext: {
+        pipelineUserDetails: {
+          name: 'test',
+          email: 'test@example.com',
+          username: 'test-username',
+        },
+      },
+    };
+
+    const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    const shouldUpdate = root.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
+    expect(shouldUpdate).toBe(false);
+  });
+
   it('should match url after redirection', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({

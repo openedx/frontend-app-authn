@@ -1,4 +1,4 @@
-import { camelCaseObject, getConfig } from '@edx/frontend-platform';
+import { camelCaseObject, convertKeyNames, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
@@ -62,7 +62,7 @@ export async function getThirdPartyAuthContext(urlParams) {
       throw (e);
     });
   return {
-    thirdPartyAuthContext: camelCaseObject(data),
+    thirdPartyAuthContext: camelCaseObject(convertKeyNames(data, { fullname: 'name' })),
   };
 }
 
