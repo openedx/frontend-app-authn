@@ -141,7 +141,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -333,7 +333,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -491,7 +491,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -649,7 +649,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit disabled btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary disabled btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -833,7 +833,7 @@ exports[`LoginPage should show error message 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="submit"

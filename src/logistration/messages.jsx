@@ -7,7 +7,7 @@ const messages = defineMessages({
     description: 'Button label that appears on login page',
   },
   'logistration.create.account.button': {
-    id: 'ogistration.create.account.button',
+    id: 'logistration.create.account.button',
     defaultMessage: 'Create Account',
     description: 'Button label that appears on register page',
   },

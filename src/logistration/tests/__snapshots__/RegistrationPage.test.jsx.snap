@@ -155,7 +155,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -203,7 +203,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           Create an account using
         </h4>
         <div
-          className="row tpa-container"
+          className="row tpa-container mb-3"
         >
           <button
             className="btn-social btn-oa2-apple-id"
@@ -380,7 +380,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -565,7 +565,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -750,7 +750,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary disabled btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -970,7 +970,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
