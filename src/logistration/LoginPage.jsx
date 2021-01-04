@@ -217,7 +217,7 @@ class LoginPage extends React.Component {
                 </div>
                 <LoginHelpLinks page={LOGIN_PAGE} />
                 <a className="field-link mt-0" href={this.getEnterPriseLoginURL()}>
-                  {intl.formatMessage(messages['logistration.enterprise.login.help.message'])}
+                  {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
                 </a>
               </div>
               <StatefulButton
