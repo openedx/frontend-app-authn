@@ -125,6 +125,12 @@ class RegistrationPage extends React.Component {
       });
       return false;
     }
+    if (this.props.thirdPartyAuthContext.pipelineUserDetails !== nextProps.thirdPartyAuthContext.pipelineUserDetails) {
+      this.setState({
+        ...nextProps.thirdPartyAuthContext.pipelineUserDetails,
+      });
+      return false;
+    }
     return true;
   }
 
@@ -595,6 +601,7 @@ RegistrationPage.defaultProps = {
     finishAuthUrl: null,
     providers: [],
     secondaryProviders: [],
+    pipelineUserDetails: null,
   },
   formData: null,
   validations: null,
