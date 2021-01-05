@@ -155,9 +155,9 @@ class LoginPage extends React.Component {
               <div className="d-flex flex-row">
                 <p>
                   {intl.formatMessage(messages['logistration.first.time.here'])}
-                  <a className="ml-1" href={REGISTER_PAGE}>
+                  <Hyperlink className="ml-1" href={REGISTER_PAGE}>
                     {intl.formatMessage(messages['logistration.create.an.account'])}.
-                  </a>
+                  </Hyperlink>
                 </p>
               </div>
               <h2 className="text-left mt-2 mb-3">
@@ -170,7 +170,7 @@ class LoginPage extends React.Component {
                     secondaryProviders={thirdPartyAuthContext.secondaryProviders}
                     buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
                   />
-                  <div className="section-heading-line mb-4">
+                  <div className="mb-4">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
                 </>
