@@ -11,12 +11,14 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { messages as headerMessages } from '@edx/frontend-component-header';
 
 import configureStore from './data/configureStore';
-import { LoginPage, RegistrationPage, NotFoundPage } from './logistration';
+import { LoginPage, RegistrationPage } from './logistration';
 import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
 } from './data/constants';
 import ForgotPasswordPage from './forgot-password';
-import { HeaderLayout, UnAuthOnlyRoute, registerIcons } from './common-components';
+import {
+  HeaderLayout, UnAuthOnlyRoute, registerIcons, NotFoundPage,
+} from './common-components';
 import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
 

@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
+import {
+  Form, Hyperlink, Input, StatefulButton, ValidationFormGroup,
+} from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -138,8 +140,8 @@ class LoginPage extends React.Component {
           redirectUrl={this.props.loginResult.redirectUrl}
           finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
         />
-        <div className="d-flex justify-content-center login-container">
-          <div className="d-flex flex-column" style={{ width: '400px' }}>
+        <div className="d-flex justify-content-center m-4">
+          <div className="d-flex flex-column">
             {thirdPartyAuthContext.currentProvider
             && (
               <ThirdPartyAuthAlert
@@ -172,54 +174,47 @@ class LoginPage extends React.Component {
                 </div>
               </>
             ) : null }
-            <form className="m-0">
-              <div className="form-group">
-                <div className="d-flex flex-column align-items-start">
-                  <ValidationFormGroup
-                    for="email"
-                    invalid={this.state.errors.email !== ''}
-                    invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
-                  >
-                    <label htmlFor="loginEmail" className="h6 mr-1">
-                      {intl.formatMessage(messages['logistration.login.page.email.label'])}
-                    </label>
-                    <Input
-                      name="email"
-                      id="loginEmail"
-                      type="email"
-                      placeholder="username@domain.com"
-                      value={this.state.email}
-                      onChange={e => this.handleOnChange(e)}
-                      style={{ width: '400px' }}
-                    />
-                  </ValidationFormGroup>
-                </div>
+            <Form className="m-0 mw-420">
+              <ValidationFormGroup
+                for="email"
+                invalid={this.state.errors.email !== ''}
+                invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
+                className="mb-0 w-100"
+              >
+                <Form.Label htmlFor="loginEmail" className="h6 mr-1">
+                  {intl.formatMessage(messages['logistration.login.page.email.label'])}
+                </Form.Label>
+                <Input
+                  name="email"
+                  id="loginEmail"
+                  type="email"
+                  placeholder="username@domain.com"
+                  value={this.state.email}
+                  onChange={e => this.handleOnChange(e)}
+                />
                 <p className="mb-4">{intl.formatMessage(messages['logistration.email.help.message'])}</p>
-                <div className="d-flex flex-column align-items-start">
-                  <ValidationFormGroup
-                    for="password"
-                    invalid={this.state.errors.password !== ''}
-                    invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
-                    className="mb-0"
-                  >
-                    <label htmlFor="loginPassword" className="h6 mr-1">
-                      {intl.formatMessage(messages['logistration.password'])}
-                    </label>
-                    <Input
-                      name="password"
-                      id="loginPassword"
-                      type="password"
-                      value={this.state.password}
-                      onChange={e => this.handleOnChange(e)}
-                      style={{ width: '400px' }}
-                    />
-                  </ValidationFormGroup>
-                </div>
-                <LoginHelpLinks page={LOGIN_PAGE} />
-                <a className="field-link mt-0" href={this.getEnterPriseLoginURL()}>
-                  {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
-                </a>
-              </div>
+              </ValidationFormGroup>
+              <ValidationFormGroup
+                for="password"
+                invalid={this.state.errors.password !== ''}
+                invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
+                className="mb-0 w-100"
+              >
+                <Form.Label htmlFor="loginPassword" className="h6 mr-1">
+                  {intl.formatMessage(messages['logistration.password'])}
+                </Form.Label>
+                <Input
+                  name="password"
+                  id="loginPassword"
+                  type="password"
+                  value={this.state.password}
+                  onChange={e => this.handleOnChange(e)}
+                />
+              </ValidationFormGroup>
+              <LoginHelpLinks page={LOGIN_PAGE} />
+              <Hyperlink className="field-link mt-0 mb-3" destination={this.getEnterPriseLoginURL()}>
+                {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
+              </Hyperlink>
               <StatefulButton
                 type="submit"
                 className="btn-primary submit"
@@ -229,7 +224,7 @@ class LoginPage extends React.Component {
                 }}
                 onClick={this.handleSubmit}
               />
-            </form>
+            </Form>
             {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
               <>
                 <div className="section-heading-line mb-4">

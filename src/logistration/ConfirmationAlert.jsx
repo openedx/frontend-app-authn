@@ -25,13 +25,13 @@ const ConfirmationAlert = (props) => {
     <Alert
       variant="success"
     >
-      <h4 style={{ color: 'green' }}>
+      <Alert.Heading className="text-success">
         <FormattedMessage
           id="logistration.forgot.password.confirmation.title"
           defaultMessage="Check Your Email"
           description="Forgot password confirmation title"
         />
-      </h4>
+      </Alert.Heading>
       <FormattedMessage
         id="logistration.forgot.password.confirmation.message"
         defaultMessage="You entered {strongEmail}. If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. {lineBreak}If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.{lineBreak} If you need further assistance, {technicalSupportLink}."

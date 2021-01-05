@@ -5,17 +5,13 @@ exports[`ConfirmationAlert should match default confirmation message snapshot 1`
   className="fade alert alert-success show"
   role="alert"
 >
-  <h4
-    style={
-      Object {
-        "color": "green",
-      }
-    }
+  <div
+    className="text-success alert-heading h4"
   >
     <span>
       Check Your Email
     </span>
-  </h4>
+  </div>
   <span>
     You entered 
     <strong>

@@ -54,46 +54,41 @@ const ForgotPasswordPage = (props) => {
       }) => (
         <>
           {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
-          <div className="d-flex justify-content-center forgot-password-container">
-            <div className="d-flex flex-column" style={{ width: '450px' }}>
-              <Form className="m-4">
-                <div className="form-group">
-                  {status === 'forbidden' ? <RequestInProgressAlert /> : null}
-                  <h3 className="text-center mt-3">
-                    {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
-                  </h3>
-                  <p className="mb-4">
-                    {intl.formatMessage(messages['logisration.forgot.password.page.instructions'])}
-                  </p>
-                  <div className="d-flex flex-column align-items-start">
-                    <ValidationFormGroup
-                      className="mb-0"
-                      for="email"
-                      invalid={!values.isEmailValid}
-                      invalidMessage={invalidEmailMessage}
-                    >
-                      <label htmlFor="forgot-password-input" className="h6 mr-1">
-                        {intl.formatMessage(messages['logisration.forgot.password.page.email.field.label'])}
-                      </label>
-                      <Input
-                        name="email"
-                        id="forgot-password-input"
-                        type="email"
-                        placeholder="username@domain.com"
-                        value={values.email}
-                        onChange={e => validateEmail(e, setFieldValue)}
-                        style={{ width: '400px' }}
-                      />
-                    </ValidationFormGroup>
-                  </div>
+          <div className="d-flex justify-content-center m-4">
+            <div className="d-flex flex-column">
+              <Form className="mw-420">
+                {status === 'forbidden' ? <RequestInProgressAlert /> : null}
+                <h3 className="text-center mt-3">
+                  {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
+                </h3>
+                <p className="mb-4">
+                  {intl.formatMessage(messages['logisration.forgot.password.page.instructions'])}
+                </p>
+                <ValidationFormGroup
+                  className="mb-0 w-100"
+                  for="email"
+                  invalid={!values.isEmailValid}
+                  invalidMessage={invalidEmailMessage}
+                >
+                  <Form.Label htmlFor="forgot-password-input" className="h6 mr-1">
+                    {intl.formatMessage(messages['logisration.forgot.password.page.email.field.label'])}
+                  </Form.Label>
+                  <Input
+                    name="email"
+                    id="forgot-password-input"
+                    type="email"
+                    placeholder="username@domain.com"
+                    value={values.email}
+                    onChange={e => validateEmail(e, setFieldValue)}
+                  />
                   <p className="mb-2">
                     {intl.formatMessage(messages['logisration.forgot.password.page.email.field.help.text'])}
                   </p>
-                  <LoginHelpLinks page="forgot-password" />
-                </div>
+                </ValidationFormGroup>
+                <LoginHelpLinks page="forgot-password" />
                 <StatefulButton
                   type="button"
-                  className="btn-primary submit"
+                  className="btn-primary submit mt-3"
                   state={status}
                   labels={{
                     default: intl.formatMessage(messages['logisration.forgot.password.page.submit.button']),

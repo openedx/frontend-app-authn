@@ -2,959 +2,967 @@
 
 exports[`./RegistrationPage.js should display no password field when current provider is present 1`] = `
 <div
-  className="register-container mx-auto"
+  className="d-flex justify-content-center m-4"
 >
   <div
-    className="fade alert-warning mt-n2 alert show"
-    id="tpa-alert"
-    role="alert"
-  >
-    <span>
-      You've successfully signed into Google. We just need a little more information before you start learning with openedX.
-    </span>
-  </div>
-  <div
-    className="text-left"
-  >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
-  <form
-    className="mb-4 mx-auto form-group"
+    className="d-flex flex-column"
   >
     <div
-      className="form-group"
+      className="fade alert-warning mt-n2 alert show"
+      id="tpa-alert"
+      role="alert"
     >
-      <label
-        className="h6 pt-3"
-        htmlFor="name"
-      >
-        Full Name (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="username"
-      >
-        Public Username (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="username"
-        name="username"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="email"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="email"
-        name="email"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={true}
-        className="form-check-input"
-        id="honor_code"
-        name="honor_code"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={true}
-      />
-      I agree to the Your Platform Name Here 
-      <a
-        href="/honor"
-        onClick={[Function]}
-        target="_self"
-      >
-        Honor Code
-      </a>
-      
-      <strong
-        className="invalid-feedback"
-        id="honor_code-invalid-feedback"
-      >
-        You must agree to the Your Platform Name Here Honor Code
-      </strong>
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={false}
-        className="form-check-input"
-        id="optional"
-        name="optional"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={false}
-      />
-      <p
-        id="additionalFields"
-        onClick={[Function]}
-        role="presentation"
-      >
-        Support education research by providing additional information
-      </p>
-    </div>
-    <button
-      aria-disabled={false}
-      aria-live="assertive"
-      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      type="button"
-    >
-      <span
-        className="d-flex align-items-center justify-content-center"
-      >
-        Create Account
+      <span>
+        You've successfully signed into Google. We just need a little more information before you start learning with openedX.
       </span>
-    </button>
-  </form>
+    </div>
+    <div
+      className="text-left"
+    >
+      <span>
+        Already have an edX account?
+      </span>
+      <a
+        href="/login"
+      >
+         Sign in.
+      </a>
+    </div>
+    <form
+      className="mb-4 form-group mw-500"
+    >
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="name"
+        >
+          Full Name (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="username"
+        >
+          Public Username (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="username"
+          name="username"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="email"
+        >
+          Email (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="username@domain.com"
+          required={true}
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={true}
+          className="form-check-input"
+          id="honor_code"
+          name="honor_code"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={true}
+        />
+        I agree to the Your Platform Name Here 
+        <a
+          href="/honor"
+          onClick={[Function]}
+          target="_self"
+        >
+          Honor Code
+        </a>
+        
+        <strong
+          className="invalid-feedback"
+          id="honor_code-invalid-feedback"
+        >
+          You must agree to the Your Platform Name Here Honor Code
+        </strong>
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={false}
+          className="form-check-input"
+          id="optional"
+          name="optional"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={false}
+        />
+        <p
+          id="additionalFields"
+          onClick={[Function]}
+          role="presentation"
+        >
+          Support education research by providing additional information
+        </p>
+      </div>
+      <button
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Create Account
+        </span>
+      </button>
+    </form>
+  </div>
 </div>
 `;
 
 exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
 <div
-  className="register-container mx-auto"
+  className="d-flex justify-content-center m-4"
 >
   <div
-    className="text-left"
+    className="d-flex flex-column"
   >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
-  <div
-    className="d-block mb-4 mt-4"
-  >
-    <span
-      className="d-block mx-auto mb-4 section-heading-line"
-    >
-      Create an account using
-    </span>
     <div
-      className="row tpa-container"
+      className="text-left"
     >
+      <span>
+        Already have an edX account?
+      </span>
+      <a
+        href="/login"
+      >
+         Sign in.
+      </a>
+    </div>
+    <div
+      className="d-block mb-4 mt-4"
+    >
+      <span
+        className="d-block mx-auto mb-4 section-heading-line"
+      >
+        Create an account using
+      </span>
+      <div
+        className="row tpa-container"
+      >
+        <button
+          className="btn-social btn-oa2-apple-id"
+          id="oa2-apple-id"
+          onClick={[Function]}
+          type="button"
+        >
+          <div
+            aria-hidden="true"
+          >
+            <img
+              alt="icon Apple"
+              className="icon-image"
+              src="https://edx.devstack.lms/logo.png"
+            />
+          </div>
+          <span
+            aria-hidden="true"
+            className="pl-2"
+          >
+            Apple
+          </span>
+        </button>
+      </div>
+      <span
+        className="d-block mx-auto text-center mt-4 section-heading-line"
+      >
+        or create a new one here
+      </span>
+    </div>
+    <form
+      className="mb-4 form-group mw-500"
+    >
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="name"
+        >
+          Full Name (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="username"
+        >
+          Public Username (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="username"
+          name="username"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="email"
+        >
+          Email (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="username@domain.com"
+          required={true}
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="password"
+        >
+          Password (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="password"
+          name="password"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="password"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={true}
+          className="form-check-input"
+          id="honor_code"
+          name="honor_code"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={true}
+        />
+        I agree to the Your Platform Name Here 
+        <a
+          href="/honor"
+          onClick={[Function]}
+          target="_self"
+        >
+          Honor Code
+        </a>
+        
+        <strong
+          className="invalid-feedback"
+          id="honor_code-invalid-feedback"
+        >
+          You must agree to the Your Platform Name Here Honor Code
+        </strong>
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={false}
+          className="form-check-input"
+          id="optional"
+          name="optional"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={false}
+        />
+        <p
+          id="additionalFields"
+          onClick={[Function]}
+          role="presentation"
+        >
+          Support education research by providing additional information
+        </p>
+      </div>
       <button
-        className="btn-social btn-oa2-apple-id"
-        id="oa2-apple-id"
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+        disabled={false}
         onClick={[Function]}
         type="button"
       >
-        <div
-          aria-hidden="true"
-        >
-          <img
-            alt="icon Apple"
-            className="icon-image"
-            src="https://edx.devstack.lms/logo.png"
-          />
-        </div>
         <span
-          aria-hidden="true"
-          className="pl-2"
+          className="d-flex align-items-center justify-content-center"
         >
-          Apple
+          Create Account
         </span>
       </button>
-    </div>
-    <span
-      className="d-block mx-auto text-center mt-4 section-heading-line"
-    >
-      or create a new one here
-    </span>
+    </form>
   </div>
-  <form
-    className="mb-4 mx-auto form-group"
-  >
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="name"
-      >
-        Full Name (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="username"
-      >
-        Public Username (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="username"
-        name="username"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="email"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="email"
-        name="email"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="password"
-      >
-        Password (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="password"
-        name="password"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="password"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={true}
-        className="form-check-input"
-        id="honor_code"
-        name="honor_code"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={true}
-      />
-      I agree to the Your Platform Name Here 
-      <a
-        href="/honor"
-        onClick={[Function]}
-        target="_self"
-      >
-        Honor Code
-      </a>
-      
-      <strong
-        className="invalid-feedback"
-        id="honor_code-invalid-feedback"
-      >
-        You must agree to the Your Platform Name Here Honor Code
-      </strong>
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={false}
-        className="form-check-input"
-        id="optional"
-        name="optional"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={false}
-      />
-      <p
-        id="additionalFields"
-        onClick={[Function]}
-        role="presentation"
-      >
-        Support education research by providing additional information
-      </p>
-    </div>
-    <button
-      aria-disabled={false}
-      aria-live="assertive"
-      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      type="button"
-    >
-      <span
-        className="d-flex align-items-center justify-content-center"
-      >
-        Create Account
-      </span>
-    </button>
-  </form>
 </div>
 `;
 
 exports[`./RegistrationPage.js should match default section snapshot 1`] = `
 <div
-  className="register-container mx-auto"
+  className="d-flex justify-content-center m-4"
 >
   <div
-    className="text-left"
-  >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
-  <form
-    className="mb-4 mx-auto form-group"
+    className="d-flex flex-column"
   >
     <div
-      className="form-group"
+      className="text-left"
     >
-      <label
-        className="h6 pt-3"
-        htmlFor="name"
-      >
-        Full Name (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="username"
-      >
-        Public Username (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="username"
-        name="username"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="email"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="email"
-        name="email"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="password"
-      >
-        Password (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="password"
-        name="password"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="password"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={true}
-        className="form-check-input"
-        id="honor_code"
-        name="honor_code"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={true}
-      />
-      I agree to the Your Platform Name Here 
-      <a
-        href="/honor"
-        onClick={[Function]}
-        target="_self"
-      >
-        Honor Code
-      </a>
-      
-      <strong
-        className="invalid-feedback"
-        id="honor_code-invalid-feedback"
-      >
-        You must agree to the Your Platform Name Here Honor Code
-      </strong>
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={false}
-        className="form-check-input"
-        id="optional"
-        name="optional"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={false}
-      />
-      <p
-        id="additionalFields"
-        onClick={[Function]}
-        role="presentation"
-      >
-        Support education research by providing additional information
-      </p>
-    </div>
-    <button
-      aria-disabled={false}
-      aria-live="assertive"
-      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      type="button"
-    >
-      <span
-        className="d-flex align-items-center justify-content-center"
-      >
-        Create Account
+      <span>
+        Already have an edX account?
       </span>
-    </button>
-  </form>
+      <a
+        href="/login"
+      >
+         Sign in.
+      </a>
+    </div>
+    <form
+      className="mb-4 form-group mw-500"
+    >
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="name"
+        >
+          Full Name (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="username"
+        >
+          Public Username (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="username"
+          name="username"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="email"
+        >
+          Email (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="username@domain.com"
+          required={true}
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="password"
+        >
+          Password (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="password"
+          name="password"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="password"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={true}
+          className="form-check-input"
+          id="honor_code"
+          name="honor_code"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={true}
+        />
+        I agree to the Your Platform Name Here 
+        <a
+          href="/honor"
+          onClick={[Function]}
+          target="_self"
+        >
+          Honor Code
+        </a>
+        
+        <strong
+          className="invalid-feedback"
+          id="honor_code-invalid-feedback"
+        >
+          You must agree to the Your Platform Name Here Honor Code
+        </strong>
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={false}
+          className="form-check-input"
+          id="optional"
+          name="optional"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={false}
+        />
+        <p
+          id="additionalFields"
+          onClick={[Function]}
+          role="presentation"
+        >
+          Support education research by providing additional information
+        </p>
+      </div>
+      <button
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Create Account
+        </span>
+      </button>
+    </form>
+  </div>
 </div>
 `;
 
 exports[`./RegistrationPage.js should match pending button state snapshot 1`] = `
 <div
-  className="register-container mx-auto"
+  className="d-flex justify-content-center m-4"
 >
   <div
-    className="text-left"
-  >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
-  <form
-    className="mb-4 mx-auto form-group"
+    className="d-flex flex-column"
   >
     <div
-      className="form-group"
+      className="text-left"
     >
-      <label
-        className="h6 pt-3"
-        htmlFor="name"
-      >
-        Full Name (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="username"
-      >
-        Public Username (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="username"
-        name="username"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="email"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="email"
-        name="email"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="password"
-      >
-        Password (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="password"
-        name="password"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="password"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={true}
-        className="form-check-input"
-        id="honor_code"
-        name="honor_code"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={true}
-      />
-      I agree to the Your Platform Name Here 
+      <span>
+        Already have an edX account?
+      </span>
       <a
-        href="/honor"
-        onClick={[Function]}
-        target="_self"
+        href="/login"
       >
-        Honor Code
+         Sign in.
       </a>
-      
-      <strong
-        className="invalid-feedback"
-        id="honor_code-invalid-feedback"
-      >
-        You must agree to the Your Platform Name Here Honor Code
-      </strong>
     </div>
-    <div
-      className="form-group custom-control"
+    <form
+      className="mb-4 form-group mw-500"
     >
-      <input
-        aria-describedby=""
-        checked={false}
-        className="form-check-input"
-        id="optional"
-        name="optional"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={false}
-      />
-      <p
-        id="additionalFields"
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="name"
+        >
+          Full Name (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="username"
+        >
+          Public Username (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="username"
+          name="username"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="email"
+        >
+          Email (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="username@domain.com"
+          required={true}
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="password"
+        >
+          Password (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="password"
+          name="password"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="password"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={true}
+          className="form-check-input"
+          id="honor_code"
+          name="honor_code"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={true}
+        />
+        I agree to the Your Platform Name Here 
+        <a
+          href="/honor"
+          onClick={[Function]}
+          target="_self"
+        >
+          Honor Code
+        </a>
+        
+        <strong
+          className="invalid-feedback"
+          id="honor_code-invalid-feedback"
+        >
+          You must agree to the Your Platform Name Here Honor Code
+        </strong>
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={false}
+          className="form-check-input"
+          id="optional"
+          name="optional"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={false}
+        />
+        <p
+          id="additionalFields"
+          onClick={[Function]}
+          role="presentation"
+        >
+          Support education research by providing additional information
+        </p>
+      </div>
+      <button
+        aria-disabled={true}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
+        disabled={false}
         onClick={[Function]}
-        role="presentation"
-      >
-        Support education research by providing additional information
-      </p>
-    </div>
-    <button
-      aria-disabled={true}
-      aria-live="assertive"
-      className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary submit mt-4 disabled btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      type="button"
-    >
-      <span
-        className="d-flex align-items-center justify-content-center"
+        type="button"
       >
         <span
-          className="pgn__stateful-btn-icon"
+          className="d-flex align-items-center justify-content-center"
         >
           <span
-            aria-hidden={true}
-            className="icon fa fa-spinner fa-spin"
-            id="Icon1"
-          />
+            className="pgn__stateful-btn-icon"
+          >
+            <span
+              aria-hidden={true}
+              className="icon fa fa-spinner fa-spin"
+              id="Icon1"
+            />
+          </span>
+          Create Account
         </span>
-        Create Account
-      </span>
-    </button>
-  </form>
+      </button>
+    </form>
+  </div>
 </div>
 `;
 
 exports[`./RegistrationPage.js should show error message on 409 1`] = `
 <div
-  className="register-container mx-auto"
+  className="d-flex justify-content-center m-4"
 >
   <div
-    className="fade alert alert-danger show"
-    role="alert"
+    className="d-flex flex-column"
   >
-    <h4
-      style={
-        Object {
-          "color": "#a0050e",
-        }
-      }
+    <div
+      className="fade alert alert-danger show"
+      role="alert"
+    >
+      <div
+        className="text-danger alert-heading h4"
+      >
+        <span>
+          We couldn't create your account.
+        </span>
+      </div>
+      <div>
+        <ul>
+          <li
+            className="text-left"
+          >
+            It looks like test@gmail.com belongs to an existing account. Try again with a different email address.
+          </li>
+          <li
+            className="text-left"
+          >
+            It looks like test belongs to an existing account. Try again with a different username.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div
+      className="text-left"
     >
       <span>
-        We couldn't create your account.
+        Already have an edX account?
       </span>
-    </h4>
-    <div>
-      <ul>
-        <li
-          style={
-            Object {
-              "textAlign": "left",
-            }
-          }
-        >
-          It looks like test@gmail.com belongs to an existing account. Try again with a different email address.
-        </li>
-        <li
-          style={
-            Object {
-              "textAlign": "left",
-            }
-          }
-        >
-          It looks like test belongs to an existing account. Try again with a different username.
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div
-    className="text-left"
-  >
-    <span>
-      Already have an edX account?
-    </span>
-    <a
-      href="/login"
-    >
-       Sign in.
-    </a>
-  </div>
-  <form
-    className="mb-4 mx-auto form-group"
-  >
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="name"
-      >
-        Full Name (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="name"
-        name="name"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="username"
-      >
-        Public Username (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="username"
-        name="username"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="text"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="email"
-      >
-        Email (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="email"
-        name="email"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder="username@domain.com"
-        required={true}
-        type="email"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group"
-    >
-      <label
-        className="h6 pt-3"
-        htmlFor="password"
-      >
-        Password (required)
-      </label>
-      <input
-        aria-describedby=""
-        className="form-control"
-        id="password"
-        name="password"
-        onBlur={[Function]}
-        onChange={[Function]}
-        placeholder=""
-        required={true}
-        type="password"
-        value=""
-      />
-    </div>
-    <div
-      className="form-group custom-control"
-    >
-      <input
-        aria-describedby=""
-        checked={true}
-        className="form-check-input"
-        id="honor_code"
-        name="honor_code"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={true}
-      />
-      I agree to the Your Platform Name Here 
       <a
-        href="/honor"
-        onClick={[Function]}
-        target="_self"
+        href="/login"
       >
-        Honor Code
+         Sign in.
       </a>
-      
-      <strong
-        className="invalid-feedback"
-        id="honor_code-invalid-feedback"
-      >
-        You must agree to the Your Platform Name Here Honor Code
-      </strong>
     </div>
-    <div
-      className="form-group custom-control"
+    <form
+      className="mb-4 form-group mw-500"
     >
-      <input
-        aria-describedby=""
-        checked={false}
-        className="form-check-input"
-        id="optional"
-        name="optional"
-        onChange={[Function]}
-        required={true}
-        type="checkbox"
-        value={false}
-      />
-      <p
-        id="additionalFields"
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="name"
+        >
+          Full Name (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="name"
+          name="name"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="username"
+        >
+          Public Username (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="username"
+          name="username"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="email"
+        >
+          Email (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="email"
+          name="email"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="username@domain.com"
+          required={true}
+          type="email"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group"
+      >
+        <label
+          className="h6 pt-3"
+          htmlFor="password"
+        >
+          Password (required)
+        </label>
+        <input
+          aria-describedby=""
+          className="form-control"
+          id="password"
+          name="password"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          required={true}
+          type="password"
+          value=""
+        />
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={true}
+          className="form-check-input"
+          id="honor_code"
+          name="honor_code"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={true}
+        />
+        I agree to the Your Platform Name Here 
+        <a
+          href="/honor"
+          onClick={[Function]}
+          target="_self"
+        >
+          Honor Code
+        </a>
+        
+        <strong
+          className="invalid-feedback"
+          id="honor_code-invalid-feedback"
+        >
+          You must agree to the Your Platform Name Here Honor Code
+        </strong>
+      </div>
+      <div
+        className="form-group custom-control"
+      >
+        <input
+          aria-describedby=""
+          checked={false}
+          className="form-check-input"
+          id="optional"
+          name="optional"
+          onChange={[Function]}
+          required={true}
+          type="checkbox"
+          value={false}
+        />
+        <p
+          id="additionalFields"
+          onClick={[Function]}
+          role="presentation"
+        >
+          Support education research by providing additional information
+        </p>
+      </div>
+      <button
+        aria-disabled={false}
+        aria-live="assertive"
+        className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
+        disabled={false}
         onClick={[Function]}
-        role="presentation"
+        type="button"
       >
-        Support education research by providing additional information
-      </p>
-    </div>
-    <button
-      aria-disabled={false}
-      aria-live="assertive"
-      className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary submit mt-4 btn btn-primary"
-      disabled={false}
-      onClick={[Function]}
-      type="button"
-    >
-      <span
-        className="d-flex align-items-center justify-content-center"
-      >
-        Create Account
-      </span>
-    </button>
-  </form>
+        <span
+          className="d-flex align-items-center justify-content-center"
+        >
+          Create Account
+        </span>
+      </button>
+    </form>
+  </div>
 </div>
 `;
