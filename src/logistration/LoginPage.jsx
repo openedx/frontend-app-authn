@@ -142,99 +142,101 @@ class LoginPage extends React.Component {
         />
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column">
-            {thirdPartyAuthContext.currentProvider
-            && (
-              <ThirdPartyAuthAlert
-                currentProvider={thirdPartyAuthContext.currentProvider}
-                platformName={thirdPartyAuthContext.platformName}
-              />
-            )}
-            {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
-            {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
-            <div className="d-flex flex-row">
-              <p>
-                {intl.formatMessage(messages['logistration.first.time.here'])}
-                <a className="ml-1" href={REGISTER_PAGE}>
-                  {intl.formatMessage(messages['logistration.create.an.account'])}.
-                </a>
-              </p>
+            <div className="mw-420">
+              {thirdPartyAuthContext.currentProvider
+              && (
+                <ThirdPartyAuthAlert
+                  currentProvider={thirdPartyAuthContext.currentProvider}
+                  platformName={thirdPartyAuthContext.platformName}
+                />
+              )}
+              {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
+              {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
+              <div className="d-flex flex-row">
+                <p>
+                  {intl.formatMessage(messages['logistration.first.time.here'])}
+                  <a className="ml-1" href={REGISTER_PAGE}>
+                    {intl.formatMessage(messages['logistration.create.an.account'])}.
+                  </a>
+                </p>
+              </div>
+              <h2 className="text-left mt-2 mb-3">
+                {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
+              </h2>
+              {thirdPartyAuthContext.secondaryProviders.length ? (
+                <>
+                  <RenderInstitutionButton
+                    onSubmitHandler={this.handleInstitutionLogin}
+                    secondaryProviders={thirdPartyAuthContext.secondaryProviders}
+                    buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
+                  />
+                  <div className="section-heading-line mb-4">
+                    <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
+                  </div>
+                </>
+              ) : null }
+              <Form className="m-0">
+                <ValidationFormGroup
+                  for="email"
+                  invalid={this.state.errors.email !== ''}
+                  invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
+                  className="mb-0 w-100"
+                >
+                  <Form.Label htmlFor="loginEmail" className="h6 mr-1">
+                    {intl.formatMessage(messages['logistration.login.page.email.label'])}
+                  </Form.Label>
+                  <Input
+                    name="email"
+                    id="loginEmail"
+                    type="email"
+                    placeholder="username@domain.com"
+                    value={this.state.email}
+                    onChange={e => this.handleOnChange(e)}
+                  />
+                  <p className="mb-4">{intl.formatMessage(messages['logistration.email.help.message'])}</p>
+                </ValidationFormGroup>
+                <ValidationFormGroup
+                  for="password"
+                  invalid={this.state.errors.password !== ''}
+                  invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
+                  className="mb-0 w-100"
+                >
+                  <Form.Label htmlFor="loginPassword" className="h6 mr-1">
+                    {intl.formatMessage(messages['logistration.password'])}
+                  </Form.Label>
+                  <Input
+                    name="password"
+                    id="loginPassword"
+                    type="password"
+                    value={this.state.password}
+                    onChange={e => this.handleOnChange(e)}
+                  />
+                </ValidationFormGroup>
+                <LoginHelpLinks page={LOGIN_PAGE} />
+                <Hyperlink className="field-link mt-0 mb-3" destination={this.getEnterPriseLoginURL()}>
+                  {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
+                </Hyperlink>
+                <StatefulButton
+                  type="submit"
+                  className="btn-primary submit"
+                  state={submitState}
+                  labels={{
+                    default: intl.formatMessage(messages['logistration.sign.in.button']),
+                  }}
+                  onClick={this.handleSubmit}
+                />
+              </Form>
+              {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
+                <>
+                  <div className="section-heading-line mb-4">
+                    <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
+                  </div>
+                  <div className="row tpa-container">
+                    <SocialAuthProviders socialAuthProviders={thirdPartyAuthContext.providers} />
+                  </div>
+                </>
+              ) : null}
             </div>
-            <h2 className="text-left mt-2 mb-3">
-              {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
-            </h2>
-            {thirdPartyAuthContext.secondaryProviders.length ? (
-              <>
-                <RenderInstitutionButton
-                  onSubmitHandler={this.handleInstitutionLogin}
-                  secondaryProviders={thirdPartyAuthContext.secondaryProviders}
-                  buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
-                />
-                <div className="section-heading-line mb-4">
-                  <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
-                </div>
-              </>
-            ) : null }
-            <Form className="m-0 mw-420">
-              <ValidationFormGroup
-                for="email"
-                invalid={this.state.errors.email !== ''}
-                invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
-                className="mb-0 w-100"
-              >
-                <Form.Label htmlFor="loginEmail" className="h6 mr-1">
-                  {intl.formatMessage(messages['logistration.login.page.email.label'])}
-                </Form.Label>
-                <Input
-                  name="email"
-                  id="loginEmail"
-                  type="email"
-                  placeholder="username@domain.com"
-                  value={this.state.email}
-                  onChange={e => this.handleOnChange(e)}
-                />
-                <p className="mb-4">{intl.formatMessage(messages['logistration.email.help.message'])}</p>
-              </ValidationFormGroup>
-              <ValidationFormGroup
-                for="password"
-                invalid={this.state.errors.password !== ''}
-                invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
-                className="mb-0 w-100"
-              >
-                <Form.Label htmlFor="loginPassword" className="h6 mr-1">
-                  {intl.formatMessage(messages['logistration.password'])}
-                </Form.Label>
-                <Input
-                  name="password"
-                  id="loginPassword"
-                  type="password"
-                  value={this.state.password}
-                  onChange={e => this.handleOnChange(e)}
-                />
-              </ValidationFormGroup>
-              <LoginHelpLinks page={LOGIN_PAGE} />
-              <Hyperlink className="field-link mt-0 mb-3" destination={this.getEnterPriseLoginURL()}>
-                {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
-              </Hyperlink>
-              <StatefulButton
-                type="submit"
-                className="btn-primary submit"
-                state={submitState}
-                labels={{
-                  default: intl.formatMessage(messages['logistration.sign.in.button']),
-                }}
-                onClick={this.handleSubmit}
-              />
-            </Form>
-            {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
-              <>
-                <div className="section-heading-line mb-4">
-                  <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
-                </div>
-                <div className="row tpa-container">
-                  <SocialAuthProviders socialAuthProviders={thirdPartyAuthContext.providers} />
-                </div>
-              </>
-            ) : null}
           </div>
         </div>
       </>
