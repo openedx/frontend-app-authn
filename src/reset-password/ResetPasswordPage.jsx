@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Input, StatefulButton, ValidationFormGroup } from '@edx/paragon';
+import {
+  Form, Input, StatefulButton, ValidationFormGroup,
+} from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { getQueryParameters } from '@edx/frontend-platform';
@@ -74,10 +76,10 @@ const ResetPasswordPage = (props) => {
     return (
       <>
         {props.status === 'failure' ? <ResetFailureMessage errors={props.errors} /> : null}
-        <div className="d-flex justify-content-center reset-password-container">
-          <div className="d-flex flex-column" style={{ width: '450px' }}>
-            <form className="m-4">
-              <div className="form-group">
+        <div className="d-flex justify-content-center m-4">
+          <div className="d-flex flex-column">
+            <Form>
+              <div className="reset-password-container">
                 <h3 className="text-center mt-3">
                   {intl.formatMessage(messages['logistration.reset.password.page.heading'])}
                 </h3>
@@ -89,27 +91,28 @@ const ResetPasswordPage = (props) => {
                     for="reset-password-input"
                     invalid={!passwordValid}
                     invalidMessage={validationMessage}
+                    className="w-100"
                   >
-                    <label htmlFor="reset-password-input" className="h6 mr-1">
+                    <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
                       {intl.formatMessage(messages['logistration.reset.password.page.new.field.label'])}
-                    </label>
+                    </Form.Label>
                     <Input
                       name="new-password1"
                       id="reset-password-input"
                       type="password"
                       placeholder=""
                       onBlur={e => handleNewPasswordChange(e)}
-                      style={{ width: '400px' }}
                     />
                   </ValidationFormGroup>
                   <ValidationFormGroup
                     for="confirm-password-input"
                     invalid={!passwordMatch}
                     invalidMessage={intl.formatMessage(messages['logistration.reset.password.page.invalid.match.message'])}
+                    className="w-100"
                   >
-                    <label htmlFor="confirm-password-input" className="h6 mr-1">
+                    <Form.Label htmlFor="confirm-password-input" className="h6 mr-1">
                       {intl.formatMessage(messages['logistration.reset.password.page.confirm.field.label'])}
-                    </label>
+                    </Form.Label>
                     <Input
                       name="new-password2"
                       id="confirm-password-input"
@@ -117,7 +120,6 @@ const ResetPasswordPage = (props) => {
                       placeholder=""
                       value={confirmPasswordInput}
                       onChange={e => handleConfirmPasswordChange(e)}
-                      style={{ width: '400px' }}
                     />
                   </ValidationFormGroup>
                 </div>
@@ -131,7 +133,7 @@ const ResetPasswordPage = (props) => {
                 }}
                 onClick={e => handleSubmit(e)}
               />
-            </form>
+            </Form>
           </div>
         </div>
       </>

@@ -446,145 +446,147 @@ class RegistrationPage extends React.Component {
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
         />
-        <div className="register-container mx-auto">
-          {this.renderErrors()}
-          {currentProvider && (
-            <ThirdPartyAuthAlert
-              currentProvider={currentProvider}
-              platformName={this.props.thirdPartyAuthContext.platformName}
-              referrer="register"
-            />
-          )}
-          <div className="text-left">
-            <span>{intl.formatMessage(messages['logistration.already.have.an.edx.account'])}</span>
-            <a href={LOGIN_PAGE}>{intl.formatMessage(messages['logistration.sign.in.hyperlink'])}</a>
-          </div>
-          {(providers.length || secondaryProviders.length) && !currentProvider ? (
-            <div className="d-block mb-4 mt-4">
-              <span className="d-block mx-auto mb-4 section-heading-line">
-                {intl.formatMessage(messages['logistration.create.an.account.using'])}
-              </span>
-              <div className="row tpa-container">
-                <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
-              </div>
-              <RenderInstitutionButton
-                onSubmitHandler={this.handleInstitutionLogin}
-                secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-                buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
+        <div className="d-flex justify-content-center m-4">
+          <div className="d-flex flex-column">
+            {this.renderErrors()}
+            {currentProvider && (
+              <ThirdPartyAuthAlert
+                currentProvider={currentProvider}
+                platformName={this.props.thirdPartyAuthContext.platformName}
+                referrer="register"
               />
-              <span className="d-block mx-auto text-center mt-4 section-heading-line">
-                {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
-              </span>
+            )}
+            <div className="text-left">
+              <span>{intl.formatMessage(messages['logistration.already.have.an.edx.account'])}</span>
+              <a href={LOGIN_PAGE}>{intl.formatMessage(messages['logistration.sign.in.hyperlink'])}</a>
             </div>
-          ) : null}
-          <Form className="mb-4 mx-auto form-group">
-            <ValidationFormGroup
-              for="name"
-              invalid={this.state.errors.name !== ''}
-              invalidMessage={this.state.errors.name}
-            >
-              <label htmlFor="name" className="h6 pt-3">
-                {intl.formatMessage(messages['logistration.fullname.label'])}
-              </label>
-              <Input
-                name="name"
-                id="name"
-                type="text"
-                placeholder=""
-                value={this.state.name}
-                onChange={e => this.handleOnChange(e)}
-                onBlur={e => this.handleOnBlur(e)}
-                required
-              />
-            </ValidationFormGroup>
-            <ValidationFormGroup
-              for="username"
-              invalid={this.state.errors.username !== ''}
-              invalidMessage={this.state.errors.username}
-            >
-              <label htmlFor="username" className="h6 pt-3">
-                {intl.formatMessage(messages['logistration.username.label'])}
-              </label>
-              <Input
-                name="username"
-                id="username"
-                type="text"
-                placeholder=""
-                value={this.state.username}
-                onChange={e => this.handleOnChange(e)}
-                onBlur={e => this.handleOnBlur(e)}
-                required
-              />
-            </ValidationFormGroup>
-            <ValidationFormGroup
-              for="email"
-              invalid={this.state.errors.email !== ''}
-              invalidMessage={this.state.errors.email}
-            >
-              <label htmlFor="email" className="h6 pt-3">
-                {intl.formatMessage(messages['logistration.register.page.email.label'])}
-              </label>
-              <Input
-                name="email"
-                id="email"
-                type="email"
-                placeholder="username@domain.com"
-                value={this.state.email}
-                onChange={e => this.handleOnChange(e)}
-                onBlur={e => this.handleOnBlur(e)}
-                required
-              />
-            </ValidationFormGroup>
-            {!currentProvider && (
+            {(providers.length || secondaryProviders.length) && !currentProvider ? (
+              <div className="d-block mb-4 mt-4">
+                <span className="d-block mx-auto mb-4 section-heading-line">
+                  {intl.formatMessage(messages['logistration.create.an.account.using'])}
+                </span>
+                <div className="row tpa-container">
+                  <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+                </div>
+                <RenderInstitutionButton
+                  onSubmitHandler={this.handleInstitutionLogin}
+                  secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+                  buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
+                />
+                <span className="d-block mx-auto text-center mt-4 section-heading-line">
+                  {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
+                </span>
+              </div>
+            ) : null}
+            <Form className="mb-4 form-group mw-500">
               <ValidationFormGroup
-                for="password"
-                invalid={this.state.errors.password !== ''}
-                invalidMessage={this.state.errors.password}
+                for="name"
+                invalid={this.state.errors.name !== ''}
+                invalidMessage={this.state.errors.name}
               >
-                <label htmlFor="password" className="h6 pt-3">
-                  {intl.formatMessage(messages['logistration.password.label'])}
+                <label htmlFor="name" className="h6 pt-3">
+                  {intl.formatMessage(messages['logistration.fullname.label'])}
                 </label>
                 <Input
-                  name="password"
-                  id="password"
-                  type="password"
+                  name="name"
+                  id="name"
+                  type="text"
                   placeholder=""
-                  value={this.state.password}
+                  value={this.state.name}
                   onChange={e => this.handleOnChange(e)}
                   onBlur={e => this.handleOnBlur(e)}
                   required
                 />
               </ValidationFormGroup>
-            )}
-            { this.addExtraRequiredFields() }
-            <ValidationFormGroup
-              for="optional"
-              className="custom-control"
-            >
-              <Input
-                name="optional"
-                id="optional"
-                type="checkbox"
-                value={this.state.enableOptionalField}
-                checked={this.state.enableOptionalField}
-                onChange={e => this.handleOnOptional(e)}
-                required
+              <ValidationFormGroup
+                for="username"
+                invalid={this.state.errors.username !== ''}
+                invalidMessage={this.state.errors.username}
+              >
+                <label htmlFor="username" className="h6 pt-3">
+                  {intl.formatMessage(messages['logistration.username.label'])}
+                </label>
+                <Input
+                  name="username"
+                  id="username"
+                  type="text"
+                  placeholder=""
+                  value={this.state.username}
+                  onChange={e => this.handleOnChange(e)}
+                  onBlur={e => this.handleOnBlur(e)}
+                  required
+                />
+              </ValidationFormGroup>
+              <ValidationFormGroup
+                for="email"
+                invalid={this.state.errors.email !== ''}
+                invalidMessage={this.state.errors.email}
+              >
+                <label htmlFor="email" className="h6 pt-3">
+                  {intl.formatMessage(messages['logistration.register.page.email.label'])}
+                </label>
+                <Input
+                  name="email"
+                  id="email"
+                  type="email"
+                  placeholder="username@domain.com"
+                  value={this.state.email}
+                  onChange={e => this.handleOnChange(e)}
+                  onBlur={e => this.handleOnBlur(e)}
+                  required
+                />
+              </ValidationFormGroup>
+              {!currentProvider && (
+                <ValidationFormGroup
+                  for="password"
+                  invalid={this.state.errors.password !== ''}
+                  invalidMessage={this.state.errors.password}
+                >
+                  <label htmlFor="password" className="h6 pt-3">
+                    {intl.formatMessage(messages['logistration.password.label'])}
+                  </label>
+                  <Input
+                    name="password"
+                    id="password"
+                    type="password"
+                    placeholder=""
+                    value={this.state.password}
+                    onChange={e => this.handleOnChange(e)}
+                    onBlur={e => this.handleOnBlur(e)}
+                    required
+                  />
+                </ValidationFormGroup>
+              )}
+              { this.addExtraRequiredFields() }
+              <ValidationFormGroup
+                for="optional"
+                className="custom-control"
+              >
+                <Input
+                  name="optional"
+                  id="optional"
+                  type="checkbox"
+                  value={this.state.enableOptionalField}
+                  checked={this.state.enableOptionalField}
+                  onChange={e => this.handleOnOptional(e)}
+                  required
+                />
+                <p role="presentation" id="additionalFields" onClick={e => this.handleOnOptional(e)}>
+                  {intl.formatMessage(messages['logistration.support.education.research'])}
+                </p>
+              </ValidationFormGroup>
+              { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
+              <StatefulButton
+                type="button"
+                className="btn-primary submit mt-4"
+                state={submitState}
+                labels={{
+                  default: intl.formatMessage(messages['logistration.create.account.button']),
+                }}
+                onClick={this.handleSubmit}
               />
-              <p role="presentation" id="additionalFields" onClick={e => this.handleOnOptional(e)}>
-                {intl.formatMessage(messages['logistration.support.education.research'])}
-              </p>
-            </ValidationFormGroup>
-            { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
-            <StatefulButton
-              type="button"
-              className="btn-primary submit mt-4"
-              state={submitState}
-              labels={{
-                default: intl.formatMessage(messages['logistration.create.account.button']),
-              }}
-              onClick={this.handleSubmit}
-            />
-          </Form>
+            </Form>
+          </div>
         </div>
       </>
     );

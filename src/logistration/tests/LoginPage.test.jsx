@@ -123,9 +123,10 @@ describe('LoginPage', () => {
   });
 
   it('updates the error state for invalid email', () => {
-    const errorState = { email: null, password: null };
+    const errorState = { email: null, password: '' };
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
+    loginPage.find('input#loginPassword').simulate('change', { target: { value: 'test', name: 'password' } });
     loginPage.find('button.submit').simulate('click');
     expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
   });

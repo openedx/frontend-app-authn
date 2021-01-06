@@ -2,7 +2,7 @@ import React from 'react';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
-import { Button } from '@edx/paragon';
+import { Button, Hyperlink } from '@edx/paragon';
 import messages from './messages';
 
 export const RenderInstitutionButton = props => {
@@ -34,25 +34,22 @@ const InstitutionLogistration = props => {
 
   return (
     <>
-      <div className="d-flex justify-content-center institution-login-container">
-        <div className="d-flex flex-column" style={{ width: '450px' }}>
-          <p className="mt-5 ml-3 mb-4" style={{ color: '#23419f', fontSize: '20px' }}>
+      <div className="d-flex justify-content-center m-4">
+        <div className="d-flex flex-column mw-500">
+          <h3 className="mt-5 mb-4 font-weight-normal">
             {headingTitle}
+          </h3>
+          <p className="mb-2">
+            {intl.formatMessage(messages['logistration.institution.login.page.sub.heading'])}
           </p>
-          <div style={{ fontSize: '16px' }}>
-            <p
-              className="mb-2"
-              style={{ fontSize: '16px' }}
-            >
-              {intl.formatMessage(messages['logistration.institution.login.page.sub.heading'])}
-            </p>
-            <div className="mb-2 ml-2">
-              <ul>
-                {secondaryProviders.map(
-                  provider => <li key={provider}><a href={lmsBaseUrl + provider.loginUrl}>{provider.name}</a></li>,
-                )}
-              </ul>
-            </div>
+          <div className="mb-2 ml-2">
+            <ul>
+              {secondaryProviders.map(provider => (
+                <li key={provider}>
+                  <Hyperlink destination={lmsBaseUrl + provider.loginUrl}>{provider.name}</Hyperlink>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="section-heading-line mb-4">
             <h4>or</h4>

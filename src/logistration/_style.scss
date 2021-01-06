@@ -14,17 +14,6 @@ $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
 
-.login-container {
-  margin: 4rem;
-  line-height: 1.5;
-}
-
-.register-container {
-  @extend .login-container;
-
-  width: 30rem;
-}
-
 .logistration-header {
   border-bottom: 1px solid #e7e7e7;
   height: 3.75rem;
@@ -225,4 +214,39 @@ $apple-focus-black: $apple-black;
 
 .full-vertical-height{
     height: 100vh;
+}
+
+.help-links {
+  margin-left: -5px;
+}
+
+.mw-420 {
+  max-width: 420px;
+}
+
+.mw-500 {
+  max-width: 500px;
+}
+
+.mw-32em {
+  max-width: 32em;
+}
+
+@media (min-width: 576px) {
+  .reset-password-container {
+    width: 420px;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 450px) {
+  .section-heading-line {
+    position: relative;
+    text-align: center;
+  
+    &:before,
+    &:after {
+      width: 10%;
+    }
+  }
 }

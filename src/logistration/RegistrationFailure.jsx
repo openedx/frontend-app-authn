@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
-
 import { Alert } from '@edx/paragon';
 
 const RegistrationFailureMessage = (props) => {
@@ -16,7 +15,7 @@ const RegistrationFailureMessage = (props) => {
     const errors = errorMessage[key];
     const errorList = errors.map((error) => (
       (error.user_message) ? (
-        <li key={error} style={{ textAlign: 'left' }}>
+        <li key={error} className="text-left">
           {error.user_message}
         </li>
       ) : null
@@ -26,13 +25,13 @@ const RegistrationFailureMessage = (props) => {
 
   return (
     <Alert variant="danger">
-      <h4 style={{ color: '#a0050e' }}>
+      <Alert.Heading className="text-danger">
         <FormattedMessage
           id="logistration.registration.request.failure.header.description.message"
           defaultMessage="We couldn't create your account."
           description="error message when registration failure."
         />
-      </h4>
+      </Alert.Heading>
       <div>
         <ul>
           {userErrors}
