@@ -36,9 +36,9 @@ const InstitutionLogistration = props => {
     <>
       <div className="d-flex justify-content-center m-4">
         <div className="d-flex flex-column mw-500">
-          <h3 className="mt-5 mb-4 font-weight-normal">
+          <h1 className="mt-5 mb-4 font-weight-normal">
             {headingTitle}
-          </h3>
+          </h1>
           <p className="mb-2">
             {intl.formatMessage(messages['logistration.institution.login.page.sub.heading'])}
           </p>
@@ -51,7 +51,7 @@ const InstitutionLogistration = props => {
               ))}
             </ul>
           </div>
-          <div className="section-heading-line mb-4">
+          <div className="mb-4">
             <h4>or</h4>
           </div>
           <Button

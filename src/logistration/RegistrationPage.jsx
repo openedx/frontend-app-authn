@@ -463,9 +463,9 @@ class RegistrationPage extends React.Component {
               </div>
               {(providers.length || secondaryProviders.length) && !currentProvider ? (
                 <div className="d-block mb-4 mt-4">
-                  <span className="d-block mx-auto mb-4 section-heading-line">
+                  <h4 className="d-block mx-auto mb-4">
                     {intl.formatMessage(messages['logistration.create.an.account.using'])}
-                  </span>
+                  </h4>
                   <div className="row tpa-container">
                     <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
                   </div>
@@ -474,9 +474,9 @@ class RegistrationPage extends React.Component {
                     secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
                     buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
                   />
-                  <span className="d-block mx-auto text-center mt-4 section-heading-line">
+                  <h4 className="d-block mx-auto mt-4">
                     {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
-                  </span>
+                  </h4>
                 </div>
               ) : null}
               <Form className="mb-4 form-group">

@@ -58,9 +58,9 @@ const ForgotPasswordPage = (props) => {
             <div className="d-flex flex-column">
               <Form className="mw-420">
                 {status === 'forbidden' ? <RequestInProgressAlert /> : null}
-                <h3 className="text-center mt-3">
+                <h1 className="mt-3">
                   {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
-                </h3>
+                </h1>
                 <p className="mb-4">
                   {intl.formatMessage(messages['logisration.forgot.password.page.instructions'])}
                 </p>
@@ -88,7 +88,7 @@ const ForgotPasswordPage = (props) => {
                 <LoginHelpLinks page="forgot-password" />
                 <StatefulButton
                   type="button"
-                  className="btn-primary submit mt-3"
+                  className="btn-primary mt-3"
                   state={status}
                   labels={{
                     default: intl.formatMessage(messages['logisration.forgot.password.page.submit.button']),
