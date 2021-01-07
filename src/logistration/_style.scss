@@ -232,6 +232,10 @@ $apple-focus-black: $apple-black;
   max-width: 32em;
 }
 
+.h-90 {
+  height: 90%;
+}
+
 @media (min-width: 576px) {
   .reset-password-container {
     width: 420px;
