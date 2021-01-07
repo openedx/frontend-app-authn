@@ -466,7 +466,7 @@ class RegistrationPage extends React.Component {
                   <h4 className="d-block mx-auto mb-4">
                     {intl.formatMessage(messages['logistration.create.an.account.using'])}
                   </h4>
-                  <div className="row tpa-container">
+                  <div className="row tpa-container mb-3">
                     <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
                   </div>
                   <RenderInstitutionButton
@@ -579,7 +579,7 @@ class RegistrationPage extends React.Component {
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
                 <StatefulButton
                   type="button"
-                  className="btn-primary submit mt-4"
+                  className="btn-primary"
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['logistration.create.account.button']),

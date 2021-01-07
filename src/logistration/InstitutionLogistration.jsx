@@ -10,7 +10,7 @@ export const RenderInstitutionButton = props => {
   if (secondaryProviders !== undefined && secondaryProviders.length > 0) {
     return (
       <Button
-        className="mb-2"
+        className="mb-2 mt-2"
         block
         variant="outline-primary"
         onClick={onSubmitHandler}
@@ -55,7 +55,7 @@ const InstitutionLogistration = props => {
             <h4>or</h4>
           </div>
           <Button
-            variant="outline-primary"
+            variant="primary"
             onClick={onSubmitHandler}
           >
             {buttonTitle}

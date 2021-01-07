@@ -170,7 +170,7 @@ class LoginPage extends React.Component {
                     secondaryProviders={thirdPartyAuthContext.secondaryProviders}
                     buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
                   />
-                  <div className="mb-4">
+                  <div className="mb-4 mt-3">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
                 </>
@@ -218,7 +218,7 @@ class LoginPage extends React.Component {
                 </Hyperlink>
                 <StatefulButton
                   type="submit"
-                  className="btn-primary submit"
+                  className="btn-primary"
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['logistration.sign.in.button']),
