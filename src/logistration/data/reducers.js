@@ -6,7 +6,7 @@ import {
   REGISTER_FORM_VALIDATIONS,
 } from './actions';
 
-import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
+import { DEFAULT_STATE, PENDING_STATE, COMPLETE_STATE } from '../../data/constants';
 
 export const defaultState = {
   loginError: null,
@@ -55,15 +55,18 @@ const reducer = (state = defaultState, action) => {
     case THIRD_PARTY_AUTH_CONTEXT.BEGIN:
       return {
         ...state,
+        thirdPartyAuthApiStatus: PENDING_STATE,
       };
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
       return {
         ...state,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       };
     case THIRD_PARTY_AUTH_CONTEXT.FAILURE:
       return {
         ...state,
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       };
     case REGISTER_FORM.BEGIN:
       return {

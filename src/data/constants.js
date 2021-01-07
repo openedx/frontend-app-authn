@@ -10,9 +10,10 @@ export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
 // Constants
 export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 
-// Stateful Submit Button States
+// States
 export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';
+export const COMPLETE_STATE = 'complete';
 
 export const REGISTRATION_VALIDITY_MAP = {};
 export const REGISTRATION_OPTIONAL_MAP = {};
