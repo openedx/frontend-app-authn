@@ -168,7 +168,7 @@ describe('ResetPasswordPage', () => {
       resetPage.find('input#reset-password-input').simulate('blur', { target: { value: newPassword } });
     });
     resetPage.find('input#confirm-password-input').simulate('change', { target: { value: newPassword } });
-    resetPage.find('button.submit').simulate('click');
+    resetPage.find('button.btn-primary').simulate('click');
 
     expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
     resetPage.unmount();

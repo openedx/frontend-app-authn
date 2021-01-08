@@ -16,7 +16,7 @@ const ResetSuccessMessage = () => {
   return (
     <div className="d-flex justify-content-center m-4">
       <div className="d-flex flex-column">
-        <div className="text-center mw-420">
+        <div className="text-center mw-500">
           <Alert variant="success">
             <Alert.Heading className="text-success">
               <FormattedMessage
