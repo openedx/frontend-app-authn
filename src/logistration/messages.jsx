@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
   'logistration.login.institution.login.page.back.button': {
     id: 'logistration.login.institution.login.page.back.button',
-    defaultMessage: 'Back',
+    defaultMessage: 'Back to sign in',
     description: 'return to login page',
   },
   'logistration.register.institution.login.button': {

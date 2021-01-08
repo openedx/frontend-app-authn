@@ -56,7 +56,7 @@ const ForgotPasswordPage = (props) => {
           {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
           <div className="d-flex justify-content-center m-4">
             <div className="d-flex flex-column">
-              <Form className="mw-420">
+              <Form className="mw-500">
                 {status === 'forbidden' ? <RequestInProgressAlert /> : null}
                 <h1 className="mt-3">
                   {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}

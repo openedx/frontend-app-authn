@@ -77,12 +77,12 @@ const ResetPasswordPage = (props) => {
       <>
         {props.status === 'failure' ? <ResetFailureMessage errors={props.errors} /> : null}
         <div className="d-flex justify-content-center m-4">
-          <div className="d-flex flex-column">
+          <div className="d-flex flex-column mw-500">
             <Form>
               <div className="reset-password-container">
-                <h3 className="text-center mt-3">
+                <h1 className="mt-3">
                   {intl.formatMessage(messages['logistration.reset.password.page.heading'])}
-                </h3>
+                </h1>
                 <p className="mb-4">
                   {intl.formatMessage(messages['logistration.reset.password.page.instructions'])}
                 </p>
@@ -126,7 +126,7 @@ const ResetPasswordPage = (props) => {
               </div>
               <StatefulButton
                 type="submit"
-                className="btn-primary submit"
+                className="btn-primary"
                 state={props.status}
                 labels={{
                   default: intl.formatMessage(messages['logistration.reset.password.page.submit.button']),

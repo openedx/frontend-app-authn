@@ -142,7 +142,7 @@ class LoginPage extends React.Component {
         />
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column">
-            <div className="mw-420">
+            <div className="mw-500">
               {thirdPartyAuthContext.currentProvider
               && (
                 <ThirdPartyAuthAlert
@@ -170,7 +170,7 @@ class LoginPage extends React.Component {
                     secondaryProviders={thirdPartyAuthContext.secondaryProviders}
                     buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
                   />
-                  <div className="mb-4 mt-3">
+                  <div className="mb-4 mt-20">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
                 </>
@@ -228,7 +228,7 @@ class LoginPage extends React.Component {
               </Form>
               {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
                 <>
-                  <div className="section-heading-line mb-4">
+                  <div className="mb-4 mt-20">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
                   <div className="row tpa-container">
