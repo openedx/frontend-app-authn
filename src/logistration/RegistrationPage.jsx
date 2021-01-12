@@ -61,7 +61,15 @@ class RegistrationPage extends React.Component {
       confirmEmail: '',
       enableOptionalField: false,
       validationFieldName: '',
-      emptyFields: {},
+      validationErrorsAlertMessages: {
+        name: [{ user_message: '' }],
+        username: [{ user_message: '' }],
+        email: [{ user_message: '' }],
+        emailFormat: [{ user_message: '' }],
+        password: [{ user_message: '' }],
+        country: [{ user_message: '' }],
+      },
+      currentValidations: null,
       errors: {
         email: '',
         name: '',
@@ -78,8 +86,8 @@ class RegistrationPage extends React.Component {
       countryValid: false,
       honorCodeValid: true,
       termsOfServiceValid: false,
-      formValid: false,
       institutionLogin: false,
+      formValid: false,
     };
   }
 
@@ -93,41 +101,31 @@ class RegistrationPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.validations !== nextProps.validations) {
+    if (nextProps.statusCode !== 403 && this.props.validations !== nextProps.validations) {
       const { errors } = this.state;
       const errorMsg = nextProps.validations.validation_decisions[this.state.validationFieldName];
       errors[this.state.validationFieldName] = errorMsg;
       const stateValidKey = `${camelCase(this.state.validationFieldName)}Valid`;
-      const stateValidValue = !errorMsg;
+      const currentValidations = nextProps.validations.validation_decisions;
 
-      this.setState(({ [stateValidKey]: stateValidValue }), () => {
-        const {
-          emailValid,
-          nameValid,
-          usernameValid,
-          passwordValid,
-        } = this.state;
-
-        const validityMap = REGISTRATION_VALIDITY_MAP;
-        let extraFieldsValid = true;
-        Object.entries(validityMap).forEach(([key, value]) => {
-          if (value) {
-            const stateValid = `${camelCase(key)}Valid`;
-            extraFieldsValid = extraFieldsValid && this.state[stateValid];
-          }
-        });
-
-        const formValid = emailValid && nameValid && usernameValid && passwordValid && extraFieldsValid;
-        this.setState({
-          errors,
-          formValid,
-        });
+      this.setState({
+        [stateValidKey]: !errorMsg,
+        errors,
+        currentValidations,
       });
       return false;
     }
+
     if (this.props.thirdPartyAuthContext.pipelineUserDetails !== nextProps.thirdPartyAuthContext.pipelineUserDetails) {
       this.setState({
         ...nextProps.thirdPartyAuthContext.pipelineUserDetails,
+      });
+      return false;
+    }
+
+    if (this.props.registrationError !== nextProps.registrationError) {
+      this.setState({
+        formValid: false,
       });
       return false;
     }
@@ -141,19 +139,23 @@ class RegistrationPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const params = (new URL(document.location)).searchParams;
-    const payload = {
-      name: this.state.name,
-      username: this.state.username,
-      email: this.state.email,
-      password: this.state.password,
-    };
+    const payload = {};
+    const payloadMap = new Map();
+    payloadMap.set('name', this.state.name);
+    payloadMap.set('username', this.state.username);
+    payloadMap.set('email', this.state.email);
+
+    if (!this.props.thirdPartyAuthContext.currentProvider) {
+      payloadMap.set('password', this.state.password);
+    }
 
     const fieldMap = { ...REGISTRATION_VALIDITY_MAP, ...REGISTRATION_OPTIONAL_MAP };
     Object.entries(fieldMap).forEach(([key, value]) => {
       if (value) {
-        payload[key] = this.state[camelCase(key)];
+        payloadMap.set(key, this.state[camelCase(key)]);
       }
     });
+    payloadMap.forEach((value, key) => { payload[key] = value; });
 
     const next = params.get('next');
     const courseId = params.get('course_id');
@@ -163,16 +165,35 @@ class RegistrationPage extends React.Component {
     if (courseId) {
       payload.course_id = params.course_id;
     }
-    if (!this.state.formValid) {
+
+    let finalValidation = this.isFormValid();
+    if (!this.isFormValid()) {
       // Special case where honor code and tos is a single field, true by default. We don't need
       // to validate this field
-      Object.entries(payload).filter(([key]) => (key !== 'honor_code' || 'terms_of_service' in REGISTRATION_VALIDITY_MAP))
-        .forEach(([key, value]) => {
-          this.validateInput(key, value);
-        });
-      return;
+      payloadMap.forEach((value, key) => {
+        if (key !== 'honor_code' || 'terms_of_service' in REGISTRATION_VALIDITY_MAP) {
+          finalValidation = this.validateInput(key, value);
+        }
+      });
     }
-    this.props.registerNewUser(payload);
+    if (finalValidation) {
+      this.props.registerNewUser(payload);
+    } else {
+      this.props.fetchRealtimeValidations(payload);
+    }
+  }
+
+  checkNoValidationsErrors(validations) {
+    let keyValidList = null;
+    keyValidList = Object.entries(validations).map(([key]) => {
+      const validation = validations[key][0];
+      return !validation.user_message;
+    });
+    return keyValidList.every((current) => current === true);
+  }
+
+  isFormValid() {
+    return this.state.formValid;
   }
 
   handleOnBlur(e) {
@@ -206,39 +227,85 @@ class RegistrationPage extends React.Component {
     });
   }
 
-  validateInput(inputName, value) {
+  handleOnClick(e) {
     const { errors } = this.state;
-    const { emptyFields } = this.state;
-    let {
-      emailValid,
-      nameValid,
-      usernameValid,
-      passwordValid,
-      countryValid,
-      honorCodeValid,
-      termsOfServiceValid,
+    if (this.state.currentValidations) {
+      const fieldName = e.target.name;
+      errors[fieldName] = this.state.currentValidations[fieldName];
+      const stateValidKey = `${camelCase(fieldName)}Valid`;
+      this.setState(prevState => ({
+        [stateValidKey]: !prevState.currentValidations[fieldName],
+        errors,
+      }));
+    }
+  }
+
+  validateInput(inputName, value) {
+    const {
+      errors,
+      validationErrorsAlertMessages,
     } = this.state;
 
+    let {
+      honorCodeValid,
+      termsOfServiceValid,
+      formValid,
+    } = this.state;
+
+    const validations = this.state.currentValidations;
     switch (inputName) {
       case 'email':
-        emailValid = value.length >= 1;
-        emptyFields.email = this.generateUserMessage(emailValid, 'logistration.email.validation.message');
+        if (this.props.statusCode !== 403 && validations && validations.email) {
+          validationErrorsAlertMessages.email = [{ user_message: validations.email }];
+        } else if (value.length < 1) {
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.email.validation.message');
+          validationErrorsAlertMessages.email = errorEmpty;
+        } else {
+          const errorCharlength = this.generateUserMessage(value.length <= 2, 'logistration.email.ratelimit.less.chars.validation.message');
+          const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'logistration.email.ratelimit.incorrect.format.validation.message');
+          validationErrorsAlertMessages.email = errorCharlength;
+          validationErrorsAlertMessages.emailFormat = formatError;
+        }
         break;
       case 'name':
-        nameValid = value.length >= 1;
-        emptyFields.name = this.generateUserMessage(nameValid, 'logistration.fullname.validation.message');
+        if (this.props.statusCode !== 403 && validations && validations.name) {
+          validationErrorsAlertMessages.name = [{ user_message: validations.name }];
+        } else if (value.length < 1) {
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.fullname.validation.message');
+          validationErrorsAlertMessages.name = errorEmpty;
+        } else {
+          validationErrorsAlertMessages.name = [{ user_message: '' }];
+        }
         break;
       case 'username':
-        usernameValid = value.length >= 1;
-        emptyFields.username = this.generateUserMessage(usernameValid, 'logistration.username.validation.message');
+        if (this.props.statusCode !== 403 && validations && validations.username) {
+          validationErrorsAlertMessages.username = [{ user_message: validations.username }];
+        } else if (value.length < 1) {
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.username.validation.message');
+          validationErrorsAlertMessages.username = errorEmpty;
+        } else {
+          const errorCharLength = this.generateUserMessage(value.length <= 1, 'logistration.username.ratelimit.less.chars.message');
+          validationErrorsAlertMessages.username = errorCharLength;
+        }
         break;
       case 'password':
-        passwordValid = value.length >= 1;
-        emptyFields.password = this.generateUserMessage(passwordValid, 'logistration.register.page.password.validation.message');
+        if (this.props.statusCode !== 403 && validations && validations.password) {
+          validationErrorsAlertMessages.password = [{ user_message: validations.password }];
+        } else if (value.length < 1) {
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.register.page.password.validation.message');
+          validationErrorsAlertMessages.password = errorEmpty;
+        } else {
+          const errorCharLength = this.generateUserMessage(value.length < 8, 'logistration.email.ratelimit.password.validation.message');
+          validationErrorsAlertMessages.password = errorCharLength;
+        }
         break;
       case 'country':
-        countryValid = value !== '';
-        emptyFields.country = this.generateUserMessage(countryValid, 'logistration.country.validation.message');
+        if (this.props.statusCode !== 403 && validations && validations.country) {
+          validationErrorsAlertMessages.country = [{ user_message: validations.country }];
+        } else {
+          const emptyError = this.generateUserMessage(value === '', 'logistration.country.validation.message');
+          validationErrorsAlertMessages.country = emptyError;
+        }
         break;
       case 'honor_code':
         honorCodeValid = value !== false;
@@ -252,16 +319,14 @@ class RegistrationPage extends React.Component {
         break;
     }
 
+    formValid = this.checkNoValidationsErrors(validationErrorsAlertMessages);
     this.setState({
-      emptyFields,
-      emailValid,
-      nameValid,
-      usernameValid,
-      passwordValid,
-      countryValid,
+      formValid,
+      validationErrorsAlertMessages,
       honorCodeValid,
       termsOfServiceValid,
     });
+    return formValid;
   }
 
   addExtraRequiredFields() {
@@ -341,6 +406,7 @@ class RegistrationPage extends React.Component {
             }));
             props.options = options;
             props.onBlur = e => this.handleOnBlur(e);
+            props.onClick = e => this.handleOnClick(e);
           }
           return (
             <ValidationFormGroup
@@ -409,14 +475,14 @@ class RegistrationPage extends React.Component {
     return fields;
   }
 
-  generateUserMessage(isFieldValid, messageID) {
-    return [{ user_message: isFieldValid ? '' : this.intl.formatMessage(messages[messageID]) }];
+  generateUserMessage(isFieldInValid, messageID) {
+    return [{ user_message: isFieldInValid ? this.intl.formatMessage(messages[messageID]) : '' }];
   }
 
   renderErrors() {
     let errorsObject = null;
-    if (Object.keys(this.state.emptyFields).length > 0) {
-      errorsObject = this.state.emptyFields;
+    if (!this.checkNoValidationsErrors(this.state.validationErrorsAlertMessages)) {
+      errorsObject = this.state.validationErrorsAlertMessages;
     } else if (this.props.registrationError) {
       errorsObject = this.props.registrationError;
     } else {
@@ -492,6 +558,7 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
                   className="mb-0"
+                  helpText="This name will be used by any certificates that you earn."
                 >
                   <label htmlFor="name" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.fullname.label'])}
@@ -504,6 +571,7 @@ class RegistrationPage extends React.Component {
                     value={this.state.name}
                     onChange={e => this.handleOnChange(e)}
                     onBlur={e => this.handleOnBlur(e)}
+                    onClick={e => this.handleOnClick(e)}
                     required
                   />
                 </ValidationFormGroup>
@@ -512,6 +580,7 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
                   className="mb-0"
+                  helpText="The name that will identify you in your courses. It cannot be changed later."
                 >
                   <label htmlFor="username" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.username.label'])}
@@ -522,8 +591,10 @@ class RegistrationPage extends React.Component {
                     type="text"
                     placeholder=""
                     value={this.state.username}
+                    maxLength="30"
                     onChange={e => this.handleOnChange(e)}
                     onBlur={e => this.handleOnBlur(e)}
+                    onClick={e => this.handleOnClick(e)}
                     required
                   />
                 </ValidationFormGroup>
@@ -532,6 +603,7 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
                   className="mb-0"
+                  helpText="This is what you will use to login."
                 >
                   <label htmlFor="email" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.register.page.email.label'])}
@@ -544,6 +616,7 @@ class RegistrationPage extends React.Component {
                     value={this.state.email}
                     onChange={e => this.handleOnChange(e)}
                     onBlur={e => this.handleOnBlur(e)}
+                    onClick={e => this.handleOnClick(e)}
                     required
                   />
                 </ValidationFormGroup>
@@ -553,6 +626,7 @@ class RegistrationPage extends React.Component {
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
                     className="mb-0"
+                    helpText="Your password must contain at least 8 characters, including 1 letter & 1 number."
                   >
                     <label htmlFor="password" className="h6 pt-10">
                       {intl.formatMessage(messages['logistration.password.label'])}
@@ -565,6 +639,7 @@ class RegistrationPage extends React.Component {
                       value={this.state.password}
                       onChange={e => this.handleOnChange(e)}
                       onBlur={e => this.handleOnBlur(e)}
+                      onClick={e => this.handleOnClick(e)}
                       required
                     />
                   </ValidationFormGroup>
@@ -620,6 +695,7 @@ RegistrationPage.defaultProps = {
   },
   formData: null,
   validations: null,
+  statusCode: null,
 };
 
 RegistrationPage.propTypes = {
@@ -664,6 +740,7 @@ RegistrationPage.propTypes = {
       username: PropTypes.string,
     }),
   }),
+  statusCode: PropTypes.number,
 };
 
 const mapStateToProps = state => {
@@ -676,6 +753,7 @@ const mapStateToProps = state => {
     thirdPartyAuthContext,
     formData: state.logistration.formData,
     validations: state.logistration.validations,
+    statusCode: state.logistration.statusCode,
   };
 };
 

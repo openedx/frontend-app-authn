@@ -100,6 +100,7 @@ export const fetchRealtimeValidationsSuccess = (validations) => ({
   payload: { validations },
 });
 
-export const fetchRealtimeValidationsFailure = () => ({
+export const fetchRealtimeValidationsFailure = (error, statusCode) => ({
   type: REGISTER_FORM_VALIDATIONS.FAILURE,
+  payload: { error, statusCode },
 });

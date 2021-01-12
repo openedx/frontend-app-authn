@@ -15,6 +15,7 @@ export const defaultState = {
   registrationResult: {},
   formData: null,
   validations: null,
+  statusCode: null,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -89,6 +90,8 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_FORM_VALIDATIONS.FAILURE:
       return {
         ...state,
+        validations: action.payload.error,
+        statusCode: action.payload.statusCode,
       };
     default:
       return state;

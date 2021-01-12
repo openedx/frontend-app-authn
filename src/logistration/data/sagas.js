@@ -116,7 +116,10 @@ export function* fetchRealtimeValidations(action) {
       fieldValidations,
     ));
   } catch (e) {
-    yield put(fetchRealtimeValidationsFailure());
+    const statusCodes = [403];
+    if (e.response && statusCodes.includes(e.response.status)) {
+      yield put(fetchRealtimeValidationsFailure(e.response.data, e.response.status));
+    }
     logError(e);
   }
 }

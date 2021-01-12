@@ -44,17 +44,24 @@ exports[`./RegistrationPage.js should display no password field when current pro
             Full Name (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="name-help-text"
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="name-help-text"
+          >
+            This name will be used by any certificates that you earn.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -66,17 +73,25 @@ exports[`./RegistrationPage.js should display no password field when current pro
             Public Username (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="username-help-text"
             className="form-control"
             id="username"
+            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="username-help-text"
+          >
+            The name that will identify you in your courses. It cannot be changed later.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -88,17 +103,24 @@ exports[`./RegistrationPage.js should display no password field when current pro
             Email (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder="username@domain.com"
             required={true}
             type="email"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
+          >
+            This is what you will use to login.
+          </small>
         </div>
         <div
           className="form-group custom-control mb-0"
@@ -248,17 +270,24 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             Full Name (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="name-help-text"
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="name-help-text"
+          >
+            This name will be used by any certificates that you earn.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -270,17 +299,25 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             Public Username (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="username-help-text"
             className="form-control"
             id="username"
+            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="username-help-text"
+          >
+            The name that will identify you in your courses. It cannot be changed later.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -292,17 +329,24 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             Email (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder="username@domain.com"
             required={true}
             type="email"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
+          >
+            This is what you will use to login.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -314,17 +358,24 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             Password (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="password-help-text"
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="password"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="password-help-text"
+          >
+            Your password must contain at least 8 characters, including 1 letter & 1 number.
+          </small>
         </div>
         <div
           className="form-group custom-control mb-0"
@@ -434,17 +485,24 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Full Name (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="name-help-text"
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="name-help-text"
+          >
+            This name will be used by any certificates that you earn.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -456,17 +514,25 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Public Username (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="username-help-text"
             className="form-control"
             id="username"
+            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="username-help-text"
+          >
+            The name that will identify you in your courses. It cannot be changed later.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -478,17 +544,24 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Email (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder="username@domain.com"
             required={true}
             type="email"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
+          >
+            This is what you will use to login.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -500,17 +573,24 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Password (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="password-help-text"
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="password"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="password-help-text"
+          >
+            Your password must contain at least 8 characters, including 1 letter & 1 number.
+          </small>
         </div>
         <div
           className="form-group custom-control mb-0"
@@ -620,17 +700,24 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Full Name (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="name-help-text"
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="name-help-text"
+          >
+            This name will be used by any certificates that you earn.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -642,17 +729,25 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Public Username (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="username-help-text"
             className="form-control"
             id="username"
+            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="username-help-text"
+          >
+            The name that will identify you in your courses. It cannot be changed later.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -664,17 +759,24 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Email (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder="username@domain.com"
             required={true}
             type="email"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
+          >
+            This is what you will use to login.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -686,17 +788,24 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Password (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="password-help-text"
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="password"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="password-help-text"
+          >
+            Your password must contain at least 8 characters, including 1 letter & 1 number.
+          </small>
         </div>
         <div
           className="form-group custom-control mb-0"
@@ -841,17 +950,24 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Full Name (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="name-help-text"
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="name-help-text"
+          >
+            This name will be used by any certificates that you earn.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -863,17 +979,25 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Public Username (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="username-help-text"
             className="form-control"
             id="username"
+            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="text"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="username-help-text"
+          >
+            The name that will identify you in your courses. It cannot be changed later.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -885,17 +1009,24 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Email (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder="username@domain.com"
             required={true}
             type="email"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
+          >
+            This is what you will use to login.
+          </small>
         </div>
         <div
           className="form-group mb-0"
@@ -907,17 +1038,24 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Password (required)
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="password-help-text"
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
             placeholder=""
             required={true}
             type="password"
             value=""
           />
+          <small
+            className="form-text text-muted"
+            id="password-help-text"
+          >
+            Your password must contain at least 8 characters, including 1 letter & 1 number.
+          </small>
         </div>
         <div
           className="form-group custom-control mb-0"
