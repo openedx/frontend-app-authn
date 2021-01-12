@@ -305,7 +305,13 @@ class RegistrationPage extends React.Component {
             return (
               <React.Fragment key={field.type}>
                 <input {...props} />
-                { nodes }
+                <ValidationFormGroup
+                  for={field.name}
+                  key={field.name}
+                  className="pt-10 mb-0"
+                >
+                  { nodes }
+                </ValidationFormGroup>
               </React.Fragment>
             );
           }
@@ -319,7 +325,7 @@ class RegistrationPage extends React.Component {
                 key={field.name}
                 invalid={this.state.errors[stateVar] !== ''}
                 invalidMessage={field.errorMessages.required}
-                className="custom-control"
+                className="custom-control mb-0"
               >
                 <Input {...props} />
                 {beforeLink}
@@ -342,8 +348,9 @@ class RegistrationPage extends React.Component {
               key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
+              className="mb-0"
             >
-              <label htmlFor={field.name} className="h6 pt-3">{field.label} (required)</label>
+              <label htmlFor={field.name} className="h6 pt-10">{field.label} (required)</label>
               <Input {...props} />
             </ValidationFormGroup>
           );
@@ -357,7 +364,7 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
-      let cssClass = null;
+      let cssClass = 'mb-0';
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
         if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
@@ -376,11 +383,11 @@ class RegistrationPage extends React.Component {
             props.options = options;
           }
           if (field.name === 'gender') {
-            cssClass = 'opt-inline-field';
+            cssClass += ' opt-inline-field';
           }
 
           if (field.name === 'year_of_birth') {
-            cssClass = 'opt-inline-field opt-year-field';
+            cssClass += ' opt-inline-field opt-year-field';
           }
 
           return (
@@ -389,7 +396,7 @@ class RegistrationPage extends React.Component {
               key={field.name}
               className={cssClass}
             >
-              <label htmlFor={field.name} className="h6 pt-3">
+              <label htmlFor={field.name} className="h6 pt-10">
                 {field.label} {this.props.intl.formatMessage(messages['logistration.register.optional.label'])}
               </label>
               <Input {...props} />
@@ -484,8 +491,9 @@ class RegistrationPage extends React.Component {
                   for="name"
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
+                  className="mb-0"
                 >
-                  <label htmlFor="name" className="h6 pt-3">
+                  <label htmlFor="name" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.fullname.label'])}
                   </label>
                   <Input
@@ -503,8 +511,9 @@ class RegistrationPage extends React.Component {
                   for="username"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
+                  className="mb-0"
                 >
-                  <label htmlFor="username" className="h6 pt-3">
+                  <label htmlFor="username" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.username.label'])}
                   </label>
                   <Input
@@ -522,8 +531,9 @@ class RegistrationPage extends React.Component {
                   for="email"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
+                  className="mb-0"
                 >
-                  <label htmlFor="email" className="h6 pt-3">
+                  <label htmlFor="email" className="h6 pt-10">
                     {intl.formatMessage(messages['logistration.register.page.email.label'])}
                   </label>
                   <Input
@@ -542,8 +552,9 @@ class RegistrationPage extends React.Component {
                     for="password"
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
+                    className="mb-0"
                   >
-                    <label htmlFor="password" className="h6 pt-3">
+                    <label htmlFor="password" className="h6 pt-10">
                       {intl.formatMessage(messages['logistration.password.label'])}
                     </label>
                     <Input
@@ -561,7 +572,7 @@ class RegistrationPage extends React.Component {
                 { this.addExtraRequiredFields() }
                 <ValidationFormGroup
                   for="optional"
-                  className="custom-control"
+                  className="custom-control pt-10 mb-0"
                 >
                   <Input
                     name="optional"
@@ -572,14 +583,14 @@ class RegistrationPage extends React.Component {
                     onChange={e => this.handleOnOptional(e)}
                     required
                   />
-                  <p role="presentation" id="additionalFields" onClick={e => this.handleOnOptional(e)}>
+                  <p role="presentation" id="additionalFields" className="mb-0" onClick={e => this.handleOnOptional(e)}>
                     {intl.formatMessage(messages['logistration.support.education.research'])}
                   </p>
                 </ValidationFormGroup>
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
                 <StatefulButton
                   type="button"
-                  className="btn-primary"
+                  className="btn-primary mt-10"
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['logistration.create.account.button']),

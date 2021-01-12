@@ -35,10 +35,10 @@ exports[`./RegistrationPage.js should display no password field when current pro
         className="mb-4 form-group"
       >
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="name"
           >
             Full Name (required)
@@ -57,10 +57,10 @@ exports[`./RegistrationPage.js should display no password field when current pro
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="username"
           >
             Public Username (required)
@@ -79,10 +79,10 @@ exports[`./RegistrationPage.js should display no password field when current pro
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="email"
           >
             Email (required)
@@ -101,7 +101,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           />
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control mb-0"
         >
           <input
             aria-describedby=""
@@ -131,7 +131,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </strong>
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control pt-10 mb-0"
         >
           <input
             aria-describedby=""
@@ -145,6 +145,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
             value={false}
           />
           <p
+            className="mb-0"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -155,7 +156,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -238,10 +239,10 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         className="mb-4 form-group"
       >
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="name"
           >
             Full Name (required)
@@ -260,10 +261,10 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="username"
           >
             Public Username (required)
@@ -282,10 +283,10 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="email"
           >
             Email (required)
@@ -304,10 +305,10 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="password"
           >
             Password (required)
@@ -326,7 +327,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control mb-0"
         >
           <input
             aria-describedby=""
@@ -356,7 +357,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control pt-10 mb-0"
         >
           <input
             aria-describedby=""
@@ -370,6 +371,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             value={false}
           />
           <p
+            className="mb-0"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -380,7 +382,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -423,10 +425,10 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         className="mb-4 form-group"
       >
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="name"
           >
             Full Name (required)
@@ -445,10 +447,10 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="username"
           >
             Public Username (required)
@@ -467,10 +469,10 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="email"
           >
             Email (required)
@@ -489,10 +491,10 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="password"
           >
             Password (required)
@@ -511,7 +513,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           />
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control mb-0"
         >
           <input
             aria-describedby=""
@@ -541,7 +543,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control pt-10 mb-0"
         >
           <input
             aria-describedby=""
@@ -555,6 +557,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             value={false}
           />
           <p
+            className="mb-0"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -565,7 +568,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -608,10 +611,10 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         className="mb-4 form-group"
       >
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="name"
           >
             Full Name (required)
@@ -630,10 +633,10 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="username"
           >
             Public Username (required)
@@ -652,10 +655,10 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="email"
           >
             Email (required)
@@ -674,10 +677,10 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="password"
           >
             Password (required)
@@ -696,7 +699,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           />
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control mb-0"
         >
           <input
             aria-describedby=""
@@ -726,7 +729,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </strong>
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control pt-10 mb-0"
         >
           <input
             aria-describedby=""
@@ -740,6 +743,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             value={false}
           />
           <p
+            className="mb-0"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -750,7 +754,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary disabled btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary mt-10 disabled btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -828,10 +832,10 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         className="mb-4 form-group"
       >
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="name"
           >
             Full Name (required)
@@ -850,10 +854,10 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="username"
           >
             Public Username (required)
@@ -872,10 +876,10 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="email"
           >
             Email (required)
@@ -894,10 +898,10 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           />
         </div>
         <div
-          className="form-group"
+          className="form-group mb-0"
         >
           <label
-            className="h6 pt-3"
+            className="h6 pt-10"
             htmlFor="password"
           >
             Password (required)
@@ -916,7 +920,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           />
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control mb-0"
         >
           <input
             aria-describedby=""
@@ -946,7 +950,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </strong>
         </div>
         <div
-          className="form-group custom-control"
+          className="form-group custom-control pt-10 mb-0"
         >
           <input
             aria-describedby=""
@@ -960,6 +964,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             value={false}
           />
           <p
+            className="mb-0"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -970,7 +975,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
           disabled={false}
           onClick={[Function]}
           type="button"
