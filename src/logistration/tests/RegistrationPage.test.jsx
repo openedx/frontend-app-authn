@@ -158,6 +158,20 @@ describe('./RegistrationPage.js', () => {
               options: [{ value: '', name: '--' }, { value: 'p', name: 'Doctorate' }],
               required: false,
             },
+            {
+              label: 'Year of birth.',
+              name: 'year_of_birth',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: '2021', name: '2021' }],
+              required: false,
+            },
+            {
+              label: 'Gender.',
+              name: 'gender',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: 'f', name: 'Female' }],
+              required: false,
+            },
           ],
         },
       },
@@ -169,6 +183,8 @@ describe('./RegistrationPage.js', () => {
     registrationPage.update();
     expect(registrationPage.find('textarea#goals').length).toEqual(1);
     expect(registrationPage.find('select#level_of_education').length).toEqual(1);
+    expect(registrationPage.find('select#year_of_birth').length).toEqual(1);
+    expect(registrationPage.find('select#gender').length).toEqual(1);
   });
 
   it('should dispatch fetchRegistrationForm on ComponentDidMount', () => {
