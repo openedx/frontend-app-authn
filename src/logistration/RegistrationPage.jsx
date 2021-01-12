@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
 import {
   Input,
@@ -26,6 +27,7 @@ import RegistrationFailure from './RegistrationFailure';
 import {
   DEFAULT_REDIRECT_URL,
   DEFAULT_STATE,
+  PENDING_STATE,
   LOGIN_PAGE,
   REGISTER_PAGE,
   REGISTRATION_VALIDITY_MAP,
@@ -479,6 +481,30 @@ class RegistrationPage extends React.Component {
     return [{ user_message: isFieldInValid ? this.intl.formatMessage(messages[messageID]) : '' }];
   }
 
+  renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
+    let thirdPartyComponent = null;
+    if ((providers.length || secondaryProviders.length) && !currentProvider) {
+      thirdPartyComponent = (
+        <>
+          <RenderInstitutionButton
+            onSubmitHandler={this.handleInstitutionLogin}
+            secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
+            buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
+          />
+          <div className="row tpa-container">
+            <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+          </div>
+          <span className="d-block mx-auto text-center mt-4 section-heading-line">
+            {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
+          </span>
+        </>
+      );
+    } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
+      thirdPartyComponent = <Skeleton height={36} count={2} />;
+    }
+    return thirdPartyComponent;
+  }
+
   renderErrors() {
     let errorsObject = null;
     if (!this.checkNoValidationsErrors(this.state.validationErrorsAlertMessages)) {
@@ -492,7 +518,7 @@ class RegistrationPage extends React.Component {
   }
 
   render() {
-    const { intl, submitState } = this.props;
+    const { intl, submitState, thirdPartyAuthApiStatus } = this.props;
     const {
       currentProvider, finishAuthUrl, providers, secondaryProviders,
     } = this.props.thirdPartyAuthContext;
@@ -534,24 +560,15 @@ class RegistrationPage extends React.Component {
                 <span>{intl.formatMessage(messages['logistration.already.have.an.edx.account'])}</span>
                 <a href={LOGIN_PAGE}>{intl.formatMessage(messages['logistration.sign.in.hyperlink'])}</a>
               </div>
-              {(providers.length || secondaryProviders.length) && !currentProvider ? (
-                <div className="d-block mb-4 mt-4">
-                  <h4 className="d-block mx-auto mb-4">
-                    {intl.formatMessage(messages['logistration.create.an.account.using'])}
-                  </h4>
-                  <div className="row tpa-container mb-3">
-                    <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+              {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
+                && !currentProvider ? (
+                  <div className="d-block mb-4 mt-4">
+                    <h4 className="d-block mx-auto mb-4">
+                      {intl.formatMessage(messages['logistration.create.an.account.using'])}
+                    </h4>
                   </div>
-                  <RenderInstitutionButton
-                    onSubmitHandler={this.handleInstitutionLogin}
-                    secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-                    buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
-                  />
-                  <h4 className="d-block mx-auto mt-4">
-                    {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
-                  </h4>
-                </div>
-              ) : null}
+                ) : null}
+              {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
               <Form className="mb-4 form-group">
                 <ValidationFormGroup
                   for="name"
@@ -686,6 +703,7 @@ RegistrationPage.defaultProps = {
   registerNewUser: null,
   registrationError: null,
   submitState: DEFAULT_STATE,
+  thirdPartyAuthApiStatus: 'pending',
   thirdPartyAuthContext: {
     currentProvider: null,
     finishAuthUrl: null,
@@ -711,6 +729,7 @@ RegistrationPage.propTypes = {
     username: PropTypes.array,
   }),
   submitState: PropTypes.string,
+  thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -749,6 +768,7 @@ const mapStateToProps = state => {
   return {
     registrationError: state.logistration.registrationError,
     submitState: state.logistration.submitState,
+    thirdPartyAuthApiStatus: state.logistration.thirdPartyAuthApiStatus,
     registrationResult,
     thirdPartyAuthContext,
     formData: state.logistration.formData,

@@ -31,6 +31,28 @@ exports[`./RegistrationPage.js should display no password field when current pro
            Sign in.
         </a>
       </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
       <form
         className="mb-4 form-group"
       >
@@ -225,38 +247,38 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         >
           Create an account using
         </h4>
-        <div
-          className="row tpa-container mb-3"
-        >
-          <button
-            className="btn-social btn-oa2-apple-id"
-            id="oa2-apple-id"
-            onClick={[Function]}
-            type="button"
-          >
-            <div
-              aria-hidden="true"
-            >
-              <img
-                alt="icon Apple"
-                className="icon-image"
-                src="https://edx.devstack.lms/logo.png"
-              />
-            </div>
-            <span
-              aria-hidden="true"
-              className="pl-2"
-            >
-              Apple
-            </span>
-          </button>
-        </div>
-        <h4
-          className="d-block mx-auto mt-4"
-        >
-          or create a new one here
-        </h4>
       </div>
+      <div
+        className="row tpa-container"
+      >
+        <button
+          className="btn-social btn-oa2-apple-id"
+          id="oa2-apple-id"
+          onClick={[Function]}
+          type="button"
+        >
+          <div
+            aria-hidden="true"
+          >
+            <img
+              alt="icon Apple"
+              className="icon-image"
+              src="https://edx.devstack.lms/logo.png"
+            />
+          </div>
+          <span
+            aria-hidden="true"
+            className="pl-2"
+          >
+            Apple
+          </span>
+        </button>
+      </div>
+      <span
+        className="d-block mx-auto text-center mt-4 section-heading-line"
+      >
+        or create a new one here
+      </span>
       <form
         className="mb-4 form-group"
       >
@@ -472,6 +494,37 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
            Sign in.
         </a>
       </div>
+      <div
+        className="d-block mb-4 mt-4"
+      >
+        <h4
+          className="d-block mx-auto mb-4"
+        >
+          Create an account using
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
       <form
         className="mb-4 form-group"
       >
@@ -687,6 +740,37 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
            Sign in.
         </a>
       </div>
+      <div
+        className="d-block mb-4 mt-4"
+      >
+        <h4
+          className="d-block mx-auto mb-4"
+        >
+          Create an account using
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
       <form
         className="mb-4 form-group"
       >
@@ -937,6 +1021,37 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
            Sign in.
         </a>
       </div>
+      <div
+        className="d-block mb-4 mt-4"
+      >
+        <h4
+          className="d-block mx-auto mb-4"
+        >
+          Create an account using
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
       <form
         className="mb-4 form-group"
       >

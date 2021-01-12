@@ -1,4 +1,5 @@
 import React from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
@@ -20,7 +21,7 @@ import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL,
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 
@@ -120,8 +121,31 @@ class LoginPage extends React.Component {
     });
   }
 
+  renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
+    let thirdPartyComponent = null;
+    if ((providers.length || secondaryProviders.length) && !currentProvider) {
+      thirdPartyComponent = (
+        <>
+          <RenderInstitutionButton
+            onSubmitHandler={this.handleInstitutionLogin}
+            secondaryProviders={secondaryProviders}
+            buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
+          />
+          <div className="row tpa-container">
+            <SocialAuthProviders socialAuthProviders={providers} />
+          </div>
+        </>
+      );
+    } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
+      thirdPartyComponent = <Skeleton height={36} />;
+    } return thirdPartyComponent;
+  }
+
   render() {
-    const { intl, submitState, thirdPartyAuthContext } = this.props;
+    const {
+      intl, submitState, thirdPartyAuthContext, thirdPartyAuthApiStatus,
+    } = this.props;
+    const { currentProvider, providers, secondaryProviders } = this.props.thirdPartyAuthContext;
 
     if (this.state.institutionLogin) {
       return (
@@ -163,18 +187,6 @@ class LoginPage extends React.Component {
               <h2 className="text-left mt-2 mb-3">
                 {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
               </h2>
-              {thirdPartyAuthContext.secondaryProviders.length ? (
-                <>
-                  <RenderInstitutionButton
-                    onSubmitHandler={this.handleInstitutionLogin}
-                    secondaryProviders={thirdPartyAuthContext.secondaryProviders}
-                    buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
-                  />
-                  <div className="mb-4 mt-20">
-                    <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
-                  </div>
-                </>
-              ) : null }
               <Form className="m-0">
                 <ValidationFormGroup
                   for="email"
@@ -226,16 +238,13 @@ class LoginPage extends React.Component {
                   onClick={this.handleSubmit}
                 />
               </Form>
-              {thirdPartyAuthContext.providers.length && !thirdPartyAuthContext.currentProvider ? (
-                <>
-                  <div className="mb-4 mt-20">
+              {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
+                && !currentProvider ? (
+                  <div className="section-heading-line mb-4">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
-                  <div className="row tpa-container">
-                    <SocialAuthProviders socialAuthProviders={thirdPartyAuthContext.providers} />
-                  </div>
-                </>
-              ) : null}
+                ) : null}
+              {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
             </div>
           </div>
         </div>
@@ -249,6 +258,7 @@ LoginPage.defaultProps = {
   loginResult: null,
   loginError: null,
   submitState: DEFAULT_STATE,
+  thirdPartyAuthApiStatus: 'pending',
   thirdPartyAuthContext: {
     currentProvider: null,
     finishAuthUrl: null,
@@ -271,6 +281,7 @@ LoginPage.propTypes = {
     success: PropTypes.bool,
   }),
   submitState: PropTypes.string,
+  thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -287,6 +298,7 @@ const mapStateToProps = state => {
   const loginError = loginErrorSelector(state);
   return {
     submitState: state.logistration.submitState,
+    thirdPartyAuthApiStatus: state.logistration.thirdPartyAuthApiStatus,
     forgotPassword,
     loginError,
     loginResult,

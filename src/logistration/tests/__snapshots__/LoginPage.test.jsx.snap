@@ -154,7 +154,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         </button>
       </form>
       <div
-        className="mb-4 mt-20"
+        className="section-heading-line mb-4"
       >
         <h4>
           or sign in with
@@ -345,6 +345,25 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </span>
         </button>
       </form>
+      <div
+        className="section-heading-line mb-4"
+      >
+        <h4>
+          or sign in with
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
     </div>
   </div>
 </div>
@@ -503,6 +522,25 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </span>
         </button>
       </form>
+      <div
+        className="section-heading-line mb-4"
+      >
+        <h4>
+          or sign in with
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
     </div>
   </div>
 </div>
@@ -670,6 +708,25 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </span>
         </button>
       </form>
+      <div
+        className="section-heading-line mb-4"
+      >
+        <h4>
+          or sign in with
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
     </div>
   </div>
 </div>
@@ -845,6 +902,25 @@ exports[`LoginPage should show error message 1`] = `
           </span>
         </button>
       </form>
+      <div
+        className="section-heading-line mb-4"
+      >
+        <h4>
+          or sign in with
+        </h4>
+      </div>
+      <span>
+        <span
+          className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
+          style={
+            Object {
+              "height": 36,
+            }
+          }
+        >
+          ‌
+        </span>
+      </span>
     </div>
   </div>
 </div>
