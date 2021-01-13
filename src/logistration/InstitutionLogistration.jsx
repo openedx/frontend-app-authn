@@ -35,7 +35,7 @@ const InstitutionLogistration = props => {
   return (
     <>
       <div className="d-flex justify-content-center m-4">
-        <div className="d-flex flex-column mw-500">
+        <div className="flex-column">
           <h1 className="mt-5 mb-4 font-weight-normal">
             {headingTitle}
           </h1>

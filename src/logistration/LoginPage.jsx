@@ -240,7 +240,7 @@ class LoginPage extends React.Component {
               </Form>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (
-                  <div className="section-heading-line mb-4">
+                  <div className="mb-4 pt-10">
                     <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
                   </div>
                 ) : null}

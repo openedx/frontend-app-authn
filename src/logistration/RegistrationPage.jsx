@@ -494,9 +494,9 @@ class RegistrationPage extends React.Component {
           <div className="row tpa-container">
             <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
           </div>
-          <span className="d-block mx-auto text-center mt-4 section-heading-line">
+          <h4 className="d-block mx-auto mt-4">
             {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
-          </span>
+          </h4>
         </>
       );
     } else if (thirdPartyAuthApiStatus === PENDING_STATE) {

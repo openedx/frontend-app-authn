@@ -255,6 +255,12 @@ $apple-focus-black: $apple-black;
   }
 }
 
+@media (min-width: 1024px) {
+  .mw-500 {
+    width: 500px;
+  }
+}
+
 @media (max-width: 450px) {
   .section-heading-line {
     position: relative;
