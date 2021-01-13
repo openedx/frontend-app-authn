@@ -274,11 +274,11 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </span>
         </button>
       </div>
-      <span
-        className="d-block mx-auto text-center mt-4 section-heading-line"
+      <h4
+        className="d-block mx-auto mt-4"
       >
         or create a new one here
-      </span>
+      </h4>
       <form
         className="mb-4 form-group"
       >
