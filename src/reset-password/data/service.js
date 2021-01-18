@@ -27,15 +27,14 @@ export async function resetPassword(payload, token, queryParams) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
   };
+  const url = new URL(`${getConfig().LMS_BASE_URL}/password/reset/${token}/`);
 
-  let path = `password/reset/${token}/?track=pwreset`;
-  path += queryParams.is_account_recovery ? '&is_account_recovery=true' : '';
+  if (queryParams.is_account_recovery) {
+    url.searchParams.append('is_account_recovery', true);
+  }
+
   const { data } = await getAuthenticatedHttpClient()
-    .post(
-      `${getConfig().LMS_BASE_URL}/${path}`,
-      formurlencoded(payload),
-      requestConfig,
-    )
+    .post(url.href, formurlencoded(payload), requestConfig)
     .catch((e) => {
       throw (e);
     });

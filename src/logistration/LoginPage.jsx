@@ -179,7 +179,7 @@ class LoginPage extends React.Component {
               <div className="d-flex flex-row">
                 <p>
                   {intl.formatMessage(messages['logistration.first.time.here'])}
-                  <Hyperlink className="ml-1" href={REGISTER_PAGE}>
+                  <Hyperlink className="ml-1" destination={REGISTER_PAGE}>
                     {intl.formatMessage(messages['logistration.create.an.account'])}.
                   </Hyperlink>
                 </p>
