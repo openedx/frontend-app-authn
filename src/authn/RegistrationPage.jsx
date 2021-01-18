@@ -36,7 +36,7 @@ import {
 } from '../data/constants';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
-import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionLogistration';
+import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionAuthn';
 import messages from './messages';
 import { processLink } from '../data/utils/dataUtils';
 

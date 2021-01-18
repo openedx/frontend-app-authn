@@ -12,7 +12,7 @@ import { getConfig } from '@edx/frontend-platform';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
 import { loginErrorSelector, loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
-import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionLogistration';
+import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionAuthn';
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
