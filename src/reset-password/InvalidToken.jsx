@@ -6,9 +6,9 @@ const InvalidTokenMessage = () => {
   const loginPasswordLink = (
     <Hyperlink destination="/login">
       <FormattedMessage
-        id="logistration.forgot.password.confirmation.support.link"
+        id="authn.forgot.password.confirmation.support.link"
         defaultMessage="sign-in"
-        description="link text used in message: logistration.reset.password.request.invalid.token.description.message link 'sign-in.'"
+        description="link text used in message: authn.reset.password.request.invalid.token.description.message link 'sign-in.'"
       />
     </Hyperlink>
   );
@@ -16,7 +16,7 @@ const InvalidTokenMessage = () => {
   const forgotPassword = (
     <strong>
       <FormattedMessage
-        id="logistration.reset.password.request.forgot.password.text"
+        id="authn.reset.password.request.forgot.password.text"
         defaultMessage="Forgot Password"
         description="Forgot password page help text."
       />
@@ -29,13 +29,13 @@ const InvalidTokenMessage = () => {
           <Alert variant="danger">
             <Alert.Heading className="text-danger">
               <FormattedMessage
-                id="logistration.reset.password.request.invalid.token.header.message"
+                id="authn.reset.password.request.invalid.token.header.message"
                 defaultMessage="Invalid Password Reset Link"
                 description="Invalid password reset link help text heading."
               />
             </Alert.Heading>
             <FormattedMessage
-              id="logistration.reset.password.request.invalid.token.description.message"
+              id="authn.reset.password.request.invalid.token.description.message"
               defaultMessage="This password reset link is invalid. It may have been used already. To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}"
               description="Invalid password reset link help text message."
               values={{

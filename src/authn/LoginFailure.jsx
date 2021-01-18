@@ -24,7 +24,7 @@ const LoginFailureMessage = (props) => {
             requirements. We just sent a password-reset message to the email address associated with this account.
             Thank you for helping us keep your data safe."
             values={{
-              passwordComplaintRequirements: <strong>{intl.formatMessage(messages['logistration.non.compliant.password.title'])}</strong>,
+              passwordComplaintRequirements: <strong>{intl.formatMessage(messages['authn.non.compliant.password.title'])}</strong>,
               lineBreak: <br />,
             }}
           />
@@ -36,7 +36,7 @@ const LoginFailureMessage = (props) => {
       const supportLink = (
         <Alert.Link href={context.supportLink}>
           <FormattedMessage
-            id="logistration.contact.support.link"
+            id="authn.contact.support.link"
             defaultMessage="contact {platformName} Support"
             description="Link text used in inactive user error message to go to learner help center"
             values={{ platformName: context.platformName }}
@@ -95,7 +95,7 @@ const LoginFailureMessage = (props) => {
     <Alert variant="danger">
       <Alert.Heading>
         <FormattedMessage
-          id="logistration.login.failure.header.title"
+          id="authn.login.failure.header.title"
           defaultMessage="We couldn't sign you in."
           description="login failure header message."
         />

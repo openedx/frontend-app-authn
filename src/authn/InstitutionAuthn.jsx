@@ -22,7 +22,7 @@ export const RenderInstitutionButton = props => {
   return <></>;
 };
 
-const InstitutionLogistration = props => {
+const InstitutionAuthn = props => {
   const lmsBaseUrl = getConfig().LMS_BASE_URL;
   const {
     intl,
@@ -40,7 +40,7 @@ const InstitutionLogistration = props => {
             {headingTitle}
           </h1>
           <p className="mb-2">
-            {intl.formatMessage(messages['logistration.institution.login.page.sub.heading'])}
+            {intl.formatMessage(messages['authn.institution.login.page.sub.heading'])}
           </p>
           <div className="mb-2 ml-2">
             <ul>
@@ -66,11 +66,11 @@ const InstitutionLogistration = props => {
   );
 };
 
-const LogistrationDefaultProps = {
+const AuthnDefaultProps = {
   secondaryProviders: [],
   buttonTitle: '',
 };
-const LogistrationProps = {
+const AuthnProps = {
   onSubmitHandler: PropTypes.func.isRequired,
   secondaryProviders: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequried,
@@ -80,20 +80,20 @@ const LogistrationProps = {
 };
 
 RenderInstitutionButton.propTypes = {
-  ...LogistrationProps,
+  ...AuthnProps,
 };
 RenderInstitutionButton.defaultProps = {
-  ...LogistrationDefaultProps,
+  ...AuthnDefaultProps,
 };
 
-InstitutionLogistration.propTypes = {
-  ...LogistrationProps,
+InstitutionAuthn.propTypes = {
+  ...AuthnProps,
   intl: intlShape.isRequired,
   headingTitle: PropTypes.string,
 };
-InstitutionLogistration.defaultProps = {
-  ...LogistrationDefaultProps,
+InstitutionAuthn.defaultProps = {
+  ...AuthnDefaultProps,
   headingTitle: '',
 };
 
-export default injectIntl(InstitutionLogistration);
+export default injectIntl(InstitutionAuthn);

@@ -1,6 +1,6 @@
 |Build Status| |Codecov| |license|
 
-frontend-app-logistration
+frontend-app-authn
 =================================
 
 This is a micro-frontend application responsible for the login, registration and password reset functionality.

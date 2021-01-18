@@ -81,10 +81,10 @@ const ResetPasswordPage = (props) => {
             <Form>
               <div className="reset-password-container">
                 <h1 className="mt-3">
-                  {intl.formatMessage(messages['logistration.reset.password.page.heading'])}
+                  {intl.formatMessage(messages['authn.reset.password.page.heading'])}
                 </h1>
                 <p className="mb-4">
-                  {intl.formatMessage(messages['logistration.reset.password.page.instructions'])}
+                  {intl.formatMessage(messages['authn.reset.password.page.instructions'])}
                 </p>
                 <div className="d-flex flex-column align-items-start">
                   <ValidationFormGroup
@@ -94,7 +94,7 @@ const ResetPasswordPage = (props) => {
                     className="w-100"
                   >
                     <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
-                      {intl.formatMessage(messages['logistration.reset.password.page.new.field.label'])}
+                      {intl.formatMessage(messages['authn.reset.password.page.new.field.label'])}
                     </Form.Label>
                     <Input
                       name="new-password1"
@@ -107,11 +107,11 @@ const ResetPasswordPage = (props) => {
                   <ValidationFormGroup
                     for="confirm-password-input"
                     invalid={!passwordMatch}
-                    invalidMessage={intl.formatMessage(messages['logistration.reset.password.page.invalid.match.message'])}
+                    invalidMessage={intl.formatMessage(messages['authn.reset.password.page.invalid.match.message'])}
                     className="w-100"
                   >
                     <Form.Label htmlFor="confirm-password-input" className="h6 mr-1">
-                      {intl.formatMessage(messages['logistration.reset.password.page.confirm.field.label'])}
+                      {intl.formatMessage(messages['authn.reset.password.page.confirm.field.label'])}
                     </Form.Label>
                     <Input
                       name="new-password2"
@@ -129,7 +129,7 @@ const ResetPasswordPage = (props) => {
                 className="btn-primary"
                 state={props.status}
                 labels={{
-                  default: intl.formatMessage(messages['logistration.reset.password.page.submit.button']),
+                  default: intl.formatMessage(messages['authn.reset.password.page.submit.button']),
                 }}
                 onClick={e => handleSubmit(e)}
               />

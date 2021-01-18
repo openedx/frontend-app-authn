@@ -22,7 +22,7 @@ import {
   fetchRealtimeValidations,
 } from './data/actions';
 import { registrationRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
-import { RedirectLogistration } from '../common-components';
+import { RedirectAuthn } from '../common-components';
 import RegistrationFailure from './RegistrationFailure';
 import {
   DEFAULT_REDIRECT_URL,
@@ -36,7 +36,7 @@ import {
 } from '../data/constants';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
-import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
+import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionLogistration';
 import messages from './messages';
 import { processLink } from '../data/utils/dataUtils';
 
@@ -260,11 +260,11 @@ class RegistrationPage extends React.Component {
         if (this.props.statusCode !== 403 && validations && validations.email) {
           validationErrorsAlertMessages.email = [{ user_message: validations.email }];
         } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.email.validation.message');
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'authn.email.validation.message');
           validationErrorsAlertMessages.email = errorEmpty;
         } else {
-          const errorCharlength = this.generateUserMessage(value.length <= 2, 'logistration.email.ratelimit.less.chars.validation.message');
-          const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'logistration.email.ratelimit.incorrect.format.validation.message');
+          const errorCharlength = this.generateUserMessage(value.length <= 2, 'authn.email.ratelimit.less.chars.validation.message');
+          const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'authn.email.ratelimit.incorrect.format.validation.message');
           validationErrorsAlertMessages.email = errorCharlength;
           validationErrorsAlertMessages.emailFormat = formatError;
         }
@@ -273,7 +273,7 @@ class RegistrationPage extends React.Component {
         if (this.props.statusCode !== 403 && validations && validations.name) {
           validationErrorsAlertMessages.name = [{ user_message: validations.name }];
         } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.fullname.validation.message');
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'authn.fullname.validation.message');
           validationErrorsAlertMessages.name = errorEmpty;
         } else {
           validationErrorsAlertMessages.name = [{ user_message: '' }];
@@ -283,10 +283,10 @@ class RegistrationPage extends React.Component {
         if (this.props.statusCode !== 403 && validations && validations.username) {
           validationErrorsAlertMessages.username = [{ user_message: validations.username }];
         } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.username.validation.message');
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'authn.username.validation.message');
           validationErrorsAlertMessages.username = errorEmpty;
         } else {
-          const errorCharLength = this.generateUserMessage(value.length <= 1, 'logistration.username.ratelimit.less.chars.message');
+          const errorCharLength = this.generateUserMessage(value.length <= 1, 'authn.username.ratelimit.less.chars.message');
           validationErrorsAlertMessages.username = errorCharLength;
         }
         break;
@@ -294,10 +294,10 @@ class RegistrationPage extends React.Component {
         if (this.props.statusCode !== 403 && validations && validations.password) {
           validationErrorsAlertMessages.password = [{ user_message: validations.password }];
         } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'logistration.register.page.password.validation.message');
+          const errorEmpty = this.generateUserMessage(value.length < 1, 'authn.register.page.password.validation.message');
           validationErrorsAlertMessages.password = errorEmpty;
         } else {
-          const errorCharLength = this.generateUserMessage(value.length < 8, 'logistration.email.ratelimit.password.validation.message');
+          const errorCharLength = this.generateUserMessage(value.length < 8, 'authn.email.ratelimit.password.validation.message');
           validationErrorsAlertMessages.password = errorCharLength;
         }
         break;
@@ -305,7 +305,7 @@ class RegistrationPage extends React.Component {
         if (this.props.statusCode !== 403 && validations && validations.country) {
           validationErrorsAlertMessages.country = [{ user_message: validations.country }];
         } else {
-          const emptyError = this.generateUserMessage(value === '', 'logistration.country.validation.message');
+          const emptyError = this.generateUserMessage(value === '', 'authn.country.validation.message');
           validationErrorsAlertMessages.country = emptyError;
         }
         break;
@@ -465,7 +465,7 @@ class RegistrationPage extends React.Component {
               className={cssClass}
             >
               <label htmlFor={field.name} className="h6 pt-10">
-                {field.label} {this.props.intl.formatMessage(messages['logistration.register.optional.label'])}
+                {field.label} {this.props.intl.formatMessage(messages['authn.register.optional.label'])}
               </label>
               <Input {...props} />
             </ValidationFormGroup>
@@ -489,13 +489,13 @@ class RegistrationPage extends React.Component {
           <RenderInstitutionButton
             onSubmitHandler={this.handleInstitutionLogin}
             secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-            buttonTitle={intl.formatMessage(messages['logistration.register.institution.login.button'])}
+            buttonTitle={intl.formatMessage(messages['authn.register.institution.login.button'])}
           />
           <div className="row tpa-container">
             <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
           </div>
           <h4 className="d-block mx-auto mt-4">
-            {intl.formatMessage(messages['logistration.create.a.new.one.here'])}
+            {intl.formatMessage(messages['authn.create.a.new.one.here'])}
           </h4>
         </>
       );
@@ -529,18 +529,18 @@ class RegistrationPage extends React.Component {
 
     if (this.state.institutionLogin) {
       return (
-        <InstitutionLogistration
+        <InstitutionAuthn
           onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-          headingTitle={intl.formatMessage(messages['logistration.register.institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['logistration.create.an.account'])}
+          headingTitle={intl.formatMessage(messages['authn.register.institution.login.page.title'])}
+          buttonTitle={intl.formatMessage(messages['authn.create.an.account'])}
         />
       );
     }
 
     return (
       <>
-        <RedirectLogistration
+        <RedirectAuthn
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
@@ -557,14 +557,14 @@ class RegistrationPage extends React.Component {
                 />
               )}
               <div className="text-left">
-                <span>{intl.formatMessage(messages['logistration.already.have.an.edx.account'])}</span>
-                <a href={LOGIN_PAGE}>{intl.formatMessage(messages['logistration.sign.in.hyperlink'])}</a>
+                <span>{intl.formatMessage(messages['authn.already.have.an.edx.account'])}</span>
+                <a href={LOGIN_PAGE}>{intl.formatMessage(messages['authn.sign.in.hyperlink'])}</a>
               </div>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (
                   <div className="d-block mb-4 mt-4">
                     <h4 className="d-block mx-auto mb-4">
-                      {intl.formatMessage(messages['logistration.create.an.account.using'])}
+                      {intl.formatMessage(messages['authn.create.an.account.using'])}
                     </h4>
                   </div>
                 ) : null}
@@ -578,7 +578,7 @@ class RegistrationPage extends React.Component {
                   helpText="This name will be used by any certificates that you earn."
                 >
                   <label htmlFor="name" className="h6 pt-10">
-                    {intl.formatMessage(messages['logistration.fullname.label'])}
+                    {intl.formatMessage(messages['authn.fullname.label'])}
                   </label>
                   <Input
                     name="name"
@@ -600,7 +600,7 @@ class RegistrationPage extends React.Component {
                   helpText="The name that will identify you in your courses. It cannot be changed later."
                 >
                   <label htmlFor="username" className="h6 pt-10">
-                    {intl.formatMessage(messages['logistration.username.label'])}
+                    {intl.formatMessage(messages['authn.username.label'])}
                   </label>
                   <Input
                     name="username"
@@ -623,7 +623,7 @@ class RegistrationPage extends React.Component {
                   helpText="This is what you will use to login."
                 >
                   <label htmlFor="email" className="h6 pt-10">
-                    {intl.formatMessage(messages['logistration.register.page.email.label'])}
+                    {intl.formatMessage(messages['authn.register.page.email.label'])}
                   </label>
                   <Input
                     name="email"
@@ -646,7 +646,7 @@ class RegistrationPage extends React.Component {
                     helpText="Your password must contain at least 8 characters, including 1 letter & 1 number."
                   >
                     <label htmlFor="password" className="h6 pt-10">
-                      {intl.formatMessage(messages['logistration.password.label'])}
+                      {intl.formatMessage(messages['authn.password.label'])}
                     </label>
                     <Input
                       name="password"
@@ -676,7 +676,7 @@ class RegistrationPage extends React.Component {
                     required
                   />
                   <p role="presentation" id="additionalFields" className="mb-0" onClick={e => this.handleOnOptional(e)}>
-                    {intl.formatMessage(messages['logistration.support.education.research'])}
+                    {intl.formatMessage(messages['authn.support.education.research'])}
                   </p>
                 </ValidationFormGroup>
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
@@ -685,7 +685,7 @@ class RegistrationPage extends React.Component {
                   className="btn-primary mt-10"
                   state={submitState}
                   labels={{
-                    default: intl.formatMessage(messages['logistration.create.account.button']),
+                    default: intl.formatMessage(messages['authn.create.account.button']),
                   }}
                   onClick={this.handleSubmit}
                 />
@@ -766,14 +766,14 @@ const mapStateToProps = state => {
   const registrationResult = registrationRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   return {
-    registrationError: state.logistration.registrationError,
-    submitState: state.logistration.submitState,
-    thirdPartyAuthApiStatus: state.logistration.thirdPartyAuthApiStatus,
+    registrationError: state.authn.registrationError,
+    submitState: state.authn.submitState,
+    thirdPartyAuthApiStatus: state.authn.thirdPartyAuthApiStatus,
     registrationResult,
     thirdPartyAuthContext,
-    formData: state.logistration.formData,
-    validations: state.logistration.validations,
-    statusCode: state.logistration.statusCode,
+    formData: state.authn.formData,
+    validations: state.authn.validations,
+    statusCode: state.authn.statusCode,
   };
 };
 

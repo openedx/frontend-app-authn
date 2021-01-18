@@ -7,7 +7,7 @@ import configureStore from 'redux-mock-store';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import LoginPage from '../LoginPage';
-import { RenderInstitutionButton } from '../InstitutionLogistration';
+import { RenderInstitutionButton } from '../InstitutionAuthn';
 import { PENDING_STATE } from '../../data/constants';
 
 const IntlLoginPage = injectIntl(LoginPage);
@@ -15,7 +15,7 @@ const mockStore = configureStore();
 
 describe('LoginPage', () => {
   const initialState = {
-    logistration: {
+    authn: {
       forgotPassword: { status: null },
       loginResult: { success: false, redirectUrl: '' },
       response_error: null,
@@ -68,8 +68,8 @@ describe('LoginPage', () => {
   it('should match pending button state snapshot', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         submitState: PENDING_STATE,
       },
     });
@@ -91,10 +91,10 @@ describe('LoginPage', () => {
   it('should match TPA provider snapshot', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           providers: [appleProvider],
         },
       },
@@ -107,8 +107,8 @@ describe('LoginPage', () => {
   it('should show error message', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         loginError: { value: 'Email or password is incorrect.' },
       },
     });
@@ -145,8 +145,8 @@ describe('LoginPage', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         loginResult: {
           success: true,
           redirectUrl: dasboardUrl,
@@ -163,14 +163,14 @@ describe('LoginPage', () => {
     const authCompleteUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         loginResult: {
           success: true,
           redirectUrl: '',
         },
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           finishAuthUrl: authCompleteUrl,
         },
       },
@@ -186,10 +186,10 @@ describe('LoginPage', () => {
     const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           providers: [{
             ...appleProvider,
             loginUrl,
@@ -210,10 +210,10 @@ describe('LoginPage', () => {
   it('should match third party auth alert', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           currentProvider: 'Apple',
           platformName: 'edX',
         },
@@ -230,10 +230,10 @@ describe('LoginPage', () => {
   it('should display institution login button', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           secondaryProviders: [secondaryProviders],
         },
       },
@@ -250,10 +250,10 @@ describe('LoginPage', () => {
   it('should display institution login page', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           secondaryProviders: [secondaryProviders],
         },
       },

@@ -16,7 +16,7 @@ import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
 import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
-import LoginHelpLinks from '../logistration/LoginHelpLinks';
+import LoginHelpLinks from '../authn/LoginHelpLinks';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;

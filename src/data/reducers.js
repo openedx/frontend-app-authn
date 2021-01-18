@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
 import {
-  reducer as logistrationReducer,
-  storeName as logistrationStoreName,
-} from '../logistration';
+  reducer as authnReducer,
+  storeName as authnStoreName,
+} from '../authn';
 import {
   reducer as forgotPasswordReducer,
   storeName as forgotPasswordStoreName,
@@ -14,7 +14,7 @@ import {
 } from '../reset-password';
 
 const createRootReducer = () => combineReducers({
-  [logistrationStoreName]: logistrationReducer,
+  [authnStoreName]: authnReducer,
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
 });

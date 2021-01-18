@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 
-function RedirectLogistration(props) {
+function RedirectAuthn(props) {
   const { finishAuthUrl, success, redirectUrl } = props;
 
   if (success) {
@@ -18,16 +18,16 @@ function RedirectLogistration(props) {
   return <></>;
 }
 
-RedirectLogistration.defaultProps = {
+RedirectAuthn.defaultProps = {
   finishAuthUrl: null,
   success: false,
   redirectUrl: '',
 };
 
-RedirectLogistration.propTypes = {
+RedirectAuthn.propTypes = {
   finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
   redirectUrl: PropTypes.string,
 };
 
-export default RedirectLogistration;
+export default RedirectAuthn;

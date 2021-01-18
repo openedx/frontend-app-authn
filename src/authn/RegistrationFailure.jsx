@@ -32,7 +32,7 @@ const RegistrationFailureMessage = (props) => {
       <Alert variant="danger">
         <Alert.Heading className="text-danger">
           <FormattedMessage
-            id="logistration.registration.request.failure.header.description.message"
+            id="authn.registration.request.failure.header.description.message"
             defaultMessage="We couldn't create your account."
             description="error message when registration failure."
           />

@@ -12,11 +12,11 @@ import { getConfig } from '@edx/frontend-platform';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
 import { loginErrorSelector, loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
-import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionLogistration';
+import InstitutionAuthn, { RenderInstitutionButton } from './InstitutionLogistration';
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
-import { RedirectLogistration } from '../common-components';
+import { RedirectAuthn } from '../common-components';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
@@ -129,7 +129,7 @@ class LoginPage extends React.Component {
           <RenderInstitutionButton
             onSubmitHandler={this.handleInstitutionLogin}
             secondaryProviders={secondaryProviders}
-            buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.button'])}
+            buttonTitle={intl.formatMessage(messages['authn.login.institution.login.button'])}
           />
           <div className="row tpa-container">
             <SocialAuthProviders socialAuthProviders={providers} />
@@ -149,17 +149,17 @@ class LoginPage extends React.Component {
 
     if (this.state.institutionLogin) {
       return (
-        <InstitutionLogistration
+        <InstitutionAuthn
           onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={thirdPartyAuthContext.secondaryProviders}
-          headingTitle={intl.formatMessage(messages['logistration.login.institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['logistration.login.institution.login.page.back.button'])}
+          headingTitle={intl.formatMessage(messages['authn.login.institution.login.page.title'])}
+          buttonTitle={intl.formatMessage(messages['authn.login.institution.login.page.back.button'])}
         />
       );
     }
     return (
       <>
-        <RedirectLogistration
+        <RedirectAuthn
           success={this.props.loginResult.success}
           redirectUrl={this.props.loginResult.redirectUrl}
           finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
@@ -178,24 +178,24 @@ class LoginPage extends React.Component {
               {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
               <div className="d-flex flex-row">
                 <p>
-                  {intl.formatMessage(messages['logistration.first.time.here'])}
+                  {intl.formatMessage(messages['authn.first.time.here'])}
                   <Hyperlink className="ml-1" href={REGISTER_PAGE}>
-                    {intl.formatMessage(messages['logistration.create.an.account'])}.
+                    {intl.formatMessage(messages['authn.create.an.account'])}.
                   </Hyperlink>
                 </p>
               </div>
               <h2 className="text-left mt-2 mb-3">
-                {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
+                {intl.formatMessage(messages['authn.login.institution.login.sign.in'])}
               </h2>
               <Form className="m-0">
                 <ValidationFormGroup
                   for="email"
                   invalid={this.state.errors.email !== ''}
-                  invalidMessage={intl.formatMessage(messages['logistration.email.format.validation.message'])}
+                  invalidMessage={intl.formatMessage(messages['authn.email.format.validation.message'])}
                   className="mb-0 w-100"
                 >
                   <Form.Label htmlFor="loginEmail" className="h6 mr-1">
-                    {intl.formatMessage(messages['logistration.login.page.email.label'])}
+                    {intl.formatMessage(messages['authn.login.page.email.label'])}
                   </Form.Label>
                   <Input
                     name="email"
@@ -205,16 +205,16 @@ class LoginPage extends React.Component {
                     value={this.state.email}
                     onChange={e => this.handleOnChange(e)}
                   />
-                  <p className="mb-4">{intl.formatMessage(messages['logistration.email.help.message'])}</p>
+                  <p className="mb-4">{intl.formatMessage(messages['authn.email.help.message'])}</p>
                 </ValidationFormGroup>
                 <ValidationFormGroup
                   for="password"
                   invalid={this.state.errors.password !== ''}
-                  invalidMessage={intl.formatMessage(messages['logistration.login.page.password.validation.message'])}
+                  invalidMessage={intl.formatMessage(messages['authn.login.page.password.validation.message'])}
                   className="mb-0 w-100"
                 >
                   <Form.Label htmlFor="loginPassword" className="h6 mr-1">
-                    {intl.formatMessage(messages['logistration.password'])}
+                    {intl.formatMessage(messages['authn.password'])}
                   </Form.Label>
                   <Input
                     name="password"
@@ -226,14 +226,14 @@ class LoginPage extends React.Component {
                 </ValidationFormGroup>
                 <LoginHelpLinks page={LOGIN_PAGE} />
                 <Hyperlink className="field-link mt-0 mb-3" destination={this.getEnterPriseLoginURL()}>
-                  {intl.formatMessage(messages['logistration.enterprise.login.link.text'])}
+                  {intl.formatMessage(messages['authn.enterprise.login.link.text'])}
                 </Hyperlink>
                 <StatefulButton
                   type="submit"
                   className="btn-primary"
                   state={submitState}
                   labels={{
-                    default: intl.formatMessage(messages['logistration.sign.in.button']),
+                    default: intl.formatMessage(messages['authn.sign.in.button']),
                   }}
                   onClick={this.handleSubmit}
                 />
@@ -241,7 +241,7 @@ class LoginPage extends React.Component {
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (
                   <div className="mb-4 pt-10">
-                    <h4>{intl.formatMessage(messages['logistration.or.sign.in.with'])}</h4>
+                    <h4>{intl.formatMessage(messages['authn.or.sign.in.with'])}</h4>
                   </div>
                 ) : null}
               {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
@@ -297,8 +297,8 @@ const mapStateToProps = state => {
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   const loginError = loginErrorSelector(state);
   return {
-    submitState: state.logistration.submitState,
-    thirdPartyAuthApiStatus: state.logistration.thirdPartyAuthApiStatus,
+    submitState: state.authn.submitState,
+    thirdPartyAuthApiStatus: state.authn.thirdPartyAuthApiStatus,
     forgotPassword,
     loginError,
     loginResult,

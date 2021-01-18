@@ -24,28 +24,28 @@ const LoginHelpLinks = (props) => {
 
   const forgotPasswordLink = () => (
     <a className="field-link" href={RESET_PAGE}>
-      {intl.formatMessage(messages['logistration.forgot.password.link'])}
+      {intl.formatMessage(messages['authn.forgot.password.link'])}
     </a>
   );
 
   const signUpLink = () => (
     <a className="field-link" href={REGISTER_PAGE}>
-      {intl.formatMessage(messages['logistration.register.link'])}
+      {intl.formatMessage(messages['authn.register.link'])}
     </a>
   );
 
   const loginIssueSupportURL = (config) => (config.LOGIN_ISSUE_SUPPORT_LINK
     ? (
       <a className="field-link" href={config.LOGIN_ISSUE_SUPPORT_LINK}>
-        {intl.formatMessage(messages['logistration.other.sign.in.issues'])}
+        {intl.formatMessage(messages['authn.other.sign.in.issues'])}
       </a>
     )
     : null);
 
   const getHelpButtonMessage = () => {
-    let mid = 'logistration.need.other.help.signing.in.collapsible.menu';
+    let mid = 'authn.need.other.help.signing.in.collapsible.menu';
     if (page === LOGIN_PAGE) {
-      mid = 'logistration.need.help.signing.in.collapsible.menu';
+      mid = 'authn.need.help.signing.in.collapsible.menu';
     }
 
     return intl.formatMessage(messages[mid]);

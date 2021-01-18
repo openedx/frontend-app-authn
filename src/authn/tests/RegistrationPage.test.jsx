@@ -7,7 +7,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
 
 import RegistrationPage from '../RegistrationPage';
-import { RenderInstitutionButton } from '../InstitutionLogistration';
+import { RenderInstitutionButton } from '../InstitutionAuthn';
 import { PENDING_STATE } from '../../data/constants';
 import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
 
@@ -16,7 +16,7 @@ const mockStore = configureStore();
 
 describe('./RegistrationPage.js', () => {
   const initialState = {
-    logistration: {
+    authn: {
       registrationResult: { success: false, redirectUrl: '' },
       thirdPartyAuthContext: {
         platformName: 'openedX',
@@ -94,11 +94,11 @@ describe('./RegistrationPage.js', () => {
     };
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         formData: {
           fields: [
-            ...initialState.logistration.formData.fields,
+            ...initialState.authn.formData.fields,
             {
               label: 'The country or region where you live.',
               name: 'country',
@@ -141,8 +141,8 @@ describe('./RegistrationPage.js', () => {
   it('should show optional fields section on optional check enabled', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         formData: {
           fields: [
             {
@@ -299,8 +299,8 @@ describe('./RegistrationPage.js', () => {
   it('should match pending button state snapshot', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         submitState: PENDING_STATE,
       },
     });
@@ -312,8 +312,8 @@ describe('./RegistrationPage.js', () => {
   it('should match TPA provider snapshot', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
           providers: [appleProvider],
         },
@@ -327,10 +327,10 @@ describe('./RegistrationPage.js', () => {
   it('should display no password field when current provider is present', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           currentProvider: 'Google',
         },
       },
@@ -362,8 +362,8 @@ describe('./RegistrationPage.js', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         registrationResult: {
           success: true,
           redirectUrl: dasboardUrl,
@@ -379,10 +379,10 @@ describe('./RegistrationPage.js', () => {
   it('should display institution register button', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           secondaryProviders: [secondaryProviders],
         },
       },
@@ -394,10 +394,10 @@ describe('./RegistrationPage.js', () => {
   it('should not display institution register button', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           secondaryProviders: [secondaryProviders],
         },
       },
@@ -411,14 +411,14 @@ describe('./RegistrationPage.js', () => {
     const authCompleteUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         registrationResult: {
           success: true,
           redirectUrl: '',
         },
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           finishAuthUrl: authCompleteUrl,
         },
       },
@@ -435,8 +435,8 @@ describe('./RegistrationPage.js', () => {
     const registerUrl = '/auth/login/apple-id/?auth_entry=register&next=/dashboard';
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
           providers: [{
             ...appleProvider,
@@ -468,10 +468,10 @@ describe('./RegistrationPage.js', () => {
   it('should match third party auth alert', () => {
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         thirdPartyAuthContext: {
-          ...initialState.logistration.thirdPartyAuthContext,
+          ...initialState.authn.thirdPartyAuthContext,
           currentProvider: 'Apple',
         },
       },
@@ -494,8 +494,8 @@ describe('./RegistrationPage.js', () => {
 
     store = mockStore({
       ...initialState,
-      logistration: {
-        ...initialState.logistration,
+      authn: {
+        ...initialState.authn,
         registrationError: {
           email: [
             {
