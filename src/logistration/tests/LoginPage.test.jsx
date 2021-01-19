@@ -117,6 +117,16 @@ describe('LoginPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('should show account activation message', () => {
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login?account_activation_status=info') };
+
+    const expectedMessage = 'This account has already been activated.';
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('#account-activation-message').find('div').text()).toEqual(expectedMessage);
+  });
+
   it('should display login help button', () => {
     const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(root.find('button.field-link').first().text()).toEqual('Need help signing in?');
@@ -154,7 +164,7 @@ describe('LoginPage', () => {
       },
     });
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toBe(dasboardUrl);
   });
@@ -177,7 +187,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
   });
@@ -199,7 +209,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
