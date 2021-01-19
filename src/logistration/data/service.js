@@ -10,7 +10,7 @@ export async function registerRequest(registrationInformation) {
 
   const { data } = await getAuthenticatedHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/user_api/v1/account/registration/`,
+      `${getConfig().LMS_BASE_URL}/user_api/v2/account/registration/`,
       querystring.stringify(registrationInformation),
       requestConfig,
     )
@@ -32,7 +32,7 @@ export async function loginRequest(creds) {
 
   const { data } = await getAuthenticatedHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/login_ajax`,
+      `${getConfig().LMS_BASE_URL}/user_api/v1/account/login_session/`,
       querystring.stringify(creds),
       requestConfig,
     )
@@ -49,13 +49,13 @@ export async function loginRequest(creds) {
 export async function getThirdPartyAuthContext(urlParams) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    params: urlParams,
     isPublic: true,
   };
 
   const { data } = await getAuthenticatedHttpClient()
     .get(
       `${getConfig().LMS_BASE_URL}/api/third_party_auth_context`,
-      { params: urlParams },
       requestConfig,
     )
     .catch((e) => {
@@ -74,7 +74,7 @@ export async function getRegistrationForm() {
 
   const { data } = await getAuthenticatedHttpClient()
     .get(
-      `${getConfig().LMS_BASE_URL}/user_api/v1/account/registration/`,
+      `${getConfig().LMS_BASE_URL}/user_api/v2/account/registration/`,
       requestConfig,
     )
     .catch((e) => {

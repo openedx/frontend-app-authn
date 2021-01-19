@@ -69,10 +69,10 @@ class LoginPage extends React.Component {
     const next = params.get('next');
     const courseId = params.get('course_id');
     if (next) {
-      payload.next = params.next;
+      payload.next = next;
     }
     if (courseId) {
-      payload.course_id = params.course_id;
+      payload.course_id = courseId;
     }
     if (!this.state.formValid) {
       this.validateInput('email', payload.email);
@@ -179,7 +179,7 @@ class LoginPage extends React.Component {
               <div className="d-flex flex-row">
                 <p>
                   {intl.formatMessage(messages['logistration.first.time.here'])}
-                  <Hyperlink className="ml-1" href={REGISTER_PAGE}>
+                  <Hyperlink className="ml-1" destination={REGISTER_PAGE}>
                     {intl.formatMessage(messages['logistration.create.an.account'])}.
                   </Hyperlink>
                 </p>
