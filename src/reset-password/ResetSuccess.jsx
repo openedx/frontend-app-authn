@@ -6,9 +6,9 @@ const ResetSuccessMessage = () => {
   const loginPasswordLink = (
     <Alert.Link href="/login" className="font-weight-normal text-info">
       <FormattedMessage
-        id="logistration.reset.password.confirmation.support.link"
+        id="reset.password.confirmation.support.link"
         defaultMessage="Sign-in to your account."
-        description="link text used in message: logistration.reset.password.invalid.token.description.message link 'sign-in.'"
+        description="link text used in message: reset.password.invalid.token.description.message link 'sign-in.'"
       />
     </Alert.Link>
   );
@@ -20,13 +20,13 @@ const ResetSuccessMessage = () => {
           <Alert variant="success">
             <Alert.Heading className="text-success">
               <FormattedMessage
-                id="logistration.reset.password.request.success.header.message"
+                id="reset.password.request.success.header.message"
                 defaultMessage="Password Reset Complete."
                 description="header message when reset is successful."
               />
             </Alert.Heading>
             <FormattedMessage
-              id="logistration.reset.password.request.success.header.description.message"
+              id="reset.password.request.success.header.description.message"
               defaultMessage="Your password has been reset. {loginPasswordLink}"
               description="message when reset password is successful."
               values={{

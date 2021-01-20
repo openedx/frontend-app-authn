@@ -11,7 +11,7 @@ const ResetFailureMessage = (props) => {
         <div className="text-left mw-500">
           <Alert variant="danger">
             <FormattedMessage
-              id="logistration.reset.password.request.failure.header.message"
+              id="reset.password.request.failure.header.message"
               defaultMessage="{errorMessage} "
               description="error message when password reset failure."
               values={{
