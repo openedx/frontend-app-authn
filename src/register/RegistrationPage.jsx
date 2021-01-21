@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   Input,
   StatefulButton,
@@ -229,6 +230,7 @@ class RegistrationPage extends React.Component {
     this.setState({
       enableOptionalField: targetValue,
     });
+    sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
   }
 
   handleOnClick(e) {
@@ -242,6 +244,10 @@ class RegistrationPage extends React.Component {
         errors,
       }));
     }
+  }
+
+  handleLoginLinkClickEvent() {
+    sendTrackEvent('edx.bi.login_form.toggled', { category: 'user-engagement' });
   }
 
   validateInput(inputName, value) {
@@ -543,6 +549,7 @@ class RegistrationPage extends React.Component {
       );
     }
 
+    sendPageEvent('login_and_registration', 'register');
     return (
       <>
         <RedirectLogistration
@@ -563,7 +570,7 @@ class RegistrationPage extends React.Component {
               )}
               <div className="text-left">
                 <span>{intl.formatMessage(messages['already.have.an.edx.account'])}</span>
-                <a href={LOGIN_PAGE}>{intl.formatMessage(messages['sign.in.hyperlink'])}</a>
+                <a href={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>{intl.formatMessage(messages['sign.in.hyperlink'])}</a>
               </div>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (

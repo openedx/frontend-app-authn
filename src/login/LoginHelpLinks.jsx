@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -22,8 +23,13 @@ const LoginHelpLinks = (props) => {
     setShowLoginHelpValue(!showLoginHelp);
   };
 
+  const handleForgotPasswordLinkClickEvent = () => {
+    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
+  };
+
   const forgotPasswordLink = () => (
-    <a className="field-link" href={RESET_PAGE}>
+
+    <a className="field-link" href={RESET_PAGE} onClick={handleForgotPasswordLinkClickEvent}>
       {intl.formatMessage(messages['forgot.password.link'])}
     </a>
   );
