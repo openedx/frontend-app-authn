@@ -17,6 +17,8 @@ import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
 import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../logistration/LoginHelpLinks';
+import APIFailureMessage from './APIFailureMessage';
+import INTERNAL_SERVER_ERROR from './data/constants';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
@@ -58,6 +60,7 @@ const ForgotPasswordPage = (props) => {
             <div className="d-flex flex-column">
               <Form className="mw-500">
                 {status === 'forbidden' ? <RequestInProgressAlert /> : null}
+                {props.errorCode === INTERNAL_SERVER_ERROR ? <APIFailureMessage /> : null}
                 <h1 className="mt-3">
                   {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
                 </h1>
@@ -108,10 +111,12 @@ ForgotPasswordPage.propTypes = {
   intl: intlShape.isRequired,
   forgotPassword: PropTypes.func.isRequired,
   status: PropTypes.string,
+  errorCode: PropTypes.string,
 };
 
 ForgotPasswordPage.defaultProps = {
   status: null,
+  errorCode: null,
 };
 
 export default connect(

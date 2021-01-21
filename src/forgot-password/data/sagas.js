@@ -9,6 +9,7 @@ import {
 } from './actions';
 
 import { forgotPassword } from './service';
+import INTERNAL_SERVER_ERROR from './constants';
 
 // Services
 export function* handleForgotPassword(action) {
@@ -20,9 +21,9 @@ export function* handleForgotPassword(action) {
     yield put(forgotPasswordSuccess(action.payload.email));
   } catch (e) {
     if (e.response && e.response.status === 403) {
-      yield put(forgotPasswordForbidden());
+      yield put(forgotPasswordForbidden(null));
     } else {
-      throw e;
+      yield put(forgotPasswordForbidden(INTERNAL_SERVER_ERROR));
     }
   }
 }

@@ -22,6 +22,7 @@ const reducer = (state = defaultState, action = null) => {
         return {
           ...state,
           status: 'forbidden',
+          errorCode: action.payload.errorCode,
         };
       default:
         return state;

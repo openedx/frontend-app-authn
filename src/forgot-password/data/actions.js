@@ -17,6 +17,7 @@ export const forgotPasswordSuccess = email => ({
   payload: { email },
 });
 
-export const forgotPasswordForbidden = () => ({
+export const forgotPasswordForbidden = (errorCode) => ({
   type: FORGOT_PASSWORD.FORBIDDEN,
+  payload: { errorCode },
 });
