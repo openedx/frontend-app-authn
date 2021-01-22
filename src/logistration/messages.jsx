@@ -216,6 +216,32 @@ const messages = defineMessages({
     defaultMessage: 'Sign in with your company or school',
     description: 'Company or school login link text.',
   },
+  // Account Activation Strings
+  'authn.account.activation.success.message.title': {
+    id: 'authn.account.activation.success.message.title',
+    defaultMessage: 'Success! You have activated your account.',
+    description: 'Account Activation success message title',
+  },
+  'authn.account.activation.success.message': {
+    id: 'authn.account.activation.success.message',
+    defaultMessage: 'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign In to continue.',
+    description: 'Message show to learners when their account has been activated successfully',
+  },
+  'authn.account.already.activated.message': {
+    id: 'authn.account.already.activated.message',
+    defaultMessage: 'This account has already been activated.',
+    description: 'Message shown when learner account has already been activated',
+  },
+  'authn.account.activation.error.message.title': {
+    id: 'authn.account.activation.error.message.title',
+    defaultMessage: 'Your account could not be activated',
+    description: 'Account Activation error message title',
+  },
+  'authn.account.activation.support.link': {
+    id: 'authn.account.activation.support.link',
+    defaultMessage: 'contact support',
+    description: 'Link text used in account activation error message to go to learner help center',
+  },
 });
 
 export default messages;

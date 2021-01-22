@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
+import { Alert } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import { processLink } from '../data/utils/dataUtils';
@@ -82,7 +82,7 @@ const LoginFailureMessage = (props) => {
           return (
             <li key={error}>
               {beforeLink}
-              <Hyperlink destination={link}>{linkText}</Hyperlink>
+              <Alert.Link href={link}>{linkText}</Alert.Link>
               {afterLink}
             </li>
           );
