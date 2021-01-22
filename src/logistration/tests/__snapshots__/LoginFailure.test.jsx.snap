@@ -36,9 +36,10 @@ exports[`LoginFailureMessage should match error message containing link snapshot
     <li>
       To be on the safe side, you can reset your password 
       <a
+        className="alert-link"
         href="/reset"
         onClick={[Function]}
-        target="_self"
+        onKeyDown={[Function]}
       >
         here
       </a>

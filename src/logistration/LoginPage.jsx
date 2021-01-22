@@ -1,6 +1,7 @@
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 
+import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form, Hyperlink, Input, StatefulButton, ValidationFormGroup,
@@ -8,7 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
+import AccountActivationMessage from './AccountActivationMessage';
 import ConfirmationAlert from './ConfirmationAlert';
 import { getThirdPartyAuthContext, loginRequest } from './data/actions';
 import { loginErrorSelector, loginRequestSelector, thirdPartyAuthContextSelector } from './data/selectors';
@@ -16,10 +17,10 @@ import InstitutionLogistration, { RenderInstitutionButton } from './InstitutionL
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
-import { RedirectLogistration } from '../common-components';
 import SocialAuthProviders from './SocialAuthProviders';
 import ThirdPartyAuthAlert from './ThirdPartyAuthAlert';
 
+import { RedirectLogistration } from '../common-components';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
@@ -147,6 +148,9 @@ class LoginPage extends React.Component {
     } = this.props;
     const { currentProvider, providers, secondaryProviders } = this.props.thirdPartyAuthContext;
 
+    const params = (new URL(window.location.href)).searchParams;
+    const activationMsgType = params.get('account_activation_status');
+
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
@@ -175,6 +179,7 @@ class LoginPage extends React.Component {
                 />
               )}
               {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
+              {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
               {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
               <div className="d-flex flex-row">
                 <p>
