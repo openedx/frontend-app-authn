@@ -5,7 +5,7 @@ $font-blue: #126f9a;
 $white: #FFFFFF;
 
 // social platforms
-$facebook-blue: #4267b2;
+$facebook-blue: #1877F2;
 $facebook-focus-blue: #29487d;
 $google-blue: #4285f4;
 $google-focus-blue: #287ae6;
@@ -41,14 +41,15 @@ $apple-focus-black: $apple-black;
 
   background-color: $white;
   border: 1px solid $font-blue;
+  border-radius: 2px;
   width: 130px;
   height: 36px;
   color: $font-blue;
 
   .icon-image {
-    background-color: $font-blue;
-    max-height: 1.4em;
-    max-width: 1.4em;
+    background-color: transparent;
+    max-height: 24px;
+    max-width: 24px;
   }
 }
 
