@@ -91,8 +91,8 @@ const messages = defineMessages({
     defaultMessage: 'Create an Account',
     description: 'Message on button to return to register page',
   },
-  'logistration.login.institution.login.sign.in': {
-    id: 'logistration.login.institution.login.sign.in',
+  'logistration.sign.in.heading': {
+    id: 'logistration.sign.in.heading',
     defaultMessage: 'Sign In',
     description: 'Sign In text',
   },
@@ -258,6 +258,27 @@ const messages = defineMessages({
     defaultMessage: 'If you do not receive a password reset message after 1 minute, verify that you entered the correct '
                     + 'email address, or check your spam folder.',
     description: 'Part of message that appears after user requests password change',
+  },
+  // Login Failure Messages
+  'logistration.login.failure.header.title': {
+    id: 'logistration.login.failure.header.title',
+    defaultMessage: 'We couldn\'t sign you in.',
+    description: 'Login failure header message.',
+  },
+  'logistration.contact.support.link': {
+    id: 'logistration.contact.support.link',
+    defaultMessage: 'contact {platformName} Support',
+    description: 'Link text used in inactive user error message to go to learner help center',
+  },
+  'login.rate.limit.reached.message': {
+    id: 'login.rate.limit.reached.message',
+    defaultMessage: 'Too many failed login attempts. Try again later.',
+    description: 'Error message that appears when an anonymous user has made too many failed login attempts',
+  },
+  'authn.internal.server.error.message': {
+    id: 'authn.internal.server.error.message',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    description: 'Error message that appears when server responds with 500 error code',
   },
 });
 

@@ -25,7 +25,7 @@ const InvalidTokenMessage = () => {
   return (
     <div className="d-flex justify-content-center m-4">
       <div className="d-flex flex-column">
-        <div className="text-center mw-420">
+        <div className="text-left mw-500">
           <Alert variant="danger">
             <Alert.Heading className="text-danger">
               <FormattedMessage

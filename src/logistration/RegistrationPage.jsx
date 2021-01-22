@@ -567,7 +567,7 @@ class RegistrationPage extends React.Component {
                       {intl.formatMessage(messages['logistration.create.an.account.using'])}
                     </h4>
                   </div>
-                ) : null}
+                ) : <h2 className="mt-4">{intl.formatMessage(messages['logistration.create.an.account'])}</h2>}
               {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
               <Form className="mb-4 form-group">
                 <ValidationFormGroup

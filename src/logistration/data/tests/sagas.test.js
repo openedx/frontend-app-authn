@@ -12,6 +12,7 @@ import {
 } from '../sagas';
 import * as api from '../service';
 import initializeMockLogging from '../../../setupTest';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -221,6 +222,22 @@ describe('handleLoginRequest', () => {
     },
   };
 
+  const testErrorResponse = async (loginErrorResponse, expectedDispatchers) => {
+    const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleLoginRequest,
+      params,
+    );
+
+    expect(loginRequest).toHaveBeenCalledTimes(1);
+    expect(loggingService.logError).toHaveBeenCalled();
+    expect(dispatched).toEqual(expectedDispatchers);
+    loginRequest.mockClear();
+  };
+
   beforeEach(() => {
     loggingService.logError.mockReset();
   });
@@ -254,23 +271,27 @@ describe('handleLoginRequest', () => {
         },
       },
     };
-    const loginRequest = jest.spyOn(api, 'loginRequest')
-      .mockImplementation(() => Promise.reject(loginErrorResponse));
 
-    const dispatched = [];
-    await runSaga(
-      { dispatch: (action) => dispatched.push(action) },
-      handleLoginRequest,
-      params,
-    );
-
-    expect(loginRequest).toHaveBeenCalledTimes(1);
-    expect(loggingService.logError).toHaveBeenCalled();
-    expect(dispatched).toEqual([
+    await testErrorResponse(loginErrorResponse, [
       actions.loginRequestBegin(),
       actions.loginRequestFailure(camelCaseObject(loginErrorResponse.response.data)),
     ]);
-    loginRequest.mockClear();
+  });
+
+  it('should handle rate limit error code', async () => {
+    const loginErrorResponse = {
+      response: {
+        status: 403,
+        data: {
+          errorCode: FORBIDDEN_REQUEST,
+        },
+      },
+    };
+
+    await testErrorResponse(loginErrorResponse, [
+      actions.loginRequestBegin(),
+      actions.loginRequestFailure(loginErrorResponse.response.data),
+    ]);
   });
 
   it('should handle 500 error code', async () => {
@@ -278,25 +299,15 @@ describe('handleLoginRequest', () => {
       response: {
         status: 500,
         data: {
-          errorCode: 'internal-server-error',
+          errorCode: INTERNAL_SERVER_ERROR,
         },
       },
     };
 
-    const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
-
-    const dispatched = [];
-    await runSaga(
-      { dispatch: (action) => dispatched.push(action) },
-      handleLoginRequest,
-      params,
-    );
-
-    expect(dispatched).toEqual([
+    await testErrorResponse(loginErrorResponse, [
       actions.loginRequestBegin(),
-      actions.loginRequestFailure(camelCaseObject(loginErrorResponse.response.data)),
+      actions.loginRequestFailure(loginErrorResponse.response.data),
     ]);
-    loginRequest.mockClear();
   });
 });
 

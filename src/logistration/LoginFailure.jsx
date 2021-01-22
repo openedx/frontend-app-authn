@@ -5,7 +5,12 @@ import { Alert } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import { processLink } from '../data/utils/dataUtils';
-import { INACTIVE_USER, INTERNAL_SERVER_ERROR, NON_COMPLIANT_PASSWORD_EXCEPTION } from './data/constants';
+import {
+  FORBIDDEN_REQUEST,
+  INACTIVE_USER,
+  INTERNAL_SERVER_ERROR,
+  NON_COMPLIANT_PASSWORD_EXCEPTION,
+} from './data/constants';
 import messages from './messages';
 
 const LoginFailureMessage = (props) => {
@@ -35,12 +40,7 @@ const LoginFailureMessage = (props) => {
     case INACTIVE_USER: {
       const supportLink = (
         <Alert.Link href={context.supportLink}>
-          <FormattedMessage
-            id="logistration.contact.support.link"
-            defaultMessage="contact {platformName} Support"
-            description="Link text used in inactive user error message to go to learner help center"
-            values={{ platformName: context.platformName }}
-          />
+          {intl.formatMessage(messages['logistration.contact.support.link'], { platformName: context.platformName })}
         </Alert.Link>
       );
       errorList = (
@@ -60,14 +60,17 @@ const LoginFailureMessage = (props) => {
       );
       break;
     }
+    case FORBIDDEN_REQUEST:
+      errorList = (
+        <li key={FORBIDDEN_REQUEST}>
+          {intl.formatMessage(messages['login.rate.limit.reached.message'])}
+        </li>
+      );
+      break;
     case INTERNAL_SERVER_ERROR:
       errorList = (
         <li key={INTERNAL_SERVER_ERROR}>
-          <FormattedMessage
-            id="login.internal.server.error.message"
-            defaultMessage="An error has occurred. Try refreshing the page, or check your Internet connection."
-            description="Error message that appears when server responds with 500 error code"
-          />
+          {intl.formatMessage(messages['authn.internal.server.error.message'])}
         </li>
       );
       break;
@@ -92,14 +95,8 @@ const LoginFailureMessage = (props) => {
   }
 
   return (
-    <Alert variant="danger">
-      <Alert.Heading>
-        <FormattedMessage
-          id="logistration.login.failure.header.title"
-          defaultMessage="We couldn't sign you in."
-          description="login failure header message."
-        />
-      </Alert.Heading>
+    <Alert id="login-failure-alert" variant="danger">
+      <Alert.Heading>{intl.formatMessage(messages['logistration.login.failure.header.title'])}</Alert.Heading>
       <ul>{errorList}</ul>
     </Alert>
   );
