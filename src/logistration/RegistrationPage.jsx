@@ -90,6 +90,7 @@ class RegistrationPage extends React.Component {
       termsOfServiceValid: false,
       institutionLogin: false,
       formValid: false,
+      submitCount: 0,
     };
   }
 
@@ -252,6 +253,7 @@ class RegistrationPage extends React.Component {
       honorCodeValid,
       termsOfServiceValid,
       formValid,
+      submitCount,
     } = this.state;
 
     const validations = this.state.currentValidations;
@@ -321,12 +323,14 @@ class RegistrationPage extends React.Component {
         break;
     }
 
+    submitCount++;
     formValid = this.checkNoValidationsErrors(validationErrorsAlertMessages);
     this.setState({
       formValid,
       validationErrorsAlertMessages,
       honorCodeValid,
       termsOfServiceValid,
+      submitCount,
     });
     return formValid;
   }
@@ -514,7 +518,7 @@ class RegistrationPage extends React.Component {
     } else {
       return null;
     }
-    return <RegistrationFailure errors={errorsObject} />;
+    return <RegistrationFailure errors={errorsObject} submitCount={this.state.submitCount} />;
   }
 
   render() {
