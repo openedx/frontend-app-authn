@@ -242,6 +242,23 @@ const messages = defineMessages({
     defaultMessage: 'contact support',
     description: 'Link text used in account activation error message to go to learner help center',
   },
+  // Confirmation Alert Message
+  'authn.forgot.password.confirmation.title': {
+    id: 'authn.forgot.password.confirmation.title',
+    defaultMessage: 'Check Your Email',
+    description: 'Forgot password confirmation message title',
+  },
+  'authn.forgot.password.confirmation.support.link': {
+    id: 'authn.forgot.password.confirmation.support.link',
+    defaultMessage: 'contact technical support',
+    description: 'Technical support link text',
+  },
+  'authn.forgot.password.confirmation.info': {
+    id: 'authn.forgot.password.confirmation.info',
+    defaultMessage: 'If you do not receive a password reset message after 1 minute, verify that you entered the correct '
+                    + 'email address, or check your spam folder.',
+    description: 'Part of message that appears after user requests password change',
+  },
 });
 
 export default messages;

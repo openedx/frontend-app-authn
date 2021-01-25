@@ -80,9 +80,9 @@ const ResetPasswordPage = (props) => {
           <div className="d-flex flex-column mw-500">
             <Form>
               <div className="reset-password-container">
-                <h1 className="mt-3">
+                <h3 className="mt-3">
                   {intl.formatMessage(messages['logistration.reset.password.page.heading'])}
-                </h1>
+                </h3>
                 <p className="mb-4">
                   {intl.formatMessage(messages['logistration.reset.password.page.instructions'])}
                 </p>

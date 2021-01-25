@@ -1,53 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
+
+import { getConfig } from '@edx/frontend-platform';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Alert } from '@edx/paragon';
+
+import messages from './messages';
 
 const ConfirmationAlert = (props) => {
-  const { email } = props;
-
-  const technicalSupportLink = (
-    <Hyperlink
-      destination="https://support.edx.org/hc/en-us/articles/206212088-What-if-I-did-not-receive-a-password-reset-message-"
-    >
-      <FormattedMessage
-        id="logistration.forgot.password.confirmation.support.link"
-        defaultMessage="contact technical support"
-        description="link text used in message: logistration.forgot.password.confirmation.support.link 'contact technical support.'"
-      />
-    </Hyperlink>
-  );
-
-  const strongEmail = (<strong>{email}</strong>);
-  const lineBreak = (<br />);
+  const { email, intl } = props;
 
   return (
-    <Alert
-      variant="success"
-    >
-      <Alert.Heading className="text-success">
+    <Alert id="confirmation-alert" variant="success">
+      <Alert.Heading>{intl.formatMessage(messages['authn.forgot.password.confirmation.title'])}</Alert.Heading>
+      <p>
         <FormattedMessage
-          id="logistration.forgot.password.confirmation.title"
-          defaultMessage="Check Your Email"
-          description="Forgot password confirmation title"
+          id="logistration.forgot.password.confirmation.message"
+          defaultMessage="You entered {strongEmail}. If this email address is associated with your
+          edX account, we will send a message with password recovery instructions to this email address."
+          description="Forgot password confirmation message"
+          values={{ strongEmail: <strong>{email}</strong> }}
         />
-      </Alert.Heading>
-      <FormattedMessage
-        id="logistration.forgot.password.confirmation.message"
-        defaultMessage="You entered {strongEmail}. If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address. {lineBreak}If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.{lineBreak} If you need further assistance, {technicalSupportLink}."
-        description="Forgot password confirmation message"
-        values={{
-          strongEmail,
-          technicalSupportLink,
-          lineBreak,
-        }}
-      />
+      </p>
+      <p>{intl.formatMessage(messages['authn.forgot.password.confirmation.info'])}</p>
+      <p>
+        <FormattedMessage
+          id="authn.forgot.password.technical.support.help.message"
+          defaultMessage="If you need further assistance, {technicalSupportLink}."
+          description="Message to help user contact technical support"
+          values={{
+            technicalSupportLink: (
+              <Alert.Link href={getConfig().PASSWORD_RESET_SUPPORT_LINK}>
+                {intl.formatMessage(messages['authn.forgot.password.confirmation.support.link'])}
+              </Alert.Link>
+            ),
+          }}
+        />
+      </p>
     </Alert>
   );
 };
 
 ConfirmationAlert.propTypes = {
   email: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
 };
 
-export default ConfirmationAlert;
+export default injectIntl(ConfirmationAlert);
