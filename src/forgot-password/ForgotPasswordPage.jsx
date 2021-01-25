@@ -58,9 +58,9 @@ const ForgotPasswordPage = (props) => {
             <div className="d-flex flex-column">
               <Form className="mw-500">
                 {status === 'forbidden' ? <RequestInProgressAlert /> : null}
-                <h1 className="mt-3">
+                <h3 className="mt-3">
                   {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
-                </h1>
+                </h3>
                 <p className="mb-4">
                   {intl.formatMessage(messages['logisration.forgot.password.page.instructions'])}
                 </p>

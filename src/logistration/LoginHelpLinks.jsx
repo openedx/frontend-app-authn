@@ -52,7 +52,7 @@ const LoginHelpLinks = (props) => {
   };
 
   const renderLoginHelp = () => (
-    <div className="login-help">
+    <div className="login-help small">
       { page === LOGIN_PAGE ? forgotPasswordLink() : signUpLink() }
       { loginIssueSupportURL(getConfig()) }
     </div>
@@ -60,10 +60,9 @@ const LoginHelpLinks = (props) => {
 
   return (
     <>
-      <button type="button" className="mt-1 field-link" onClick={toggleLoginHelp}>
+      <button type="button" className="mt-1 field-link small" onClick={toggleLoginHelp}>
         <FontAwesomeIcon className="mr-1" icon={showLoginHelp ? faCaretDown : faCaretRight} />
         {getHelpButtonMessage()}
-
       </button>
       <SwitchContent
         expression={showLoginHelp ? 'showHelp' : 'default'}

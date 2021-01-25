@@ -91,7 +91,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link"
+          className="mt-1 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -283,7 +283,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link"
+          className="mt-1 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -380,6 +380,44 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
       className="mw-500"
     >
       <div
+        className="fade alert alert-success show"
+        id="confirmation-alert"
+        role="alert"
+      >
+        <div
+          className="alert-heading h4"
+        >
+          Check Your Email
+        </div>
+        <p>
+          <span>
+            You entered 
+            <strong>
+              test@example.com
+            </strong>
+            . If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address.
+          </span>
+        </p>
+        <p>
+          If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.
+        </p>
+        <p>
+          <span>
+            If you need further assistance, 
+            <a
+              className="alert-link"
+              href="#"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+            >
+              contact technical support
+            </a>
+            .
+          </span>
+        </p>
+      </div>
+      <div
         className="d-flex flex-row"
       >
         <p>
@@ -460,7 +498,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link"
+          className="mt-1 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -637,7 +675,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link"
+          className="mt-1 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -840,7 +878,7 @@ exports[`LoginPage should show error message 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link"
+          className="mt-1 field-link small"
           onClick={[Function]}
           type="button"
         >

@@ -15,8 +15,8 @@ const mockStore = configureStore();
 
 describe('LoginPage', () => {
   const initialState = {
+    forgotPassword: { status: null },
     logistration: {
-      forgotPassword: { status: null },
       loginResult: { success: false, redirectUrl: '' },
       response_error: null,
       thirdPartyAuthContext: {
@@ -80,10 +80,11 @@ describe('LoginPage', () => {
   });
 
   it('should match forget password alert message snapshot', () => {
-    props = {
-      ...props,
+    store = mockStore({
+      ...initialState,
       forgotPassword: { status: 'complete', email: 'test@example.com' },
-    };
+    });
+
     const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
     expect(tree).toMatchSnapshot();
   });
