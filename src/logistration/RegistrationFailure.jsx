@@ -12,8 +12,8 @@ const RegistrationFailureMessage = (props) => {
   const userErrors = [];
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [errorMessage]);
+    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  }, [props.submitCount]);
 
   Object.keys(errorMessage).forEach((key) => {
     const errors = errorMessage[key];
@@ -49,6 +49,7 @@ const RegistrationFailureMessage = (props) => {
 
 RegistrationFailureMessage.defaultProps = {
   errors: '',
+  submitCount: 0,
 };
 
 RegistrationFailureMessage.propTypes = {
@@ -56,6 +57,7 @@ RegistrationFailureMessage.propTypes = {
     email: PropTypes.array,
     username: PropTypes.array,
   }),
+  submitCount: PropTypes.number,
 };
 
 export default RegistrationFailureMessage;
