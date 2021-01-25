@@ -782,14 +782,13 @@ exports[`LoginPage should show error message 1`] = `
     >
       <div
         className="fade alert alert-danger show"
+        id="login-failure-alert"
         role="alert"
       >
         <div
           className="alert-heading h4"
         >
-          <span>
-            We couldn't sign you in.
-          </span>
+          We couldn't sign you in.
         </div>
         <ul>
           <li>

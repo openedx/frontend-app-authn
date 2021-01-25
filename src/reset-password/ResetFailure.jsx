@@ -8,7 +8,7 @@ const ResetFailureMessage = (props) => {
   return (
     <div className="d-flex justify-content-center m-4">
       <div className="d-flex flex-column">
-        <div className="text-center mw-500">
+        <div className="text-left mw-500">
           <Alert variant="danger">
             <FormattedMessage
               id="logistration.reset.password.request.failure.header.message"

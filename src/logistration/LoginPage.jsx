@@ -190,7 +190,7 @@ class LoginPage extends React.Component {
                 </p>
               </div>
               <h2 className="text-left mt-2 mb-3">
-                {intl.formatMessage(messages['logistration.login.institution.login.sign.in'])}
+                {intl.formatMessage(messages['logistration.sign.in.heading'])}
               </h2>
               <Form className="m-0">
                 <ValidationFormGroup

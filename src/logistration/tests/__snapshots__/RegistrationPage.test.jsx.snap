@@ -31,6 +31,11 @@ exports[`./RegistrationPage.js should display no password field when current pro
            Sign in.
         </a>
       </div>
+      <h2
+        className="mt-4"
+      >
+        Create an Account
+      </h2>
       <span>
         <span
           className="react-loading-skeleton css-1vmnjpn-skeletonStyles-Skeleton"
