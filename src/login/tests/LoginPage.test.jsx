@@ -146,7 +146,7 @@ describe('LoginPage', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
     loginPage.find('input#loginPassword').simulate('change', { target: { value: 'test', name: 'password' } });
-    loginPage.find('button.btn-primary').simulate('click');
+    loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
   });
@@ -156,7 +156,7 @@ describe('LoginPage', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
     loginPage.find('input#loginEmail').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
-    loginPage.find('button.btn-primary').simulate('click');
+    loginPage.find('button.btn-brand').simulate('click');
     expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
   });
 

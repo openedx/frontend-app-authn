@@ -10,7 +10,7 @@ export const RenderInstitutionButton = props => {
   if (secondaryProviders !== undefined && secondaryProviders.length > 0) {
     return (
       <Button
-        className="mt-2"
+        className="w-auto mb-20"
         block
         variant="outline-primary"
         onClick={onSubmitHandler}

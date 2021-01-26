@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
+import { Hyperlink } from '@edx/paragon';
 
 import SwitchContent from '../common-components/SwitchContent';
 import {
@@ -28,23 +29,26 @@ const LoginHelpLinks = (props) => {
   };
 
   const forgotPasswordLink = () => (
-
-    <a className="field-link" href={RESET_PAGE} onClick={handleForgotPasswordLinkClickEvent}>
+    <Hyperlink
+      className="field-link"
+      destination={RESET_PAGE}
+      onClick={handleForgotPasswordLinkClickEvent}
+    >
       {intl.formatMessage(messages['forgot.password.link'])}
-    </a>
+    </Hyperlink>
   );
 
   const signUpLink = () => (
-    <a className="field-link" href={REGISTER_PAGE}>
+    <Hyperlink className="field-link" destination={REGISTER_PAGE}>
       {intl.formatMessage(messages['register.link'])}
-    </a>
+    </Hyperlink>
   );
 
   const loginIssueSupportURL = (config) => (config.LOGIN_ISSUE_SUPPORT_LINK
     ? (
-      <a className="field-link" href={config.LOGIN_ISSUE_SUPPORT_LINK}>
+      <Hyperlink className="field-link" destination={config.LOGIN_ISSUE_SUPPORT_LINK}>
         {intl.formatMessage(messages['other.sign.in.issues'])}
-      </a>
+      </Hyperlink>
     )
     : null);
 
