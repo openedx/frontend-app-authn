@@ -17,9 +17,7 @@ describe('LoginPage', () => {
   const initialState = {
     forgotPassword: { status: null },
     login: {
-      forgotPassword: { status: null },
       loginResult: { success: false, redirectUrl: '' },
-      response_error: null,
     },
     commonComponents: {
       thirdPartyAuthApiStatus: null,

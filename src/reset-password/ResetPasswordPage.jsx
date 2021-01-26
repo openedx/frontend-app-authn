@@ -79,7 +79,7 @@ const ResetPasswordPage = (props) => {
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">
             <Form>
-              <div className="reset-password-container">
+              <div>
                 <h3 className="mt-3">
                   {intl.formatMessage(messages['reset.password.page.heading'])}
                 </h3>
