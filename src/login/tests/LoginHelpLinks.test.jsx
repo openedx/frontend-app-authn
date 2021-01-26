@@ -1,5 +1,6 @@
 import React from 'react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import * as analytics from '@edx/frontend-platform/analytics';
 import { mount } from 'enzyme';
 
 import LoginHelpLinks from '../LoginHelpLinks';
@@ -10,6 +11,9 @@ const otherSignInIssues = 'https://login-issue-support-url.com';
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn().mockReturnValue({ LOGIN_ISSUE_SUPPORT_LINK: otherSignInIssues }),
 }));
+
+jest.mock('@edx/frontend-platform/analytics');
+analytics.sendTrackEvent = jest.fn();
 
 describe('LoginHelpLinks', () => {
   let props = {};

@@ -6,9 +6,15 @@ import configureStore from 'redux-mock-store';
 
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+import * as analytics from '@edx/frontend-platform/analytics';
 import LoginPage from '../LoginPage';
 import { RenderInstitutionButton } from '../../common-components';
 import { PENDING_STATE } from '../../data/constants';
+
+jest.mock('@edx/frontend-platform/analytics');
+
+analytics.sendTrackEvent = jest.fn();
+analytics.sendPageEvent = jest.fn();
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -277,5 +283,35 @@ describe('LoginPage', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
     expect(loginPage.text().includes('Test University')).toBe(true);
+  });
+
+  it('send tracking event when create account link is clicked', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('a[href*="/register"]').simulate('click');
+    loginPage.update();
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
+  });
+
+  it('send page event when login page is rendered', () => {
+    mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
+  });
+
+  it('send tracking and page events when institutional button is clicked', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
   });
 });

@@ -3,6 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   Form, Hyperlink, Input, StatefulButton, ValidationFormGroup,
 } from '@edx/paragon';
@@ -58,6 +59,8 @@ class LoginPage extends React.Component {
   }
 
   handleInstitutionLogin = () => {
+    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    sendPageEvent('login_and_registration', 'institution_login');
     this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
@@ -123,6 +126,10 @@ class LoginPage extends React.Component {
     });
   }
 
+  handleCreateAccountLinkClickEvent() {
+    sendTrackEvent('edx.bi.register_form.toggled', { category: 'user-engagement' });
+  }
+
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
     let thirdPartyComponent = null;
     if ((providers.length || secondaryProviders.length) && !currentProvider) {
@@ -162,6 +169,8 @@ class LoginPage extends React.Component {
         />
       );
     }
+
+    sendPageEvent('login_and_registration', 'login');
     return (
       <>
         <RedirectLogistration
@@ -185,7 +194,7 @@ class LoginPage extends React.Component {
               <div className="d-flex flex-row">
                 <p>
                   {intl.formatMessage(messages['first.time.here'])}
-                  <Hyperlink className="ml-1" destination={REGISTER_PAGE}>
+                  <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>
                     {intl.formatMessage(messages['create.an.account'])}.
                   </Hyperlink>
                 </p>

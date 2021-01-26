@@ -5,11 +5,17 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
+import * as analytics from '@edx/frontend-platform/analytics';
 
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../../common-components';
 import { PENDING_STATE } from '../../data/constants';
 import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
+
+jest.mock('@edx/frontend-platform/analytics');
+
+analytics.sendTrackEvent = jest.fn();
+analytics.sendPageEvent = jest.fn();
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -139,6 +145,65 @@ describe('./RegistrationPage.js', () => {
 
     registrationPage.find('#additionalFields').simulate('click');
     expect(registrationPage.find('RegistrationPage').state('enableOptionalField')).toEqual(true);
+  });
+
+  it('send tracking event on optional checkbox enabled', () => {
+    store = mockStore({
+      ...initialState,
+      logistration: {
+        ...initialState.logistration,
+        formData: {
+          fields: [
+            {
+              label: 'Tell us why you\'re interested in edX',
+              name: 'goals',
+              type: 'textarea',
+              required: false,
+            },
+            {
+              label: 'Highest level of Education completed.',
+              name: 'level_of_education',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: 'p', name: 'Doctorate' }],
+              required: false,
+            },
+            {
+              label: 'Year of birth.',
+              name: 'year_of_birth',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: '2021', name: '2021' }],
+              required: false,
+            },
+            {
+              label: 'Gender.',
+              name: 'gender',
+              type: 'select',
+              options: [{ value: '', name: '--' }, { value: 'f', name: 'Female' }],
+              required: false,
+            },
+          ],
+        },
+      },
+    });
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
+    registrationPage.update();
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.register.optional_fields_selected', {});
+  });
+
+  it('send tracking event when login link is clicked', () => {
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registrationPage.find('a[href*="/login"]').simulate('click');
+    registrationPage.update();
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.login_form.toggled', { category: 'user-engagement' });
+  });
+
+  it('send page event when register page is rendered', () => {
+    mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
   });
 
   it('should show optional fields section on optional check enabled', () => {
