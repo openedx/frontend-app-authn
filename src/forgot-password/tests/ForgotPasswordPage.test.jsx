@@ -7,10 +7,14 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { createMemoryHistory } from 'history';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+import * as analytics from '@edx/frontend-platform/analytics';
 
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
 jest.mock('../data/selectors', () => jest.fn().mockImplementation(() => ({ forgotPasswordSelector: () => ({}) })));
+jest.mock('@edx/frontend-platform/analytics');
+
+analytics.sendPageEvent = jest.fn();
 
 const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
