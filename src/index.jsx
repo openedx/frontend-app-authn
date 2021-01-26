@@ -11,7 +11,8 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { messages as headerMessages } from '@edx/frontend-component-header';
 
 import configureStore from './data/configureStore';
-import { LoginPage, RegistrationPage } from './logistration';
+import { RegistrationPage } from './register';
+import { LoginPage } from './login';
 import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
 } from './data/constants';

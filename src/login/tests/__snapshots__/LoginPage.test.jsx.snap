@@ -1,0 +1,888 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginPage should match TPA provider snapshot 1`] = `
+<div
+  className="d-flex justify-content-center m-4"
+>
+  <div
+    className="d-flex flex-column"
+  >
+    <div
+      className="mw-500"
+    >
+      <div
+        className="d-flex flex-row"
+      >
+        <p>
+          First time here?
+          <a
+            className="ml-1"
+            href="/register"
+            onClick={[Function]}
+            target="_self"
+          >
+            Create an Account
+            .
+          </a>
+        </p>
+      </div>
+      <h2
+        className="text-left mt-2 mb-3"
+      >
+        Sign In
+      </h2>
+      <form
+        className="m-0"
+      >
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginEmail"
+          >
+            Email
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginEmail"
+            name="email"
+            onChange={[Function]}
+            placeholder="username@domain.com"
+            type="email"
+            value=""
+          />
+          <p
+            className="mb-4"
+          >
+            The email address you used to register with edX.
+          </p>
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            The email address you've provided isn't formatted correctly.
+          </strong>
+        </div>
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginPassword"
+          >
+            Password
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginPassword"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            value=""
+          />
+          <strong
+            className="invalid-feedback"
+            id="password-invalid-feedback"
+          >
+            Please enter your password.
+          </strong>
+        </div>
+        <button
+          className="mt-1 field-link small"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+        <a
+          className="field-link mt-0 mb-3"
+          href="http://localhost:18000/enterprise/login"
+          onClick={[Function]}
+          target="_self"
+        >
+          Sign in with your company or school
+        </a>
+        <button
+          aria-disabled={false}
+          aria-live="assertive"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          <span
+            className="d-flex align-items-center justify-content-center"
+          >
+            Sign in
+          </span>
+        </button>
+      </form>
+      <div
+        className="mb-4 pt-10"
+      >
+        <h4>
+          or sign in with
+        </h4>
+      </div>
+      <div
+        className="row tpa-container"
+      >
+        <button
+          className="btn-social btn-oa2-apple-id"
+          data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
+          id="oa2-apple-id"
+          onClick={[Function]}
+          type="button"
+        >
+          <div
+            aria-hidden="true"
+          >
+            <img
+              alt="icon Apple"
+              className="icon-image"
+              src="https://edx.devstack.lms/logo.png"
+            />
+          </div>
+          <span
+            aria-hidden="true"
+            className="pl-2"
+          >
+            Apple
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should match default section snapshot 1`] = `
+<div
+  className="d-flex justify-content-center m-4"
+>
+  <div
+    className="d-flex flex-column"
+  >
+    <div
+      className="mw-500"
+    >
+      <div
+        className="d-flex flex-row"
+      >
+        <p>
+          First time here?
+          <a
+            className="ml-1"
+            href="/register"
+            onClick={[Function]}
+            target="_self"
+          >
+            Create an Account
+            .
+          </a>
+        </p>
+      </div>
+      <h2
+        className="text-left mt-2 mb-3"
+      >
+        Sign In
+      </h2>
+      <form
+        className="m-0"
+      >
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginEmail"
+          >
+            Email
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginEmail"
+            name="email"
+            onChange={[Function]}
+            placeholder="username@domain.com"
+            type="email"
+            value=""
+          />
+          <p
+            className="mb-4"
+          >
+            The email address you used to register with edX.
+          </p>
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            The email address you've provided isn't formatted correctly.
+          </strong>
+        </div>
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginPassword"
+          >
+            Password
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginPassword"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            value=""
+          />
+          <strong
+            className="invalid-feedback"
+            id="password-invalid-feedback"
+          >
+            Please enter your password.
+          </strong>
+        </div>
+        <button
+          className="mt-1 field-link small"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+        <a
+          className="field-link mt-0 mb-3"
+          href="http://localhost:18000/enterprise/login"
+          onClick={[Function]}
+          target="_self"
+        >
+          Sign in with your company or school
+        </a>
+        <button
+          aria-disabled={false}
+          aria-live="assertive"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          <span
+            className="d-flex align-items-center justify-content-center"
+          >
+            Sign in
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should match forget password alert message snapshot 1`] = `
+<div
+  className="d-flex justify-content-center m-4"
+>
+  <div
+    className="d-flex flex-column"
+  >
+    <div
+      className="mw-500"
+    >
+      <div
+        className="fade alert alert-success show"
+        id="confirmation-alert"
+        role="alert"
+      >
+        <div
+          className="alert-heading h4"
+        >
+          Check Your Email
+        </div>
+        <p>
+          <span>
+            You entered 
+            <strong>
+              test@example.com
+            </strong>
+            . If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address.
+          </span>
+        </p>
+        <p>
+          If you do not receive a password reset message after 1 minute, verify that you entered the correct email address, or check your spam folder.
+        </p>
+        <p>
+          <span>
+            If you need further assistance, 
+            <a
+              className="alert-link"
+              href="#"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+            >
+              contact technical support
+            </a>
+            .
+          </span>
+        </p>
+      </div>
+      <div
+        className="d-flex flex-row"
+      >
+        <p>
+          First time here?
+          <a
+            className="ml-1"
+            href="/register"
+            onClick={[Function]}
+            target="_self"
+          >
+            Create an Account
+            .
+          </a>
+        </p>
+      </div>
+      <h2
+        className="text-left mt-2 mb-3"
+      >
+        Sign In
+      </h2>
+      <form
+        className="m-0"
+      >
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginEmail"
+          >
+            Email
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginEmail"
+            name="email"
+            onChange={[Function]}
+            placeholder="username@domain.com"
+            type="email"
+            value=""
+          />
+          <p
+            className="mb-4"
+          >
+            The email address you used to register with edX.
+          </p>
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            The email address you've provided isn't formatted correctly.
+          </strong>
+        </div>
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginPassword"
+          >
+            Password
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginPassword"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            value=""
+          />
+          <strong
+            className="invalid-feedback"
+            id="password-invalid-feedback"
+          >
+            Please enter your password.
+          </strong>
+        </div>
+        <button
+          className="mt-1 field-link small"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+        <a
+          className="field-link mt-0 mb-3"
+          href="http://localhost:18000/enterprise/login"
+          onClick={[Function]}
+          target="_self"
+        >
+          Sign in with your company or school
+        </a>
+        <button
+          aria-disabled={false}
+          aria-live="assertive"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          <span
+            className="d-flex align-items-center justify-content-center"
+          >
+            Sign in
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should match pending button state snapshot 1`] = `
+<div
+  className="d-flex justify-content-center m-4"
+>
+  <div
+    className="d-flex flex-column"
+  >
+    <div
+      className="mw-500"
+    >
+      <div
+        className="d-flex flex-row"
+      >
+        <p>
+          First time here?
+          <a
+            className="ml-1"
+            href="/register"
+            onClick={[Function]}
+            target="_self"
+          >
+            Create an Account
+            .
+          </a>
+        </p>
+      </div>
+      <h2
+        className="text-left mt-2 mb-3"
+      >
+        Sign In
+      </h2>
+      <form
+        className="m-0"
+      >
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginEmail"
+          >
+            Email
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginEmail"
+            name="email"
+            onChange={[Function]}
+            placeholder="username@domain.com"
+            type="email"
+            value=""
+          />
+          <p
+            className="mb-4"
+          >
+            The email address you used to register with edX.
+          </p>
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            The email address you've provided isn't formatted correctly.
+          </strong>
+        </div>
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginPassword"
+          >
+            Password
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginPassword"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            value=""
+          />
+          <strong
+            className="invalid-feedback"
+            id="password-invalid-feedback"
+          >
+            Please enter your password.
+          </strong>
+        </div>
+        <button
+          className="mt-1 field-link small"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+        <a
+          className="field-link mt-0 mb-3"
+          href="http://localhost:18000/enterprise/login"
+          onClick={[Function]}
+          target="_self"
+        >
+          Sign in with your company or school
+        </a>
+        <button
+          aria-disabled={true}
+          aria-live="assertive"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary disabled btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          <span
+            className="d-flex align-items-center justify-content-center"
+          >
+            <span
+              className="pgn__stateful-btn-icon"
+            >
+              <span
+                aria-hidden={true}
+                className="icon fa fa-spinner fa-spin"
+                id="Icon1"
+              />
+            </span>
+            Sign in
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LoginPage should show error message 1`] = `
+<div
+  className="d-flex justify-content-center m-4"
+>
+  <div
+    className="d-flex flex-column"
+  >
+    <div
+      className="mw-500"
+    >
+      <div
+        className="fade alert alert-danger show"
+        id="login-failure-alert"
+        role="alert"
+      >
+        <div
+          className="alert-heading h4"
+        >
+          We couldn't sign you in.
+        </div>
+        <ul>
+          <li>
+            Email or password is incorrect.
+          </li>
+        </ul>
+      </div>
+      <div
+        className="d-flex flex-row"
+      >
+        <p>
+          First time here?
+          <a
+            className="ml-1"
+            href="/register"
+            onClick={[Function]}
+            target="_self"
+          >
+            Create an Account
+            .
+          </a>
+        </p>
+      </div>
+      <h2
+        className="text-left mt-2 mb-3"
+      >
+        Sign In
+      </h2>
+      <form
+        className="m-0"
+      >
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginEmail"
+          >
+            Email
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginEmail"
+            name="email"
+            onChange={[Function]}
+            placeholder="username@domain.com"
+            type="email"
+            value=""
+          />
+          <p
+            className="mb-4"
+          >
+            The email address you used to register with edX.
+          </p>
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            The email address you've provided isn't formatted correctly.
+          </strong>
+        </div>
+        <div
+          className="form-group mb-0 w-100"
+        >
+          <label
+            className="h6 mr-1 form-label"
+            htmlFor="loginPassword"
+          >
+            Password
+          </label>
+          <input
+            aria-describedby=""
+            className="form-control"
+            id="loginPassword"
+            name="password"
+            onChange={[Function]}
+            type="password"
+            value=""
+          />
+          <strong
+            className="invalid-feedback"
+            id="password-invalid-feedback"
+          >
+            Please enter your password.
+          </strong>
+        </div>
+        <button
+          className="mt-1 field-link small"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-caret-right fa-w-6 mr-1"
+            data-icon="caret-right"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 192 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          Need help signing in?
+        </button>
+        <div
+          className="pgn-transition-replace-group position-relative"
+          style={
+            Object {
+              "height": null,
+            }
+          }
+        >
+          <div
+            style={
+              Object {
+                "padding": ".1px 0",
+              }
+            }
+          />
+        </div>
+        <a
+          className="field-link mt-0 mb-3"
+          href="http://localhost:18000/enterprise/login"
+          onClick={[Function]}
+          target="_self"
+        >
+          Sign in with your company or school
+        </a>
+        <button
+          aria-disabled={false}
+          aria-live="assertive"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          disabled={false}
+          onClick={[Function]}
+          type="submit"
+        >
+          <span
+            className="d-flex align-items-center justify-content-center"
+          >
+            Sign in
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+`;

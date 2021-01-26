@@ -16,14 +16,14 @@ import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
 import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
-import LoginHelpLinks from '../logistration/LoginHelpLinks';
+import LoginHelpLinks from '../login/LoginHelpLinks';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
   let invalidEmailMessage;
 
   const validateEmail = (e, setFieldValue) => {
-    invalidEmailMessage = intl.formatMessage(messages['logisration.forgot.password.page.invalid.email.message']);
+    invalidEmailMessage = intl.formatMessage(messages['forgot.password.page.invalid.email.message']);
     const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
     const inputEmail = e.target.value;
@@ -31,7 +31,7 @@ const ForgotPasswordPage = (props) => {
     setFieldValue('email', inputEmail);
     setFieldValue('isEmailValid', isEmailValid);
     if (inputEmail.length < 3) {
-      invalidEmailMessage = `${intl.formatMessage(messages['logisration.forgot.password.page.email.invalid.length.message'])} ${invalidEmailMessage}`;
+      invalidEmailMessage = `${intl.formatMessage(messages['forgot.password.page.email.invalid.length.message'])} ${invalidEmailMessage}`;
     }
   };
 
@@ -59,10 +59,10 @@ const ForgotPasswordPage = (props) => {
               <Form className="mw-500">
                 {status === 'forbidden' ? <RequestInProgressAlert /> : null}
                 <h3 className="mt-3">
-                  {intl.formatMessage(messages['logisration.forgot.password.page.heading'])}
+                  {intl.formatMessage(messages['forgot.password.page.heading'])}
                 </h3>
                 <p className="mb-4">
-                  {intl.formatMessage(messages['logisration.forgot.password.page.instructions'])}
+                  {intl.formatMessage(messages['forgot.password.page.instructions'])}
                 </p>
                 <ValidationFormGroup
                   className="mb-0 w-100"
@@ -71,7 +71,7 @@ const ForgotPasswordPage = (props) => {
                   invalidMessage={invalidEmailMessage}
                 >
                   <Form.Label htmlFor="forgot-password-input" className="h6 mr-1">
-                    {intl.formatMessage(messages['logisration.forgot.password.page.email.field.label'])}
+                    {intl.formatMessage(messages['forgot.password.page.email.field.label'])}
                   </Form.Label>
                   <Input
                     name="email"
@@ -82,7 +82,7 @@ const ForgotPasswordPage = (props) => {
                     onChange={e => validateEmail(e, setFieldValue)}
                   />
                   <p className="mb-2">
-                    {intl.formatMessage(messages['logisration.forgot.password.page.email.field.help.text'])}
+                    {intl.formatMessage(messages['forgot.password.page.email.field.help.text'])}
                   </p>
                 </ValidationFormGroup>
                 <LoginHelpLinks page="forgot-password" />
@@ -91,7 +91,7 @@ const ForgotPasswordPage = (props) => {
                   className="btn-primary mt-3"
                   state={status}
                   labels={{
-                    default: intl.formatMessage(messages['logisration.forgot.password.page.submit.button']),
+                    default: intl.formatMessage(messages['forgot.password.page.submit.button']),
                   }}
                   onClick={handleSubmit}
                 />
