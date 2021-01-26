@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import {
@@ -34,6 +35,8 @@ const ForgotPasswordPage = (props) => {
       invalidEmailMessage = `${intl.formatMessage(messages['forgot.password.page.email.invalid.length.message'])} ${invalidEmailMessage}`;
     }
   };
+
+  sendPageEvent('login_and_registration', 'reset');
 
   return (
     <Formik
