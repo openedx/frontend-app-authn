@@ -148,44 +148,6 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('send tracking event on optional checkbox enabled', () => {
-    store = mockStore({
-      ...initialState,
-      logistration: {
-        ...initialState.logistration,
-        formData: {
-          fields: [
-            {
-              label: 'Tell us why you\'re interested in edX',
-              name: 'goals',
-              type: 'textarea',
-              required: false,
-            },
-            {
-              label: 'Highest level of Education completed.',
-              name: 'level_of_education',
-              type: 'select',
-              options: [{ value: '', name: '--' }, { value: 'p', name: 'Doctorate' }],
-              required: false,
-            },
-            {
-              label: 'Year of birth.',
-              name: 'year_of_birth',
-              type: 'select',
-              options: [{ value: '', name: '--' }, { value: '2021', name: '2021' }],
-              required: false,
-            },
-            {
-              label: 'Gender.',
-              name: 'gender',
-              type: 'select',
-              options: [{ value: '', name: '--' }, { value: 'f', name: 'Female' }],
-              required: false,
-            },
-          ],
-        },
-      },
-    });
-
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
     registrationPage.find('input#optional').simulate('change', { target: { checked: true } });
