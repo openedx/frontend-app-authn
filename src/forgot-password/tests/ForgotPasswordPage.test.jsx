@@ -9,7 +9,13 @@ import { createMemoryHistory } from 'history';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import * as analytics from '@edx/frontend-platform/analytics';
 
+import { runSaga } from 'redux-saga';
 import ForgotPasswordPage from '../ForgotPasswordPage';
+import * as api from '../data/service';
+
+import { handleForgotPassword } from '../data/sagas';
+import * as actions from '../data/actions';
+import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 
 jest.mock('../data/selectors', () => jest.fn().mockImplementation(() => ({ forgotPasswordSelector: () => ({}) })));
 jest.mock('@edx/frontend-platform/analytics');
@@ -92,5 +98,80 @@ describe('ForgotPasswordPage', () => {
     });
     wrapper.update();
     expect(wrapper.find('#email-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should handle 500 error code', async () => {
+    const params = {
+      payload: {
+        formData: {
+          email: 'test@test.com',
+        },
+      },
+    };
+    const passwordErrorResponse = {
+      response: {
+        status: 500,
+        data: {
+          errorCode: 'internal-server-error',
+        },
+      },
+    };
+
+    const forgotPasswordRequest = jest.spyOn(api, 'forgotPassword').mockImplementation(() => Promise.reject(passwordErrorResponse));
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleForgotPassword,
+      params,
+    );
+
+    expect(dispatched).toEqual([
+      actions.forgotPasswordBegin(),
+      actions.forgotPasswordServerError(),
+    ]);
+    forgotPasswordRequest.mockClear();
+  });
+
+  it('should handle 403 error code', async () => {
+    const params = {
+      payload: {
+        formData: {
+          email: 'test@test.com',
+        },
+      },
+    };
+    const forbiddenErrorResponse = {
+      response: {
+        status: 403,
+        data: {
+          msg: 'forbidden request',
+        },
+      },
+    };
+
+    const forbiddenPasswordRequest = jest.spyOn(api, 'forgotPassword').mockImplementation(() => Promise.reject(forbiddenErrorResponse));
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleForgotPassword,
+      params,
+    );
+
+    expect(dispatched).toEqual([
+      actions.forgotPasswordBegin(),
+      actions.forgotPasswordForbidden(null),
+    ]);
+    forbiddenPasswordRequest.mockClear();
+  });
+
+  it('should show alert on server error', () => {
+    props = {
+      ...props,
+      status: INTERNAL_SERVER_ERROR,
+    };
+    const expectedMessage = 'Failed to Send Forgot Password Email';
+    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+
+    expect(wrapper.find('div.alert-heading').text()).toEqual(expectedMessage);
   });
 });

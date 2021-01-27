@@ -6,6 +6,7 @@ import {
   forgotPasswordBegin,
   forgotPasswordSuccess,
   forgotPasswordForbidden,
+  forgotPasswordServerError,
 } from './actions';
 
 import { forgotPassword } from './service';
@@ -22,7 +23,7 @@ export function* handleForgotPassword(action) {
     if (e.response && e.response.status === 403) {
       yield put(forgotPasswordForbidden());
     } else {
-      throw e;
+      yield put(forgotPasswordServerError());
     }
   }
 }

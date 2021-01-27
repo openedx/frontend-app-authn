@@ -23,6 +23,11 @@ const messages = defineMessages({
                     + 'email address, or check your spam folder.',
     description: 'Part of message that appears after user requests password change',
   },
+  'internal.server.error.message': {
+    id: 'internal.server.error.message',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    description: 'Error message that appears when server responds with 500 error code',
+  },
 });
 
 export default messages;

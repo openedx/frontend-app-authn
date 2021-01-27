@@ -1,4 +1,5 @@
 import { FORGOT_PASSWORD } from './actions';
+import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 
 export const defaultState = {
   status: null,
@@ -22,6 +23,11 @@ const reducer = (state = defaultState, action = null) => {
         return {
           ...state,
           status: 'forbidden',
+        };
+      case FORGOT_PASSWORD.FAILURE:
+        return {
+          ...state,
+          status: INTERNAL_SERVER_ERROR,
         };
       default:
         return state;
