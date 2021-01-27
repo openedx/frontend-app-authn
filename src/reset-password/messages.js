@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'reset.password.page.heading': {
     id: 'reset.password.page.heading',
-    defaultMessage: 'Reset Your Password',
+    defaultMessage: 'Reset your password',
     description: 'The page heading for the Reset password page.',
   },
   'reset.password.page.instructions': {
@@ -30,6 +30,11 @@ const messages = defineMessages({
     id: 'reset.password.page.submit.button',
     defaultMessage: 'Reset my password',
     description: 'Submit button text for the reset password page.',
+  },
+  'reset.password.request.success.header.message': {
+    id: 'reset.password.request.success.header.message',
+    defaultMessage: 'Password Reset Complete.',
+    description: 'header message when reset is successful.',
   },
 });
 

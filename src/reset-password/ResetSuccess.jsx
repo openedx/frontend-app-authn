@@ -1,8 +1,13 @@
 import React from 'react';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
+
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 
-const ResetSuccessMessage = () => {
+import messages from './messages';
+
+const ResetSuccessMessage = (props) => {
+  const { intl } = props;
+
   const loginPasswordLink = (
     <Alert.Link href="/login" className="font-weight-normal text-info">
       <FormattedMessage
@@ -19,19 +24,13 @@ const ResetSuccessMessage = () => {
         <div className="text-left mw-500">
           <Alert variant="success">
             <Alert.Heading className="text-success">
-              <FormattedMessage
-                id="reset.password.request.success.header.message"
-                defaultMessage="Password Reset Complete."
-                description="header message when reset is successful."
-              />
+              {intl.formatMessage(messages['reset.password.request.success.header.message'])}
             </Alert.Heading>
             <FormattedMessage
               id="reset.password.request.success.header.description.message"
               defaultMessage="Your password has been reset. {loginPasswordLink}"
               description="message when reset password is successful."
-              values={{
-                loginPasswordLink,
-              }}
+              values={{ loginPasswordLink }}
             />
           </Alert>
         </div>
@@ -40,4 +39,8 @@ const ResetSuccessMessage = () => {
   );
 };
 
-export default ResetSuccessMessage;
+ResetSuccessMessage.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(ResetSuccessMessage);

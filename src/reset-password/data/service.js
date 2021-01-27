@@ -50,7 +50,7 @@ export async function validatePassword(password) {
       `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
       formurlencoded({ password }),
       requestConfig,
-    ).then((resp) => resp)
+    )
     .catch((e) => {
       throw (e);
     });
