@@ -3,6 +3,8 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Button, Hyperlink } from '@edx/paragon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import messages from './messages';
 
 export const RenderInstitutionButton = props => {
@@ -36,9 +38,18 @@ const InstitutionLogistration = props => {
     <>
       <div className="d-flex justify-content-center m-4">
         <div className="flex-column">
-          <h1 className="mt-5 mb-4 font-weight-normal">
+          <div className="mt-3">
+            <FontAwesomeIcon className="mr-2" icon={faChevronLeft} />
+            <Hyperlink
+              destination=""
+              onClick={onSubmitHandler}
+            >
+              {buttonTitle}
+            </Hyperlink>
+          </div>
+          <h3 className="mt-2 mb-4 font-weight-normal">
             {headingTitle}
-          </h1>
+          </h3>
           <p className="mb-2">
             {intl.formatMessage(messages['institution.login.page.sub.heading'])}
           </p>
@@ -51,15 +62,6 @@ const InstitutionLogistration = props => {
               ))}
             </ul>
           </div>
-          <div className="mb-4">
-            <h4>or</h4>
-          </div>
-          <Button
-            variant="primary"
-            onClick={onSubmitHandler}
-          >
-            {buttonTitle}
-          </Button>
         </div>
       </div>
     </>
