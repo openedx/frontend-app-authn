@@ -26,11 +26,14 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </a>
         </p>
       </div>
-      <h2
+      <hr
+        className="mt-0 border-gray-200"
+      />
+      <h3
         className="text-left mt-2 mb-3"
       >
         Sign In
-      </h2>
+      </h3>
       <form
         className="m-0"
       >
@@ -44,7 +47,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
             Email
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="loginEmail"
             name="email"
@@ -53,11 +56,12 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
             type="email"
             value=""
           />
-          <p
-            className="mb-4"
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
           >
             The email address you used to register with edX.
-          </p>
+          </small>
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -131,7 +135,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           />
         </div>
         <a
-          className="field-link mt-0 mb-3"
+          className="field-link mt-0 mb-3 small"
           href="http://localhost:18000/enterprise/login"
           onClick={[Function]}
           target="_self"
@@ -141,7 +145,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -154,11 +158,12 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         </button>
       </form>
       <div
-        className="mb-4 pt-10"
+        className="mb-20"
       >
-        <h4>
-          or sign in with
-        </h4>
+        <hr
+          className="mt-20 mb-20 border-gray-200"
+        />
+        or sign in with
       </div>
       <div
         className="row tpa-container"
@@ -172,19 +177,20 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         >
           <div
             aria-hidden="true"
+            className="mx-auto"
           >
             <img
               alt="icon Apple"
               className="icon-image"
               src="https://edx.devstack.lms/logo.png"
             />
+            <span
+              aria-hidden="true"
+              className="pl-2"
+            >
+              Apple
+            </span>
           </div>
-          <span
-            aria-hidden="true"
-            className="pl-2"
-          >
-            Apple
-          </span>
         </button>
       </div>
     </div>
@@ -218,11 +224,14 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </a>
         </p>
       </div>
-      <h2
+      <hr
+        className="mt-0 border-gray-200"
+      />
+      <h3
         className="text-left mt-2 mb-3"
       >
         Sign In
-      </h2>
+      </h3>
       <form
         className="m-0"
       >
@@ -236,7 +245,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
             Email
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="loginEmail"
             name="email"
@@ -245,11 +254,12 @@ exports[`LoginPage should match default section snapshot 1`] = `
             type="email"
             value=""
           />
-          <p
-            className="mb-4"
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
           >
             The email address you used to register with edX.
-          </p>
+          </small>
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -323,7 +333,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           />
         </div>
         <a
-          className="field-link mt-0 mb-3"
+          className="field-link mt-0 mb-3 small"
           href="http://localhost:18000/enterprise/login"
           onClick={[Function]}
           target="_self"
@@ -333,7 +343,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -414,11 +424,14 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </a>
         </p>
       </div>
-      <h2
+      <hr
+        className="mt-0 border-gray-200"
+      />
+      <h3
         className="text-left mt-2 mb-3"
       >
         Sign In
-      </h2>
+      </h3>
       <form
         className="m-0"
       >
@@ -432,7 +445,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
             Email
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="loginEmail"
             name="email"
@@ -441,11 +454,12 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
             type="email"
             value=""
           />
-          <p
-            className="mb-4"
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
           >
             The email address you used to register with edX.
-          </p>
+          </small>
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -519,7 +533,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           />
         </div>
         <a
-          className="field-link mt-0 mb-3"
+          className="field-link mt-0 mb-3 small"
           href="http://localhost:18000/enterprise/login"
           onClick={[Function]}
           target="_self"
@@ -529,7 +543,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -572,11 +586,14 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </a>
         </p>
       </div>
-      <h2
+      <hr
+        className="mt-0 border-gray-200"
+      />
+      <h3
         className="text-left mt-2 mb-3"
       >
         Sign In
-      </h2>
+      </h3>
       <form
         className="m-0"
       >
@@ -590,7 +607,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
             Email
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="loginEmail"
             name="email"
@@ -599,11 +616,12 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
             type="email"
             value=""
           />
-          <p
-            className="mb-4"
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
           >
             The email address you used to register with edX.
-          </p>
+          </small>
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -677,7 +695,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           />
         </div>
         <a
-          className="field-link mt-0 mb-3"
+          className="field-link mt-0 mb-3 small"
           href="http://localhost:18000/enterprise/login"
           onClick={[Function]}
           target="_self"
@@ -687,7 +705,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary disabled btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending disabled btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="submit"
@@ -755,11 +773,14 @@ exports[`LoginPage should show error message 1`] = `
           </a>
         </p>
       </div>
-      <h2
+      <hr
+        className="mt-0 border-gray-200"
+      />
+      <h3
         className="text-left mt-2 mb-3"
       >
         Sign In
-      </h2>
+      </h3>
       <form
         className="m-0"
       >
@@ -773,7 +794,7 @@ exports[`LoginPage should show error message 1`] = `
             Email
           </label>
           <input
-            aria-describedby=""
+            aria-describedby="email-help-text"
             className="form-control"
             id="loginEmail"
             name="email"
@@ -782,11 +803,12 @@ exports[`LoginPage should show error message 1`] = `
             type="email"
             value=""
           />
-          <p
-            className="mb-4"
+          <small
+            className="form-text text-muted"
+            id="email-help-text"
           >
             The email address you used to register with edX.
-          </p>
+          </small>
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -860,7 +882,7 @@ exports[`LoginPage should show error message 1`] = `
           />
         </div>
         <a
-          className="field-link mt-0 mb-3"
+          className="field-link mt-0 mb-3 small"
           href="http://localhost:18000/enterprise/login"
           onClick={[Function]}
           target="_self"
@@ -870,7 +892,7 @@ exports[`LoginPage should show error message 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="submit"

@@ -27,12 +27,10 @@ function SocialAuthProviders(props) {
       onClick={handleSubmit}
     >
       {provider.iconImage ? (
-        <>
-          <div aria-hidden="true">
-            <img className="icon-image" src={provider.iconImage} alt={`icon ${provider.name}`} />
-          </div>
+        <div className="mx-auto" aria-hidden="true">
+          <img className="icon-image" src={provider.iconImage} alt={`icon ${provider.name}`} />
           <span className="pl-2" aria-hidden="true">{provider.name}</span>
-        </>
+        </div>
       )
         : (
           <>

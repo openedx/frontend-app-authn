@@ -199,15 +199,17 @@ class LoginPage extends React.Component {
                   </Hyperlink>
                 </p>
               </div>
-              <h2 className="text-left mt-2 mb-3">
+              <hr className="mt-0 border-gray-200" />
+              <h3 className="text-left mt-2 mb-3">
                 {intl.formatMessage(messages['sign.in.heading'])}
-              </h2>
+              </h3>
               <Form className="m-0">
                 <ValidationFormGroup
                   for="email"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={intl.formatMessage(messages['email.format.validation.message'])}
                   className="mb-0 w-100"
+                  helpText={intl.formatMessage(messages['email.help.message'])}
                 >
                   <Form.Label htmlFor="loginEmail" className="h6 mr-1">
                     {intl.formatMessage(messages['email.label'])}
@@ -220,7 +222,6 @@ class LoginPage extends React.Component {
                     value={this.state.email}
                     onChange={e => this.handleOnChange(e)}
                   />
-                  <p className="mb-4">{intl.formatMessage(messages['email.help.message'])}</p>
                 </ValidationFormGroup>
                 <ValidationFormGroup
                   for="password"
@@ -240,12 +241,12 @@ class LoginPage extends React.Component {
                   />
                 </ValidationFormGroup>
                 <LoginHelpLinks page={LOGIN_PAGE} />
-                <Hyperlink className="field-link mt-0 mb-3" destination={this.getEnterPriseLoginURL()}>
+                <Hyperlink className="field-link mt-0 mb-3 small" destination={this.getEnterPriseLoginURL()}>
                   {intl.formatMessage(messages['enterprise.login.link.text'])}
                 </Hyperlink>
                 <StatefulButton
                   type="submit"
-                  className="btn-primary"
+                  variant="brand"
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['sign.in.button']),
@@ -255,8 +256,9 @@ class LoginPage extends React.Component {
               </Form>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (
-                  <div className="mb-4 pt-10">
-                    <h4>{intl.formatMessage(messages['or.sign.in.with'])}</h4>
+                  <div className="mb-20">
+                    <hr className="mt-20 mb-20 border-gray-200" />
+                    {intl.formatMessage(messages['or.sign.in.with'])}
                   </div>
                 ) : null}
               {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}

@@ -244,19 +244,20 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         >
           <div
             aria-hidden="true"
+            className="mx-auto"
           >
             <img
               alt="icon Apple"
               className="icon-image"
               src="https://edx.devstack.lms/logo.png"
             />
+            <span
+              aria-hidden="true"
+              className="pl-2"
+            >
+              Apple
+            </span>
           </div>
-          <span
-            aria-hidden="true"
-            className="pl-2"
-          >
-            Apple
-          </span>
         </button>
       </div>
       <h4
