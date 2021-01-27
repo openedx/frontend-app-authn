@@ -8,7 +8,7 @@ const APIFailureMessage = (props) => {
   const { intl, header } = props;
 
   return (
-    <Alert variant="danger">
+    <Alert id="internal-server-error" variant="danger">
       <Alert.Heading>
         {header}
       </Alert.Heading>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -20,7 +20,6 @@ import Spinner from './Spinner';
 const ResetPasswordPage = (props) => {
   const { intl } = props;
   const params = getQueryParameters();
-  const mainRef = useRef();
 
   const [newPasswordInput, setNewPasswordValue] = useState('');
   const [confirmPasswordInput, setConfirmPasswordValue] = useState('');
@@ -54,6 +53,8 @@ const ResetPasswordPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+
     if (newPasswordInput === '') {
       setEmptyFieldError(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
       return;
@@ -69,7 +70,6 @@ const ResetPasswordPage = (props) => {
       };
       props.resetPassword(formPayload, props.token, params);
     }
-    mainRef.current.focus();
   };
 
   if (props.token_status === 'pending') {
@@ -85,7 +85,7 @@ const ResetPasswordPage = (props) => {
   } else {
     return (
       <>
-        <div id="main" className="d-flex justify-content-center m-4" ref={mainRef}>
+        <div id="main" className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">
             {(emptyFieldError || props.status) && (
               <Alert id="validation-errors" variant="danger">

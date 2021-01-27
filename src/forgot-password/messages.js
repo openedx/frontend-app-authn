@@ -21,25 +21,30 @@ const messages = defineMessages({
     defaultMessage: 'Email',
     description: 'Email field label for the forgot password page.',
   },
-  'forgot.password.page.email.field.help.text': {
-    id: 'forgot.password.page.email.field.help.text',
-    defaultMessage: 'The email address you used to register with edX.',
-    description: 'Email field help text for the forgot password page.',
-  },
   'forgot.password.page.submit.button': {
     id: 'forgot.password.page.submit.button',
     defaultMessage: 'Recover my password',
     description: 'Submit button text for the forgot password page.',
   },
-  'forgot.password.page.email.invalid.length.message': {
-    id: 'forgot.password.page.email.invalid.length.message',
-    defaultMessage: 'Email must have at least 3 characters.',
-    description: 'Invalid email address length message for the forgot password page.',
-  },
   'forgot.password.request.server.error': {
     id: 'forgot.password.request.server.error',
-    defaultMessage: 'Failed to Send Forgot Password Email',
-    description: 'Failed to Send Forgot Password Email help text heading.',
+    defaultMessage: 'Failed to send forgot password email.',
+    description: 'Failed to Send Forgot Password Email heading.',
+  },
+  'forgot.password.error.message.title': {
+    id: 'forgot.password.error.message.title',
+    defaultMessage: 'An error occurred.',
+    description: 'Title for message that appears when error occurs for password assistance page',
+  },
+  'forgot.password.request.in.progress.message': {
+    id: 'forgot.password.request.in.progress.message',
+    defaultMessage: 'Your previous request is in progress, please try again in a few moments.',
+    description: 'Message displayed when previous password reset request is still in progress.',
+  },
+  'forgot.password.empty.email.field.error': {
+    id: 'forgot.password.empty.email.field.error',
+    defaultMessage: 'Please enter your Email.',
+    description: 'Error message that appears when user tries to submit empty email field',
   },
   'forgot.password.invalid.email.heading': {
     id: 'forgot.password.invalid.email',
