@@ -15,7 +15,7 @@ const ConfirmationAlert = (props) => {
       <Alert.Heading>{intl.formatMessage(messages['forgot.password.confirmation.title'])}</Alert.Heading>
       <p>
         <FormattedMessage
-          id="logistration.forgot.password.confirmation.message"
+          id="forgot.password.confirmation.message"
           defaultMessage="You entered {strongEmail}. If this email address is associated with your
           edX account, we will send a message with password recovery instructions to this email address."
           description="Forgot password confirmation message"
