@@ -32,6 +32,7 @@ class LoginPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    sendPageEvent('login_and_registration', 'login');
     this.state = {
       password: '',
       email: '',
@@ -170,7 +171,6 @@ class LoginPage extends React.Component {
       );
     }
 
-    sendPageEvent('login_and_registration', 'login');
     return (
       <>
         <RedirectLogistration

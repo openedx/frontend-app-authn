@@ -46,6 +46,7 @@ class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    sendPageEvent('login_and_registration', 'register');
     this.intl = props.intl;
 
     this.state = {
@@ -549,7 +550,6 @@ class RegistrationPage extends React.Component {
       );
     }
 
-    sendPageEvent('login_and_registration', 'register');
     return (
       <>
         <RedirectLogistration
