@@ -26,6 +26,17 @@ describe('ResetPasswordPage', () => {
     </IntlProvider>
   );
 
+  const submitForm = async (password) => {
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    await act(async () => {
+      resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: password } });
+    });
+    resetPasswordPage.find('input#confirm-password-input').simulate('change', { target: { value: password } });
+    resetPasswordPage.find('button.btn-primary').simulate('click');
+
+    return resetPasswordPage;
+  };
+
   beforeEach(() => {
     store = mockStore();
     props = {
@@ -104,7 +115,7 @@ describe('ResetPasswordPage', () => {
       ...props,
       token_status: 'valid',
       status: 'failure',
-      errors: 'Password reset was unsuccessfull.',
+      errors: 'Password reset was unsuccessful.',
     };
     const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
       .toJSON();
@@ -140,10 +151,6 @@ describe('ResetPasswordPage', () => {
 
   it('with valid inputs resetPassword action is dispatch', async () => {
     const newPassword = 'test-password1';
-    store = mockStore({
-      ...store,
-    });
-
     props = {
       ...props,
       token_status: 'valid',
@@ -163,14 +170,32 @@ describe('ResetPasswordPage', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    const resetPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    await act(async () => {
-      resetPage.find('input#reset-password-input').simulate('blur', { target: { value: newPassword } });
-    });
-    resetPage.find('input#confirm-password-input').simulate('change', { target: { value: newPassword } });
-    resetPage.find('button.btn-primary').simulate('click');
 
+    const resetPasswordPage = await submitForm(newPassword);
     expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
-    resetPage.unmount();
+    resetPasswordPage.unmount();
+  });
+
+  it('should dispatch resetPassword action if validations have reached rate limit', async () => {
+    const password = 'test-password';
+
+    auth.getHttpClient = jest.fn(() => ({
+      post: async () => {
+        throw new Error('error');
+      },
+    }));
+    store.dispatch = jest.fn(store.dispatch);
+
+    props = {
+      ...props,
+      token_status: 'valid',
+      token: 'token',
+    };
+
+    const resetPasswordPage = await submitForm(password);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      resetPassword({ new_password1: password, new_password2: password }, props.token, {}),
+    );
+    resetPasswordPage.unmount();
   });
 });
