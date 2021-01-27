@@ -317,7 +317,7 @@ describe('./RegistrationPage.js', () => {
     store.dispatch = jest.fn(store.dispatch);
 
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-    registrationPage.find('button.btn-primary').simulate('click');
+    registrationPage.find('button.btn-brand').simulate('click');
     expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser(formPayload));
   });
 

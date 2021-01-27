@@ -32,16 +32,19 @@ exports[`./RegistrationPage.js should display no password field when current pro
            Sign in.
         </a>
       </div>
-      <h2
-        className="mt-4"
+      <hr
+        className="mb-20 border-gray-200"
+      />
+      <h3
+        className="mb-20"
       >
-        Create an Account
-      </h2>
+        Create a new account
+      </h3>
       <form
         className="mb-4 form-group"
       >
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -70,7 +73,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -100,7 +103,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -129,7 +132,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group custom-control mb-0"
+          className="form-group custom-control mb-20 small"
         >
           <input
             aria-describedby=""
@@ -173,18 +176,18 @@ exports[`./RegistrationPage.js should display no password field when current pro
             value={false}
           />
           <p
-            className="mb-0"
+            className="mb-20 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
           >
-            Support education research by providing additional information
+            Support education research by providing additional information. (Optional)
           </p>
         </div>
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -195,6 +198,11 @@ exports[`./RegistrationPage.js should display no password field when current pro
             Create Account
           </span>
         </button>
+        <span
+          className="mt-4 text-left"
+        >
+          or create an account using
+        </span>
       </form>
     </div>
   </div>
@@ -224,52 +232,19 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
            Sign in.
         </a>
       </div>
-      <div
-        className="d-block mb-4 mt-4"
+      <hr
+        className="mb-20 border-gray-200"
+      />
+      <h3
+        className="mb-20"
       >
-        <h4
-          className="d-block mx-auto mb-4"
-        >
-          Create an account using
-        </h4>
-      </div>
-      <div
-        className="row tpa-container"
-      >
-        <button
-          className="btn-social btn-oa2-apple-id"
-          id="oa2-apple-id"
-          onClick={[Function]}
-          type="button"
-        >
-          <div
-            aria-hidden="true"
-            className="mx-auto"
-          >
-            <img
-              alt="icon Apple"
-              className="icon-image"
-              src="https://edx.devstack.lms/logo.png"
-            />
-            <span
-              aria-hidden="true"
-              className="pl-2"
-            >
-              Apple
-            </span>
-          </div>
-        </button>
-      </div>
-      <h4
-        className="d-block mx-auto mt-4"
-      >
-        or create a new one here
-      </h4>
+        Create a new account
+      </h3>
       <form
         className="mb-4 form-group"
       >
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -298,7 +273,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -328,7 +303,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -357,7 +332,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -386,7 +361,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-0"
+          className="form-group custom-control mb-20 small"
         >
           <input
             aria-describedby=""
@@ -430,18 +405,18 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             value={false}
           />
           <p
-            className="mb-0"
+            className="mb-20 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
           >
-            Support education research by providing additional information
+            Support education research by providing additional information. (Optional)
           </p>
         </div>
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -452,6 +427,45 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             Create Account
           </span>
         </button>
+        <div
+          className="d-block mb-4 mt-4"
+        >
+          <hr
+            className="mt-0 border-gray-200"
+          />
+          <span
+            className="d-blockmb-4 text-left"
+          >
+            or create an account using
+          </span>
+        </div>
+        <div
+          className="row tpa-container"
+        >
+          <button
+            className="btn-social btn-oa2-apple-id"
+            id="oa2-apple-id"
+            onClick={[Function]}
+            type="button"
+          >
+            <div
+              aria-hidden="true"
+              className="mx-auto"
+            >
+              <img
+                alt="icon Apple"
+                className="icon-image"
+                src="https://edx.devstack.lms/logo.png"
+              />
+              <span
+                aria-hidden="true"
+                className="pl-2"
+              >
+                Apple
+              </span>
+            </div>
+          </button>
+        </div>
       </form>
     </div>
   </div>
@@ -481,16 +495,19 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
            Sign in.
         </a>
       </div>
-      <h2
-        className="mt-4"
+      <hr
+        className="mb-20 border-gray-200"
+      />
+      <h3
+        className="mb-20"
       >
-        Create an Account
-      </h2>
+        Create a new account
+      </h3>
       <form
         className="mb-4 form-group"
       >
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -519,7 +536,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -549,7 +566,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -578,7 +595,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -607,7 +624,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-0"
+          className="form-group custom-control mb-20 small"
         >
           <input
             aria-describedby=""
@@ -651,18 +668,18 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             value={false}
           />
           <p
-            className="mb-0"
+            className="mb-20 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
           >
-            Support education research by providing additional information
+            Support education research by providing additional information. (Optional)
           </p>
         </div>
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -673,6 +690,11 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Create Account
           </span>
         </button>
+        <span
+          className="mt-4 text-left"
+        >
+          or create an account using
+        </span>
       </form>
     </div>
   </div>
@@ -702,16 +724,19 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
            Sign in.
         </a>
       </div>
-      <h2
-        className="mt-4"
+      <hr
+        className="mb-20 border-gray-200"
+      />
+      <h3
+        className="mb-20"
       >
-        Create an Account
-      </h2>
+        Create a new account
+      </h3>
       <form
         className="mb-4 form-group"
       >
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -740,7 +765,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -770,7 +795,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -799,7 +824,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -828,7 +853,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group custom-control mb-0"
+          className="form-group custom-control mb-20 small"
         >
           <input
             aria-describedby=""
@@ -872,18 +897,18 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             value={false}
           />
           <p
-            className="mb-0"
+            className="mb-20 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
           >
-            Support education research by providing additional information
+            Support education research by providing additional information. (Optional)
           </p>
         </div>
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending btn-primary mt-10 disabled btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending disabled btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -903,6 +928,11 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Create Account
           </span>
         </button>
+        <span
+          className="mt-4 text-left"
+        >
+          or create an account using
+        </span>
       </form>
     </div>
   </div>
@@ -958,16 +988,19 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
            Sign in.
         </a>
       </div>
-      <h2
-        className="mt-4"
+      <hr
+        className="mb-20 border-gray-200"
+      />
+      <h3
+        className="mb-20"
       >
-        Create an Account
-      </h2>
+        Create a new account
+      </h3>
       <form
         className="mb-4 form-group"
       >
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -996,7 +1029,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -1026,7 +1059,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -1055,7 +1088,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-20"
         >
           <label
             className="h6 pt-10"
@@ -1084,7 +1117,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-0"
+          className="form-group custom-control mb-20 small"
         >
           <input
             aria-describedby=""
@@ -1128,18 +1161,18 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             value={false}
           />
           <p
-            className="mb-0"
+            className="mb-20 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
           >
-            Support education research by providing additional information
+            Support education research by providing additional information. (Optional)
           </p>
         </div>
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn-primary mt-10 btn btn-primary"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -1150,6 +1183,11 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Create Account
           </span>
         </button>
+        <span
+          className="mt-4 text-left"
+        >
+          or create an account using
+        </span>
       </form>
     </div>
   </div>
