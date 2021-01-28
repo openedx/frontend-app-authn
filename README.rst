@@ -1,6 +1,6 @@
 |Build Status| |Codecov| |license|
 
-frontend-app-logistration
+frontend-app-authn
 =================================
 
 This is a micro-frontend application responsible for the login, registration and password reset functionality.
@@ -40,9 +40,9 @@ This MFE is configured via node environment variables supplied at build time. Se
 For more information see the document: `Micro-frontend applications in Open
 edX <https://github.com/edx/edx-developer-docs/blob/5191e800bf16cf42f25c58c58f983bdaf7f9305d/docs/micro-frontends-in-open-edx.rst>`__.
 
-.. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-logistration.svg?branch=master
-   :target: https://travis-ci.com/edx/frontend-app-logistration
-.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-logistration
-   :target: https://codecov.io/gh/edx/frontend-app-logistration
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-logistration.svg
-   :target: @edx/frontend-app-logistration
+.. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-authn.svg?branch=master
+   :target: https://travis-ci.com/edx/frontend-app-authn
+.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-authn
+   :target: https://codecov.io/gh/edx/frontend-app-authn
+.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-authn.svg
+   :target: @edx/frontend-app-authn

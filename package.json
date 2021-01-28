@@ -1,10 +1,10 @@
 {
-  "name": "@edx/frontend-app-logistration",
+  "name": "@edx/frontend-app-authn",
   "version": "0.1.0",
   "description": "Frontend application template",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/frontend-app-logistration.git"
+    "url": "git+https://github.com/edx/frontend-app-authn.git"
   },
   "browserslist": [
     "last 2 versions",
@@ -26,12 +26,12 @@
   },
   "author": "edX",
   "license": "AGPL-3.0",
-  "homepage": "https://github.com/edx/frontend-app-logistration#readme",
+  "homepage": "https://github.com/edx/frontend-app-authn#readme",
   "publishConfig": {
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/edx/frontend-app-logistration/issues"
+    "url": "https://github.com/edx/frontend-app-authn/issues"
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.1.0",
