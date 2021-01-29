@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   'sign.in.hyperlink': {
     id: 'sign.in.hyperlink',
-    defaultMessage: ' Sign in.',
+    defaultMessage: 'Sign in.',
     description: 'Text for the hyperlink that takes user to login page',
   },
   'create.an.account.using': {

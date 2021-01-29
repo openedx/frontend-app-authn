@@ -2,7 +2,7 @@
 
 exports[`ThirdPartyAuthAlert should match login page third party auth alert message snapshot 1`] = `
 <div
-  className="fade alert-warning mt-n2 alert show"
+  className="fade alert-success mt-n2 alert show"
   id="tpa-alert"
   role="alert"
 >
@@ -14,7 +14,7 @@ exports[`ThirdPartyAuthAlert should match login page third party auth alert mess
 
 exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
 <div
-  className="fade alert-warning mt-n2 alert show"
+  className="fade alert-success mt-n2 alert show"
   id="tpa-alert"
   role="alert"
 >
