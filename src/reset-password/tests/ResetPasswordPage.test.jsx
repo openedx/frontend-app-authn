@@ -196,6 +196,23 @@ describe('ResetPasswordPage', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       resetPassword({ new_password1: password, new_password2: password }, props.token, {}),
     );
+
     resetPasswordPage.unmount();
+  });
+
+  it('should display empty new password field error', () => {
+    const validationMessage = 'Please enter your New Password.';
+    props = {
+      ...props,
+      token_status: 'valid',
+      token: 'token',
+    };
+
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('button.btn-primary').simulate('click');
+
+    resetPasswordPage.update();
+    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual('We couldn\'t reset your password.'.concat(validationMessage));
   });
 });

@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Alert, Form, Input, StatefulButton, ValidationFormGroup,
 } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-
 import { getQueryParameters } from '@edx/frontend-platform';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 import messages from './messages';
 import { resetPassword, validateToken } from './data/actions';
 import { resetPasswordResultSelector } from './data/selectors';
@@ -18,12 +20,14 @@ import Spinner from './Spinner';
 const ResetPasswordPage = (props) => {
   const { intl } = props;
   const params = getQueryParameters();
+  const mainRef = useRef();
 
   const [newPasswordInput, setNewPasswordValue] = useState('');
   const [confirmPasswordInput, setConfirmPasswordValue] = useState('');
   const [passwordValid, setPasswordValidValue] = useState(true);
   const [passwordMatch, setPasswordMatchValue] = useState(true);
   const [validationMessage, setvalidationMessage] = useState('');
+  const [emptyFieldError, setEmptyFieldError] = useState('');
 
   const validatePasswordFromBackend = async (newPassword) => {
     let errorMessage;
@@ -41,6 +45,7 @@ const ResetPasswordPage = (props) => {
     setNewPasswordValue(newPassword);
     validatePasswordFromBackend(newPassword);
   };
+
   const handleConfirmPasswordChange = (e) => {
     const confirmPassword = e.target.value;
     setConfirmPasswordValue(confirmPassword);
@@ -50,7 +55,7 @@ const ResetPasswordPage = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newPasswordInput === '') {
-      setPasswordValidValue(false);
+      setEmptyFieldError(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
       return;
     }
     if (newPasswordInput !== confirmPasswordInput) {
@@ -64,6 +69,7 @@ const ResetPasswordPage = (props) => {
       };
       props.resetPassword(formPayload, props.token, params);
     }
+    mainRef.current.focus();
   };
 
   if (props.token_status === 'pending') {
@@ -73,15 +79,21 @@ const ResetPasswordPage = (props) => {
       return <Spinner />;
     }
   } else if (props.token_status === 'invalid') {
-    return (<InvalidTokenMessage />);
+    return <InvalidTokenMessage />;
   } else if (props.status === 'success') {
-    return (<ResetSuccessMessage />);
+    return <ResetSuccessMessage />;
   } else {
     return (
       <>
-        <div className="d-flex justify-content-center m-4">
+        <div id="main" className="d-flex justify-content-center m-4" tabIndex="-1" ref={mainRef}>
           <div className="d-flex flex-column mw-500">
             {props.status === 'failure' ? <Alert variant="danger">{props.errors}</Alert> : null}
+            {emptyFieldError && (
+              <Alert id="validation-errors" variant="danger">
+                <Alert.Heading>{intl.formatMessage(messages['forgot.password.empty.new.password.error.heading'])}</Alert.Heading>
+                <ul><li>{intl.formatMessage(messages['reset.password.empty.new.password.field.error'])}</li></ul>
+              </Alert>
+            )}
             <Form>
               <h3 className="mt-3">
                 {intl.formatMessage(messages['reset.password.page.heading'])}
@@ -89,43 +101,42 @@ const ResetPasswordPage = (props) => {
               <p className="mb-4">
                 {intl.formatMessage(messages['reset.password.page.instructions'])}
               </p>
-              <div className="d-flex flex-column align-items-start">
-                <ValidationFormGroup
-                  for="reset-password-input"
-                  invalid={!passwordValid}
-                  invalidMessage={validationMessage}
-                  className="w-100"
-                >
-                  <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
-                    {intl.formatMessage(messages['reset.password.page.new.field.label'])}
-                  </Form.Label>
-                  <Input
-                    name="new-password1"
-                    id="reset-password-input"
-                    type="password"
-                    placeholder=""
-                    onBlur={e => handleNewPasswordChange(e)}
-                  />
-                </ValidationFormGroup>
-                <ValidationFormGroup
-                  for="confirm-password-input"
-                  invalid={!passwordMatch}
-                  invalidMessage={intl.formatMessage(messages['reset.password.page.invalid.match.message'])}
-                  className="w-100"
-                >
-                  <Form.Label htmlFor="confirm-password-input" className="h6 mr-1">
-                    {intl.formatMessage(messages['reset.password.page.confirm.field.label'])}
-                  </Form.Label>
-                  <Input
-                    name="new-password2"
-                    id="confirm-password-input"
-                    type="password"
-                    placeholder=""
-                    value={confirmPasswordInput}
-                    onChange={e => handleConfirmPasswordChange(e)}
-                  />
-                </ValidationFormGroup>
-              </div>
+              <ValidationFormGroup
+                for="reset-password-input"
+                invalid={!passwordValid || emptyFieldError !== ''}
+                invalidMessage={validationMessage || emptyFieldError}
+                className="w-100"
+              >
+                <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
+                  {intl.formatMessage(messages['reset.password.page.new.field.label'])}
+                </Form.Label>
+                <Input
+                  name="new-password1"
+                  id="reset-password-input"
+                  type="password"
+                  placeholder=""
+                  onChange={() => setEmptyFieldError('')}
+                  onBlur={e => handleNewPasswordChange(e)}
+                />
+              </ValidationFormGroup>
+              <ValidationFormGroup
+                for="confirm-password-input"
+                invalid={!passwordMatch}
+                invalidMessage={intl.formatMessage(messages['reset.password.page.invalid.match.message'])}
+                className="w-100"
+              >
+                <Form.Label htmlFor="confirm-password-input" className="h6 mr-1">
+                  {intl.formatMessage(messages['reset.password.page.confirm.field.label'])}
+                </Form.Label>
+                <Input
+                  name="new-password2"
+                  id="confirm-password-input"
+                  type="password"
+                  placeholder=""
+                  value={confirmPasswordInput}
+                  onChange={e => handleConfirmPasswordChange(e)}
+                />
+              </ValidationFormGroup>
               <StatefulButton
                 type="submit"
                 className="btn-primary"
@@ -133,6 +144,7 @@ const ResetPasswordPage = (props) => {
                 labels={{
                   default: intl.formatMessage(messages['reset.password.page.submit.button']),
                 }}
+                icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                 onClick={e => handleSubmit(e)}
               />
             </Form>

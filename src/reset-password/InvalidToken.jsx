@@ -1,53 +1,42 @@
 import React from 'react';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Alert } from '@edx/paragon';
 
-const InvalidTokenMessage = () => {
+import messages from './messages';
+import { LOGIN_PAGE } from '../data/constants';
+
+const InvalidTokenMessage = props => {
+  const { intl } = props;
+
   const loginPasswordLink = (
-    <Hyperlink destination="/login">
-      <FormattedMessage
-        id="forgot.password.confirmation.support.link"
-        defaultMessage="sign-in"
-        description="link text used in message: reset.password.request.invalid.token.description.message link 'sign-in.'"
-      />
-    </Hyperlink>
+    <Alert.Link href={LOGIN_PAGE}>
+      {intl.formatMessage(messages['forgot.password.confirmation.sign.in.link'])}
+    </Alert.Link>
   );
 
-  const forgotPassword = (
-    <strong>
-      <FormattedMessage
-        id="reset.password.request.forgot.password.text"
-        defaultMessage="Forgot Password"
-        description="Forgot password page help text."
-      />
-    </strong>
-  );
   return (
     <div className="d-flex justify-content-center m-4">
-      <div className="d-flex flex-column">
-        <div className="text-left mw-500">
-          <Alert variant="danger">
-            <Alert.Heading className="text-danger">
-              <FormattedMessage
-                id="reset.password.request.invalid.token.header.message"
-                defaultMessage="Invalid Password Reset Link"
-                description="Invalid password reset link help text heading."
-              />
-            </Alert.Heading>
-            <FormattedMessage
-              id="reset.password.request.invalid.token.description.message"
-              defaultMessage="This password reset link is invalid. It may have been used already. To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}"
-              description="Invalid password reset link help text message."
-              values={{
-                forgotPassword,
-                loginPasswordLink,
-              }}
-            />
-          </Alert>
-        </div>
+      <div className="d-flex flex-column mw-500">
+        <Alert variant="danger">
+          <Alert.Heading> {intl.formatMessage(messages['reset.password.request.invalid.token.header'])}</Alert.Heading>
+          <FormattedMessage
+            id="reset.password.request.invalid.token.description.message"
+            defaultMessage="This password reset link is invalid. It may have been used already.
+            To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}"
+            description="Invalid password reset link help text message."
+            values={{
+              forgotPassword: <strong> {intl.formatMessage(messages['reset.password.request.forgot.password.text'])} </strong>,
+              loginPasswordLink,
+            }}
+          />
+        </Alert>
       </div>
     </div>
   );
 };
 
-export default InvalidTokenMessage;
+InvalidTokenMessage.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(InvalidTokenMessage);

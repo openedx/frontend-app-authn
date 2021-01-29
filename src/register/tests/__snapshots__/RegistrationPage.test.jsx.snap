@@ -954,7 +954,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         role="alert"
       >
         <div
-          className="text-danger alert-heading h4"
+          className="alert-heading h4"
         >
           <span>
             We couldn't create your account.

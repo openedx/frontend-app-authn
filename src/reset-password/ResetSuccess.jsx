@@ -23,7 +23,7 @@ const ResetSuccessMessage = (props) => {
       <div className="d-flex flex-column">
         <div className="text-left mw-500">
           <Alert variant="success">
-            <Alert.Heading className="text-success">
+            <Alert.Heading>
               {intl.formatMessage(messages['reset.password.request.success.header.message'])}
             </Alert.Heading>
             <FormattedMessage
