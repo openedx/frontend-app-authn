@@ -205,6 +205,10 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnBlur(e) {
+    if (this.props.statusCode === 403) {
+      this.validateInput(e.target.name, e.target.value);
+      return;
+    }
     this.setState({
       validationFieldName: e.target.name,
     });
@@ -274,11 +278,13 @@ class RegistrationPage extends React.Component {
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'email.validation.message');
           validationErrorsAlertMessages.email = errorEmpty;
+          errors.email = errorEmpty[0].user_message;
         } else {
           const errorCharlength = this.generateUserMessage(value.length <= 2, 'email.ratelimit.less.chars.validation.message');
           const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'email.ratelimit.incorrect.format.validation.message');
           validationErrorsAlertMessages.email = errorCharlength;
           validationErrorsAlertMessages.emailFormat = formatError;
+          errors.email = errorCharlength[0].user_message;
         }
         break;
       case 'name':
@@ -287,8 +293,10 @@ class RegistrationPage extends React.Component {
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'fullname.validation.message');
           validationErrorsAlertMessages.name = errorEmpty;
+          errors.name = validationErrorsAlertMessages.name[0].user_message;
         } else {
           validationErrorsAlertMessages.name = [{ user_message: '' }];
+          errors.name = validationErrorsAlertMessages.name[0].user_message;
         }
         break;
       case 'username':
@@ -297,9 +305,11 @@ class RegistrationPage extends React.Component {
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'username.validation.message');
           validationErrorsAlertMessages.username = errorEmpty;
+          errors.username = errorEmpty[0].user_message;
         } else {
           const errorCharLength = this.generateUserMessage(value.length <= 1, 'username.ratelimit.less.chars.message');
           validationErrorsAlertMessages.username = errorCharLength;
+          errors.username = errorCharLength[0].user_message;
         }
         break;
       case 'password':
@@ -308,9 +318,11 @@ class RegistrationPage extends React.Component {
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'register.page.password.validation.message');
           validationErrorsAlertMessages.password = errorEmpty;
+          errors.password = errorEmpty[0].user_message;
         } else {
           const errorCharLength = this.generateUserMessage(value.length < 8, 'email.ratelimit.password.validation.message');
           validationErrorsAlertMessages.password = errorCharLength;
+          errors.password = errorCharLength[0].user_message;
         }
         break;
       case 'country':
@@ -319,6 +331,7 @@ class RegistrationPage extends React.Component {
         } else {
           const emptyError = this.generateUserMessage(value === '', 'country.validation.message');
           validationErrorsAlertMessages.country = emptyError;
+          errors.country = emptyError[0].user_message;
         }
         break;
       case 'honor_code':
@@ -341,6 +354,7 @@ class RegistrationPage extends React.Component {
       honorCodeValid,
       termsOfServiceValid,
       submitCount,
+      errors,
     });
     return formValid;
   }
@@ -423,6 +437,7 @@ class RegistrationPage extends React.Component {
             props.options = options;
             props.onBlur = e => this.handleOnBlur(e);
             props.onClick = e => this.handleOnClick(e);
+            props.onChange = e => this.handleOnChange(e);
           }
           return (
             <ValidationFormGroup
