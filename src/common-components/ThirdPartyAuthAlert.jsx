@@ -29,7 +29,7 @@ const ThirdPartyAuthAlert = (props) => {
     );
   }
 
-  return <Alert id="tpa-alert" className="alert-warning mt-n2">{ message }</Alert>;
+  return <Alert id="tpa-alert" className="alert-success mt-n2">{ message }</Alert>;
 };
 
 ThirdPartyAuthAlert.defaultProps = {

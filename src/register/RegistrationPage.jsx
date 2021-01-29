@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
   Input,
   StatefulButton,
@@ -566,7 +568,7 @@ class RegistrationPage extends React.Component {
                 />
               )}
               <div className="text-left">
-                <span>{intl.formatMessage(messages['already.have.an.edx.account'])}</span>
+                <span className="mr-1">{intl.formatMessage(messages['already.have.an.edx.account'])}</span>
                 <a href={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>{intl.formatMessage(messages['sign.in.hyperlink'])}</a>
               </div>
               <hr className="mb-20 border-gray-200" />
@@ -689,6 +691,7 @@ class RegistrationPage extends React.Component {
                   labels={{
                     default: intl.formatMessage(messages['create.account.button']),
                   }}
+                  icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={this.handleSubmit}
                 />
                 {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
