@@ -1,5 +1,6 @@
 import { runSaga } from 'redux-saga';
 
+import { camelCaseObject } from '@edx/frontend-platform';
 import * as actions from '../actions';
 import {
   fetchRealtimeValidations,
@@ -184,6 +185,32 @@ describe('handleNewUserRegistration', () => {
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
       actions.registerNewUserSuccess(data.redirectUrl, data.success),
+    ]);
+    registerRequest.mockClear();
+  });
+
+  it('should handle 500 error code', async () => {
+    const registerErrorResponse = {
+      response: {
+        status: 500,
+        data: {
+          errorCode: 'internal-server-error',
+        },
+      },
+    };
+
+    const registerRequest = jest.spyOn(api, 'registerRequest').mockImplementation(() => Promise.reject(registerErrorResponse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleNewUserRegistration,
+      params,
+    );
+
+    expect(dispatched).toEqual([
+      actions.registerNewUserBegin(),
+      actions.registerNewUserFailure(camelCaseObject(registerErrorResponse.response.data)),
     ]);
     registerRequest.mockClear();
   });

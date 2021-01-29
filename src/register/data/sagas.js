@@ -24,6 +24,7 @@ import {
   getRegistrationForm,
   registerRequest,
 } from './service';
+import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 
 export function* handleNewUserRegistration(action) {
   try {
@@ -39,6 +40,8 @@ export function* handleNewUserRegistration(action) {
     const statusCodes = [400, 409, 403];
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(registerNewUserFailure(e.response.data));
+    } else {
+      yield put(registerNewUserFailure({ errorCode: INTERNAL_SERVER_ERROR }));
     }
     logError(e);
   }

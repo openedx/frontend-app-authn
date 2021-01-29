@@ -976,24 +976,20 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         <div
           className="alert-heading h4"
         >
-          <span>
-            We couldn't create your account.
-          </span>
+          We couldn't create your account.
         </div>
-        <div>
-          <ul>
-            <li
-              className="text-left"
-            >
-              It looks like test@gmail.com belongs to an existing account. Try again with a different email address.
-            </li>
-            <li
-              className="text-left"
-            >
-              It looks like test belongs to an existing account. Try again with a different username.
-            </li>
-          </ul>
-        </div>
+        <ul>
+          <li
+            className="text-left"
+          >
+            It looks like test@gmail.com belongs to an existing account. Try again with a different email address.
+          </li>
+          <li
+            className="text-left"
+          >
+            It looks like test belongs to an existing account. Try again with a different username.
+          </li>
+        </ul>
       </div>
       <div
         className="text-left"

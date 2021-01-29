@@ -116,6 +116,16 @@ const messages = defineMessages({
     defaultMessage: '(optional)',
     description: 'Text that appears with optional field labels',
   },
+  'registration.request.server.error': {
+    id: 'registration.request.server.error',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    description: 'error message on server error.',
+  },
+  'registration.request.failure.header': {
+    id: 'registration.request.failure.header',
+    defaultMessage: 'We couldn\'t create your account.',
+    description: 'error message when registration failure.',
+  },
 });
 
 export default messages;
