@@ -9,7 +9,9 @@ import * as analytics from '@edx/frontend-platform/analytics';
 
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../../common-components';
+import RegistrationFailureMessage from '../RegistrationFailure';
 import { PENDING_STATE } from '../../data/constants';
+import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -18,6 +20,7 @@ analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
+const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
 const mockStore = configureStore();
 
 describe('./RegistrationPage.js', () => {
@@ -324,6 +327,19 @@ describe('./RegistrationPage.js', () => {
   it('should match default section snapshot', () => {
     const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(tree.toJSON()).toMatchSnapshot();
+  });
+
+  it('should match internal server error message', () => {
+    props = {
+      errors: {
+        errorCode: INTERNAL_SERVER_ERROR,
+      },
+    };
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
+    expect(registrationPage.find('div.alert-heading').length).toEqual(1);
+    const expectedMessage = 'We couldn\'t create your account.An error has occurred. Try refreshing the page, or check your Internet connection.';
+    expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
   });
 
   it('should match pending button state snapshot', () => {
