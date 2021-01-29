@@ -36,6 +36,31 @@ const messages = defineMessages({
     defaultMessage: 'Password Reset Complete.',
     description: 'header message when reset is successful.',
   },
+  'forgot.password.confirmation.sign.in.link': {
+    id: 'forgot.password.confirmation.sign.in.link',
+    defaultMessage: 'sign-in',
+    description: 'link text used in message to refer to sign in page',
+  },
+  'reset.password.request.forgot.password.text': {
+    id: 'reset.password.request.forgot.password.text',
+    defaultMessage: 'Forgot Password',
+    description: 'Forgot password text',
+  },
+  'reset.password.request.invalid.token.header': {
+    id: 'reset.password.request.invalid.token.header',
+    defaultMessage: 'Invalid Password Reset Link',
+    description: 'Invalid password reset link help text heading',
+  },
+  'reset.password.empty.new.password.field.error': {
+    id: 'reset.password.empty.new.password.field.error',
+    defaultMessage: 'Please enter your New Password.',
+    description: 'Error message that appears when user tries to submit form with empty New Password field',
+  },
+  'forgot.password.empty.new.password.error.heading': {
+    id: 'forgot.password.empty.new.password.error.heading',
+    defaultMessage: 'We couldn\'t reset your password.',
+    description: 'Heading that appears above error message when user submits empty form.',
+  },
 });
 
 export default messages;

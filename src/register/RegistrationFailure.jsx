@@ -30,7 +30,7 @@ const RegistrationFailureMessage = (props) => {
   return (
     hasNoErrors(userErrors) ? null : (
       <Alert variant="danger">
-        <Alert.Heading className="text-danger">
+        <Alert.Heading>
           <FormattedMessage
             id="registration.request.failure.header.description.message"
             defaultMessage="We couldn't create your account."
