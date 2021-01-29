@@ -387,7 +387,7 @@ class RegistrationPage extends React.Component {
                 <ValidationFormGroup
                   for={field.name}
                   key={field.name}
-                  className="pt-10 mb-0"
+                  className="pt-10 mb-20 small"
                 >
                   { nodes }
                 </ValidationFormGroup>
@@ -404,7 +404,7 @@ class RegistrationPage extends React.Component {
                 key={field.name}
                 invalid={this.state.errors[stateVar] !== ''}
                 invalidMessage={field.errorMessages.required}
-                className="custom-control mb-0"
+                className="custom-control mb-20 small"
               >
                 <Input {...props} />
                 {beforeLink}
@@ -428,7 +428,7 @@ class RegistrationPage extends React.Component {
               key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
-              className="mb-0"
+              className="mb-20"
             >
               <label htmlFor={field.name} className="h6 pt-10">{field.label} (required)</label>
               <Input {...props} />
@@ -444,7 +444,7 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
-      let cssClass = 'mb-0';
+      let cssClass = 'mb-20';
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
         if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
@@ -506,9 +506,6 @@ class RegistrationPage extends React.Component {
           <div className="row tpa-container">
             <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
           </div>
-          <h4 className="d-block mx-auto mt-4">
-            {intl.formatMessage(messages['create.a.new.one.here'])}
-          </h4>
         </>
       );
     } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
@@ -572,21 +569,14 @@ class RegistrationPage extends React.Component {
                 <span>{intl.formatMessage(messages['already.have.an.edx.account'])}</span>
                 <a href={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>{intl.formatMessage(messages['sign.in.hyperlink'])}</a>
               </div>
-              {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
-                && !currentProvider ? (
-                  <div className="d-block mb-4 mt-4">
-                    <h4 className="d-block mx-auto mb-4">
-                      {intl.formatMessage(messages['create.an.account.using'])}
-                    </h4>
-                  </div>
-                ) : <h2 className="mt-4">{intl.formatMessage(messages['create.an.account'])}</h2>}
-              {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
+              <hr className="mb-20 border-gray-200" />
+              <h3 className="mb-20">{intl.formatMessage(messages['create.a.new.account'])}</h3>
               <Form className="mb-4 form-group">
                 <ValidationFormGroup
                   for="name"
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
-                  className="mb-0"
+                  className="mb-20"
                   helpText="This name will be used by any certificates that you earn."
                 >
                   <label htmlFor="name" className="h6 pt-10">
@@ -608,7 +598,7 @@ class RegistrationPage extends React.Component {
                   for="username"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
-                  className="mb-0"
+                  className="mb-20"
                   helpText="The name that will identify you in your courses. It cannot be changed later."
                 >
                   <label htmlFor="username" className="h6 pt-10">
@@ -631,7 +621,7 @@ class RegistrationPage extends React.Component {
                   for="email"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
-                  className="mb-0"
+                  className="mb-20"
                   helpText="This is what you will use to login."
                 >
                   <label htmlFor="email" className="h6 pt-10">
@@ -654,7 +644,7 @@ class RegistrationPage extends React.Component {
                     for="password"
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
-                    className="mb-0"
+                    className="mb-20"
                     helpText="Your password must contain at least 8 characters, including 1 letter & 1 number."
                   >
                     <label htmlFor="password" className="h6 pt-10">
@@ -687,20 +677,34 @@ class RegistrationPage extends React.Component {
                     onChange={e => this.handleOnOptional(e)}
                     required
                   />
-                  <p role="presentation" id="additionalFields" className="mb-0" onClick={e => this.handleOnOptional(e)}>
+                  <p role="presentation" id="additionalFields" className="mb-20 small" onClick={e => this.handleOnOptional(e)}>
                     {intl.formatMessage(messages['support.education.research'])}
                   </p>
                 </ValidationFormGroup>
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
                 <StatefulButton
                   type="button"
-                  className="btn-primary mt-10"
+                  variant="brand"
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['create.account.button']),
                   }}
                   onClick={this.handleSubmit}
                 />
+                {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
+                  && !currentProvider ? (
+                    <div className="d-block mb-4 mt-4">
+                      <hr className="mt-0 border-gray-200" />
+                      <span className="d-blockmb-4 text-left">
+                        {intl.formatMessage(messages['create.an.account.using'])}
+                      </span>
+                    </div>
+                  ) : <span className="mt-4 text-left">{intl.formatMessage(messages['create.an.account.using'])}</span>}
+                {this.renderThirdPartyAuth(providers,
+                  secondaryProviders,
+                  currentProvider,
+                  thirdPartyAuthApiStatus,
+                  intl)}
               </Form>
             </div>
           </div>

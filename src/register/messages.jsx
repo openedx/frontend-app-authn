@@ -18,13 +18,13 @@ const messages = defineMessages({
   },
   'create.an.account.using': {
     id: 'create.an.account.using',
-    defaultMessage: 'Create an account using',
-    description: 'A message that appears before social auth buttons',
+    defaultMessage: 'or create an account using',
+    description: 'A message that after optional form fields checkbox',
   },
-  'create.a.new.one.here': {
-    id: 'create.a.new.one.here',
-    defaultMessage: 'or create a new one here',
-    description: 'Text that appears after social auth buttons and before the registration form',
+  'create.a.new.account': {
+    id: 'create.a.new.account',
+    defaultMessage: 'Create a new account',
+    description: 'Text that appears before social auth buttons and before the registration form',
   },
   'register.institution.login.button': {
     id: 'register.institution.login.button',
@@ -108,7 +108,7 @@ const messages = defineMessages({
   },
   'support.education.research': {
     id: 'support.education.research',
-    defaultMessage: 'Support education research by providing additional information',
+    defaultMessage: 'Support education research by providing additional information. (Optional)',
     description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
   },
   'register.optional.label': {
