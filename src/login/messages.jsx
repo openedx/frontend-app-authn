@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
   'institution.login.page.title': {
     id: 'institution.login.page.title',
-    defaultMessage: 'Sign in with Institution/Campus Credentials',
+    defaultMessage: 'Sign in with institution/campus credentials',
     description: 'Heading of institution page',
   },
   'institution.login.page.sub.heading': {
