@@ -47,7 +47,7 @@ const InstitutionLogistration = props => {
               {buttonTitle}
             </Hyperlink>
           </div>
-          <h3 className="mt-2 mb-4 font-weight-normal">
+          <h3 className="mt-3 mb-4 font-weight-normal">
             {headingTitle}
           </h3>
           <p className="mb-2">
