@@ -36,6 +36,11 @@ const messages = defineMessages({
     defaultMessage: 'Email must have at least 3 characters.',
     description: 'Invalid email address length message for the forgot password page.',
   },
+  'forgot.password.request.server.error': {
+    id: 'forgot.password.request.server.error',
+    defaultMessage: 'Failed to Send Forgot Password Email',
+    description: 'Failed to Send Forgot Password Email help text heading.',
+  },
 });
 
 export default messages;

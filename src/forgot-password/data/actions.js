@@ -20,3 +20,7 @@ export const forgotPasswordSuccess = email => ({
 export const forgotPasswordForbidden = () => ({
   type: FORGOT_PASSWORD.FORBIDDEN,
 });
+
+export const forgotPasswordServerError = () => ({
+  type: FORGOT_PASSWORD.FAILURE,
+});

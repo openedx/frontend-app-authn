@@ -18,6 +18,8 @@ import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
 import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../login/LoginHelpLinks';
+import APIFailureMessage from '../common-components/APIFailureMessage';
+import { INTERNAL_SERVER_ERROR } from '../login/data/constants';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
@@ -36,6 +38,12 @@ const ForgotPasswordPage = (props) => {
     }
   };
 
+  const getStatusBannerifAny = () => {
+    if (status === INTERNAL_SERVER_ERROR) {
+      return <APIFailureMessage header={intl.formatMessage(messages['forgot.password.request.server.error'])} />;
+    }
+    return status === 'forbidden' ? <RequestInProgressAlert /> : null;
+  };
   sendPageEvent('login_and_registration', 'reset');
 
   return (
@@ -60,7 +68,7 @@ const ForgotPasswordPage = (props) => {
           <div className="d-flex justify-content-center m-4">
             <div className="d-flex flex-column">
               <Form className="mw-500">
-                {status === 'forbidden' ? <RequestInProgressAlert /> : null}
+                { getStatusBannerifAny()}
                 <h3 className="mt-3">
                   {intl.formatMessage(messages['forgot.password.page.heading'])}
                 </h3>
