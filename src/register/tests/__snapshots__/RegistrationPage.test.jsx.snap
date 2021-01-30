@@ -200,11 +200,6 @@ exports[`./RegistrationPage.js should display no password field when current pro
             Create Account
           </span>
         </button>
-        <span
-          className="mt-4 text-left"
-        >
-          or create an account using
-        </span>
       </form>
     </div>
   </div>
@@ -696,11 +691,6 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             Create Account
           </span>
         </button>
-        <span
-          className="mt-4 text-left"
-        >
-          or create an account using
-        </span>
       </form>
     </div>
   </div>
@@ -948,11 +938,6 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             Create Account
           </span>
         </button>
-        <span
-          className="mt-4 text-left"
-        >
-          or create an account using
-        </span>
       </form>
     </div>
   </div>
@@ -1201,11 +1186,6 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             Create Account
           </span>
         </button>
-        <span
-          className="mt-4 text-left"
-        >
-          or create an account using
-        </span>
       </form>
     </div>
   </div>
