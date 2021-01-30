@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { FormattedMessage } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
-import { LOGIN_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 
 const ThirdPartyAuthAlert = (props) => {
   const { currentProvider, referrer, platformName } = props;
@@ -29,7 +29,7 @@ const ThirdPartyAuthAlert = (props) => {
     );
   }
 
-  return <Alert id="tpa-alert" className="alert-success mt-n2">{ message }</Alert>;
+  return <Alert id="tpa-alert" className={referrer === REGISTER_PAGE ? 'alert-success mt-n2' : 'alert-warning mt-n2'}>{ message }</Alert>;
 };
 
 ThirdPartyAuthAlert.defaultProps = {

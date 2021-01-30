@@ -579,7 +579,7 @@ class RegistrationPage extends React.Component {
                 <ThirdPartyAuthAlert
                   currentProvider={currentProvider}
                   platformName={this.props.thirdPartyAuthContext.platformName}
-                  referrer="register"
+                  referrer={REGISTER_PAGE}
                 />
               )}
               <div className="text-left">
@@ -717,7 +717,7 @@ class RegistrationPage extends React.Component {
                         {intl.formatMessage(messages['create.an.account.using'])}
                       </span>
                     </div>
-                  ) : <span className="mt-4 text-left">{intl.formatMessage(messages['create.an.account.using'])}</span>}
+                  ) : null}
                 {this.renderThirdPartyAuth(providers,
                   secondaryProviders,
                   currentProvider,
