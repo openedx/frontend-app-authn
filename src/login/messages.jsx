@@ -91,9 +91,14 @@ const messages = defineMessages({
     defaultMessage: 'The email address you\'ve provided isn\'t formatted correctly.',
     description: 'Validation message that appears when email address format is incorrect',
   },
+  'email.validation.message': {
+    id: 'email.validation.message',
+    defaultMessage: 'Please enter your Email.',
+    description: 'Validation message that appears when email is empty',
+  },
   'password.validation.message': {
     id: 'password.validation.message',
-    defaultMessage: 'Please enter your password.',
+    defaultMessage: 'Please enter your Password.',
     description: 'Validation message that appears when password is empty',
   },
   'password.label': {
