@@ -43,10 +43,10 @@ exports[`./RegistrationPage.js should display no password field when current pro
         Create a new account
       </h3>
       <form
-        className="mb-4 form-group"
+        className="form-group"
       >
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -75,7 +75,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -105,7 +105,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -134,7 +134,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
           </small>
         </div>
         <div
-          className="form-group custom-control mb-20 small"
+          className="form-group custom-control small"
         >
           <input
             aria-describedby=""
@@ -178,7 +178,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
             value={false}
           />
           <p
-            className="mb-20 small"
+            className="mb-0 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -189,7 +189,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -240,10 +240,10 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         Create a new account
       </h3>
       <form
-        className="mb-4 form-group"
+        className="form-group"
       >
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -272,7 +272,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -302,7 +302,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -331,7 +331,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -360,7 +360,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-20 small"
+          className="form-group custom-control small"
         >
           <input
             aria-describedby=""
@@ -404,7 +404,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
             value={false}
           />
           <p
-            className="mb-20 small"
+            className="mb-0 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -415,7 +415,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -505,10 +505,10 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         Create a new account
       </h3>
       <form
-        className="mb-4 form-group"
+        className="form-group"
       >
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -537,7 +537,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -567,7 +567,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -596,7 +596,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -625,7 +625,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-20 small"
+          className="form-group custom-control small"
         >
           <input
             aria-describedby=""
@@ -669,7 +669,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
             value={false}
           />
           <p
-            className="mb-20 small"
+            className="mb-0 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -680,7 +680,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -731,10 +731,10 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         Create a new account
       </h3>
       <form
-        className="mb-4 form-group"
+        className="form-group"
       >
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -763,7 +763,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -793,7 +793,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -822,7 +822,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -851,7 +851,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
           </small>
         </div>
         <div
-          className="form-group custom-control mb-20 small"
+          className="form-group custom-control small"
         >
           <input
             aria-describedby=""
@@ -895,7 +895,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
             value={false}
           />
           <p
-            className="mb-20 small"
+            className="mb-0 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -906,7 +906,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending disabled btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending mt-20 disabled btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -1000,10 +1000,10 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         Create a new account
       </h3>
       <form
-        className="mb-4 form-group"
+        className="form-group"
       >
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -1032,7 +1032,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -1062,7 +1062,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -1091,7 +1091,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group mb-20"
+          className="form-group"
         >
           <label
             className="h6 pt-10"
@@ -1120,7 +1120,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
           </small>
         </div>
         <div
-          className="form-group custom-control mb-20 small"
+          className="form-group custom-control small"
         >
           <input
             aria-describedby=""
@@ -1164,7 +1164,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
             value={false}
           />
           <p
-            className="mb-20 small"
+            className="mb-0 small"
             id="additionalFields"
             onClick={[Function]}
             role="presentation"
@@ -1175,7 +1175,7 @@ exports[`./RegistrationPage.js should show error message on 409 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"

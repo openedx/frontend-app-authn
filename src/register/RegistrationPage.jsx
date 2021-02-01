@@ -403,7 +403,7 @@ class RegistrationPage extends React.Component {
                 <ValidationFormGroup
                   for={field.name}
                   key={field.name}
-                  className="pt-10 mb-20 small"
+                  className="pt-10 small"
                 >
                   { nodes }
                 </ValidationFormGroup>
@@ -420,7 +420,7 @@ class RegistrationPage extends React.Component {
                 key={field.name}
                 invalid={this.state.errors[stateVar] !== ''}
                 invalidMessage={field.errorMessages.required}
-                className="custom-control mb-20 small"
+                className="custom-control small"
               >
                 <Input {...props} />
                 {beforeLink}
@@ -445,7 +445,7 @@ class RegistrationPage extends React.Component {
               key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
-              className="mb-20"
+              className="mb-0"
             >
               <label htmlFor={field.name} className="h6 pt-10">{field.label} (required)</label>
               <Input {...props} />
@@ -461,7 +461,7 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
-      let cssClass = 'mb-20';
+      let cssClass = 'mb-0';
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
         if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
@@ -588,12 +588,11 @@ class RegistrationPage extends React.Component {
               </div>
               <hr className="mb-20 border-gray-200" />
               <h3 className="mb-20">{intl.formatMessage(messages['create.a.new.account'])}</h3>
-              <Form className="mb-4 form-group">
+              <Form className="form-group">
                 <ValidationFormGroup
                   for="name"
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
-                  className="mb-20"
                   helpText="This name will be used by any certificates that you earn."
                 >
                   <label htmlFor="name" className="h6 pt-10">
@@ -615,7 +614,6 @@ class RegistrationPage extends React.Component {
                   for="username"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
-                  className="mb-20"
                   helpText="The name that will identify you in your courses. It cannot be changed later."
                 >
                   <label htmlFor="username" className="h6 pt-10">
@@ -638,7 +636,6 @@ class RegistrationPage extends React.Component {
                   for="email"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
-                  className="mb-20"
                   helpText="This is what you will use to login."
                 >
                   <label htmlFor="email" className="h6 pt-10">
@@ -661,7 +658,6 @@ class RegistrationPage extends React.Component {
                     for="password"
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
-                    className="mb-20"
                     helpText="Your password must contain at least 8 characters, including 1 letter & 1 number."
                   >
                     <label htmlFor="password" className="h6 pt-10">
@@ -694,7 +690,7 @@ class RegistrationPage extends React.Component {
                     onChange={e => this.handleOnOptional(e)}
                     required
                   />
-                  <p role="presentation" id="additionalFields" className="mb-20 small" onClick={e => this.handleOnOptional(e)}>
+                  <p role="presentation" id="additionalFields" className="mb-0 small" onClick={e => this.handleOnOptional(e)}>
                     {intl.formatMessage(messages['support.education.research'])}
                   </p>
                 </ValidationFormGroup>
@@ -703,6 +699,7 @@ class RegistrationPage extends React.Component {
                   type="button"
                   variant="brand"
                   state={submitState}
+                  className="mt-20"
                   labels={{
                     default: intl.formatMessage(messages['create.account.button']),
                   }}
