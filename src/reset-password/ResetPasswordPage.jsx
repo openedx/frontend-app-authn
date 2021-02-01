@@ -85,7 +85,7 @@ const ResetPasswordPage = (props) => {
   } else {
     return (
       <>
-        <div id="main" className="d-flex justify-content-center m-4" tabIndex="-1" ref={mainRef}>
+        <div id="main" className="d-flex justify-content-center m-4" ref={mainRef}>
           <div className="d-flex flex-column mw-500">
             {props.status === 'failure' ? <Alert variant="danger">{props.errors}</Alert> : null}
             {emptyFieldError && (
