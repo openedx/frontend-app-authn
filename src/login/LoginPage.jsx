@@ -209,7 +209,7 @@ class LoginPage extends React.Component {
                 <ValidationFormGroup
                   for="email"
                   invalid={this.state.errors.email !== ''}
-                  invalidMessage={intl.formatMessage(messages['email.format.validation.message'])}
+                  invalidMessage={this.state.email === '' ? intl.formatMessage(messages['email.validation.message']) : intl.formatMessage(messages['email.format.validation.message'])}
                   className="mb-0 w-100"
                   helpText={intl.formatMessage(messages['email.help.message'])}
                 >
