@@ -9,6 +9,8 @@ import {
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import AccountActivationMessage from './AccountActivationMessage';
 import ConfirmationAlert from '../common-components/ConfirmationAlert';
@@ -251,6 +253,7 @@ class LoginPage extends React.Component {
                   labels={{
                     default: intl.formatMessage(messages['sign.in.button']),
                   }}
+                  icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={this.handleSubmit}
                 />
               </Form>

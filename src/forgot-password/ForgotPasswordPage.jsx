@@ -12,6 +12,8 @@ import {
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import { Formik } from 'formik';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import messages from './messages';
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
@@ -105,6 +107,7 @@ const ForgotPasswordPage = (props) => {
                     default: intl.formatMessage(messages['forgot.password.page.submit.button']),
                   }}
                   onClick={handleSubmit}
+                  icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                 />
               </Form>
             </div>
