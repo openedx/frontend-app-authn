@@ -6,6 +6,7 @@ import configureStore from 'redux-mock-store';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
 import * as analytics from '@edx/frontend-platform/analytics';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../../common-components';
@@ -534,8 +535,13 @@ describe('./RegistrationPage.js', () => {
     const expectedMessage = 'You\'ve successfully signed into Apple. We just need a little more information before '
                             + 'you start learning with openedX.';
 
-    const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-    expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('check cookie rendered', () => {
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
   it('should show error message on 409', () => {

@@ -7,6 +7,7 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { createMemoryHistory } from 'history';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as analytics from '@edx/frontend-platform/analytics';
 
 import { runSaga } from 'redux-saga';
@@ -183,5 +184,10 @@ describe('ForgotPasswordPage', () => {
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     expect(wrapper.find('div.alert-heading').text()).toEqual(expectedMessage);
+  });
+
+  it('check cookie rendered', () => {
+    const forgotPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    expect(forgotPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 });

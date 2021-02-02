@@ -7,6 +7,7 @@ import configureStore from 'redux-mock-store';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import * as analytics from '@edx/frontend-platform/analytics';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import LoginPage from '../LoginPage';
 import { RenderInstitutionButton } from '../../common-components';
 import { PENDING_STATE } from '../../data/constants';
@@ -313,5 +314,10 @@ describe('LoginPage', () => {
     loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
     expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
     expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+  });
+
+  it('check cookie rendered', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 });
