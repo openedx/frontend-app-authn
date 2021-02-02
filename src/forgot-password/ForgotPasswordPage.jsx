@@ -11,9 +11,7 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Alert,
   Form,
-  Input,
   StatefulButton,
-  ValidationFormGroup,
 } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -21,7 +19,11 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import RequestInProgressAlert from './RequestInProgressAlert';
+
 import messages from './messages';
+import {
+  AuthnValidationFormGroup,
+} from '../common-components';
 import APIFailureMessage from '../common-components/APIFailureMessage';
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../login/LoginHelpLinks';
@@ -95,26 +97,20 @@ const ForgotPasswordPage = (props) => {
                 <p className="mb-4">
                   {intl.formatMessage(messages['forgot.password.page.instructions'])}
                 </p>
-                <ValidationFormGroup
-                  className="mb-0 w-100"
-                  for="email"
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['forgot.password.page.email.field.label'])}
+                  for="forgot-password-input"
+                  name="email"
+                  type="email"
                   invalid={validationError !== ''}
                   invalidMessage={validationError}
+                  placeholder="username@domain.com"
+                  value={values.email}
+                  onBlur={() => getValidationMessage(values.email)}
+                  onChange={e => setFieldValue('email', e.target.value)}
                   helpText={intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })}
-                >
-                  <Form.Label htmlFor="forgot-password-input" className="h6 mr-1">
-                    {intl.formatMessage(messages['forgot.password.page.email.field.label'])}
-                  </Form.Label>
-                  <Input
-                    name="email"
-                    id="forgot-password-input"
-                    type="email"
-                    placeholder="username@domain.com"
-                    value={values.email}
-                    onBlur={() => getValidationMessage(values.email)}
-                    onChange={e => setFieldValue('email', e.target.value)}
-                  />
-                </ValidationFormGroup>
+                  className="mb-0 w-100"
+                />
                 <LoginHelpLinks page="forgot-password" />
                 <StatefulButton
                   type="submit"

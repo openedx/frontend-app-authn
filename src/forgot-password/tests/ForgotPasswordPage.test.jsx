@@ -150,7 +150,7 @@ describe('ForgotPasswordPage', () => {
     });
 
     forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('#email-invalid-feedback').text()).toEqual(validationMessage);
+    expect(forgotPasswordPage.find('#forgot-password-input-invalid-feedback').text()).toEqual(validationMessage);
   });
 
   it('check cookie rendered', () => {

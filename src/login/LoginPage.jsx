@@ -5,7 +5,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
-  Form, Hyperlink, Input, StatefulButton, ValidationFormGroup,
+  Form, Hyperlink, StatefulButton,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -23,7 +23,7 @@ import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
-  InstitutionLogistration,
+  InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
@@ -209,42 +209,30 @@ class LoginPage extends React.Component {
                 {intl.formatMessage(messages['sign.in.heading'])}
               </h3>
               <Form className="m-0">
-                <ValidationFormGroup
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['email.label'])}
                   for="email"
+                  name="email"
+                  type="email"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.email === '' ? intl.formatMessage(messages['email.validation.message']) : intl.formatMessage(messages['email.format.validation.message'])}
-                  className="mb-0 w-100"
+                  placeholder="username@domain.com"
+                  value={this.state.email}
+                  onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['email.help.message'])}
-                >
-                  <Form.Label htmlFor="loginEmail" className="h6 mr-1">
-                    {intl.formatMessage(messages['email.label'])}
-                  </Form.Label>
-                  <Input
-                    name="email"
-                    id="loginEmail"
-                    type="email"
-                    placeholder="username@domain.com"
-                    value={this.state.email}
-                    onChange={e => this.handleOnChange(e)}
-                  />
-                </ValidationFormGroup>
-                <ValidationFormGroup
+                  className="w-100"
+                />
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['password.label'])}
                   for="password"
+                  name="password"
+                  type="password"
                   invalid={this.state.errors.password !== ''}
                   invalidMessage={intl.formatMessage(messages['password.validation.message'])}
-                  className="mb-0 w-100"
-                >
-                  <Form.Label htmlFor="loginPassword" className="h6 mr-1">
-                    {intl.formatMessage(messages['password.label'])}
-                  </Form.Label>
-                  <Input
-                    name="password"
-                    id="loginPassword"
-                    type="password"
-                    value={this.state.password}
-                    onChange={e => this.handleOnChange(e)}
-                  />
-                </ValidationFormGroup>
+                  placeholder=""
+                  value={this.state.password}
+                  onChange={(e) => this.handleOnChange(e)}
+                />
                 <LoginHelpLinks page={LOGIN_PAGE} />
                 <Hyperlink className="field-link mt-0 mb-3 small" destination={this.getEnterPriseLoginURL()}>
                   {intl.formatMessage(messages['enterprise.login.link.text'])}

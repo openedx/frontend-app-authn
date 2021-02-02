@@ -48,90 +48,62 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="name"
-          >
-            Full Name (required)
-          </label>
+          <span />
           <input
-            aria-describedby="name-help-text"
+            aria-describedby=""
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Full Name (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="name-help-text"
-          >
-            This name will be used by any certificates that you earn.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="username"
-          >
-            Public Username (required)
-          </label>
+          <span />
           <input
-            aria-describedby="username-help-text"
+            aria-describedby=""
             className="form-control"
             id="username"
-            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Public Username (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="username-help-text"
-          >
-            The name that will identify you in your courses. It cannot be changed later.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="email"
-          >
-            Email (required)
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder="username@domain.com"
+            onFocus={[Function]}
+            placeholder="Email (required)"
             required={true}
-            type="email"
+            type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            This is what you will use to login.
-          </small>
+          <span />
         </div>
         <div
           className="form-group custom-control small"
@@ -166,13 +138,18 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <div
           className="form-group custom-control pt-10 mb-0"
         >
+          <span />
           <input
             aria-describedby=""
             checked={false}
             className="form-check-input"
             id="optional"
             name="optional"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -245,119 +222,82 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="name"
-          >
-            Full Name (required)
-          </label>
+          <span />
           <input
-            aria-describedby="name-help-text"
+            aria-describedby=""
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Full Name (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="name-help-text"
-          >
-            This name will be used by any certificates that you earn.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="username"
-          >
-            Public Username (required)
-          </label>
+          <span />
           <input
-            aria-describedby="username-help-text"
+            aria-describedby=""
             className="form-control"
             id="username"
-            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Public Username (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="username-help-text"
-          >
-            The name that will identify you in your courses. It cannot be changed later.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="email"
-          >
-            Email (required)
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder="username@domain.com"
+            onFocus={[Function]}
+            placeholder="Email (required)"
             required={true}
-            type="email"
+            type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            This is what you will use to login.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="password"
-          >
-            Password (required)
-          </label>
+          <span />
           <input
-            aria-describedby="password-help-text"
+            aria-describedby=""
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="password-help-text"
-          >
-            Your password must contain at least 8 characters, including 1 letter & 1 number.
-          </small>
+          <span />
         </div>
         <div
           className="form-group custom-control small"
@@ -392,13 +332,18 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <div
           className="form-group custom-control pt-10 mb-0"
         >
+          <span />
           <input
             aria-describedby=""
             checked={false}
             className="form-check-input"
             id="optional"
             name="optional"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -510,119 +455,82 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="name"
-          >
-            Full Name (required)
-          </label>
+          <span />
           <input
-            aria-describedby="name-help-text"
+            aria-describedby=""
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Full Name (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="name-help-text"
-          >
-            This name will be used by any certificates that you earn.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="username"
-          >
-            Public Username (required)
-          </label>
+          <span />
           <input
-            aria-describedby="username-help-text"
+            aria-describedby=""
             className="form-control"
             id="username"
-            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Public Username (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="username-help-text"
-          >
-            The name that will identify you in your courses. It cannot be changed later.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="email"
-          >
-            Email (required)
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder="username@domain.com"
+            onFocus={[Function]}
+            placeholder="Email (required)"
             required={true}
-            type="email"
+            type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            This is what you will use to login.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="password"
-          >
-            Password (required)
-          </label>
+          <span />
           <input
-            aria-describedby="password-help-text"
+            aria-describedby=""
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="password-help-text"
-          >
-            Your password must contain at least 8 characters, including 1 letter & 1 number.
-          </small>
+          <span />
         </div>
         <div
           className="form-group custom-control small"
@@ -657,13 +565,18 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <div
           className="form-group custom-control pt-10 mb-0"
         >
+          <span />
           <input
             aria-describedby=""
             checked={false}
             className="form-check-input"
             id="optional"
             name="optional"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -736,119 +649,82 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="name"
-          >
-            Full Name (required)
-          </label>
+          <span />
           <input
-            aria-describedby="name-help-text"
+            aria-describedby=""
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Full Name (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="name-help-text"
-          >
-            This name will be used by any certificates that you earn.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="username"
-          >
-            Public Username (required)
-          </label>
+          <span />
           <input
-            aria-describedby="username-help-text"
+            aria-describedby=""
             className="form-control"
             id="username"
-            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Public Username (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="username-help-text"
-          >
-            The name that will identify you in your courses. It cannot be changed later.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="email"
-          >
-            Email (required)
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder="username@domain.com"
+            onFocus={[Function]}
+            placeholder="Email (required)"
             required={true}
-            type="email"
+            type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            This is what you will use to login.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="password"
-          >
-            Password (required)
-          </label>
+          <span />
           <input
-            aria-describedby="password-help-text"
+            aria-describedby=""
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="password-help-text"
-          >
-            Your password must contain at least 8 characters, including 1 letter & 1 number.
-          </small>
+          <span />
         </div>
         <div
           className="form-group custom-control small"
@@ -883,13 +759,18 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <div
           className="form-group custom-control pt-10 mb-0"
         >
+          <span />
           <input
             aria-describedby=""
             checked={false}
             className="form-check-input"
             id="optional"
             name="optional"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -1005,119 +886,82 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="name"
-          >
-            Full Name (required)
-          </label>
+          <span />
           <input
-            aria-describedby="name-help-text"
+            aria-describedby=""
             className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Full Name (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="name-help-text"
-          >
-            This name will be used by any certificates that you earn.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="username"
-          >
-            Public Username (required)
-          </label>
+          <span />
           <input
-            aria-describedby="username-help-text"
+            aria-describedby=""
             className="form-control"
             id="username"
-            maxLength="30"
             name="username"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Public Username (required)"
             required={true}
             type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="username-help-text"
-          >
-            The name that will identify you in your courses. It cannot be changed later.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="email"
-          >
-            Email (required)
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder="username@domain.com"
+            onFocus={[Function]}
+            placeholder="Email (required)"
             required={true}
-            type="email"
+            type="text"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            This is what you will use to login.
-          </small>
+          <span />
         </div>
         <div
           className="form-group"
         >
-          <label
-            className="h6 pt-10"
-            htmlFor="password"
-          >
-            Password (required)
-          </label>
+          <span />
           <input
-            aria-describedby="password-help-text"
+            aria-describedby=""
             className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
             onChange={[Function]}
             onClick={[Function]}
-            placeholder=""
+            onFocus={[Function]}
+            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="password-help-text"
-          >
-            Your password must contain at least 8 characters, including 1 letter & 1 number.
-          </small>
+          <span />
         </div>
         <div
           className="form-group custom-control small"
@@ -1152,13 +996,18 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
         <div
           className="form-group custom-control pt-10 mb-0"
         >
+          <span />
           <input
             aria-describedby=""
             checked={false}
             className="form-check-input"
             id="optional"
             name="optional"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder=""
             required={true}
             type="checkbox"
             value={false}
