@@ -41,6 +41,20 @@ const messages = defineMessages({
     defaultMessage: 'Failed to Send Forgot Password Email',
     description: 'Failed to Send Forgot Password Email help text heading.',
   },
+  'forgot.password.invalid.email.heading': {
+    id: 'forgot.password.invalid.email',
+    defaultMessage: 'An error occurred.',
+    description: 'heading for invalid email',
+  },
+  'forgot.password.invalid.email.message': {
+    id: 'forgot.password.invalid.email.message',
+    defaultMessage: "The email address you've provided isn't formatted correctly.",
+    description: 'message for invalid email',
+  },
+  'forgot.password.email.help.text': {
+    id: 'forgot.password.email.help.text',
+    defaultMessage: 'The email address you used to register with {platformName}',
+    description: 'text help for the email',
+  },
 });
-
 export default messages;

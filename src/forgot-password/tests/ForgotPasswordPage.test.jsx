@@ -91,13 +91,23 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display email validation error message', async () => {
-    const validationMessage = "Email must have at least 3 characters. The email address you've provided isn't formatted correctly.";
+    const validationMessage = "The email address you've provided isn't formatted correctly.";
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     await act(async () => {
-      await wrapper.find('input#forgot-password-input').simulate('change', { target: { value: '', name: 'email' } });
+      await wrapper.find('button.btn-primary').simulate('click', { target: { value: 'random', name: 'email' } });
     });
     wrapper.update();
     expect(wrapper.find('#email-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should display alert banner incase of invalid email', async () => {
+    const validationMessage = "An error occurred.The email address you've provided isn't formatted correctly.";
+    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    await act(async () => {
+      await wrapper.find('button.btn-primary').simulate('click', { target: { value: 'random', name: 'email' } });
+    });
+    wrapper.update();
+    expect(wrapper.find('.alert-danger').text()).toEqual(validationMessage);
   });
 
   it('should handle 500 error code', async () => {
