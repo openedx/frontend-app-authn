@@ -5,6 +5,7 @@ import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as auth from '@edx/frontend-platform/auth';
 import { resetPassword } from '../data/actions';
 
@@ -45,6 +46,9 @@ describe('ResetPasswordPage', () => {
       token_status: 'pending',
       token: null,
       errors: null,
+      match: {
+        params: {},
+      },
     };
   });
 
@@ -214,5 +218,10 @@ describe('ResetPasswordPage', () => {
     resetPasswordPage.update();
     expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
     expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual('We couldn\'t reset your password.'.concat(validationMessage));
+  });
+
+  it('check cookie rendered', () => {
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 });
