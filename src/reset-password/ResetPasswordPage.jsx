@@ -87,11 +87,10 @@ const ResetPasswordPage = (props) => {
       <>
         <div id="main" className="d-flex justify-content-center m-4" ref={mainRef}>
           <div className="d-flex flex-column mw-500">
-            {props.status === 'failure' ? <Alert variant="danger">{props.errors}</Alert> : null}
-            {emptyFieldError && (
+            {(emptyFieldError || props.status) && (
               <Alert id="validation-errors" variant="danger">
                 <Alert.Heading>{intl.formatMessage(messages['forgot.password.empty.new.password.error.heading'])}</Alert.Heading>
-                <ul><li>{intl.formatMessage(messages['reset.password.empty.new.password.field.error'])}</li></ul>
+                <ul><li>{emptyFieldError || props.errors}</li></ul>
               </Alert>
             )}
             <Form>
