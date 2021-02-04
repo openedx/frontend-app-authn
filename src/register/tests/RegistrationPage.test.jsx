@@ -257,6 +257,63 @@ describe('./RegistrationPage.js', () => {
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
   });
 
+  it('should call Validations function on Blur in case of 403', () => {
+    store = mockStore({
+      ...initialState,
+      register: {
+        ...initialState.register,
+        statusCode: 403,
+      },
+    });
+    const errors = {
+      email: 'Please enter your Email.',
+      name: 'Please enter your Full Name.',
+      username: 'Please enter your Public Username.',
+      password: 'Please enter your Password.',
+      country: '',
+      honorCode: '',
+      termsOfService: '',
+    };
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+    registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
+    registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+    registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+    expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+  });
+
+  it('validate passwrod validations incsae of 403', () => {
+    store = mockStore({
+      ...initialState,
+      register: {
+        ...initialState.register,
+        statusCode: 403,
+      },
+    });
+    const errors = {
+      email: '',
+      name: '',
+      username: '',
+      password: 'Your password must contain at least 8 characters',
+      country: '',
+      honorCode: '',
+      termsOfService: '',
+    };
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('input#password').simulate('blur', { target: { value: 'pas', name: 'password' } });
+    expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+
+    errors.password = 'Your password must contain at least 1 number.';
+    registrationPage.find('input#password').simulate('blur', { target: { value: 'passwordd', name: 'password' } });
+    expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+
+    errors.password = 'Your password must contain at least 1 letter.';
+    registrationPage.find('input#password').simulate('blur', { target: { value: '123456789', name: 'password' } });
+    expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+  });
+
   it('tests shouldComponentUpdate change validations and formValid state', () => {
     const nextProps = {
       validations: {
@@ -544,18 +601,18 @@ describe('./RegistrationPage.js', () => {
     expect(registerPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
-  it('should show error message on 409', () => {
+  it('should show error message on 409 on alert and below the fields', () => {
     const windowSpy = jest.spyOn(global, 'window', 'get');
     windowSpy.mockImplementation(() => ({
       scrollTo: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }));
-
     store = mockStore({
       ...initialState,
       register: {
         ...initialState.register,
+        isSubmitted: true,
         registrationError: {
           email: [
             {
@@ -571,8 +628,8 @@ describe('./RegistrationPage.js', () => {
       },
     });
 
-    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />)).toJSON();
-    expect(tree).toMatchSnapshot();
+    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(tree.toJSON()).toMatchSnapshot();
     windowSpy.mockClear();
   });
 });

@@ -96,6 +96,7 @@ class RegistrationPage extends React.Component {
       institutionLogin: false,
       formValid: false,
       submitCount: 0,
+      isSubmitted: false,
     };
   }
 
@@ -146,6 +147,7 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.state.isSubmitted = true;
     const params = (new URL(document.location)).searchParams;
     const payload = {};
     const payloadMap = new Map();
@@ -205,14 +207,14 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnBlur(e) {
+    this.state.isSubmitted = false;
     if (this.props.statusCode === 403) {
-      this.validateInput(e.target.name, e.target.value);
+      this.validateInput(e.target.name, e.target.value, 'blurCase');
       return;
     }
     this.setState({
       validationFieldName: e.target.name,
     });
-
     const payload = {
       email: this.state.email,
       username: this.state.username,
@@ -241,8 +243,8 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnClick(e) {
-    const { errors } = this.state;
-    if (this.state.currentValidations) {
+    if (this.state.currentValidations && this.props.statusCode !== 403) {
+      const { errors } = this.state;
       const fieldName = e.target.name;
       errors[fieldName] = this.state.currentValidations[fieldName];
       const stateValidKey = `${camelCase(fieldName)}Valid`;
@@ -257,7 +259,7 @@ class RegistrationPage extends React.Component {
     sendTrackEvent('edx.bi.login_form.toggled', { category: 'user-engagement' });
   }
 
-  validateInput(inputName, value) {
+  validateInput(inputName, value, blurCase) {
     const {
       errors,
       validationErrorsAlertMessages,
@@ -277,14 +279,17 @@ class RegistrationPage extends React.Component {
           validationErrorsAlertMessages.email = [{ user_message: validations.email }];
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'email.validation.message');
-          validationErrorsAlertMessages.email = errorEmpty;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.email = errorEmpty;
+          }
           errors.email = errorEmpty[0].user_message;
         } else {
           const errorCharlength = this.generateUserMessage(value.length <= 2, 'email.ratelimit.less.chars.validation.message');
           const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'email.ratelimit.incorrect.format.validation.message');
-          validationErrorsAlertMessages.email = errorCharlength;
-          validationErrorsAlertMessages.emailFormat = formatError;
-          errors.email = errorCharlength[0].user_message;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.email = value.length <= 2 ? errorCharlength : formatError;
+          }
+          errors.email = value.length <= 2 ? errorCharlength[0].user_message : formatError[0].user_message;
         }
         break;
       case 'name':
@@ -292,8 +297,10 @@ class RegistrationPage extends React.Component {
           validationErrorsAlertMessages.name = [{ user_message: validations.name }];
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'fullname.validation.message');
-          validationErrorsAlertMessages.name = errorEmpty;
-          errors.name = validationErrorsAlertMessages.name[0].user_message;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.name = errorEmpty;
+          }
+          errors.name = errorEmpty[0].user_message;
         } else {
           validationErrorsAlertMessages.name = [{ user_message: '' }];
           errors.name = validationErrorsAlertMessages.name[0].user_message;
@@ -304,12 +311,22 @@ class RegistrationPage extends React.Component {
           validationErrorsAlertMessages.username = [{ user_message: validations.username }];
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'username.validation.message');
-          validationErrorsAlertMessages.username = errorEmpty;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.username = errorEmpty;
+          }
           errors.username = errorEmpty[0].user_message;
-        } else {
+        } else if (value.length <= 1) {
           const errorCharLength = this.generateUserMessage(value.length <= 1, 'username.ratelimit.less.chars.message');
-          validationErrorsAlertMessages.username = errorCharLength;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.username = errorCharLength;
+          }
           errors.username = errorCharLength[0].user_message;
+        } else if (!value.match(/^([a-zA-Z0-9_-])$/i)) {
+          const formatError = this.generateUserMessage(!value.match(/^[a-zA-Z0-9_-]*$/i), 'username.format.validation.message');
+          if (blurCase === true) {
+            validationErrorsAlertMessages.username = formatError;
+          }
+          errors.username = formatError[0].user_message;
         }
         break;
       case 'password':
@@ -317,12 +334,28 @@ class RegistrationPage extends React.Component {
           validationErrorsAlertMessages.password = [{ user_message: validations.password }];
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'register.page.password.validation.message');
-          validationErrorsAlertMessages.password = errorEmpty;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.password = errorEmpty;
+          }
           errors.password = errorEmpty[0].user_message;
+        } else if (value.length < 8) {
+          const errorCharlength = this.generateUserMessage(value.length < 8, 'email.ratelimit.password.validation.message');
+          if (blurCase === true) {
+            validationErrorsAlertMessages.password = errorCharlength;
+          }
+          errors.password = errorCharlength[0].user_message;
+        } else if (!value.match(/.*[0-9].*/i)) {
+          const formatError = this.generateUserMessage(!value.match(/.*[0-9].*/i), 'username.number.validation.message');
+          if (blurCase === true) {
+            validationErrorsAlertMessages.password = formatError;
+          }
+          errors.password = formatError[0].user_message;
         } else {
-          const errorCharLength = this.generateUserMessage(value.length < 8, 'email.ratelimit.password.validation.message');
-          validationErrorsAlertMessages.password = errorCharLength;
-          errors.password = errorCharLength[0].user_message;
+          const formatError = this.generateUserMessage(!value.match(/.*[a-zA-Z].*/i), 'username.character.validation.message');
+          if (blurCase === true) {
+            validationErrorsAlertMessages.password = formatError;
+          }
+          errors.password = formatError[0].user_message;
         }
         break;
       case 'country':
@@ -330,7 +363,9 @@ class RegistrationPage extends React.Component {
           validationErrorsAlertMessages.country = [{ user_message: validations.country }];
         } else {
           const emptyError = this.generateUserMessage(value === '', 'country.validation.message');
-          validationErrorsAlertMessages.country = emptyError;
+          if (blurCase === true) {
+            validationErrorsAlertMessages.country = emptyError;
+          }
           errors.country = emptyError[0].user_message;
         }
         break;
@@ -346,7 +381,9 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    submitCount++;
+    if (!blurCase) {
+      submitCount++;
+    }
     formValid = this.checkNoValidationsErrors(validationErrorsAlertMessages);
     this.setState({
       formValid,
@@ -510,6 +547,43 @@ class RegistrationPage extends React.Component {
     return [{ user_message: isFieldInValid ? this.intl.formatMessage(messages[messageID]) : '' }];
   }
 
+  updateFieldErrors(errorMessages) {
+    const {
+      errors,
+    } = this.state;
+    if (errorMessages.email) {
+      errors.email = errorMessages.email[0].user_message;
+    }
+    if (errorMessages.username) {
+      errors.username = errorMessages.username[0].user_message;
+    }
+    if (errorMessages.name) {
+      errors.name = errorMessages.name[0].user_message;
+    }
+    if (errorMessages.password) {
+      errors.password = errorMessages.password[0].user_message;
+    }
+    if (errorMessages.country) {
+      errors.country = errorMessages.country[0].user_message;
+    }
+  }
+
+  renderErrors() {
+    let errorsObject = null;
+    if (!this.checkNoValidationsErrors(this.state.validationErrorsAlertMessages)) {
+      this.updateFieldErrors(this.state.validationErrorsAlertMessages);
+      errorsObject = this.state.validationErrorsAlertMessages;
+    } else if (this.props.registrationError) {
+      if (this.state.isSubmitted) {
+        this.updateFieldErrors(this.props.registrationError);
+      }
+      errorsObject = this.props.registrationError;
+    } else {
+      return null;
+    }
+    return <RegistrationFailure errors={errorsObject} submitCount={this.state.submitCount} />;
+  }
+
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
     let thirdPartyComponent = null;
     if ((providers.length || secondaryProviders.length) && !currentProvider) {
@@ -529,18 +603,6 @@ class RegistrationPage extends React.Component {
       thirdPartyComponent = <Skeleton height={36} count={2} />;
     }
     return thirdPartyComponent;
-  }
-
-  renderErrors() {
-    let errorsObject = null;
-    if (!this.checkNoValidationsErrors(this.state.validationErrorsAlertMessages)) {
-      errorsObject = this.state.validationErrorsAlertMessages;
-    } else if (this.props.registrationError) {
-      errorsObject = this.props.registrationError;
-    } else {
-      return null;
-    }
-    return <RegistrationFailure errors={errorsObject} submitCount={this.state.submitCount} />;
   }
 
   render() {
@@ -758,6 +820,9 @@ RegistrationPage.propTypes = {
   registrationError: PropTypes.shape({
     email: PropTypes.array,
     username: PropTypes.array,
+    country: PropTypes.array,
+    password: PropTypes.array,
+    name: PropTypes.array,
   }),
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,

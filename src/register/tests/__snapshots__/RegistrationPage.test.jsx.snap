@@ -944,7 +944,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
 </div>
 `;
 
-exports[`./RegistrationPage.js should show error message on 409 1`] = `
+exports[`./RegistrationPage.js should show error message on 409 on alert and below the fields 1`] = `
 <div
   className="d-flex justify-content-center m-4"
 >

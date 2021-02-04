@@ -95,7 +95,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link small"
+          className="mt-2 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -293,7 +293,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link small"
+          className="mt-2 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -493,7 +493,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link small"
+          className="mt-2 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -655,7 +655,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link small"
+          className="mt-2 field-link small"
           onClick={[Function]}
           type="button"
         >
@@ -854,7 +854,7 @@ exports[`LoginPage should show error message 1`] = `
           </strong>
         </div>
         <button
-          className="mt-1 field-link small"
+          className="mt-2 field-link small"
           onClick={[Function]}
           type="button"
         >
