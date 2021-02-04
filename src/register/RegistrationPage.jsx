@@ -42,7 +42,7 @@ import {
   REGISTRATION_EXTRA_FIELDS,
 } from '../data/constants';
 import messages from './messages';
-import { processLink } from '../data/utils/dataUtils';
+import processLink from '../data/utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {

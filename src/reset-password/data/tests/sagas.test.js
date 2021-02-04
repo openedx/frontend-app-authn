@@ -7,6 +7,9 @@ import {
 } from '../actions';
 import { handleResetPassword } from '../sagas';
 import * as api from '../service';
+import initializeMockLogging from '../../../setupTest';
+
+const { loggingService } = initializeMockLogging();
 
 describe('handleResetPassword', () => {
   const params = {
@@ -24,6 +27,10 @@ describe('handleResetPassword', () => {
     reset_status: true,
     err_msg: '',
   };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
 
   it('should call service and dispatch success action', async () => {
     const resetPassword = jest.spyOn(api, 'resetPassword')

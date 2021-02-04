@@ -1,4 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import { logError } from '@edx/frontend-platform/logging';
 
 // Actions
 import {
@@ -27,6 +28,7 @@ export function* handleValidateToken(action) {
     }
   } catch (err) {
     yield put(validateTokenFailure(err));
+    logError(err);
   }
 }
 
@@ -44,6 +46,7 @@ export function* handleResetPassword(action) {
     }
   } catch (err) {
     yield put(resetPasswordFailure(err));
+    logError(err);
   }
 }
 
