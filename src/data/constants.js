@@ -10,6 +10,9 @@ export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
 // Constants
 export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 
+// Error Codes
+export const INTERNAL_SERVER_ERROR = 'internal-server-error';
+
 // States
 export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';

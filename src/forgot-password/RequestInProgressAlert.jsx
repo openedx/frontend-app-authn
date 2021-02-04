@@ -1,18 +1,25 @@
 import React from 'react';
-import { FormattedMessage } from '@edx/frontend-platform/i18n';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 
-const RequestInProgressAlert = () => (
-  <Alert variant="warning">
-    <FontAwesomeIcon className="mr-2" icon={faExclamationTriangle} />
-    <FormattedMessage
-      id="forgot.password.request.inprogress.message"
-      defaultMessage="Your previous request is still in progress, please try again in a few moments."
-      description="A message displayed when a previous password reset request is still in progress."
-    />
-  </Alert>
-);
+import messages from './messages';
 
-export default RequestInProgressAlert;
+const RequestInProgressAlert = (props) => {
+  const { intl } = props;
+
+  return (
+    <Alert variant="danger">
+      <Alert.Heading>{intl.formatMessage(messages['forgot.password.error.message.title'])}</Alert.Heading>
+      <ul>
+        <li>{intl.formatMessage(messages['forgot.password.request.in.progress.message'])}</li>
+      </ul>
+    </Alert>
+  );
+};
+
+RequestInProgressAlert.propTypes = {
+  intl: intlShape.isRequired,
+};
+
+export default injectIntl(RequestInProgressAlert);
