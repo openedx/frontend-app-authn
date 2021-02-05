@@ -12,6 +12,10 @@ import LoginPage from '../LoginPage';
 import { RenderInstitutionButton } from '../../common-components';
 import { PENDING_STATE } from '../../data/constants';
 
+import LoginFailureMessage from '../LoginFailure';
+
+const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
+
 jest.mock('@edx/frontend-platform/analytics');
 
 analytics.sendTrackEvent = jest.fn();
@@ -319,5 +323,15 @@ describe('LoginPage', () => {
   it('check cookie rendered', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find(<CookiePolicyBanner />)).toBeTruthy();
+  });
+
+  it('form only be scrollable on submission', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('input#loginPassword').simulate('change', { target: { value: 'test@example.com', name: 'password' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
+    expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
   });
 });

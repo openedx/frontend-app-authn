@@ -46,6 +46,7 @@ class LoginPage extends React.Component {
       passwordValid: false,
       formValid: false,
       institutionLogin: false,
+      isSubmitted: false,
     };
   }
 
@@ -69,6 +70,7 @@ class LoginPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.setState({ isSubmitted: true });
     const params = (new URL(document.location)).searchParams;
     const payload = {
       email: this.state.email,
@@ -87,7 +89,6 @@ class LoginPage extends React.Component {
       this.validateInput('password', payload.password);
       return;
     }
-
     this.props.loginRequest(payload);
   }
 
@@ -118,6 +119,7 @@ class LoginPage extends React.Component {
   handleOnChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
+      isSubmitted: false,
     });
     this.validateInput(e.target.name, e.target.value);
   }
@@ -191,6 +193,7 @@ class LoginPage extends React.Component {
                 />
               )}
               {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
+              {this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
               {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
               {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
               <div className="d-flex flex-row">

@@ -16,7 +16,6 @@ import messages from './messages';
 const LoginFailureMessage = (props) => {
   const { intl } = props;
   const { context, errorCode, value } = props.loginError;
-
   let errorList;
 
   switch (errorCode) {
