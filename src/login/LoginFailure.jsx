@@ -6,8 +6,11 @@ import PropTypes from 'prop-types';
 
 import processLink from '../data/utils';
 import {
+  ACCOUNT_LOCKED_OUT,
+  FAILED_LOGIN_ATTEMPT,
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
+  INCORRECT_EMAIL_PASSWORD,
   INTERNAL_SERVER_ERROR,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
 } from './data/constants';
@@ -73,6 +76,62 @@ const LoginFailureMessage = (props) => {
         </li>
       );
       break;
+    case FAILED_LOGIN_ATTEMPT: {
+      const resetLink = (
+        <Alert.Link href="/reset">
+          {intl.formatMessage(messages['login.failed.link.text'])}
+        </Alert.Link>
+      );
+      errorList = (
+        <>
+          <li key={FAILED_LOGIN_ATTEMPT + 1}>
+            {intl.formatMessage(messages['login.incorrect.credentials.error'])}
+          </li>
+          <li key={FAILED_LOGIN_ATTEMPT + 2}>
+            {intl.formatMessage(messages['login.failed.attempt.error'], { remainingAttempts: context.remainingAttempts })}
+          </li>
+          <li key={FAILED_LOGIN_ATTEMPT + 3}>
+            <FormattedMessage
+              id="login.reset.password.message.with.link"
+              defaultMessage="If you've forgotten your password, click {resetLink} to reset."
+              description="Password reset user message with link"
+              values={{ resetLink }}
+            />
+          </li>
+        </>
+      );
+      break;
+    }
+    case ACCOUNT_LOCKED_OUT: {
+      const resetLink = (
+        <Alert.Link href="/reset">
+          {intl.formatMessage(messages['login.failed.link.text'])}
+        </Alert.Link>
+      );
+      errorList = (
+        <>
+          <li key={ACCOUNT_LOCKED_OUT + 1}>
+            {intl.formatMessage(messages['login.locked.out.error.message'], { lockedOutPeriod: context.lockedOutPeriod })}
+          </li>
+          <li key={FAILED_LOGIN_ATTEMPT + 2}>
+            <FormattedMessage
+              id="login.locked.reset.password.message.with.link"
+              defaultMessage="To be on the safe side, you can reset your password {resetLink} before you try again."
+              description="Password reset user message with link"
+              values={{ resetLink }}
+            />
+          </li>
+        </>
+      );
+      break;
+    }
+    case INCORRECT_EMAIL_PASSWORD:
+      errorList = (
+        <li key={INCORRECT_EMAIL_PASSWORD}>
+          {intl.formatMessage(messages['login.incorrect.credentials.error'])}
+        </li>
+      );
+      break;
     default:
       // TODO: use errorCode instead of processing error messages on frontend
       errorList = value.trim().split('\n');
@@ -110,7 +169,7 @@ LoginFailureMessage.defaultProps = {
 
 LoginFailureMessage.propTypes = {
   loginError: PropTypes.shape({
-    context: PropTypes.objectOf(PropTypes.string),
+    context: PropTypes.object,
     email: PropTypes.string,
     errorCode: PropTypes.string,
     value: PropTypes.string,
