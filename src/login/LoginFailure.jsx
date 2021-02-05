@@ -4,7 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/
 import { Alert } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import { processLink } from '../data/utils/dataUtils';
+import processLink from '../data/utils';
 import {
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
