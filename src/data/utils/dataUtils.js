@@ -7,3 +7,21 @@ export default function processLink(link) {
   });
   return matches;
 }
+
+export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
+  let tpaProvider = null;
+  primaryProviders.forEach((provider) => {
+    if (provider.id === tpaHintProvider) {
+      tpaProvider = provider;
+    }
+  });
+
+  if (!tpaProvider) {
+    secondaryProviders.forEach((provider) => {
+      if (provider.id === tpaHintProvider) {
+        tpaProvider = provider;
+      }
+    });
+  }
+  return tpaProvider;
+};

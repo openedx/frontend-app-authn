@@ -21,6 +21,7 @@ import { loginErrorSelector, loginRequestSelector } from './data/selectors';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import LoginHelpLinks from './LoginHelpLinks';
 import LoginFailureMessage from './LoginFailure';
+import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import messages from './messages';
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
@@ -30,6 +31,7 @@ import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
+import { getTpaProvider } from '../data/utils';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -50,9 +52,14 @@ class LoginPage extends React.Component {
 
   componentDidMount() {
     const params = (new URL(document.location)).searchParams;
+    const tpaHint = params.get('tpa_hint');
     const payload = {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
+
+    if (tpaHint) {
+      payload.tpa_hint = tpaHint;
+    }
     this.props.getThirdPartyAuthContext(payload);
   }
 
@@ -144,16 +151,16 @@ class LoginPage extends React.Component {
     } return thirdPartyComponent;
   }
 
-  render() {
+  renderForm(params,
+    currentProvider,
+    providers,
+    secondaryProviders,
+    thirdPartyAuthContext,
+    thirdPartyAuthApiStatus,
+    submitState,
+    intl) {
     const { email, errors, password } = this.state;
-    const {
-      intl, submitState, thirdPartyAuthContext, thirdPartyAuthApiStatus,
-    } = this.props;
-    const { currentProvider, providers, secondaryProviders } = this.props.thirdPartyAuthContext;
-
-    const params = (new URL(window.location.href)).searchParams;
     const activationMsgType = params.get('account_activation_status');
-
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
@@ -249,6 +256,39 @@ class LoginPage extends React.Component {
         </div>
       </>
     );
+  }
+
+  render() {
+    const {
+      intl, submitState, thirdPartyAuthContext, thirdPartyAuthApiStatus,
+    } = this.props;
+    const { currentProvider, providers, secondaryProviders } = this.props.thirdPartyAuthContext;
+
+    const params = (new URL(window.location.href)).searchParams;
+
+    const tpaHint = params.get('tpa_hint');
+    if (tpaHint) {
+      if (thirdPartyAuthApiStatus === PENDING_STATE) {
+        return <Skeleton height={36} />;
+      }
+      const provider = getTpaProvider(tpaHint, providers, secondaryProviders);
+      return provider ? (<EnterpriseSSO provider={provider} intl={intl} />) : this.renderForm(params,
+        currentProvider,
+        providers,
+        secondaryProviders,
+        thirdPartyAuthContext,
+        thirdPartyAuthApiStatus,
+        submitState,
+        intl);
+    }
+    return this.renderForm(params,
+      currentProvider,
+      providers,
+      secondaryProviders,
+      thirdPartyAuthContext,
+      thirdPartyAuthApiStatus,
+      submitState,
+      intl);
   }
 }
 
