@@ -3,6 +3,9 @@ import { runSaga } from 'redux-saga';
 import * as actions from '../actions';
 import { handleForgotPassword } from '../sagas';
 import * as api from '../service';
+import initializeMockLogging from '../../../setupTest';
+
+const { loggingService } = initializeMockLogging();
 
 describe('handleForgotPassword', () => {
   const params = {
@@ -12,6 +15,10 @@ describe('handleForgotPassword', () => {
       },
     },
   };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
 
   it('should handle 500 error code', async () => {
     const passwordErrorResponse = { response: { status: 500 } };

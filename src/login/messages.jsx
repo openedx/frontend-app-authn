@@ -162,6 +162,26 @@ const messages = defineMessages({
     defaultMessage: 'contact {platformName} Support',
     description: 'Link text used in inactive user error message to go to learner help center',
   },
+  'login.failed.link.text': {
+    id: 'login.failed.link.text',
+    defaultMessage: 'here',
+    description: 'Link text used in failed login attempt user error message to reset password',
+  },
+  'login.incorrect.credentials.error': {
+    id: 'login.incorrect.credentials.error',
+    defaultMessage: 'Email or password is incorrect.',
+    description: 'Error message for incorrect email or password',
+  },
+  'login.failed.attempt.error': {
+    id: 'login.failed.attempt.error',
+    defaultMessage: 'You have {remainingAttempts} more sign-in attempts before your account is temporarily locked.',
+    description: 'Failed login attempts error message',
+  },
+  'login.locked.out.error.message': {
+    id: 'login.locked.out.error.message',
+    defaultMessage: 'To protect your account, it’s been temporarily locked. Try again in {lockedOutPeriod} minutes.',
+    description: 'Account locked out user message',
+  },
 });
 
 export default messages;
