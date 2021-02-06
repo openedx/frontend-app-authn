@@ -96,6 +96,21 @@ const messages = defineMessages({
     defaultMessage: 'Please enter your Public Username.',
     description: 'Validation message that appears when username is invalid',
   },
+  'username.format.validation.message': {
+    id: 'username.format.validation.message',
+    defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-).',
+    description: 'Validation message that appears when username format is invalid',
+  },
+  'username.character.validation.message': {
+    id: 'username.character.validation.message',
+    defaultMessage: 'Your password must contain at least 1 letter.',
+    description: 'Validation message that appears when password does not contain letter',
+  },
+  'username.number.validation.message': {
+    id: 'username.number.validation.message',
+    defaultMessage: 'Your password must contain at least 1 number.',
+    description: 'Validation message that appears when password does not contain number',
+  },
   'username.ratelimit.less.chars.message': {
     id: 'username.ratelimit.less.chars.message',
     defaultMessage: 'Public Username must have atleast 2 characters.',

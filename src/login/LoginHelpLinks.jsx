@@ -70,7 +70,7 @@ const LoginHelpLinks = (props) => {
 
   return (
     <>
-      <button type="button" className="mt-1 field-link small" onClick={toggleLoginHelp}>
+      <button type="button" className="mt-2 field-link small" onClick={toggleLoginHelp}>
         <FontAwesomeIcon className="mr-1" icon={showLoginHelp ? faCaretDown : faCaretRight} />
         {getHelpButtonMessage()}
       </button>
