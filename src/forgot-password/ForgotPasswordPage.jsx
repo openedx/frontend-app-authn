@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
@@ -31,6 +31,7 @@ const ForgotPasswordPage = (props) => {
 
   const platformName = getConfig().SITE_NAME;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
+  const [validationError, setValidationError] = useState('');
 
   const getErrorMessage = (errors) => {
     const header = intl.formatMessage(messages['forgot.password.request.server.error']);
@@ -48,6 +49,19 @@ const ForgotPasswordPage = (props) => {
     return status === 'forbidden' ? <RequestInProgressAlert /> : null;
   };
 
+  const getValidationMessage = (email) => {
+    let error = '';
+
+    if (email === '') {
+      error = intl.formatMessage(messages['forgot.password.empty.email.field.error']);
+    } else if (!regex.test(email)) {
+      error = intl.formatMessage(messages['forgot.password.page.invalid.email.message']);
+    }
+
+    setValidationError(error);
+    return error;
+  };
+
   sendPageEvent('login_and_registration', 'reset');
 
   return (
@@ -55,24 +69,19 @@ const ForgotPasswordPage = (props) => {
       initialValues={{ email: '' }}
       validateOnChange={false}
       validate={(values) => {
-        // eslint-disable-next-line prefer-const
-        let errors = {};
+        const validationMessage = getValidationMessage(values.email);
 
-        if (values.email === '') {
-          errors.email = intl.formatMessage(messages['forgot.password.empty.email.field.error']);
-        } else if (!regex.test(values.email)) {
-          errors.email = intl.formatMessage(messages['forgot.password.page.invalid.email.message']);
-        }
-
-        if (errors) {
+        if (validationMessage !== '') {
           window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+          return { email: validationMessage };
         }
-        return errors;
+
+        return {};
       }}
       onSubmit={(values) => { props.forgotPassword(values.email); }}
     >
       {({
-        errors, handleSubmit, setFieldValue, validateForm, values,
+        errors, handleSubmit, setFieldValue, values,
       }) => (
         <>
           {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
@@ -89,8 +98,8 @@ const ForgotPasswordPage = (props) => {
                 <ValidationFormGroup
                   className="mb-0 w-100"
                   for="email"
-                  invalid={errors.email !== undefined}
-                  invalidMessage={errors.email}
+                  invalid={validationError !== ''}
+                  invalidMessage={validationError}
                   helpText={intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })}
                 >
                   <Form.Label htmlFor="forgot-password-input" className="h6 mr-1">
@@ -102,7 +111,7 @@ const ForgotPasswordPage = (props) => {
                     type="email"
                     placeholder="username@domain.com"
                     value={values.email}
-                    onBlur={() => validateForm()}
+                    onBlur={() => getValidationMessage(values.email)}
                     onChange={e => setFieldValue('email', e.target.value)}
                   />
                 </ValidationFormGroup>

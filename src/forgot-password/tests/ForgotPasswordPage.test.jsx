@@ -86,7 +86,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display email validation error message', async () => {
-    const validationMessage = "The email address you've provided isn't formatted correctly.";
+    const validationMessage = "Failed to send forgot password email.The email address you've provided isn't formatted correctly.";
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     wrapper.find('input#forgot-password-input').simulate(
@@ -95,8 +95,7 @@ describe('ForgotPasswordPage', () => {
     await act(async () => { await wrapper.find('button.btn-primary').simulate('click'); });
     wrapper.update();
 
-    expect(wrapper.find('#email-invalid-feedback').text()).toEqual(validationMessage);
-    expect(wrapper.find('.alert-danger').text()).toEqual('Failed to send forgot password email.'.concat(validationMessage));
+    expect(wrapper.find('.alert-danger').text()).toEqual(validationMessage);
   });
 
   it('should show alert on server error', () => {
@@ -112,16 +111,13 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display empty email validation message', async () => {
-    const validationMessage = 'Please enter your Email.';
+    const validationMessage = 'Failed to send forgot password email.Please enter your Email.';
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     await act(async () => { await forgotPasswordPage.find('button.btn-primary').simulate('click'); });
 
     forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('#email-invalid-feedback').text()).toEqual(validationMessage);
-    expect(forgotPasswordPage.find('.alert-danger').text()).toEqual(
-      'Failed to send forgot password email.'.concat(validationMessage),
-    );
+    expect(forgotPasswordPage.find('.alert-danger').text()).toEqual(validationMessage);
   });
 
   it('should display request in progress error message', () => {
@@ -145,7 +141,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display error message on blur event', async () => {
-    const validationMessage = 'Failed to send forgot password email.Please enter your Email.';
+    const validationMessage = 'Please enter your Email.';
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const emailInput = forgotPasswordPage.find('input#forgot-password-input');
 
@@ -154,7 +150,7 @@ describe('ForgotPasswordPage', () => {
     });
 
     forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('.alert-danger').text()).toEqual(validationMessage);
+    expect(forgotPasswordPage.find('#email-invalid-feedback').text()).toEqual(validationMessage);
   });
 
   it('check cookie rendered', () => {
