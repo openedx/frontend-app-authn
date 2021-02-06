@@ -21,6 +21,9 @@ describe('ResetPasswordPage', () => {
   let props = {};
   let store = {};
 
+  const emptyFieldError = 'Please enter your New Password.';
+  const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
+
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <Provider store={store}>{children}</Provider>
@@ -114,25 +117,7 @@ describe('ResetPasswordPage', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('should match unsuccessful reset message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-      status: 'failure',
-      errors: 'Password reset was unsuccessful.',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
   it('should display invalid password message', async () => {
-    const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
-    const data = {
-      validation_decisions: {
-        password: validationMessage,
-      },
-    };
     props = {
       ...props,
       token_status: 'valid',
@@ -140,17 +125,45 @@ describe('ResetPasswordPage', () => {
 
     auth.getHttpClient = jest.fn(() => ({
       post: async () => ({
-        data,
+        data: {
+          validation_decisions: {
+            password: validationMessage,
+          },
+        },
         catch: () => {},
       }),
     }));
 
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+
+    // Focus out of empty field
     await act(async () => {
       await resetPasswordPage.find('input#reset-password-input').simulate('blur');
     });
     resetPasswordPage.update();
+    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
+
+    // Enter non-compliant password
+    await act(async () => {
+      await resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: 'invalid' } });
+    });
     expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
+  });
+
+  it('should display error message on empty form submission', () => {
+    const bannerMessage = 'We couldn\'t reset your password.'.concat(emptyFieldError);
+    props = {
+      ...props,
+      token_status: 'valid',
+      token: 'token',
+    };
+
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('button.btn-primary').simulate('click');
+
+    resetPasswordPage.update();
+    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
   });
 
   it('with valid inputs resetPassword action is dispatch', async () => {
@@ -204,20 +217,24 @@ describe('ResetPasswordPage', () => {
     resetPasswordPage.unmount();
   });
 
-  it('should display empty new password field error', () => {
-    const validationMessage = 'Please enter your New Password.';
+  it('should not update the banner message on focus out', async () => {
+    const bannerMessage = 'We couldn\'t reset your password.'.concat(validationMessage);
     props = {
       ...props,
       token_status: 'valid',
       token: 'token',
+      errors: validationMessage,
     };
 
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('button.btn-primary').simulate('click');
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
 
-    resetPasswordPage.update();
-    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual('We couldn\'t reset your password.'.concat(validationMessage));
+    await act(async () => {
+      await resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: '' } });
+    });
+    // On blur event, the banner message remains same
+    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
   });
 
   it('check cookie rendered', () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
@@ -26,7 +26,15 @@ const ResetPasswordPage = (props) => {
   const [passwordValid, setPasswordValidValue] = useState(true);
   const [passwordMatch, setPasswordMatchValue] = useState(true);
   const [validationMessage, setvalidationMessage] = useState('');
-  const [emptyFieldError, setEmptyFieldError] = useState('');
+  const [bannerErrorMessage, setbannerErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (props.errors) {
+      setbannerErrorMessage(props.errors);
+      setvalidationMessage(props.errors);
+      setPasswordValidValue(false);
+    }
+  }, [props.status === 'failure']);
 
   const validatePasswordFromBackend = async (newPassword) => {
     let errorMessage;
@@ -42,7 +50,13 @@ const ResetPasswordPage = (props) => {
   const handleNewPasswordChange = (e) => {
     const newPassword = e.target.value;
     setNewPasswordValue(newPassword);
-    validatePasswordFromBackend(newPassword);
+
+    if (newPassword === '') {
+      setPasswordValidValue(false);
+      setvalidationMessage(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
+    } else {
+      validatePasswordFromBackend(newPassword);
+    }
   };
 
   const handleConfirmPasswordChange = (e) => {
@@ -53,23 +67,24 @@ const ResetPasswordPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
 
+    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
     if (newPasswordInput === '') {
-      setEmptyFieldError(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
+      setPasswordValidValue(false);
+      setvalidationMessage(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
+      setbannerErrorMessage(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
       return;
     }
     if (newPasswordInput !== confirmPasswordInput) {
       setPasswordMatchValue(false);
       return;
     }
-    if (passwordValid && passwordMatch) {
-      const formPayload = {
-        new_password1: newPasswordInput,
-        new_password2: confirmPasswordInput,
-      };
-      props.resetPassword(formPayload, props.token, params);
-    }
+
+    const formPayload = {
+      new_password1: newPasswordInput,
+      new_password2: confirmPasswordInput,
+    };
+    props.resetPassword(formPayload, props.token, params);
   };
 
   if (props.token_status === 'pending') {
@@ -87,12 +102,12 @@ const ResetPasswordPage = (props) => {
       <>
         <div id="main" className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">
-            {(emptyFieldError || props.status) && (
+            {bannerErrorMessage ? (
               <Alert id="validation-errors" variant="danger">
                 <Alert.Heading>{intl.formatMessage(messages['forgot.password.empty.new.password.error.heading'])}</Alert.Heading>
-                <ul><li>{emptyFieldError || props.errors}</li></ul>
+                <ul><li>{bannerErrorMessage}</li></ul>
               </Alert>
-            )}
+            ) : null}
             <Form>
               <h3 className="mt-3">
                 {intl.formatMessage(messages['reset.password.page.heading'])}
@@ -102,8 +117,8 @@ const ResetPasswordPage = (props) => {
               </p>
               <ValidationFormGroup
                 for="reset-password-input"
-                invalid={!passwordValid || emptyFieldError !== ''}
-                invalidMessage={validationMessage || emptyFieldError}
+                invalid={!passwordValid}
+                invalidMessage={validationMessage}
                 className="w-100"
               >
                 <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
@@ -114,7 +129,6 @@ const ResetPasswordPage = (props) => {
                   id="reset-password-input"
                   type="password"
                   placeholder=""
-                  onChange={() => setEmptyFieldError('')}
                   onBlur={e => handleNewPasswordChange(e)}
                 />
               </ValidationFormGroup>
