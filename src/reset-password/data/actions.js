@@ -18,9 +18,9 @@ export const validateTokenSuccess = (tokenStatus, token) => ({
   payload: { tokenStatus, token },
 });
 
-export const validateTokenFailure = (tokenStatus) => ({
+export const validateTokenFailure = (tokenStatus, errorCode) => ({
   type: VALIDATE_TOKEN.FAILURE,
-  payload: { tokenStatus },
+  payload: { tokenStatus, errorCode },
 });
 
 // Reset Password
@@ -38,7 +38,7 @@ export const resetPasswordSuccess = data => ({
   payload: { data },
 });
 
-export const resetPasswordFailure = errors => ({
+export const resetPasswordFailure = (errors, errorCode) => ({
   type: RESET_PASSWORD.FAILURE,
-  payload: { errors },
+  payload: { errors, errorCode },
 });

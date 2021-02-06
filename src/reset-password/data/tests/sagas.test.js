@@ -3,11 +3,12 @@ import { runSaga } from 'redux-saga';
 import {
   resetPasswordBegin,
   resetPasswordSuccess,
-  resetPasswordFailure,
 } from '../actions';
-import { handleResetPassword } from '../sagas';
+import { handleResetPassword, handleValidateToken } from '../sagas';
 import * as api from '../service';
 import initializeMockLogging from '../../../setupTest';
+import * as actions from '../actions';
+import { INTERNAL_SERVER_ERROR } from '../../../data/constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -50,7 +51,8 @@ describe('handleResetPassword', () => {
 
   it('should call service and dispatch error action', async () => {
     const resetPassword = jest.spyOn(api, 'resetPassword')
-      .mockImplementation(() => Promise.reject());
+      .mockImplementation(() => Promise.reject())
+      .mockImplementation(() => Promise.reject(new Error(INTERNAL_SERVER_ERROR)));
 
     const dispatched = [];
     await runSaga(
@@ -60,7 +62,26 @@ describe('handleResetPassword', () => {
     );
 
     expect(resetPassword).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure()]);
+    expect(dispatched).toEqual([
+      actions.resetPasswordBegin(),
+      actions.resetPasswordFailure(new Error(INTERNAL_SERVER_ERROR), INTERNAL_SERVER_ERROR),
+    ]);
     resetPassword.mockClear();
+  });
+
+  it('should handle internal server error', async () => {
+    const forgotPasswordRequest = jest.spyOn(api, 'validateToken')
+      .mockImplementation(() => Promise.reject(new Error(INTERNAL_SERVER_ERROR)));
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleValidateToken,
+      params,
+    );
+    expect(dispatched).toEqual([
+      actions.validateTokenBegin(),
+      actions.validateTokenFailure(new Error(INTERNAL_SERVER_ERROR), INTERNAL_SERVER_ERROR),
+    ]);
+    forgotPasswordRequest.mockClear();
   });
 });

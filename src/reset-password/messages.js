@@ -61,6 +61,16 @@ const messages = defineMessages({
     defaultMessage: 'We couldn\'t reset your password.',
     description: 'Heading that appears above error message when user submits empty form.',
   },
+  'reset.password.request.server.error': {
+    id: 'reset.password.request.server.error',
+    defaultMessage: 'Failed to reset password',
+    description: 'Failed to reset password error message heading.',
+  },
+  'reset.password.token.validation.sever.error': {
+    id: 'reset.password.token.validation.sever.error',
+    defaultMessage: 'Token validation failure',
+    description: 'Failed to validate reset password token.',
+  },
 });
 
 export default messages;

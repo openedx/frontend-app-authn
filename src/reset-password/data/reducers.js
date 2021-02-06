@@ -24,6 +24,7 @@ const reducer = (state = defaultState, action = null) => {
       return {
         ...state,
         token_status: 'invalid',
+        errorCode: action.payload.errorCode,
       };
     case RESET_PASSWORD.BEGIN:
       return {
@@ -40,6 +41,7 @@ const reducer = (state = defaultState, action = null) => {
         ...state,
         status: 'failure',
         errors: action.payload.errors,
+        errorCode: action.payload.errorCode,
       };
     default:
       return state;

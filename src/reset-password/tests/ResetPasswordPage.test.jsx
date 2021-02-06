@@ -8,7 +8,7 @@ import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as auth from '@edx/frontend-platform/auth';
 import { resetPassword } from '../data/actions';
-
+import { INTERNAL_SERVER_ERROR } from '../../data/constants';
 import ResetPasswordPage from '../ResetPasswordPage';
 
 jest.mock('../data/selectors', () => jest.fn().mockImplementation(() => ({ resetPasswordSelector: () => ({}) })));
@@ -202,6 +202,16 @@ describe('ResetPasswordPage', () => {
     );
 
     resetPasswordPage.unmount();
+  });
+
+  it('should show alert on server error', () => {
+    props = {
+      ...props,
+      token_status: 'invalid',
+      errorCode: INTERNAL_SERVER_ERROR,
+    };
+    const tree = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(tree.find('div.alert-heading').text()).toEqual('Token validation failure');
   });
 
   it('should display empty new password field error', () => {

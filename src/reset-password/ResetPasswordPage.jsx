@@ -16,6 +16,8 @@ import { validatePassword } from './data/service';
 import InvalidTokenMessage from './InvalidToken';
 import ResetSuccessMessage from './ResetSuccess';
 import Spinner from './Spinner';
+import APIFailureMessage from '../common-components/APIFailureMessage';
+import { INTERNAL_SERVER_ERROR } from '../data/constants';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
@@ -78,8 +80,16 @@ const ResetPasswordPage = (props) => {
       props.validateToken(token);
       return <Spinner />;
     }
-  } else if (props.token_status === 'invalid') {
+  } else if (props.token_status === 'invalid' && props.errorCode !== INTERNAL_SERVER_ERROR) {
     return <InvalidTokenMessage />;
+  } else if (props.token_status === 'invalid' && props.errorCode === INTERNAL_SERVER_ERROR) {
+    return (
+      <div className="d-flex justify-content-center m-4">
+        <div className="d-flex flex-column mw-500">
+          <APIFailureMessage header={intl.formatMessage(messages['reset.password.token.validation.sever.error'])} />
+        </div>
+      </div>
+    );
   } else if (props.status === 'success') {
     return <ResetSuccessMessage />;
   } else {
@@ -87,13 +97,14 @@ const ResetPasswordPage = (props) => {
       <>
         <div id="main" className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">
-            {(emptyFieldError || props.status) && (
+            {(emptyFieldError || props.status) && (!props.errorCode) && (
               <Alert id="validation-errors" variant="danger">
                 <Alert.Heading>{intl.formatMessage(messages['forgot.password.empty.new.password.error.heading'])}</Alert.Heading>
                 <ul><li>{emptyFieldError || props.errors}</li></ul>
               </Alert>
             )}
             <Form>
+              {props.errorCode === INTERNAL_SERVER_ERROR ? <APIFailureMessage header={intl.formatMessage(messages['reset.password.request.server.error'])} /> : null}
               <h3 className="mt-3">
                 {intl.formatMessage(messages['reset.password.page.heading'])}
               </h3>
@@ -161,6 +172,7 @@ ResetPasswordPage.defaultProps = {
   token: null,
   match: null,
   errors: null,
+  errorCode: null,
 };
 
 ResetPasswordPage.propTypes = {
@@ -168,6 +180,7 @@ ResetPasswordPage.propTypes = {
   resetPassword: PropTypes.func.isRequired,
   validateToken: PropTypes.func.isRequired,
   token_status: PropTypes.string,
+  errorCode: PropTypes.string,
   token: PropTypes.string,
   match: PropTypes.shape({
     params: PropTypes.shape({
