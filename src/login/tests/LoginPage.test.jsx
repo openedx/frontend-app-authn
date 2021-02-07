@@ -150,7 +150,7 @@ describe('LoginPage', () => {
     const errorState = { email: null, password: '' };
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
-    loginPage.find('input#loginPassword').simulate('change', { target: { value: 'test', name: 'password' } });
+    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
@@ -160,7 +160,7 @@ describe('LoginPage', () => {
     const errorState = { email: '', password: null };
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
-    loginPage.find('input#loginEmail').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
+    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
     loginPage.find('button.btn-brand').simulate('click');
     expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
   });
@@ -328,7 +328,7 @@ describe('LoginPage', () => {
   it('form only be scrollable on submission', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
-    loginPage.find('input#loginPassword').simulate('change', { target: { value: 'test@example.com', name: 'password' } });
+    loginPage.find('input#password').simulate('change', { target: { value: 'test@example.com', name: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();

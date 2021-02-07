@@ -28,7 +28,7 @@ import { registrationRequestSelector } from './data/selectors';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
-  InstitutionLogistration,
+  InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
 import RegistrationFailure from './RegistrationFailure';
 import {
@@ -467,26 +467,35 @@ class RegistrationPage extends React.Component {
             );
           }
           if (field.type === 'select') {
-            options = field.options.map((item) => ({
-              value: item.value,
-              label: item.name,
-            }));
+            options = field.options.map((item) => {
+              const option = {};
+              option.value = item.value;
+              option.label = item.name;
+              if (item.name === '--') {
+                option.label = `${field.label} (required)`;
+                option.disabled = true;
+              }
+              return option;
+            });
             props.options = options;
-            props.onBlur = e => this.handleOnBlur(e);
-            props.onClick = e => this.handleOnClick(e);
-            props.onChange = e => this.handleOnChange(e);
           }
           return (
-            <ValidationFormGroup
+            <AuthnValidationFormGroup
+              label={field.label}
               for={field.name}
+              name={field.name}
+              type={field.type}
               key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
+              placeholder=""
               className="mb-0"
-            >
-              <label htmlFor={field.name} className="h6 pt-10">{field.label} (required)</label>
-              <Input {...props} />
-            </ValidationFormGroup>
+              value={props.value}
+              onClick={(e) => this.handleOnClick(e)}
+              onBlur={(e) => this.handleOnBlur(e)}
+              onChange={(e) => this.handleOnChange(e)}
+              selectOptions={props.options}
+            />
           );
         }
       }
@@ -651,111 +660,80 @@ class RegistrationPage extends React.Component {
               <hr className="mb-20 border-gray-200" />
               <h3 className="mb-20">{intl.formatMessage(messages['create.a.new.account'])}</h3>
               <Form className="form-group">
-                <ValidationFormGroup
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['fullname.label'])}
                   for="name"
+                  name="name"
+                  type="text"
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
-                  helpText="This name will be used by any certificates that you earn."
-                >
-                  <label htmlFor="name" className="h6 pt-10">
-                    {intl.formatMessage(messages['fullname.label'])}
-                  </label>
-                  <Input
-                    name="name"
-                    id="name"
-                    type="text"
-                    placeholder=""
-                    value={this.state.name}
-                    onChange={e => this.handleOnChange(e)}
-                    onBlur={e => this.handleOnBlur(e)}
-                    onClick={e => this.handleOnClick(e)}
-                    required
-                  />
-                </ValidationFormGroup>
-                <ValidationFormGroup
+                  placeholder=""
+                  value={this.state.name}
+                  onClick={(e) => this.handleOnClick(e)}
+                  onBlur={(e) => this.handleOnBlur(e)}
+                  onChange={(e) => this.handleOnChange(e)}
+                  helpText={intl.formatMessage(messages['helptext.name'])}
+                />
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['username.label'])}
                   for="username"
+                  name="username"
+                  type="text"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
-                  helpText="The name that will identify you in your courses. It cannot be changed later."
-                >
-                  <label htmlFor="username" className="h6 pt-10">
-                    {intl.formatMessage(messages['username.label'])}
-                  </label>
-                  <Input
-                    name="username"
-                    id="username"
-                    type="text"
-                    placeholder=""
-                    value={this.state.username}
-                    maxLength="30"
-                    onChange={e => this.handleOnChange(e)}
-                    onBlur={e => this.handleOnBlur(e)}
-                    onClick={e => this.handleOnClick(e)}
-                    required
-                  />
-                </ValidationFormGroup>
-                <ValidationFormGroup
+                  placeholder=""
+                  value={this.state.username}
+                  onClick={(e) => this.handleOnClick(e)}
+                  onBlur={(e) => this.handleOnBlur(e)}
+                  onChange={(e) => this.handleOnChange(e)}
+                  helpText={intl.formatMessage(messages['helptext.username'])}
+                />
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['register.page.email.label'])}
                   for="email"
+                  name="email"
+                  type="text"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
-                  helpText="This is what you will use to login."
-                >
-                  <label htmlFor="email" className="h6 pt-10">
-                    {intl.formatMessage(messages['register.page.email.label'])}
-                  </label>
-                  <Input
-                    name="email"
-                    id="email"
-                    type="email"
-                    placeholder="username@domain.com"
-                    value={this.state.email}
-                    onChange={e => this.handleOnChange(e)}
-                    onBlur={e => this.handleOnBlur(e)}
-                    onClick={e => this.handleOnClick(e)}
-                    required
-                  />
-                </ValidationFormGroup>
+                  placeholder=""
+                  value={this.state.email}
+                  onClick={(e) => this.handleOnClick(e)}
+                  onBlur={(e) => this.handleOnBlur(e)}
+                  onChange={(e) => this.handleOnChange(e)}
+                  helpText={intl.formatMessage(messages['helptext.email'])}
+                />
                 {!currentProvider && (
-                  <ValidationFormGroup
+                  <AuthnValidationFormGroup
+                    label={intl.formatMessage(messages['password.label'])}
                     for="password"
+                    name="password"
+                    type="password"
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
-                    helpText="Your password must contain at least 8 characters, including 1 letter & 1 number."
-                  >
-                    <label htmlFor="password" className="h6 pt-10">
-                      {intl.formatMessage(messages['password.label'])}
-                    </label>
-                    <Input
-                      name="password"
-                      id="password"
-                      type="password"
-                      placeholder=""
-                      value={this.state.password}
-                      onChange={e => this.handleOnChange(e)}
-                      onBlur={e => this.handleOnBlur(e)}
-                      onClick={e => this.handleOnClick(e)}
-                      required
-                    />
-                  </ValidationFormGroup>
+                    placeholder=""
+                    value={this.state.password}
+                    onClick={(e) => this.handleOnClick(e)}
+                    onBlur={(e) => this.handleOnBlur(e)}
+                    onChange={(e) => this.handleOnChange(e)}
+                    helpText={intl.formatMessage(messages['helptext.password'])}
+                  />
                 )}
                 { this.addExtraRequiredFields() }
-                <ValidationFormGroup
+                <AuthnValidationFormGroup
+                  label=""
                   for="optional"
-                  className="custom-control pt-10 mb-0"
-                >
-                  <Input
-                    name="optional"
-                    id="optional"
-                    type="checkbox"
-                    value={this.state.enableOptionalField}
-                    checked={this.state.enableOptionalField}
-                    onChange={e => this.handleOnOptional(e)}
-                    required
-                  />
-                  <p role="presentation" id="additionalFields" className="mb-0 small" onClick={e => this.handleOnOptional(e)}>
-                    {intl.formatMessage(messages['support.education.research'])}
-                  </p>
-                </ValidationFormGroup>
+                  name="optional"
+                  type="checkbox"
+                  invalidMessage=""
+                  placeholder=""
+                  value={this.state.enableOptionalField}
+                  onClick={(e) => this.handleOnOptional(e)}
+                  onBlur={null}
+                  onChange={(e) => this.handleOnOptional(e)}
+                  optionalFieldCheckbox
+                  isChecked={this.state.enableOptionalField}
+                  checkboxMessage={intl.formatMessage(messages['support.education.research'])}
+                />
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
                 <StatefulButton
                   type="button"

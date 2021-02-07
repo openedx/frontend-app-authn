@@ -141,6 +141,26 @@ const messages = defineMessages({
     defaultMessage: 'We couldn\'t create your account.',
     description: 'error message when registration failure.',
   },
+  'helptext.name': {
+    id: 'helptext.name',
+    defaultMessage: 'This name will be used by any certificates that you earn.',
+    description: '',
+  },
+  'helptext.username': {
+    id: 'helptext.username',
+    defaultMessage: 'The name that will identify you in your courses. It cannot be changed later.',
+    description: '',
+  },
+  'helptext.password': {
+    id: 'helptext.password',
+    defaultMessage: 'Your password must contain at least 8 characters, including 1 letter & 1 number.',
+    description: '',
+  },
+  'helptext.email': {
+    id: 'helptext.email',
+    defaultMessage: 'This is what you will use to login.',
+    description: '',
+  },
 });
 
 export default messages;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Alert, Form, Input, StatefulButton, ValidationFormGroup,
+  Alert, Form, StatefulButton,
 } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getQueryParameters } from '@edx/frontend-platform';
@@ -15,6 +15,9 @@ import { resetPasswordResultSelector } from './data/selectors';
 import { validatePassword } from './data/service';
 import InvalidTokenMessage from './InvalidToken';
 import ResetSuccessMessage from './ResetSuccess';
+import {
+  AuthnValidationFormGroup,
+} from '../common-components';
 import Spinner from './Spinner';
 
 const ResetPasswordPage = (props) => {
@@ -48,6 +51,11 @@ const ResetPasswordPage = (props) => {
   };
 
   const handleNewPasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setNewPasswordValue(newPassword);
+  };
+
+  const handleNewPasswordOnBlur = (e) => {
     const newPassword = e.target.value;
     setNewPasswordValue(newPassword);
 
@@ -115,41 +123,31 @@ const ResetPasswordPage = (props) => {
               <p className="mb-4">
                 {intl.formatMessage(messages['reset.password.page.instructions'])}
               </p>
-              <ValidationFormGroup
+              <AuthnValidationFormGroup
+                label={intl.formatMessage(messages['reset.password.page.new.field.label'])}
                 for="reset-password-input"
+                name="new-password1"
+                type="password"
                 invalid={!passwordValid}
                 invalidMessage={validationMessage}
+                placeholder=""
+                value={newPasswordInput}
+                onChange={e => handleNewPasswordChange(e)}
+                onBlur={e => handleNewPasswordOnBlur(e)}
                 className="w-100"
-              >
-                <Form.Label htmlFor="reset-password-input" className="h6 mr-1">
-                  {intl.formatMessage(messages['reset.password.page.new.field.label'])}
-                </Form.Label>
-                <Input
-                  name="new-password1"
-                  id="reset-password-input"
-                  type="password"
-                  placeholder=""
-                  onBlur={e => handleNewPasswordChange(e)}
-                />
-              </ValidationFormGroup>
-              <ValidationFormGroup
+              />
+              <AuthnValidationFormGroup
+                label={intl.formatMessage(messages['reset.password.page.confirm.field.label'])}
                 for="confirm-password-input"
+                name="new-password2"
+                type="password"
                 invalid={!passwordMatch}
                 invalidMessage={intl.formatMessage(messages['reset.password.page.invalid.match.message'])}
+                placeholder=""
+                value={confirmPasswordInput}
+                onChange={e => handleConfirmPasswordChange(e)}
                 className="w-100"
-              >
-                <Form.Label htmlFor="confirm-password-input" className="h6 mr-1">
-                  {intl.formatMessage(messages['reset.password.page.confirm.field.label'])}
-                </Form.Label>
-                <Input
-                  name="new-password2"
-                  id="confirm-password-input"
-                  type="password"
-                  placeholder=""
-                  value={confirmPasswordInput}
-                  onChange={e => handleConfirmPasswordChange(e)}
-                />
-              </ValidationFormGroup>
+              />
               <StatefulButton
                 type="submit"
                 className="btn-primary"

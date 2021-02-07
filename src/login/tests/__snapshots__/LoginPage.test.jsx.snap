@@ -38,30 +38,24 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         className="m-0"
       >
         <div
-          className="form-group mb-0 w-100"
+          className="form-group w-100"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginEmail"
-          >
-            Email
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
-            id="loginEmail"
+            id="email"
             name="email"
+            onBlur={[Function]}
             onChange={[Function]}
-            placeholder="username@domain.com"
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Email"
+            required={true}
             type="email"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            The email address you used to register with edX.
-          </small>
+          <span />
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -70,23 +64,24 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group mb-0 w-100"
+          className="form-group"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginPassword"
-          >
-            Password
-          </label>
+          <span />
           <input
             aria-describedby=""
             className="form-control"
-            id="loginPassword"
+            id="password"
             name="password"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Password"
+            required={true}
             type="password"
             value=""
           />
+          <span />
           <strong
             className="invalid-feedback"
             id="password-invalid-feedback"
@@ -236,30 +231,24 @@ exports[`LoginPage should match default section snapshot 1`] = `
         className="m-0"
       >
         <div
-          className="form-group mb-0 w-100"
+          className="form-group w-100"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginEmail"
-          >
-            Email
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
-            id="loginEmail"
+            id="email"
             name="email"
+            onBlur={[Function]}
             onChange={[Function]}
-            placeholder="username@domain.com"
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Email"
+            required={true}
             type="email"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            The email address you used to register with edX.
-          </small>
+          <span />
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -268,23 +257,24 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group mb-0 w-100"
+          className="form-group"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginPassword"
-          >
-            Password
-          </label>
+          <span />
           <input
             aria-describedby=""
             className="form-control"
-            id="loginPassword"
+            id="password"
             name="password"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Password"
+            required={true}
             type="password"
             value=""
           />
+          <span />
           <strong
             className="invalid-feedback"
             id="password-invalid-feedback"
@@ -436,30 +426,24 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         className="m-0"
       >
         <div
-          className="form-group mb-0 w-100"
+          className="form-group w-100"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginEmail"
-          >
-            Email
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
-            id="loginEmail"
+            id="email"
             name="email"
+            onBlur={[Function]}
             onChange={[Function]}
-            placeholder="username@domain.com"
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Email"
+            required={true}
             type="email"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            The email address you used to register with edX.
-          </small>
+          <span />
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -468,23 +452,24 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group mb-0 w-100"
+          className="form-group"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginPassword"
-          >
-            Password
-          </label>
+          <span />
           <input
             aria-describedby=""
             className="form-control"
-            id="loginPassword"
+            id="password"
             name="password"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Password"
+            required={true}
             type="password"
             value=""
           />
+          <span />
           <strong
             className="invalid-feedback"
             id="password-invalid-feedback"
@@ -598,30 +583,24 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
         className="m-0"
       >
         <div
-          className="form-group mb-0 w-100"
+          className="form-group w-100"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginEmail"
-          >
-            Email
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
-            id="loginEmail"
+            id="email"
             name="email"
+            onBlur={[Function]}
             onChange={[Function]}
-            placeholder="username@domain.com"
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Email"
+            required={true}
             type="email"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            The email address you used to register with edX.
-          </small>
+          <span />
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -630,23 +609,24 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </strong>
         </div>
         <div
-          className="form-group mb-0 w-100"
+          className="form-group"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginPassword"
-          >
-            Password
-          </label>
+          <span />
           <input
             aria-describedby=""
             className="form-control"
-            id="loginPassword"
+            id="password"
             name="password"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Password"
+            required={true}
             type="password"
             value=""
           />
+          <span />
           <strong
             className="invalid-feedback"
             id="password-invalid-feedback"
@@ -797,30 +777,24 @@ exports[`LoginPage should show error message 1`] = `
         className="m-0"
       >
         <div
-          className="form-group mb-0 w-100"
+          className="form-group w-100"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginEmail"
-          >
-            Email
-          </label>
+          <span />
           <input
-            aria-describedby="email-help-text"
+            aria-describedby=""
             className="form-control"
-            id="loginEmail"
+            id="email"
             name="email"
+            onBlur={[Function]}
             onChange={[Function]}
-            placeholder="username@domain.com"
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Email"
+            required={true}
             type="email"
             value=""
           />
-          <small
-            className="form-text text-muted"
-            id="email-help-text"
-          >
-            The email address you used to register with edX.
-          </small>
+          <span />
           <strong
             className="invalid-feedback"
             id="email-invalid-feedback"
@@ -829,23 +803,24 @@ exports[`LoginPage should show error message 1`] = `
           </strong>
         </div>
         <div
-          className="form-group mb-0 w-100"
+          className="form-group"
         >
-          <label
-            className="h6 mr-1 form-label"
-            htmlFor="loginPassword"
-          >
-            Password
-          </label>
+          <span />
           <input
             aria-describedby=""
             className="form-control"
-            id="loginPassword"
+            id="password"
             name="password"
+            onBlur={[Function]}
             onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            placeholder="Password"
+            required={true}
             type="password"
             value=""
           />
+          <span />
           <strong
             className="invalid-feedback"
             id="password-invalid-feedback"
