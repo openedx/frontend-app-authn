@@ -224,6 +224,7 @@ describe('ResetPasswordPage', () => {
       token_status: 'valid',
       token: 'token',
       errors: validationMessage,
+      status: 'failure',
     };
 
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));

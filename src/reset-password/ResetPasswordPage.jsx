@@ -32,12 +32,12 @@ const ResetPasswordPage = (props) => {
   const [bannerErrorMessage, setbannerErrorMessage] = useState('');
 
   useEffect(() => {
-    if (props.errors) {
+    if (props.status === 'failure' && props.errors) {
       setbannerErrorMessage(props.errors);
       setvalidationMessage(props.errors);
       setPasswordValidValue(false);
     }
-  }, [props.status === 'failure']);
+  }, [props.status]);
 
   const validatePasswordFromBackend = async (newPassword) => {
     let errorMessage;
