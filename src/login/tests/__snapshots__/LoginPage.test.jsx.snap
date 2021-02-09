@@ -10,22 +10,18 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
     <div
       className="mw-500"
     >
-      <div
-        className="d-flex flex-row"
-      >
-        <p>
-          First time here?
-          <a
-            className="ml-1"
-            href="/register"
-            onClick={[Function]}
-            target="_self"
-          >
-            Create an Account
-            .
-          </a>
-        </p>
-      </div>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+          onClick={[Function]}
+          target="_self"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
       <hr
         className="mt-0 border-gray-200"
       />
@@ -153,10 +149,10 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         </button>
       </form>
       <div
-        className="mb-20"
+        className="mb-3"
       >
         <hr
-          className="mt-20 mb-20 border-gray-200"
+          className="mt-3 mb-3 border-gray-200"
         />
         or sign in with
       </div>
@@ -203,22 +199,18 @@ exports[`LoginPage should match default section snapshot 1`] = `
     <div
       className="mw-500"
     >
-      <div
-        className="d-flex flex-row"
-      >
-        <p>
-          First time here?
-          <a
-            className="ml-1"
-            href="/register"
-            onClick={[Function]}
-            target="_self"
-          >
-            Create an Account
-            .
-          </a>
-        </p>
-      </div>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+          onClick={[Function]}
+          target="_self"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
       <hr
         className="mt-0 border-gray-200"
       />
@@ -398,22 +390,18 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </span>
         </p>
       </div>
-      <div
-        className="d-flex flex-row"
-      >
-        <p>
-          First time here?
-          <a
-            className="ml-1"
-            href="/register"
-            onClick={[Function]}
-            target="_self"
-          >
-            Create an Account
-            .
-          </a>
-        </p>
-      </div>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+          onClick={[Function]}
+          target="_self"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
       <hr
         className="mt-0 border-gray-200"
       />
@@ -555,22 +543,18 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
     <div
       className="mw-500"
     >
-      <div
-        className="d-flex flex-row"
-      >
-        <p>
-          First time here?
-          <a
-            className="ml-1"
-            href="/register"
-            onClick={[Function]}
-            target="_self"
-          >
-            Create an Account
-            .
-          </a>
-        </p>
-      </div>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+          onClick={[Function]}
+          target="_self"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
       <hr
         className="mt-0 border-gray-200"
       />
@@ -749,22 +733,18 @@ exports[`LoginPage should show error message 1`] = `
           </li>
         </ul>
       </div>
-      <div
-        className="d-flex flex-row"
-      >
-        <p>
-          First time here?
-          <a
-            className="ml-1"
-            href="/register"
-            onClick={[Function]}
-            target="_self"
-          >
-            Create an Account
-            .
-          </a>
-        </p>
-      </div>
+      <p>
+        First time here?
+        <a
+          className="ml-1"
+          href="/register"
+          onClick={[Function]}
+          target="_self"
+        >
+          Create an Account
+          .
+        </a>
+      </p>
       <hr
         className="mt-0 border-gray-200"
       />
