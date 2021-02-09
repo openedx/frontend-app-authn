@@ -157,6 +157,7 @@ const ResetPasswordPage = (props) => {
                 }}
                 icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                 onClick={e => handleSubmit(e)}
+                onMouseDown={(e) => e.preventDefault()}
               />
             </Form>
           </div>
