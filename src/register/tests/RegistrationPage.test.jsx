@@ -245,15 +245,19 @@ describe('./RegistrationPage.js', () => {
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
     registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+    formPayload.fieldName = 'username';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
 
     registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
+    formPayload.fieldName = 'name';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
 
     registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+    formPayload.fieldName = 'email';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
 
     registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+    formPayload.fieldName = 'password';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
   });
 
