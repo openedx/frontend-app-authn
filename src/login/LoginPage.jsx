@@ -71,11 +71,11 @@ class LoginPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ isSubmitted: true });
+
     const params = (new URL(document.location)).searchParams;
-    const payload = {
-      email: this.state.email,
-      password: this.state.password,
-    };
+    const { email, password, formValid } = this.state;
+
+    const payload = { email, password };
     const next = params.get('next');
     const courseId = params.get('course_id');
     if (next) {
@@ -84,7 +84,7 @@ class LoginPage extends React.Component {
     if (courseId) {
       payload.course_id = courseId;
     }
-    if (!this.state.formValid) {
+    if (!formValid) {
       this.validateInput('email', payload.email);
       this.validateInput('password', payload.password);
       return;
@@ -95,10 +95,11 @@ class LoginPage extends React.Component {
   validateInput(inputName, value) {
     let { emailValid, passwordValid } = this.state;
     const { errors } = this.state;
+    const regex = new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i, 'i');
 
     switch (inputName) {
       case 'email':
-        emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        emailValid = regex.test(value);
         errors.email = emailValid ? '' : null;
         break;
       case 'password':
@@ -195,7 +196,9 @@ class LoginPage extends React.Component {
               {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
               {this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
               {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
-              {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
+              {this.props.forgotPassword.status === 'complete' && !this.props.loginError ? (
+                <ConfirmationAlert email={this.props.forgotPassword.email} />
+              ) : null}
               <p>
                 {intl.formatMessage(messages['first.time.here'])}
                 <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>

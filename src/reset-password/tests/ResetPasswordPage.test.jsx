@@ -11,7 +11,6 @@ import { resetPassword } from '../data/actions';
 
 import ResetPasswordPage from '../ResetPasswordPage';
 
-jest.mock('../data/selectors', () => jest.fn().mockImplementation(() => ({ resetPasswordSelector: () => ({}) })));
 jest.mock('@edx/frontend-platform/auth');
 
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
