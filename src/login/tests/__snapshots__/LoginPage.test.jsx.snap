@@ -139,6 +139,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
+          onMouseDown={[Function]}
           type="submit"
         >
           <span
@@ -328,6 +329,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
+          onMouseDown={[Function]}
           type="submit"
         >
           <span
@@ -519,6 +521,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
+          onMouseDown={[Function]}
           type="submit"
         >
           <span
@@ -672,6 +675,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           className="pgn__stateful-btn pgn__stateful-btn-state-pending disabled btn btn-brand"
           disabled={false}
           onClick={[Function]}
+          onMouseDown={[Function]}
           type="submit"
         >
           <span
@@ -862,6 +866,7 @@ exports[`LoginPage should show error message 1`] = `
           className="pgn__stateful-btn pgn__stateful-btn-state-default btn btn-brand"
           disabled={false}
           onClick={[Function]}
+          onMouseDown={[Function]}
           type="submit"
         >
           <span

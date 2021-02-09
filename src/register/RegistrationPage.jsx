@@ -738,7 +738,7 @@ class RegistrationPage extends React.Component {
                 />
                 { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
                 <StatefulButton
-                  type="button"
+                  type="submit"
                   variant="brand"
                   state={submitState}
                   className="mt-3"
@@ -747,6 +747,7 @@ class RegistrationPage extends React.Component {
                   }}
                   icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={this.handleSubmit}
+                  onMouseDown={(e) => e.preventDefault()}
                 />
                 {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                   && !currentProvider ? (

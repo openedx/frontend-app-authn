@@ -247,6 +247,7 @@ class LoginPage extends React.Component {
                   }}
                   icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={this.handleSubmit}
+                  onMouseDown={(e) => e.preventDefault()}
                 />
               </Form>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
