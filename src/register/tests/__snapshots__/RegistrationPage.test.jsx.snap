@@ -19,26 +19,22 @@ exports[`./RegistrationPage.js should display no password field when current pro
           You've successfully signed into Google. We just need a little more information before you start learning with openedX.
         </span>
       </div>
-      <div
-        className="text-left"
-      >
-        <span
-          className="mr-1"
-        >
-          Already have an edX account?
-        </span>
+      <p>
+        Already have an edX account?
         <a
+          className="ml-1"
           href="/login"
           onClick={[Function]}
+          target="_self"
         >
           Sign in.
         </a>
-      </div>
+      </p>
       <hr
-        className="mb-20 border-gray-200"
+        className="mb-3 border-gray-200"
       />
       <h3
-        className="mb-20"
+        className="mb-3"
       >
         Create a new account
       </h3>
@@ -166,7 +162,7 @@ exports[`./RegistrationPage.js should display no password field when current pro
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-3 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -193,26 +189,22 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
     <div
       className="mw-500"
     >
-      <div
-        className="text-left"
-      >
-        <span
-          className="mr-1"
-        >
-          Already have an edX account?
-        </span>
+      <p>
+        Already have an edX account?
         <a
+          className="ml-1"
           href="/login"
           onClick={[Function]}
+          target="_self"
         >
           Sign in.
         </a>
-      </div>
+      </p>
       <hr
-        className="mb-20 border-gray-200"
+        className="mb-3 border-gray-200"
       />
       <h3
-        className="mb-20"
+        className="mb-3"
       >
         Create a new account
       </h3>
@@ -360,7 +352,7 @@ exports[`./RegistrationPage.js should match TPA provider snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-3 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -426,26 +418,22 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
     <div
       className="mw-500"
     >
-      <div
-        className="text-left"
-      >
-        <span
-          className="mr-1"
-        >
-          Already have an edX account?
-        </span>
+      <p>
+        Already have an edX account?
         <a
+          className="ml-1"
           href="/login"
           onClick={[Function]}
+          target="_self"
         >
           Sign in.
         </a>
-      </div>
+      </p>
       <hr
-        className="mb-20 border-gray-200"
+        className="mb-3 border-gray-200"
       />
       <h3
-        className="mb-20"
+        className="mb-3"
       >
         Create a new account
       </h3>
@@ -593,7 +581,7 @@ exports[`./RegistrationPage.js should match default section snapshot 1`] = `
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-3 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -620,26 +608,22 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
     <div
       className="mw-500"
     >
-      <div
-        className="text-left"
-      >
-        <span
-          className="mr-1"
-        >
-          Already have an edX account?
-        </span>
+      <p>
+        Already have an edX account?
         <a
+          className="ml-1"
           href="/login"
           onClick={[Function]}
+          target="_self"
         >
           Sign in.
         </a>
-      </div>
+      </p>
       <hr
-        className="mb-20 border-gray-200"
+        className="mb-3 border-gray-200"
       />
       <h3
-        className="mb-20"
+        className="mb-3"
       >
         Create a new account
       </h3>
@@ -787,7 +771,7 @@ exports[`./RegistrationPage.js should match pending button state snapshot 1`] = 
         <button
           aria-disabled={true}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-pending mt-20 disabled btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-pending mt-3 disabled btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"
@@ -857,26 +841,22 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
           </li>
         </ul>
       </div>
-      <div
-        className="text-left"
-      >
-        <span
-          className="mr-1"
-        >
-          Already have an edX account?
-        </span>
+      <p>
+        Already have an edX account?
         <a
+          className="ml-1"
           href="/login"
           onClick={[Function]}
+          target="_self"
         >
           Sign in.
         </a>
-      </div>
+      </p>
       <hr
-        className="mb-20 border-gray-200"
+        className="mb-3 border-gray-200"
       />
       <h3
-        className="mb-20"
+        className="mb-3"
       >
         Create a new account
       </h3>
@@ -1024,7 +1004,7 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
         <button
           aria-disabled={false}
           aria-live="assertive"
-          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-20 btn btn-brand"
+          className="pgn__stateful-btn pgn__stateful-btn-state-default mt-3 btn btn-brand"
           disabled={false}
           onClick={[Function]}
           type="button"

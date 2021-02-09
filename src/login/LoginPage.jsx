@@ -196,14 +196,12 @@ class LoginPage extends React.Component {
               {this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
               {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
               {this.props.forgotPassword.status === 'complete' ? <ConfirmationAlert email={this.props.forgotPassword.email} /> : null}
-              <div className="d-flex flex-row">
-                <p>
-                  {intl.formatMessage(messages['first.time.here'])}
-                  <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>
-                    {intl.formatMessage(messages['create.an.account'])}.
-                  </Hyperlink>
-                </p>
-              </div>
+              <p>
+                {intl.formatMessage(messages['first.time.here'])}
+                <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>
+                  {intl.formatMessage(messages['create.an.account'])}.
+                </Hyperlink>
+              </p>
               <hr className="mt-0 border-gray-200" />
               <h3 className="text-left mt-2 mb-3">
                 {intl.formatMessage(messages['sign.in.heading'])}
@@ -250,8 +248,8 @@ class LoginPage extends React.Component {
               </Form>
               {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
                 && !currentProvider ? (
-                  <div className="mb-20">
-                    <hr className="mt-20 mb-20 border-gray-200" />
+                  <div className="mb-3">
+                    <hr className="mt-3 mb-3 border-gray-200" />
                     {intl.formatMessage(messages['or.sign.in.with'])}
                   </div>
                 ) : null}

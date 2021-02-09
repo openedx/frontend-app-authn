@@ -653,12 +653,14 @@ class RegistrationPage extends React.Component {
                   referrer={REGISTER_PAGE}
                 />
               )}
-              <div className="text-left">
-                <span className="mr-1">{intl.formatMessage(messages['already.have.an.edx.account'])}</span>
-                <a href={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>{intl.formatMessage(messages['sign.in.hyperlink'])}</a>
-              </div>
-              <hr className="mb-20 border-gray-200" />
-              <h3 className="mb-20">{intl.formatMessage(messages['create.a.new.account'])}</h3>
+              <p>
+                {intl.formatMessage(messages['already.have.an.edx.account'])}
+                <Hyperlink className="ml-1" destination={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>
+                  {intl.formatMessage(messages['sign.in.hyperlink'])}
+                </Hyperlink>
+              </p>
+              <hr className="mb-3 border-gray-200" />
+              <h3 className="mb-3">{intl.formatMessage(messages['create.a.new.account'])}</h3>
               <Form className="form-group">
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['fullname.label'])}
@@ -739,7 +741,7 @@ class RegistrationPage extends React.Component {
                   type="button"
                   variant="brand"
                   state={submitState}
-                  className="mt-20"
+                  className="mt-3"
                   labels={{
                     default: intl.formatMessage(messages['create.account.button']),
                   }}
