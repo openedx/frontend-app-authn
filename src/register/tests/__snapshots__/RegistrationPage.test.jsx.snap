@@ -892,8 +892,8 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
         >
           <span />
           <input
-            aria-describedby=""
-            className="form-control"
+            aria-describedby="username-invalid-feedback"
+            className="form-control is-invalid"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -906,14 +906,20 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
             value=""
           />
           <span />
+          <strong
+            className="invalid-feedback"
+            id="username-invalid-feedback"
+          >
+            It looks like test belongs to an existing account. Try again with a different username.
+          </strong>
         </div>
         <div
           className="form-group"
         >
           <span />
           <input
-            aria-describedby=""
-            className="form-control"
+            aria-describedby="email-invalid-feedback"
+            className="form-control is-invalid"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -926,6 +932,12 @@ exports[`./RegistrationPage.js should show error message on 409 on alert and bel
             value=""
           />
           <span />
+          <strong
+            className="invalid-feedback"
+            id="email-invalid-feedback"
+          >
+            It looks like test@gmail.com belongs to an existing account. Try again with a different email address.
+          </strong>
         </div>
         <div
           className="form-group"

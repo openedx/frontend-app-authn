@@ -95,8 +95,7 @@ class RegistrationPage extends React.Component {
       termsOfServiceValid: false,
       institutionLogin: false,
       formValid: false,
-      submitCount: 0,
-      isSubmitted: false,
+      assignRegistrationErrorsToField: true,
     };
   }
 
@@ -148,7 +147,6 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.state.isSubmitted = true;
     const params = (new URL(document.location)).searchParams;
     const payload = {};
     const payloadMap = new Map();
@@ -208,13 +206,15 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnBlur(e) {
+    const { name, value } = e.target;
     if (this.props.statusCode === 403) {
-      this.validateInput(e.target.name, e.target.value, true);
+      this.setState({
+        assignRegistrationErrorsToField: false,
+      }, () => {
+        this.validateInput(name, value, false);
+      });
       return;
     }
-    this.setState({
-      validationFieldName: e.target.name,
-    });
     const payload = {
       fieldName: e.target.name,
       email: this.state.email,
@@ -224,6 +224,11 @@ class RegistrationPage extends React.Component {
       honor_code: this.state.honorCode,
       country: this.state.country,
     };
+    this.setState({
+      validationFieldName: e.target.name,
+      assignRegistrationErrorsToField: false,
+    });
+
     this.props.fetchRealtimeValidations(payload);
   }
 
@@ -260,7 +265,7 @@ class RegistrationPage extends React.Component {
     sendTrackEvent('edx.bi.login_form.toggled', { category: 'user-engagement' });
   }
 
-  validateInput(inputName, value, blurCase = false) {
+  validateInput(inputName, value, showAlertMessageOnBlurEvent = true) {
     const {
       errors,
       validationErrorsAlertMessages,
@@ -270,9 +275,8 @@ class RegistrationPage extends React.Component {
       honorCodeValid,
       termsOfServiceValid,
       formValid,
-      submitCount,
+      assignRegistrationErrorsToField,
     } = this.state;
-
     const validations = this.state.currentValidations;
     switch (inputName) {
       case 'email':
@@ -281,14 +285,14 @@ class RegistrationPage extends React.Component {
           errors.email = validations.email;
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'email.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.email = errorEmpty;
           }
           errors.email = errorEmpty[0].user_message;
         } else {
           const errorCharlength = this.generateUserMessage(value.length <= 2, 'email.ratelimit.less.chars.validation.message');
           const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'email.ratelimit.incorrect.format.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.email = value.length <= 2 ? errorCharlength : formatError;
           }
           errors.email = value.length <= 2 ? errorCharlength[0].user_message : formatError[0].user_message;
@@ -300,7 +304,7 @@ class RegistrationPage extends React.Component {
           errors.name = validations.name;
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'fullname.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.name = errorEmpty;
           }
           errors.name = errorEmpty[0].user_message;
@@ -315,19 +319,19 @@ class RegistrationPage extends React.Component {
           errors.username = validations.username;
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'username.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.username = errorEmpty;
           }
           errors.username = errorEmpty[0].user_message;
         } else if (value.length <= 1) {
           const errorCharLength = this.generateUserMessage(value.length <= 1, 'username.ratelimit.less.chars.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.username = errorCharLength;
           }
           errors.username = errorCharLength[0].user_message;
         } else if (!value.match(/^([a-zA-Z0-9_-])$/i)) {
           const formatError = this.generateUserMessage(!value.match(/^[a-zA-Z0-9_-]*$/i), 'username.format.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.username = formatError;
           }
           errors.username = formatError[0].user_message;
@@ -339,25 +343,25 @@ class RegistrationPage extends React.Component {
           errors.password = validations.password;
         } else if (value.length < 1) {
           const errorEmpty = this.generateUserMessage(value.length < 1, 'register.page.password.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.password = errorEmpty;
           }
           errors.password = errorEmpty[0].user_message;
         } else if (value.length < 8) {
           const errorCharlength = this.generateUserMessage(value.length < 8, 'email.ratelimit.password.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.password = errorCharlength;
           }
           errors.password = errorCharlength[0].user_message;
         } else if (!value.match(/.*[0-9].*/i)) {
           const formatError = this.generateUserMessage(!value.match(/.*[0-9].*/i), 'username.number.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.password = formatError;
           }
           errors.password = formatError[0].user_message;
         } else {
           const formatError = this.generateUserMessage(!value.match(/.*[a-zA-Z].*/i), 'username.character.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.password = formatError;
           }
           errors.password = formatError[0].user_message;
@@ -369,7 +373,7 @@ class RegistrationPage extends React.Component {
           errors.country = validations.country;
         } else {
           const emptyError = this.generateUserMessage(value === '', 'country.validation.message');
-          if (blurCase !== true) {
+          if (showAlertMessageOnBlurEvent) {
             validationErrorsAlertMessages.country = emptyError;
           }
           errors.country = emptyError[0].user_message;
@@ -387,8 +391,8 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    if (!blurCase) {
-      submitCount++;
+    if (showAlertMessageOnBlurEvent) {
+      assignRegistrationErrorsToField = true;
       formValid = this.checkNoValidationsErrors(validationErrorsAlertMessages);
     }
     this.setState({
@@ -396,7 +400,7 @@ class RegistrationPage extends React.Component {
       validationErrorsAlertMessages,
       honorCodeValid,
       termsOfServiceValid,
-      submitCount,
+      assignRegistrationErrorsToField,
       errors,
     });
     return formValid;
@@ -594,18 +598,27 @@ class RegistrationPage extends React.Component {
 
   renderErrors() {
     let errorsObject = null;
-    if (!this.checkNoValidationsErrors(this.state.validationErrorsAlertMessages)) {
-      errorsObject = this.state.validationErrorsAlertMessages;
-    } else if (this.props.registrationError) {
-      if (this.state.isSubmitted && this.props.submitState !== PENDING_STATE) {
-        this.updateFieldErrors(this.props.registrationError);
+    let { assignRegistrationErrorsToField } = this.state;
+    const { validationErrorsAlertMessages } = this.state;
+    const { registrationError, submitState } = this.props;
+    if (!this.checkNoValidationsErrors(validationErrorsAlertMessages)) {
+      assignRegistrationErrorsToField = false;
+      errorsObject = validationErrorsAlertMessages;
+    } else if (registrationError) {
+      if (assignRegistrationErrorsToField && submitState !== PENDING_STATE) {
+        this.updateFieldErrors(registrationError);
       }
-      this.state.isSubmitted = false;
-      errorsObject = this.props.registrationError;
+      errorsObject = registrationError;
     } else {
       return null;
     }
-    return <RegistrationFailure errors={errorsObject} submitCount={this.state.submitCount} />;
+    return (
+      <RegistrationFailure
+        errors={errorsObject}
+        isSubmitted={assignRegistrationErrorsToField}
+        submitButtonState={submitState}
+      />
+    );
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {

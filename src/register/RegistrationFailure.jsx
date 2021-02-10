@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { INTERNAL_SERVER_ERROR } from '../login/data/constants';
+import { DEFAULT_STATE, PENDING_STATE } from '../data/constants';
 import messages from './messages';
 
 const RegistrationFailureMessage = (props) => {
@@ -11,8 +12,10 @@ const RegistrationFailureMessage = (props) => {
   const userErrors = [];
 
   useEffect(() => {
-    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-  }, [props.submitCount]);
+    if (props.isSubmitted && props.submitButtonState !== PENDING_STATE) {
+      window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+    }
+  });
 
   let serverError;
   switch (errorCode) {
@@ -57,7 +60,8 @@ const RegistrationFailureMessage = (props) => {
 
 RegistrationFailureMessage.defaultProps = {
   errors: '',
-  submitCount: 0,
+  submitButtonState: DEFAULT_STATE,
+  isSubmitted: false,
 };
 
 RegistrationFailureMessage.propTypes = {
@@ -66,7 +70,8 @@ RegistrationFailureMessage.propTypes = {
     username: PropTypes.array,
     errorCode: PropTypes.string,
   }),
-  submitCount: PropTypes.number,
+  submitButtonState: PropTypes.string,
+  isSubmitted: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 
