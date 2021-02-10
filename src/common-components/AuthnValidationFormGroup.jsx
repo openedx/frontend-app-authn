@@ -47,7 +47,7 @@ const AuthnCustomValidationFormGroup = (props) => {
   };
   const showOptional = () => {
     const additionalField = props.optionalFieldCheckbox ? (
-      <p role="presentation" id="additionalFields" className="mb-0 small" onClick={(e) => onOptionalHandler(e, onClick)}>
+      <p role="presentation" id="additionalFields" className="mb-1 small" onClick={(e) => onOptionalHandler(e, onClick)}>
         {props.checkboxMessage}
       </p>
     ) : <span />;
