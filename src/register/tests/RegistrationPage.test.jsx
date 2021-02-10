@@ -222,10 +222,6 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('should dispatch fetchRegistrationForm on ComponentDidMount', () => {
-    store = mockStore({
-      ...initialState,
-    });
-
     store.dispatch = jest.fn(store.dispatch);
     mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(store.dispatch).toHaveBeenCalledWith(fetchRegistrationForm());

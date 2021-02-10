@@ -4,23 +4,23 @@ import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 
-import { getConfig } from '@edx/frontend-platform';
-import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
-import * as analytics from '@edx/frontend-platform/analytics';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import LoginPage from '../LoginPage';
-import { RenderInstitutionButton } from '../../common-components';
-import { PENDING_STATE } from '../../data/constants';
+import { getConfig } from '@edx/frontend-platform';
+import * as analytics from '@edx/frontend-platform/analytics';
+import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
 import LoginFailureMessage from '../LoginFailure';
-
-const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
+import LoginPage from '../LoginPage';
+import { loginRequest, loginRequestFailure } from '../data/actions';
+import { RenderInstitutionButton } from '../../common-components';
+import { PENDING_STATE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
 
+const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
 
@@ -147,22 +147,62 @@ describe('LoginPage', () => {
   });
 
   it('updates the error state for invalid email', () => {
-    const errorState = { email: null, password: '' };
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    const errorState = { email: 'Please enter your Email.', password: '' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
 
     loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
-    expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
+    expect(loginPage.state('errors')).toEqual(errorState);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
+    );
   });
 
   it('updates the error state for invalid password', () => {
-    const errorState = { email: '', password: null };
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    const errorState = { email: '', password: 'Please enter your Password.' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
 
     loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
     loginPage.find('button.btn-brand').simulate('click');
-    expect(loginPage.find('LoginPage').state('errors')).toEqual(errorState);
+
+    expect(loginPage.state('errors')).toEqual(errorState);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
+    );
+  });
+
+  it('should update the error message on focus out', () => {
+    const errorState = { email: 'Please enter your Email.', password: 'Please enter your Password.' };
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+
+    loginPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+    loginPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+
+    expect(loginPage.state('errors')).toEqual(errorState);
+
+    errorState.email = 'The email address you\'ve provided isn\'t formatted correctly.';
+
+    // Enter email with invalid format
+    loginPage.find('input#email').simulate('blur', { target: { value: 'invalid-email', name: 'email' } });
+    expect(loginPage.state('errors')).toEqual(errorState);
+  });
+
+  it('submits login request for valid email and password values', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+
+    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com' } });
+    loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(store.dispatch).toHaveBeenCalledWith(
+      loginRequest({ email: 'test@example.com', password: 'password' }),
+    );
   });
 
   it('should match url after redirection', () => {

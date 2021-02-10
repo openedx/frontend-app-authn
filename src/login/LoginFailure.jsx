@@ -12,6 +12,7 @@ import {
   INACTIVE_USER,
   INCORRECT_EMAIL_PASSWORD,
   INTERNAL_SERVER_ERROR,
+  INVALID_FORM,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
 } from './data/constants';
 import messages from './messages';
@@ -39,6 +40,13 @@ const LoginFailureMessage = (props) => {
       );
       break;
     }
+    case FORBIDDEN_REQUEST:
+      errorList = (
+        <li key={FORBIDDEN_REQUEST}>
+          {intl.formatMessage(messages['login.rate.limit.reached.message'])}
+        </li>
+      );
+      break;
     case INACTIVE_USER: {
       const supportLink = (
         <Alert.Link href={context.supportLink}>
@@ -62,18 +70,19 @@ const LoginFailureMessage = (props) => {
       );
       break;
     }
-    case FORBIDDEN_REQUEST:
-      errorList = (
-        <li key={FORBIDDEN_REQUEST}>
-          {intl.formatMessage(messages['login.rate.limit.reached.message'])}
-        </li>
-      );
-      break;
     case INTERNAL_SERVER_ERROR:
       errorList = (
         <li key={INTERNAL_SERVER_ERROR}>
           {intl.formatMessage(messages['internal.server.error.message'])}
         </li>
+      );
+      break;
+    case INVALID_FORM:
+      errorList = (
+        <>
+          {context.email && <li key={`${INVALID_FORM}-email`}>{context.email}</li>}
+          {context.password && <li key={`${INVALID_FORM}-password`}>{context.password}</li>}
+        </>
       );
       break;
     case FAILED_LOGIN_ATTEMPT: {
