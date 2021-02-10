@@ -14,7 +14,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import AccountActivationMessage from './AccountActivationMessage';
 import ConfirmationAlert from '../common-components/ConfirmationAlert';
-import { loginRequest } from './data/actions';
+import { loginRequest, loginRequestFailure } from './data/actions';
+import { INVALID_FORM } from './data/constants';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { loginErrorSelector, loginRequestSelector } from './data/selectors';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
@@ -42,9 +43,6 @@ class LoginPage extends React.Component {
         email: '',
         password: '',
       },
-      emailValid: false,
-      passwordValid: false,
-      formValid: false,
       institutionLogin: false,
       isSubmitted: false,
     };
@@ -68,13 +66,29 @@ class LoginPage extends React.Component {
     this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
+  handleOnBlur = () => {
+    if (this.state.isSubmitted) {
+      this.setState({ isSubmitted: false });
+    }
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ isSubmitted: true });
 
-    const params = (new URL(document.location)).searchParams;
-    const { email, password, formValid } = this.state;
+    const { email, password } = this.state;
+    const emailValidationError = this.validateEmail(email);
+    const passwordValidationError = this.validatePassword(password);
 
+    if (emailValidationError !== '' || passwordValidationError !== '') {
+      this.props.loginRequestFailure({
+        errorCode: INVALID_FORM,
+        context: { email: emailValidationError, password: passwordValidationError },
+      });
+      return;
+    }
+
+    const params = (new URL(document.location)).searchParams;
     const payload = { email, password };
     const next = params.get('next');
     const courseId = params.get('course_id');
@@ -84,52 +98,30 @@ class LoginPage extends React.Component {
     if (courseId) {
       payload.course_id = courseId;
     }
-    if (!formValid) {
-      this.validateInput('email', payload.email);
-      this.validateInput('password', payload.password);
-      return;
-    }
     this.props.loginRequest(payload);
   }
 
-  validateInput(inputName, value) {
-    let { emailValid, passwordValid } = this.state;
+  validateEmail(email) {
     const { errors } = this.state;
     const regex = new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i, 'i');
 
-    switch (inputName) {
-      case 'email':
-        emailValid = regex.test(value);
-        errors.email = emailValid ? '' : null;
-        break;
-      case 'password':
-        passwordValid = value.length > 0;
-        errors.password = passwordValid ? '' : null;
-        break;
-      default:
-        break;
+    if (email === '') {
+      errors.email = this.props.intl.formatMessage(messages['email.validation.message']);
+    } else if (!regex.test(email)) {
+      errors.email = this.props.intl.formatMessage(messages['email.format.validation.message']);
+    } else {
+      errors.email = '';
     }
-
-    this.setState({
-      errors,
-      emailValid,
-      passwordValid,
-    }, this.validateForm);
+    this.setState({ errors });
+    return errors.email;
   }
 
-  handleOnChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value,
-      isSubmitted: false,
-    });
-    this.validateInput(e.target.name, e.target.value);
-  }
+  validatePassword(password) {
+    const { errors } = this.state;
+    errors.password = password.length > 0 ? '' : this.props.intl.formatMessage(messages['password.validation.message']);
 
-  validateForm() {
-    const { emailValid, passwordValid } = this.state;
-    this.setState({
-      formValid: emailValid && passwordValid,
-    });
+    this.setState({ errors });
+    return errors.password;
   }
 
   handleCreateAccountLinkClickEvent() {
@@ -157,6 +149,7 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    const { email, errors, password } = this.state;
     const {
       intl, submitState, thirdPartyAuthContext, thirdPartyAuthApiStatus,
     } = this.props;
@@ -194,7 +187,7 @@ class LoginPage extends React.Component {
                 />
               )}
               {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
-              {this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
+              {submitState === DEFAULT_STATE && this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
               {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
               {this.props.forgotPassword.status === 'complete' && !this.props.loginError ? (
                 <ConfirmationAlert email={this.props.forgotPassword.email} />
@@ -215,24 +208,23 @@ class LoginPage extends React.Component {
                   for="email"
                   name="email"
                   type="email"
-                  invalid={this.state.errors.email !== ''}
-                  invalidMessage={this.state.email === '' ? intl.formatMessage(messages['email.validation.message']) : intl.formatMessage(messages['email.format.validation.message'])}
-                  placeholder="username@domain.com"
-                  value={this.state.email}
-                  onChange={(e) => this.handleOnChange(e)}
+                  invalid={errors.email !== ''}
+                  invalidMessage={errors.email}
+                  value={email}
                   helpText={intl.formatMessage(messages['email.help.message'])}
-                  className="w-100"
+                  onBlur={(e) => { this.handleOnBlur(); this.validateEmail(e.target.value); }}
+                  onChange={(e) => this.setState({ email: e.target.value, isSubmitted: false })}
                 />
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['password.label'])}
                   for="password"
                   name="password"
                   type="password"
-                  invalid={this.state.errors.password !== ''}
-                  invalidMessage={intl.formatMessage(messages['password.validation.message'])}
-                  placeholder=""
-                  value={this.state.password}
-                  onChange={(e) => this.handleOnChange(e)}
+                  invalid={errors.password !== ''}
+                  invalidMessage={errors.password}
+                  value={password}
+                  onBlur={(e) => { this.handleOnBlur(); this.validatePassword(e.target.value); }}
+                  onChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
                 />
                 <LoginHelpLinks page={LOGIN_PAGE} />
                 <Hyperlink className="field-link mt-0 mb-3 small" destination={this.getEnterPriseLoginURL()}>
@@ -289,6 +281,7 @@ LoginPage.propTypes = {
   intl: intlShape.isRequired,
   loginError: PropTypes.objectOf(PropTypes.any),
   loginRequest: PropTypes.func.isRequired,
+  loginRequestFailure: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -324,5 +317,6 @@ export default connect(
   {
     getThirdPartyAuthContext,
     loginRequest,
+    loginRequestFailure,
   },
 )(injectIntl(LoginPage));

@@ -8,6 +8,7 @@ import {
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
   INTERNAL_SERVER_ERROR,
+  INVALID_FORM,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
 } from '../data/constants';
 
@@ -94,6 +95,24 @@ describe('LoginFailureMessage', () => {
     );
 
     const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your Internet connection.';
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
+  });
+
+  it('should match invalid form error message', () => {
+    props = {
+      loginError: {
+        errorCode: INVALID_FORM,
+        context: { email: 'Please enter your Email.', password: 'Please enter your Password.' },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+
+    const expectedMessage = 'We couldn\'t sign you in.Please enter your Email.Please enter your Password.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
