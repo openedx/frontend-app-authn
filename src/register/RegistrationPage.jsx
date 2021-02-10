@@ -446,7 +446,7 @@ class RegistrationPage extends React.Component {
                 <ValidationFormGroup
                   for={field.name}
                   key={field.name}
-                  className="pt-10 small"
+                  className="pt-10 small mb-0"
                 >
                   { nodes }
                 </ValidationFormGroup>
