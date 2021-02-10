@@ -487,7 +487,7 @@ class RegistrationPage extends React.Component {
           }
           return (
             <AuthnValidationFormGroup
-              label={field.label}
+              label={`${field.label} (required)`}
               for={field.name}
               name={field.name}
               type={field.type}
@@ -513,22 +513,30 @@ class RegistrationPage extends React.Component {
   addExtraOptionalFields() {
     const fields = this.props.formData.fields.map((field) => {
       let options = null;
-      let cssClass = 'mb-0';
+      let cssClass = 'mb-20';
       if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
         if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
           REGISTRATION_OPTIONAL_MAP[field.name] = true;
+          const stateVar = camelCase(field.name);
           const props = {
             id: field.name,
             name: field.name,
             type: field.type,
             onChange: e => this.handleOnChange(e),
+            value: this.state[stateVar],
           };
 
           if (field.type === 'select') {
-            options = field.options.map((item) => ({
-              value: item.value,
-              label: item.name,
-            }));
+            options = field.options.map((item) => {
+              const option = {};
+              option.value = item.value;
+              option.label = item.name;
+              if (item.name === '--') {
+                option.label = `${field.label} (optional)`;
+                option.disabled = true;
+              }
+              return option;
+            });
             props.options = options;
           }
           if (field.name === 'gender') {
@@ -540,16 +548,19 @@ class RegistrationPage extends React.Component {
           }
 
           return (
-            <ValidationFormGroup
+            <AuthnValidationFormGroup
+              label={`${field.label} (optional)`}
               for={field.name}
+              name={field.name}
+              type={field.type}
               key={field.name}
+              value={props.value}
+              placeholder=""
               className={cssClass}
-            >
-              <label htmlFor={field.name} className="h6 pt-10">
-                {field.label} {this.props.intl.formatMessage(messages['register.optional.label'])}
-              </label>
-              <Input {...props} />
-            </ValidationFormGroup>
+              onClick={(e) => this.handleOnClick(e)}
+              onChange={(e) => this.handleOnChange(e)}
+              selectOptions={props.options}
+            />
           );
         }
       }
