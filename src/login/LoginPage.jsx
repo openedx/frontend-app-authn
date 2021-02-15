@@ -66,12 +66,6 @@ class LoginPage extends React.Component {
     this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
-  handleOnBlur = () => {
-    if (this.state.isSubmitted) {
-      this.setState({ isSubmitted: false });
-    }
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ isSubmitted: true });
@@ -107,6 +101,8 @@ class LoginPage extends React.Component {
 
     if (email === '') {
       errors.email = this.props.intl.formatMessage(messages['email.validation.message']);
+    } else if (email.length < 3) {
+      errors.email = this.props.intl.formatMessage(messages['email.format.validation.less.chars.message']);
     } else if (!regex.test(email)) {
       errors.email = this.props.intl.formatMessage(messages['email.format.validation.message']);
     } else {
@@ -212,7 +208,6 @@ class LoginPage extends React.Component {
                   invalidMessage={errors.email}
                   value={email}
                   helpText={intl.formatMessage(messages['email.help.message'])}
-                  onBlur={(e) => { this.handleOnBlur(); this.validateEmail(e.target.value); }}
                   onChange={(e) => this.setState({ email: e.target.value, isSubmitted: false })}
                 />
                 <AuthnValidationFormGroup
@@ -223,7 +218,6 @@ class LoginPage extends React.Component {
                   invalid={errors.password !== ''}
                   invalidMessage={errors.password}
                   value={password}
-                  onBlur={(e) => { this.handleOnBlur(); this.validatePassword(e.target.value); }}
                   onChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
                 />
                 <LoginHelpLinks page={LOGIN_PAGE} />
