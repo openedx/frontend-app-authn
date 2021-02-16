@@ -14,6 +14,7 @@ import {
 } from './actions';
 
 import { validateToken, resetPassword } from './service';
+import { INTERNAL_SERVER_ERROR } from '../../data/constants';
 
 // Services
 export function* handleValidateToken(action) {
@@ -27,7 +28,7 @@ export function* handleValidateToken(action) {
       yield put(validateTokenFailure(isValid));
     }
   } catch (err) {
-    yield put(validateTokenFailure(err));
+    yield put(validateTokenFailure(INTERNAL_SERVER_ERROR));
     logError(err);
   }
 }
@@ -45,7 +46,7 @@ export function* handleResetPassword(action) {
       yield put(resetPasswordFailure(resetErrors));
     }
   } catch (err) {
-    yield put(resetPasswordFailure(err));
+    yield put(resetPasswordFailure(INTERNAL_SERVER_ERROR));
     logError(err);
   }
 }

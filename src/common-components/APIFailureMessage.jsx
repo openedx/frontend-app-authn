@@ -8,12 +8,16 @@ const APIFailureMessage = (props) => {
   const { intl, header } = props;
 
   return (
-    <Alert id="internal-server-error" variant="danger">
-      <Alert.Heading>
-        {header}
-      </Alert.Heading>
-      {intl.formatMessage(messages['internal.server.error.message'])}
-    </Alert>
+    <div className="d-flex justify-content-center m-4">
+      <div className="d-flex flex-column mw-500">
+        <Alert id="internal-server-error" variant="danger">
+          <Alert.Heading>
+            {header}
+          </Alert.Heading>
+          {intl.formatMessage(messages['internal.server.error.message'])}
+        </Alert>
+      </div>
+    </div>
   );
 };
 

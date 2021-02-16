@@ -17,8 +17,10 @@ import InvalidTokenMessage from './InvalidToken';
 import ResetSuccessMessage from './ResetSuccess';
 import {
   AuthnValidationFormGroup,
+  APIFailureMessage,
 } from '../common-components';
 import Spinner from './Spinner';
+import { INTERNAL_SERVER_ERROR } from '../data/constants';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
@@ -32,7 +34,7 @@ const ResetPasswordPage = (props) => {
   const [bannerErrorMessage, setbannerErrorMessage] = useState('');
 
   useEffect(() => {
-    if (props.status === 'failure' && props.errors) {
+    if (props.status === 'failure' && props.errors !== INTERNAL_SERVER_ERROR) {
       setbannerErrorMessage(props.errors);
       setvalidationMessage(props.errors);
       setPasswordValidValue(false);
@@ -95,19 +97,27 @@ const ResetPasswordPage = (props) => {
     props.resetPassword(formPayload, props.token, params);
   };
 
-  if (props.token_status === 'pending') {
+  if (props.status === 'token-pending') {
     const { token } = props.match.params;
     if (token) {
       props.validateToken(token);
       return <Spinner />;
     }
-  } else if (props.token_status === 'invalid') {
+  } else if (props.status === 'invalid' && props.errors === INTERNAL_SERVER_ERROR) {
+    return (
+      <APIFailureMessage header={intl.formatMessage(messages['reset.password.token.validation.sever.error'])} />
+    );
+  } else if (props.status === 'invalid') {
     return <InvalidTokenMessage />;
   } else if (props.status === 'success') {
     return <ResetSuccessMessage />;
   } else {
     return (
       <>
+
+        {props.status === 'failure' && props.errors === INTERNAL_SERVER_ERROR ? (
+          <APIFailureMessage header={intl.formatMessage(messages['reset.password.request.server.error'])} />
+        ) : null}
         <div id="main" className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">
             {bannerErrorMessage ? (
@@ -168,7 +178,6 @@ const ResetPasswordPage = (props) => {
 
 ResetPasswordPage.defaultProps = {
   status: null,
-  token_status: null,
   token: null,
   match: null,
   errors: null,
@@ -178,7 +187,6 @@ ResetPasswordPage.propTypes = {
   intl: intlShape.isRequired,
   resetPassword: PropTypes.func.isRequired,
   validateToken: PropTypes.func.isRequired,
-  token_status: PropTypes.string,
   token: PropTypes.string,
   match: PropTypes.shape({
     params: PropTypes.shape({

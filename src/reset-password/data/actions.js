@@ -18,9 +18,9 @@ export const validateTokenSuccess = (tokenStatus, token) => ({
   payload: { tokenStatus, token },
 });
 
-export const validateTokenFailure = (tokenStatus) => ({
+export const validateTokenFailure = errors => ({
   type: VALIDATE_TOKEN.FAILURE,
-  payload: { tokenStatus },
+  payload: { errors },
 });
 
 // Reset Password
