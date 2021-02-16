@@ -494,7 +494,6 @@ class RegistrationPage extends React.Component {
               key={field.name}
               invalid={this.state.errors[stateVar] !== ''}
               invalidMessage={field.errorMessages.required}
-              placeholder=""
               className="mb-0"
               value={props.value}
               onClick={(e) => this.handleOnClick(e)}
@@ -555,7 +554,6 @@ class RegistrationPage extends React.Component {
               type={field.type}
               key={field.name}
               value={props.value}
-              placeholder=""
               className={cssClass}
               onClick={(e) => this.handleOnClick(e)}
               onChange={(e) => this.handleOnChange(e)}
@@ -686,7 +684,6 @@ class RegistrationPage extends React.Component {
                   type="text"
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
-                  placeholder=""
                   value={this.state.name}
                   onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -700,7 +697,6 @@ class RegistrationPage extends React.Component {
                   type="text"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
-                  placeholder=""
                   value={this.state.username}
                   onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -714,7 +710,6 @@ class RegistrationPage extends React.Component {
                   type="text"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
-                  placeholder=""
                   value={this.state.email}
                   onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -729,7 +724,6 @@ class RegistrationPage extends React.Component {
                     type="password"
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
-                    placeholder=""
                     value={this.state.password}
                     onClick={(e) => this.handleOnClick(e)}
                     onBlur={(e) => this.handleOnBlur(e)}
@@ -744,7 +738,6 @@ class RegistrationPage extends React.Component {
                   name="optional"
                   type="checkbox"
                   invalidMessage=""
-                  placeholder=""
                   value={this.state.enableOptionalField}
                   onClick={(e) => this.handleOnOptional(e)}
                   onBlur={null}

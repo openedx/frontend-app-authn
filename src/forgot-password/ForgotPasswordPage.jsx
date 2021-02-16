@@ -104,7 +104,6 @@ const ForgotPasswordPage = (props) => {
                   type="email"
                   invalid={validationError !== ''}
                   invalidMessage={validationError}
-                  placeholder="username@domain.com"
                   value={values.email}
                   onBlur={() => getValidationMessage(values.email)}
                   onChange={e => setFieldValue('email', e.target.value)}
