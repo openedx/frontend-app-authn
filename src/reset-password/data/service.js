@@ -1,15 +1,14 @@
 import { getConfig } from '@edx/frontend-platform';
-import { getHttpClient, getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getHttpClient } from '@edx/frontend-platform/auth';
 import formurlencoded from 'form-urlencoded';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function validateToken(token) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    isPublic: true,
   };
 
-  const { data } = await getAuthenticatedHttpClient()
+  const { data } = await getHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/user_api/v1/account/password_reset/token/validate/`,
       formurlencoded({ token }),
@@ -25,7 +24,6 @@ export async function validateToken(token) {
 export async function resetPassword(payload, token, queryParams) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    isPublic: true,
   };
   const url = new URL(`${getConfig().LMS_BASE_URL}/password/reset/${token}/`);
 
@@ -33,7 +31,7 @@ export async function resetPassword(payload, token, queryParams) {
     url.searchParams.append('is_account_recovery', true);
   }
 
-  const { data } = await getAuthenticatedHttpClient()
+  const { data } = await getHttpClient()
     .post(url.href, formurlencoded(payload), requestConfig)
     .catch((e) => {
       throw (e);
