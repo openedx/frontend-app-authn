@@ -249,6 +249,33 @@ describe('LoginPage', () => {
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
   });
 
+  it('should redirect to enterprise selection page', () => {
+    const authCompleteUrl = '/auth/complete/google-oauth2/';
+    const enterpriseSelectionPage = 'http://localhost:18000/enterprise/select/active/?success_url='.concat(authCompleteUrl);
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginResult: {
+          success: true,
+          redirectUrl: enterpriseSelectionPage,
+        },
+      },
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          finishAuthUrl: authCompleteUrl,
+        },
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
+    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toBe(enterpriseSelectionPage);
+  });
+
   it('should redirect to social auth provider url', () => {
     const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
