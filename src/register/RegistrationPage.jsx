@@ -50,15 +50,13 @@ class RegistrationPage extends React.Component {
       goals: '',
       levelOfEducation: '',
       enableOptionalField: false,
-      validationErrorsAlertMessages: {
+      validationAlertMessages: {
         name: [{ user_message: '' }],
         username: [{ user_message: '' }],
         email: [{ user_message: '' }],
-        emailFormat: [{ user_message: '' }],
         password: [{ user_message: '' }],
         country: [{ user_message: '' }],
       },
-      currentValidations: null,
       errors: {
         email: '',
         name: '',
@@ -68,7 +66,8 @@ class RegistrationPage extends React.Component {
       },
       institutionLogin: false,
       formValid: false,
-      assignRegistrationErrorsToField: true,
+      updateFieldErrors: false,
+      updateAlertErrors: false,
     };
   }
 
@@ -91,11 +90,8 @@ class RegistrationPage extends React.Component {
       const { fieldName } = nextProps.validations.validation_decisions;
       const errorMsg = nextProps.validations.validation_decisions[fieldName];
       errors[fieldName] = errorMsg;
-      const currentValidations = nextProps.validations.validation_decisions;
-
       this.setState({
         errors,
-        currentValidations,
       });
       return false;
     }
@@ -184,12 +180,15 @@ class RegistrationPage extends React.Component {
     });
     if (finalValidation) {
       this.props.registerNewUser(payload);
-    } else {
-      this.props.fetchRealtimeValidations(payload);
     }
   }
 
-  checkNoValidationsErrors(validations) {
+  checkNoFieldErrors(validations) {
+    const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
+    return keyValidList.every((current) => current === true);
+  }
+
+  checkNoAlertErrors(validations) {
     const keyValidList = Object.entries(validations).map(([key]) => {
       const validation = validations[key][0];
       return !validation.user_message;
@@ -198,15 +197,6 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnBlur(e) {
-    const { name, value } = e.target;
-    if (this.props.statusCode === 403) {
-      this.setState({
-        assignRegistrationErrorsToField: false,
-      }, () => {
-        this.validateInput(name, value, false);
-      });
-      return;
-    }
     const payload = {
       fieldName: e.target.name,
       email: this.state.email,
@@ -216,11 +206,21 @@ class RegistrationPage extends React.Component {
       honor_code: true,
       country: this.state.country,
     };
+    const { name, value } = e.target;
     this.setState({
-      assignRegistrationErrorsToField: false,
+      updateFieldErrors: false,
+      updateAlertErrors: false,
+    }, () => {
+      this.validateInput(name, value, payload, false);
     });
+  }
 
-    this.props.fetchRealtimeValidations(payload);
+  handleOnChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+      updateFieldErrors: false,
+      updateAlertErrors: false,
+    });
   }
 
   handleOnOptional(e) {
@@ -228,6 +228,8 @@ class RegistrationPage extends React.Component {
     const targetValue = e.target.id === 'additionalFields' ? !optionalEnable : e.target.checked;
     this.setState({
       enableOptionalField: targetValue,
+      updateAlertErrors: false,
+      updateFieldErrors: false,
     });
     sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
   }
@@ -236,177 +238,140 @@ class RegistrationPage extends React.Component {
     sendTrackEvent('edx.bi.login_form.toggled', { category: 'user-engagement' });
   }
 
-  validateInput(inputName, value, showAlertMessageOnBlurEvent = true) {
+  validateInput(inputName, value, payload, updateAlertMessage = true) {
     const {
       errors,
-      validationErrorsAlertMessages,
     } = this.state;
+    const {
+      intl,
+      statusCode,
+    } = this.props;
 
-    let { formValid, assignRegistrationErrorsToField } = this.state;
-    const validations = this.state.currentValidations;
+    let {
+      formValid,
+      updateFieldErrors,
+      updateAlertErrors,
+    } = this.state;
     switch (inputName) {
       case 'email':
-        if (this.props.statusCode !== 403 && validations && validations.email) {
-          validationErrorsAlertMessages.email = [{ user_message: validations.email }];
-          errors.email = validations.email;
-        } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'email.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.email = errorEmpty;
-          }
-          errors.email = errorEmpty[0].user_message;
+        if (value.length < 1) {
+          errors.email = intl.formatMessage(messages['email.validation.message']);
+        } else if (value.length <= 2) {
+          errors.email = intl.formatMessage(messages['email.ratelimit.less.chars.validation.message']);
+        } else if (!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+          errors.email = intl.formatMessage(messages['email.ratelimit.incorrect.format.validation.message']);
+        } else if (payload && statusCode !== 403) {
+          this.props.fetchRealtimeValidations(payload);
         } else {
-          const errorCharlength = this.generateUserMessage(value.length <= 2, 'email.ratelimit.less.chars.validation.message');
-          const formatError = this.generateUserMessage(!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i), 'email.ratelimit.incorrect.format.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.email = value.length <= 2 ? errorCharlength : formatError;
-          }
-          errors.email = value.length <= 2 ? errorCharlength[0].user_message : formatError[0].user_message;
+          errors.email = '';
         }
         break;
       case 'name':
-        if (this.props.statusCode !== 403 && validations && validations.name) {
-          validationErrorsAlertMessages.name = [{ user_message: validations.name }];
-          errors.name = validations.name;
-        } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'fullname.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.name = errorEmpty;
-          }
-          errors.name = errorEmpty[0].user_message;
+        if (value.length < 1) {
+          errors.name = intl.formatMessage(messages['fullname.validation.message']);
         } else {
-          validationErrorsAlertMessages.name = [{ user_message: '' }];
-          errors.name = validationErrorsAlertMessages.name[0].user_message;
+          errors.name = '';
         }
         break;
       case 'username':
-        if (this.props.statusCode !== 403 && validations && validations.username) {
-          validationErrorsAlertMessages.username = [{ user_message: validations.username }];
-          errors.username = validations.username;
-        } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'username.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.username = errorEmpty;
-          }
-          errors.username = errorEmpty[0].user_message;
+        if (value.length < 1) {
+          errors.username = intl.formatMessage(messages['username.validation.message']);
         } else if (value.length <= 1) {
-          const errorCharLength = this.generateUserMessage(value.length <= 1, 'username.ratelimit.less.chars.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.username = errorCharLength;
-          }
-          errors.username = errorCharLength[0].user_message;
-        } else if (!value.match(/^([a-zA-Z0-9_-])$/i)) {
-          const formatError = this.generateUserMessage(!value.match(/^[a-zA-Z0-9_-]*$/i), 'username.format.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.username = formatError;
-          }
-          errors.username = formatError[0].user_message;
+          errors.username = intl.formatMessage(messages['username.ratelimit.less.chars.message']);
+        } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
+          errors.username = intl.formatMessage(messages['username.format.validation.message']);
+        } else if (payload && statusCode !== 403) {
+          this.props.fetchRealtimeValidations(payload);
+        } else {
+          errors.username = '';
         }
         break;
       case 'password':
-        if (this.props.statusCode !== 403 && validations && validations.password) {
-          validationErrorsAlertMessages.password = [{ user_message: validations.password }];
-          errors.password = validations.password;
-        } else if (value.length < 1) {
-          const errorEmpty = this.generateUserMessage(value.length < 1, 'register.page.password.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.password = errorEmpty;
-          }
-          errors.password = errorEmpty[0].user_message;
+        if (value.length < 1) {
+          errors.password = intl.formatMessage(messages['register.page.password.validation.message']);
         } else if (value.length < 8) {
-          const errorCharlength = this.generateUserMessage(value.length < 8, 'email.ratelimit.password.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.password = errorCharlength;
-          }
-          errors.password = errorCharlength[0].user_message;
+          errors.password = intl.formatMessage(messages['email.ratelimit.password.validation.message']);
         } else if (!value.match(/.*[0-9].*/i)) {
-          const formatError = this.generateUserMessage(!value.match(/.*[0-9].*/i), 'username.number.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.password = formatError;
-          }
-          errors.password = formatError[0].user_message;
+          errors.password = intl.formatMessage(messages['username.number.validation.message']);
+        } else if (!value.match(/.*[a-zA-Z].*/i)) {
+          errors.password = intl.formatMessage(messages['username.character.validation.message']);
+        } else if (payload && statusCode !== 403) {
+          this.props.fetchRealtimeValidations(payload);
         } else {
-          const formatError = this.generateUserMessage(!value.match(/.*[a-zA-Z].*/i), 'username.character.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.password = formatError;
-          }
-          errors.password = formatError[0].user_message;
+          errors.password = '';
         }
         break;
       case 'country':
-        if (this.props.statusCode !== 403 && validations && validations.country) {
-          validationErrorsAlertMessages.country = [{ user_message: validations.country }];
-          errors.country = validations.country;
+        if (!value) {
+          errors.country = intl.formatMessage(messages['country.validation.message']);
         } else {
-          const emptyError = this.generateUserMessage(value === '', 'country.validation.message');
-          if (showAlertMessageOnBlurEvent) {
-            validationErrorsAlertMessages.country = emptyError;
-          }
-          errors.country = emptyError[0].user_message;
+          errors.country = '';
         }
         break;
       default:
         break;
     }
 
-    if (showAlertMessageOnBlurEvent) {
-      assignRegistrationErrorsToField = true;
-      formValid = this.checkNoValidationsErrors(validationErrorsAlertMessages);
+    if (updateAlertMessage) {
+      updateFieldErrors = true;
+      updateAlertErrors = true;
+      formValid = this.checkNoFieldErrors(errors);
     }
     this.setState({
       formValid,
-      validationErrorsAlertMessages,
-      assignRegistrationErrorsToField,
+      updateFieldErrors,
+      updateAlertErrors,
       errors,
     });
     return formValid;
   }
 
-  generateUserMessage(isFieldInValid, messageID) {
-    return [{ user_message: isFieldInValid ? this.intl.formatMessage(messages[messageID]) : '' }];
-  }
-
-  updateFieldErrors(errorMessages) {
+  updateFieldErrors(registrationError) {
     const {
       errors,
     } = this.state;
-    if (errorMessages.email) {
-      errors.email = errorMessages.email[0].user_message;
-    }
-    if (errorMessages.username) {
-      errors.username = errorMessages.username[0].user_message;
-    }
-    if (errorMessages.name) {
-      errors.name = errorMessages.name[0].user_message;
-    }
-    if (errorMessages.password) {
-      errors.password = errorMessages.password[0].user_message;
-    }
-    if (errorMessages.country) {
-      errors.country = errorMessages.country[0].user_message;
-    }
+    Object.entries(registrationError).map(([key]) => {
+      if (registrationError[key]) {
+        errors[key] = registrationError[key][0].user_message;
+      }
+      return errors;
+    });
+  }
+
+  updateValidationAlertMessages() {
+    const {
+      errors,
+      validationAlertMessages,
+    } = this.state;
+    Object.entries(errors).map(([key, value]) => {
+      validationAlertMessages[key][0].user_message = value;
+      return validationAlertMessages;
+    });
   }
 
   renderErrors() {
     let errorsObject = null;
-    let { assignRegistrationErrorsToField } = this.state;
-    const { validationErrorsAlertMessages } = this.state;
+    const {
+      updateAlertErrors,
+      updateFieldErrors,
+      validationAlertMessages,
+    } = this.state;
     const { registrationError, submitState } = this.props;
-    if (!this.checkNoValidationsErrors(validationErrorsAlertMessages)) {
-      assignRegistrationErrorsToField = false;
-      errorsObject = validationErrorsAlertMessages;
-    } else if (registrationError) {
-      if (assignRegistrationErrorsToField && submitState !== PENDING_STATE) {
+    if (registrationError) {
+      if (updateFieldErrors && submitState !== PENDING_STATE) {
         this.updateFieldErrors(registrationError);
       }
       errorsObject = registrationError;
     } else {
-      return null;
+      if (updateAlertErrors && submitState !== PENDING_STATE) {
+        this.updateValidationAlertMessages();
+      }
+      errorsObject = !this.checkNoAlertErrors(validationAlertMessages) ? validationAlertMessages : {};
     }
     return (
       <RegistrationFailure
         errors={errorsObject}
-        isSubmitted={assignRegistrationErrorsToField}
+        isSubmitted={updateAlertErrors}
         submitButtonState={submitState}
       />
     );
@@ -487,7 +452,7 @@ class RegistrationPage extends React.Component {
                   invalidMessage={this.state.errors.name}
                   value={this.state.name}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.setState({ name: e.target.value })}
+                  onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.name'])}
                 />
                 <AuthnValidationFormGroup
@@ -499,7 +464,7 @@ class RegistrationPage extends React.Component {
                   invalidMessage={this.state.errors.username}
                   value={this.state.username}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.setState({ username: e.target.value })}
+                  onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.username'])}
                 />
                 <AuthnValidationFormGroup
@@ -511,7 +476,7 @@ class RegistrationPage extends React.Component {
                   invalidMessage={this.state.errors.email}
                   value={this.state.email}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.setState({ email: e.target.value })}
+                  onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.email'])}
                 />
                 {!currentProvider && (
@@ -524,7 +489,7 @@ class RegistrationPage extends React.Component {
                     invalidMessage={this.state.errors.password}
                     value={this.state.password}
                     onBlur={(e) => this.handleOnBlur(e)}
-                    onChange={(e) => this.setState({ password: e.target.value })}
+                    onChange={(e) => this.handleOnChange(e)}
                     helpText={intl.formatMessage(messages['helptext.password'])}
                   />
                 )}
@@ -539,7 +504,7 @@ class RegistrationPage extends React.Component {
                   className="mb-0"
                   value={this.state.country}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.setState({ country: e.target.value })}
+                  onChange={(e) => this.handleOnChange(e)}
                   selectOptions={this.getCountryOptions()}
                 />
                 <div id="honor-code" className="pt-10 small">
