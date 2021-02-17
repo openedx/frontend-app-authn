@@ -146,7 +146,7 @@ describe('LoginPage', () => {
     expect(root.find('button.field-link').first().text()).toEqual('Need help signing in?');
   });
 
-  it('updates the error state for invalid email', () => {
+  it('updates the error state for empty email input on form submission', () => {
     const errorState = { email: 'Please enter your Email.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
@@ -159,6 +159,35 @@ describe('LoginPage', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
       loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
     );
+  });
+
+  it('updates the error state for invalid email; less than 3 characters on form submission', () => {
+    const errorState = { email: 'Email must have at least 3 characters.', password: '' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+
+    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
+    loginPage.find('input#email').simulate('change', { target: { value: 'te', name: 'email' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(loginPage.state('errors')).toEqual(errorState);
+    expect(store.dispatch).toHaveBeenCalledWith(
+      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
+    );
+  });
+
+  it('updates the error state for invalid email format validation on form submission', () => {
+    const errorState = { email: 'The email address you\'ve provided isn\'t formatted correctly.', password: '' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+
+    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
+    loginPage.find('input#email').simulate('change', { target: { value: 'test@', name: 'email' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(loginPage.state('errors')).toEqual(errorState);
   });
 
   it('updates the error state for invalid password', () => {
@@ -176,26 +205,9 @@ describe('LoginPage', () => {
     );
   });
 
-  it('should update the error message on focus out', () => {
-    const errorState = { email: 'Please enter your Email.', password: 'Please enter your Password.' };
-    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-
-    loginPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
-    loginPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
-
-    expect(loginPage.state('errors')).toEqual(errorState);
-
-    errorState.email = 'The email address you\'ve provided isn\'t formatted correctly.';
-
-    // Enter email with invalid format
-    loginPage.find('input#email').simulate('blur', { target: { value: 'invalid-email', name: 'email' } });
-    expect(loginPage.state('errors')).toEqual(errorState);
-  });
-
   it('submits login request for valid email and password values', () => {
     store.dispatch = jest.fn(store.dispatch);
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-
     loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com' } });
     loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');

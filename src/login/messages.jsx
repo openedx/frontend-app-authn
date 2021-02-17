@@ -91,6 +91,11 @@ const messages = defineMessages({
     defaultMessage: 'The email address you\'ve provided isn\'t formatted correctly.',
     description: 'Validation message that appears when email address format is incorrect',
   },
+  'email.format.validation.less.chars.message': {
+    id: 'email.format.validation.less.chars.message',
+    defaultMessage: 'Email must have at least 3 characters.',
+    description: 'Validation message that appears when email address is less than 3 characters',
+  },
   'email.validation.message': {
     id: 'email.validation.message',
     defaultMessage: 'Please enter your Email.',
