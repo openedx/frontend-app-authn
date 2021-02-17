@@ -31,6 +31,7 @@ import {
   InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
 import RegistrationFailure from './RegistrationFailure';
+import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   DEFAULT_REDIRECT_URL,
   DEFAULT_STATE,
@@ -42,7 +43,7 @@ import {
   REGISTRATION_EXTRA_FIELDS,
 } from '../data/constants';
 import messages from './messages';
-import processLink from '../data/utils';
+import processLink, { getTpaProvider } from '../data/utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -101,9 +102,14 @@ class RegistrationPage extends React.Component {
 
   componentDidMount() {
     const params = (new URL(document.location)).searchParams;
+    const tpaHint = params.get('tpa_hint');
     const payload = {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
+
+    if (tpaHint) {
+      payload.tpa_hint = tpaHint;
+    }
     this.props.getThirdPartyAuthContext(payload);
     this.props.fetchRegistrationForm();
   }
@@ -642,16 +648,13 @@ class RegistrationPage extends React.Component {
     return thirdPartyComponent;
   }
 
-  render() {
-    const { intl, submitState, thirdPartyAuthApiStatus } = this.props;
-    const {
-      currentProvider, finishAuthUrl, providers, secondaryProviders,
-    } = this.props.thirdPartyAuthContext;
-
-    if (!this.props.formData) {
-      return <div />;
-    }
-
+  renderForm(currentProvider,
+    providers,
+    secondaryProviders,
+    thirdPartyAuthApiStatus,
+    finishAuthUrl,
+    submitState,
+    intl) {
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
@@ -792,6 +795,42 @@ class RegistrationPage extends React.Component {
         </div>
       </>
     );
+  }
+
+  render() {
+    const { intl, submitState, thirdPartyAuthApiStatus } = this.props;
+    const {
+      currentProvider, finishAuthUrl, providers, secondaryProviders,
+    } = this.props.thirdPartyAuthContext;
+
+    if (!this.props.formData) {
+      return <div />;
+    }
+
+    const params = (new URL(window.location.href)).searchParams;
+    const tpaHint = params.get('tpa_hint');
+
+    if (tpaHint) {
+      if (thirdPartyAuthApiStatus === PENDING_STATE) {
+        return <Skeleton height={36} />;
+      }
+      const provider = getTpaProvider(tpaHint, providers, secondaryProviders);
+      return provider ? (<EnterpriseSSO provider={provider} intl={intl} />)
+        : this.renderForm(currentProvider,
+          providers,
+          secondaryProviders,
+          thirdPartyAuthApiStatus,
+          finishAuthUrl,
+          submitState,
+          intl);
+    }
+    return this.renderForm(currentProvider,
+      providers,
+      secondaryProviders,
+      thirdPartyAuthApiStatus,
+      finishAuthUrl,
+      submitState,
+      intl);
   }
 }
 

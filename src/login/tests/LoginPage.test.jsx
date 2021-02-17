@@ -13,7 +13,7 @@ import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 import { loginRequest, loginRequestFailure } from '../data/actions';
 import { RenderInstitutionButton } from '../../common-components';
-import { PENDING_STATE } from '../../data/constants';
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
@@ -412,5 +412,71 @@ describe('LoginPage', () => {
 
     expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
     expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
+  });
+
+  it('should render tpa button for tpa_hint id in primary provider', () => {
+    const expectedMessage = `Sign in using ${appleProvider.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [appleProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${appleProvider.id}`) };
+    appleProvider.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should render regular tpa button for invalid tpa_hint value', () => {
+    const expectedMessage = `${appleProvider.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [appleProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login?next=/dashboard&tpa_hint=invalid') };
+    appleProvider.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should render tpa button for tpa_hint id in secondary provider', () => {
+    const expectedMessage = `Sign in using ${secondaryProviders.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${secondaryProviders.id}`) };
+    secondaryProviders.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${secondaryProviders.id}`).find('span').text()).toEqual(expectedMessage);
   });
 });

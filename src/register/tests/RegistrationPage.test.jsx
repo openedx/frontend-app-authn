@@ -11,7 +11,7 @@ import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../../common-components';
 import RegistrationFailureMessage from '../RegistrationFailure';
-import { PENDING_STATE } from '../../data/constants';
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 import { fetchRegistrationForm, fetchRealtimeValidations, registerNewUser } from '../data/actions';
 
@@ -476,7 +476,7 @@ describe('./RegistrationPage.js', () => {
       },
     });
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
     renderer.create(reduxWrapper(<IntlRegistrationPage />));
     expect(window.location.href).toBe(dasboardUrl);
   });
@@ -492,6 +492,8 @@ describe('./RegistrationPage.js', () => {
         },
       },
     });
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
     const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(root.text().includes('Use my institution/campus credentials')).toBe(true);
   });
@@ -507,6 +509,8 @@ describe('./RegistrationPage.js', () => {
         },
       },
     });
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
     const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     root.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
     expect(root.text().includes('Test University')).toBe(true);
@@ -533,7 +537,7 @@ describe('./RegistrationPage.js', () => {
     });
 
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
 
     renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
@@ -569,7 +573,7 @@ describe('./RegistrationPage.js', () => {
     });
 
     delete window.location;
-    window.location = { href: '' };
+    window.location = { href: getConfig().BASE_URL };
 
     const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
@@ -589,6 +593,8 @@ describe('./RegistrationPage.js', () => {
       },
     });
 
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
     const expectedMessage = 'You\'ve successfully signed into Apple. We just need a little more information before '
                             + 'you start learning with openedX.';
 
@@ -597,39 +603,75 @@ describe('./RegistrationPage.js', () => {
   });
 
   it('check cookie rendered', () => {
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(registerPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
-  it('should show error message on 409 on alert and below the fields', () => {
-    const windowSpy = jest.spyOn(global, 'window', 'get');
-    windowSpy.mockImplementation(() => ({
-      scrollTo: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-    }));
+  it('should render tpa button for tpa_hint id in primary provider', () => {
+    const expectedMessage = `Sign in using ${appleProvider.name}`;
     store = mockStore({
       ...initialState,
-      register: {
-        ...initialState.register,
-        isSubmitted: true,
-        registrationError: {
-          email: [
-            {
-              user_message: 'It looks like test@gmail.com belongs to an existing account. Try again with a different email address.',
-            },
-          ],
-          username: [
-            {
-              user_message: 'It looks like test belongs to an existing account. Try again with a different username.',
-            },
-          ],
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [appleProvider],
         },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       },
     });
 
-    const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-    expect(tree.toJSON()).toMatchSnapshot();
-    windowSpy.mockClear();
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${appleProvider.id}`) };
+    appleProvider.iconImage = null;
+
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should render regular tpa button for invalid tpa_hint value', () => {
+    const expectedMessage = `${appleProvider.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [appleProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login?next=/dashboard&tpa_hint=invalid') };
+    appleProvider.iconImage = null;
+
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should render tpa button for tpa_hint id in secondary provider', () => {
+    const expectedMessage = `Sign in using ${secondaryProviders.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${secondaryProviders.id}`) };
+    secondaryProviders.iconImage = null;
+
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find(`button#${secondaryProviders.id}`).find('span').text()).toEqual(expectedMessage);
   });
 });

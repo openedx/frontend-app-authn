@@ -28,6 +28,17 @@ const messages = defineMessages({
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
     description: 'Error message that appears when server responds with 500 error code',
   },
+  // enterprise sso strings
+  'enterprisetpa.title.heading': {
+    id: 'enterprisetpa.title.heading',
+    defaultMessage: 'Would you like to sign in using {providerName} credentials?',
+    description: 'Header text used in enterprise third party authentication',
+  },
+  'enterprisetpa.login.button.text': {
+    id: 'enterprisetpa.login.button.text',
+    defaultMessage: 'Show me other ways to sign in or register',
+    description: 'Button text for login',
+  },
 });
 
 export default messages;
