@@ -12,18 +12,10 @@ import {
   fetchRealtimeValidationsBegin,
   fetchRealtimeValidationsSuccess,
   fetchRealtimeValidationsFailure,
-  REGISTER_FORM,
-  fetchRegistrationFormBegin,
-  fetchRegistrationFormSuccess,
-  fetchRegistrationFormFailure,
 } from './actions';
 
 // Services
-import {
-  getFieldsValidations,
-  getRegistrationForm,
-  registerRequest,
-} from './service';
+import { getFieldsValidations, registerRequest } from './service';
 import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 
 export function* handleNewUserRegistration(action) {
@@ -47,20 +39,6 @@ export function* handleNewUserRegistration(action) {
   }
 }
 
-export function* fetchRegistrationForm() {
-  try {
-    yield put(fetchRegistrationFormBegin());
-    const { registrationForm } = yield call(getRegistrationForm);
-
-    yield put(fetchRegistrationFormSuccess(
-      registrationForm,
-    ));
-  } catch (e) {
-    yield put(fetchRegistrationFormFailure());
-    logError(e);
-  }
-}
-
 export function* fetchRealtimeValidations(action) {
   try {
     yield put(fetchRealtimeValidationsBegin());
@@ -80,6 +58,5 @@ export function* fetchRealtimeValidations(action) {
 
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
-  yield takeEvery(REGISTER_FORM.BASE, fetchRegistrationForm);
   yield takeEvery(REGISTER_FORM_VALIDATIONS.BASE, fetchRealtimeValidations);
 }

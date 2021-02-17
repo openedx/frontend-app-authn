@@ -26,24 +26,6 @@ export const registerNewUserFailure = (error) => ({
   payload: { error },
 });
 
-// Registration Form Fields
-export const fetchRegistrationForm = () => ({
-  type: REGISTER_FORM.BASE,
-});
-
-export const fetchRegistrationFormBegin = () => ({
-  type: REGISTER_FORM.BEGIN,
-});
-
-export const fetchRegistrationFormSuccess = (formData) => ({
-  type: REGISTER_FORM.SUCCESS,
-  payload: { formData },
-});
-
-export const fetchRegistrationFormFailure = () => ({
-  type: REGISTER_FORM.FAILURE,
-});
-
 // Realtime Field validations
 export const fetchRealtimeValidations = (formPayload) => ({
   type: REGISTER_FORM_VALIDATIONS.BASE,

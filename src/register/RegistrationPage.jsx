@@ -1,49 +1,36 @@
 import React from 'react';
+
+import camelCase from 'lodash.camelcase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
+
+import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
-  Input,
-  StatefulButton,
-  Hyperlink,
-  ValidationFormGroup,
-  Form,
-} from '@edx/paragon';
-
-import {
-  injectIntl, intlShape,
+  injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { Form, Hyperlink, StatefulButton } from '@edx/paragon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import camelCase from 'lodash.camelcase';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import {
-  registerNewUser,
-  fetchRegistrationForm,
-  fetchRealtimeValidations,
-} from './data/actions';
+import { registerNewUser, fetchRealtimeValidations } from './data/actions';
 import { registrationRequestSelector } from './data/selectors';
-import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
+import messages from './messages';
+import OptionalFields from './OptionalFields';
+import RegistrationFailure from './RegistrationFailure';
+
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
   InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
-import RegistrationFailure from './RegistrationFailure';
+import { getThirdPartyAuthContext } from '../common-components/data/actions';
+import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_REDIRECT_URL,
-  DEFAULT_STATE,
-  PENDING_STATE,
-  LOGIN_PAGE,
-  REGISTER_PAGE,
-  REGISTRATION_VALIDITY_MAP,
-  REGISTRATION_OPTIONAL_MAP,
-  REGISTRATION_EXTRA_FIELDS,
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
-import messages from './messages';
-import processLink, { getTpaProvider } from '../data/utils';
+import { getTpaProvider } from '../data/utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -58,17 +45,11 @@ class RegistrationPage extends React.Component {
       username: '',
       password: '',
       country: '',
-      city: '',
       gender: '',
       yearOfBirth: '',
-      mailingAddress: '',
       goals: '',
-      honorCode: true,
-      termsOfService: true,
       levelOfEducation: '',
-      confirmEmail: '',
       enableOptionalField: false,
-      validationFieldName: '',
       validationErrorsAlertMessages: {
         name: [{ user_message: '' }],
         username: [{ user_message: '' }],
@@ -84,16 +65,7 @@ class RegistrationPage extends React.Component {
         username: '',
         password: '',
         country: '',
-        honorCode: '',
-        termsOfService: '',
       },
-      emailValid: false,
-      nameValid: false,
-      usernameValid: false,
-      passwordValid: false,
-      countryValid: false,
-      honorCodeValid: true,
-      termsOfServiceValid: false,
       institutionLogin: false,
       formValid: false,
       assignRegistrationErrorsToField: true,
@@ -111,7 +83,6 @@ class RegistrationPage extends React.Component {
       payload.tpa_hint = tpaHint;
     }
     this.props.getThirdPartyAuthContext(payload);
-    this.props.fetchRegistrationForm();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -120,11 +91,9 @@ class RegistrationPage extends React.Component {
       const { fieldName } = nextProps.validations.validation_decisions;
       const errorMsg = nextProps.validations.validation_decisions[fieldName];
       errors[fieldName] = errorMsg;
-      const stateValidKey = `${camelCase(fieldName)}Valid`;
       const currentValidations = nextProps.validations.validation_decisions;
 
       this.setState({
-        [stateValidKey]: !errorMsg,
         errors,
         currentValidations,
       });
@@ -147,6 +116,29 @@ class RegistrationPage extends React.Component {
     return true;
   }
 
+  getCountryOptions = () => {
+    const { intl } = this.props;
+    return [{
+      value: '',
+      label: intl.formatMessage(messages['registration.country.label']),
+    }].concat(getCountryList(getLocale()).map(({ code, name }) => ({ value: code, label: name })));
+  }
+
+  getOptionalFields() {
+    const values = {};
+    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(' ');
+    optionalFields.forEach((key) => {
+      values[camelCase(key)] = this.state[camelCase(key)];
+    });
+
+    return (
+      <OptionalFields
+        values={values}
+        onChangeHandler={(fieldName, value) => { this.setState({ [fieldName]: value }); }}
+      />
+    );
+  }
+
   handleInstitutionLogin = () => {
     this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
@@ -154,23 +146,17 @@ class RegistrationPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const params = (new URL(document.location)).searchParams;
-    const payload = {};
-    const payloadMap = new Map();
-    payloadMap.set('name', this.state.name);
-    payloadMap.set('username', this.state.username);
-    payloadMap.set('email', this.state.email);
+    const payload = {
+      name: this.state.name,
+      username: this.state.username,
+      email: this.state.email,
+      country: this.state.country,
+      honor_code: true,
+    };
 
     if (!this.props.thirdPartyAuthContext.currentProvider) {
-      payloadMap.set('password', this.state.password);
+      payload.password = this.state.password;
     }
-
-    const fieldMap = { ...REGISTRATION_VALIDITY_MAP, ...REGISTRATION_OPTIONAL_MAP };
-    Object.entries(fieldMap).forEach(([key, value]) => {
-      if (value) {
-        payloadMap.set(key, this.state[camelCase(key)]);
-      }
-    });
-    payloadMap.forEach((value, key) => { payload[key] = value; });
 
     const next = params.get('next');
     const courseId = params.get('course_id');
@@ -181,16 +167,21 @@ class RegistrationPage extends React.Component {
       payload.course_id = courseId;
     }
 
-    let finalValidation = this.isFormValid();
-    if (!this.isFormValid()) {
-      // Special case where honor code and tos is a single field, true by default. We don't need
-      // to validate this field
-      payloadMap.forEach((value, key) => {
-        if (key !== 'honor_code' || 'terms_of_service' in REGISTRATION_VALIDITY_MAP) {
-          finalValidation = this.validateInput(key, value);
-        }
+    let finalValidation = this.state.formValid;
+    if (!this.state.formValid) {
+      Object.keys(payload).forEach(key => {
+        finalValidation = this.validateInput(key, payload[key]);
       });
     }
+    // Since optional fields are not validated we can add it to payload after required fields
+    // have been validated. This will save us unwanted calls to validateInput()
+    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(' ');
+    optionalFields.forEach((key) => {
+      const stateKey = camelCase(key);
+      if (this.state[stateKey]) {
+        payload[key] = this.state[stateKey];
+      }
+    });
     if (finalValidation) {
       this.props.registerNewUser(payload);
     } else {
@@ -199,16 +190,11 @@ class RegistrationPage extends React.Component {
   }
 
   checkNoValidationsErrors(validations) {
-    let keyValidList = null;
-    keyValidList = Object.entries(validations).map(([key]) => {
+    const keyValidList = Object.entries(validations).map(([key]) => {
       const validation = validations[key][0];
       return !validation.user_message;
     });
     return keyValidList.every((current) => current === true);
-  }
-
-  isFormValid() {
-    return this.state.formValid;
   }
 
   handleOnBlur(e) {
@@ -227,22 +213,14 @@ class RegistrationPage extends React.Component {
       username: this.state.username,
       password: this.state.password,
       name: this.state.name,
-      honor_code: this.state.honorCode,
+      honor_code: true,
       country: this.state.country,
     };
     this.setState({
-      validationFieldName: e.target.name,
       assignRegistrationErrorsToField: false,
     });
 
     this.props.fetchRealtimeValidations(payload);
-  }
-
-  handleOnChange(e) {
-    const targetValue = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    this.setState({
-      [camelCase(e.target.name)]: targetValue,
-    });
   }
 
   handleOnOptional(e) {
@@ -252,19 +230,6 @@ class RegistrationPage extends React.Component {
       enableOptionalField: targetValue,
     });
     sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
-  }
-
-  handleOnClick(e) {
-    if (this.state.currentValidations && this.props.statusCode !== 403) {
-      const { errors } = this.state;
-      const fieldName = e.target.name;
-      errors[fieldName] = this.state.currentValidations[fieldName];
-      const stateValidKey = `${camelCase(fieldName)}Valid`;
-      this.setState(prevState => ({
-        [stateValidKey]: !prevState.currentValidations[fieldName],
-        errors,
-      }));
-    }
   }
 
   handleLoginLinkClickEvent() {
@@ -277,12 +242,7 @@ class RegistrationPage extends React.Component {
       validationErrorsAlertMessages,
     } = this.state;
 
-    let {
-      honorCodeValid,
-      termsOfServiceValid,
-      formValid,
-      assignRegistrationErrorsToField,
-    } = this.state;
+    let { formValid, assignRegistrationErrorsToField } = this.state;
     const validations = this.state.currentValidations;
     switch (inputName) {
       case 'email':
@@ -385,14 +345,6 @@ class RegistrationPage extends React.Component {
           errors.country = emptyError[0].user_message;
         }
         break;
-      case 'honor_code':
-        honorCodeValid = value !== false;
-        errors.honorCode = honorCodeValid ? '' : null;
-        break;
-      case 'terms_of_service':
-        termsOfServiceValid = value !== false;
-        errors.termsOfService = termsOfServiceValid ? '' : null;
-        break;
       default:
         break;
     }
@@ -404,177 +356,10 @@ class RegistrationPage extends React.Component {
     this.setState({
       formValid,
       validationErrorsAlertMessages,
-      honorCodeValid,
-      termsOfServiceValid,
       assignRegistrationErrorsToField,
       errors,
     });
     return formValid;
-  }
-
-  addExtraRequiredFields() {
-    const fields = this.props.formData.fields.map((field) => {
-      let options = null;
-      if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
-        if (field.required) {
-          const stateVar = camelCase(field.name);
-
-          let beforeLink;
-          let link;
-          let linkText;
-          let afterLink;
-
-          const props = {
-            id: field.name,
-            name: field.name,
-            type: field.type,
-            value: this.state[stateVar],
-            required: true,
-            onChange: e => this.handleOnChange(e),
-          };
-
-          REGISTRATION_VALIDITY_MAP[field.name] = true;
-          if (field.type === 'plaintext' && field.name === 'honor_code') { // special case where honor code and tos are combined
-            afterLink = field.label;
-            props.type = 'hidden';
-            const nodes = [];
-            do {
-              const matches = processLink(afterLink);
-              [beforeLink, link, linkText, afterLink] = matches;
-              nodes.push(
-                <React.Fragment key={link}>
-                  {beforeLink}
-                  <Hyperlink destination={link}>{linkText}</Hyperlink>
-                </React.Fragment>,
-              );
-            } while (afterLink.includes('a href'));
-            nodes.push(<React.Fragment key={afterLink}>{afterLink}</React.Fragment>);
-
-            return (
-              <React.Fragment key={field.type}>
-                <input {...props} />
-                <ValidationFormGroup
-                  for={field.name}
-                  key={field.name}
-                  className="pt-10 small mb-0"
-                >
-                  { nodes }
-                </ValidationFormGroup>
-              </React.Fragment>
-            );
-          }
-          if (field.type === 'checkbox') {
-            const matches = processLink(field.label);
-            [beforeLink, link, linkText, afterLink] = matches;
-            props.checked = this.state[stateVar];
-            return (
-              <ValidationFormGroup
-                for={field.name}
-                key={field.name}
-                invalid={this.state.errors[stateVar] !== ''}
-                invalidMessage={field.errorMessages.required}
-                className="custom-control small"
-              >
-                <Input {...props} />
-                {beforeLink}
-                <Hyperlink destination={link}>{linkText}</Hyperlink>
-                {afterLink}
-              </ValidationFormGroup>
-            );
-          }
-          if (field.type === 'select') {
-            options = field.options.map((item) => {
-              const option = {};
-              option.value = item.value;
-              option.label = item.name;
-              if (item.name === '--') {
-                option.label = `${field.label} (required)`;
-                option.disabled = true;
-              }
-              return option;
-            });
-            props.options = options;
-          }
-          return (
-            <AuthnValidationFormGroup
-              label={`${field.label} (required)`}
-              for={field.name}
-              name={field.name}
-              type={field.type}
-              key={field.name}
-              invalid={this.state.errors[stateVar] !== ''}
-              invalidMessage={field.errorMessages.required}
-              className="mb-0"
-              value={props.value}
-              onClick={(e) => this.handleOnClick(e)}
-              onBlur={(e) => this.handleOnBlur(e)}
-              onChange={(e) => this.handleOnChange(e)}
-              selectOptions={props.options}
-            />
-          );
-        }
-      }
-      return null;
-    });
-    return fields;
-  }
-
-  addExtraOptionalFields() {
-    const fields = this.props.formData.fields.map((field) => {
-      let options = null;
-      let cssClass = 'mb-20';
-      if (REGISTRATION_EXTRA_FIELDS.includes(field.name)) {
-        if (!field.required && field.name !== 'honor_code' && field.name !== 'country') {
-          REGISTRATION_OPTIONAL_MAP[field.name] = true;
-          const stateVar = camelCase(field.name);
-          const props = {
-            id: field.name,
-            name: field.name,
-            type: field.type,
-            onChange: e => this.handleOnChange(e),
-            value: this.state[stateVar],
-          };
-
-          if (field.type === 'select') {
-            options = field.options.map((item) => {
-              const option = {};
-              option.value = item.value;
-              option.label = item.name;
-              if (item.name === '--') {
-                option.label = `${field.label} (optional)`;
-                option.disabled = true;
-              }
-              return option;
-            });
-            props.options = options;
-          }
-          if (field.name === 'gender') {
-            cssClass += ' opt-inline-field';
-          }
-
-          if (field.name === 'year_of_birth') {
-            cssClass += ' opt-inline-field opt-year-field';
-          }
-
-          return (
-            <AuthnValidationFormGroup
-              label={`${field.label} (optional)`}
-              for={field.name}
-              name={field.name}
-              type={field.type}
-              key={field.name}
-              value={props.value}
-              className={cssClass}
-              onClick={(e) => this.handleOnClick(e)}
-              onChange={(e) => this.handleOnChange(e)}
-              selectOptions={props.options}
-            />
-          );
-        }
-      }
-      return null;
-    });
-    return fields;
   }
 
   generateUserMessage(isFieldInValid, messageID) {
@@ -701,9 +486,8 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
                   value={this.state.name}
-                  onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
+                  onChange={(e) => this.setState({ name: e.target.value })}
                   helpText={intl.formatMessage(messages['helptext.name'])}
                 />
                 <AuthnValidationFormGroup
@@ -714,9 +498,8 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
                   value={this.state.username}
-                  onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
+                  onChange={(e) => this.setState({ username: e.target.value })}
                   helpText={intl.formatMessage(messages['helptext.username'])}
                 />
                 <AuthnValidationFormGroup
@@ -727,9 +510,8 @@ class RegistrationPage extends React.Component {
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
                   value={this.state.email}
-                  onClick={(e) => this.handleOnClick(e)}
                   onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
+                  onChange={(e) => this.setState({ email: e.target.value })}
                   helpText={intl.formatMessage(messages['helptext.email'])}
                 />
                 {!currentProvider && (
@@ -741,19 +523,51 @@ class RegistrationPage extends React.Component {
                     invalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
                     value={this.state.password}
-                    onClick={(e) => this.handleOnClick(e)}
                     onBlur={(e) => this.handleOnBlur(e)}
-                    onChange={(e) => this.handleOnChange(e)}
+                    onChange={(e) => this.setState({ password: e.target.value })}
                     helpText={intl.formatMessage(messages['helptext.password'])}
                   />
                 )}
-                { this.addExtraRequiredFields() }
+                <AuthnValidationFormGroup
+                  label={intl.formatMessage(messages['registration.country.label'])}
+                  for="country"
+                  name="country"
+                  type="select"
+                  key="country"
+                  invalid={this.state.errors.country !== ''}
+                  invalidMessage={intl.formatMessage(messages['country.validation.message'])}
+                  className="mb-0"
+                  value={this.state.country}
+                  onBlur={(e) => this.handleOnBlur(e)}
+                  onChange={(e) => this.setState({ country: e.target.value })}
+                  selectOptions={this.getCountryOptions()}
+                />
+                <div id="honor-code" className="pt-10 small">
+                  <FormattedMessage
+                    id="register.page.terms.of.service.and.honor.code"
+                    defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
+                    Member process your personal data in accordance with the {privacyPolicy}."
+                    description="Text that appears on registration form stating honor code and privacy policy"
+                    values={{
+                      platformName: this.state.platformName,
+                      tosAndHonorCode: (
+                        <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} rel="noopener" target="_blank">
+                          {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
+                        </Hyperlink>
+                      ),
+                      privacyPolicy: (
+                        <Hyperlink destination={getConfig().PRIVACY_POLICY} rel="noopener" target="_blank">
+                          {intl.formatMessage(messages['privacy.policy'])}
+                        </Hyperlink>
+                      ),
+                    }}
+                  />
+                </div>
                 <AuthnValidationFormGroup
                   label=""
                   for="optional"
                   name="optional"
                   type="checkbox"
-                  invalidMessage=""
                   value={this.state.enableOptionalField}
                   onClick={(e) => this.handleOnOptional(e)}
                   onBlur={null}
@@ -762,7 +576,7 @@ class RegistrationPage extends React.Component {
                   isChecked={this.state.enableOptionalField}
                   checkboxMessage={intl.formatMessage(messages['support.education.research'])}
                 />
-                { this.state.enableOptionalField ? this.addExtraOptionalFields() : null}
+                { this.state.enableOptionalField ? this.getOptionalFields() : null}
                 <StatefulButton
                   type="submit"
                   variant="brand"
@@ -779,7 +593,7 @@ class RegistrationPage extends React.Component {
                   && !currentProvider ? (
                     <div className="d-block mb-4 mt-4">
                       <hr className="mt-0 border-gray-200" />
-                      <span className="d-blockmb-4 text-left">
+                      <span className="d-block mb-4 text-left">
                         {intl.formatMessage(messages['create.an.account.using'])}
                       </span>
                     </div>
@@ -803,10 +617,6 @@ class RegistrationPage extends React.Component {
       currentProvider, finishAuthUrl, providers, secondaryProviders,
     } = this.props.thirdPartyAuthContext;
 
-    if (!this.props.formData) {
-      return <div />;
-    }
-
     const params = (new URL(window.location.href)).searchParams;
     const tpaHint = params.get('tpa_hint');
 
@@ -816,21 +626,25 @@ class RegistrationPage extends React.Component {
       }
       const provider = getTpaProvider(tpaHint, providers, secondaryProviders);
       return provider ? (<EnterpriseSSO provider={provider} intl={intl} />)
-        : this.renderForm(currentProvider,
+        : this.renderForm(
+          currentProvider,
           providers,
           secondaryProviders,
           thirdPartyAuthApiStatus,
           finishAuthUrl,
           submitState,
-          intl);
+          intl,
+        );
     }
-    return this.renderForm(currentProvider,
+    return this.renderForm(
+      currentProvider,
       providers,
       secondaryProviders,
       thirdPartyAuthApiStatus,
       finishAuthUrl,
       submitState,
-      intl);
+      intl,
+    );
   }
 }
 
@@ -847,7 +661,6 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
     pipelineUserDetails: null,
   },
-  formData: null,
   validations: null,
   statusCode: null,
 };
@@ -883,11 +696,6 @@ RegistrationPage.propTypes = {
       username: PropTypes.string,
     }),
   }),
-
-  fetchRegistrationForm: PropTypes.func.isRequired,
-  formData: PropTypes.shape({
-    fields: PropTypes.array,
-  }),
   fetchRealtimeValidations: PropTypes.func.isRequired,
   validations: PropTypes.shape({
     validation_decisions: PropTypes.shape({
@@ -911,7 +719,6 @@ const mapStateToProps = state => {
     thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
     registrationResult,
     thirdPartyAuthContext,
-    formData: state.register.formData,
     validations: state.register.validations,
     statusCode: state.register.statusCode,
   };
@@ -921,7 +728,6 @@ export default connect(
   mapStateToProps,
   {
     getThirdPartyAuthContext,
-    fetchRegistrationForm,
     fetchRealtimeValidations,
     registerNewUser,
   },

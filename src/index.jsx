@@ -61,6 +61,9 @@ initialize({
         LOGIN_ISSUE_SUPPORT_LINK: process.env.LOGIN_ISSUE_SUPPORT_LINK || null,
         ACTIVATION_EMAIL_SUPPORT_LINK: process.env.ACTIVATION_EMAIL_SUPPORT_LINK || null,
         PASSWORD_RESET_SUPPORT_LINK: process.env.PASSWORD_RESET_SUPPORT_LINK || null,
+        TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
+        PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
+        REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
       });
     },
   },
