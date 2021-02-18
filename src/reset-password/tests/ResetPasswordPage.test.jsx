@@ -8,8 +8,10 @@ import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as auth from '@edx/frontend-platform/auth';
 import { resetPassword } from '../data/actions';
+import { APIFailureMessage } from '../../common-components';
 
 import ResetPasswordPage from '../ResetPasswordPage';
+import { INTERNAL_SERVER_ERROR } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -240,5 +242,30 @@ describe('ResetPasswordPage', () => {
   it('check cookie rendered', () => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(resetPasswordPage.find(<CookiePolicyBanner />)).toBeTruthy();
+  });
+
+  it('should display error banner on server error', () => {
+    const bannerMessage = 'Failed to reset passwordAn error has occurred. Try refreshing the page, or check your Internet connection.';
+    props = {
+      ...props,
+      status: 'failure',
+      errors: INTERNAL_SERVER_ERROR,
+    };
+
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('button.btn-primary').simulate('click');
+
+    resetPasswordPage.update();
+    expect(resetPasswordPage.find('#internal-server-error').first().text()).toEqual(bannerMessage);
+  });
+
+  it('check api failure banner rendered', () => {
+    props = {
+      ...props,
+      status: 'invalid',
+      errors: INTERNAL_SERVER_ERROR,
+    };
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
   });
 });

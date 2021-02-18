@@ -4,10 +4,13 @@ import {
   resetPasswordBegin,
   resetPasswordSuccess,
   resetPasswordFailure,
+  validateTokenBegin,
+  validateTokenFailure,
 } from '../actions';
-import { handleResetPassword } from '../sagas';
+import { handleResetPassword, handleValidateToken } from '../sagas';
 import * as api from '../service';
 import initializeMockLogging from '../../../setupTest';
+import { INTERNAL_SERVER_ERROR } from '../../../data/constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -60,7 +63,35 @@ describe('handleResetPassword', () => {
     );
 
     expect(resetPassword).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure()]);
+    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(INTERNAL_SERVER_ERROR)]);
     resetPassword.mockClear();
+  });
+});
+
+describe('handleValidateToken', () => {
+  const params = {
+    payload: {
+      token: 'token',
+      params: {},
+    },
+  };
+
+  beforeEach(() => {
+    loggingService.logError.mockReset();
+  });
+
+  it('check server error on api failure', async () => {
+    const validateToken = jest.spyOn(api, 'validateToken')
+      .mockImplementation(() => Promise.reject());
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleValidateToken,
+      params,
+    );
+
+    expect(validateToken).toHaveBeenCalledTimes(1);
+    expect(dispatched).toEqual([validateTokenBegin(), validateTokenFailure(INTERNAL_SERVER_ERROR)]);
   });
 });
