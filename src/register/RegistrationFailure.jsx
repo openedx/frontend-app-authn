@@ -44,7 +44,7 @@ const RegistrationFailureMessage = (props) => {
 
   return (
     !userErrors.length ? null : (
-      <Alert variant="danger">
+      <Alert id="validation-errors" variant="danger">
         <Alert.Heading>
           {props.intl.formatMessage(messages['registration.request.failure.header'])}
         </Alert.Heading>

@@ -1,8 +1,4 @@
-import {
-  REGISTER_NEW_USER,
-  REGISTER_FORM,
-  REGISTER_FORM_VALIDATIONS,
-} from './actions';
+import { REGISTER_NEW_USER, REGISTER_FORM_VALIDATIONS } from './actions';
 
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 
@@ -31,19 +27,6 @@ const reducer = (state = defaultState, action) => {
         ...state,
         registrationError: action.payload.error,
         submitState: DEFAULT_STATE,
-      };
-    case REGISTER_FORM.BEGIN:
-      return {
-        ...state,
-      };
-    case REGISTER_FORM.SUCCESS:
-      return {
-        ...state,
-        formData: action.payload.formData,
-      };
-    case REGISTER_FORM.FAILURE:
-      return {
-        ...state,
       };
     case REGISTER_FORM_VALIDATIONS.BEGIN:
       return {

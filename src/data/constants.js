@@ -18,21 +18,7 @@ export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';
 export const COMPLETE_STATE = 'complete';
 
-export const REGISTRATION_VALIDITY_MAP = {};
-export const REGISTRATION_OPTIONAL_MAP = {};
-export const REGISTRATION_EXTRA_FIELDS = [
-  'confirm_email',
-  'level_of_education',
-  'gender',
-  'year_of_birth',
-  'mailing_address',
-  'goals',
-  'honor_code',
-  'terms_of_service',
-  'city',
-  'country',
-];
-
+// Regex
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'
                                  + '|^"([\\001-\\010\\013\\014\\016-\\037!#-\\[\\]-\\177]|\\\\[\\001-\\011\\013\\014\\016-\\177])*"'
                                  + ')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+)(?:[A-Z0-9-]{2,63})'
