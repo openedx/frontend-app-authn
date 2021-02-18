@@ -31,7 +31,7 @@ import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
-import { getTpaProvider } from '../data/utils';
+import { getTpaProvider, processTpaHintURL } from '../data/utils';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -52,11 +52,11 @@ class LoginPage extends React.Component {
 
   componentDidMount() {
     const params = (new URL(document.location)).searchParams;
-    const tpaHint = params.get('tpa_hint');
     const payload = {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
 
+    const tpaHint = processTpaHintURL(params);
     if (tpaHint) {
       payload.tpa_hint = tpaHint;
     }
@@ -266,7 +266,7 @@ class LoginPage extends React.Component {
 
     const params = (new URL(window.location.href)).searchParams;
 
-    const tpaHint = params.get('tpa_hint');
+    const tpaHint = processTpaHintURL(params);
     if (tpaHint) {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
         return <Skeleton height={36} />;

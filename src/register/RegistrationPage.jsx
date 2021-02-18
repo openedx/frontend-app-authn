@@ -30,7 +30,7 @@ import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
-import { getTpaProvider } from '../data/utils';
+import { getTpaProvider, processTpaHintURL } from '../data/utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -73,11 +73,11 @@ class RegistrationPage extends React.Component {
 
   componentDidMount() {
     const params = (new URL(document.location)).searchParams;
-    const tpaHint = params.get('tpa_hint');
     const payload = {
       redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
     };
 
+    const tpaHint = processTpaHintURL(params);
     if (tpaHint) {
       payload.tpa_hint = tpaHint;
     }
@@ -585,7 +585,7 @@ class RegistrationPage extends React.Component {
     } = this.props.thirdPartyAuthContext;
 
     const params = (new URL(window.location.href)).searchParams;
-    const tpaHint = params.get('tpa_hint');
+    const tpaHint = processTpaHintURL(params);
 
     if (tpaHint) {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
