@@ -67,10 +67,10 @@ describe('RegistrationPageTests', () => {
   };
 
   const emptyFieldValidation = {
-    name: 'Please enter your Full Name.',
-    username: 'Please enter your Public Username.',
-    email: 'Please enter your Email.',
-    password: 'Please enter your Password.',
+    name: 'Please enter your full name.',
+    username: 'Please enter your public username.',
+    email: 'Please enter your email.',
+    password: 'Please enter your password.',
     country: 'Select your country or region of residence.',
   };
 
@@ -340,10 +340,10 @@ describe('RegistrationPageTests', () => {
 
   it('should display validationAlertMessages incase of invalid form submission', () => {
     const alertMessages = {
-      name: [{ user_message: 'Please enter your Full Name.' }],
-      username: [{ user_message: 'Please enter your Public Username.' }],
-      email: [{ user_message: 'Please enter your Email.' }],
-      password: [{ user_message: 'Please enter your Password.' }],
+      name: [{ user_message: 'Please enter your full name.' }],
+      username: [{ user_message: 'Please enter your public username.' }],
+      email: [{ user_message: 'Please enter your email.' }],
+      password: [{ user_message: 'Please enter your password.' }],
       country: [{ user_message: 'Select your country or region of residence.' }],
     };
     store.dispatch = jest.fn(store.dispatch);
@@ -355,10 +355,10 @@ describe('RegistrationPageTests', () => {
 
   it('should not update validationAlertMessages on blur event', () => {
     const alertMessages = {
-      name: [{ user_message: 'Please enter your Full Name.' }],
-      username: [{ user_message: 'Please enter your Public Username.' }],
-      email: [{ user_message: 'Please enter your Email.' }],
-      password: [{ user_message: 'Please enter your Password.' }],
+      name: [{ user_message: 'Please enter your full name.' }],
+      username: [{ user_message: 'Please enter your public username.' }],
+      email: [{ user_message: 'Please enter your email.' }],
+      password: [{ user_message: 'Please enter your password.' }],
       country: [{ user_message: 'Select your country or region of residence.' }],
     };
     store.dispatch = jest.fn(store.dispatch);
@@ -388,7 +388,7 @@ describe('RegistrationPageTests', () => {
 
     const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
     expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-    const expectedMessage = 'We couldn\'t create your account.An error has occurred. Try refreshing the page, or check your Internet connection.';
+    const expectedMessage = 'We couldn\'t create your account.An error has occurred. Try refreshing the page, or check your internet connection.';
     expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
   });
 

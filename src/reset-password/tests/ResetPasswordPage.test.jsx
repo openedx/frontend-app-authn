@@ -22,7 +22,7 @@ describe('ResetPasswordPage', () => {
   let props = {};
   let store = {};
 
-  const emptyFieldError = 'Please enter your New Password.';
+  const emptyFieldError = 'Please enter your new password.';
   const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
 
   const reduxWrapper = children => (
