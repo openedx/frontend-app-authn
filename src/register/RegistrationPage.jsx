@@ -528,20 +528,22 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                <AuthnValidationFormGroup
-                  label=""
-                  for="optional"
-                  name="optional"
-                  type="checkbox"
-                  value={this.state.enableOptionalField}
-                  onClick={(e) => this.handleOnOptional(e)}
-                  onBlur={null}
-                  onChange={(e) => this.handleOnOptional(e)}
-                  optionalFieldCheckbox
-                  isChecked={this.state.enableOptionalField}
-                  checkboxMessage={intl.formatMessage(messages['support.education.research'])}
-                />
-                { this.state.enableOptionalField ? this.getOptionalFields() : null}
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
+                  <AuthnValidationFormGroup
+                    label=""
+                    for="optional"
+                    name="optional"
+                    type="checkbox"
+                    value={this.state.enableOptionalField}
+                    onClick={(e) => this.handleOnOptional(e)}
+                    onBlur={null}
+                    onChange={(e) => this.handleOnOptional(e)}
+                    optionalFieldCheckbox
+                    isChecked={this.state.enableOptionalField}
+                    checkboxMessage={intl.formatMessage(messages['support.education.research'])}
+                  />
+                ) : null}
+                { this.state.enableOptionalField ? this.getOptionalFields() : null }
                 <StatefulButton
                   type="submit"
                   variant="brand"
