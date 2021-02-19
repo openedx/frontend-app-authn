@@ -1,14 +1,13 @@
 import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getHttpClient } from '@edx/frontend-platform/auth';
 import querystring from 'querystring';
 
 export async function registerRequest(registrationInformation) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    isPublic: true,
   };
 
-  const { data } = await getAuthenticatedHttpClient()
+  const { data } = await getHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/user_api/v2/account/registration/`,
       querystring.stringify(registrationInformation),
@@ -27,10 +26,9 @@ export async function registerRequest(registrationInformation) {
 export async function getFieldsValidations(formPayload) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    isPublic: true,
   };
 
-  const { data } = await getAuthenticatedHttpClient()
+  const { data } = await getHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
       querystring.stringify(formPayload),
