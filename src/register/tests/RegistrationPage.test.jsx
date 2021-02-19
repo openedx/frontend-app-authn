@@ -145,6 +145,21 @@ describe('RegistrationPageTests', () => {
     expect(registrationPage.find('select#gender').length).toEqual(1);
   });
 
+  it('should not show optional field check if process env has empty optional fields list', () => {
+    mergeConfig({
+      REGISTRATION_OPTIONAL_FIELDS: '',
+    });
+    let registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registrationPage.find('input#optional').length).toEqual(0);
+
+    mergeConfig({
+      REGISTRATION_OPTIONAL_FIELDS: 'gender goals level_of_education year_of_birth',
+    });
+
+    registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registrationPage.find('input#optional').length).toEqual(1);
+  });
+
   it('should dispatch fetchRealtimeValidations on Blur after frontend validations ', () => {
     const formPayload = {
       email: '',
