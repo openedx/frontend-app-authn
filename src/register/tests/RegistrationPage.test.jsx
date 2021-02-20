@@ -27,7 +27,7 @@ const mockStore = configureStore();
 describe('RegistrationPageTests', () => {
   mergeConfig({
     PRIVACY_POLICY: 'http://privacy-policy.com',
-    REGISTRATION_OPTIONAL_FIELDS: 'gender goals level_of_education year_of_birth',
+    REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,level_of_education,year_of_birth',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
   });
 
@@ -153,7 +153,7 @@ describe('RegistrationPageTests', () => {
     expect(registrationPage.find('input#optional').length).toEqual(0);
 
     mergeConfig({
-      REGISTRATION_OPTIONAL_FIELDS: 'gender goals level_of_education year_of_birth',
+      REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,level_of_education,year_of_birth',
     });
 
     registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));

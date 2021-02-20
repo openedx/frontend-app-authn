@@ -122,7 +122,7 @@ class RegistrationPage extends React.Component {
 
   getOptionalFields() {
     const values = {};
-    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(' ');
+    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',');
     optionalFields.forEach((key) => {
       values[camelCase(key)] = this.state[camelCase(key)];
     });
@@ -171,7 +171,7 @@ class RegistrationPage extends React.Component {
     }
     // Since optional fields are not validated we can add it to payload after required fields
     // have been validated. This will save us unwanted calls to validateInput()
-    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(' ');
+    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',');
     optionalFields.forEach((key) => {
       const stateKey = camelCase(key);
       if (this.state[stateKey]) {
