@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   'create.an.account': {
     id: 'create.an.account',
-    defaultMessage: 'Create an account',
+    defaultMessage: 'Create an account.',
     description: 'Message on button to return to register page',
   },
   'or.sign.in.with': {

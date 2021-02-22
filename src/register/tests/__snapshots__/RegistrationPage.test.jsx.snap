@@ -13,10 +13,9 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
       <p>
         Already have an edX account?
         <a
-          className="ml-1"
+          className="text-info ml-1"
           href="/login"
           onClick={[Function]}
-          target="_self"
         >
           Sign in.
         </a>
@@ -1562,10 +1561,9 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
       <p>
         Already have an edX account?
         <a
-          className="ml-1"
+          className="text-info ml-1"
           href="/login"
           onClick={[Function]}
-          target="_self"
         >
           Sign in.
         </a>
@@ -3072,10 +3070,9 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
       <p>
         Already have an edX account?
         <a
-          className="ml-1"
+          className="text-info ml-1"
           href="/login"
           onClick={[Function]}
-          target="_self"
         >
           Sign in.
         </a>
