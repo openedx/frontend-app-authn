@@ -14,6 +14,22 @@ $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
 
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.focus-out {
+  position: absolute;
+  padding-left: 17px;
+  opacity: 0.75;
+  z-index: 1;
+}
+
 .alert-link {
   font-weight: normal;
   text-decoration: underline;
@@ -219,21 +235,21 @@ $apple-focus-black: $apple-black;
   padding-left: 14px;
 }
 
-.opt-inline-field{
-    display: inline-block;
-    width: 50%;
+.opt-inline-field {
+  display: inline-block;
+  width: 50%;
 }
 
-.opt-year-field{
-    padding-left: 15px;
+.opt-year-field {
+  padding-left: 15px;
 }
 
 .invalid-feedback {
   color: $red;
 }
 
-.full-vertical-height{
-    height: 100vh;
+.full-vertical-height {
+  height: 100vh;
 }
 
 .help-links {
@@ -257,7 +273,7 @@ $apple-focus-black: $apple-black;
 }
 
 .mt-10 {
- margin-top: 10px;
+  margin-top: 10px;
 }
 
 .pt-10 {
@@ -281,7 +297,7 @@ $apple-focus-black: $apple-black;
   .section-heading-line {
     position: relative;
     text-align: center;
-  
+
     &:before,
     &:after {
       width: 10%;

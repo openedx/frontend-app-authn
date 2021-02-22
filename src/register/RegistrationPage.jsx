@@ -530,7 +530,7 @@ class RegistrationPage extends React.Component {
                 </div>
                 {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
                   <AuthnValidationFormGroup
-                    label=""
+                    label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
                     name="optional"
                     type="checkbox"

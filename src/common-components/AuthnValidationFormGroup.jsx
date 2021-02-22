@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
   Input,
@@ -11,13 +10,11 @@ const AuthnCustomValidationFormGroup = (props) => {
   const { onClick, onChange, onBlur } = props;
   const [showHelpText, setShowHelpText] = useState(false);
   const [showLabelText, setShowLabelText] = useState(false);
-  const [showPlaceholder, setShowPlaceHolder] = useState(true);
 
   // handler code that need to be invoked via input
   const onClickHandler = (e, clickCb) => {
     setShowHelpText(true);
     setShowLabelText(true);
-    setShowPlaceHolder(false);
     if (clickCb) {
       clickCb(e);
     }
@@ -25,7 +22,6 @@ const AuthnCustomValidationFormGroup = (props) => {
   const onBlurHandler = (e, blurCb) => {
     setShowHelpText(false);
     setShowLabelText(false);
-    setShowPlaceHolder(true);
     if (blurCb) {
       blurCb(e);
     }
@@ -38,12 +34,18 @@ const AuthnCustomValidationFormGroup = (props) => {
   const onOptionalHandler = (e, clickCb) => { clickCb(e); };
 
   const showLabel = () => {
-    const fieldLabel = (!props.optionalFieldCheckbox && showLabelText) ? (
-      <Form.Label htmlFor={props.for} className="h6 pt-10">
-        {props.label}
-      </Form.Label>
-    ) : <span />;
-    return fieldLabel;
+    let className;
+    if (props.optionalFieldCheckbox || (!showLabelText && (props.value !== '' || props.type === 'select'))) {
+      className = 'sr-only';
+    } else if (showLabelText) {
+      className = 'pt-10 h6';
+    } else {
+      className = 'pt-10 focus-out';
+    }
+
+    return (
+      <Form.Label htmlFor={props.for} className={className}>{props.label}</Form.Label>
+    );
   };
   const showOptional = () => {
     const additionalField = props.optionalFieldCheckbox ? (
@@ -60,7 +62,6 @@ const AuthnCustomValidationFormGroup = (props) => {
     type: props.type,
     value: props.value,
   };
-  inputProps.placeholder = showPlaceholder ? props.label : '';
   inputProps.onChange = (e) => onChangeHandler(e, onChange);
   inputProps.onClick = (e) => onClickHandler(e, onClick);
   inputProps.onBlur = (e) => onBlurHandler(e, onBlur);
@@ -145,4 +146,4 @@ AuthnCustomValidationFormGroup.propTypes = {
   })),
 };
 
-export default injectIntl(AuthnCustomValidationFormGroup);
+export default AuthnCustomValidationFormGroup;
