@@ -31,7 +31,7 @@ const EnterpriseSSO = (props) => {
     return (
       <div className="d-flex justify-content-center m-4">
         <div className="d-flex flex-column">
-          <div className="mw-500">
+          <div className="mw-450">
             <h3>Sign in</h3>
             <Form className="m-0">
               <p>{intl.formatMessage(messages['enterprisetpa.title.heading'], { providerName: tpaProvider.name })}</p>
@@ -65,6 +65,7 @@ const EnterpriseSSO = (props) => {
                 type="submit"
                 variant="primary"
                 state="Complete"
+                className="w-100"
                 onClick={(e) => handleClick(e)}
               >
                 {intl.formatMessage(messages['enterprisetpa.login.button.text'])}
