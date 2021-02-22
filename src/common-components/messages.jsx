@@ -31,7 +31,7 @@ const messages = defineMessages({
   // enterprise sso strings
   'enterprisetpa.title.heading': {
     id: 'enterprisetpa.title.heading',
-    defaultMessage: 'Would you like to sign in using {providerName} credentials?',
+    defaultMessage: 'Would you like to sign in using your {providerName} credentials?',
     description: 'Header text used in enterprise third party authentication',
   },
   'enterprisetpa.login.button.text': {
