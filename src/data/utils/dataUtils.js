@@ -25,3 +25,18 @@ export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProvi
   }
   return tpaProvider;
 };
+
+export const processTpaHintURL = (params) => {
+  let tpaHint = null;
+  tpaHint = params.get('tpa_hint');
+  if (!tpaHint) {
+    const next = params.get('next');
+    if (next) {
+      const index = next.indexOf('tpa_hint=');
+      if (index !== -1) {
+        tpaHint = next.substring(index + 'tpa_hint='.length, next.length);
+      }
+    }
+  }
+  return tpaHint;
+};

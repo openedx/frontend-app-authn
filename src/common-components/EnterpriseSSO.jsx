@@ -32,7 +32,7 @@ const EnterpriseSSO = (props) => {
       <div className="d-flex justify-content-center m-4">
         <div className="d-flex flex-column">
           <div className="mw-500">
-            <h3 className="section-title border-gray-200"><span className="text">Sign in</span></h3>
+            <h3>Sign in</h3>
             <Form className="m-0">
               <p>{intl.formatMessage(messages['enterprisetpa.title.heading'], { providerName: tpaProvider.name })}</p>
               <Button
@@ -60,7 +60,7 @@ const EnterpriseSSO = (props) => {
                     </>
                   )}
               </Button>
-              <h3 className="section-title border-gray-200"><span className="text">or</span></h3>
+              <div className="mb-4" />
               <Button
                 type="submit"
                 variant="primary"

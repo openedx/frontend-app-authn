@@ -263,21 +263,6 @@ $apple-focus-black: $apple-black;
   padding-top: 10px;
 }
 
-.section-title {
-  width: 100%; 
-  text-align: center; 
-  border-bottom: 1px solid;
-  line-height: 0.1em;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-} 
-.section-title span { 
-   background:#fff; 
-   padding:0 20px;
-   color:#646464;
-   font-size: 20px;
-}
-
 @media (min-width: 576px) {
   .reset-password-container {
     width: 420px;
