@@ -9,7 +9,7 @@ const messages = defineMessages({
   // Confirmation Alert Message
   'forgot.password.confirmation.title': {
     id: 'forgot.password.confirmation.title',
-    defaultMessage: 'Check Your Email',
+    defaultMessage: 'Check your email',
     description: 'Forgot password confirmation message title',
   },
   'forgot.password.confirmation.support.link': {

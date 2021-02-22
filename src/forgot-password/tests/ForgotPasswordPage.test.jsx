@@ -111,7 +111,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display empty email validation message', async () => {
-    const validationMessage = 'Failed to send forgot password email.Please enter your Email.';
+    const validationMessage = 'Failed to send forgot password email.Please enter your email.';
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     await act(async () => { await forgotPasswordPage.find('button.btn-primary').simulate('click'); });
@@ -141,7 +141,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display error message on blur event', async () => {
-    const validationMessage = 'Please enter your Email.';
+    const validationMessage = 'Please enter your email.';
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const emailInput = forgotPasswordPage.find('input#forgot-password-input');
 

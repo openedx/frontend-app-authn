@@ -147,7 +147,7 @@ describe('LoginPage', () => {
   });
 
   it('updates the error state for empty email input on form submission', () => {
-    const errorState = { email: 'Please enter your Email.', password: '' };
+    const errorState = { email: 'Please enter your email.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
@@ -191,7 +191,7 @@ describe('LoginPage', () => {
   });
 
   it('updates the error state for invalid password', () => {
-    const errorState = { email: '', password: 'Please enter your Password.' };
+    const errorState = { email: '', password: 'Please enter your password.' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');

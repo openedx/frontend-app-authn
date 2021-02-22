@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'create.account.button': {
     id: 'create.account.button',
-    defaultMessage: 'Create Account',
+    defaultMessage: 'Create account',
     description: 'Button label that appears on register page',
   },
   'already.have.an.edx.account': {
@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   'create.an.account': {
     id: 'create.an.account',
-    defaultMessage: 'Create an Account',
+    defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
   'register.page.email.label': {
@@ -48,7 +48,7 @@ const messages = defineMessages({
   },
   'email.validation.message': {
     id: 'email.validation.message',
-    defaultMessage: 'Please enter your Email.',
+    defaultMessage: 'Please enter your email.',
     description: 'Validation message that appears when email address is empty',
   },
   'email.ratelimit.less.chars.validation.message': {
@@ -73,27 +73,27 @@ const messages = defineMessages({
   },
   'register.page.password.validation.message': {
     id: 'register.page.password.validation.message',
-    defaultMessage: 'Please enter your Password.',
+    defaultMessage: 'Please enter your password.',
     description: 'Validation message that appears when password is non compliant with edX requirement',
   },
   'fullname.label': {
     id: 'fullname.label',
-    defaultMessage: 'Full Name (required)',
+    defaultMessage: 'Full name (required)',
     description: 'Label that appears above fullname field',
   },
   'fullname.validation.message': {
     id: 'fullname.validation.message',
-    defaultMessage: 'Please enter your Full Name.',
+    defaultMessage: 'Please enter your full name.',
     description: 'Validation message that appears when fullname is empty',
   },
   'username.label': {
     id: 'username.label',
-    defaultMessage: 'Public Username (required)',
+    defaultMessage: 'Public username (required)',
     description: 'Label that appears above username field',
   },
   'username.validation.message': {
     id: 'username.validation.message',
-    defaultMessage: 'Please enter your Public Username.',
+    defaultMessage: 'Please enter your public username.',
     description: 'Validation message that appears when username is invalid',
   },
   'username.format.validation.message': {
@@ -133,7 +133,7 @@ const messages = defineMessages({
   },
   'registration.request.server.error': {
     id: 'registration.request.server.error',
-    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
     description: 'error message on server error.',
   },
   'registration.request.failure.header': {
@@ -180,7 +180,7 @@ const messages = defineMessages({
   },
   'registration.country.label': {
     id: 'registration.country.label',
-    defaultMessage: 'Country or Region of Residence (required)',
+    defaultMessage: 'Country or region of residence (required)',
     description: 'Placeholder for the country options dropdown.',
   },
   'registration.field.gender.options.label': {
@@ -225,7 +225,7 @@ const messages = defineMessages({
   },
   'registration.field.education.levels.b': {
     id: 'registration.field.education.levels.b',
-    defaultMessage: "Bachelor's Degree",
+    defaultMessage: "Bachelor's degree",
     description: "Selected by the user if their highest level of education is a four year college or university bachelor's degree.",
   },
   'registration.field.education.levels.a': {

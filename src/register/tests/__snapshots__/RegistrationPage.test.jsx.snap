@@ -45,7 +45,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full Name (required)"
+            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -65,7 +65,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public Username (required)"
+            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -125,14 +125,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or Region of Residence (required)"
+            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
             <option
               value=""
             >
-              Country or Region of Residence (required)
+              Country or region of residence (required)
             </option>
             <option
               value="AF"
@@ -1477,7 +1477,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <span
             className="d-flex align-items-center justify-content-center"
           >
-            Create Account
+            Create account
           </span>
         </button>
         <div
@@ -1570,7 +1570,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full Name (required)"
+            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -1590,7 +1590,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public Username (required)"
+            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -1650,14 +1650,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or Region of Residence (required)"
+            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
             <option
               value=""
             >
-              Country or Region of Residence (required)
+              Country or region of residence (required)
             </option>
             <option
               value="AF"
@@ -3002,7 +3002,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <span
             className="d-flex align-items-center justify-content-center"
           >
-            Create Account
+            Create account
           </span>
         </button>
       </form>
@@ -3056,7 +3056,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full Name (required)"
+            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -3076,7 +3076,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public Username (required)"
+            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -3136,14 +3136,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or Region of Residence (required)"
+            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
             <option
               value=""
             >
-              Country or Region of Residence (required)
+              Country or region of residence (required)
             </option>
             <option
               value="AF"
@@ -4509,7 +4509,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
                 />
               </svg>
             </span>
-            Create Account
+            Create account
           </span>
         </button>
       </form>

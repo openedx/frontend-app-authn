@@ -43,7 +43,7 @@ const messages = defineMessages({
   },
   'forgot.password.empty.email.field.error': {
     id: 'forgot.password.empty.email.field.error',
-    defaultMessage: 'Please enter your Email.',
+    defaultMessage: 'Please enter your email.',
     description: 'Error message that appears when user tries to submit empty email field',
   },
   'forgot.password.invalid.email.heading': {

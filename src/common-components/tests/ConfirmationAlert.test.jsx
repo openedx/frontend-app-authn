@@ -21,7 +21,7 @@ describe('ConfirmationAlert', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'Check Your Email'
+    const expectedMessage = 'Check your email'
                             + 'You entered test@example.com. If this email address is associated with your edX account, '
                             + 'we will send a message with password recovery instructions to this email address.'
                             + 'If you do not receive a password reset message after 1 minute, verify that you entered '

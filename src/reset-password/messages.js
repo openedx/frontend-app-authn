@@ -18,12 +18,12 @@ const messages = defineMessages({
   },
   'reset.password.page.new.field.label': {
     id: 'forgot.password.page.new.field.label',
-    defaultMessage: 'New Password',
+    defaultMessage: 'New password',
     description: 'New password field label for the reset password page.',
   },
   'reset.password.page.confirm.field.label': {
     id: 'forgot.password.page.confirm.field.label',
-    defaultMessage: 'Confirm Password',
+    defaultMessage: 'Confirm password',
     description: 'Confirm password field label for the reset password page.',
   },
   'reset.password.page.submit.button': {
@@ -33,27 +33,27 @@ const messages = defineMessages({
   },
   'reset.password.request.success.header.message': {
     id: 'reset.password.request.success.header.message',
-    defaultMessage: 'Password Reset Complete.',
+    defaultMessage: 'Password reset complete.',
     description: 'header message when reset is successful.',
   },
   'forgot.password.confirmation.sign.in.link': {
     id: 'forgot.password.confirmation.sign.in.link',
-    defaultMessage: 'sign-in',
+    defaultMessage: 'sign in',
     description: 'link text used in message to refer to sign in page',
   },
   'reset.password.request.forgot.password.text': {
     id: 'reset.password.request.forgot.password.text',
-    defaultMessage: 'Forgot Password',
+    defaultMessage: 'Forgot password',
     description: 'Forgot password text',
   },
   'reset.password.request.invalid.token.header': {
     id: 'reset.password.request.invalid.token.header',
-    defaultMessage: 'Invalid Password Reset Link',
+    defaultMessage: 'Invalid password reset link',
     description: 'Invalid password reset link help text heading',
   },
   'reset.password.empty.new.password.field.error': {
     id: 'reset.password.empty.new.password.field.error',
-    defaultMessage: 'Please enter your New Password.',
+    defaultMessage: 'Please enter your new password.',
     description: 'Error message that appears when user tries to submit form with empty New Password field',
   },
   'forgot.password.empty.new.password.error.heading': {

@@ -18,7 +18,7 @@ const messages = defineMessages({
   },
   'other.sign.in.issues': {
     id: 'other.sign.in.issues',
-    defaultMessage: 'Other sign-in issues',
+    defaultMessage: 'Other sign in issues',
     description: 'A link that redirects to sign-in issues help',
   },
   'need.other.help.signing.in.collapsible.menu': {
@@ -48,13 +48,8 @@ const messages = defineMessages({
   },
   'create.an.account': {
     id: 'create.an.account',
-    defaultMessage: 'Create an Account',
+    defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
-  },
-  'institution.login.sign.in': {
-    id: 'institution.login.sign.in',
-    defaultMessage: 'Sign In',
-    description: 'Sign In text',
   },
   'or.sign.in.with': {
     id: 'or.sign.in.with',
@@ -98,12 +93,12 @@ const messages = defineMessages({
   },
   'email.validation.message': {
     id: 'email.validation.message',
-    defaultMessage: 'Please enter your Email.',
+    defaultMessage: 'Please enter your email.',
     description: 'Validation message that appears when email is empty',
   },
   'password.validation.message': {
     id: 'password.validation.message',
-    defaultMessage: 'Please enter your Password.',
+    defaultMessage: 'Please enter your password.',
     description: 'Validation message that appears when password is empty',
   },
   'password.label': {
@@ -118,8 +113,8 @@ const messages = defineMessages({
   },
   'sign.in.heading': {
     id: 'sign.in.heading',
-    defaultMessage: 'Sign In',
-    description: 'Sign In text',
+    defaultMessage: 'Sign in',
+    description: 'Sign in text',
   },
   // Account Activation Strings
   'account.activation.success.message.title': {
@@ -149,7 +144,7 @@ const messages = defineMessages({
   },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
-    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
     description: 'Error message that appears when server responds with 500 error code',
   },
   'login.rate.limit.reached.message': {
@@ -164,7 +159,7 @@ const messages = defineMessages({
   },
   'contact.support.link': {
     id: 'contact.support.link',
-    defaultMessage: 'contact {platformName} Support',
+    defaultMessage: 'contact {platformName} support',
     description: 'Link text used in inactive user error message to go to learner help center',
   },
   'login.failed.link.text': {

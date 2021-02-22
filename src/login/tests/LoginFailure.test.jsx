@@ -58,7 +58,7 @@ describe('LoginFailureMessage', () => {
 
     const expectedMessage = 'We couldn\'t sign you in.In order to sign in, you need to activate your account. '
                             + 'We just sent an activation link to text@example.com. If you do not receive an email, '
-                            + 'check your spam folders or contact openedX Support.';
+                            + 'check your spam folders or contact openedX support.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
     expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('https://support.edx.org/');
@@ -94,7 +94,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your Internet connection.';
+    const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your internet connection.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
@@ -102,7 +102,7 @@ describe('LoginFailureMessage', () => {
     props = {
       loginError: {
         errorCode: INVALID_FORM,
-        context: { email: 'Please enter your Email.', password: 'Please enter your Password.' },
+        context: { email: 'Please enter your email.', password: 'Please enter your password.' },
       },
     };
 
@@ -112,7 +112,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'We couldn\'t sign you in.Please enter your Email.Please enter your Password.';
+    const expectedMessage = 'We couldn\'t sign you in.Please enter your email.Please enter your password.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
