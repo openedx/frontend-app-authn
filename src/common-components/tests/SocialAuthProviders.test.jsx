@@ -18,8 +18,16 @@ describe('SocialAuthProviders', () => {
     loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
   };
 
+  const facebookProvider = {
+    id: 'oa2-facebook',
+    name: 'Facebook',
+    iconClass: null,
+    iconImage: 'https://edx.devstack.lms/facebook-logo.png',
+    loginUrl: '/auth/login/facebook/?auth_entry=login&next=/dashboard',
+  };
+
   it('should match social auth provider with iconImage snapshot', () => {
-    props = { socialAuthProviders: [appleProvider] };
+    props = { socialAuthProviders: [appleProvider, facebookProvider] };
 
     const tree = renderer.create(
       <IntlProvider locale="en">

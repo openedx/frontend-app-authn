@@ -46,13 +46,12 @@ $apple-focus-black: $apple-black;
   justify-content: flex-start;
   align-items: center;
 
-  margin: 5px;
+  margin-bottom: 1rem;
   font-size: 14px;
 
   background-color: $white;
   border: 1px solid $font-blue;
-  border-radius: 2px;
-  width: 160px;
+  width: 242px;
   height: 36px;
   color: $font-blue;
 
@@ -80,7 +79,9 @@ $apple-focus-black: $apple-black;
 .tpa-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
+
+  margin: 0 !important;
 }
 
 .font-container {
