@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
-    defaultMessage: 'An error has occurred. Try refreshing the page, or check your Internet connection.',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
     description: 'Error message that appears when server responds with 500 error code',
   },
   // enterprise sso strings

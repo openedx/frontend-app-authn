@@ -113,7 +113,7 @@ const messages = defineMessages({
   },
   'username.ratelimit.less.chars.message': {
     id: 'username.ratelimit.less.chars.message',
-    defaultMessage: 'Public Username must have atleast 2 characters.',
+    defaultMessage: 'Public username must have atleast 2 characters.',
     description: 'Validation message that appears when username is less than 2 characters and with no backend validations available.',
   },
   'country.validation.message': {
@@ -125,11 +125,6 @@ const messages = defineMessages({
     id: 'support.education.research',
     defaultMessage: 'Support education research by providing additional information. (Optional)',
     description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
-  },
-  'register.optional.label': {
-    id: 'register.optional.label',
-    defaultMessage: '(optional)',
-    description: 'Text that appears with optional field labels',
   },
   'registration.request.server.error': {
     id: 'registration.request.server.error',
@@ -144,22 +139,22 @@ const messages = defineMessages({
   'helptext.name': {
     id: 'helptext.name',
     defaultMessage: 'This name will be used by any certificates that you earn.',
-    description: '',
+    description: 'help text for name field on registration field',
   },
   'helptext.username': {
     id: 'helptext.username',
     defaultMessage: 'The name that will identify you in your courses. It cannot be changed later.',
-    description: '',
+    description: 'helptext for username field on registration page',
   },
   'helptext.password': {
     id: 'helptext.password',
     defaultMessage: 'Your password must contain at least 8 characters, including 1 letter & 1 number.',
-    description: '',
+    description: 'help text for password field on registration page',
   },
   'helptext.email': {
     id: 'helptext.email',
     defaultMessage: 'This is what you will use to login.',
-    description: '',
+    description: 'help text for email field on registration page',
   },
   // Terms of Service and Honor Code
   'terms.of.service.and.honor.code': {
@@ -205,7 +200,7 @@ const messages = defineMessages({
   },
   'registration.field.gender.options.o': {
     id: 'registration.field.gender.options.o',
-    defaultMessage: 'Other/Prefer Not to Say',
+    defaultMessage: 'Other/Prefer not to say',
     description: 'The label for catch-all gender option.',
   },
   'registration.field.education.levels.label': {
