@@ -46,7 +46,7 @@ const ForgotPasswordPage = (props) => {
       );
     }
     if (status === INTERNAL_SERVER_ERROR) {
-      return <APIFailureMessage header={header} />;
+      return <APIFailureMessage header={header} errorCode={INTERNAL_SERVER_ERROR} />;
     }
     return status === 'forbidden' ? <RequestInProgressAlert /> : null;
   };

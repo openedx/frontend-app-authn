@@ -20,7 +20,7 @@ import {
   APIFailureMessage,
 } from '../common-components';
 import Spinner from './Spinner';
-import { INTERNAL_SERVER_ERROR } from '../data/constants';
+import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../data/constants';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
@@ -34,7 +34,9 @@ const ResetPasswordPage = (props) => {
   const [bannerErrorMessage, setbannerErrorMessage] = useState('');
 
   useEffect(() => {
-    if (props.status === 'failure' && props.errors !== INTERNAL_SERVER_ERROR) {
+    if (props.status === 'failure'
+      && props.errors !== INTERNAL_SERVER_ERROR
+      && props.errors !== API_RATELIMIT_ERROR) {
       setbannerErrorMessage(props.errors);
       setvalidationMessage(props.errors);
       setPasswordValidValue(false);
@@ -105,7 +107,11 @@ const ResetPasswordPage = (props) => {
     }
   } else if (props.status === 'invalid' && props.errors === INTERNAL_SERVER_ERROR) {
     return (
-      <APIFailureMessage header={intl.formatMessage(messages['reset.password.token.validation.sever.error'])} />
+      <APIFailureMessage header={intl.formatMessage(messages['reset.password.token.validation.sever.error'])} errorCode={INTERNAL_SERVER_ERROR} />
+    );
+  } else if (props.status === 'invalid' && props.errors === API_RATELIMIT_ERROR) {
+    return (
+      <APIFailureMessage header={intl.formatMessage(messages['reset.server.ratelimit.error'])} errorCode={API_RATELIMIT_ERROR} />
     );
   } else if (props.status === 'invalid') {
     return <InvalidTokenMessage />;
@@ -116,7 +122,10 @@ const ResetPasswordPage = (props) => {
       <>
 
         {props.status === 'failure' && props.errors === INTERNAL_SERVER_ERROR ? (
-          <APIFailureMessage header={intl.formatMessage(messages['reset.password.request.server.error'])} />
+          <APIFailureMessage header={intl.formatMessage(messages['reset.password.request.server.error'])} errorCode={INTERNAL_SERVER_ERROR} />
+        ) : null}
+        {props.status === 'failure' && props.errors === API_RATELIMIT_ERROR ? (
+          <APIFailureMessage header={intl.formatMessage(messages['reset.server.ratelimit.error'])} errorCode={API_RATELIMIT_ERROR} />
         ) : null}
         <div id="main" className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column mw-500">

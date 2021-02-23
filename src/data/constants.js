@@ -12,6 +12,7 @@ export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft
 
 // Error Codes
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
+export const API_RATELIMIT_ERROR = 'api-ratelimit-error';
 
 // States
 export const DEFAULT_STATE = 'default';

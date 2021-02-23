@@ -28,6 +28,11 @@ const messages = defineMessages({
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
     description: 'Error message that appears when server responds with 500 error code',
   },
+  'server.ratelimit.error.message': {
+    id: 'server.ratelimit.error.message',
+    defaultMessage: 'An error has occurred because of too many requests. Please try again after some time.',
+    description: 'Error message that appears when server responds with 429 error code',
+  },
   // enterprise sso strings
   'enterprisetpa.title.heading': {
     id: 'enterprisetpa.title.heading',

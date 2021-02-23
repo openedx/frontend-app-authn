@@ -11,7 +11,7 @@ import { resetPassword } from '../data/actions';
 import { APIFailureMessage } from '../../common-components';
 
 import ResetPasswordPage from '../ResetPasswordPage';
-import { INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -264,6 +264,26 @@ describe('ResetPasswordPage', () => {
       ...props,
       status: 'invalid',
       errors: INTERNAL_SERVER_ERROR,
+    };
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
+  });
+
+  it('check failure banner rendered on validate token api ratelimit', () => {
+    props = {
+      ...props,
+      status: 'invalid',
+      errors: API_RATELIMIT_ERROR,
+    };
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
+  });
+
+  it('check failure banner rendered on reset password api ratelimit', () => {
+    props = {
+      ...props,
+      status: 'failure',
+      errors: API_RATELIMIT_ERROR,
     };
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
