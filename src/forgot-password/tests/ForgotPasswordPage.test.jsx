@@ -86,7 +86,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display email validation error message', async () => {
-    const validationMessage = "Failed to send forgot password email.The email address you've provided isn't formatted correctly.";
+    const validationMessage = "We couldn’t send the password recovery email.The email address you've provided isn't formatted correctly.";
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     wrapper.find('input#forgot-password-input').simulate(
@@ -103,7 +103,7 @@ describe('ForgotPasswordPage', () => {
       ...props,
       status: INTERNAL_SERVER_ERROR,
     };
-    const expectedMessage = 'Failed to send forgot password email.'
+    const expectedMessage = 'We couldn’t send the password recovery email.'
                             + 'An error has occurred. Try refreshing the page, or check your internet connection.';
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
@@ -111,7 +111,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display empty email validation message', async () => {
-    const validationMessage = 'Failed to send forgot password email.Please enter your email.';
+    const validationMessage = 'We couldn’t send the password recovery email.Please enter your email.';
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     await act(async () => { await forgotPasswordPage.find('button.btn-primary').simulate('click'); });

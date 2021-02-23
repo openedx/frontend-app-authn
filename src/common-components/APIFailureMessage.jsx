@@ -8,7 +8,7 @@ const APIFailureMessage = (props) => {
   const { intl, header } = props;
 
   return (
-    <div className="d-flex justify-content-center m-4">
+    <div className="d-flex justify-content-center">
       <div className="d-flex flex-column mw-500">
         <Alert id="internal-server-error" variant="danger">
           <Alert.Heading>
