@@ -28,8 +28,8 @@ const messages = defineMessages({
   },
   'forgot.password.request.server.error': {
     id: 'forgot.password.request.server.error',
-    defaultMessage: 'Failed to send forgot password email.',
-    description: 'Failed to Send Forgot Password Email heading.',
+    defaultMessage: 'We couldn’t send the password recovery email.',
+    description: 'Failed to send password recovery email.',
   },
   'forgot.password.error.message.title': {
     id: 'forgot.password.error.message.title',
