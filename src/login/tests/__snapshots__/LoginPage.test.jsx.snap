@@ -149,7 +149,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         className="row tpa-container"
       >
         <button
-          className="btn-social btn-oa2-apple-id"
+          className="btn-social btn-oa2-apple-id mr-3"
           data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
           id="oa2-apple-id"
           onClick={[Function]}

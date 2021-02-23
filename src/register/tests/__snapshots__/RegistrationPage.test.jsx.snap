@@ -1496,7 +1496,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="row tpa-container"
         >
           <button
-            className="btn-social btn-oa2-apple-id"
+            className="btn-social btn-oa2-apple-id mr-3"
             id="oa2-apple-id"
             onClick={[Function]}
             type="button"

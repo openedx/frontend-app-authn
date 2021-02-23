@@ -17,12 +17,12 @@ function SocialAuthProviders(props) {
     window.location.href = getConfig().LMS_BASE_URL + url;
   }
 
-  const socialAuth = socialAuthProviders.map((provider) => (
+  const socialAuth = socialAuthProviders.map((provider, index) => (
     <button
       id={provider.id}
       key={provider.id}
       type="button"
-      className={`btn-social btn-${provider.id}`}
+      className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
       onClick={handleSubmit}
     >
