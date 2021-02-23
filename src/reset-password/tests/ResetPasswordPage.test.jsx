@@ -245,7 +245,7 @@ describe('ResetPasswordPage', () => {
   });
 
   it('should display error banner on server error', () => {
-    const bannerMessage = 'Failed to reset passwordAn error has occurred. Try refreshing the page, or check your Internet connection.';
+    const bannerMessage = 'Failed to reset passwordAn error has occurred. Try refreshing the page, or check your internet connection.';
     props = {
       ...props,
       status: 'failure',

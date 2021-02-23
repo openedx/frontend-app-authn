@@ -12,7 +12,7 @@ const ResetSuccessMessage = (props) => {
     <Alert.Link href="/login" className="font-weight-normal text-info">
       <FormattedMessage
         id="reset.password.confirmation.support.link"
-        defaultMessage="Sign-in to your account."
+        defaultMessage="Sign in to your account."
         description="link text used in message: reset.password.invalid.token.description.message link 'sign-in.'"
       />
     </Alert.Link>

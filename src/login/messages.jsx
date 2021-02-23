@@ -124,7 +124,7 @@ const messages = defineMessages({
   },
   'account.activation.success.message': {
     id: 'account.activation.success.message',
-    defaultMessage: 'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign In to continue.',
+    defaultMessage: 'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.',
     description: 'Message show to learners when their account has been activated successfully',
   },
   'account.already.activated.message': {
@@ -174,7 +174,7 @@ const messages = defineMessages({
   },
   'login.failed.attempt.error': {
     id: 'login.failed.attempt.error',
-    defaultMessage: 'You have {remainingAttempts} more sign-in attempts before your account is temporarily locked.',
+    defaultMessage: 'You have {remainingAttempts} more sign in attempts before your account is temporarily locked.',
     description: 'Failed login attempts error message',
   },
   'login.locked.out.error.message': {

@@ -29,7 +29,7 @@ describe('AccountActivationMessage', () => {
 
     const expectedMessage = 'Success! You have activated your account.'
                             + 'You will now receive email updates and alerts from us related to '
-                            + 'the courses you are enrolled in. Sign In to continue.';
+                            + 'the courses you are enrolled in. Sign in to continue.';
     expect(accountActivationMessage.find('#account-activation-message').first().text()).toEqual(expectedMessage);
   });
 

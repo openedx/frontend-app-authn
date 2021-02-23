@@ -104,7 +104,7 @@ describe('ForgotPasswordPage', () => {
       status: INTERNAL_SERVER_ERROR,
     };
     const expectedMessage = 'Failed to send forgot password email.'
-                            + 'An error has occurred. Try refreshing the page, or check your Internet connection.';
+                            + 'An error has occurred. Try refreshing the page, or check your internet connection.';
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
     expect(wrapper.find('#internal-server-error').first().text()).toEqual(expectedMessage);
