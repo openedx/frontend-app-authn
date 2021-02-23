@@ -46,7 +46,7 @@ const EnterpriseSSO = (props) => {
                 {tpaProvider.iconImage ? (
                   <div aria-hidden="true">
                     <img className="icon-image" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
-                    <span className="pl-2" aria-hidden="true">{tpaProvider.name}</span>
+                    <span className="pl-2" aria-hidden="true">{intl.formatMessage(messages['enterprisetpa.sso.button.title'], { providerName: tpaProvider.name })}</span>
                   </div>
                 )
                   : (
@@ -56,14 +56,14 @@ const EnterpriseSSO = (props) => {
                           icon={SUPPORTED_ICON_CLASSES.includes(tpaProvider.iconClass) ? ['fab', tpaProvider.iconClass] : faSignInAlt}
                         />
                       </div>
-                      <span className="pl-2" aria-hidden="true">Sign in using {tpaProvider.name}</span>
+                      <span className="pl-2" aria-hidden="true">{intl.formatMessage(messages['enterprisetpa.sso.button.title'], { providerName: tpaProvider.name })}</span>
                     </>
                   )}
               </Button>
               <div className="mb-4" />
               <Button
                 type="submit"
-                variant="primary"
+                variant="outline-primary"
                 state="Complete"
                 className="w-100"
                 onClick={(e) => handleClick(e)}
