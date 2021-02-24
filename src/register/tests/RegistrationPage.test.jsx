@@ -285,7 +285,7 @@ describe('RegistrationPageTests', () => {
     expect(registrationPage.find('#validation-errors').first().text()).toEqual(alertBanner);
   });
 
-  it('should show error message on alert and below the fields incase of 409', () => {
+  it('should show error message on alert and below the fields in case of 409', () => {
     const errors = {
       email: 'It looks like test@gmail.com belongs to an existing account. Try again with a different email address.',
       username: 'It looks like test belongs to an existing account. Try again with a different username.',
@@ -338,7 +338,7 @@ describe('RegistrationPageTests', () => {
     expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(formPayload));
   });
 
-  it('should display validationAlertMessages incase of invalid form submission', () => {
+  it('should display validationAlertMessages in case of invalid form submission', () => {
     const alertMessages = {
       name: [{ user_message: 'Please enter your full name.' }],
       username: [{ user_message: 'Please enter your public username.' }],
