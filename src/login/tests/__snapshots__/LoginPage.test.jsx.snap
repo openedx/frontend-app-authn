@@ -36,7 +36,12 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -46,7 +51,6 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email"
             required={true}
             type="email"
             value=""
@@ -56,7 +60,12 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -66,7 +75,6 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password"
             required={true}
             type="password"
             value=""
@@ -214,7 +222,12 @@ exports[`LoginPage should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -224,7 +237,6 @@ exports[`LoginPage should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email"
             required={true}
             type="email"
             value=""
@@ -234,7 +246,12 @@ exports[`LoginPage should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -244,7 +261,6 @@ exports[`LoginPage should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password"
             required={true}
             type="password"
             value=""
@@ -394,7 +410,12 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -404,7 +425,6 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email"
             required={true}
             type="email"
             value=""
@@ -414,7 +434,12 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -424,7 +449,6 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password"
             required={true}
             type="password"
             value=""
@@ -536,7 +560,12 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -546,7 +575,6 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email"
             required={true}
             type="email"
             value=""
@@ -556,7 +584,12 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -566,7 +599,6 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password"
             required={true}
             type="password"
             value=""
@@ -715,7 +747,12 @@ exports[`LoginPage should show error message 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -725,7 +762,6 @@ exports[`LoginPage should show error message 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email"
             required={true}
             type="email"
             value=""
@@ -735,7 +771,12 @@ exports[`LoginPage should show error message 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -745,7 +786,6 @@ exports[`LoginPage should show error message 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password"
             required={true}
             type="password"
             value=""

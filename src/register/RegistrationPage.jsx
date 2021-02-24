@@ -516,12 +516,12 @@ class RegistrationPage extends React.Component {
                     values={{
                       platformName: this.state.platformName,
                       tosAndHonorCode: (
-                        <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} rel="noopener" target="_blank">
+                        <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} target="_blank">
                           {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
                         </Hyperlink>
                       ),
                       privacyPolicy: (
-                        <Hyperlink destination={getConfig().PRIVACY_POLICY} rel="noopener" target="_blank">
+                        <Hyperlink destination={getConfig().PRIVACY_POLICY} target="_blank">
                           {intl.formatMessage(messages['privacy.policy'])}
                         </Hyperlink>
                       ),
@@ -530,7 +530,7 @@ class RegistrationPage extends React.Component {
                 </div>
                 {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
                   <AuthnValidationFormGroup
-                    label=""
+                    label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
                     name="optional"
                     type="checkbox"

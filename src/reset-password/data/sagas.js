@@ -14,7 +14,7 @@ import {
 } from './actions';
 
 import { validateToken, resetPassword } from './service';
-import { INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { INTERNAL_SERVER_ERROR, API_RATELIMIT_ERROR } from '../../data/constants';
 
 // Services
 export function* handleValidateToken(action) {
@@ -28,7 +28,13 @@ export function* handleValidateToken(action) {
       yield put(validateTokenFailure(isValid));
     }
   } catch (err) {
-    yield put(validateTokenFailure(INTERNAL_SERVER_ERROR));
+    const statusCodes = [429];
+    if (err.response && statusCodes.includes(err.response.status)) {
+      yield put(validateTokenFailure(API_RATELIMIT_ERROR));
+    } else {
+      yield put(validateTokenFailure(INTERNAL_SERVER_ERROR));
+    }
+
     logError(err);
   }
 }
@@ -46,7 +52,12 @@ export function* handleResetPassword(action) {
       yield put(resetPasswordFailure(resetErrors));
     }
   } catch (err) {
-    yield put(resetPasswordFailure(INTERNAL_SERVER_ERROR));
+    const statusCodes = [429];
+    if (err.response && statusCodes.includes(err.response.status)) {
+      yield put(resetPasswordFailure(API_RATELIMIT_ERROR));
+    } else {
+      yield put(resetPasswordFailure(INTERNAL_SERVER_ERROR));
+    }
     logError(err);
   }
 }

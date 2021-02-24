@@ -35,7 +35,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
+          >
+            Full name (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -45,7 +50,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -55,7 +59,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
+          >
+            Public username (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -65,7 +74,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -75,7 +83,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -85,7 +98,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email (required)"
             required={true}
             type="text"
             value=""
@@ -95,7 +107,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -105,7 +122,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
@@ -115,7 +131,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="country"
+          >
+            Country or region of residence (required)
+          </label>
           <select
             aria-describedby=""
             className="form-control text-muted"
@@ -125,7 +146,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
@@ -1402,7 +1422,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -1420,7 +1440,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
@@ -1440,7 +1460,12 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
         <div
           className="form-group custom-control pt-10 mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="optional"
+          >
+            Support education research by providing additional information. (Optional)
+          </label>
           <input
             aria-describedby=""
             checked={false}
@@ -1451,7 +1476,6 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -1560,7 +1584,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
+          >
+            Full name (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -1570,7 +1599,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -1580,7 +1608,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
+          >
+            Public username (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -1590,7 +1623,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -1600,7 +1632,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -1610,7 +1647,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email (required)"
             required={true}
             type="text"
             value=""
@@ -1620,7 +1656,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -1630,7 +1671,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
@@ -1640,7 +1680,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="country"
+          >
+            Country or region of residence (required)
+          </label>
           <select
             aria-describedby=""
             className="form-control text-muted"
@@ -1650,7 +1695,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
@@ -2927,7 +2971,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -2945,7 +2989,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
@@ -2965,7 +3009,12 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
         <div
           className="form-group custom-control pt-10 mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="optional"
+          >
+            Support education research by providing additional information. (Optional)
+          </label>
           <input
             aria-describedby=""
             checked={false}
@@ -2976,7 +3025,6 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder=""
             required={true}
             type="checkbox"
             value={false}
@@ -3046,7 +3094,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
+          >
+            Full name (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -3056,7 +3109,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Full name (required)"
             required={true}
             type="text"
             value=""
@@ -3066,7 +3118,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
+          >
+            Public username (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -3076,7 +3133,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Public username (required)"
             required={true}
             type="text"
             value=""
@@ -3086,7 +3142,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
+          >
+            Email (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -3096,7 +3157,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Email (required)"
             required={true}
             type="text"
             value=""
@@ -3106,7 +3166,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group"
         >
-          <span />
+          <label
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
+          >
+            Password (required)
+          </label>
           <input
             aria-describedby=""
             className="form-control"
@@ -3116,7 +3181,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Password (required)"
             required={true}
             type="password"
             value=""
@@ -3126,7 +3190,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="country"
+          >
+            Country or region of residence (required)
+          </label>
           <select
             aria-describedby=""
             className="form-control text-muted"
@@ -3136,7 +3205,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder="Country or region of residence (required)"
             required={true}
             value=""
           >
@@ -4413,7 +4481,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -4431,7 +4499,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
@@ -4451,7 +4519,12 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
         <div
           className="form-group custom-control pt-10 mb-0"
         >
-          <span />
+          <label
+            className="sr-only form-label"
+            htmlFor="optional"
+          >
+            Support education research by providing additional information. (Optional)
+          </label>
           <input
             aria-describedby=""
             checked={false}
@@ -4462,7 +4535,6 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             onChange={[Function]}
             onClick={[Function]}
             onFocus={[Function]}
-            placeholder=""
             required={true}
             type="checkbox"
             value={false}
