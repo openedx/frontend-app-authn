@@ -139,7 +139,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
-            className="form-control"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -1688,7 +1688,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
-            className="form-control"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -3198,7 +3198,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <select
             aria-describedby=""
-            className="form-control"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
