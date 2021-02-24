@@ -1422,7 +1422,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -1440,7 +1440,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
@@ -2971,7 +2971,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -2989,7 +2989,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
@@ -4481,7 +4481,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             <a
               href="http://tos-and-honot-code.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Terms of Service and Honor Code
@@ -4499,7 +4499,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
-              rel="noopener noopener"
+              rel="noopener"
               target="_blank"
             >
               Privacy Policy
