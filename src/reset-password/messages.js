@@ -71,6 +71,11 @@ const messages = defineMessages({
     defaultMessage: 'Token validation failure',
     description: 'Failed to validate reset password token error message.',
   },
+  'reset.server.ratelimit.error': {
+    id: 'reset.server.ratelimit.error',
+    defaultMessage: 'Too many requests.',
+    description: 'Too many request at server end point',
+  },
 });
 
 export default messages;
