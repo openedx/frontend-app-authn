@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,17 +29,19 @@ const LoginHelpLinks = (props) => {
   };
 
   const forgotPasswordLink = () => (
-    <Link
-      to={RESET_PAGE}
+    <Hyperlink
+      className="field-link"
+      destination={RESET_PAGE}
       onClick={handleForgotPasswordLinkClickEvent}
     >
       {intl.formatMessage(messages['forgot.password.link'])}
-    </Link>
+    </Hyperlink>
   );
 
   const signUpLink = () => (
-    <Link to={REGISTER_PAGE}>{intl.formatMessage(messages['register.link'])}</Link>
-
+    <Hyperlink className="field-link" destination={REGISTER_PAGE}>
+      {intl.formatMessage(messages['register.link'])}
+    </Hyperlink>
   );
 
   const loginIssueSupportURL = (config) => (config.LOGIN_ISSUE_SUPPORT_LINK

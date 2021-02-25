@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
@@ -19,6 +18,7 @@ import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 jest.mock('@edx/frontend-platform/analytics');
 
 analytics.sendTrackEvent = jest.fn();
+analytics.sendPageEvent = jest.fn();
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 const IntlLoginPage = injectIntl(LoginPage);
@@ -61,11 +61,7 @@ describe('LoginPage', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>
-        <Router>
-          {children}
-        </Router>
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </IntlProvider>
   );
 
@@ -379,6 +375,11 @@ describe('LoginPage', () => {
     loginPage.find('a[href*="/register"]').simulate('click');
     loginPage.update();
     expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
+  });
+
+  it('send page event when login page is rendered', () => {
+    mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
   });
 
   it('send tracking and page events when institutional button is clicked', () => {
