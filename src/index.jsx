@@ -13,7 +13,7 @@ import configureStore from './data/configureStore';
 import LoadableForgotPasswordPage from './forgot-password';
 import LoadableRegistrationPage from './register';
 import LoadableLoginPage from './login';
-import LoadableResetPasswordPage from './reset-password';
+import ResetPasswordPage from './reset-password';
 import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
 } from './data/constants';
@@ -37,7 +37,7 @@ subscribe(APP_READY, () => {
           <UnAuthenticatedRoute exact path={LOGIN_PAGE} component={LoadableLoginPage} />
           <UnAuthenticatedRoute exact path={REGISTER_PAGE} component={LoadableRegistrationPage} />
           <UnAuthenticatedRoute exact path={RESET_PAGE} component={LoadableForgotPasswordPage} />
-          <Route exact path={PASSWORD_RESET_CONFIRM} component={LoadableResetPasswordPage} />
+          <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
           <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
           <Route path="*">
             <Redirect to={PAGE_NOT_FOUND} />
