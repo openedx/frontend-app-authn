@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import camelCase from 'lodash.camelcase';
 import { connect } from 'react-redux';
@@ -6,7 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
@@ -36,9 +37,7 @@ class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    sendPageEvent('login_and_registration', 'register');
     this.intl = props.intl;
-
     this.state = {
       email: '',
       name: '',
@@ -436,9 +435,13 @@ class RegistrationPage extends React.Component {
               )}
               <p>
                 {intl.formatMessage(messages['already.have.an.edx.account'])}
-                <Hyperlink className="ml-1" destination={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>
+                <Link
+                  to={LOGIN_PAGE}
+                  className="text-info ml-1"
+                  onClick={this.handleLoginLinkClickEvent}
+                >
                   {intl.formatMessage(messages['sign.in.hyperlink'])}
-                </Hyperlink>
+                </Link>
               </p>
               <hr className="mb-3 border-gray-200" />
               <h3 className="mb-3">{intl.formatMessage(messages['create.a.new.account'])}</h3>

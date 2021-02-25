@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { mount } from 'enzyme';
@@ -20,7 +21,9 @@ describe('LoginHelpLinks', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      {children}
+      <Router>
+        {children}
+      </Router>
     </IntlProvider>
   );
 
