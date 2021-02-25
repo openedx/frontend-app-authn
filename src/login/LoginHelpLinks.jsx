@@ -33,14 +33,13 @@ const LoginHelpLinks = (props) => {
     <Link
       to={RESET_PAGE}
       onClick={handleForgotPasswordLinkClickEvent}
-      className="field-link"
     >
       {intl.formatMessage(messages['forgot.password.link'])}
     </Link>
   );
 
   const signUpLink = () => (
-    <Link to={REGISTER_PAGE} className="field-link">{intl.formatMessage(messages['register.link'])}</Link>
+    <Link to={REGISTER_PAGE}>{intl.formatMessage(messages['register.link'])}</Link>
 
   );
 
