@@ -18,8 +18,8 @@ import ResetSuccessMessage from './ResetSuccess';
 import {
   AuthnValidationFormGroup,
   APIFailureMessage,
-  Spinner,
 } from '../common-components';
+import Spinner from './Spinner';
 import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../data/constants';
 
 const ResetPasswordPage = (props) => {

@@ -44,7 +44,6 @@
     "@fortawesome/free-regular-svg-icons": "5.15.1",
     "@fortawesome/free-solid-svg-icons": "5.15.1",
     "@fortawesome/react-fontawesome": "0.1.13",
-    "@loadable/component": "^5.14.1",
     "babel-polyfill": "6.26.0",
     "classnames": "^2.2.6",
     "extract-react-intl-messages": "^4.1.1",

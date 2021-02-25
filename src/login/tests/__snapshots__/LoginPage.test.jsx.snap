@@ -13,11 +13,13 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
       <p>
         First time here?
         <a
-          className="text-info ml-1"
+          className="ml-1"
           href="/register"
           onClick={[Function]}
+          target="_self"
         >
-          Create an account.
+          Create an account
+          .
         </a>
       </p>
       <hr
@@ -197,11 +199,13 @@ exports[`LoginPage should match default section snapshot 1`] = `
       <p>
         First time here?
         <a
-          className="text-info ml-1"
+          className="ml-1"
           href="/register"
           onClick={[Function]}
+          target="_self"
         >
-          Create an account.
+          Create an account
+          .
         </a>
       </p>
       <hr
@@ -383,11 +387,13 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
       <p>
         First time here?
         <a
-          className="text-info ml-1"
+          className="ml-1"
           href="/register"
           onClick={[Function]}
+          target="_self"
         >
-          Create an account.
+          Create an account
+          .
         </a>
       </p>
       <hr
@@ -531,11 +537,13 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
       <p>
         First time here?
         <a
-          className="text-info ml-1"
+          className="ml-1"
           href="/register"
           onClick={[Function]}
+          target="_self"
         >
-          Create an account.
+          Create an account
+          .
         </a>
       </p>
       <hr
@@ -716,11 +724,13 @@ exports[`LoginPage should show error message 1`] = `
       <p>
         First time here?
         <a
-          className="text-info ml-1"
+          className="ml-1"
           href="/register"
           onClick={[Function]}
+          target="_self"
         >
-          Create an account.
+          Create an account
+          .
         </a>
       </p>
       <hr

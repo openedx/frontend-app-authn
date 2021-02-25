@@ -7,19 +7,20 @@ import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect, Route, Switch } from 'react-router-dom';
+
 import { messages as headerMessages } from '@edx/frontend-component-header';
 
 import configureStore from './data/configureStore';
-import LoadableForgotPasswordPage from './forgot-password';
-import LoadableRegistrationPage from './register';
-import LoadableLoginPage from './login';
-import LoadableResetPasswordPage from './reset-password';
+import { RegistrationPage } from './register';
+import { LoginPage } from './login';
 import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
 } from './data/constants';
+import ForgotPasswordPage from './forgot-password';
 import {
-  HeaderLayout, UnAuthenticatedRoute, registerIcons, NotFoundPage,
+  HeaderLayout, UnAuthOnlyRoute, registerIcons, NotFoundPage,
 } from './common-components';
+import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
 
 import './index.scss';
@@ -34,10 +35,10 @@ subscribe(APP_READY, () => {
           <Route exact path="/">
             <Redirect to={PAGE_NOT_FOUND} />
           </Route>
-          <UnAuthenticatedRoute exact path={LOGIN_PAGE} component={LoadableLoginPage} />
-          <UnAuthenticatedRoute exact path={REGISTER_PAGE} component={LoadableRegistrationPage} />
-          <UnAuthenticatedRoute exact path={RESET_PAGE} component={LoadableForgotPasswordPage} />
-          <Route exact path={PASSWORD_RESET_CONFIRM} component={LoadableResetPasswordPage} />
+          <UnAuthOnlyRoute exact path={LOGIN_PAGE} component={LoginPage} />
+          <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={RegistrationPage} />
+          <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
+          <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
           <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
           <Route path="*">
             <Redirect to={PAGE_NOT_FOUND} />

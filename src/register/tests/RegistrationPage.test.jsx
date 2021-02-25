@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
@@ -19,6 +18,7 @@ import { fetchRealtimeValidations, registerNewUser } from '../data/actions';
 jest.mock('@edx/frontend-platform/analytics');
 
 analytics.sendTrackEvent = jest.fn();
+analytics.sendPageEvent = jest.fn();
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
@@ -76,11 +76,7 @@ describe('RegistrationPageTests', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>
-        <Router>
-          {children}
-        </Router>
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </IntlProvider>
   );
 
@@ -131,6 +127,11 @@ describe('RegistrationPageTests', () => {
     registrationPage.find('a[href*="/login"]').simulate('click');
     registrationPage.update();
     expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.login_form.toggled', { category: 'user-engagement' });
+  });
+
+  it('send page event when register page is rendered', () => {
+    mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
   });
 
   it('should show optional fields section on optional check enabled', () => {
