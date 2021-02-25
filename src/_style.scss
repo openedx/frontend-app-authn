@@ -257,7 +257,7 @@ $apple-focus-black: $apple-black;
 }
 
 a span {
-  font-size: 0;
+  @extend .sr-only;
 }
 
 .mw-420 {
@@ -294,6 +294,17 @@ a span {
 @media (min-width: 1024px) {
   .mw-500 {
     width: 500px;
+  }
+}
+
+@media (max-width: 600px) {
+  .btn-social {
+    width: 47%;
+    margin-bottom: 0.75rem;
+  }
+
+  .tpa-container {
+    justify-content: center;
   }
 }
 
