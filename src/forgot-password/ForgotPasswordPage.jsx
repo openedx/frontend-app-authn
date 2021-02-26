@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Alert,
@@ -63,8 +62,6 @@ const ForgotPasswordPage = (props) => {
     setValidationError(error);
     return error;
   };
-
-  sendPageEvent('login_and_registration', 'reset');
 
   return (
     <Formik

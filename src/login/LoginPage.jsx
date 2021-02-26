@@ -1,5 +1,6 @@
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
+import { Link } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -37,7 +38,6 @@ class LoginPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    sendPageEvent('login_and_registration', 'login');
     this.state = {
       password: '',
       email: '',
@@ -197,9 +197,13 @@ class LoginPage extends React.Component {
               ) : null}
               <p>
                 {intl.formatMessage(messages['first.time.here'])}
-                <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>
-                  {intl.formatMessage(messages['create.an.account'])}.
-                </Hyperlink>
+                <Link
+                  to={REGISTER_PAGE}
+                  className="text-info ml-1"
+                  onClick={this.handleCreateAccountLinkClickEvent}
+                >
+                  {intl.formatMessage(messages['create.an.account'])}
+                </Link>
               </p>
               <hr className="mt-0 border-gray-200" />
               <h3 className="text-left mt-2 mb-3">
