@@ -44,6 +44,7 @@ describe('RegistrationPageTests', () => {
         finishAuthUrl: null,
         providers: [],
         secondaryProviders: [],
+        pipelineUserDetails: null,
       },
     },
   };
@@ -301,8 +302,19 @@ describe('RegistrationPageTests', () => {
       },
     });
 
+    const nextProps = {
+      validations: null,
+      thirdPartyAuthContext: {
+        pipelineUserDetails: null,
+      },
+      registrationError: {
+        username: [{ username: errors.username }],
+      },
+    };
+
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
     registrationPage.find('button.btn-brand').simulate('click');
+    registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
     expect(registrationPage.find('#email-invalid-feedback').text()).toEqual(errors.email);
     expect(registrationPage.find('#username-invalid-feedback').text()).toEqual(errors.username);
     expect(registrationPage.find('#validation-errors').first().text()).toEqual(
