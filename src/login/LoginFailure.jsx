@@ -21,6 +21,7 @@ const LoginFailureMessage = (props) => {
   const { intl } = props;
   const { context, errorCode, value } = props.loginError;
   let errorList;
+  let link;
 
   switch (errorCode) {
     case NON_COMPLIANT_PASSWORD_EXCEPTION: {
@@ -148,7 +149,11 @@ const LoginFailureMessage = (props) => {
         let matches;
         if (error.includes('a href')) {
           matches = processLink(error);
-          const [beforeLink, link, linkText, afterLink] = matches;
+          const [beforeLink, href, linkText, afterLink] = matches;
+          link = href;
+          if (href.indexOf('/dashboard?tpa_hint') === 0) {
+            link = `/login?next=${href}`;
+          }
           return (
             <li key={error}>
               {beforeLink}
