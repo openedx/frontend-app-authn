@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  'reset.password.page.title': {
+    id: 'reset.password.page.title',
+    defaultMessage: 'Reset Password | {siteName}',
+    description: 'page title',
+  },
   'reset.password.page.heading': {
     id: 'reset.password.page.heading',
     defaultMessage: 'Reset your password',

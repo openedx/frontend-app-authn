@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import {
   Alert, Form, StatefulButton,
 } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { getQueryParameters } from '@edx/frontend-platform';
+import { getQueryParameters, getConfig } from '@edx/frontend-platform';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
@@ -120,7 +121,11 @@ const ResetPasswordPage = (props) => {
   } else {
     return (
       <>
-
+        <Helmet>
+          <title>{intl.formatMessage(messages['reset.password.page.title'],
+            { siteName: getConfig().SITE_NAME })}
+          </title>
+        </Helmet>
         {props.status === 'failure' && props.errors === INTERNAL_SERVER_ERROR ? (
           <APIFailureMessage header={intl.formatMessage(messages['reset.password.request.server.error'])} errorCode={INTERNAL_SERVER_ERROR} />
         ) : null}

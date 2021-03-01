@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  'forgot.password.page.title': {
+    id: 'forgot.password.page.title',
+    defaultMessage: 'Forgot Password | {siteName}',
+    description: 'forgot password page title',
+  },
   'forgot.password.page.heading': {
     id: 'forgot.password.page.heading',
     defaultMessage: 'Password assistance',

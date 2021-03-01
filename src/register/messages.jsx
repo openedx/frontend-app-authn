@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  'register.page.title': {
+    id: 'register.page.title',
+    defaultMessage: 'Register | {siteName}',
+    description: 'register page title',
+  },
   'create.account.button': {
     id: 'create.account.button',
     defaultMessage: 'Create account',

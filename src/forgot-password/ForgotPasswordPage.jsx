@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 import { Redirect } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -86,6 +87,11 @@ const ForgotPasswordPage = (props) => {
         errors, handleSubmit, setFieldValue, values,
       }) => (
         <>
+          <Helmet>
+            <title>{intl.formatMessage(messages['forgot.password.page.title'],
+              { siteName: getConfig().SITE_NAME })}
+            </title>
+          </Helmet>
           {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
           <div className="d-flex justify-content-center m-4">
             <div className="d-flex flex-column">

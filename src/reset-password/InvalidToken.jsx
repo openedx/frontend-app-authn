@@ -1,5 +1,7 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import { Alert } from '@edx/paragon';
 
 import messages from './messages';
@@ -15,23 +17,30 @@ const InvalidTokenMessage = props => {
   );
 
   return (
-    <div className="d-flex justify-content-center m-4">
-      <div className="d-flex flex-column mw-500">
-        <Alert variant="danger">
-          <Alert.Heading> {intl.formatMessage(messages['reset.password.request.invalid.token.header'])}</Alert.Heading>
-          <FormattedMessage
-            id="reset.password.request.invalid.token.description.message"
-            defaultMessage="This password reset link is invalid. It may have been used already.
-            To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}"
-            description="Invalid password reset link help text message."
-            values={{
-              forgotPassword: <strong> {intl.formatMessage(messages['reset.password.request.forgot.password.text'])} </strong>,
-              loginPasswordLink,
-            }}
-          />
-        </Alert>
+    <>
+      <Helmet>
+        <title>{intl.formatMessage(messages['reset.password.page.title'],
+          { siteName: getConfig().SITE_NAME })}
+        </title>
+      </Helmet>
+      <div className="d-flex justify-content-center m-4">
+        <div className="d-flex flex-column mw-500">
+          <Alert variant="danger">
+            <Alert.Heading> {intl.formatMessage(messages['reset.password.request.invalid.token.header'])}</Alert.Heading>
+            <FormattedMessage
+              id="reset.password.request.invalid.token.description.message"
+              defaultMessage="This password reset link is invalid. It may have been used already.
+              To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}"
+              description="Invalid password reset link help text message."
+              values={{
+                forgotPassword: <strong> {intl.formatMessage(messages['reset.password.request.forgot.password.text'])} </strong>,
+                loginPasswordLink,
+              }}
+            />
+          </Alert>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
