@@ -1,5 +1,6 @@
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
+import { Helmet } from 'react-helmet';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -174,6 +175,11 @@ class LoginPage extends React.Component {
 
     return (
       <>
+        <Helmet>
+          <title>{intl.formatMessage(messages['login.page.title'],
+            { siteName: getConfig().SITE_NAME })}
+          </title>
+        </Helmet>
         <RedirectLogistration
           success={this.props.loginResult.success}
           redirectUrl={this.props.loginResult.redirectUrl}

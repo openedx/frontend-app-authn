@@ -3,6 +3,7 @@ import React from 'react';
 import camelCase from 'lodash.camelcase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
+import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -435,6 +436,11 @@ class RegistrationPage extends React.Component {
 
     return (
       <>
+        <Helmet>
+          <title>{intl.formatMessage(messages['register.page.title'],
+            { siteName: getConfig().SITE_NAME })}
+          </title>
+        </Helmet>
         <RedirectLogistration
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}

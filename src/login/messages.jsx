@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  'login.page.title': {
+    id: 'login.page.title',
+    defaultMessage: 'Login | {siteName}',
+    description: 'login page title',
+  },
   'sign.in.button': {
     id: 'sign.in.button',
     defaultMessage: 'Sign in',

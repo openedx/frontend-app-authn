@@ -1,6 +1,8 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import { Alert } from '@edx/paragon';
 
 import messages from './messages';
@@ -19,23 +21,30 @@ const ResetSuccessMessage = (props) => {
   );
 
   return (
-    <div className="d-flex justify-content-center m-4">
-      <div className="d-flex flex-column">
-        <div className="text-left mw-500">
-          <Alert variant="success">
-            <Alert.Heading>
-              {intl.formatMessage(messages['reset.password.request.success.header.message'])}
-            </Alert.Heading>
-            <FormattedMessage
-              id="reset.password.request.success.header.description.message"
-              defaultMessage="Your password has been reset. {loginPasswordLink}"
-              description="message when reset password is successful."
-              values={{ loginPasswordLink }}
-            />
-          </Alert>
+    <>
+      <Helmet>
+        <title>{intl.formatMessage(messages['reset.password.page.title'],
+          { siteName: getConfig().SITE_NAME })}
+        </title>
+      </Helmet>
+      <div className="d-flex justify-content-center m-4">
+        <div className="d-flex flex-column">
+          <div className="text-left mw-500">
+            <Alert variant="success">
+              <Alert.Heading>
+                {intl.formatMessage(messages['reset.password.request.success.header.message'])}
+              </Alert.Heading>
+              <FormattedMessage
+                id="reset.password.request.success.header.description.message"
+                defaultMessage="Your password has been reset. {loginPasswordLink}"
+                description="message when reset password is successful."
+                values={{ loginPasswordLink }}
+              />
+            </Alert>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
