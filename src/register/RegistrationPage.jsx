@@ -68,6 +68,7 @@ class RegistrationPage extends React.Component {
       formValid: false,
       updateFieldErrors: false,
       updateAlertErrors: false,
+      registrationErrorsUpdated: false,
     };
   }
 
@@ -106,9 +107,19 @@ class RegistrationPage extends React.Component {
     if (this.props.registrationError !== nextProps.registrationError) {
       this.setState({
         formValid: false,
+        registrationErrorsUpdated: true,
       });
       return false;
     }
+
+    if (this.state.registrationErrorsUpdated && this.props.registrationError === nextProps.registrationError) {
+      this.setState({
+        formValid: false,
+        registrationErrorsUpdated: false,
+      });
+      return false;
+    }
+
     return true;
   }
 
@@ -166,7 +177,7 @@ class RegistrationPage extends React.Component {
     let finalValidation = this.state.formValid;
     if (!this.state.formValid) {
       Object.keys(payload).forEach(key => {
-        finalValidation = this.validateInput(key, payload[key]);
+        finalValidation = this.validateInput(key, payload[key], payload);
       });
     }
     // Since optional fields are not validated we can add it to payload after required fields
@@ -216,11 +227,13 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value,
-      updateFieldErrors: false,
-      updateAlertErrors: false,
-    });
+    if (!(e.target.name === 'username' && e.target.value.length > 30)) {
+      this.setState({
+        [e.target.name]: e.target.value,
+        updateFieldErrors: false,
+        updateAlertErrors: false,
+      });
+    }
   }
 
   handleOnOptional(e) {
@@ -276,7 +289,7 @@ class RegistrationPage extends React.Component {
       case 'username':
         if (value.length < 1) {
           errors.username = intl.formatMessage(messages['username.validation.message']);
-        } else if (value.length <= 1) {
+        } else if (value.length <= 1 || value.length > 30) {
           errors.username = intl.formatMessage(messages['username.ratelimit.less.chars.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
           errors.username = intl.formatMessage(messages['username.format.validation.message']);
@@ -344,23 +357,27 @@ class RegistrationPage extends React.Component {
       validationAlertMessages,
     } = this.state;
     Object.entries(errors).map(([key, value]) => {
-      validationAlertMessages[key][0].user_message = value;
+      if (validationAlertMessages[key]) {
+        validationAlertMessages[key][0].user_message = value;
+      }
       return validationAlertMessages;
     });
   }
 
   renderErrors() {
     let errorsObject = null;
+    let { registrationErrorsUpdated } = this.state;
     const {
       updateAlertErrors,
       updateFieldErrors,
       validationAlertMessages,
     } = this.state;
     const { registrationError, submitState } = this.props;
-    if (registrationError) {
+    if (registrationError && registrationErrorsUpdated) {
       if (updateFieldErrors && submitState !== PENDING_STATE) {
         this.updateFieldErrors(registrationError);
       }
+      registrationErrorsUpdated = false;
       errorsObject = registrationError;
     } else {
       if (updateAlertErrors && submitState !== PENDING_STATE) {
