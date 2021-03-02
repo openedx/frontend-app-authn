@@ -15,6 +15,7 @@ import ukMessages from './messages/uk.json';
 
 const messages = {
   ar: arMessages,
+  es: es419Messages, // Prospectus uses es language code for spanish, added `es` option and pointed to es-419 strings.
   'es-419': es419Messages,
   fr: frMessages,
   'zh-cn': zhcnMessages,
