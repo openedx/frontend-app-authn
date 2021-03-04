@@ -57,7 +57,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -81,7 +81,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -129,7 +129,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-0 data-hj-suppress"
         >
           <label
             className="sr-only form-label"
@@ -1608,7 +1608,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -1632,7 +1632,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -1680,7 +1680,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <span />
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-0 data-hj-suppress"
         >
           <label
             className="sr-only form-label"
@@ -3120,7 +3120,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -3144,7 +3144,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <span />
         </div>
         <div
-          className="form-group"
+          className="form-group data-hj-suppress"
         >
           <label
             className="pt-10 focus-out form-label"
@@ -3192,7 +3192,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <span />
         </div>
         <div
-          className="form-group mb-0"
+          className="form-group mb-0 data-hj-suppress"
         >
           <label
             className="sr-only form-label"

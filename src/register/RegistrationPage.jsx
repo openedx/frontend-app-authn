@@ -483,6 +483,7 @@ class RegistrationPage extends React.Component {
                   for="username"
                   name="username"
                   type="text"
+                  className="data-hj-suppress"
                   invalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
                   value={this.state.username}
@@ -495,6 +496,7 @@ class RegistrationPage extends React.Component {
                   for="email"
                   name="email"
                   type="text"
+                  className="data-hj-suppress"
                   invalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
                   value={this.state.email}
@@ -524,7 +526,7 @@ class RegistrationPage extends React.Component {
                   key="country"
                   invalid={this.state.errors.country !== ''}
                   invalidMessage={intl.formatMessage(messages['country.validation.message'])}
-                  className="mb-0"
+                  className="mb-0 data-hj-suppress"
                   value={this.state.country}
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}

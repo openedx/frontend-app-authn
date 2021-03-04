@@ -35,7 +35,7 @@ const OptionalFields = (props) => {
         type="select"
         key="gender"
         value={values.gender}
-        className="mb-20 opt-inline-field"
+        className="mb-20 opt-inline-field data-hj-suppress"
         onChange={(e) => onChangeHandler('gender', e.target.value)}
         selectOptions={getOptions().genderOptions}
       />
@@ -46,7 +46,7 @@ const OptionalFields = (props) => {
         type="select"
         key="yearOfBirth"
         value={values.yearOfBirth}
-        className="mb-20 opt-inline-field opt-year-field"
+        className="mb-20 opt-inline-field opt-year-field data-hj-suppress"
         onChange={(e) => onChangeHandler('yearOfBirth', e.target.value)}
         selectOptions={getOptions().yearOfBirthOptions}
       />
@@ -57,7 +57,7 @@ const OptionalFields = (props) => {
         type="select"
         key="levelOfEducation"
         value={values.levelOfEducation}
-        className="mb-20"
+        className="mb-20 data-hj-suppress"
         onChange={(e) => onChangeHandler('levelOfEducation', e.target.value)}
         selectOptions={getOptions().educationLevelOptions}
       />
