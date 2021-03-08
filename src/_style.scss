@@ -56,6 +56,10 @@ $apple-focus-black: $apple-black;
   box-sizing: content-box;
 }
 
+.form-control {
+  width: 500px;
+}
+
 .btn-social {
   display: flex;
   flex-direction: row;
@@ -305,6 +309,9 @@ $apple-focus-black: $apple-black;
 
   .tpa-container {
     justify-content: center;
+  }
+  .form-control {
+    width: 100%;
   }
 }
 
