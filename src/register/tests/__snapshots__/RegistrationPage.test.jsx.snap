@@ -1501,7 +1501,9 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <span
             className="d-flex align-items-center justify-content-center"
           >
-            Create account
+            <span>
+              Create account
+            </span>
           </span>
         </button>
         <div
@@ -3050,7 +3052,9 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <span
             className="d-flex align-items-center justify-content-center"
           >
-            Create account
+            <span>
+              Create account
+            </span>
           </span>
         </button>
       </form>
@@ -4581,7 +4585,9 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
                 />
               </svg>
             </span>
-            Create account
+            <span>
+              Create account
+            </span>
           </span>
         </button>
       </form>
