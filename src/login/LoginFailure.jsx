@@ -63,7 +63,7 @@ const LoginFailureMessage = (props) => {
             check your spam folders or {supportLink}."
             values={{
               lineBreak: <br />,
-              email: <strong>{props.loginError.email}</strong>,
+              email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
               supportLink,
             }}
           />

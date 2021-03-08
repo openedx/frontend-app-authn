@@ -31,9 +31,10 @@ const RegistrationFailureMessage = (props) => {
      default:
         Object.keys(errorMessage).forEach((key) => {
           const errors = errorMessage[key];
+          const suppressionClass = ['email', 'username'].includes(key) ? 'data-hj-suppress' : '';
           const errorList = errors.map((error) => (
             (error.user_message) ? (
-              <li key={error} className="text-left">
+              <li key={error} className={`text-left ${suppressionClass}`}>
                 {error.user_message}
               </li>
             ) : null
@@ -45,14 +46,8 @@ const RegistrationFailureMessage = (props) => {
   return (
     !userErrors.length ? null : (
       <Alert id="validation-errors" variant="danger">
-        <Alert.Heading>
-          {props.intl.formatMessage(messages['registration.request.failure.header'])}
-        </Alert.Heading>
-
-        <ul>
-          {userErrors}
-        </ul>
-
+        <Alert.Heading>{props.intl.formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
+        <ul>{userErrors}</ul>
       </Alert>
     )
   );

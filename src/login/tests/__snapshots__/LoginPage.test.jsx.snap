@@ -363,7 +363,9 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
         <p>
           <span>
             You entered 
-            <strong>
+            <strong
+              className="data-hj-suppress"
+            >
               test@example.com
             </strong>
             . If this email address is associated with your edX account, we will send a message with password recovery instructions to this email address.
