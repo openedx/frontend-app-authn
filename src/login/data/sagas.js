@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import { camelCaseObject } from '@edx/frontend-platform';
-import { logError } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@edx/frontend-platform/logging';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
 
 // Actions
@@ -33,13 +33,15 @@ export function* handleLoginRequest(action) {
       const { status } = e.response;
       if (statusCodes.includes(status)) {
         yield put(loginRequestFailure(camelCaseObject(e.response.data)));
+        logInfo(e);
       } else if (status === 403) {
         yield put(loginRequestFailure({ errorCode: FORBIDDEN_REQUEST }));
+        logInfo(e);
       } else {
         yield put(loginRequestFailure({ errorCode: INTERNAL_SERVER_ERROR }));
+        logError(e);
       }
     }
-    logError(e);
   }
 }
 

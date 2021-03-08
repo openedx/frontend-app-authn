@@ -20,7 +20,7 @@ describe('handleLoginRequest', () => {
     },
   };
 
-  const testErrorResponse = async (loginErrorResponse, expectedDispatchers) => {
+  const testErrorResponse = async (loginErrorResponse, expectedLogFunc, expectedDispatchers) => {
     const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
 
     const dispatched = [];
@@ -31,13 +31,14 @@ describe('handleLoginRequest', () => {
     );
 
     expect(loginRequest).toHaveBeenCalledTimes(1);
-    expect(loggingService.logError).toHaveBeenCalled();
+    expect(expectedLogFunc).toHaveBeenCalled();
     expect(dispatched).toEqual(expectedDispatchers);
     loginRequest.mockClear();
   };
 
   beforeEach(() => {
     loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   it('should call service and dispatch success action', async () => {
@@ -70,7 +71,7 @@ describe('handleLoginRequest', () => {
       },
     };
 
-    await testErrorResponse(loginErrorResponse, [
+    await testErrorResponse(loginErrorResponse, loggingService.logInfo, [
       actions.loginRequestBegin(),
       actions.loginRequestFailure(camelCaseObject(loginErrorResponse.response.data)),
     ]);
@@ -86,7 +87,7 @@ describe('handleLoginRequest', () => {
       },
     };
 
-    await testErrorResponse(loginErrorResponse, [
+    await testErrorResponse(loginErrorResponse, loggingService.logInfo, [
       actions.loginRequestBegin(),
       actions.loginRequestFailure(loginErrorResponse.response.data),
     ]);
@@ -102,7 +103,7 @@ describe('handleLoginRequest', () => {
       },
     };
 
-    await testErrorResponse(loginErrorResponse, [
+    await testErrorResponse(loginErrorResponse, loggingService.logError, [
       actions.loginRequestBegin(),
       actions.loginRequestFailure(loginErrorResponse.response.data),
     ]);
