@@ -28,8 +28,9 @@ const RegistrationFailureMessage = (props) => {
      userErrors.push(serverError);
      break;
 
-     default:
-        Object.keys(errorMessage).forEach((key) => {
+    default:
+      Object.keys(errorMessage).forEach((key) => {
+        if (key !== 'error_code') {
           const errors = errorMessage[key];
           const suppressionClass = ['email', 'username'].includes(key) ? 'data-hj-suppress' : '';
           const errorList = errors.map((error) => (
@@ -40,7 +41,8 @@ const RegistrationFailureMessage = (props) => {
             ) : null
           ));
           userErrors.push(errorList);
-        });
+        }
+      });
   }
 
   return (
