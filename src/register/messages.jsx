@@ -253,8 +253,8 @@ const messages = defineMessages({
     defaultMessage: 'No formal education',
     description: 'Selected by the user to describe their education.',
   },
-  'registration.field.education.levels.o': {
-    id: 'registration.field.education.levels.o',
+  'registration.field.education.levels.other': {
+    id: 'registration.field.education.levels.other',
     defaultMessage: 'Other education',
     description: 'Selected by the user if they have a type of education not described by the other choices.',
   },
