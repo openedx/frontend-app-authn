@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { logError } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@edx/frontend-platform/logging';
 
 // Actions
 import {
@@ -31,11 +31,11 @@ export function* handleValidateToken(action) {
     const statusCodes = [429];
     if (err.response && statusCodes.includes(err.response.status)) {
       yield put(validateTokenFailure(API_RATELIMIT_ERROR));
+      logInfo(err);
     } else {
       yield put(validateTokenFailure(INTERNAL_SERVER_ERROR));
+      logError(err);
     }
-
-    logError(err);
   }
 }
 
@@ -55,10 +55,11 @@ export function* handleResetPassword(action) {
     const statusCodes = [429];
     if (err.response && statusCodes.includes(err.response.status)) {
       yield put(resetPasswordFailure(API_RATELIMIT_ERROR));
+      logInfo(err);
     } else {
       yield put(resetPasswordFailure(INTERNAL_SERVER_ERROR));
+      logError(err);
     }
-    logError(err);
   }
 }
 

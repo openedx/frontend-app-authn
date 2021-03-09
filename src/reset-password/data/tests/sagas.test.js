@@ -33,6 +33,7 @@ describe('handleResetPassword', () => {
 
   beforeEach(() => {
     loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   it('should call service and dispatch success action', async () => {
@@ -70,6 +71,7 @@ describe('handleResetPassword', () => {
       params,
     );
 
+    expect(loggingService.logError).toHaveBeenCalled();
     expect(resetPassword).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(INTERNAL_SERVER_ERROR)]);
     resetPassword.mockClear();
@@ -94,6 +96,7 @@ describe('handleResetPassword', () => {
       params,
     );
 
+    expect(loggingService.logInfo).toHaveBeenCalled();
     expect(resetPassword).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(API_RATELIMIT_ERROR)]);
     resetPassword.mockClear();
@@ -110,6 +113,7 @@ describe('handleValidateToken', () => {
 
   beforeEach(() => {
     loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   it('check internal server error on api failure', async () => {
@@ -155,6 +159,7 @@ describe('handleValidateToken', () => {
       params,
     );
 
+    expect(loggingService.logInfo).toHaveBeenCalled();
     expect(validateToken).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([validateTokenBegin(), validateTokenFailure(API_RATELIMIT_ERROR)]);
     validateToken.mockClear();

@@ -18,6 +18,7 @@ describe('handleForgotPassword', () => {
 
   beforeEach(() => {
     loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   it('should handle 500 error code', async () => {
@@ -34,6 +35,7 @@ describe('handleForgotPassword', () => {
       params,
     );
 
+    expect(loggingService.logError).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.forgotPasswordBegin(),
       actions.forgotPasswordServerError(),
@@ -55,6 +57,7 @@ describe('handleForgotPassword', () => {
       params,
     );
 
+    expect(loggingService.logInfo).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.forgotPasswordBegin(),
       actions.forgotPasswordForbidden(null),

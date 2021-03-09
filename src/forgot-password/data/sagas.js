@@ -1,4 +1,4 @@
-import { logError } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@edx/frontend-platform/logging';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 // Actions
@@ -23,10 +23,11 @@ export function* handleForgotPassword(action) {
   } catch (e) {
     if (e.response && e.response.status === 403) {
       yield put(forgotPasswordForbidden());
+      logInfo(e);
     } else {
       yield put(forgotPasswordServerError());
+      logError(e);
     }
-    logError(e);
   }
 }
 
