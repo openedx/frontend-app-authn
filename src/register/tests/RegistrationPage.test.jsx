@@ -81,6 +81,30 @@ describe('RegistrationPageTests', () => {
     </IntlProvider>
   );
 
+  const submitForm = (payload, submitOptionalFields = true, isThirdPartyAuth = false) => {
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+    registerPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
+    registerPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
+    registerPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
+    registerPage.find('select#country').simulate('change', { target: { value: payload.country, name: 'country' } });
+
+    if (!isThirdPartyAuth) {
+      registerPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
+    }
+
+    // Send optional field
+    if (submitOptionalFields) {
+      registerPage.find('input#optional').simulate('change', { target: { checked: true } });
+      registerPage.find('select#gender').simulate('change', { target: { value: payload.gender || null, name: 'gender' } });
+      registerPage.find('select#yearOfBirth').simulate('change', { target: { values: payload.yearOfBirth || null, name: 'yearOfBirth' } });
+      registerPage.find('select#levelOfEducation').simulate('change', { target: { values: payload.levelOfEducation || null, name: 'levelOfEducation' } });
+      registerPage.find('textarea#goals').simulate('change', { target: { value: payload.goals || '', name: 'goals' } });
+    }
+
+    registerPage.find('button.btn-brand').simulate('click');
+  };
+
   beforeEach(() => {
     store = mockStore(initialState);
     configure({
@@ -334,19 +358,33 @@ describe('RegistrationPageTests', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    submitForm(formPayload);
+    expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(formPayload));
+  });
 
-    registerPage.find('input#name').simulate('change', { target: { value: formPayload.name, name: 'name' } });
-    registerPage.find('input#username').simulate('change', { target: { value: formPayload.username, name: 'username' } });
-    registerPage.find('input#email').simulate('change', { target: { value: formPayload.email, name: 'email' } });
-    registerPage.find('input#password').simulate('change', { target: { value: formPayload.password, name: 'password' } });
-    registerPage.find('select#country').simulate('change', { target: { value: formPayload.country, name: 'country' } });
+  it('should submit form with no password when current provider is present', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          currentProvider: appleProvider.name,
+        },
+      },
+    });
 
-    // Send optional field
-    registerPage.find('input#optional').simulate('change', { target: { checked: true } });
-    registerPage.find('select#gender').simulate('change', { target: { value: formPayload.gender, name: 'gender' } });
+    const formPayload = {
+      name: 'John Doe',
+      username: 'john_doe',
+      email: 'john.doe@example.com',
+      country: 'Pakistan',
+      honor_code: true,
+      social_auth_provider: appleProvider.name,
+    };
 
-    registerPage.find('button.btn-brand').simulate('click');
+    store.dispatch = jest.fn(store.dispatch);
+    submitForm(formPayload, false, true);
     expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(formPayload));
   });
 
@@ -440,7 +478,7 @@ describe('RegistrationPageTests', () => {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          currentProvider: 'Google',
+          currentProvider: appleProvider.name,
         },
       },
     });

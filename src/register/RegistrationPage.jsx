@@ -162,7 +162,9 @@ class RegistrationPage extends React.Component {
       honor_code: true,
     };
 
-    if (!this.props.thirdPartyAuthContext.currentProvider) {
+    if (this.props.thirdPartyAuthContext.currentProvider) {
+      payload.social_auth_provider = this.props.thirdPartyAuthContext.currentProvider;
+    } else {
       payload.password = this.state.password;
     }
 
