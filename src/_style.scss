@@ -242,6 +242,10 @@ $apple-focus-black: $apple-black;
 .opt-inline-field {
   display: inline-block;
   width: 50%;
+
+  .form-control {
+    width: 100%;
+  }
 }
 
 .opt-year-field {
