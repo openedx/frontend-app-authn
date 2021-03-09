@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { logError } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@edx/frontend-platform/logging';
 
 // Actions
 import {
@@ -32,10 +32,11 @@ export function* handleNewUserRegistration(action) {
     const statusCodes = [400, 409, 403];
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(registerNewUserFailure(e.response.data));
+      logInfo(e);
     } else {
       yield put(registerNewUserFailure({ errorCode: INTERNAL_SERVER_ERROR }));
+      logError(e);
     }
-    logError(e);
   }
 }
 
@@ -51,8 +52,10 @@ export function* fetchRealtimeValidations(action) {
     const statusCodes = [403];
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(fetchRealtimeValidationsFailure(e.response.data, e.response.status));
+      logInfo(e);
+    } else {
+      logError(e);
     }
-    logError(e);
   }
 }
 

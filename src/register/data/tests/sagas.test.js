@@ -8,6 +8,7 @@ import {
 } from '../sagas';
 import * as api from '../service';
 import initializeMockLogging from '../../../setupTest';
+import { INTERNAL_SERVER_ERROR } from '../../../data/constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -26,7 +27,7 @@ describe('fetchRealtimeValidations', () => {
   };
 
   beforeEach(() => {
-    loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   const data = {
@@ -74,7 +75,7 @@ describe('fetchRealtimeValidations', () => {
     );
 
     expect(getFieldsValidations).toHaveBeenCalledTimes(1);
-    expect(loggingService.logError).toHaveBeenCalled();
+    expect(loggingService.logInfo).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.fetchRealtimeValidationsBegin(),
       actions.fetchRealtimeValidationsFailure(
@@ -82,6 +83,28 @@ describe('fetchRealtimeValidations', () => {
         validationRatelimitResponse.response.status,
       ),
     ]);
+    getFieldsValidations.mockClear();
+  });
+
+  it('should call logError on 500 server error', async () => {
+    const validationRatelimitResponse = {
+      response: {
+        status: 500,
+        data: {},
+      },
+    };
+    const getFieldsValidations = jest.spyOn(api, 'getFieldsValidations')
+      .mockImplementation(() => Promise.reject(validationRatelimitResponse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      fetchRealtimeValidations,
+      params,
+    );
+
+    expect(getFieldsValidations).toHaveBeenCalledTimes(1);
+    expect(loggingService.logError).toHaveBeenCalled();
     getFieldsValidations.mockClear();
   });
 });
@@ -102,6 +125,7 @@ describe('handleNewUserRegistration', () => {
 
   beforeEach(() => {
     loggingService.logError.mockReset();
+    loggingService.logInfo.mockReset();
   });
 
   it('should call service and dispatch success action', async () => {
@@ -129,7 +153,7 @@ describe('handleNewUserRegistration', () => {
       response: {
         status: 500,
         data: {
-          errorCode: 'internal-server-error',
+          errorCode: INTERNAL_SERVER_ERROR,
         },
       },
     };
@@ -143,6 +167,7 @@ describe('handleNewUserRegistration', () => {
       params,
     );
 
+    expect(loggingService.logError).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
       actions.registerNewUserFailure(camelCaseObject(registerErrorResponse.response.data)),
@@ -170,7 +195,7 @@ describe('handleNewUserRegistration', () => {
     );
 
     expect(registerRequest).toHaveBeenCalledTimes(1);
-    expect(loggingService.logError).toHaveBeenCalled();
+    expect(loggingService.logInfo).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
       actions.registerNewUserFailure(loginErrorResponse.response.data),
