@@ -32,7 +32,9 @@ import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
-import { getTpaProvider, processTpaHintURL } from '../data/utils';
+import {
+  getTpaProvider, processTpaHintURL, updatePathWithQueryParams, getAllPossibleQueryParam,
+} from '../data/utils';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -90,16 +92,10 @@ class LoginPage extends React.Component {
       return;
     }
 
-    const params = (new URL(document.location)).searchParams;
-    const payload = { email, password };
-    const next = params.get('next');
-    const courseId = params.get('course_id');
-    if (next) {
-      payload.next = next;
-    }
-    if (courseId) {
-      payload.course_id = courseId;
-    }
+    let payload = { email, password };
+    const postParams = getAllPossibleQueryParam();
+
+    payload = { ...payload, ...postParams };
     this.props.loginRequest(payload);
   }
 
@@ -203,7 +199,11 @@ class LoginPage extends React.Component {
               ) : null}
               <p>
                 {intl.formatMessage(messages['first.time.here'])}
-                <Hyperlink className="ml-1" destination={REGISTER_PAGE} onClick={this.handleCreateAccountLinkClickEvent}>
+                <Hyperlink
+                  className="ml-1"
+                  destination={updatePathWithQueryParams(REGISTER_PAGE)}
+                  onClick={this.handleCreateAccountLinkClickEvent}
+                >
                   {intl.formatMessage(messages['create.an.account'])}.
                 </Hyperlink>
               </p>

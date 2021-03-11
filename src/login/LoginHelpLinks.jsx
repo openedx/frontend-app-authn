@@ -14,6 +14,7 @@ import {
   RESET_PAGE,
 } from '../data/constants';
 import messages from './messages';
+import { updatePathWithQueryParams } from '../data/utils';
 
 const LoginHelpLinks = (props) => {
   const { intl, page } = props;
@@ -31,7 +32,7 @@ const LoginHelpLinks = (props) => {
   const forgotPasswordLink = () => (
     <Hyperlink
       className="field-link"
-      destination={RESET_PAGE}
+      destination={updatePathWithQueryParams(RESET_PAGE)}
       onClick={handleForgotPasswordLinkClickEvent}
     >
       {intl.formatMessage(messages['forgot.password.link'])}
@@ -39,7 +40,7 @@ const LoginHelpLinks = (props) => {
   );
 
   const signUpLink = () => (
-    <Hyperlink className="field-link" destination={REGISTER_PAGE}>
+    <Hyperlink className="field-link" destination={updatePathWithQueryParams(REGISTER_PAGE)}>
       {intl.formatMessage(messages['register.link'])}
     </Hyperlink>
   );
