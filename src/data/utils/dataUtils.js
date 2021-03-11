@@ -1,5 +1,8 @@
 // Utility functions
 
+import * as QueryString from 'query-string';
+import { AUTH_PARAMS } from '../constants';
+
 export default function processLink(link) {
   let matches;
   link.replace(/(.*?)<a href=["']([^"']*).*?>([^<]+)<\/a>(.*)/g, function () { // eslint-disable-line func-names
@@ -39,4 +42,26 @@ export const processTpaHintURL = (params) => {
     }
   }
   return tpaHint;
+};
+
+export const updatePathWithQueryParams = (path) => {
+  const queryParams = window.location.search;
+
+  if (!queryParams) {
+    return path;
+  }
+
+  return `${path}${queryParams}`;
+};
+
+export const getAllPossibleQueryParam = () => {
+  const urlParams = QueryString.parse(document.location.search);
+  const params = {};
+  Object.entries(urlParams).forEach(([key, value]) => {
+    if (AUTH_PARAMS.indexOf(key) > -1) {
+      params[key] = value;
+    }
+  });
+
+  return params;
 };

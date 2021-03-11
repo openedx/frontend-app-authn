@@ -28,6 +28,7 @@ import {
 import APIFailureMessage from '../common-components/APIFailureMessage';
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../login/LoginHelpLinks';
+import { updatePathWithQueryParams } from '../data/utils';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
@@ -92,7 +93,7 @@ const ForgotPasswordPage = (props) => {
               { siteName: getConfig().SITE_NAME })}
             </title>
           </Helmet>
-          {status === 'complete' ? <Redirect to={LOGIN_PAGE} /> : null}
+          {status === 'complete' ? <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} /> : null}
           <div className="d-flex justify-content-center m-4">
             <div className="d-flex flex-column">
               <Form className="mw-500">

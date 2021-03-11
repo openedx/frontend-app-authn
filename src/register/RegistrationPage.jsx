@@ -31,7 +31,9 @@ import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
-import { getTpaProvider, processTpaHintURL } from '../data/utils';
+import {
+  getTpaProvider, processTpaHintURL, updatePathWithQueryParams, getAllPossibleQueryParam,
+} from '../data/utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -153,8 +155,7 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const params = (new URL(document.location)).searchParams;
-    const payload = {
+    let payload = {
       name: this.state.name,
       username: this.state.username,
       email: this.state.email,
@@ -168,14 +169,8 @@ class RegistrationPage extends React.Component {
       payload.password = this.state.password;
     }
 
-    const next = params.get('next');
-    const courseId = params.get('course_id');
-    if (next) {
-      payload.next = next;
-    }
-    if (courseId) {
-      payload.course_id = courseId;
-    }
+    const postParams = getAllPossibleQueryParam();
+    payload = { ...payload, ...postParams };
 
     let finalValidation = this.state.formValid;
     if (!this.state.formValid) {
@@ -461,7 +456,11 @@ class RegistrationPage extends React.Component {
               )}
               <p>
                 {intl.formatMessage(messages['already.have.an.edx.account'])}
-                <Hyperlink className="ml-1" destination={LOGIN_PAGE} onClick={this.handleLoginLinkClickEvent}>
+                <Hyperlink
+                  className="ml-1"
+                  destination={updatePathWithQueryParams(LOGIN_PAGE)}
+                  onClick={this.handleLoginLinkClickEvent}
+                >
                   {intl.formatMessage(messages['sign.in.hyperlink'])}
                 </Hyperlink>
               </p>
