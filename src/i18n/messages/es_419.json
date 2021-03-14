@@ -113,7 +113,7 @@
   "registration.field.education.levels.jhs": "Junior secondary/junior high/middle school",
   "registration.field.education.levels.el": "Elementary/primary school",
   "registration.field.education.levels.none": "No formal education",
-  "registration.field.education.levels.o": "Other education",
+  "registration.field.education.levels.other": "Other education",
   "register.page.terms.of.service.and.honor.code": "By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each\n                    Member process your personal data in accordance with the {privacyPolicy}.",
   "reset.password.request.invalid.token.description.message": "This password reset link is invalid. It may have been used already.\n              To reset your password, go to the {loginPasswordLink} page and select {forgotPassword}",
   "reset.password.page.title": "Reset Password | {siteName}",
