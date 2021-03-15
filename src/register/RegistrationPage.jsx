@@ -478,6 +478,7 @@ class RegistrationPage extends React.Component {
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.name'])}
+                  inputFieldStyle="border-gray-600"
                 />
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['username.label'])}
@@ -491,6 +492,7 @@ class RegistrationPage extends React.Component {
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.username'])}
+                  inputFieldStyle="border-gray-600"
                 />
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['register.page.email.label'])}
@@ -504,6 +506,7 @@ class RegistrationPage extends React.Component {
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
                   helpText={intl.formatMessage(messages['helptext.email'])}
+                  inputFieldStyle="border-gray-600"
                 />
                 {!currentProvider && (
                   <AuthnValidationFormGroup
@@ -517,6 +520,7 @@ class RegistrationPage extends React.Component {
                     onBlur={(e) => this.handleOnBlur(e)}
                     onChange={(e) => this.handleOnChange(e)}
                     helpText={intl.formatMessage(messages['helptext.password'])}
+                    inputFieldStyle="border-gray-600"
                   />
                 )}
                 <AuthnValidationFormGroup
@@ -532,6 +536,7 @@ class RegistrationPage extends React.Component {
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
                   selectOptions={this.getCountryOptions()}
+                  inputFieldStyle="border-gray-600"
                 />
                 <div id="honor-code" className="pt-10 small">
                   <FormattedMessage

@@ -61,6 +61,7 @@ const AuthnCustomValidationFormGroup = (props) => {
     id: props.for,
     type: props.type,
     value: props.value,
+    className: props.inputFieldStyle,
   };
   inputProps.onChange = (e) => onChangeHandler(e, onChange);
   inputProps.onClick = (e) => onClickHandler(e, onClick);
@@ -69,7 +70,7 @@ const AuthnCustomValidationFormGroup = (props) => {
 
   if (props.type === 'select') {
     inputProps.options = props.selectOptions;
-    inputProps.className = props.value === '' ? 'text-muted' : null;
+    inputProps.className = props.value === '' ? 'text-muted border-gray-600' : null;
   }
   if (props.type === 'checkbox') {
     inputProps.checked = props.isChecked;
@@ -112,6 +113,7 @@ AuthnCustomValidationFormGroup.defaultProps = {
   value: '',
   invalid: false,
   invalidMessage: '',
+  inputFieldStyle: '',
   helpText: '',
   className: '',
   onClick: null,
@@ -135,6 +137,7 @@ AuthnCustomValidationFormGroup.propTypes = {
   invalidMessage: PropTypes.string,
   helpText: PropTypes.string,
   className: PropTypes.string,
+  inputFieldStyle: PropTypes.string,
   isChecked: PropTypes.bool,
   optionalFieldCheckbox: PropTypes.bool,
   onClick: PropTypes.func,
