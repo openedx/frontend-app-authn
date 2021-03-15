@@ -43,7 +43,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -67,7 +67,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -91,7 +91,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -115,7 +115,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -139,7 +139,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
-            className="form-control text-muted"
+            className="form-control text-muted border-gray-600"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -1594,7 +1594,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -1618,7 +1618,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -1642,7 +1642,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -1666,7 +1666,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -1690,7 +1690,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
-            className="form-control text-muted"
+            className="form-control text-muted border-gray-600"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -3106,7 +3106,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -3130,7 +3130,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -3154,7 +3154,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -3178,7 +3178,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -3202,7 +3202,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <select
             aria-describedby=""
-            className="form-control text-muted"
+            className="form-control text-muted border-gray-600"
             id="country"
             name="country"
             onBlur={[Function]}
