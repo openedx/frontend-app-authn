@@ -36,15 +36,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="name"
+            className="pgn__form-label pt-10 focus-out"
           >
             Full name (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -61,15 +60,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="username"
+            className="pgn__form-label pt-10 focus-out"
           >
             Public username (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -86,15 +84,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="email"
+            className="pgn__form-label pt-10 focus-out"
           >
             Email (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -111,15 +108,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="password"
+            className="pgn__form-label pt-10 focus-out"
           >
             Password (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -136,15 +132,14 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="country"
+            className="pgn__form-label sr-only"
           >
             Country or region of residence (required)
           </label>
           <select
             aria-describedby=""
             aria-invalid={false}
-            className="form-control text-muted border-gray-600"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -1466,8 +1461,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="optional"
+            className="pgn__form-label sr-only"
           >
             Support education research by providing additional information. (Optional)
           </label>
@@ -1599,15 +1593,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="name"
+            className="pgn__form-label pt-10 focus-out"
           >
             Full name (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -1624,15 +1617,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="username"
+            className="pgn__form-label pt-10 focus-out"
           >
             Public username (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -1649,15 +1641,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="email"
+            className="pgn__form-label pt-10 focus-out"
           >
             Email (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -1674,15 +1665,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="password"
+            className="pgn__form-label pt-10 focus-out"
           >
             Password (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -1699,15 +1689,14 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="country"
+            className="pgn__form-label sr-only"
           >
             Country or region of residence (required)
           </label>
           <select
             aria-describedby=""
             aria-invalid={false}
-            className="form-control text-muted border-gray-600"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -3029,8 +3018,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="optional"
+            className="pgn__form-label sr-only"
           >
             Support education research by providing additional information. (Optional)
           </label>
@@ -3117,15 +3105,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="name"
+            className="pgn__form-label pt-10 focus-out"
           >
             Full name (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="name"
             name="name"
             onBlur={[Function]}
@@ -3142,15 +3129,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="username"
+            className="pgn__form-label pt-10 focus-out"
           >
             Public username (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="username"
             name="username"
             onBlur={[Function]}
@@ -3167,15 +3153,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group data-hj-suppress"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="email"
+            className="pgn__form-label pt-10 focus-out"
           >
             Email (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -3192,15 +3177,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group"
         >
           <label
-            className="pt-10 focus-out form-label"
-            htmlFor="password"
+            className="pgn__form-label pt-10 focus-out"
           >
             Password (required)
           </label>
           <input
             aria-describedby=""
             aria-invalid={false}
-            className="form-control border-gray-600"
+            className="form-control"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -3217,15 +3201,14 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="country"
+            className="pgn__form-label sr-only"
           >
             Country or region of residence (required)
           </label>
           <select
             aria-describedby=""
             aria-invalid={false}
-            className="form-control text-muted border-gray-600"
+            className="form-control text-muted"
             id="country"
             name="country"
             onBlur={[Function]}
@@ -4547,8 +4530,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="sr-only form-label"
-            htmlFor="optional"
+            className="pgn__form-label sr-only"
           >
             Support education research by providing additional information. (Optional)
           </label>

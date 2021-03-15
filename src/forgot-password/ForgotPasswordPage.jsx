@@ -117,7 +117,6 @@ const ForgotPasswordPage = (props) => {
                   onChange={e => setFieldValue('email', e.target.value)}
                   helpText={intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })}
                   className="mb-0 w-100"
-                  inputFieldStyle="border-gray-600"
                 />
                 <LoginHelpLinks page="forgot-password" />
                 <StatefulButton
