@@ -1535,20 +1535,26 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           >
             <div
               aria-hidden="true"
-              className="mx-auto"
+              className="ml-auto"
             >
               <img
                 alt="icon Apple"
                 className="icon-image"
                 src="https://edx.devstack.lms/logo.png"
               />
-              <span
-                aria-hidden="true"
-                className="pl-2"
-              >
-                Apple
-              </span>
             </div>
+            <span
+              aria-hidden="true"
+              className="mr-auto pl-2"
+              id="provider-name"
+            >
+              Apple
+            </span>
+            <span
+              className="sr-only"
+            >
+              Create account using Apple
+            </span>
           </button>
         </div>
       </form>

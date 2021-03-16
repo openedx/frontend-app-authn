@@ -49,6 +49,17 @@ const messages = defineMessages({
     defaultMessage: 'Show me other ways to sign in or register',
     description: 'Button text for login',
   },
+  // social auth providers
+  'sso.sign.in.with': {
+    id: 'sso.sign.in.with',
+    defaultMessage: 'Sign in with {providerName}',
+    description: 'Screen reader text that appears before social auth provider name',
+  },
+  'sso.create.account.using': {
+    id: 'sso.create.account.using',
+    defaultMessage: 'Create account using {providerName}',
+    description: 'Screen reader text that appears before social auth provider name',
+  },
 });
 
 export default messages;

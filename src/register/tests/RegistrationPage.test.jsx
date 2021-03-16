@@ -675,7 +675,7 @@ describe('RegistrationPageTests', () => {
     appleProvider.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-    expect(registerPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+    expect(registerPage.find(`button#${appleProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);
   });
 
   it('should render tpa button for tpa_hint id in secondary provider', () => {

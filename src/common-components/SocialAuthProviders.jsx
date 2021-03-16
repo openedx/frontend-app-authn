@@ -2,13 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 
+import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 
 function SocialAuthProviders(props) {
-  const { referrer, socialAuthProviders } = props;
+  const { intl, referrer, socialAuthProviders } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -27,9 +29,8 @@ function SocialAuthProviders(props) {
       onClick={handleSubmit}
     >
       {provider.iconImage ? (
-        <div className="mx-auto" aria-hidden="true">
+        <div className="ml-auto" aria-hidden="true">
           <img className="icon-image" src={provider.iconImage} alt={`icon ${provider.name}`} />
-          <span className="pl-2" aria-hidden="true">{provider.name}</span>
         </div>
       )
         : (
@@ -39,10 +40,14 @@ function SocialAuthProviders(props) {
                 icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
               />
             </div>
-            <span className="pl-2 provider-name" aria-hidden="true">{provider.name}</span>
           </>
         )}
-
+      <span id="provider-name" className="mr-auto pl-2" aria-hidden="true">{provider.name}</span>
+      <span className="sr-only">
+        {referrer === LOGIN_PAGE
+          ? intl.formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
+          : intl.formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
+      </span>
     </button>
   ));
 
@@ -55,6 +60,7 @@ SocialAuthProviders.defaultProps = {
 };
 
 SocialAuthProviders.propTypes = {
+  intl: intlShape.isRequired,
   referrer: PropTypes.string,
   socialAuthProviders: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
@@ -66,4 +72,4 @@ SocialAuthProviders.propTypes = {
   })),
 };
 
-export default SocialAuthProviders;
+export default injectIntl(SocialAuthProviders);

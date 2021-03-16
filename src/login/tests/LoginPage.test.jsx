@@ -455,7 +455,7 @@ describe('LoginPage', () => {
     appleProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+    expect(loginPage.find(`button#${appleProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);
   });
 
   it('should render tpa button for tpa_hint id in secondary provider', () => {
