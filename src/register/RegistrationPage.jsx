@@ -69,6 +69,7 @@ class RegistrationPage extends React.Component {
       },
       institutionLogin: false,
       formValid: false,
+      startTime: Date.now(),
       updateFieldErrors: false,
       updateAlertErrors: false,
       registrationErrorsUpdated: false,
@@ -155,6 +156,7 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const totalRegistrationTime = (Date.now() - this.state.startTime) / 1000;
     let payload = {
       name: this.state.name,
       username: this.state.username,
@@ -188,6 +190,7 @@ class RegistrationPage extends React.Component {
       }
     });
     if (finalValidation) {
+      payload.totalRegistrationTime = totalRegistrationTime;
       this.props.registerNewUser(payload);
     }
   }

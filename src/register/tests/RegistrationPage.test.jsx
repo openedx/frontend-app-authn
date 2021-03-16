@@ -347,6 +347,8 @@ describe('RegistrationPageTests', () => {
   });
 
   it('should submit form for valid input', () => {
+    jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+
     const formPayload = {
       name: 'John Doe',
       username: 'john_doe',
@@ -355,6 +357,7 @@ describe('RegistrationPageTests', () => {
       country: 'Pakistan',
       gender: 'm',
       honor_code: true,
+      totalRegistrationTime: 0,
     };
 
     store.dispatch = jest.fn(store.dispatch);
@@ -363,6 +366,7 @@ describe('RegistrationPageTests', () => {
   });
 
   it('should submit form with no password when current provider is present', () => {
+    jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -381,6 +385,7 @@ describe('RegistrationPageTests', () => {
       country: 'Pakistan',
       honor_code: true,
       social_auth_provider: appleProvider.name,
+      totalRegistrationTime: 0,
     };
 
     store.dispatch = jest.fn(store.dispatch);
