@@ -44,7 +44,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -68,7 +68,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -232,7 +232,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -256,7 +256,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -424,7 +424,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -448,7 +448,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -576,7 +576,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -600,7 +600,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
@@ -765,7 +765,7 @@ exports[`LoginPage should show error message 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="email"
             name="email"
             onBlur={[Function]}
@@ -789,7 +789,7 @@ exports[`LoginPage should show error message 1`] = `
           </label>
           <input
             aria-describedby=""
-            className="form-control"
+            className="form-control border-gray-600"
             id="password"
             name="password"
             onBlur={[Function]}
