@@ -1417,7 +1417,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="pt-10 small"
           id="honor-code"
         >
-          <span>
+          <p>
             By creating an account, you agree to the 
             <a
               href="http://tos-and-honot-code.com"
@@ -1455,7 +1455,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
               </span>
             </a>
             .
-          </span>
+          </p>
         </div>
         <div
           className="form-group custom-control pt-10 mb-0"
@@ -2968,7 +2968,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="pt-10 small"
           id="honor-code"
         >
-          <span>
+          <p>
             By creating an account, you agree to the 
             <a
               href="http://tos-and-honot-code.com"
@@ -3006,7 +3006,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
               </span>
             </a>
             .
-          </span>
+          </p>
         </div>
         <div
           className="form-group custom-control pt-10 mb-0"
@@ -4480,7 +4480,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="pt-10 small"
           id="honor-code"
         >
-          <span>
+          <p>
             By creating an account, you agree to the 
             <a
               href="http://tos-and-honot-code.com"
@@ -4518,7 +4518,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
               </span>
             </a>
             .
-          </span>
+          </p>
         </div>
         <div
           className="form-group custom-control pt-10 mb-0"
