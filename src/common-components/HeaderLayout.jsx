@@ -9,7 +9,7 @@ const HeaderLayout = ({ children }) => (
   <div className="d-flex flex-column">
     <CookiePolicyBanner languageCode={getLocale()} />
     <Header />
-    <main className="flex-grow-1">
+    <main className="flex-grow-1" id="main">
       {children}
     </main>
   </div>
