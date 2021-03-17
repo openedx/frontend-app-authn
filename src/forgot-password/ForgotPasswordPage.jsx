@@ -110,6 +110,7 @@ const ForgotPasswordPage = (props) => {
                   name="email"
                   type="email"
                   invalid={validationError !== ''}
+                  ariaInvalid={validationError !== ''}
                   invalidMessage={validationError}
                   value={values.email}
                   onBlur={() => getValidationMessage(values.email)}

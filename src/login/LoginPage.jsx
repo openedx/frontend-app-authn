@@ -218,6 +218,7 @@ class LoginPage extends React.Component {
                   name="email"
                   type="email"
                   invalid={errors.email !== ''}
+                  ariaInvalid={errors.email !== ''}
                   invalidMessage={errors.email}
                   value={email}
                   helpText={intl.formatMessage(messages['email.help.message'])}
@@ -230,6 +231,7 @@ class LoginPage extends React.Component {
                   name="password"
                   type="password"
                   invalid={errors.password !== ''}
+                  ariaInvalid={errors.password !== ''}
                   invalidMessage={errors.password}
                   value={password}
                   onChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}

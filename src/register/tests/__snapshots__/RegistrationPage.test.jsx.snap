@@ -43,6 +43,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -67,6 +68,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -91,6 +93,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -115,6 +118,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -139,6 +143,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
+            aria-invalid={false}
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -1468,6 +1473,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             checked={false}
             className="form-check-input"
             id="optional"
@@ -1594,6 +1600,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -1618,6 +1625,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -1642,6 +1650,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -1666,6 +1675,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -1690,6 +1700,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <select
             aria-describedby=""
+            aria-invalid={false}
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -3019,6 +3030,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             checked={false}
             className="form-check-input"
             id="optional"
@@ -3106,6 +3118,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -3130,6 +3143,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -3154,6 +3168,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -3178,6 +3193,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -3202,6 +3218,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <select
             aria-describedby=""
+            aria-invalid={false}
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -4531,6 +4548,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           </label>
           <input
             aria-describedby=""
+            aria-invalid={false}
             checked={false}
             className="form-check-input"
             id="optional"

@@ -153,6 +153,7 @@ const ResetPasswordPage = (props) => {
                 name="new-password1"
                 type="password"
                 invalid={!passwordValid}
+                ariaInvalid={!passwordValid}
                 invalidMessage={validationMessage}
                 value={newPasswordInput}
                 onChange={e => handleNewPasswordChange(e)}
@@ -166,6 +167,7 @@ const ResetPasswordPage = (props) => {
                 name="new-password2"
                 type="password"
                 invalid={!passwordMatch}
+                ariaInvalid={!passwordMatch}
                 invalidMessage={intl.formatMessage(messages['reset.password.page.invalid.match.message'])}
                 value={confirmPasswordInput}
                 onChange={e => handleConfirmPasswordChange(e)}
