@@ -473,6 +473,7 @@ class RegistrationPage extends React.Component {
                   name="name"
                   type="text"
                   invalid={this.state.errors.name !== ''}
+                  ariaInvalid={this.state.errors.name !== ''}
                   invalidMessage={this.state.errors.name}
                   value={this.state.name}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -487,6 +488,7 @@ class RegistrationPage extends React.Component {
                   type="text"
                   className="data-hj-suppress"
                   invalid={this.state.errors.username !== ''}
+                  ariaInvalid={this.state.errors.username !== ''}
                   invalidMessage={this.state.errors.username}
                   value={this.state.username}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -501,6 +503,7 @@ class RegistrationPage extends React.Component {
                   type="text"
                   className="data-hj-suppress"
                   invalid={this.state.errors.email !== ''}
+                  ariaInvalid={this.state.errors.email !== ''}
                   invalidMessage={this.state.errors.email}
                   value={this.state.email}
                   onBlur={(e) => this.handleOnBlur(e)}
@@ -515,6 +518,7 @@ class RegistrationPage extends React.Component {
                     name="password"
                     type="password"
                     invalid={this.state.errors.password !== ''}
+                    ariaInvalid={this.state.errors.password !== ''}
                     invalidMessage={this.state.errors.password}
                     value={this.state.password}
                     onBlur={(e) => this.handleOnBlur(e)}
@@ -530,6 +534,7 @@ class RegistrationPage extends React.Component {
                   type="select"
                   key="country"
                   invalid={this.state.errors.country !== ''}
+                  ariaInvalid={this.state.errors.country !== ''}
                   invalidMessage={intl.formatMessage(messages['country.validation.message'])}
                   className="mb-0 data-hj-suppress"
                   value={this.state.country}

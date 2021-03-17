@@ -62,6 +62,7 @@ const AuthnCustomValidationFormGroup = (props) => {
     type: props.type,
     value: props.value,
     className: props.inputFieldStyle,
+    'aria-invalid': props.ariaInvalid,
   };
   inputProps.onChange = (e) => onChangeHandler(e, onChange);
   inputProps.onClick = (e) => onClickHandler(e, onClick);
@@ -112,6 +113,7 @@ AuthnCustomValidationFormGroup.defaultProps = {
   type: '',
   value: '',
   invalid: false,
+  ariaInvalid: false,
   invalidMessage: '',
   inputFieldStyle: '',
   helpText: '',
@@ -134,6 +136,7 @@ AuthnCustomValidationFormGroup.propTypes = {
     PropTypes.bool,
   ]),
   invalid: PropTypes.bool,
+  ariaInvalid: PropTypes.bool,
   invalidMessage: PropTypes.string,
   helpText: PropTypes.string,
   className: PropTypes.string,
