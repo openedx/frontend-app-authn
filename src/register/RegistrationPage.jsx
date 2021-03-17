@@ -541,6 +541,7 @@ class RegistrationPage extends React.Component {
                 <div id="honor-code" className="pt-10 small">
                   <FormattedMessage
                     id="register.page.terms.of.service.and.honor.code"
+                    tagName="p"
                     defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
                     Member process your personal data in accordance with the {privacyPolicy}."
                     description="Text that appears on registration form stating honor code and privacy policy"

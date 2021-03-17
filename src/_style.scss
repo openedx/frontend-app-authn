@@ -264,6 +264,11 @@ $apple-focus-black: $apple-black;
   margin-left: -5px;
 }
 
+#honor-code p {
+  margin: 0;
+  padding: 0;
+}
+
 #honor-code a span {
   @extend .sr-only;
 }
