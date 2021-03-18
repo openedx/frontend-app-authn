@@ -133,7 +133,7 @@ describe('LoginPage', () => {
 
   it('should show account activation message', () => {
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login?account_activation_status=info') };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?account_activation_status=info' };
 
     const expectedMessage = 'This account has already been activated.';
 
@@ -429,7 +429,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${appleProvider.id}`) };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${appleProvider.id}` };
     appleProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
@@ -451,7 +451,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login?next=/dashboard&tpa_hint=invalid') };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
     appleProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
@@ -473,7 +473,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${secondaryProviders.id}`) };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));

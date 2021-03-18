@@ -1,8 +1,9 @@
 export {
   default,
   getTpaProvider,
-  processTpaHintURL,
+  getTpaHint,
   updatePathWithQueryParams,
   getAllPossibleQueryParam,
+  getActivationStatus,
 } from './dataUtils';
 export { default as AsyncActionType } from './reduxUtils';

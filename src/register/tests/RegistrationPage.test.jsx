@@ -654,7 +654,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${appleProvider.id}`) };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${appleProvider.id}` };
     appleProvider.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -676,7 +676,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login?next=/dashboard&tpa_hint=invalid') };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
     appleProvider.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -698,7 +698,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(`/login?next=/dashboard&tpa_hint=${secondaryProviders.id}`) };
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
