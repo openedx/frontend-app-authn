@@ -12,8 +12,8 @@ import RegistrationPage from '../RegistrationPage';
 import { RenderInstitutionButton } from '../../common-components';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
-import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 import { fetchRealtimeValidations, registerNewUser } from '../data/actions';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
@@ -432,6 +432,19 @@ describe('RegistrationPageTests', () => {
   it('should match default section snapshot', () => {
     const tree = renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
     expect(tree.toJSON()).toMatchSnapshot();
+  });
+
+  it('should match registration api rate limit error message', () => {
+    props = {
+      errors: {
+        errorCode: FORBIDDEN_REQUEST,
+      },
+    };
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
+    expect(registrationPage.find('div.alert-heading').length).toEqual(1);
+    const expectedMessage = 'We couldn\'t create your account.Too many failed registration attempts. Try again later.';
+    expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
   });
 
   it('should match internal server error message', () => {

@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
-import { INTERNAL_SERVER_ERROR } from '../login/data/constants';
-import { DEFAULT_STATE, PENDING_STATE } from '../data/constants';
+
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './data/constants';
 import messages from './messages';
+import { DEFAULT_STATE, PENDING_STATE } from '../data/constants';
 
 const RegistrationFailureMessage = (props) => {
   const errorMessage = props.errors;
@@ -27,7 +29,15 @@ const RegistrationFailureMessage = (props) => {
       );
      userErrors.push(serverError);
      break;
-
+    case FORBIDDEN_REQUEST:
+      userErrors.push(
+        (
+          <li key={FORBIDDEN_REQUEST} className="text-left">
+            {props.intl.formatMessage(messages['register.rate.limit.reached.message'])}
+          </li>
+        ),
+      );
+      break;
     default:
       Object.keys(errorMessage).forEach((key) => {
         if (key !== 'error_code') {

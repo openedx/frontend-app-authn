@@ -1,3 +1,7 @@
+// Registration Error Codes
+export const INTERNAL_SERVER_ERROR = 'internal-server-error';
+export const FORBIDDEN_REQUEST = 'forbidden-request';
+
 export const YEAR_OF_BIRTH_OPTIONS = (() => {
   const currentYear = new Date().getFullYear();
   const years = [];

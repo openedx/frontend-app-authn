@@ -51,6 +51,11 @@ const messages = defineMessages({
     defaultMessage: 'Email (required)',
     description: 'Label that appears above email field on register page',
   },
+  'register.rate.limit.reached.message': {
+    id: 'register.rate.limit.reached.message',
+    defaultMessage: 'Too many failed registration attempts. Try again later.',
+    description: 'Error message that appears when an anonymous user has made too many failed registration attempts',
+  },
   'email.validation.message': {
     id: 'email.validation.message',
     defaultMessage: 'Please enter your email.',
