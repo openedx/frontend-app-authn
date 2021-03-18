@@ -1,11 +1,9 @@
 import { AsyncActionType } from '../../data/utils';
 
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
-export const REGISTER_FORM = new AsyncActionType('REGISTRATION', 'GET_FORM_FIELDS');
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 
 // Register
-
 export const registerNewUser = registrationInfo => ({
   type: REGISTER_NEW_USER.BASE,
   payload: { registrationInfo },
