@@ -29,10 +29,10 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
+  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getTpaProvider, processTpaHintURL, updatePathWithQueryParams, getAllPossibleQueryParam,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam,
 } from '../data/utils';
 
 class RegistrationPage extends React.Component {
@@ -41,6 +41,8 @@ class RegistrationPage extends React.Component {
 
     sendPageEvent('login_and_registration', 'register');
     this.intl = props.intl;
+    this.queryParams = getAllPossibleQueryParam();
+    this.tpaHint = getTpaHint();
 
     this.state = {
       email: '',
@@ -77,14 +79,10 @@ class RegistrationPage extends React.Component {
   }
 
   componentDidMount() {
-    const params = (new URL(document.location)).searchParams;
-    const payload = {
-      redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
-    };
+    const payload = { ...this.queryParams };
 
-    const tpaHint = processTpaHintURL(params);
-    if (tpaHint) {
-      payload.tpa_hint = tpaHint;
+    if (this.tpaHint) {
+      payload.tpa_hint = this.tpaHint;
     }
     this.props.getThirdPartyAuthContext(payload);
   }
@@ -624,14 +622,11 @@ class RegistrationPage extends React.Component {
       currentProvider, finishAuthUrl, providers, secondaryProviders,
     } = this.props.thirdPartyAuthContext;
 
-    const params = (new URL(window.location.href)).searchParams;
-    const tpaHint = processTpaHintURL(params);
-
-    if (tpaHint) {
+    if (this.tpaHint) {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
         return <Skeleton height={36} />;
       }
-      const provider = getTpaProvider(tpaHint, providers, secondaryProviders);
+      const provider = getTpaProvider(this.tpaHint, providers, secondaryProviders);
       return provider ? (<EnterpriseSSO provider={provider} intl={intl} />)
         : this.renderForm(
           currentProvider,

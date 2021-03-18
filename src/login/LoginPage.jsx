@@ -29,11 +29,11 @@ import {
   InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
+  DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import {
-  getTpaProvider, processTpaHintURL, updatePathWithQueryParams, getAllPossibleQueryParam,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, getActivationStatus,
 } from '../data/utils';
 
 class LoginPage extends React.Component {
@@ -51,17 +51,15 @@ class LoginPage extends React.Component {
       institutionLogin: false,
       isSubmitted: false,
     };
+    this.queryParams = getAllPossibleQueryParam();
+    this.tpaHint = getTpaHint();
   }
 
   componentDidMount() {
-    const params = (new URL(document.location)).searchParams;
-    const payload = {
-      redirect_to: params.get('next') || DEFAULT_REDIRECT_URL,
-    };
+    const payload = { ...this.queryParams };
 
-    const tpaHint = processTpaHintURL(params);
-    if (tpaHint) {
-      payload.tpa_hint = tpaHint;
+    if (this.tpaHint) {
+      payload.tpa_hint = this.tpaHint;
     }
     this.props.getThirdPartyAuthContext(payload);
   }
@@ -92,10 +90,9 @@ class LoginPage extends React.Component {
       return;
     }
 
-    let payload = { email, password };
-    const postParams = getAllPossibleQueryParam();
-
-    payload = { ...payload, ...postParams };
+    const payload = {
+      email, password, ...this.queryParams,
+    };
     this.props.loginRequest(payload);
   }
 
@@ -148,16 +145,17 @@ class LoginPage extends React.Component {
     } return thirdPartyComponent;
   }
 
-  renderForm(params,
+  renderForm(
     currentProvider,
     providers,
     secondaryProviders,
     thirdPartyAuthContext,
     thirdPartyAuthApiStatus,
     submitState,
-    intl) {
+    intl,
+  ) {
     const { email, errors, password } = this.state;
-    const activationMsgType = params.get('account_activation_status');
+    const activationMsgType = getActivationStatus();
     if (this.state.institutionLogin) {
       return (
         <InstitutionLogistration
@@ -274,31 +272,30 @@ class LoginPage extends React.Component {
     } = this.props;
     const { currentProvider, providers, secondaryProviders } = this.props.thirdPartyAuthContext;
 
-    const params = (new URL(window.location.href)).searchParams;
-
-    const tpaHint = processTpaHintURL(params);
-    if (tpaHint) {
+    if (this.tpaHint) {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
         return <Skeleton height={36} />;
       }
-      const provider = getTpaProvider(tpaHint, providers, secondaryProviders);
-      return provider ? (<EnterpriseSSO provider={provider} intl={intl} />) : this.renderForm(params,
+      const provider = getTpaProvider(this.tpaHint, providers, secondaryProviders);
+      return provider ? (<EnterpriseSSO provider={provider} intl={intl} />) : this.renderForm(
         currentProvider,
         providers,
         secondaryProviders,
         thirdPartyAuthContext,
         thirdPartyAuthApiStatus,
         submitState,
-        intl);
+        intl,
+      );
     }
-    return this.renderForm(params,
+    return this.renderForm(
       currentProvider,
       providers,
       secondaryProviders,
       thirdPartyAuthContext,
       thirdPartyAuthApiStatus,
       submitState,
-      intl);
+      intl,
+    );
   }
 }
 

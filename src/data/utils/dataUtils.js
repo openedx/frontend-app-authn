@@ -29,11 +29,12 @@ export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProvi
   return tpaProvider;
 };
 
-export const processTpaHintURL = (params) => {
+export const getTpaHint = () => {
+  const params = QueryString.parse(window.location.search);
   let tpaHint = null;
-  tpaHint = params.get('tpa_hint');
+  tpaHint = params.tpa_hint;
   if (!tpaHint) {
-    const next = params.get('next');
+    const { next } = params;
     if (next) {
       const index = next.indexOf('tpa_hint=');
       if (index !== -1) {
@@ -55,7 +56,7 @@ export const updatePathWithQueryParams = (path) => {
 };
 
 export const getAllPossibleQueryParam = () => {
-  const urlParams = QueryString.parse(document.location.search);
+  const urlParams = QueryString.parse(window.location.search);
   const params = {};
   Object.entries(urlParams).forEach(([key, value]) => {
     if (AUTH_PARAMS.indexOf(key) > -1) {
@@ -64,4 +65,10 @@ export const getAllPossibleQueryParam = () => {
   });
 
   return params;
+};
+
+export const getActivationStatus = () => {
+  const params = QueryString.parse(window.location.search);
+
+  return params.account_activation_status;
 };
