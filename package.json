@@ -52,7 +52,7 @@
     "lodash.camelcase": "4.3.0",
     "lodash.snakecase": "4.1.1",
     "prop-types": "15.7.2",
-    "query-string": "5.1.1",
+    "query-string": "6.14.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-helmet": "6.1.0",
