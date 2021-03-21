@@ -10,6 +10,8 @@
   "enterprisetpa.title.heading": "Would you like to sign in using your {providerName} credentials?",
   "enterprisetpa.sso.button.title": "Sign in using {providerName}",
   "enterprisetpa.login.button.text": "Show me other ways to sign in or register",
+  "sso.sign.in.with": "Sign in with {providerName}",
+  "sso.create.account.using": "Create account using {providerName}",
   "error.notfound.message": "الصفحة التي تبحث عنها غير متوفرة أو هناك خطأ في نص الرابط. الرجاء التحقق من الرابط والمحاولة مجددا.",
   "login.third.party.auth.account.not.linked.message": "لقد نجحت في تسجيل الدخول إلى {currentProvider}، ولكن حساب {currentProvider} لا يحتوي على حساب {platformName} مرتبط. لربط حساباتك، قم بتسجيل الدخول الآن باستخدام كلمة مرور {platformName}.",
   "register.third.party.auth.account.not.linked.message": "لقد نجحت في تسجيل الدخول إلى {currentProvider}. نحتاج إلى القليل من المعلومات قبل بدء التعلّم مع  {platformName}.",

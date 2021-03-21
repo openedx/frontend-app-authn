@@ -10,6 +10,8 @@
   "enterprisetpa.title.heading": "Would you like to sign in using your {providerName} credentials?",
   "enterprisetpa.sso.button.title": "Sign in using {providerName}",
   "enterprisetpa.login.button.text": "Show me other ways to sign in or register",
+  "sso.sign.in.with": "Sign in with {providerName}",
+  "sso.create.account.using": "Create account using {providerName}",
   "error.notfound.message": "The page you're looking for is unavailable or there's an error in the URL. Please check the URL and try again.",
   "login.third.party.auth.account.not.linked.message": "You have successfully signed into {currentProvider}, but your {currentProvider} account does not have a linked {platformName} account. To link your accounts, sign in now using your {platformName} password.",
   "register.third.party.auth.account.not.linked.message": "You've successfully signed into {currentProvider}. We just need a little more information before you start learning with {platformName}.",
