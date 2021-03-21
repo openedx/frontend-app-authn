@@ -10,6 +10,8 @@
   "enterprisetpa.title.heading": "Would you like to sign in using your {providerName} credentials?",
   "enterprisetpa.sso.button.title": "Sign in using {providerName}",
   "enterprisetpa.login.button.text": "Mostrar otras formas de iniciar sesión o de registrarme",
+  "sso.sign.in.with": "Sign in with {providerName}",
+  "sso.create.account.using": "Create account using {providerName}",
   "error.notfound.message": "La página que estas buscando no está disponible o hay un error en la URL. Por favor, verifica la URL y vuelve a intentarlo.",
   "login.third.party.auth.account.not.linked.message": "Te has registrado correctamente en {currentProvider}, pero tu cuenta de {currentProvider} no tiene una cuenta de {platformName} asociada. Para asociar tus cuentas, inicia sesión ahora usando tu contraseña de {platformName}.",
   "register.third.party.auth.account.not.linked.message": "Has iniciado sesión correctamente en {currentProvider}. Solo necesitamos un poco más de información para que puedas empezar a aprender con {platformName}.",
