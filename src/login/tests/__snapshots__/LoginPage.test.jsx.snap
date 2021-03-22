@@ -25,11 +25,11 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
       <hr
         className="mt-0 border-gray-200"
       />
-      <h3
-        className="text-left mt-2 mb-3"
+      <h1
+        className="text-left mt-2 mb-3 h3"
       >
         Sign in
-      </h3>
+      </h1>
       <form
         className="m-0"
       >
@@ -221,11 +221,11 @@ exports[`LoginPage should match default section snapshot 1`] = `
       <hr
         className="mt-0 border-gray-200"
       />
-      <h3
-        className="text-left mt-2 mb-3"
+      <h1
+        className="text-left mt-2 mb-3 h3"
       >
         Sign in
-      </h3>
+      </h1>
       <form
         className="m-0"
       >
@@ -415,11 +415,11 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
       <hr
         className="mt-0 border-gray-200"
       />
-      <h3
-        className="text-left mt-2 mb-3"
+      <h1
+        className="text-left mt-2 mb-3 h3"
       >
         Sign in
-      </h3>
+      </h1>
       <form
         className="m-0"
       >
@@ -569,11 +569,11 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
       <hr
         className="mt-0 border-gray-200"
       />
-      <h3
-        className="text-left mt-2 mb-3"
+      <h1
+        className="text-left mt-2 mb-3 h3"
       >
         Sign in
-      </h3>
+      </h1>
       <form
         className="m-0"
       >
@@ -760,11 +760,11 @@ exports[`LoginPage should show error message 1`] = `
       <hr
         className="mt-0 border-gray-200"
       />
-      <h3
-        className="text-left mt-2 mb-3"
+      <h1
+        className="text-left mt-2 mb-3 h3"
       >
         Sign in
-      </h3>
+      </h1>
       <form
         className="m-0"
       >

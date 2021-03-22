@@ -206,9 +206,9 @@ class LoginPage extends React.Component {
                 </Hyperlink>
               </p>
               <hr className="mt-0 border-gray-200" />
-              <h3 className="text-left mt-2 mb-3">
+              <h1 className="text-left mt-2 mb-3 h3">
                 {intl.formatMessage(messages['sign.in.heading'])}
-              </h3>
+              </h1>
               <Form className="m-0">
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['email.label'])}
