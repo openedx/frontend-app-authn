@@ -274,7 +274,11 @@ class LoginPage extends React.Component {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
         return <Skeleton height={36} />;
       }
-      const provider = getTpaProvider(this.tpaHint, providers, secondaryProviders);
+      const { provider, isSecondaryProvider } = getTpaProvider(this.tpaHint, providers, secondaryProviders);
+      if (isSecondaryProvider) {
+        window.location.href = getConfig().LMS_BASE_URL + provider.loginUrl;
+        return null;
+      }
       return provider ? (<EnterpriseSSO provider={provider} intl={intl} />) : this.renderForm(
         currentProvider,
         providers,
