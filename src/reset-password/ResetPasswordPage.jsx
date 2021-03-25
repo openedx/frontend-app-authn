@@ -159,7 +159,6 @@ const ResetPasswordPage = (props) => {
                 onChange={e => handleNewPasswordChange(e)}
                 onBlur={e => handleNewPasswordOnBlur(e)}
                 className="w-100"
-                inputFieldStyle="border-gray-600"
               />
               <AuthnValidationFormGroup
                 label={intl.formatMessage(messages['reset.password.page.confirm.field.label'])}
@@ -172,7 +171,6 @@ const ResetPasswordPage = (props) => {
                 value={confirmPasswordInput}
                 onChange={e => handleConfirmPasswordChange(e)}
                 className="w-100"
-                inputFieldStyle="border-gray-600"
               />
               <StatefulButton
                 type="submit"
