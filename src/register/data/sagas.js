@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
+import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
 
 // Actions
@@ -13,10 +14,10 @@ import {
   fetchRealtimeValidationsSuccess,
   fetchRealtimeValidationsFailure,
 } from './actions';
+import { INTERNAL_SERVER_ERROR } from './constants';
 
 // Services
 import { getFieldsValidations, registerRequest } from './service';
-import { INTERNAL_SERVER_ERROR } from '../../login/data/constants';
 
 export function* handleNewUserRegistration(action) {
   try {
@@ -29,9 +30,12 @@ export function* handleNewUserRegistration(action) {
       success,
     ));
   } catch (e) {
-    const statusCodes = [400, 409, 403];
+    const statusCodes = [400, 409];
     if (e.response && statusCodes.includes(e.response.status)) {
       yield put(registerNewUserFailure(e.response.data));
+      logInfo(e);
+    } else if (e.response.status === 403) {
+      yield put(registerNewUserFailure(camelCaseObject(e.response.data)));
       logInfo(e);
     } else {
       yield put(registerNewUserFailure({ errorCode: INTERNAL_SERVER_ERROR }));

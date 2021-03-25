@@ -8,7 +8,7 @@ import {
 } from '../sagas';
 import * as api from '../service';
 import initializeMockLogging from '../../../setupTest';
-import { INTERNAL_SERVER_ERROR } from '../../../data/constants';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -176,7 +176,7 @@ describe('handleNewUserRegistration', () => {
   });
 
   it('should call service and dispatch error action', async () => {
-    const loginErrorResponse = {
+    const registerErrorResponse = {
       response: {
         status: 400,
         data: {
@@ -185,7 +185,7 @@ describe('handleNewUserRegistration', () => {
       },
     };
     const registerRequest = jest.spyOn(api, 'registerRequest')
-      .mockImplementation(() => Promise.reject(loginErrorResponse));
+      .mockImplementation(() => Promise.reject(registerErrorResponse));
 
     const dispatched = [];
     await runSaga(
@@ -198,7 +198,36 @@ describe('handleNewUserRegistration', () => {
     expect(loggingService.logInfo).toHaveBeenCalled();
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
-      actions.registerNewUserFailure(loginErrorResponse.response.data),
+      actions.registerNewUserFailure(registerErrorResponse.response.data),
+    ]);
+    registerRequest.mockClear();
+  });
+
+  it('should handle rate limit error code', async () => {
+    const registerErrorResponse = {
+      response: {
+        status: 403,
+        data: {
+          errorCode: FORBIDDEN_REQUEST,
+        },
+      },
+    };
+
+    const registerRequest = jest.spyOn(api, 'registerRequest')
+      .mockImplementation(() => Promise.reject(registerErrorResponse));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleNewUserRegistration,
+      params,
+    );
+
+    expect(registerRequest).toHaveBeenCalledTimes(1);
+    expect(loggingService.logInfo).toHaveBeenCalled();
+    expect(dispatched).toEqual([
+      actions.registerNewUserBegin(),
+      actions.registerNewUserFailure(registerErrorResponse.response.data),
     ]);
     registerRequest.mockClear();
   });
