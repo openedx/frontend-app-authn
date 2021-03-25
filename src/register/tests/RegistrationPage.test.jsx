@@ -697,7 +697,6 @@ describe('RegistrationPageTests', () => {
   });
 
   it('should render tpa button for tpa_hint id in secondary provider', () => {
-    const expectedMessage = `Sign in using ${secondaryProviders.name}`;
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -714,7 +713,7 @@ describe('RegistrationPageTests', () => {
     window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
-    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-    expect(registerPage.find(`button#${secondaryProviders.id}`).find('span').text()).toEqual(expectedMessage);
+    mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
   });
 });

@@ -13,6 +13,7 @@ export default function processLink(link) {
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
   let tpaProvider = null;
+  let isSecondaryProvider = false;
   primaryProviders.forEach((provider) => {
     if (provider.id === tpaHintProvider) {
       tpaProvider = provider;
@@ -23,10 +24,11 @@ export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProvi
     secondaryProviders.forEach((provider) => {
       if (provider.id === tpaHintProvider) {
         tpaProvider = provider;
+        isSecondaryProvider = true;
       }
     });
   }
-  return tpaProvider;
+  return { provider: tpaProvider, isSecondaryProvider };
 };
 
 export const getTpaHint = () => {
