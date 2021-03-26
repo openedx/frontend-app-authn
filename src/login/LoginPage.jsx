@@ -221,6 +221,7 @@ class LoginPage extends React.Component {
                   value={email}
                   helpText={intl.formatMessage(messages['email.help.message'])}
                   onChange={(e) => this.setState({ email: e.target.value, isSubmitted: false })}
+                  inputFieldStyle="border-gray-600"
                 />
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['password.label'])}
@@ -232,6 +233,7 @@ class LoginPage extends React.Component {
                   invalidMessage={errors.password}
                   value={password}
                   onChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
+                  inputFieldStyle="border-gray-600"
                 />
                 <LoginHelpLinks page={LOGIN_PAGE} />
                 <Hyperlink className="field-link mt-0 mb-3 small" destination={this.getEnterPriseLoginURL()}>

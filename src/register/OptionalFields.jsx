@@ -70,6 +70,7 @@ const OptionalFields = (props) => {
         value={values.goals}
         className="mb-20"
         onChange={(e) => onChangeHandler('goals', e.target.value)}
+        inputFieldStyle="border-gray-600"
       />
     </>
   );
