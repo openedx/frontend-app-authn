@@ -466,7 +466,7 @@ class RegistrationPage extends React.Component {
                 </Hyperlink>
               </p>
               <hr className="mb-3 border-gray-200" />
-              <h3 className="mb-3">{intl.formatMessage(messages['create.a.new.account'])}</h3>
+              <h1 className="mb-3 h3">{intl.formatMessage(messages['create.a.new.account'])}</h1>
               <Form className="form-group">
                 <AuthnValidationFormGroup
                   label={intl.formatMessage(messages['fullname.label'])}

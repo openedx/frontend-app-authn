@@ -98,9 +98,9 @@ const ForgotPasswordPage = (props) => {
             <div className="d-flex flex-column">
               <Form className="mw-500">
                 { getErrorMessage(errors) }
-                <h3 className="mt-3">
+                <h1 className="mt-3 h3">
                   {intl.formatMessage(messages['forgot.password.page.heading'])}
-                </h3>
+                </h1>
                 <p className="mb-4">
                   {intl.formatMessage(messages['forgot.password.page.instructions'])}
                 </p>
