@@ -63,6 +63,7 @@ const AuthnCustomValidationFormGroup = (props) => {
     value: props.value,
     className: props.inputFieldStyle,
     'aria-invalid': props.ariaInvalid,
+    autoComplete: 'on',
   };
   inputProps.onChange = (e) => onChangeHandler(e, onChange);
   inputProps.onClick = (e) => onClickHandler(e, onClick);

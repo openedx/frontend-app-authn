@@ -45,6 +45,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -70,6 +71,7 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -241,6 +243,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -266,6 +269,7 @@ exports[`LoginPage should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -435,6 +439,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -460,6 +465,7 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -589,6 +595,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -614,6 +621,7 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -780,6 +788,7 @@ exports[`LoginPage should show error message 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -805,6 +814,7 @@ exports[`LoginPage should show error message 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"

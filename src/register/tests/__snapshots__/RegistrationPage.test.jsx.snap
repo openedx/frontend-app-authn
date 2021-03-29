@@ -44,6 +44,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -69,6 +70,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -94,6 +96,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -119,6 +122,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -144,6 +148,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <select
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -1474,6 +1479,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             checked={false}
             className="form-check-input"
             id="optional"
@@ -1607,6 +1613,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -1632,6 +1639,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -1657,6 +1665,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -1682,6 +1691,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -1707,6 +1717,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <select
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -3037,6 +3048,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             checked={false}
             className="form-check-input"
             id="optional"
@@ -3125,6 +3137,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="name"
             name="name"
@@ -3150,6 +3163,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="username"
             name="username"
@@ -3175,6 +3189,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="email"
             name="email"
@@ -3200,6 +3215,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control border-gray-600"
             id="password"
             name="password"
@@ -3225,6 +3241,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <select
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             className="form-control text-muted border-gray-600"
             id="country"
             name="country"
@@ -4555,6 +4572,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           <input
             aria-describedby=""
             aria-invalid={false}
+            autoComplete="on"
             checked={false}
             className="form-check-input"
             id="optional"
