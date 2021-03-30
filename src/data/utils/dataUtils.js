@@ -13,22 +13,16 @@ export default function processLink(link) {
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
   let tpaProvider = null;
-  let isSecondaryProvider = false;
-  primaryProviders.forEach((provider) => {
+  let skipHintedLogin = false;
+  [...primaryProviders, ...secondaryProviders].forEach((provider) => {
     if (provider.id === tpaHintProvider) {
       tpaProvider = provider;
+      if (provider.skipHintedLogin) {
+        skipHintedLogin = true;
+      }
     }
   });
-
-  if (!tpaProvider) {
-    secondaryProviders.forEach((provider) => {
-      if (provider.id === tpaHintProvider) {
-        tpaProvider = provider;
-        isSecondaryProvider = true;
-      }
-    });
-  }
-  return { provider: tpaProvider, isSecondaryProvider };
+  return { provider: tpaProvider, skipHintedLogin };
 };
 
 export const getTpaHint = () => {

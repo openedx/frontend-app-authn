@@ -65,6 +65,7 @@ describe('RegistrationPageTests', () => {
     name: 'Test University',
     loginUrl: '/dummy-auth',
     registerUrl: '/dummy_auth',
+    skipHintedLogin: false,
   };
 
   const emptyFieldValidation = {
@@ -667,7 +668,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${appleProvider.id}` };
+    window.location = { href: getConfig().BASE_URL.concat('/register'), search: `?next=/dashboard&tpa_hint=${appleProvider.id}` };
     appleProvider.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -689,7 +690,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
+    window.location = { href: getConfig().BASE_URL.concat('/register'), search: '?next=/dashboard&tpa_hint=invalid' };
     appleProvider.iconImage = null;
 
     const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -697,6 +698,28 @@ describe('RegistrationPageTests', () => {
   });
 
   it('should render tpa button for tpa_hint id in secondary provider', () => {
+    const expectedMessage = `Sign in using ${secondaryProviders.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/register'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+    secondaryProviders.iconImage = null;
+
+    const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registerPage.find(`button#${secondaryProviders.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should redirect to idp page if skipHinetedLogin is true', () => {
+    secondaryProviders.skipHintedLogin = true;
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -710,7 +733,7 @@ describe('RegistrationPageTests', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+    window.location = { href: getConfig().BASE_URL.concat('/register'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
     mount(reduxWrapper(<IntlRegistrationPage {...props} />));

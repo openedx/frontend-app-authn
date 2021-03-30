@@ -49,6 +49,7 @@ describe('LoginPage', () => {
     name: 'Test University',
     loginUrl: '/dummy-auth',
     registerUrl: '/dummy_auth',
+    skipHintedLogin: false,
   };
 
   const appleProvider = {
@@ -459,6 +460,28 @@ describe('LoginPage', () => {
   });
 
   it('should render tpa button for tpa_hint id in secondary provider', () => {
+    const expectedMessage = `Sign in using ${secondaryProviders.name}`;
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+    secondaryProviders.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${secondaryProviders.id}`).find('span').text()).toEqual(expectedMessage);
+  });
+
+  it('should redirect to idp page if skipHinetedLogin is true', () => {
+    secondaryProviders.skipHintedLogin = true;
     store = mockStore({
       ...initialState,
       commonComponents: {
