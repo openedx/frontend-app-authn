@@ -24,11 +24,11 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
       <hr
         className="mb-3 border-gray-200"
       />
-      <h3
-        className="mb-3"
+      <h1
+        className="mb-3 h3"
       >
         Create a new account
-      </h3>
+      </h1>
       <form
         className="form-group"
       >
@@ -1593,11 +1593,11 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
       <hr
         className="mb-3 border-gray-200"
       />
-      <h3
-        className="mb-3"
+      <h1
+        className="mb-3 h3"
       >
         Create a new account
-      </h3>
+      </h1>
       <form
         className="form-group"
       >
@@ -3117,11 +3117,11 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
       <hr
         className="mb-3 border-gray-200"
       />
-      <h3
-        className="mb-3"
+      <h1
+        className="mb-3 h3"
       >
         Create a new account
-      </h3>
+      </h1>
       <form
         className="form-group"
       >

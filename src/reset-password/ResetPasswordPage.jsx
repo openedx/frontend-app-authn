@@ -141,9 +141,9 @@ const ResetPasswordPage = (props) => {
               </Alert>
             ) : null}
             <Form>
-              <h3 className="mt-3">
+              <h1 className="mt-3 h3">
                 {intl.formatMessage(messages['reset.password.page.heading'])}
-              </h3>
+              </h1>
               <p className="mb-4">
                 {intl.formatMessage(messages['reset.password.page.instructions'])}
               </p>

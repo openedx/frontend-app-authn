@@ -47,9 +47,9 @@ const InstitutionLogistration = props => {
               {buttonTitle}
             </Hyperlink>
           </div>
-          <h3 className="mt-3 mb-4 font-weight-normal">
+          <h1 className="mt-3 mb-4 font-weight-normal h3">
             {headingTitle}
-          </h3>
+          </h1>
           <p className="mb-2">
             {intl.formatMessage(messages['institution.login.page.sub.heading'])}
           </p>
