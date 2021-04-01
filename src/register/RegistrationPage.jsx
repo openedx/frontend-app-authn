@@ -626,8 +626,8 @@ class RegistrationPage extends React.Component {
       if (thirdPartyAuthApiStatus === PENDING_STATE) {
         return <Skeleton height={36} />;
       }
-      const { provider, isSecondaryProvider } = getTpaProvider(this.tpaHint, providers, secondaryProviders);
-      if (isSecondaryProvider) {
+      const { provider, skipHintedLogin } = getTpaProvider(this.tpaHint, providers, secondaryProviders);
+      if (skipHintedLogin) {
         window.location.href = getConfig().LMS_BASE_URL + provider.registerUrl;
         return null;
       }
