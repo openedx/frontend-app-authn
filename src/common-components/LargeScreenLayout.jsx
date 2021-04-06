@@ -27,8 +27,12 @@ const LargeScreenLayout = (props) => {
             <div className="bc-accent-b rotate-deg-11 w-5 h-124" />
           </div>
           <div className="mw-250 pt-100 pl-50">
-            <h1 className="text-white mb-0">{intl.formatMessage(messages['start.learning'])}</h1>
-            <h1 className="color-accent-a">{intl.formatMessage(messages['with.edx'])}</h1>
+            <h1 className="text-white">
+              {intl.formatMessage(messages['start.learning'])}
+              <span className="color-accent-a"><br />
+                {intl.formatMessage(messages['with.edx'])}
+              </span>
+            </h1>
           </div>
         </div>
         <div className="float-right w-50">

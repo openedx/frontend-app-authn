@@ -45,14 +45,15 @@ exports[`BaseComponent should match large screen layout with snapshot 1`] = `
         className="mw-250 pt-100 pl-50"
       >
         <h1
-          className="text-white mb-0"
+          className="text-white"
         >
           Start Learning
-        </h1>
-        <h1
-          className="color-accent-a"
-        >
-          with edX
+          <span
+            className="color-accent-a"
+          >
+            <br />
+            with edX
+          </span>
         </h1>
       </div>
     </div>
@@ -122,14 +123,15 @@ exports[`BaseComponent should match medium screen layout with snapshot 1`] = `
         className="pt-3 pl-5 mw-230"
       >
         <h1
-          className="text-white mb-0"
+          className="text-white"
         >
           Start Learning
-        </h1>
-        <h1
-          className="color-accent-a"
-        >
-          with edX
+          <span
+            className="color-accent-a"
+          >
+            <br />
+            with edX
+          </span>
         </h1>
       </div>
     </div>
@@ -196,14 +198,15 @@ exports[`BaseComponent should match small screen layout with snapshot 1`] = `
         className="pl-4 pt-20"
       >
         <h1
-          className="text-white mb-0"
+          className="text-white"
         >
           Start Learning
-        </h1>
-        <h1
-          className="color-accent-a"
-        >
-          with edX
+          <br />
+          <span
+            className="color-accent-a"
+          >
+            with edX
+          </span>
         </h1>
       </div>
     </div>

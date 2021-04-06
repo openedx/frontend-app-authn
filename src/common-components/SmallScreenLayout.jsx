@@ -22,8 +22,13 @@ const SmallScreenLayout = (props) => {
             <div className="bc-accent-b rotate-deg-11 w-5 h-72 mt-1" />
           </div>
           <div className="pl-4 pt-20">
-            <h1 className="text-white mb-0">{intl.formatMessage(messages['start.learning'])}</h1>
-            <h1 className="color-accent-a">{intl.formatMessage(messages['with.edx'])}</h1>
+            <h1 className="text-white">
+              {intl.formatMessage(messages['start.learning'])}
+              <br />
+              <span className="color-accent-a">
+                {intl.formatMessage(messages['with.edx'])}
+              </span>
+            </h1>
           </div>
         </div>
       </div>
