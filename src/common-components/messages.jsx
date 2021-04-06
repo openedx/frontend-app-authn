@@ -60,6 +60,16 @@ const messages = defineMessages({
     defaultMessage: 'Create account using {providerName}',
     description: 'Screen reader text that appears before social auth provider name',
   },
+  'start.learning': {
+    id: 'start.learning',
+    defaultMessage: 'Start Learning',
+    description: 'Screen reader text that appears on every MFE auth page',
+  },
+  'with.edx': {
+    id: 'with.edx',
+    defaultMessage: 'with edX',
+    description: 'Screen reader text that appears on every MFE auth page',
+  },
 });
 
 export default messages;

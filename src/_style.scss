@@ -13,6 +13,7 @@ $microsoft-black: #2f2f2f;
 $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
+$accent-a-light: #c9f2f5;
 
 .sr-only {
   position: absolute;
@@ -275,6 +276,18 @@ $apple-focus-black: $apple-black;
   max-width: 500px;
 }
 
+.mw-5 {
+  max-width: 5rem;
+}
+
+.mw-15 {
+  max-width: 15rem;
+}
+
+.w-4 {
+  width: 4rem;
+}
+
 .mw-32em {
   max-width: 32em;
 }
@@ -283,12 +296,24 @@ $apple-focus-black: $apple-black;
   height: 90%;
 }
 
+.h-120 {
+  height: 120px;
+}
+
+.h-72 {
+  height: 72px;
+}
+
 .mt-10 {
   margin-top: 10px;
 }
 
 .pt-10 {
   padding-top: 10px;
+}
+
+.pt-140 {
+  padding-top: 140px;
 }
 
 @media (min-width: 576px) {
@@ -328,4 +353,72 @@ $apple-focus-black: $apple-black;
       width: 10%;
     }
   }
+}
+
+.large-screen-background {
+  background-color: $white;
+  background-image: -webkit-linear-gradient(-10deg, $primary 50%, $white 50%);
+  height: 100vh;
+  width: 100%;
+}
+
+.medium-screen-background {
+  background-color: $white;
+  background-image: -webkit-linear-gradient(-11.5deg, $primary 96%, $white 4%);
+  width: 100%;
+}
+
+.small-screen-background {
+  background-color: $primary;
+}
+
+.large-screen-top-header {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    -70deg,
+    $accent-a-light 20%,
+    $accent-a 20%,
+    $accent-a 40%,
+    $primary-700 10%,
+    $primary-700 10%,
+    $brand 10%,
+    $brand 90%,
+    $brand-700 90%,
+    $brand-700 100%,
+  );
+  background-repeat: no-repeat;
+}
+
+.medium-screen-top-header {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    -70deg,
+    $primary-700 10%,
+    $primary-700 10%,
+    $brand 10%,
+    $brand 90%,
+    $brand-700 90%,
+    $brand-700 100%,
+  );
+  background-repeat: no-repeat;
+}
+
+.small-screen-top-header {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    -70deg,
+    $brand 80%,
+    $brand-700 80%,
+    $brand-700 100%,
+  );
+  background-repeat: no-repeat;
+}
+
+.color-accent-a {
+  color: $accent-a;
+}
+
+.svg-path {
+  stroke: $accent-b;
+  stroke-width: 5px;
 }

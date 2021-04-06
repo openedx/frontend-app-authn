@@ -1,0 +1,222 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BaseComponent should match large screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="large-screen-top-header"
+  />
+  <div
+    className="large-screen-background"
+  >
+    <div>
+      <img
+        alt="edx"
+        className="pt-3 pl-3 mw-5"
+        src="https://edx-cdn.org/v3/default/logo-white.svg"
+      />
+    </div>
+    <div
+      className="d-flex float-left w-50"
+    >
+      <div
+        className="pt-140 pl-3"
+      >
+        <svg
+          className="h-120 w-4 mt-1"
+        >
+          <path
+            className="svg-path"
+            d="M50 -15L3 200"
+            fill="none"
+          />
+        </svg>
+      </div>
+      <div
+        className="pt-140 pl-3 mw-15"
+      >
+        <h1
+          className="text-white"
+        >
+          Start Learning
+          <span
+            className="color-accent-a"
+          >
+            <br />
+            with edX
+          </span>
+        </h1>
+      </div>
+    </div>
+    <div
+      className="float-right w-50"
+    >
+      <form>
+        <div>
+          <input
+            id="username"
+            name="username"
+            type="text"
+          />
+          <input
+            id="password"
+            name="password"
+            type="password"
+          />
+        </div>
+        <div>
+          <input
+            name="submit"
+            type="submit"
+            value="Submit"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BaseComponent should match medium screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="medium-screen-top-header"
+  />
+  <div
+    className="medium-screen-background"
+  >
+    <img
+      alt="edx"
+      className="pt-3 pl-3 mw-5"
+      src="https://edx-cdn.org/v3/default/logo-white.svg"
+    />
+    <div
+      className="d-flex"
+    >
+      <div
+        className="pt-3 pl-3"
+      >
+        <svg
+          className="h-120 w-4 mt-1"
+        >
+          <path
+            className="svg-path"
+            d="M50 -15L3 200"
+            fill="none"
+          />
+        </svg>
+      </div>
+      <div
+        className="pt-3 pl-3 mw-15"
+      >
+        <h1
+          className="text-white"
+        >
+          Start Learning
+          <span
+            className="color-accent-a"
+          >
+            <br />
+            with edX
+          </span>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div
+    className="100vh w-100"
+  >
+    <form>
+      <div>
+        <input
+          id="username"
+          name="username"
+          type="text"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+        />
+      </div>
+      <div>
+        <input
+          name="submit"
+          type="submit"
+          value="Submit"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`BaseComponent should match small screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="small-screen-top-header"
+  />
+  <div
+    className="small-screen-background"
+  >
+    <img
+      alt="edx"
+      className="pt-3 pl-3 mw-5"
+      src="https://edx-cdn.org/v3/default/logo-white.svg"
+    />
+    <div
+      className="d-flex"
+    >
+      <div
+        className="pl-3 pt-3"
+      >
+        <svg
+          className="h-72 w-4 mt-1"
+        >
+          <path
+            className="svg-path"
+            d="M50 -15L3 200"
+          />
+        </svg>
+      </div>
+      <div
+        className="pl-3 pt-3"
+      >
+        <h1
+          className="text-white"
+        >
+          Start Learning
+          <br />
+          <span
+            className="color-accent-a"
+          >
+            with edX
+          </span>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div>
+    <form>
+      <div>
+        <input
+          id="username"
+          name="username"
+          type="text"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+        />
+      </div>
+      <div>
+        <input
+          name="submit"
+          type="submit"
+          value="Submit"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+`;
