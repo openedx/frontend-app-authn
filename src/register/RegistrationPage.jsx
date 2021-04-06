@@ -432,6 +432,13 @@ class RegistrationPage extends React.Component {
       );
     }
 
+    if (this.props.registrationResult.success && window.hj) {
+      window.hj('identify', null, {
+        signedUp: new Date().toISOString(),
+        testAccount: this.state.username.includes('hotjarTest'), // TODO: Remove this after testing
+      });
+    }
+
     return (
       <>
         <Helmet>

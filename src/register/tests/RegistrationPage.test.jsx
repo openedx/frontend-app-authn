@@ -526,6 +526,8 @@ describe('RegistrationPageTests', () => {
 
   it('should match url after redirection', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
+    Object.defineProperty(global.window, 'hj', { value: () => {} });
+
     store = mockStore({
       ...initialState,
       register: {
