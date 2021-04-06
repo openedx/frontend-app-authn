@@ -1,0 +1,235 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BaseComponent should match large screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="h-10 d-flex"
+  >
+    <div
+      className="bc-brand-700 w-10 skew-deg-170"
+    />
+    <div
+      className="bc-brand w-35 skew-deg-170"
+    />
+    <div
+      className="bc-primary-700 w-10 skew-deg-170"
+    />
+    <div
+      className="bc-accent-a w-20 skew-deg-170"
+    />
+    <div
+      className="bc-accent-a-light w-25 skew-deg-170"
+    />
+  </div>
+  <div
+    className="large-screen-background"
+  >
+    <div>
+      <img
+        alt="edx"
+        className="pt-20 pl-3 mw-65 h-65"
+        src="https://edx-cdn.org/v3/default/logo-white.svg"
+      />
+    </div>
+    <div
+      className="d-flex float-left w-50"
+    >
+      <div
+        className="pt-100 pl-50"
+      >
+        <div
+          className="bc-accent-b rotate-deg-11 w-5 h-124"
+        />
+      </div>
+      <div
+        className="mw-250 pt-100 pl-50"
+      >
+        <h1
+          className="text-white mb-0"
+        >
+          Start Learning
+        </h1>
+        <h1
+          className="color-accent-a"
+        >
+          with edX
+        </h1>
+      </div>
+    </div>
+    <div
+      className="float-right w-50"
+    >
+      <form>
+        <div>
+          <input
+            id="username"
+            name="username"
+            type="text"
+          />
+          <input
+            id="password"
+            name="password"
+            type="password"
+          />
+        </div>
+        <div>
+          <input
+            name="submit"
+            type="submit"
+            value="Submit"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`BaseComponent should match medium screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="h-10 bc-brand-700 d-flex"
+  >
+    <div
+      className="bc-brand-700 w-10 skew-deg-170"
+    />
+    <div
+      className="bc-brand w-80 skew-deg-170"
+    />
+    <div
+      className="bc-primary-700 w-10 skew-deg-170"
+    />
+  </div>
+  <div
+    className="medium-screen-background"
+  >
+    <img
+      alt="edx"
+      className="pt-20 pl-3 mw-65 h-65"
+      src="https://edx-cdn.org/v3/default/logo-white.svg"
+    />
+    <div
+      className="d-flex"
+    >
+      <div
+        className="pt-3 pl-5"
+      >
+        <div
+          className="bc-accent-b rotate-deg-11 w-5 h-120 mt-1"
+        />
+      </div>
+      <div
+        className="pt-3 pl-5 mw-230"
+      >
+        <h1
+          className="text-white mb-0"
+        >
+          Start Learning
+        </h1>
+        <h1
+          className="color-accent-a"
+        >
+          with edX
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div
+    className="100vh w-100"
+  >
+    <form>
+      <div>
+        <input
+          id="username"
+          name="username"
+          type="text"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+        />
+      </div>
+      <div>
+        <input
+          name="submit"
+          type="submit"
+          value="Submit"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`BaseComponent should match small screen layout with snapshot 1`] = `
+<div>
+  <div
+    className="w-100 h-10 d-flex bc-brand-700"
+  >
+    <div
+      className="bc-brand-700 w-20 skew-deg-170"
+    />
+    <div
+      className="bc-brand w-80 skew-deg-170"
+    />
+  </div>
+  <div
+    className="small-screen-background"
+  >
+    <img
+      alt="edx"
+      className="pt-20 pl-3 mw-65 h-65"
+      src="https://edx-cdn.org/v3/default/logo-white.svg"
+    />
+    <div
+      className="d-flex"
+    >
+      <div
+        className=" pl-5 pt-20"
+      >
+        <div
+          className="bc-accent-b rotate-deg-11 w-5 h-72 mt-1"
+        />
+      </div>
+      <div
+        className="pl-4 pt-20"
+      >
+        <h1
+          className="text-white mb-0"
+        >
+          Start Learning
+        </h1>
+        <h1
+          className="color-accent-a"
+        >
+          with edX
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div>
+    <form>
+      <div>
+        <input
+          id="username"
+          name="username"
+          type="text"
+        />
+        <input
+          id="password"
+          name="password"
+          type="password"
+        />
+      </div>
+      <div>
+        <input
+          name="submit"
+          type="submit"
+          value="Submit"
+        />
+      </div>
+    </form>
+  </div>
+</div>
+`;
