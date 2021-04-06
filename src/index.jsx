@@ -19,7 +19,7 @@ import {
 } from './data/constants';
 import ForgotPasswordPage from './forgot-password';
 import {
-  HeaderLayout, UnAuthOnlyRoute, registerIcons, NotFoundPage,
+  BaseComponent, UnAuthOnlyRoute, registerIcons, NotFoundPage,
 } from './common-components';
 import ResetPasswordPage from './reset-password';
 import appMessages from './i18n';
@@ -31,7 +31,7 @@ registerIcons();
 subscribe(APP_READY, () => {
   ReactDOM.render(
     <AppProvider store={configureStore()}>
-      <HeaderLayout>
+      <BaseComponent>
         <Switch>
           <Route exact path="/">
             <Redirect to={PAGE_NOT_FOUND} />
@@ -45,7 +45,7 @@ subscribe(APP_READY, () => {
             <Redirect to={PAGE_NOT_FOUND} />
           </Route>
         </Switch>
-      </HeaderLayout>
+      </BaseComponent>
     </AppProvider>,
     document.getElementById('root'),
   );

@@ -60,6 +60,16 @@ const messages = defineMessages({
     defaultMessage: 'Create account using {providerName}',
     description: 'Screen reader text that appears before social auth provider name',
   },
+  'start.learning': {
+    id: 'start.learning',
+    defaultMessage: 'Start Learning',
+    description: 'Header text that appears on the left of the page.',
+  },
+  'with.': {
+    id: 'with.',
+    defaultMessage: 'with {siteNme}',
+    description: 'Header text that appears on the left of the page.',
+  },
 });
 
 export default messages;
