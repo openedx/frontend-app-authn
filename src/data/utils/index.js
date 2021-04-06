@@ -5,5 +5,6 @@ export {
   updatePathWithQueryParams,
   getAllPossibleQueryParam,
   getActivationStatus,
+  windowScrollTo,
 } from './dataUtils';
 export { default as AsyncActionType } from './reduxUtils';

@@ -7,6 +7,7 @@ import { Alert } from '@edx/paragon';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './data/constants';
 import messages from './messages';
 import { DEFAULT_STATE, PENDING_STATE } from '../data/constants';
+import { windowScrollTo } from '../data/utils';
 
 const RegistrationFailureMessage = (props) => {
   const errorMessage = props.errors;
@@ -15,7 +16,7 @@ const RegistrationFailureMessage = (props) => {
 
   useEffect(() => {
     if (props.isSubmitted && props.submitButtonState !== PENDING_STATE) {
-      window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+      windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
     }
   });
 

@@ -22,6 +22,7 @@ import {
 } from '../common-components';
 import Spinner from './Spinner';
 import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../data/constants';
+import { windowScrollTo } from '../data/utils';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;
@@ -81,7 +82,7 @@ const ResetPasswordPage = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+    windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
     if (newPasswordInput === '') {
       setPasswordValidValue(false);
       setvalidationMessage(intl.formatMessage(messages['reset.password.empty.new.password.field.error']));
