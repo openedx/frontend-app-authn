@@ -1,6 +1,6 @@
 import React from 'react';
 
-import camelCase from 'lodash.camelcase';
+import snakeCase from 'lodash.snakecase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
@@ -44,16 +44,14 @@ class RegistrationPage extends React.Component {
     this.queryParams = getAllPossibleQueryParam();
     this.tpaHint = getTpaHint();
 
+    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS ? getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',') : [];
+
     this.state = {
       email: '',
       name: '',
       username: '',
       password: '',
       country: '',
-      gender: '',
-      yearOfBirth: '',
-      goals: '',
-      levelOfEducation: '',
       enableOptionalField: false,
       validationAlertMessages: {
         name: [{ user_message: '' }],
@@ -71,6 +69,8 @@ class RegistrationPage extends React.Component {
       },
       institutionLogin: false,
       formValid: false,
+      optionalFields,
+      optionalFieldsState: {},
       startTime: Date.now(),
       updateFieldErrors: false,
       updateAlertErrors: false,
@@ -134,16 +134,17 @@ class RegistrationPage extends React.Component {
   }
 
   getOptionalFields() {
-    const values = {};
-    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',');
-    optionalFields.forEach((key) => {
-      values[camelCase(key)] = this.state[camelCase(key)];
-    });
-
     return (
       <OptionalFields
-        values={values}
-        onChangeHandler={(fieldName, value) => { this.setState({ [fieldName]: value }); }}
+        optionalFields={this.state.optionalFields}
+        values={this.state.optionalFieldsState}
+        onChangeHandler={
+          (fieldName, value) => {
+            this.setState(prevState => ({
+              optionalFieldsState: { ...prevState.optionalFieldsState, [fieldName]: value },
+            }));
+          }
+        }
       />
     );
   }
@@ -180,11 +181,9 @@ class RegistrationPage extends React.Component {
     }
     // Since optional fields are not validated we can add it to payload after required fields
     // have been validated. This will save us unwanted calls to validateInput()
-    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',');
-    optionalFields.forEach((key) => {
-      const stateKey = camelCase(key);
-      if (this.state[stateKey]) {
-        payload[key] = this.state[stateKey];
+    this.state.optionalFields.forEach((key) => {
+      if (this.state.optionalFieldsState[key]) {
+        payload[snakeCase(key)] = this.state.optionalFieldsState[key];
       }
     });
     if (finalValidation) {
@@ -566,7 +565,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
+                {this.state.optionalFields.length ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
