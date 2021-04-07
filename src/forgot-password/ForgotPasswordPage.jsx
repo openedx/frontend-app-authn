@@ -28,7 +28,7 @@ import {
 import APIFailureMessage from '../common-components/APIFailureMessage';
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import LoginHelpLinks from '../login/LoginHelpLinks';
-import { updatePathWithQueryParams } from '../data/utils';
+import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status } = props;
@@ -76,7 +76,7 @@ const ForgotPasswordPage = (props) => {
         const validationMessage = getValidationMessage(values.email);
 
         if (validationMessage !== '') {
-          window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+          windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
           return { email: validationMessage };
         }
 

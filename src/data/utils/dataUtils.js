@@ -68,3 +68,13 @@ export const getActivationStatus = () => {
 
   return params.account_activation_status;
 };
+
+export const isScrollBehaviorSupported = () => 'scrollBehavior' in document.documentElement.style;
+
+export const windowScrollTo = (options) => {
+  if (isScrollBehaviorSupported()) {
+    return window.scrollTo(options);
+  }
+
+  return window.scrollTo(options.top, options.left);
+};

@@ -33,7 +33,7 @@ import {
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, getActivationStatus,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, getActivationStatus, windowScrollTo,
 } from '../data/utils';
 
 class LoginPage extends React.Component {
@@ -190,7 +190,7 @@ class LoginPage extends React.Component {
                 />
               )}
               {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
-              {submitState === DEFAULT_STATE && this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
+              {submitState === DEFAULT_STATE && this.state.isSubmitted ? windowScrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
               {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
               {this.props.forgotPassword.status === 'complete' && !this.props.loginError ? (
                 <ConfirmationAlert email={this.props.forgotPassword.email} />
