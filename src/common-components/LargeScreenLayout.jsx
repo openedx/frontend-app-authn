@@ -14,18 +14,18 @@ const LargeScreenLayout = (props) => {
       <div className="large-screen-top-header" />
       <div className="large-screen-background">
         <div>
-          <img alt="edx" className="pt-3 pl-3 mw-5" src={getConfig().LOGO_WHITE_URL} />
+          <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         </div>
-        <div className="d-flex float-left w-50">
-          <div className="pt-140 pl-3">
-            <svg className="h-120 w-4 mt-1">
-              <path d="M50 -15L3 200" className="svg-path" fill="none" />
+        <div className="d-flex float-left w-50 mt-7">
+          <div className="pl-3">
+            <svg className="h-100 w-4 mt-2">
+              <path d="M50 -15L10 215" className="svg-path" />
             </svg>
           </div>
-          <div className="pt-140 pl-3 mw-15">
-            <h1 className="text-white">
+          <div className="pl-3 mw-24">
+            <h1 className="text-white font-size-78 line-height-78">
               {intl.formatMessage(messages['start.learning'])}
-              <span className="color-accent-a"><br />
+              <span className="text-accent-a"><br />
                 {intl.formatMessage(messages['with.edx'])}
               </span>
             </h1>

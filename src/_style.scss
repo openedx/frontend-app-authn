@@ -280,8 +280,8 @@ $accent-a-light: #c9f2f5;
   max-width: 5rem;
 }
 
-.mw-15 {
-  max-width: 15rem;
+.mw-24 {
+  max-width: 24rem;
 }
 
 .w-4 {
@@ -296,24 +296,36 @@ $accent-a-light: #c9f2f5;
   height: 90%;
 }
 
-.h-120 {
-  height: 120px;
-}
-
-.h-72 {
-  height: 72px;
+.h-70 {
+  height: 70px;
 }
 
 .mt-10 {
   margin-top: 10px;
 }
 
+.mt-7 {
+  margin-top: 7rem;
+}
+
 .pt-10 {
   padding-top: 10px;
 }
 
-.pt-140 {
-  padding-top: 140px;
+.font-size-78 {
+  font-size: 78px;
+}
+
+.font-size-36 {
+  font-size: 36px;
+}
+
+.line-height-78 {
+  line-height: 78px;
+}
+
+.line-height-40 {
+  line-height: 40px;
 }
 
 @media (min-width: 576px) {
@@ -364,7 +376,7 @@ $accent-a-light: #c9f2f5;
 
 .medium-screen-background {
   background-color: $white;
-  background-image: -webkit-linear-gradient(-11.5deg, $primary 96%, $white 4%);
+  background-image: -webkit-linear-gradient(-11.5deg, $primary 93%, $white 7%);
   width: 100%;
 }
 
@@ -414,11 +426,13 @@ $accent-a-light: #c9f2f5;
   background-repeat: no-repeat;
 }
 
-.color-accent-a {
-  color: $accent-a;
-}
-
 .svg-path {
   stroke: $accent-b;
-  stroke-width: 5px;
+  stroke-width: 0.5rem;
+}
+
+.logo {
+  width: 4.5rem;
+  padding-top: 2rem;
+  padding-left: 25px;
 }

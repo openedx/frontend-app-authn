@@ -13,17 +13,17 @@ const MediumScreenLayout = (props) => {
     <div>
       <div className="medium-screen-top-header" />
       <div className="medium-screen-background">
-        <img alt="edx" className="pt-3 pl-3 mw-5" src={getConfig().LOGO_WHITE_URL} />
-        <div className="d-flex">
-          <div className="pt-3 pl-3">
-            <svg className="h-120 w-4 mt-1">
-              <path d="M50 -15L3 200" className="svg-path" fill="none" />
+        <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
+        <div className="d-flex mt-5">
+          <div className="pl-3">
+            <svg className="h-100 w-4 mt-2">
+              <path d="M50 -15L3 215" className="svg-path" />
             </svg>
           </div>
-          <div className="pt-3 pl-3 mw-15">
-            <h1 className="text-white">
+          <div className="pl-3 mw-24">
+            <h1 className="text-white font-size-78 line-height-78">
               {intl.formatMessage(messages['start.learning'])}
-              <span className="color-accent-a"><br />
+              <span className="text-accent-a"><br />
                 {intl.formatMessage(messages['with.edx'])}
               </span>
             </h1>
