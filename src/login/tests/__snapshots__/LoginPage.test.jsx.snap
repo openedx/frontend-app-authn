@@ -169,7 +169,6 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
         >
           <div
             aria-hidden="true"
-            className="ml-auto"
           >
             <img
               alt="icon Apple"

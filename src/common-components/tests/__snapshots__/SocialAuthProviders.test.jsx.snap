@@ -101,7 +101,6 @@ Array [
   >
     <div
       aria-hidden="true"
-      className="ml-auto"
     >
       <img
         alt="icon Apple"
@@ -131,7 +130,6 @@ Array [
   >
     <div
       aria-hidden="true"
-      className="ml-auto"
     >
       <img
         alt="icon Facebook"

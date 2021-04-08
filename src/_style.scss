@@ -63,7 +63,6 @@ $apple-focus-black: $apple-black;
 .btn-social {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
 
   margin-bottom: 1rem;
@@ -97,10 +96,6 @@ $apple-focus-black: $apple-black;
 }
 
 .tpa-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-
   margin: 0 !important;
 }
 
@@ -306,13 +301,11 @@ $apple-focus-black: $apple-black;
 
 @media (max-width: 600px) {
   .btn-social {
-    width: 47%;
+    width: 100%;
     margin-bottom: 0.75rem;
+    margin-right: 0 !important;
   }
 
-  .tpa-container {
-    justify-content: center;
-  }
   .form-control {
     width: 100%;
   }
