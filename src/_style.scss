@@ -276,16 +276,12 @@ $accent-a-light: #c9f2f5;
   max-width: 500px;
 }
 
-.mw-5 {
-  max-width: 5rem;
+.w-4em {
+  width: 4em;
 }
 
-.mw-24 {
-  max-width: 24rem;
-}
-
-.w-4 {
-  width: 4rem;
+.w-7em {
+  width: 7em;
 }
 
 .mw-32em {
@@ -296,8 +292,8 @@ $accent-a-light: #c9f2f5;
   height: 90%;
 }
 
-.h-70 {
-  height: 70px;
+.h-72 {
+  height: 72px;
 }
 
 .mt-10 {
@@ -310,22 +306,6 @@ $accent-a-light: #c9f2f5;
 
 .pt-10 {
   padding-top: 10px;
-}
-
-.font-size-78 {
-  font-size: 78px;
-}
-
-.font-size-36 {
-  font-size: 36px;
-}
-
-.line-height-78 {
-  line-height: 78px;
-}
-
-.line-height-40 {
-  line-height: 40px;
 }
 
 @media (min-width: 576px) {
@@ -369,34 +349,29 @@ $accent-a-light: #c9f2f5;
 
 .large-screen-background {
   background-color: $white;
-  background-image: -webkit-linear-gradient(-10deg, $primary 50%, $white 50%);
-  height: 100vh;
+  background-image: -webkit-linear-gradient(-11deg, $primary 50%, $white 50%);
   width: 100%;
 }
 
 .medium-screen-background {
   background-color: $white;
-  background-image: -webkit-linear-gradient(-11.5deg, $primary 93%, $white 7%);
+  background-image: -webkit-linear-gradient(-11deg, $primary 93%, $white 7%);
   width: 100%;
-}
-
-.small-screen-background {
-  background-color: $primary;
 }
 
 .large-screen-top-header {
   height: 0.5rem;
   background-image: linear-gradient(
-    -70deg,
-    $accent-a-light 20%,
-    $accent-a 20%,
-    $accent-a 40%,
-    $primary-700 10%,
-    $primary-700 10%,
+    102.02deg,
+    $brand-700 10%,
+    $brand-700 10%,
     $brand 10%,
-    $brand 90%,
-    $brand-700 90%,
-    $brand-700 100%,
+    $brand 45%,
+    $primary-700 45%,
+    $primary-700 53%,
+    $accent-a 53%,
+    $accent-a 72%,
+    $accent-a-light 72%,
   );
   background-repeat: no-repeat;
 }
@@ -404,13 +379,13 @@ $accent-a-light: #c9f2f5;
 .medium-screen-top-header {
   height: 0.5rem;
   background-image: linear-gradient(
-    -70deg,
-    $primary-700 10%,
-    $primary-700 10%,
+    102.02deg,
+    $brand-700 10%,
+    $brand-700 10%,
     $brand 10%,
     $brand 90%,
-    $brand-700 90%,
-    $brand-700 100%,
+    $primary-700 90%,
+    $primary-700 100%,
   );
   background-repeat: no-repeat;
 }
@@ -418,17 +393,33 @@ $accent-a-light: #c9f2f5;
 .small-screen-top-header {
   height: 0.5rem;
   background-image: linear-gradient(
-    -70deg,
-    $brand 80%,
-    $brand-700 80%,
-    $brand-700 100%,
+    102.02deg,
+    $brand-700 20%,
+    $brand-700 20%,
+    $brand 20%,
   );
   background-repeat: no-repeat;
 }
 
-.svg-path {
+.svg-line {
+  padding-top: 0.5rem;
   stroke: $accent-b;
   stroke-width: 0.5rem;
+}
+
+.large-heading {
+  padding-left: 1rem;
+  color: $white;
+  max-width: 24rem;
+  line-height: 78px;
+  font-size: 78px;
+}
+
+.small-heading {
+  padding-left: 1rem;
+  color: $white;
+  line-height: 40px;
+  font-size: 36px;
 }
 
 .logo {

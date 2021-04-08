@@ -14,12 +14,12 @@ const BaseComponent = ({ children }) => (
         {children}
       </SmallScreenLayout>
     </Responsive>
-    <Responsive minWidth={768} maxWidth={1000}>
+    <Responsive minWidth={768} maxWidth={1199}>
       <MediumScreenLayout>
         {children}
       </MediumScreenLayout>
     </Responsive>
-    <Responsive minWidth={1001}>
+    <Responsive minWidth={1200}>
       <LargeScreenLayout>
         {children}
       </LargeScreenLayout>
