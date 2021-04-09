@@ -75,7 +75,7 @@
     "codecov": "3.8.1",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.6",
-    "es-check": "5.1.4",
+    "es-check": "5.2.3",
     "glob": "7.1.6",
     "history": "5.0.0",
     "husky": "4.3.8",
