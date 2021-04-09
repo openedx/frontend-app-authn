@@ -64,7 +64,6 @@ $accent-a-light: #c9f2f5;
 .btn-social {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
   align-items: center;
 
   margin-bottom: 1rem;
@@ -98,10 +97,6 @@ $accent-a-light: #c9f2f5;
 }
 
 .tpa-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-
   margin: 0 !important;
 }
 
@@ -311,13 +306,11 @@ $accent-a-light: #c9f2f5;
 
 @media (max-width: 600px) {
   .btn-social {
-    width: 47%;
+    width: 100%;
     margin-bottom: 0.75rem;
+    margin-right: 0 !important;
   }
 
-  .tpa-container {
-    justify-content: center;
-  }
   .form-control {
     width: 100%;
   }
