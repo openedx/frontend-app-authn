@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Form, Icon } from '@edx/paragon';
+import { ExpandMore } from '@edx/paragon/icons';
 
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from './data/constants';
 import messages from './messages';
-
-import { AuthnValidationFormGroup } from '../common-components';
 
 const OptionalFields = (props) => {
   const {
@@ -14,75 +14,74 @@ const OptionalFields = (props) => {
   } = props;
 
   const getOptions = () => ({
-    yearOfBirthOptions: [{
-      value: '',
-      label: intl.formatMessage(messages['registration.year.of.birth.label']),
-    }].concat(YEAR_OF_BIRTH_OPTIONS),
-    educationLevelOptions: EDUCATION_LEVELS.map(key => ({
-      value: key,
-      label: intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`]),
-    })),
-    genderOptions: GENDER_OPTIONS.map(key => ({
-      value: key,
-      label: intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`]),
-    })),
+    yearOfBirthOptions: YEAR_OF_BIRTH_OPTIONS.map(({ value, label }) => (
+      <option key={value} value={value}>{label}</option>
+    )),
+    educationLevelOptions: EDUCATION_LEVELS.map(key => (
+      <option key={key} value={key}>{intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`])}</option>
+    )),
+    genderOptions: GENDER_OPTIONS.map(key => (
+      <option key={key} value={key}>{intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`])}</option>
+    )),
   });
 
   return (
-    <>
+    <div className="mt-3">
       {optionalFields.includes('gender') && (
-        <AuthnValidationFormGroup
-          label={intl.formatMessage(messages['registration.field.gender.options.label'])}
-          for="gender"
-          name="gender"
-          type="select"
-          key="gender"
-          value={values.gender}
-          className="mb-20 data-hj-suppress"
-          onChange={(e) => onChangeHandler('gender', e.target.value)}
-          selectOptions={getOptions().genderOptions}
-        />
+        <Form.Group controlId="gender">
+          <Form.Control
+            as="select"
+            name="gender"
+            value={values.gender}
+            onChange={(e) => onChangeHandler('gender', e.target.value)}
+            trailingElement={<Icon src={ExpandMore} />}
+            floatingLabel={intl.formatMessage(messages['registration.field.gender.options.label'])}
+          >
+            {getOptions().genderOptions}
+          </Form.Control>
+        </Form.Group>
       )}
       {optionalFields.includes('yearOfBirth') && (
-        <AuthnValidationFormGroup
-          label={intl.formatMessage(messages['registration.year.of.birth.label'])}
-          for="yearOfBirth"
-          name="yearOfBirth"
-          type="select"
-          key="yearOfBirth"
-          value={values.yearOfBirth}
-          className="mb-20 data-hj-suppress"
-          onChange={(e) => onChangeHandler('yearOfBirth', e.target.value)}
-          selectOptions={getOptions().yearOfBirthOptions}
-        />
+        <Form.Group controlId="yearOfBirth">
+          <Form.Control
+            as="select"
+            name="yearOfBirth"
+            value={values.yearOfBirth}
+            onChange={(e) => onChangeHandler('yearOfBirth', e.target.value)}
+            trailingElement={<Icon src={ExpandMore} />}
+            floatingLabel={intl.formatMessage(messages['registration.year.of.birth.label'])}
+          >
+            <option value="">{intl.formatMessage(messages['registration.year.of.birth.label'])}</option>
+            {getOptions().yearOfBirthOptions}
+          </Form.Control>
+        </Form.Group>
       )}
       {optionalFields.includes('levelOfEducation') && (
-        <AuthnValidationFormGroup
-          label={intl.formatMessage(messages['registration.field.education.levels.label'])}
-          for="levelOfEducation"
-          name="levelOfEducation"
-          type="select"
-          key="levelOfEducation"
-          value={values.levelOfEducation}
-          className="mb-20 data-hj-suppress"
-          onChange={(e) => onChangeHandler('levelOfEducation', e.target.value)}
-          selectOptions={getOptions().educationLevelOptions}
-        />
+        <Form.Group controlId="levelOfEducation">
+          <Form.Control
+            as="select"
+            name="levelOfEducation"
+            value={values.levelOfEducation}
+            onChange={(e) => onChangeHandler('levelOfEducation', e.target.value)}
+            trailingElement={<Icon src={ExpandMore} />}
+            floatingLabel={intl.formatMessage(messages['registration.field.education.levels.label'])}
+          >
+            {getOptions().educationLevelOptions}
+          </Form.Control>
+        </Form.Group>
       )}
       {optionalFields.includes('goals') && (
-        <AuthnValidationFormGroup
-          label={intl.formatMessage(messages['registration.goals.label'])}
-          for="goals"
-          name="goals"
-          type="textarea"
-          key="goals"
-          value={values.goals}
-          className="mb-20"
-          onChange={(e) => onChangeHandler('goals', e.target.value)}
-          inputFieldStyle="border-gray-600"
-        />
+        <Form.Group controlId="goals">
+          <Form.Control
+            as="textarea"
+            name="goals"
+            value={values.goals}
+            onChange={(e) => onChangeHandler('goals', e.target.value)}
+            floatingLabel={intl.formatMessage(messages['registration.goals.label'])}
+          />
+        </Form.Group>
       )}
-    </>
+    </div>
   );
 };
 
