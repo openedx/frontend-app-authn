@@ -15,14 +15,14 @@ describe('AuthnCustomValidationFormGroup', () => {
 
   it('should show label in place of placeholder when field is empty', () => {
     const validationFormGroup = mount(<AuthnCustomValidationFormGroup {...props} />);
-    expect(validationFormGroup.find('label').prop('className')).toEqual('pt-10 focus-out form-label');
+    expect(validationFormGroup.find('label').prop('className')).toEqual('pgn__form-label pt-10 focus-out');
   });
 
   it('should show label on top of field when field is focused in', () => {
     const validationFormGroup = mount(<AuthnCustomValidationFormGroup {...props} />);
 
     validationFormGroup.find('input').simulate('focus');
-    expect(validationFormGroup.find('label').prop('className')).toEqual('pt-10 h6 form-label');
+    expect(validationFormGroup.find('label').prop('className')).toEqual('pgn__form-label pt-10 h6');
   });
 
   it('should keep label hidden for checkbox field', () => {
@@ -32,7 +32,7 @@ describe('AuthnCustomValidationFormGroup', () => {
       optionalFieldCheckbox: true,
     };
     const validationFormGroup = mount(<AuthnCustomValidationFormGroup {...props} />);
-    expect(validationFormGroup.find('label').prop('className')).toEqual('sr-only form-label');
+    expect(validationFormGroup.find('label').prop('className')).toEqual('pgn__form-label sr-only');
   });
 
   it('should keep label hidden when input field is not empty', () => {
@@ -41,6 +41,6 @@ describe('AuthnCustomValidationFormGroup', () => {
       value: 'test',
     };
     const validationFormGroup = mount(<AuthnCustomValidationFormGroup {...props} />);
-    expect(validationFormGroup.find('label').prop('className')).toEqual('sr-only form-label');
+    expect(validationFormGroup.find('label').prop('className')).toEqual('pgn__form-label sr-only');
   });
 });
