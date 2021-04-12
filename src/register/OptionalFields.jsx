@@ -15,13 +15,17 @@ const OptionalFields = (props) => {
 
   const getOptions = () => ({
     yearOfBirthOptions: YEAR_OF_BIRTH_OPTIONS.map(({ value, label }) => (
-      <option key={value} value={value}>{label}</option>
+      <option className="data-hj-suppress" key={value} value={value}>{label}</option>
     )),
     educationLevelOptions: EDUCATION_LEVELS.map(key => (
-      <option key={key} value={key}>{intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`])}</option>
+      <option className="data-hj-suppress" key={key} value={key}>
+        {intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`])}
+      </option>
     )),
     genderOptions: GENDER_OPTIONS.map(key => (
-      <option key={key} value={key}>{intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`])}</option>
+      <option className="data-hj-suppress" key={key} value={key}>
+        {intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`])}
+      </option>
     )),
   });
 

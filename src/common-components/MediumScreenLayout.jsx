@@ -9,7 +9,9 @@ const MediumScreenLayout = (props) => {
   return (
     <>
       <MediumScreenHeader />
-      { children }
+      <div className="mt-5 d-flex align-items-center justify-content-center">
+        { children }
+      </div>
     </>
   );
 };
