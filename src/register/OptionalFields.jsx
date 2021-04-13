@@ -38,6 +38,7 @@ const OptionalFields = (props) => {
         className="mb-20 opt-inline-field data-hj-suppress"
         onChange={(e) => onChangeHandler('gender', e.target.value)}
         selectOptions={getOptions().genderOptions}
+        inputFieldStyle="border-gray-600 custom-select-size"
       />
       <AuthnValidationFormGroup
         label={intl.formatMessage(messages['registration.year.of.birth.label'])}
@@ -49,6 +50,7 @@ const OptionalFields = (props) => {
         className="mb-20 opt-inline-field opt-year-field data-hj-suppress"
         onChange={(e) => onChangeHandler('yearOfBirth', e.target.value)}
         selectOptions={getOptions().yearOfBirthOptions}
+        inputFieldStyle="border-gray-600 custom-select-size"
       />
       <AuthnValidationFormGroup
         label={intl.formatMessage(messages['registration.field.education.levels.label'])}
@@ -60,6 +62,7 @@ const OptionalFields = (props) => {
         className="mb-20 data-hj-suppress"
         onChange={(e) => onChangeHandler('levelOfEducation', e.target.value)}
         selectOptions={getOptions().educationLevelOptions}
+        inputFieldStyle="border-gray-600 custom-select-size"
       />
       <AuthnValidationFormGroup
         label={intl.formatMessage(messages['registration.goals.label'])}
@@ -70,7 +73,7 @@ const OptionalFields = (props) => {
         value={values.goals}
         className="mb-20"
         onChange={(e) => onChangeHandler('goals', e.target.value)}
-        inputFieldStyle="border-gray-600"
+        inputFieldStyle="border-gray-600 custom-select-size"
       />
     </>
   );

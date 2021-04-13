@@ -549,7 +549,7 @@ class RegistrationPage extends React.Component {
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
                   selectOptions={this.getCountryOptions()}
-                  inputFieldStyle="border-gray-600"
+                  inputFieldStyle="border-gray-600 custom-select-size"
                 />
                 <div id="honor-code" className="pt-10 small">
                   <FormattedMessage

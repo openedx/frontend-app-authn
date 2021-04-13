@@ -37,7 +37,8 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email
           </label>
@@ -62,7 +63,8 @@ exports[`LoginPage should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password
           </label>
@@ -233,7 +235,8 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email
           </label>
@@ -258,7 +261,8 @@ exports[`LoginPage should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password
           </label>
@@ -427,7 +431,8 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email
           </label>
@@ -452,7 +457,8 @@ exports[`LoginPage should match forget password alert message snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password
           </label>
@@ -581,7 +587,8 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email
           </label>
@@ -606,7 +613,8 @@ exports[`LoginPage should match pending button state snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password
           </label>
@@ -772,7 +780,8 @@ exports[`LoginPage should show error message 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email
           </label>
@@ -797,7 +806,8 @@ exports[`LoginPage should show error message 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password
           </label>

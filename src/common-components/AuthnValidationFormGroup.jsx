@@ -72,7 +72,7 @@ const AuthnCustomValidationFormGroup = (props) => {
 
   if (props.type === 'select') {
     inputProps.options = props.selectOptions;
-    inputProps.className = props.value === '' ? 'text-muted border-gray-600' : null;
+    inputProps.className = props.value === '' ? `${props.inputFieldStyle} text-muted` : null;
   }
   if (props.type === 'checkbox') {
     inputProps.checked = props.isChecked;
