@@ -90,7 +90,7 @@ class RegistrationPage extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.statusCode !== 403 && this.props.validations !== nextProps.validations) {
       const { errors } = this.state;
-      const { fieldName } = nextProps.validations.validation_decisions;
+      const { fieldName } = this.state;
       const errorMsg = nextProps.validations.validation_decisions[fieldName];
       errors[fieldName] = errorMsg;
       this.setState({
@@ -208,7 +208,6 @@ class RegistrationPage extends React.Component {
 
   handleOnBlur(e) {
     const payload = {
-      fieldName: e.target.name,
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
@@ -220,6 +219,7 @@ class RegistrationPage extends React.Component {
     this.setState({
       updateFieldErrors: false,
       updateAlertErrors: false,
+      fieldName: e.target.name,
     }, () => {
       this.validateInput(name, value, payload, false);
     });
@@ -717,7 +717,6 @@ RegistrationPage.propTypes = {
       name: PropTypes.string,
       password: PropTypes.string,
       username: PropTypes.string,
-      fieldName: PropTypes.string,
     }),
   }),
   statusCode: PropTypes.number,
