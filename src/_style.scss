@@ -328,23 +328,23 @@ $accent-a-light: #c9f2f5;
   }
 }
 
-.large-screen-background {
+.large-screen-container {
   background-color: $white;
   background-image: linear-gradient(102.02deg, $primary 45%, $white 45%);
   width: 100%;
 }
 
-.medium-screen-background {
+.medium-screen-header {
   background-color: $white;
   background-image: linear-gradient(102.02deg, $primary 93%, $white 7%);
   width: 100%;
 }
 
-.large-screen-top-header {
+.large-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
-    $brand-700 10%,
+    $brand-700,
     $brand-700 10%,
     $brand 10%,
     $brand 40%,
@@ -357,11 +357,11 @@ $accent-a-light: #c9f2f5;
   background-repeat: no-repeat;
 }
 
-.medium-screen-top-header {
+.medium-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
-    $brand-700 10%,
+    $brand-700,
     $brand-700 10%,
     $brand 10%,
     $brand 90%,
@@ -371,11 +371,11 @@ $accent-a-light: #c9f2f5;
   background-repeat: no-repeat;
 }
 
-.small-screen-top-header {
+.small-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
-    $brand-700 20%,
+    $brand-700,
     $brand-700 20%,
     $brand 20%,
   );

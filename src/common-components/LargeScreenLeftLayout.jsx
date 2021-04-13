@@ -19,7 +19,7 @@ const LargeScreenLeftLayout = (props) => {
         <h1 className="large-heading">
           {intl.formatMessage(messages['start.learning'])}
           <span className="text-accent-a"><br />
-            {intl.formatMessage(messages['with.'], { siteNme: getConfig().SITE_NAME })}
+            {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
           </span>
         </h1>
       </div>

@@ -63,12 +63,12 @@ const messages = defineMessages({
   'start.learning': {
     id: 'start.learning',
     defaultMessage: 'Start Learning',
-    description: 'Header text that appears on the left of the page.',
+    description: 'Header text for logistration MFE pages',
   },
-  'with.': {
-    id: 'with.',
-    defaultMessage: 'with {siteNme}',
-    description: 'Header text that appears on the left of the page.',
+  'with.site.name': {
+    id: 'with.site.name',
+    defaultMessage: 'with {siteName}',
+    description: 'Header text with site name for logistration MFE pages',
   },
 });
 

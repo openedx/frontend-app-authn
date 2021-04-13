@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SmallScreenTopLayout from './SmallScreenTopLayout';
+import SmallScreenHeader from './SmallScreenHeader';
 
 const SmallScreenLayout = (props) => {
   const { children } = props;
 
   return (
-    <div>
-      <div className="small-screen-top-header" />
-      <SmallScreenTopLayout />
-      <div>
-        { children }
-      </div>
-    </div>
+    <>
+      <SmallScreenHeader />
+      { children }
+    </>
   );
 };
 

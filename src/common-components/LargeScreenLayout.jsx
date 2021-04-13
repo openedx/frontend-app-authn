@@ -10,15 +10,15 @@ const LargeScreenLayout = (props) => {
   const { children } = props;
 
   return (
-    <div>
-      <div className="large-screen-top-header" />
-      <Row className="large-screen-background">
+    <>
+      <div className="large-screen-top-stripe" />
+      <Row className="large-screen-container">
         <LargeScreenLeftLayout />
         <LargeScreenRightLayout>
           { children }
         </LargeScreenRightLayout>
       </Row>
-    </div>
+    </>
   );
 };
 
