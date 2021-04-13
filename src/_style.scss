@@ -13,6 +13,7 @@ $microsoft-black: #2f2f2f;
 $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
+$accent-a-light: #c9f2f5;
 
 .sr-only {
   position: absolute;
@@ -282,6 +283,10 @@ $apple-focus-black: $apple-black;
   margin-top: 10px;
 }
 
+.mt-7 {
+  margin-top: 7rem;
+}
+
 .pt-10 {
   padding-top: 10px;
 }
@@ -323,6 +328,92 @@ $apple-focus-black: $apple-black;
   }
 }
 
-.custom-select-size {
-  background-size: 8px 10px;
+.large-screen-container {
+  background-color: $white;
+  background-image: linear-gradient(102.02deg, $primary 45%, $white 45%);
+  width: 100%;
+}
+
+.medium-screen-header {
+  background-color: $white;
+  background-image: linear-gradient(102.02deg, $primary 93%, $white 7%);
+  width: 100%;
+}
+
+.large-screen-top-stripe {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    102.02deg,
+    $brand-700,
+    $brand-700 10%,
+    $brand 10%,
+    $brand 40%,
+    $primary-700 40%,
+    $primary-700 50%,
+    $accent-a 50%,
+    $accent-a 72%,
+    $accent-a-light 72%,
+  );
+  background-repeat: no-repeat;
+}
+
+.medium-screen-top-stripe {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    102.02deg,
+    $brand-700,
+    $brand-700 10%,
+    $brand 10%,
+    $brand 90%,
+    $primary-700 90%,
+    $primary-700 100%,
+  );
+  background-repeat: no-repeat;
+}
+
+.small-screen-top-stripe {
+  height: 0.5rem;
+  background-image: linear-gradient(
+    102.02deg,
+    $brand-700,
+    $brand-700 20%,
+    $brand 20%,
+  );
+  background-repeat: no-repeat;
+}
+
+.svg-line {
+  padding-top: 0.5rem;
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+  width: 7em;
+}
+
+.small-screen-svg-line {
+  padding-top: 0.5rem;
+  stroke: $accent-b;
+  stroke-width: 0.25rem;
+  width: 4em;
+  height: 72px;
+}
+
+.large-heading {
+  padding-left: 1rem;
+  color: $white;
+  max-width: 24rem;
+  line-height: 78px;
+  font-size: 78px;
+}
+
+.small-heading {
+  padding-left: 0.5rem;
+  color: $white;
+  line-height: 40px;
+  font-size: 36px;
+}
+
+.logo {
+  width: 4.5rem;
+  padding-top: 2rem;
+  padding-left: 25px;
 }
