@@ -36,7 +36,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
           >
             Full name (required)
           </label>
@@ -61,7 +62,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
           >
             Public username (required)
           </label>
@@ -86,7 +88,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email (required)
           </label>
@@ -111,7 +114,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password (required)
           </label>
@@ -136,7 +140,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="country"
           >
             Country or region of residence (required)
           </label>
@@ -1466,7 +1471,8 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="optional"
           >
             Support education research by providing additional information. (Optional)
           </label>
@@ -1599,7 +1605,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
           >
             Full name (required)
           </label>
@@ -1624,7 +1631,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
           >
             Public username (required)
           </label>
@@ -1649,7 +1657,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email (required)
           </label>
@@ -1674,7 +1683,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password (required)
           </label>
@@ -1699,7 +1709,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="country"
           >
             Country or region of residence (required)
           </label>
@@ -3029,7 +3040,8 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="optional"
           >
             Support education research by providing additional information. (Optional)
           </label>
@@ -3117,7 +3129,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="name"
           >
             Full name (required)
           </label>
@@ -3142,7 +3155,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="username"
           >
             Public username (required)
           </label>
@@ -3167,7 +3181,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group data-hj-suppress"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="email"
           >
             Email (required)
           </label>
@@ -3192,7 +3207,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group"
         >
           <label
-            className="pgn__form-label pt-10 focus-out"
+            className="pt-10 focus-out form-label"
+            htmlFor="password"
           >
             Password (required)
           </label>
@@ -3217,7 +3233,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group mb-0 data-hj-suppress"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="country"
           >
             Country or region of residence (required)
           </label>
@@ -4547,7 +4564,8 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
           className="form-group custom-control pt-10 mb-0"
         >
           <label
-            className="pgn__form-label sr-only"
+            className="sr-only form-label"
+            htmlFor="optional"
           >
             Support education research by providing additional information. (Optional)
           </label>
