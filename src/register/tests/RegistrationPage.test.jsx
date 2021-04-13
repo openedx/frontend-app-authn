@@ -201,18 +201,15 @@ describe('RegistrationPageTests', () => {
     IntlRegistrationPage.prototype.componentDidMount = jest.fn();
     registrationPage.find('input#username').simulate('change', { target: { value: 'test', name: 'username' } });
     registrationPage.find('input#username').simulate('blur');
-    formPayload.fieldName = 'username';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
 
     registrationPage.find('input#email').simulate('change', { target: { value: 'test@test.com', name: 'email' } });
     registrationPage.find('input#email').simulate('blur');
-    formPayload.fieldName = 'email';
     formPayload.email = 'test@test.com';
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
 
     registrationPage.find('input#password').simulate('change', { target: { value: 'random123', name: 'password' } });
     registrationPage.find('input#password').simulate('blur');
-    formPayload.fieldName = 'password';
     formPayload.password = 'random123';
 
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
