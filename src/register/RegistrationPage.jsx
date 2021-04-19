@@ -12,7 +12,10 @@ import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { Form, Hyperlink, StatefulButton } from '@edx/paragon';
+import {
+  Form, Hyperlink, Icon, StatefulButton,
+} from '@edx/paragon';
+import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { registerNewUser, fetchRealtimeValidations } from './data/actions';
@@ -23,16 +26,16 @@ import RegistrationFailure from './RegistrationFailure';
 
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
-  InstitutionLogistration, AuthnValidationFormGroup,
+  InstitutionLogistration, FormGroup, PasswordField,
 } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
+  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam,
+  getTpaProvider, getTpaHint, getAllPossibleQueryParam,
 } from '../data/utils';
 
 class RegistrationPage extends React.Component {
@@ -52,7 +55,7 @@ class RegistrationPage extends React.Component {
       username: '',
       password: '',
       country: '',
-      enableOptionalField: false,
+      showOptionalField: false,
       validationAlertMessages: {
         name: [{ user_message: '' }],
         username: [{ user_message: '' }],
@@ -91,8 +94,8 @@ class RegistrationPage extends React.Component {
     if (nextProps.statusCode !== 403 && this.props.validations !== nextProps.validations) {
       const { errors } = this.state;
       const { fieldName } = nextProps.validations.validation_decisions;
-      const errorMsg = nextProps.validations.validation_decisions[fieldName];
-      errors[fieldName] = errorMsg;
+      errors[fieldName] = nextProps.validations.validation_decisions[fieldName];
+
       this.setState({
         errors,
       });
@@ -125,13 +128,11 @@ class RegistrationPage extends React.Component {
     return true;
   }
 
-  getCountryOptions = () => {
-    const { intl } = this.props;
-    return [{
-      value: '',
-      label: intl.formatMessage(messages['registration.country.label']),
-    }].concat(getCountryList(getLocale()).map(({ code, name }) => ({ value: code, label: name })));
-  }
+  getCountryOptions = () => [
+    { code: '', name: this.props.intl.formatMessage(messages['registration.country.label']) },
+  ].concat(getCountryList(getLocale())).map(({ code, name }) => (
+    <option className="data-hj-suppress" key={code} value={code}>{name}</option>
+  ));
 
   getOptionalFields() {
     return (
@@ -192,20 +193,7 @@ class RegistrationPage extends React.Component {
     }
   }
 
-  checkNoFieldErrors(validations) {
-    const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
-    return keyValidList.every((current) => current === true);
-  }
-
-  checkNoAlertErrors(validations) {
-    const keyValidList = Object.entries(validations).map(([key]) => {
-      const validation = validations[key][0];
-      return !validation.user_message;
-    });
-    return keyValidList.every((current) => current === true);
-  }
-
-  handleOnBlur(e) {
+  handleOnBlur = (e) => {
     const payload = {
       fieldName: e.target.name,
       email: this.state.email,
@@ -224,8 +212,15 @@ class RegistrationPage extends React.Component {
     });
   }
 
-  handleOnChange(e) {
-    if (!(e.target.name === 'username' && e.target.value.length > 30)) {
+  handleOnChange = (e) => {
+    if (e.target.name === 'optionalFields') {
+      this.setState({
+        showOptionalField: e.target.checked,
+        updateAlertErrors: false,
+        updateFieldErrors: false,
+      });
+      sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
+    } else if (!(e.target.name === 'username' && e.target.value.length > 30)) {
       this.setState({
         [e.target.name]: e.target.value,
         updateFieldErrors: false,
@@ -234,19 +229,17 @@ class RegistrationPage extends React.Component {
     }
   }
 
-  handleOnOptional(e) {
-    const optionalEnable = this.state.enableOptionalField;
-    const targetValue = e.target.id === 'additionalFields' ? !optionalEnable : e.target.checked;
-    this.setState({
-      enableOptionalField: targetValue,
-      updateAlertErrors: false,
-      updateFieldErrors: false,
+  checkNoAlertErrors(validations) {
+    const keyValidList = Object.entries(validations).map(([key]) => {
+      const validation = validations[key][0];
+      return !validation.user_message;
     });
-    sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
+    return keyValidList.every((current) => current === true);
   }
 
-  handleLoginLinkClickEvent() {
-    sendTrackEvent('edx.bi.login_form.toggled', { category: 'user-engagement' });
+  checkNoFieldErrors(validations) {
+    const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
+    return keyValidList.every((current) => current === true);
   }
 
   validateInput(inputName, value, payload, updateAlertMessage = true) {
@@ -443,173 +436,129 @@ class RegistrationPage extends React.Component {
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
         />
-        <div className="d-flex justify-content-center m-4">
-          <div className="d-flex flex-column">
-            <div className="mw-500">
-              {this.renderErrors()}
-              {currentProvider && (
-                <ThirdPartyAuthAlert
-                  currentProvider={currentProvider}
-                  platformName={this.props.thirdPartyAuthContext.platformName}
-                  referrer={REGISTER_PAGE}
-                />
-              )}
-              <p>
-                {intl.formatMessage(messages['already.have.an.edx.account'])}
-                <Hyperlink
-                  className="ml-1"
-                  destination={updatePathWithQueryParams(LOGIN_PAGE)}
-                  onClick={this.handleLoginLinkClickEvent}
-                >
-                  {intl.formatMessage(messages['sign.in.hyperlink'])}
-                </Hyperlink>
-              </p>
-              <hr className="mb-3 border-gray-200" />
-              <h3 className="mb-3">{intl.formatMessage(messages['create.a.new.account'])}</h3>
-              <Form className="form-group">
-                <AuthnValidationFormGroup
-                  label={intl.formatMessage(messages['fullname.label'])}
-                  for="name"
-                  name="name"
-                  type="text"
-                  invalid={this.state.errors.name !== ''}
-                  ariaInvalid={this.state.errors.name !== ''}
-                  invalidMessage={this.state.errors.name}
-                  value={this.state.name}
-                  onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
-                  helpText={intl.formatMessage(messages['helptext.name'])}
-                  inputFieldStyle="border-gray-600"
-                />
-                <AuthnValidationFormGroup
-                  label={intl.formatMessage(messages['username.label'])}
-                  for="username"
-                  name="username"
-                  type="text"
-                  className="data-hj-suppress"
-                  invalid={this.state.errors.username !== ''}
-                  ariaInvalid={this.state.errors.username !== ''}
-                  invalidMessage={this.state.errors.username}
-                  value={this.state.username}
-                  onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
-                  helpText={intl.formatMessage(messages['helptext.username'])}
-                  inputFieldStyle="border-gray-600"
-                />
-                <AuthnValidationFormGroup
-                  label={intl.formatMessage(messages['register.page.email.label'])}
-                  for="email"
-                  name="email"
-                  type="text"
-                  className="data-hj-suppress"
-                  invalid={this.state.errors.email !== ''}
-                  ariaInvalid={this.state.errors.email !== ''}
-                  invalidMessage={this.state.errors.email}
-                  value={this.state.email}
-                  onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
-                  helpText={intl.formatMessage(messages['helptext.email'])}
-                  inputFieldStyle="border-gray-600"
-                />
-                {!currentProvider && (
-                  <AuthnValidationFormGroup
-                    label={intl.formatMessage(messages['password.label'])}
-                    for="password"
-                    name="password"
-                    type="password"
-                    invalid={this.state.errors.password !== ''}
-                    ariaInvalid={this.state.errors.password !== ''}
-                    invalidMessage={this.state.errors.password}
-                    value={this.state.password}
-                    onBlur={(e) => this.handleOnBlur(e)}
-                    onChange={(e) => this.handleOnChange(e)}
-                    helpText={intl.formatMessage(messages['helptext.password'])}
-                    inputFieldStyle="border-gray-600"
-                  />
-                )}
-                <AuthnValidationFormGroup
-                  label={intl.formatMessage(messages['registration.country.label'])}
-                  for="country"
-                  name="country"
-                  type="select"
-                  key="country"
-                  invalid={this.state.errors.country !== ''}
-                  ariaInvalid={this.state.errors.country !== ''}
-                  invalidMessage={intl.formatMessage(messages['country.validation.message'])}
-                  className="mb-0 data-hj-suppress"
-                  value={this.state.country}
-                  onBlur={(e) => this.handleOnBlur(e)}
-                  onChange={(e) => this.handleOnChange(e)}
-                  selectOptions={this.getCountryOptions()}
-                  inputFieldStyle="border-gray-600"
-                />
-                <div id="honor-code" className="pt-10 small">
-                  <FormattedMessage
-                    id="register.page.terms.of.service.and.honor.code"
-                    tagName="p"
-                    defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
-                    Member process your personal data in accordance with the {privacyPolicy}."
-                    description="Text that appears on registration form stating honor code and privacy policy"
-                    values={{
-                      platformName: this.state.platformName,
-                      tosAndHonorCode: (
-                        <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} target="_blank">
-                          {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
-                        </Hyperlink>
-                      ),
-                      privacyPolicy: (
-                        <Hyperlink destination={getConfig().PRIVACY_POLICY} target="_blank">
-                          {intl.formatMessage(messages['privacy.policy'])}
-                        </Hyperlink>
-                      ),
-                    }}
-                  />
-                </div>
-                {this.state.optionalFields.length ? (
-                  <AuthnValidationFormGroup
-                    label={intl.formatMessage(messages['support.education.research'])}
-                    for="optional"
-                    name="optional"
-                    type="checkbox"
-                    value={this.state.enableOptionalField}
-                    onClick={(e) => this.handleOnOptional(e)}
-                    onBlur={null}
-                    onChange={(e) => this.handleOnOptional(e)}
-                    optionalFieldCheckbox
-                    isChecked={this.state.enableOptionalField}
-                    checkboxMessage={intl.formatMessage(messages['support.education.research'])}
-                  />
-                ) : null}
-                { this.state.enableOptionalField ? this.getOptionalFields() : null }
-                <StatefulButton
-                  type="submit"
-                  variant="brand"
-                  state={submitState}
-                  className="mt-3"
-                  labels={{
-                    default: intl.formatMessage(messages['create.account.button']),
-                  }}
-                  icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
-                  onClick={this.handleSubmit}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-                {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
-                  && !currentProvider ? (
-                    <div className="d-block mb-4 mt-4">
-                      <hr className="mt-0 border-gray-200" />
-                      <span className="d-block mb-4 text-left">
-                        {intl.formatMessage(messages['create.an.account.using'])}
-                      </span>
-                    </div>
-                  ) : null}
-                {this.renderThirdPartyAuth(providers,
-                  secondaryProviders,
-                  currentProvider,
-                  thirdPartyAuthApiStatus,
-                  intl)}
-              </Form>
+        <div className="mw-xs mt-3">
+          {this.renderErrors()}
+          {currentProvider && (
+            <ThirdPartyAuthAlert
+              currentProvider={currentProvider}
+              platformName={this.props.thirdPartyAuthContext.platformName}
+              referrer={REGISTER_PAGE}
+            />
+          )}
+          <Form>
+            <FormGroup
+              name="name"
+              value={this.state.name}
+              handleBlur={this.handleOnBlur}
+              handleChange={this.handleOnChange}
+              errorMessage={this.state.errors.name}
+              floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
+            />
+            <FormGroup
+              name="username"
+              value={this.state.username}
+              handleBlur={this.handleOnBlur}
+              handleChange={this.handleOnChange}
+              errorMessage={this.state.errors.username}
+              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
+              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+            />
+            <FormGroup
+              name="email"
+              value={this.state.email}
+              handleBlur={this.handleOnBlur}
+              handleChange={this.handleOnChange}
+              errorMessage={this.state.errors.email}
+              helpText={[intl.formatMessage(messages['help.text.email'])]}
+              floatingLabel={intl.formatMessage(messages['registration.email.label'])}
+            />
+            {!currentProvider && (
+              <PasswordField
+                name="password"
+                value={this.state.password}
+                handleBlur={this.handleOnBlur}
+                handleChange={this.handleOnChange}
+                errorMessage={this.state.errors.password}
+                floatingLabel={intl.formatMessage(messages['registration.password.label'])}
+              />
+            )}
+            <FormGroup
+              as="select"
+              name="country"
+              value={this.state.country}
+              handleBlur={this.handleOnBlur}
+              handleChange={this.handleOnChange}
+              errorMessage={this.state.errors.country}
+              floatingLabel={intl.formatMessage(messages['registration.country.label'])}
+              trailingElement=<Icon src={ExpandMore} />
+              options={this.getCountryOptions}
+            />
+            <div id="honor-code" className="small">
+              <FormattedMessage
+                id="register.page.terms.of.service.and.honor.code"
+                defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
+                Member process your personal data in accordance with the {privacyPolicy}."
+                description="Text that appears on registration form stating honor code and privacy policy"
+                values={{
+                  platformName: this.state.platformName,
+                  tosAndHonorCode: (
+                    <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} target="_blank">
+                      {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
+                    </Hyperlink>
+                  ),
+                  privacyPolicy: (
+                    <Hyperlink destination={getConfig().PRIVACY_POLICY} target="_blank">
+                      {intl.formatMessage(messages['privacy.policy'])}
+                    </Hyperlink>
+                  ),
+                }}
+              />
             </div>
-          </div>
+            {this.state.optionalFields.length ? (
+              <Form.Group className="mb-0 mt-2 small">
+                <Form.Check
+                  id="optional-field-checkbox"
+                  type="checkbox"
+                  name="optionalFields"
+                  value={this.state.showOptionalField}
+                  onClick={this.handleOnChange}
+                  onChange={this.handleOnChange}
+                  label={intl.formatMessage(messages['support.education.research'])}
+                />
+              </Form.Group>
+            ) : null}
+            { this.state.showOptionalField ? this.getOptionalFields() : null }
+            <StatefulButton
+              type="submit"
+              variant="brand"
+              className="register-button-width mt-4"
+              state={submitState}
+              labels={{
+                default: intl.formatMessage(messages['create.account.button']),
+                pending: '',
+              }}
+              icons={{
+                pending: (
+                  <FontAwesomeIcon icon={faSpinner} spin>
+                    <span className="sr-only">{intl.formatMessage(messages['create.an.account.btn.pending.state'])}</span>
+                  </FontAwesomeIcon>
+                ),
+              }}
+              onClick={this.handleSubmit}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
+              && !currentProvider ? (
+                <div className="mt-4 mb-3 h4">
+                  {intl.formatMessage(messages['registration.other.options.heading'])}
+                </div>
+              ) : null}
+            {this.renderThirdPartyAuth(providers,
+              secondaryProviders,
+              currentProvider,
+              thirdPartyAuthApiStatus,
+              intl)}
+          </Form>
         </div>
       </>
     );

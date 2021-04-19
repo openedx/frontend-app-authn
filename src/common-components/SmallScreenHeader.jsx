@@ -17,7 +17,7 @@ const SmallScreenHeader = (props) => {
           <svg className="small-screen-svg-line">
             <line x1="55" y1="0" x2="40" y2="65" />
           </svg>
-          <h1 className="small-heading">
+          <h1 className="small-heading pb-3">
             {intl.formatMessage(messages['start.learning'])}
             <br />
             <span className="text-accent-a">

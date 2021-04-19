@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { getConfig } from '@edx/frontend-platform';
 import { Row } from '@edx/paragon';
 
 import LargeScreenLeftLayout from './LargeScreenLeftLayout';
@@ -11,6 +12,7 @@ const LargeScreenLayout = (props) => {
 
   return (
     <>
+      <img alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
       <div className="large-screen-top-stripe" />
       <Row className="large-screen-container">
         <LargeScreenLeftLayout />

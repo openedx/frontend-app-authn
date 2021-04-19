@@ -10,9 +10,8 @@ const LargeScreenLeftLayout = (props) => {
   const { intl } = props;
 
   return (
-    <Col xs={6} className="pr-0">
-      <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
-      <div className="d-flex mt-7">
+    <Col xs={6} className="pr-0 mt-lg-n3 d-flex align-items-center">
+      <div className="d-flex align-items-center">
         <svg className="svg-line pl-5">
           <line x1="50" y1="0" x2="10" y2="215" />
         </svg>
