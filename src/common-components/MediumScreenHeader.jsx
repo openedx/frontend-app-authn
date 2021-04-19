@@ -17,7 +17,7 @@ const MediumScreenHeader = (props) => {
           <svg className="svg-line pl-5">
             <line x1="50" y1="0" x2="10" y2="215" />
           </svg>
-          <h1 className="large-heading pb-3">
+          <h1 className="large-heading pb-4">
             {intl.formatMessage(messages['start.learning'])}
             <span className="text-accent-a"><br />
               {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}

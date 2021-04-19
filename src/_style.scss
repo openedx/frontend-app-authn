@@ -15,6 +15,31 @@ $apple-black: #000000;
 $apple-focus-black: $apple-black;
 $accent-a-light: #c9f2f5;
 
+.register-button-width {
+  width: 12rem;
+}
+
+.nav-tabs {
+  a {
+    color: $primary !important;
+
+    :hover {
+      color: $primary !important;
+    }
+  }
+
+  .nav-link.active {
+    border-bottom: 0.175rem solid $primary;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  :hover {
+    border: none;
+  }
+}
+
 .sr-only {
   position: absolute;
   left: -10000px;
@@ -58,7 +83,7 @@ $accent-a-light: #c9f2f5;
 }
 
 .form-control {
-  width: 500px;
+  background-color: white !important;
 }
 
 .btn-social {
@@ -71,7 +96,7 @@ $accent-a-light: #c9f2f5;
 
   background-color: $white;
   border: 1px solid $font-blue;
-  width: 242px;
+  width: 224px;
   height: 36px;
   color: $font-blue;
 
@@ -229,19 +254,6 @@ $accent-a-light: #c9f2f5;
   padding-left: 14px;
 }
 
-.opt-inline-field {
-  display: inline-block;
-  width: 50%;
-
-  .form-control {
-    width: 100%;
-  }
-}
-
-.opt-year-field {
-  padding-left: 15px;
-}
-
 .invalid-feedback {
   color: $red;
 }
@@ -252,6 +264,10 @@ $accent-a-light: #c9f2f5;
 
 .help-links {
   margin-left: -5px;
+}
+
+select.form-control {
+  background: none !important;
 }
 
 #honor-code p {
@@ -305,12 +321,6 @@ $accent-a-light: #c9f2f5;
 }
 
 @media (max-width: 600px) {
-  .btn-social {
-    width: 100%;
-    margin-bottom: 0.75rem;
-    margin-right: 0 !important;
-  }
-
   .form-control {
     width: 100%;
   }
@@ -325,6 +335,12 @@ $accent-a-light: #c9f2f5;
     &:after {
       width: 10%;
     }
+  }
+
+  .btn-social {
+    width: 100%;
+    margin-bottom: 0.75rem;
+    margin-right: 0 !important;
   }
 }
 
@@ -387,6 +403,7 @@ $accent-a-light: #c9f2f5;
   stroke: $accent-b;
   stroke-width: 0.5rem;
   width: 7em;
+  height: 240px;
 }
 
 .small-screen-svg-line {

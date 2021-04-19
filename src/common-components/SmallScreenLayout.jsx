@@ -9,7 +9,9 @@ const SmallScreenLayout = (props) => {
   return (
     <>
       <SmallScreenHeader />
-      { children }
+      <div className="d-flex align-items-center justify-content-center">
+        { children }
+      </div>
     </>
   );
 };
