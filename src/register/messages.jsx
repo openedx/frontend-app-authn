@@ -6,30 +6,57 @@ const messages = defineMessages({
     defaultMessage: 'Register | {siteName}',
     description: 'register page title',
   },
+  // Field labels
+  'registration.fullname.label': {
+    id: 'registration.fullname.label',
+    defaultMessage: 'Full name',
+    description: 'Label that appears above fullname field',
+  },
+  'registration.email.label': {
+    id: 'registration.email.label',
+    defaultMessage: 'Email',
+    description: 'Label that appears above email field on register page',
+  },
+  'registration.username.label': {
+    id: 'registration.username.label',
+    defaultMessage: 'Public username',
+    description: 'Label that appears above username field',
+  },
+  'registration.password.label': {
+    id: 'registration.password.label',
+    defaultMessage: 'Password',
+    description: 'Label that appears above password field',
+  },
+  'registration.country.label': {
+    id: 'registration.country.label',
+    defaultMessage: 'Country/Region',
+    description: 'Placeholder for the country options dropdown.',
+  },
+  // Help text
+  'help.text.username.1': {
+    id: 'help.text.username.1',
+    defaultMessage: 'The name that will identify you in your courses.',
+    description: 'Part of help text for username field on registration page',
+  },
+  'help.text.username.2': {
+    id: 'help.text.username.2',
+    defaultMessage: 'This can not be changed later.',
+    description: 'Part of help text for username field on registration page',
+  },
+  'help.text.email': {
+    id: 'help.text.email',
+    defaultMessage: 'For account activation and important updates',
+    description: 'Help text for email field on registration page',
+  },
   'create.account.button': {
     id: 'create.account.button',
-    defaultMessage: 'Create account',
+    defaultMessage: 'Create an account',
     description: 'Button label that appears on register page',
   },
-  'already.have.an.edx.account': {
-    id: 'already.have.an.edx.account',
-    defaultMessage: 'Already have an edX account?',
-    description: 'A message on registration page asking the user if he already has an edX account',
-  },
-  'sign.in.hyperlink': {
-    id: 'sign.in.hyperlink',
-    defaultMessage: 'Sign in.',
-    description: 'Text for the hyperlink that takes user to login page',
-  },
-  'create.an.account.using': {
-    id: 'create.an.account.using',
-    defaultMessage: 'or create an account using',
-    description: 'A message that after optional form fields checkbox',
-  },
-  'create.a.new.account': {
-    id: 'create.a.new.account',
-    defaultMessage: 'Create a new account',
-    description: 'Text that appears before social auth buttons and before the registration form',
+  'registration.other.options.heading': {
+    id: 'registration.other.options.heading',
+    defaultMessage: 'Or register with:',
+    description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
   },
   'register.institution.login.button': {
     id: 'register.institution.login.button',
@@ -46,10 +73,10 @@ const messages = defineMessages({
     defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
-  'register.page.email.label': {
-    id: 'register.page.email.label',
-    defaultMessage: 'Email (required)',
-    description: 'Label that appears above email field on register page',
+  'create.an.account.btn.pending.state': {
+    id: 'create.an.account.btn.pending.state',
+    defaultMessage: 'Loading',
+    description: 'Message that appears for screen readers only when button is in pending state',
   },
   'register.rate.limit.reached.message': {
     id: 'register.rate.limit.reached.message',
@@ -76,31 +103,17 @@ const messages = defineMessages({
     defaultMessage: 'Your password must contain at least 8 characters',
     description: 'Validation message that appears when password is not formatted correctly with no backend validations available.',
   },
-  'password.label': {
-    id: 'password.label',
-    defaultMessage: 'Password (required)',
-    description: 'Label that appears above password field',
-  },
   'register.page.password.validation.message': {
     id: 'register.page.password.validation.message',
     defaultMessage: 'Please enter your password.',
     description: 'Validation message that appears when password is non compliant with edX requirement',
-  },
-  'fullname.label': {
-    id: 'fullname.label',
-    defaultMessage: 'Full name (required)',
-    description: 'Label that appears above fullname field',
   },
   'fullname.validation.message': {
     id: 'fullname.validation.message',
     defaultMessage: 'Please enter your full name.',
     description: 'Validation message that appears when fullname is empty',
   },
-  'username.label': {
-    id: 'username.label',
-    defaultMessage: 'Public username (required)',
-    description: 'Label that appears above username field',
-  },
+
   'username.validation.message': {
     id: 'username.validation.message',
     defaultMessage: 'Please enter your public username.',
@@ -146,26 +159,6 @@ const messages = defineMessages({
     defaultMessage: 'We couldn\'t create your account.',
     description: 'error message when registration failure.',
   },
-  'helptext.name': {
-    id: 'helptext.name',
-    defaultMessage: 'This name will be used by any certificates that you earn.',
-    description: 'help text for name field on registration field',
-  },
-  'helptext.username': {
-    id: 'helptext.username',
-    defaultMessage: 'The name that will identify you in your courses. It cannot be changed later.',
-    description: 'helptext for username field on registration page',
-  },
-  'helptext.password': {
-    id: 'helptext.password',
-    defaultMessage: 'Your password must contain at least 8 characters, including 1 letter & 1 number.',
-    description: 'help text for password field on registration page',
-  },
-  'helptext.email': {
-    id: 'helptext.email',
-    defaultMessage: 'This is what you will use to login.',
-    description: 'help text for email field on registration page',
-  },
   // Terms of Service and Honor Code
   'terms.of.service.and.honor.code': {
     id: 'terms.of.service.and.honor.code',
@@ -177,16 +170,11 @@ const messages = defineMessages({
     defaultMessage: 'Privacy Policy',
     description: 'Text for the hyperlink that redirects user to privacy policy',
   },
-  // Registration Fields
+  // Optional fields
   'registration.year.of.birth.label': {
     id: 'registration.year.of.birth.label',
     defaultMessage: 'Year of birth (optional)',
     description: 'Placeholder for the year of birth options dropdown',
-  },
-  'registration.country.label': {
-    id: 'registration.country.label',
-    defaultMessage: 'Country or region of residence (required)',
-    description: 'Placeholder for the country options dropdown.',
   },
   'registration.field.gender.options.label': {
     id: 'registration.field.gender.options.label',
