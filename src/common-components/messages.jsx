@@ -23,6 +23,17 @@ const messages = defineMessages({
                     + 'email address, or check your spam folder.',
     description: 'Part of message that appears after user requests password change',
   },
+  // Logistration strinsg
+  'logistration.login': {
+    id: 'logistration.login',
+    defaultMessage: 'Login',
+    description: 'Text that appears on the tab to switch between login and register',
+  },
+  'logistration.register': {
+    id: 'logistration.register',
+    defaultMessage: 'Register',
+    description: 'Text that appears on the tab to switch between login and register',
+  },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
@@ -69,6 +80,32 @@ const messages = defineMessages({
     id: 'with.site.name',
     defaultMessage: 'with {siteName}',
     description: 'Header text with site name for logistration MFE pages',
+  },
+  // password field strings
+  'show.password': {
+    id: 'show.password',
+    defaultMessage: 'Show password',
+    description: 'aria label for show password icon on password field',
+  },
+  'hide.password': {
+    id: 'hide.password',
+    defaultMessage: 'Hide password',
+    description: 'aria label for hide password icon on password field',
+  },
+  'one.letter': {
+    id: 'one.letter',
+    defaultMessage: '1 Letter',
+    description: 'password requirement to have 1 letter',
+  },
+  'one.number': {
+    id: 'one.number',
+    defaultMessage: '1 Number',
+    description: 'password requirement to have 1 number',
+  },
+  'eight.characters': {
+    id: 'eight.characters',
+    defaultMessage: '8 Characters',
+    description: 'password requirement to have a minimum of 8 characters',
   },
 });
 
