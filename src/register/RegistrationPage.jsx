@@ -395,13 +395,13 @@ class RegistrationPage extends React.Component {
             secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
             buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
           />
-          <div className="row tpa-container">
+          <div className="row m-0">
             <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
           </div>
         </>
       );
     } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
-      thirdPartyComponent = <Skeleton height={36} count={2} />;
+      thirdPartyComponent = <Skeleton className="tpa-skeleton" height={36} count={2} />;
     }
     return thirdPartyComponent;
   }
@@ -538,11 +538,7 @@ class RegistrationPage extends React.Component {
                 pending: '',
               }}
               icons={{
-                pending: (
-                  <FontAwesomeIcon icon={faSpinner} spin>
-                    <span className="sr-only">{intl.formatMessage(messages['create.an.account.btn.pending.state'])}</span>
-                  </FontAwesomeIcon>
-                ),
+                pending: <FontAwesomeIcon title={intl.formatMessage(messages['create.an.account.btn.pending.state'])} icon={faSpinner} spin />,
               }}
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}

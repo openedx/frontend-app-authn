@@ -18,8 +18,8 @@ const PasswordField = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleBlur = (e) => {
-    props.handleBlur(e);
-    setShowTooltip(false);
+    if (props.handleBlur) { props.handleBlur(e); }
+    setShowTooltip(props.showRequirements && false);
   };
 
   const HideButton = (
@@ -51,7 +51,7 @@ const PasswordField = (props) => {
     <OverlayTrigger key="tooltip" placement="left" overlay={tooltip} show={showTooltip}>
       <FormGroup
         {...props}
-        handleFocus={() => setShowTooltip(true)}
+        handleFocus={() => setShowTooltip(props.showRequirements && true)}
         handleBlur={handleBlur}
         type={isPasswordHidden ? 'password' : 'text'}
         trailingElement={isPasswordHidden ? ShowButton : HideButton}
@@ -64,6 +64,7 @@ PasswordField.defaultProps = {
   errorMessage: '',
   handleBlur: null,
   handleChange: () => {},
+  showRequirements: true,
 };
 
 PasswordField.propTypes = {
@@ -73,6 +74,7 @@ PasswordField.propTypes = {
   handleChange: PropTypes.func,
   intl: intlShape.isRequired,
   name: PropTypes.string.isRequired,
+  showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
 };
 

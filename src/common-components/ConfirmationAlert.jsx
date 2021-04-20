@@ -17,9 +17,12 @@ const ConfirmationAlert = (props) => {
         <FormattedMessage
           id="forgot.password.confirmation.message"
           defaultMessage="You entered {strongEmail}. If this email address is associated with your
-          edX account, we will send a message with password recovery instructions to this email address."
+          {platformName} account, we will send a message with password recovery instructions to this email address."
           description="Forgot password confirmation message"
-          values={{ strongEmail: <strong className="data-hj-suppress">{email}</strong> }}
+          values={{
+            strongEmail: <strong className="data-hj-suppress">{email}</strong>,
+            platformName: getConfig().SITE_NAME,
+          }}
         />
       </p>
       <p>{intl.formatMessage(messages['forgot.password.confirmation.info'])}</p>
