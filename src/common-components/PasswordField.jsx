@@ -29,9 +29,9 @@ const PasswordField = (props) => {
   const ShowButton = (
     <IconButton icon={faEye} onClick={setHiddenFalse} alt={formatMessage(messages['show.password'])} aria-label={formatMessage(messages['show.password'])} />
   );
-
+  const placement = window.innerWidth < 768 ? 'top' : 'left';
   const tooltip = (
-    <Tooltip id="password-requirement">
+    <Tooltip id={`password-requirement-${placement}`}>
       <span id="letter-check" className="d-flex position-relative align-content-start">
         {LETTER_REGEX.test(props.value) ? <Icon className="text-success mr-1" src={Check} /> : <Icon className="mr-1" src={Remove} />}
         {formatMessage(messages['one.letter'])}
@@ -46,12 +46,11 @@ const PasswordField = (props) => {
       </span>
     </Tooltip>
   );
-
   return (
-    <OverlayTrigger key="tooltip" placement="left" overlay={tooltip} show={showTooltip}>
+    <OverlayTrigger key="tooltip" placement={placement} overlay={tooltip} show={showTooltip}>
       <FormGroup
         {...props}
-        handleFocus={() => setShowTooltip(props.showRequirements && true)}
+        handleFocus={() => setTimeout(() => setShowTooltip(props.showRequirements && true), 150)}
         handleBlur={handleBlur}
         type={isPasswordHidden ? 'password' : 'text'}
         trailingElement={isPasswordHidden ? ShowButton : HideButton}
