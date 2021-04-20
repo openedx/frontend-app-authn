@@ -48,10 +48,14 @@ describe('PasswordField', () => {
 
   it('should show password requirement tooltip on focus', async () => {
     const passwordField = mount(<IntlProvider locale="en"><IntlPasswordField {...props} /></IntlProvider>);
-    await act(async () => { passwordField.find('input').simulate('focus'); });
+    jest.useFakeTimers();
+    await act(async () => {
+      passwordField.find('input').simulate('focus');
+      jest.runAllTimers();
+    });
     passwordField.update();
 
-    expect(passwordField.find('#password-requirement').exists()).toBeTruthy();
+    expect(passwordField.find('#password-requirement-left').exists()).toBeTruthy();
   });
 
   it('should show all password requirement checks as failed', async () => {
@@ -60,8 +64,12 @@ describe('PasswordField', () => {
       value: '',
     };
 
+    jest.useFakeTimers();
     const passwordField = mount(<IntlProvider locale="en"><IntlPasswordField {...props} /></IntlProvider>);
-    await act(async () => { passwordField.find('input').simulate('focus'); });
+    await act(async () => {
+      passwordField.find('input').simulate('focus');
+      jest.runAllTimers();
+    });
     passwordField.update();
 
     expect(passwordField.find('#letter-check span').prop('className')).toEqual('pgn__icon mr-1');
@@ -71,9 +79,10 @@ describe('PasswordField', () => {
 
   it('should update password requirement checks', async () => {
     const passwordField = mount(<IntlProvider locale="en"><IntlPasswordField {...props} /></IntlProvider>);
-
+    jest.useFakeTimers();
     await act(async () => {
       passwordField.find('input').simulate('focus');
+      jest.runAllTimers();
     });
     passwordField.update();
 
