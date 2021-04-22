@@ -21,3 +21,7 @@ export const loginRequestFailure = (loginError) => ({
   type: LOGIN_REQUEST.FAILURE,
   payload: { loginError },
 });
+
+export const loginRequestReset = () => ({
+  type: LOGIN_REQUEST.RESET,
+});
