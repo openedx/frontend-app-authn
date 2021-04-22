@@ -23,7 +23,7 @@ const Logistration = (props) => {
           {intl.formatMessage(messages['logistration.login'])}
         </Link>
       </span>
-      <div id="main-content" className="p-2 main-content">
+      <div id="main-content" className="main-content">
         {selectedPage === LOGIN_PAGE ? <LoginPage /> : <RegistrationPage />}
       </div>
     </div>

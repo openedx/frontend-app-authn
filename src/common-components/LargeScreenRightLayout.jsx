@@ -7,8 +7,8 @@ const LargeScreenRightLayout = (props) => {
   const { children } = props;
 
   return (
-    <Col xs={6} className="min-vh-100 d-flex justify-content-center mt-5">
-      { children }
+    <Col xs={6} className="min-vh-100 d-flex justify-content-center">
+      <div className="mt-5">{ children }</div>
     </Col>
   );
 };
