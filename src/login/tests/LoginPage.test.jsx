@@ -1,17 +1,20 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import renderer from 'react-test-renderer';
+
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
+import { loginRequest, loginRequestFailure } from '../data/actions';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
-import { loginRequest, loginRequestFailure } from '../data/actions';
+
 import { RenderInstitutionButton } from '../../common-components';
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
@@ -25,8 +28,18 @@ const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
 
 describe('LoginPage', () => {
+  let props = {};
+  let store = {};
+
+  const reduxWrapper = children => (
+    <IntlProvider locale="en">
+      <MemoryRouter>
+        <Provider store={store}>{children}</Provider>
+      </MemoryRouter>
+    </IntlProvider>
+  );
+
   const initialState = {
-    forgotPassword: { status: null },
     login: {
       loginResult: { success: false, redirectUrl: '' },
     },
@@ -41,9 +54,6 @@ describe('LoginPage', () => {
     },
   };
 
-  let props = {};
-  let store = {};
-
   const secondaryProviders = {
     id: 'saml-test',
     name: 'Test University',
@@ -51,19 +61,13 @@ describe('LoginPage', () => {
     registerUrl: '/dummy_auth',
   };
 
-  const appleProvider = {
+  const ssoProvider = {
     id: 'oa2-apple-id',
     name: 'Apple',
     iconClass: null,
     iconImage: 'https://edx.devstack.lms/logo.png',
     loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
   };
-
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
-  );
 
   beforeEach(() => {
     store = mockStore(initialState);
@@ -72,97 +76,43 @@ describe('LoginPage', () => {
     };
   });
 
-  it('should match default section snapshot', () => {
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+  // ******** test login form submission ********
 
-  it('should match pending button state snapshot', () => {
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        submitState: PENDING_STATE,
-      },
-    });
-
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match forget password alert message snapshot', () => {
-    store = mockStore({
-      ...initialState,
-      forgotPassword: { status: 'complete', email: 'test@example.com' },
-    });
-
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match TPA provider snapshot', () => {
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [appleProvider],
-        },
-      },
-    });
-
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should show error message', () => {
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        loginError: { value: 'Email or password is incorrect.' },
-      },
-    });
-
-    const tree = renderer.create(reduxWrapper(<IntlLoginPage {...props} />)).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should show account activation message', () => {
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?account_activation_status=info' };
-
-    const expectedMessage = 'This account has already been activated.';
-
+  it('should submit form for valid input', () => {
+    store.dispatch = jest.fn(store.dispatch);
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find('#account-activation-message').find('div').text()).toEqual(expectedMessage);
+
+    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com' } });
+    loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email: 'test@example.com', password: 'password' }));
   });
 
-  it('should display login help button', () => {
-    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(root.find('button.field-link').first().text()).toEqual('Need help signing in?');
+  it('should not dispatch loginRequest on empty form submission', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('button.btn-brand').simulate('click');
+    expect(store.dispatch).not.toHaveBeenCalledWith(loginRequest({}));
   });
 
-  it('updates the error state for empty email input on form submission', () => {
-    const errorState = { email: 'Please enter your email.', password: '' };
+  // ******** test login form validations ********
+
+  it('should match state on empty form submission', () => {
+    const errorState = { emailOrUsername: 'Please enter your email.', password: 'Please enter your password.' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-
-    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
+    // Check that loginRequestFailure was dispatched and state is updated
     expect(loginPage.state('errors')).toEqual(errorState);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
-    );
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequestFailure({ errorCode: 'invalid-form', context: errorState }));
   });
 
-  it('updates the error state for invalid email; less than 3 characters on form submission', () => {
-    const errorState = { email: 'Email must have at least 3 characters.', password: '' };
+  it('should match state for invalid email (less than 3 characters), on form submission', () => {
+    const errorState = { emailOrUsername: 'Email must have at least 3 characters.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
@@ -172,13 +122,10 @@ describe('LoginPage', () => {
     loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.state('errors')).toEqual(errorState);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
-    );
   });
 
-  it('updates the error state for invalid email format validation on form submission', () => {
-    const errorState = { email: 'The email address you\'ve provided isn\'t formatted correctly.', password: '' };
+  it('should match the state for invalid email format on form submission', () => {
+    const errorState = { emailOrUsername: 'The email address you\'ve provided isn\'t formatted correctly.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
@@ -190,127 +137,102 @@ describe('LoginPage', () => {
     expect(loginPage.state('errors')).toEqual(errorState);
   });
 
-  it('updates the error state for invalid password', () => {
-    const errorState = { email: '', password: 'Please enter your password.' };
-    store.dispatch = jest.fn(store.dispatch);
+  // ******** test form buttons and links ********
 
-    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-
-    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com', name: 'email' } });
-    loginPage.find('button.btn-brand').simulate('click');
-
-    expect(loginPage.state('errors')).toEqual(errorState);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      loginRequestFailure({ errorCode: 'invalid-form', context: errorState }),
-    );
+  it('should match default button state', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('button[type="submit"] span').first().text()).toEqual('Sign in');
   });
 
-  it('submits login request for valid email and password values', () => {
-    store.dispatch = jest.fn(store.dispatch);
-    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com' } });
-    loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
-    loginPage.find('button.btn-brand').simulate('click');
-
-    expect(store.dispatch).toHaveBeenCalledWith(
-      loginRequest({ email: 'test@example.com', password: 'password' }),
-    );
-  });
-
-  it('should match url after redirection', () => {
-    const dasboardUrl = 'http://test.com/testing-dashboard/';
+  it('should match pending button state', () => {
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
-        loginResult: {
-          success: true,
-          redirectUrl: dasboardUrl,
-        },
+        submitState: PENDING_STATE,
       },
     });
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL };
-    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(dasboardUrl);
-  });
-
-  it('should match url after TPA redirection', () => {
-    const authCompleteUrl = '/auth/complete/google-oauth2/';
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        loginResult: {
-          success: true,
-          redirectUrl: '',
-        },
-      },
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          finishAuthUrl: authCompleteUrl,
-        },
-      },
-    });
-
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL };
-    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
-  });
-
-  it('should redirect to enterprise selection page', () => {
-    const authCompleteUrl = '/auth/complete/google-oauth2/';
-    const enterpriseSelectionPage = 'http://localhost:18000/enterprise/select/active/?success_url='.concat(authCompleteUrl);
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        loginResult: {
-          success: true,
-          redirectUrl: enterpriseSelectionPage,
-        },
-      },
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          finishAuthUrl: authCompleteUrl,
-        },
-      },
-    });
-
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL };
-    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(enterpriseSelectionPage);
-  });
-
-  it('should redirect to social auth provider url', () => {
-    const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...appleProvider,
-            loginUrl,
-          }],
-        },
-      },
-    });
-
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL };
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    const button = loginPage.find('button[type="submit"] span').first();
 
-    loginPage.find('button#oa2-apple-id').simulate('click');
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
+    // test pending state icon and that pending state icon has title associated with it
+    expect(button.find('svg').prop('className')).toEqual(expect.stringContaining('fa-spinner'));
+    expect(button.find('svg').find('title').text()).toEqual('Loading');
+  });
+
+  it('should show forgot password link', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('a#forgot-password').text()).toEqual('Forgot password');
+  });
+
+  it('should show single sign on provider button', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
+  });
+
+  it('should not display institution login option when no secondary providers are present', () => {
+    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(root.text().includes('Use my university info')).toBe(false);
+  });
+
+  it('should display institution login option when secondary providers are present', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Use my university info')).toBe(true);
+
+    // on clicking "Use my university info" button, it should display institution login page
+    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(loginPage.text().includes('Test University')).toBe(true);
+  });
+
+  // ******** test alert messages ********
+
+  it('should match login error message', () => {
+    const errorMessage = 'Email or password is incorrect.';
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginError: { value: errorMessage },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('#login-failure-alert').first().text()).toEqual(`We couldn't sign you in.${errorMessage}`);
+  });
+
+  it('should match account activation message', () => {
+    const activationMessage = 'Success! You have activated your account.'
+      + 'You will now receive email updates and alerts from us related '
+      + 'to the courses you are enrolled in. Sign in to continue.';
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?account_activation_status=success' };
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('div#account-activation-message').text()).toEqual(activationMessage);
   });
 
   it('should match third party auth alert', () => {
@@ -333,132 +255,119 @@ describe('LoginPage', () => {
     expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
   });
 
-  it('should display institution login button', () => {
+  it('should match forget password confirmation message', () => {
     store = mockStore({
       ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          secondaryProviders: [secondaryProviders],
+      forgotPassword: { status: 'complete', email: 'test@example.com' },
+    });
+
+    const confirmationMessage = 'Check your email'
+      + 'You entered test@example.com. If this email address is associated with your edX account, '
+      + 'we will send a message with password recovery instructions to this email address.If you do not '
+      + 'receive a password reset message after 1 minute, verify that you entered the correct email address, '
+      + 'or check your spam folder.If you need further assistance, contact technical support.';
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('#confirmation-alert').first().text()).toEqual(confirmationMessage);
+  });
+
+  // ******** test redirection ********
+
+  it('should redirect to url returned by login endpoint', () => {
+    const dasboardUrl = 'http://localhost:18000/enterprise/select/active/?success_url=/dashboard';
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginResult: {
+          success: true,
+          redirectUrl: dasboardUrl,
         },
       },
     });
-    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(root.text().includes('Use my university info')).toBe(true);
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
+    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toBe(dasboardUrl);
   });
 
-  it('should not display institution login button', () => {
-    const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(root.text().includes('Use my university info')).toBe(false);
-  });
-
-  it('should display institution login page', () => {
+  it('should redirect to finishAuthUrl upon successful login via SSO', () => {
+    const authCompleteUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
+      login: {
+        ...initialState.login,
+        loginResult: {
+          success: true,
+          redirectUrl: '',
+        },
+      },
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          secondaryProviders: [secondaryProviders],
+          finishAuthUrl: authCompleteUrl,
         },
       },
     });
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
-    expect(loginPage.text().includes('Test University')).toBe(true);
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
+
+    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
   });
 
-  it('send tracking event when create account link is clicked', () => {
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-
-    loginPage.find('a[href*="/register"]').simulate('click');
-    loginPage.update();
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
-  });
-
-  it('send page event when login page is rendered', () => {
-    mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
-  });
-
-  it('send tracking and page events when institutional button is clicked', () => {
+  it('should redirect to social auth provider url on SSO button click', () => {
+    const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          secondaryProviders: [secondaryProviders],
+          providers: [{
+            ...ssoProvider,
+            loginUrl,
+          }],
         },
       },
     });
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
-  });
 
-  it('check cookie rendered', () => {
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find(<CookiePolicyBanner />)).toBeTruthy();
-  });
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
 
-  it('form only be scrollable on submission', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
-    loginPage.find('input#password').simulate('change', { target: { value: 'test@example.com', name: 'password' } });
-    loginPage.find('button.btn-brand').simulate('click');
-
-    expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
-    expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
+    loginPage.find('button#oa2-apple-id').simulate('click');
+    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
   });
 
-  it('should render tpa button for tpa_hint id in primary provider', () => {
-    const expectedMessage = `Sign in using ${appleProvider.name}`;
+  // ******** test hinted third party auth ********
+
+  it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [appleProvider],
+          providers: [ssoProvider],
         },
         thirdPartyAuthApiStatus: COMPLETE_STATE,
       },
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${appleProvider.id}` };
-    appleProvider.iconImage = null;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+    ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find(`button#${appleProvider.id}`).find('span').text()).toEqual(expectedMessage);
+    expect(loginPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(`Sign in using ${ssoProvider.name}`);
   });
 
-  it('should render regular tpa button for invalid tpa_hint value', () => {
-    const expectedMessage = `${appleProvider.name}`;
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [appleProvider],
-        },
-        thirdPartyAuthApiStatus: COMPLETE_STATE,
-      },
-    });
-
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
-    appleProvider.iconImage = null;
-
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find(`button#${appleProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);
-  });
-
-  it('should render tpa button for tpa_hint id in secondary provider', () => {
+  it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -477,5 +386,66 @@ describe('LoginPage', () => {
 
     mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.loginUrl);
+  });
+
+  it('should render regular tpa button for invalid tpa_hint value', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
+    ssoProvider.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(`${ssoProvider.name}`);
+  });
+
+  // ******** miscellaneous tests ********
+
+  it('should render cookie banner', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find(<CookiePolicyBanner />)).toBeTruthy();
+  });
+
+  it('should send page event when login page is rendered', () => {
+    mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
+  });
+
+  it('send tracking and page events when institutional button is clicked', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+  });
+
+  it('tests that form is only scrollable on form submission', () => {
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
+    expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
   });
 });

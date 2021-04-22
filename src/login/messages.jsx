@@ -6,10 +6,26 @@ const messages = defineMessages({
     defaultMessage: 'Login | {siteName}',
     description: 'login page title',
   },
+  // Login labels
+  'login.user.identity.label': {
+    id: 'login.user.identity.label',
+    defaultMessage: 'Username or email',
+    description: 'Label for user identity field to enter either username or email to login',
+  },
+  'login.password.label': {
+    id: 'login.password.label',
+    defaultMessage: 'Password',
+    description: 'Label for password field',
+  },
   'sign.in.button': {
     id: 'sign.in.button',
     defaultMessage: 'Sign in',
     description: 'Button label that appears on login page',
+  },
+  'sign.in.btn.pending.state': {
+    id: 'sign.in.btn.pending.state',
+    defaultMessage: 'Loading',
+    description: 'Title of icon that appears when button is in pending state',
   },
   'need.help.signing.in.collapsible.menu': {
     id: 'need.help.signing.in.collapsible.menu',
@@ -20,6 +36,11 @@ const messages = defineMessages({
     id: 'forgot.password.link',
     defaultMessage: 'Forgot my password',
     description: 'Forgot password link',
+  },
+  'forgot.password': {
+    id: 'forgot.password',
+    defaultMessage: 'Forgot password',
+    description: 'Button text for forgot password',
   },
   'other.sign.in.issues': {
     id: 'other.sign.in.issues',
@@ -56,10 +77,10 @@ const messages = defineMessages({
     defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
-  'or.sign.in.with': {
-    id: 'or.sign.in.with',
-    defaultMessage: 'or sign in with',
-    description: 'gives hint about other sign in options',
+  'login.other.options.heading': {
+    id: 'login.other.options.heading',
+    defaultMessage: 'Or sign in with:',
+    description: 'Text that appears above other sign in options like social auth buttons',
   },
   'non.compliant.password.title': {
     id: 'non.compliant.password.title',
@@ -71,19 +92,14 @@ const messages = defineMessages({
     defaultMessage: 'First time here?',
     description: 'A question that appears before sign up link',
   },
-  'email.label': {
-    id: 'email.label',
-    defaultMessage: 'Email',
-    description: 'Label that appears above email field',
-  },
   'email.help.message': {
     id: 'email.help.message',
     defaultMessage: 'The email address you used to register with edX.',
     description: 'Message that appears below email field on login page',
   },
-  'enterprise.login.link.text': {
-    id: 'enterprise.login.link.text',
-    defaultMessage: 'Sign in with your company or school',
+  'enterprise.login.btn.text': {
+    id: 'enterprise.login.btn.text',
+    defaultMessage: 'Company or school credentials',
     description: 'Company or school login link text.',
   },
   'email.format.validation.message': {
@@ -105,11 +121,6 @@ const messages = defineMessages({
     id: 'password.validation.message',
     defaultMessage: 'Please enter your password.',
     description: 'Validation message that appears when password is empty',
-  },
-  'password.label': {
-    id: 'password.label',
-    defaultMessage: 'Password',
-    description: 'Text that appears above password field or as a placeholder',
   },
   'register.link': {
     id: 'register.link',

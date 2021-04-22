@@ -15,8 +15,20 @@ $apple-black: #000000;
 $apple-focus-black: $apple-black;
 $accent-a-light: #c9f2f5;
 
+.main-content {
+  min-width: 464px !important;
+}
+
 .register-button-width {
   width: 12rem;
+}
+
+.login-button-width {
+  width: 6rem;
+}
+
+.tpa-skeleton {
+  margin-bottom: 0.75rem;
 }
 
 .nav-tabs {
@@ -119,10 +131,6 @@ $accent-a-light: #c9f2f5;
     max-height: 24px;
     max-width: 24px;
   }
-}
-
-.tpa-container {
-  margin: 0 !important;
 }
 
 .font-container {
@@ -229,24 +237,16 @@ $accent-a-light: #c9f2f5;
   }
 }
 
-.field-link {
-  font-weight: normal;
-  display: block;
-  color: $primary;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  border: none;
-  padding: 0;
-  background: transparent;
-  box-shadow: none;
-  text-transform: initial;
-  letter-spacing: normal;
-  text-decoration: none;
-  text-shadow: none;
+.institute-icon {
+  @extend .mr-1;
+  @extend .text-gray;
 
-  &:focus,
-  &:hover {
-    color: $primary;
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+
+  svg {
+    display: inline-block;
   }
 }
 
@@ -279,6 +279,10 @@ select.form-control {
   @extend .sr-only;
 }
 
+.font-weight-500 {
+  font-weight: 500 !important;
+}
+
 .mw-420 {
   max-width: 420px;
 }
@@ -307,13 +311,6 @@ select.form-control {
   padding-top: 10px;
 }
 
-@media (min-width: 576px) {
-  .reset-password-container {
-    width: 420px;
-    max-width: 420px;
-  }
-}
-
 @media (min-width: 1024px) {
   .mw-500 {
     width: 500px;
@@ -326,7 +323,18 @@ select.form-control {
   }
 }
 
-@media (max-width: 450px) {
+@media (min-width: 463px) {
+  .reset-password-container {
+    width: 420px;
+    max-width: 420px;
+  }
+
+  .tpa-skeleton {
+    min-width: 464px !important;
+  }
+}
+
+@media (max-width: 464px) {
   .section-heading-line {
     position: relative;
     text-align: center;
@@ -338,9 +346,13 @@ select.form-control {
   }
 
   .btn-social {
-    width: 100%;
+    min-width: 100%;
     margin-bottom: 0.75rem;
     margin-right: 0 !important;
+  }
+
+  .main-content {
+    min-width: 100vw !important;
   }
 }
 
