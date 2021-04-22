@@ -16,6 +16,7 @@ $apple-focus-black: $apple-black;
 $accent-a-light: #c9f2f5;
 
 .main-content {
+  @extend .pt-4;
   min-width: 464px !important;
 }
 
@@ -353,6 +354,7 @@ select.form-control {
 
   .main-content {
     min-width: 100vw !important;
+    padding: 1.5rem !important;
   }
 }
 
