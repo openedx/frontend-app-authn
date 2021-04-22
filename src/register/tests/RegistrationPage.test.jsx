@@ -231,7 +231,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#username').simulate('blur');
 
       const formPayload = {
-        fieldName: 'username', email: '', name: '', username: 'test', password: '', country: '', honor_code: true,
+        email: '', name: '', username: 'test', password: '', country: '', honor_code: true,
       };
       expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
     });
@@ -650,6 +650,26 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('#optional').length).toEqual(0);
 
       delete window.optimizelyExperimentName;
+    });
+
+    it('test username suggestions', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          validations: {
+            validation_decisions: {
+              username: 'It looks like test belongs to an existing account. Try again with a different username.',
+            },
+            username_suggestions: ['test_1', 'test_12', 'test_123'],
+          },
+        },
+      });
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registerPage.find('button.username-suggestion').length).toEqual(3);
+      registerPage.find('button.username-suggestion').at(0).simulate('click');
+      expect(registerPage.find('RegistrationPage').state('username')).toEqual('test_1');
     });
   });
 

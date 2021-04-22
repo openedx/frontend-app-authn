@@ -251,6 +251,11 @@ const messages = defineMessages({
     defaultMessage: 'Other education',
     description: 'Selected by the user if they have a type of education not described by the other choices.',
   },
+  'registration.username.suggestion.label': {
+    id: 'registration.username.suggestion.label',
+    defaultMessage: 'Available:',
+    description: 'Available usernames label text.',
+  },
 });
 
 export default messages;
