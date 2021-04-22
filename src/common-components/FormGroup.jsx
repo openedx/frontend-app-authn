@@ -47,6 +47,7 @@ const FormGroup = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" feedback-for={props.name} className="data-hj-suppress" type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
+      {props.children}
     </Form.Group>
   );
 };
@@ -61,6 +62,7 @@ FormGroup.defaultProps = {
   options: null,
   trailingElement: null,
   type: 'text',
+  children: null,
 };
 
 FormGroup.propTypes = {
@@ -76,6 +78,7 @@ FormGroup.propTypes = {
   trailingElement: PropTypes.element,
   type: PropTypes.string,
   value: PropTypes.string.isRequired,
+  children: PropTypes.element,
 };
 
 export default FormGroup;
