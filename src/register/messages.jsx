@@ -76,7 +76,7 @@ const messages = defineMessages({
   'create.an.account.btn.pending.state': {
     id: 'create.an.account.btn.pending.state',
     defaultMessage: 'Loading',
-    description: 'Message that appears for screen readers only when button is in pending state',
+    description: 'Title of icon that appears when button is in pending state',
   },
   'register.rate.limit.reached.message': {
     id: 'register.rate.limit.reached.message',
