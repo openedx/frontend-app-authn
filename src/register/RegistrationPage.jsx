@@ -19,7 +19,7 @@ import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { registerNewUser, fetchRealtimeValidations } from './data/actions';
-import { registrationRequestSelector } from './data/selectors';
+import { registrationRequestSelector, validationsSelector } from './data/selectors';
 import messages from './messages';
 import OptionalFields from './OptionalFields';
 import RegistrationFailure from './RegistrationFailure';
@@ -37,6 +37,7 @@ import {
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam,
 } from '../data/utils';
+import UsernameField from './UsernameField';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -78,6 +79,7 @@ class RegistrationPage extends React.Component {
       updateFieldErrors: false,
       updateAlertErrors: false,
       registrationErrorsUpdated: false,
+      fieldName: '',
     };
   }
 
@@ -92,8 +94,7 @@ class RegistrationPage extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.statusCode !== 403 && this.props.validations !== nextProps.validations) {
-      const { errors } = this.state;
-      const { fieldName } = nextProps.validations.validation_decisions;
+      const { errors, fieldName } = this.state;
       errors[fieldName] = nextProps.validations.validation_decisions[fieldName];
 
       this.setState({
@@ -195,7 +196,6 @@ class RegistrationPage extends React.Component {
 
   handleOnBlur = (e) => {
     const payload = {
-      fieldName: e.target.name,
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
@@ -205,6 +205,7 @@ class RegistrationPage extends React.Component {
     };
     const { name, value } = e.target;
     this.setState({
+      fieldName: e.target.name,
       updateFieldErrors: false,
       updateAlertErrors: false,
     }, () => {
@@ -227,6 +228,21 @@ class RegistrationPage extends React.Component {
         updateAlertErrors: false,
       });
     }
+  }
+
+  handleSuggestionClick = (suggestion) => {
+    const fieldName = 'username';
+    const payload = {
+      username: suggestion,
+    };
+    this.setState({
+      ...payload,
+      fieldName,
+      updateFieldErrors: false,
+      updateAlertErrors: false,
+    }, () => {
+      this.validateInput(fieldName, suggestion, payload, false);
+    });
   }
 
   checkNoAlertErrors(validations) {
@@ -454,7 +470,7 @@ class RegistrationPage extends React.Component {
               errorMessage={this.state.errors.name}
               floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
             />
-            <FormGroup
+            <UsernameField
               name="username"
               value={this.state.username}
               handleBlur={this.handleOnBlur}
@@ -462,6 +478,7 @@ class RegistrationPage extends React.Component {
               errorMessage={this.state.errors.username}
               helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
               floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+              handleSuggestionClick={this.handleSuggestionClick}
             />
             <FormGroup
               name="email"
@@ -490,7 +507,7 @@ class RegistrationPage extends React.Component {
               handleChange={this.handleOnChange}
               errorMessage={this.state.errors.country}
               floatingLabel={intl.formatMessage(messages['registration.country.label'])}
-              trailingElement=<Icon src={ExpandMore} />
+              trailingElement={<Icon src={ExpandMore} />}
               options={this.getCountryOptions}
             />
             <div id="honor-code" className="small">
@@ -669,7 +686,7 @@ const mapStateToProps = state => {
     thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
     registrationResult,
     thirdPartyAuthContext,
-    validations: state.register.validations,
+    validations: validationsSelector(state),
     statusCode: state.register.statusCode,
   };
 };
