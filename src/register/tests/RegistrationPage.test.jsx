@@ -387,12 +387,12 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       const button = registrationPage.find('button[type="submit"] span').first();
 
-      // submit button has no text when it is loading
-      expect(button.text()).toEqual('');
+      // test pending state icon and that pending state icon has title associated with it
       expect(button.find('svg').prop('className')).toEqual(expect.stringContaining('fa-spinner'));
+      expect(button.find('svg').find('title').text()).toEqual('Loading');
     });
 
-    it('should match single sign on provider button', () => {
+    it('should show single sign on provider button', () => {
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -405,7 +405,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button#oa2-apple-id').length).toEqual(1);
+      expect(registrationPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
     });
 
     it('should display institution register button', () => {
@@ -547,7 +547,7 @@ describe('RegistrationPage', () => {
 
     // ******** test hinted third party auth ********
 
-    it('should render tpa button for tpa_hint id in primary provider', () => {
+    it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
       const expectedMessage = `Sign in using ${ssoProvider.name}`;
       store = mockStore({
         ...initialState,
@@ -569,7 +569,7 @@ describe('RegistrationPage', () => {
       expect(registerPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(expectedMessage);
     });
 
-    it('should render tpa button for tpa_hint id in secondary provider', () => {
+    it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -632,12 +632,12 @@ describe('RegistrationPage', () => {
       expect(shouldUpdate).toBe(false);
     });
 
-    it('check cookie rendered', () => {
+    it('should render cookie banner', () => {
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registerPage.find(<CookiePolicyBanner />)).toBeTruthy();
     });
 
-    it('send page event when register page is rendered', () => {
+    it('should send page event when register page is rendered', () => {
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });

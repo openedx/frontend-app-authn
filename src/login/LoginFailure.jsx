@@ -81,7 +81,7 @@ const LoginFailureMessage = (props) => {
     case INVALID_FORM:
       errorList = (
         <>
-          {context.email && <li key={`${INVALID_FORM}-email`}>{context.email}</li>}
+          {context.emailOrUsername && <li key={`${INVALID_FORM}-email`}>{context.emailOrUsername}</li>}
           {context.password && <li key={`${INVALID_FORM}-password`}>{context.password}</li>}
         </>
       );
