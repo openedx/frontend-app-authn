@@ -102,7 +102,7 @@ describe('LoginFailureMessage', () => {
     props = {
       loginError: {
         errorCode: INVALID_FORM,
-        context: { email: 'Please enter your email.', password: 'Please enter your password.' },
+        context: { emailOrUsername: 'Please enter your email.', password: 'Please enter your password.' },
       },
     };
 
