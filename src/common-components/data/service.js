@@ -11,7 +11,7 @@ export async function getThirdPartyAuthContext(urlParams) {
 
   const { data } = await getAuthenticatedHttpClient()
     .get(
-      `${getConfig().LMS_BASE_URL}/api/third_party_auth_context`,
+      `${getConfig().LMS_BASE_URL}/api/mfe_context`,
       requestConfig,
     )
     .catch((e) => {

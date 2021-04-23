@@ -128,6 +128,14 @@ class RegistrationPage extends React.Component {
       return false;
     }
 
+    if (this.props.thirdPartyAuthContext.countryCode
+    && this.state.country !== nextProps.thirdPartyAuthContext.countryCode) {
+      this.setState({
+        country: nextProps.thirdPartyAuthContext.countryCode || '',
+      });
+      return false;
+    }
+
     return true;
   }
 
@@ -657,6 +665,7 @@ RegistrationPage.defaultProps = {
   thirdPartyAuthContext: {
     currentProvider: null,
     finishAuthUrl: null,
+    countryCode: null,
     providers: [],
     secondaryProviders: [],
     pipelineUserDetails: null,
@@ -688,6 +697,7 @@ RegistrationPage.propTypes = {
     providers: PropTypes.array,
     secondaryProviders: PropTypes.array,
     finishAuthUrl: PropTypes.string,
+    countryCode: PropTypes.string,
     pipelineUserDetails: PropTypes.shape({
       email: PropTypes.string,
       fullname: PropTypes.string,
