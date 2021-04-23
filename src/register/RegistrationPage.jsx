@@ -559,7 +559,7 @@ class RegistrationPage extends React.Component {
                     Member process your personal data in accordance with the {privacyPolicy}."
                     description="Text that appears on registration form stating honor code and privacy policy"
                     values={{
-                      platformName: this.state.platformName,
+                      platformName: getConfig().SITE_NAME,
                       tosAndHonorCode: (
                         <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE} target="_blank">
                           {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
