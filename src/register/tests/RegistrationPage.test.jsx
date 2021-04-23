@@ -55,6 +55,7 @@ describe('RegistrationPage', () => {
         providers: [],
         secondaryProviders: [],
         pipelineUserDetails: null,
+        countryCode: null,
       },
     },
   };
@@ -670,6 +671,37 @@ describe('RegistrationPage', () => {
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
       registerPage.find('button.username-suggestion').at(0).simulate('click');
       expect(registerPage.find('RegistrationPage').state('username')).toEqual('test_1');
+    });
+
+    it('Should update state if countryCode is present in context', () => {
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            countryCode: 'US',
+          },
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
+        },
+      });
+
+      const nextProps = {
+        validations: null,
+        thirdPartyAuthContext: {
+          pipelineUserDetails: {
+            name: 'test',
+            email: 'test@example.com',
+            username: 'test-username',
+          },
+          countryCode: 'US',
+        },
+      };
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const shouldUpdate = registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
+      expect(registrationPage.find('RegistrationPage').state('country')).toEqual('US');
+      expect(shouldUpdate).toBe(false);
     });
   });
 
