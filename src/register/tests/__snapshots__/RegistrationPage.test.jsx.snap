@@ -1446,7 +1446,7 @@ exports[`RegistrationPageTests should match TPA provider snapshot 1`] = `
                 />
               </span>
             </a>
-             and you acknowledge that  and each Member process your personal data in accordance with the 
+             and you acknowledge that edX and each Member process your personal data in accordance with the 
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
@@ -3015,7 +3015,7 @@ exports[`RegistrationPageTests should match default section snapshot 1`] = `
                 />
               </span>
             </a>
-             and you acknowledge that  and each Member process your personal data in accordance with the 
+             and you acknowledge that edX and each Member process your personal data in accordance with the 
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
@@ -4539,7 +4539,7 @@ exports[`RegistrationPageTests should match pending button state snapshot 1`] = 
                 />
               </span>
             </a>
-             and you acknowledge that  and each Member process your personal data in accordance with the 
+             and you acknowledge that edX and each Member process your personal data in accordance with the 
             <a
               href="http://privacy-policy.com"
               onClick={[Function]}
