@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
+import Cookies from 'universal-cookie';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -432,11 +433,15 @@ class RegistrationPage extends React.Component {
       );
     }
 
-    if (this.props.registrationResult.success && window.hj) {
-      window.hj('identify', null, {
-        signedUp: new Date().toISOString(),
-        testAccount: this.state.username.includes('hotjarTest'), // TODO: Remove this after testing
-      });
+    if (this.props.registrationResult.success) {
+      const cookieName = getConfig().USER_SIGNUP_SURVEY_COOKIE_NAME;
+      if (cookieName) {
+        const cookies = new Cookies();
+        const signupTimestamp = (new Date()).getTime();
+        // set expiry to exactly 24 hours from now
+        const cookieExpiry = new Date(signupTimestamp + 1 * 864e5);
+        cookies.set(cookieName, signupTimestamp, { expires: cookieExpiry });
+      }
     }
 
     return (
