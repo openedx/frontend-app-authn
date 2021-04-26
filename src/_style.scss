@@ -311,6 +311,38 @@ select.form-control {
 .pt-10 {
   padding-top: 10px;
 }
+.tooltip-shadow {
+  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.3) !important;
+}
+#password-requirement-left {
+  .tooltip-inner {
+    @extend .tooltip-shadow;
+    background: white;
+    display: block;
+    color: #707070;
+  }
+  .arrow::before {
+    border-left-color: #fff;
+    @extend .tooltip-shadow;
+  }
+    
+}
+
+#password-requirement-top {
+  .tooltip-inner {
+    background: white;
+    max-width: 465px;
+    width: 465px;
+    display: block;
+    @extend .tooltip-shadow;
+    color: #707070;
+  }
+  .arrow::before {
+    border-top-color: #fff;
+    @extend .tooltip-shadow;
+  }
+    
+}
 
 @media (min-width: 1024px) {
   .mw-500 {
