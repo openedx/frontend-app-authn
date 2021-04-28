@@ -29,7 +29,7 @@ import {
   InstitutionLogistration, AuthnValidationFormGroup,
 } from '../common-components';
 import {
-  DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE,
+  DEFAULT_STATE, LOGIN_PAGE, REGISTER_PAGE, ENTERPRISE_LOGIN_URL, PENDING_STATE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import {
@@ -98,7 +98,7 @@ class LoginPage extends React.Component {
 
   validateEmail(email) {
     const { errors } = this.state;
-    const regex = new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i, 'i');
+    const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
     if (email === '') {
       errors.email = this.props.intl.formatMessage(messages['email.validation.message']);

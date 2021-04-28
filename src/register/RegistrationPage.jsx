@@ -30,7 +30,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
+  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam,
@@ -252,13 +252,9 @@ class RegistrationPage extends React.Component {
   }
 
   validateInput(inputName, value, payload, updateAlertMessage = true) {
-    const {
-      errors,
-    } = this.state;
-    const {
-      intl,
-      statusCode,
-    } = this.props;
+    const { errors } = this.state;
+    const { intl, statusCode } = this.props;
+    const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
     let {
       formValid,
@@ -271,7 +267,7 @@ class RegistrationPage extends React.Component {
           errors.email = intl.formatMessage(messages['email.validation.message']);
         } else if (value.length <= 2) {
           errors.email = intl.formatMessage(messages['email.ratelimit.less.chars.validation.message']);
-        } else if (!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+        } else if (!emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.ratelimit.incorrect.format.validation.message']);
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
