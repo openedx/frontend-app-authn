@@ -114,12 +114,12 @@ const messages = defineMessages({
   },
   'email.validation.message': {
     id: 'email.validation.message',
-    defaultMessage: 'Please enter your email.',
+    defaultMessage: 'Enter your username or email',
     description: 'Validation message that appears when email is empty',
   },
   'password.validation.message': {
     id: 'password.validation.message',
-    defaultMessage: 'Please enter your password.',
+    defaultMessage: 'Enter your password',
     description: 'Validation message that appears when password is empty',
   },
   'register.link': {
@@ -197,6 +197,11 @@ const messages = defineMessages({
     id: 'login.locked.out.error.message',
     defaultMessage: 'To protect your account, it’s been temporarily locked. Try again in {lockedOutPeriod} minutes.',
     description: 'Account locked out user message',
+  },
+  'login.form.invalid.error.message': {
+    id: 'login.form.invalid.error.message',
+    defaultMessage: 'Please fill in the fields below.',
+    description: 'Login form empty input user message',
   },
 });
 

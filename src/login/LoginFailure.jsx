@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert, Icon } from '@edx/paragon';
+import { Info } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import processLink from '../data/utils';
@@ -80,10 +81,9 @@ const LoginFailureMessage = (props) => {
       break;
     case INVALID_FORM:
       errorList = (
-        <>
-          {context.emailOrUsername && <li key={`${INVALID_FORM}-email`}>{context.emailOrUsername}</li>}
-          {context.password && <li key={`${INVALID_FORM}-password`}>{context.password}</li>}
-        </>
+        <p>
+          {intl.formatMessage(messages['login.form.invalid.error.message'])}
+        </p>
       );
       break;
     case FAILED_LOGIN_ATTEMPT: {
@@ -168,8 +168,9 @@ const LoginFailureMessage = (props) => {
 
   return (
     <Alert id="login-failure-alert" variant="danger">
+      <Icon src={Info} className="alert-icon" />
       <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      <ul>{errorList}</ul>
+      { errorList }
     </Alert>
   );
 };

@@ -11,7 +11,7 @@ import { getConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
-import { loginRequest, loginRequestFailure } from '../data/actions';
+import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/actions';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 
@@ -100,7 +100,7 @@ describe('LoginPage', () => {
   // ******** test login form validations ********
 
   it('should match state on empty form submission', () => {
-    const errorState = { emailOrUsername: 'Please enter your email.', password: 'Please enter your password.' };
+    const errorState = { emailOrUsername: 'Enter your username or email', password: 'Enter your password' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
@@ -269,6 +269,20 @@ describe('LoginPage', () => {
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find('#confirmation-alert').first().text()).toEqual(confirmationMessage);
+  });
+
+  it('should match invalid login form error message', () => {
+    const errorMessage = 'Please fill in the fields below.';
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginError: { errorCode: 'invalid-form' },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('#login-failure-alert p').first().text()).toEqual(errorMessage);
   });
 
   // ******** test redirection ********
@@ -447,5 +461,15 @@ describe('LoginPage', () => {
 
     expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
     expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
+  });
+
+  it('should reset login form errors', () => {
+    const errorState = { emailOrUsername: '', password: '' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequestReset());
+    expect(loginPage.state('errors')).toEqual(errorState);
   });
 });
