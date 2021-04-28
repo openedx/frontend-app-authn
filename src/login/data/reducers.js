@@ -25,6 +25,11 @@ const reducer = (state = defaultState, action) => {
         loginError: action.payload.loginError,
         submitState: DEFAULT_STATE,
       };
+    case LOGIN_REQUEST.RESET:
+      return {
+        ...state,
+        loginError: null,
+      };
     default:
       return state;
   }
