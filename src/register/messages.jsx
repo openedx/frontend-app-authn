@@ -48,16 +48,23 @@ const messages = defineMessages({
     defaultMessage: 'For account activation and important updates',
     description: 'Help text for email field on registration page',
   },
+  // Form buttons
   'create.account.button': {
     id: 'create.account.button',
     defaultMessage: 'Create an account',
     description: 'Button label that appears on register page',
+  },
+  'create.an.account.btn.pending.state': {
+    id: 'create.an.account.btn.pending.state',
+    defaultMessage: 'Loading',
+    description: 'Title of icon that appears when button is in pending state',
   },
   'registration.other.options.heading': {
     id: 'registration.other.options.heading',
     defaultMessage: 'Or register with:',
     description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
   },
+  // Institution login
   'register.institution.login.button': {
     id: 'register.institution.login.button',
     defaultMessage: 'Use my institution/campus credentials',
@@ -73,91 +80,77 @@ const messages = defineMessages({
     defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
-  'create.an.account.btn.pending.state': {
-    id: 'create.an.account.btn.pending.state',
-    defaultMessage: 'Loading',
-    description: 'Title of icon that appears when button is in pending state',
+  // Validation messages
+  'empty.name.field.error': {
+    id: 'empty.name.field.error',
+    defaultMessage: 'Enter your full name',
+    description: 'Error message for empty fullname field',
   },
-  'register.rate.limit.reached.message': {
-    id: 'register.rate.limit.reached.message',
-    defaultMessage: 'Too many failed registration attempts. Try again later.',
-    description: 'Error message that appears when an anonymous user has made too many failed registration attempts',
+  'empty.email.field.error': {
+    id: 'empty.email.field.error',
+    defaultMessage: 'Enter your email',
+    description: 'Error message for empty email field',
   },
-  'email.validation.message': {
-    id: 'email.validation.message',
-    defaultMessage: 'Please enter your email.',
-    description: 'Validation message that appears when email address is empty',
+  'empty.country.field.error': {
+    id: 'empty.country.field.error',
+    defaultMessage: 'Select your country or region of residence',
+    description: 'Error message when no country/region is selected',
+  },
+  'email.invalid.format.error': {
+    id: 'email.invalid.format.error',
+    defaultMessage: 'Enter a valid email address',
+    description: 'Validation error for invalid email address',
   },
   'email.ratelimit.less.chars.validation.message': {
     id: 'email.ratelimit.less.chars.validation.message',
     defaultMessage: 'Email must have 3 characters.',
     description: 'Validation message that appears when email address is less than 3 characters',
   },
-  'email.ratelimit.incorrect.format.validation.message': {
-    id: 'email.ratelimit.incorrect.format.validation.message',
-    defaultMessage: 'The email address you provided isn\'t formatted correctly.',
-    description: 'Validation message that appears when email address is not formatted correctly with no backend validations available.',
-  },
-  'email.ratelimit.password.validation.message': {
-    id: 'email.ratelimit.password.validation.message',
-    defaultMessage: 'Your password must contain at least 8 characters',
-    description: 'Validation message that appears when password is not formatted correctly with no backend validations available.',
-  },
-  'register.page.password.validation.message': {
-    id: 'register.page.password.validation.message',
-    defaultMessage: 'Please enter your password.',
-    description: 'Validation message that appears when password is non compliant with edX requirement',
-  },
-  'fullname.validation.message': {
-    id: 'fullname.validation.message',
-    defaultMessage: 'Please enter your full name.',
-    description: 'Validation message that appears when fullname is empty',
-  },
-
   'username.validation.message': {
     id: 'username.validation.message',
-    defaultMessage: 'Please enter your public username.',
-    description: 'Validation message that appears when username is invalid',
+    defaultMessage: 'Username must be between 2 and 30 characters',
+    description: 'Error message for empty username field',
+  },
+  'password.validation.message': {
+    id: 'password.validation.message',
+    defaultMessage: 'Password criteria has not been met',
+    description: 'Error message for empty or invalid password',
   },
   'username.format.validation.message': {
     id: 'username.format.validation.message',
     defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-).',
     description: 'Validation message that appears when username format is invalid',
   },
-  'username.character.validation.message': {
-    id: 'username.character.validation.message',
-    defaultMessage: 'Your password must contain at least 1 letter.',
-    description: 'Validation message that appears when password does not contain letter',
-  },
-  'username.number.validation.message': {
-    id: 'username.number.validation.message',
-    defaultMessage: 'Your password must contain at least 1 number.',
-    description: 'Validation message that appears when password does not contain number',
-  },
-  'username.ratelimit.less.chars.message': {
-    id: 'username.ratelimit.less.chars.message',
-    defaultMessage: 'Public username must have atleast 2 characters.',
-    description: 'Validation message that appears when username is less than 2 characters and with no backend validations available.',
-  },
-  'country.validation.message': {
-    id: 'country.validation.message',
-    defaultMessage: 'Select your country or region of residence.',
-    description: 'Validation message that appears when country is not selected',
-  },
   'support.education.research': {
     id: 'support.education.research',
     defaultMessage: 'Support education research by providing additional information. (Optional)',
     description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
   },
-  'registration.request.server.error': {
-    id: 'registration.request.server.error',
-    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
-    description: 'error message on server error.',
-  },
+  // Error messages
   'registration.request.failure.header': {
     id: 'registration.request.failure.header',
     defaultMessage: 'We couldn\'t create your account.',
     description: 'error message when registration failure.',
+  },
+  'registration.empty.form.submission.error': {
+    id: 'registration.empty.form.submission.error',
+    defaultMessage: 'Please check your responses and try again.',
+    description: 'Error message that appears on top of the form when empty form is submitted',
+  },
+  'registration.request.server.error': {
+    id: 'registration.request.server.error',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
+    description: 'Error message for internal server error.',
+  },
+  'registration.rate.limit.error': {
+    id: 'registration.rate.limit.error',
+    defaultMessage: 'Too many failed registration attempts. Try again later.',
+    description: 'Error message that appears when an anonymous user has made too many failed registration attempts',
+  },
+  'registration.tpa.session.expired': {
+    id: 'registration.tpa.session.expired',
+    defaultMessage: 'Registration using {provider} has timed out.',
+    description: '',
   },
   // Terms of Service and Honor Code
   'terms.of.service.and.honor.code': {
@@ -251,10 +244,16 @@ const messages = defineMessages({
     defaultMessage: 'Other education',
     description: 'Selected by the user if they have a type of education not described by the other choices.',
   },
+  // miscellaneous strings
   'registration.username.suggestion.label': {
     id: 'registration.username.suggestion.label',
     defaultMessage: 'Available:',
     description: 'Available usernames label text.',
+  },
+  'registration.using.tpa.form.heading': {
+    id: 'registration.using.tpa.form.heading',
+    defaultMessage: 'Finish creating your account',
+    description: 'Heading that appears above form when user is trying to create account using social auth',
   },
 });
 

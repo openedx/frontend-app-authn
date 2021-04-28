@@ -1,6 +1,8 @@
 // Registration Error Codes
-export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 export const FORBIDDEN_REQUEST = 'forbidden-request';
+export const FORM_SUBMISSION_ERROR = 'form-submission-error';
+export const INTERNAL_SERVER_ERROR = 'internal-server-error';
+export const TPA_SESSION_EXPIRED = 'tpa-session-expired';
 
 export const YEAR_OF_BIRTH_OPTIONS = (() => {
   const currentYear = new Date().getFullYear();
@@ -28,3 +30,6 @@ export const EDUCATION_LEVELS = [
 ];
 
 export const GENDER_OPTIONS = ['', 'f', 'm', 'o'];
+
+// Other constants
+export const FORM_FIELDS = ['name', 'email', 'password', 'username', 'country'];
