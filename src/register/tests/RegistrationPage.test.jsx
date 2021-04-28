@@ -29,6 +29,7 @@ describe('RegistrationPageTests', () => {
     PRIVACY_POLICY: 'http://privacy-policy.com',
     REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,level_of_education,year_of_birth',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
+    USER_SIGNUP_SURVEY_COOKIE_NAME: process.env.USER_SIGNUP_SURVEY_COOKIE_NAME,
   });
 
   const initialState = {
@@ -523,7 +524,6 @@ describe('RegistrationPageTests', () => {
 
   it('should match url after redirection', () => {
     const dasboardUrl = 'http://test.com/testing-dashboard/';
-    Object.defineProperty(global.window, 'hj', { value: () => {} });
 
     store = mockStore({
       ...initialState,
@@ -539,6 +539,21 @@ describe('RegistrationPageTests', () => {
     window.location = { href: getConfig().BASE_URL };
     renderer.create(reduxWrapper(<IntlRegistrationPage />));
     expect(window.location.href).toBe(dasboardUrl);
+  });
+
+  it('should set registration timestamp cookie', () => {
+    store = mockStore({
+      ...initialState,
+      register: {
+        ...initialState.register,
+        registrationResult: {
+          success: true,
+        },
+      },
+    });
+
+    renderer.create(reduxWrapper(<IntlRegistrationPage />));
+    expect(document.cookie).toMatch(getConfig().USER_SIGNUP_SURVEY_COOKIE_NAME);
   });
 
   it('should display institution register button', () => {

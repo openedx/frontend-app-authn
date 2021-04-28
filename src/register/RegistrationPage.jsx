@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
+import Cookies from 'universal-cookie';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -29,7 +30,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
+  DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam,
@@ -251,13 +252,9 @@ class RegistrationPage extends React.Component {
   }
 
   validateInput(inputName, value, payload, updateAlertMessage = true) {
-    const {
-      errors,
-    } = this.state;
-    const {
-      intl,
-      statusCode,
-    } = this.props;
+    const { errors } = this.state;
+    const { intl, statusCode } = this.props;
+    const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
     let {
       formValid,
@@ -270,7 +267,7 @@ class RegistrationPage extends React.Component {
           errors.email = intl.formatMessage(messages['email.validation.message']);
         } else if (value.length <= 2) {
           errors.email = intl.formatMessage(messages['email.ratelimit.less.chars.validation.message']);
-        } else if (!value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+        } else if (!emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.ratelimit.incorrect.format.validation.message']);
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
@@ -432,11 +429,15 @@ class RegistrationPage extends React.Component {
       );
     }
 
-    if (this.props.registrationResult.success && window.hj) {
-      window.hj('identify', null, {
-        signedUp: new Date().toISOString(),
-        testAccount: this.state.username.includes('hotjarTest'), // TODO: Remove this after testing
-      });
+    if (this.props.registrationResult.success) {
+      const cookieName = getConfig().USER_SIGNUP_SURVEY_COOKIE_NAME;
+      if (cookieName) {
+        const cookies = new Cookies();
+        const signupTimestamp = (new Date()).getTime();
+        // set expiry to exactly 24 hours from now
+        const cookieExpiry = new Date(signupTimestamp + 1 * 864e5);
+        cookies.set(cookieName, signupTimestamp, { expires: cookieExpiry });
+      }
     }
 
     return (
