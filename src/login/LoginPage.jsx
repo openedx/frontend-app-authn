@@ -17,7 +17,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccountActivationMessage from './AccountActivationMessage';
-import { loginRequest, loginRequestFailure } from './data/actions';
+import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
 import { INVALID_FORM } from './data/constants';
 import { loginErrorSelector, loginRequestSelector } from './data/selectors';
 import LoginFailureMessage from './LoginFailure';
@@ -65,6 +65,7 @@ class LoginPage extends React.Component {
       payload.tpa_hint = this.tpaHint;
     }
     this.props.getThirdPartyAuthContext(payload);
+    this.props.loginRequestReset();
   }
 
   getEnterPriseLoginURL() {
@@ -88,7 +89,6 @@ class LoginPage extends React.Component {
     if (emailValidationError !== '' || passwordValidationError !== '') {
       this.props.loginRequestFailure({
         errorCode: INVALID_FORM,
-        context: { emailOrUsername: emailValidationError, password: passwordValidationError },
       });
       return;
     }
@@ -300,6 +300,7 @@ LoginPage.propTypes = {
   loginError: PropTypes.objectOf(PropTypes.any),
   loginRequest: PropTypes.func.isRequired,
   loginRequestFailure: PropTypes.func.isRequired,
+  loginRequestReset: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -336,5 +337,6 @@ export default connect(
     getThirdPartyAuthContext,
     loginRequest,
     loginRequestFailure,
+    loginRequestReset,
   },
 )(injectIntl(LoginPage));
