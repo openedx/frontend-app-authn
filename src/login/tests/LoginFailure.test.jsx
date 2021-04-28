@@ -102,7 +102,6 @@ describe('LoginFailureMessage', () => {
     props = {
       loginError: {
         errorCode: INVALID_FORM,
-        context: { emailOrUsername: 'Please enter your email.', password: 'Please enter your password.' },
       },
     };
 
@@ -112,7 +111,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'We couldn\'t sign you in.Please enter your email.Please enter your password.';
+    const expectedMessage = 'We couldn\'t sign you in.Please fill in the fields below.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
