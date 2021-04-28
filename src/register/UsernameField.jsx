@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes, { string } from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { connect } from 'react-redux';
 
 import { Button } from '@edx/paragon';
 
-import { usernameSuggestionsSelector } from './data/selectors';
 import { FormGroup } from '../common-components';
 import messages from './messages';
 
@@ -49,10 +47,4 @@ UsernameField.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  usernameSuggestions: usernameSuggestionsSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-)(injectIntl(UsernameField));
+export default injectIntl(UsernameField);
