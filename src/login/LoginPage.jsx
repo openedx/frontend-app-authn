@@ -89,7 +89,6 @@ class LoginPage extends React.Component {
     if (emailValidationError !== '' || passwordValidationError !== '') {
       this.props.loginRequestFailure({
         errorCode: INVALID_FORM,
-        context: { emailOrUsername: emailValidationError, password: passwordValidationError },
       });
       return;
     }
