@@ -112,7 +112,7 @@ describe('LoginPage', () => {
 
     // Check that loginRequestFailure was dispatched and state is updated
     expect(loginPage.state('errors')).toEqual(errorState);
-    expect(store.dispatch).toHaveBeenCalledWith(loginRequestFailure({ errorCode: 'invalid-form', context: errorState }));
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequestFailure({ errorCode: 'invalid-form' }));
   });
 
   it('should match state for invalid email (less than 3 characters), on form submission', () => {
