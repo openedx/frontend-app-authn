@@ -101,6 +101,11 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid email address',
     description: 'Validation error for invalid email address',
   },
+  'email.empty.validation.message': {
+    id: 'email.validation.message',
+    defaultMessage: 'Please enter your email.',
+    description: 'Validation message that appears when email address is empty',
+  },
   'email.ratelimit.less.chars.validation.message': {
     id: 'email.ratelimit.less.chars.validation.message',
     defaultMessage: 'Email must have 3 characters.',

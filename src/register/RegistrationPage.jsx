@@ -17,6 +17,7 @@ import {
 } from '@edx/paragon';
 import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { closest } from 'fastest-levenshtein';
 
 import {
   clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
@@ -38,7 +39,8 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, DEFAULT_TOP_LEVEL_DOMAINS,
+  DEFAULT_SERVICE_PROVIDER_DOMAINS, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam,
@@ -59,6 +61,8 @@ class RegistrationPage extends React.Component {
       name: '',
       password: '',
       username: '',
+      isTldSuggested: '',
+      isSldSuggested: '',
       errors: {
         email: '',
         name: '',
@@ -245,6 +249,36 @@ class RegistrationPage extends React.Component {
         } else {
           errors.email = '';
         }
+        if (emailRegex.test(value)) {
+          let emailLexemes = value.split('@');
+          let domainLexemes = emailLexemes[1].split('.');
+          const serviceProvider = domainLexemes[0];
+          const topLevelDomain = domainLexemes[1];
+
+          if (DEFAULT_TOP_LEVEL_DOMAINS.indexOf(topLevelDomain) < 0) {
+            let suggestedTld = closest(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS);
+            suggestedTld = `${emailLexemes[0]}@${domainLexemes[0]}.${suggestedTld}`;
+            errors.email = intl.formatMessage(messages['email.invalid.format.error']);
+            this.setState({
+              isTldSuggested: suggestedTld,
+              isSldSuggested: '',
+            });
+            emailLexemes = '';
+            domainLexemes = '';
+            break;
+          }
+          if (DEFAULT_SERVICE_PROVIDER_DOMAINS.indexOf(serviceProvider) < 0) {
+            let suggestedSld = closest(serviceProvider, DEFAULT_SERVICE_PROVIDER_DOMAINS);
+            suggestedSld = `${emailLexemes[0]}@${suggestedSld}.${domainLexemes[1]}`;
+            this.setState({
+              isSldSuggested: suggestedSld,
+              isTldSuggested: '',
+            });
+            emailLexemes = '';
+            domainLexemes = '';
+            break;
+          }
+        }
         break;
       case 'name':
         if (!value) {
@@ -379,6 +413,8 @@ class RegistrationPage extends React.Component {
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
               errorMessage={this.state.errors.email}
+              isTldSuggested={this.state.isTldSuggested}
+              isSldSuggested={this.state.isSldSuggested}
               helpText={[intl.formatMessage(messages['help.text.email'])]}
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
             />

@@ -219,6 +219,16 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(emptyFieldValidation);
     });
 
+    it('should validate the did you mean suggestions', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
+      expect(registrationPage.find('RegistrationPage').state('isTldSuggested')).toEqual('test@gmail.com');
+
+      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@fmail.com', name: 'email' } });
+      expect(registrationPage.find('RegistrationPage').state('isSldSuggested')).toEqual('test@gmail.com');
+    });
+
     it('should call validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));

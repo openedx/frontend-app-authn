@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 
-import { Form, TransitionReplace } from '@edx/paragon';
+import { Form, TransitionReplace, Icon } from '@edx/paragon';
 import PropTypes from 'prop-types';
+import { Info } from '@edx/paragon/icons';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
@@ -16,7 +17,7 @@ const FormGroup = (props) => {
   };
 
   return (
-    <Form.Group controlId={props.name} className="mb-4" isInvalid={props.errorMessage !== ''}>
+    <Form.Group controlId={props.name} className="mb-4" isInvalid={props.errorMessage !== ''} isValid={props.isSldSuggested !== ''}>
       <Form.Control
         as={props.as}
         type={props.type}
@@ -47,6 +48,19 @@ const FormGroup = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
+      {props.isTldSuggested !== '' && (
+        <div className="alert alert-danger alert-dismissible fade show pt-1 pb-1" role="alert">
+          <Icon src={Info} className="alert-icon" />
+          <span style={{ fontSize: '1rem' }}>Did you mean <u>{props.isTldSuggested}</u>?</span>
+          <button type="button" className="close pt-1 pb-1" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      )}
+
+      {props.isSldSuggested !== '' && (
+        <span style={{ fontSize: '1rem' }}>Did you mean <u style={{ color: '#01688d' }}>{props.isSldSuggested}</u>?</span>
+      )}
       {props.children}
     </Form.Group>
   );
@@ -55,6 +69,8 @@ const FormGroup = (props) => {
 FormGroup.defaultProps = {
   as: 'input',
   errorMessage: '',
+  isTldSuggested: '',
+  isSldSuggested: '',
   handleBlur: null,
   handleChange: () => {},
   handleFocus: null,
@@ -68,6 +84,8 @@ FormGroup.defaultProps = {
 FormGroup.propTypes = {
   as: PropTypes.string,
   errorMessage: PropTypes.string,
+  isTldSuggested: PropTypes.string,
+  isSldSuggested: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,
