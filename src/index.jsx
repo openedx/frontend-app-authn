@@ -66,6 +66,7 @@ initialize({
         PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
         REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
         USER_SIGNUP_SURVEY_COOKIE_NAME: process.env.USER_SIGNUP_SURVEY_COOKIE_NAME || null,
+        COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
       });
     },
   },

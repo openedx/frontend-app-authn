@@ -436,7 +436,8 @@ class RegistrationPage extends React.Component {
         const signupTimestamp = (new Date()).getTime();
         // set expiry to exactly 24 hours from now
         const cookieExpiry = new Date(signupTimestamp + 1 * 864e5);
-        cookies.set(cookieName, signupTimestamp, { expires: cookieExpiry });
+        const options = { domain: getConfig().COOKIE_DOMAIN, expires: cookieExpiry, path: '/' };
+        cookies.set(cookieName, signupTimestamp, options);
       }
     }
 
