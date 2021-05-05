@@ -431,9 +431,7 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
-          validations: {
-            usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-          },
+          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
         },
       });
 

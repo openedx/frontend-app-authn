@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes, { string } from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { connect } from 'react-redux';
 
 import { Button } from '@edx/paragon';
 
-import { usernameSuggestionsSelector } from './data/selectors';
 import { FormGroup } from '../common-components';
 import messages from './messages';
 
@@ -16,7 +14,7 @@ const UsernameField = (props) => {
     <FormGroup {...props}>
       {usernameSuggestions.length > 0 && errorMessage ? (
         <div>
-          <span className="text-gray mr-2">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
+          <span className="text-gray username-suggestion-label">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
           {usernameSuggestions.map((username, index) => (
             <Button
               type="button"
@@ -49,10 +47,4 @@ UsernameField.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  usernameSuggestions: usernameSuggestionsSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-)(injectIntl(UsernameField));
+export default injectIntl(UsernameField);
