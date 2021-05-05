@@ -107,6 +107,27 @@ const messages = defineMessages({
     defaultMessage: '8 Characters',
     description: 'password requirement to have a minimum of 8 characters',
   },
+  // third party auth
+  'tpa.alert.heading': {
+    id: 'tpa.alert.heading',
+    defaultMessage: 'Almost done',
+    description: 'Success alert heading after user has successfully signed in with social auth',
+  },
+  'login.third.party.auth.account.not.linked': {
+    id: 'login.third.party.auth.account.not.linked',
+    defaultMessage: 'You have successfully signed into {currentProvider}, but your {currentProvider} '
+                    + 'account does not have a linked {platformName} account. To link your accounts, '
+                    + 'sign in now using your {platformName} password.',
+    description: 'Message that appears on login page if user has successfully authenticated with social '
+                  + 'auth but no associated platform account exists',
+  },
+  'register.third.party.auth.account.not.linked': {
+    id: 'register.third.party.auth.account.not.linked',
+    defaultMessage: 'You\'ve successfully signed into {currentProvider}! We just need a little more information '
+                    + 'before you start learning with {platformName}.',
+    description: 'Message that appears on register page if user has successfully authenticated with TPA '
+                  + 'but no associated platform account exists',
+  },
 });
 
 export default messages;

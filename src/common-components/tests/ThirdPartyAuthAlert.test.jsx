@@ -3,6 +3,7 @@ import renderer from 'react-test-renderer';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
 import ThirdPartyAuthAlert from '../ThirdPartyAuthAlert';
+import { REGISTER_PAGE } from '../../data/constants';
 
 describe('ThirdPartyAuthAlert', () => {
   let props = {};
@@ -26,7 +27,7 @@ describe('ThirdPartyAuthAlert', () => {
   it('should match register page third party auth alert message snapshot', () => {
     props = {
       ...props,
-      referrer: 'register',
+      referrer: REGISTER_PAGE,
     };
 
     const tree = renderer.create(

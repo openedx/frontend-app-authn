@@ -10,11 +10,11 @@ import { FormGroup } from '../common-components';
 import messages from './messages';
 
 const UsernameField = (props) => {
-  const { intl, usernameSuggestions } = props;
+  const { intl, usernameSuggestions, errorMessage } = props;
 
   return (
     <FormGroup {...props}>
-      {usernameSuggestions.length > 0 ? (
+      {usernameSuggestions.length > 0 && errorMessage ? (
         <div>
           <span className="text-gray mr-2">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
           {usernameSuggestions.map((username, index) => (
@@ -37,11 +37,13 @@ const UsernameField = (props) => {
 UsernameField.defaultProps = {
   usernameSuggestions: [],
   handleSuggestionClick: () => {},
+  errorMessage: '',
 };
 
 UsernameField.propTypes = {
   usernameSuggestions: PropTypes.arrayOf(string),
   handleSuggestionClick: PropTypes.func,
+  errorMessage: PropTypes.string,
   intl: intlShape.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,

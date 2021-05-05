@@ -2,6 +2,12 @@ import { AsyncActionType } from '../../data/utils';
 
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
+export const REGISTRATION_FORM = new AsyncActionType('REGISTRATION', 'REGISTRATION_FORM');
+
+// Reset Form
+export const resetRegistrationForm = () => ({
+  type: REGISTRATION_FORM.RESET,
+});
 
 // Register
 export const registerNewUser = registrationInfo => ({
@@ -21,7 +27,7 @@ export const registerNewUserSuccess = (redirectUrl, success) => ({
 
 export const registerNewUserFailure = (error) => ({
   type: REGISTER_NEW_USER.FAILURE,
-  payload: { error },
+  payload: { ...error },
 });
 
 // Realtime Field validations
@@ -39,7 +45,6 @@ export const fetchRealtimeValidationsSuccess = (validations) => ({
   payload: { validations },
 });
 
-export const fetchRealtimeValidationsFailure = (error, statusCode) => ({
+export const fetchRealtimeValidationsFailure = () => ({
   type: REGISTER_FORM_VALIDATIONS.FAILURE,
-  payload: { error, statusCode },
 });
