@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccountActivationMessage from './AccountActivationMessage';
 import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
-import { INVALID_FORM } from './data/constants';
+import { EDX_SITE_NAME, INVALID_FORM } from './data/constants';
 import { loginErrorSelector, loginRequestSelector } from './data/selectors';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
@@ -131,7 +131,6 @@ class LoginPage extends React.Component {
         <>
           <RenderInstitutionButton
             onSubmitHandler={this.handleInstitutionLogin}
-            secondaryProviders={secondaryProviders}
             buttonTitle={intl.formatMessage(messages['institution.login.button'])}
           />
           <div className="row m-0">
@@ -228,11 +227,20 @@ class LoginPage extends React.Component {
             <div className="mt-4 mb-3 h4">
               {intl.formatMessage(messages['login.other.options.heading'])}
             </div>
-            <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={this.getEnterPriseLoginURL()}>
-              <Icon src={Institution} className="institute-icon" />
-              {intl.formatMessage(messages['enterprise.login.btn.text'])}
-            </Hyperlink>
-            {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
+            { getConfig().SITE_NAME === EDX_SITE_NAME
+              ? (
+                <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={this.getEnterPriseLoginURL()}>
+                  <Icon src={Institution} className="institute-icon" />
+                  {intl.formatMessage(messages['enterprise.login.btn.text'])}
+                </Hyperlink>
+              )
+              : this.renderThirdPartyAuth(
+                providers,
+                secondaryProviders,
+                currentProvider,
+                thirdPartyAuthApiStatus,
+                intl,
+              )}
           </Form>
         </div>
       </>

@@ -14,3 +14,5 @@ export const ACCOUNT_ACTIVATION_MESSAGE = {
   SUCCESS: 'success',
   ERROR: 'error',
 };
+
+export const EDX_SITE_NAME = 'edX';

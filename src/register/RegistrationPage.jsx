@@ -294,7 +294,6 @@ class RegistrationPage extends React.Component {
         <>
           <RenderInstitutionButton
             onSubmitHandler={this.handleInstitutionLogin}
-            secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
             buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
           />
           <div className="row m-0">
@@ -451,12 +450,9 @@ class RegistrationPage extends React.Component {
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
-              && !currentProvider ? (
-                <div className="mb-3 h4">
-                  {intl.formatMessage(messages['registration.other.options.heading'])}
-                </div>
-              ) : null}
+            <div className="mt-4 mb-3 h4">
+              {intl.formatMessage(messages['registration.other.options.heading'])}
+            </div>
             {this.renderThirdPartyAuth(providers,
               secondaryProviders,
               currentProvider,
