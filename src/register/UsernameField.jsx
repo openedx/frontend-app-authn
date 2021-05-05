@@ -14,7 +14,7 @@ const UsernameField = (props) => {
     <FormGroup {...props}>
       {usernameSuggestions.length > 0 && errorMessage ? (
         <div>
-          <span className="text-gray mr-2">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
+          <span className="text-gray username-suggestion-label">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
           {usernameSuggestions.map((username, index) => (
             <Button
               type="button"
