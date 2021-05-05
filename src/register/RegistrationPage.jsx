@@ -4,7 +4,7 @@ import snakeCase from 'lodash.snakecase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -18,9 +18,13 @@ import {
 import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { registerNewUser, resetRegistrationForm, fetchRealtimeValidations } from './data/actions';
+import {
+  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
+} from './data/actions';
 import { FORM_SUBMISSION_ERROR } from './data/constants';
-import { registrationErrorSelector, registrationRequestSelector, validationsSelector } from './data/selectors';
+import {
+  registrationErrorSelector, registrationRequestSelector, validationsSelector, usernameSuggestionsSelector,
+} from './data/selectors';
 import messages from './messages';
 import OptionalFields from './OptionalFields';
 import RegistrationFailure from './RegistrationFailure';
@@ -211,16 +215,13 @@ class RegistrationPage extends React.Component {
   }
 
   handleSuggestionClick = (suggestion) => {
-    const fieldName = 'username';
-    const payload = {
-      is_authn_mfe: true,
-      username: suggestion,
-    };
+    const { errors } = this.state;
+    errors.username = '';
     this.setState({
-      ...payload,
-    }, () => {
-      this.validateInput(fieldName, suggestion, payload);
+      username: suggestion,
+      errors,
     });
+    this.props.clearUsernameSuggestions();
   }
 
   isFormValid(validations) {
@@ -370,6 +371,7 @@ class RegistrationPage extends React.Component {
               helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
               floatingLabel={intl.formatMessage(messages['registration.username.label'])}
               handleSuggestionClick={this.handleSuggestionClick}
+              usernameSuggestions={this.props.usernameSuggestions}
             />
             <FormGroup
               name="email"
@@ -522,6 +524,7 @@ RegistrationPage.defaultProps = {
   },
   validationDecisions: null,
   statusCode: null,
+  usernameSuggestions: [],
 };
 
 RegistrationPage.propTypes = {
@@ -559,7 +562,9 @@ RegistrationPage.propTypes = {
     password: PropTypes.string,
     username: PropTypes.string,
   }),
+  clearUsernameSuggestions: PropTypes.func.isRequired,
   statusCode: PropTypes.number,
+  usernameSuggestions: PropTypes.arrayOf(string),
 };
 
 const mapStateToProps = state => {
@@ -573,6 +578,7 @@ const mapStateToProps = state => {
     thirdPartyAuthContext,
     validationDecisions: validationsSelector(state),
     statusCode: state.register.statusCode,
+    usernameSuggestions: usernameSuggestionsSelector(state),
   };
 };
 
@@ -583,5 +589,6 @@ export default connect(
     fetchRealtimeValidations,
     registerNewUser,
     resetRegistrationForm,
+    clearUsernameSuggestions,
   },
 )(injectIntl(RegistrationPage));

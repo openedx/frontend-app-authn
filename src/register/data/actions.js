@@ -3,6 +3,7 @@ import { AsyncActionType } from '../../data/utils';
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 export const REGISTRATION_FORM = new AsyncActionType('REGISTRATION', 'REGISTRATION_FORM');
+export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
 
 // Reset Form
 export const resetRegistrationForm = () => ({
@@ -47,4 +48,8 @@ export const fetchRealtimeValidationsSuccess = (validations) => ({
 
 export const fetchRealtimeValidationsFailure = () => ({
   type: REGISTER_FORM_VALIDATIONS.FAILURE,
+});
+
+export const clearUsernameSuggestions = () => ({
+  type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
 });
