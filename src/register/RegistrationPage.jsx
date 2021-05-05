@@ -18,11 +18,13 @@ import {
 import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { registerNewUser, fetchRealtimeValidations } from './data/actions';
-import { registrationRequestSelector, validationsSelector } from './data/selectors';
+import { registerNewUser, resetRegistrationForm, fetchRealtimeValidations } from './data/actions';
+import { FORM_SUBMISSION_ERROR } from './data/constants';
+import { registrationErrorSelector, registrationRequestSelector, validationsSelector } from './data/selectors';
 import messages from './messages';
 import OptionalFields from './OptionalFields';
 import RegistrationFailure from './RegistrationFailure';
+import UsernameField from './UsernameField';
 
 import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
@@ -32,38 +34,27 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie,
 } from '../data/utils';
-import UsernameField from './UsernameField';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-
     sendPageEvent('login_and_registration', 'register');
-    this.intl = props.intl;
-    this.queryParams = getAllPossibleQueryParam();
-    this.tpaHint = getTpaHint();
 
     const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS ? getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',') : [];
 
+    this.queryParams = getAllPossibleQueryParam();
+    this.tpaHint = getTpaHint();
     this.state = {
+      country: '',
       email: '',
       name: '',
-      username: '',
       password: '',
-      country: '',
-      showOptionalField: false,
-      validationAlertMessages: {
-        name: [{ user_message: '' }],
-        username: [{ user_message: '' }],
-        email: [{ user_message: '' }],
-        password: [{ user_message: '' }],
-        country: [{ user_message: '' }],
-      },
+      username: '',
       errors: {
         email: '',
         name: '',
@@ -71,16 +62,13 @@ class RegistrationPage extends React.Component {
         password: '',
         country: '',
       },
+      errorCode: null,
       institutionLogin: false,
-      formValid: false,
       optionalFields,
       optionalFieldsState: {},
+      showOptionalField: false,
       startTime: Date.now(),
-      updateFieldErrors: false,
-      updateAlertErrors: false,
-      registrationErrorsUpdated: false,
       optimizelyExperimentName: '',
-      fieldName: '',
     };
   }
 
@@ -90,46 +78,36 @@ class RegistrationPage extends React.Component {
     if (this.tpaHint) {
       payload.tpa_hint = this.tpaHint;
     }
+    this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
     // this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
-    if (nextProps.statusCode !== 403 && this.props.validations !== nextProps.validations) {
-      const { errors, fieldName } = this.state;
-      errors[fieldName] = nextProps.validations.validation_decisions[fieldName];
+    if (this.props.validationDecisions !== nextProps.validationDecisions) {
+      const state = { errors: { ...this.state.errors, ...nextProps.validationDecisions } };
 
-      this.setState({
-        errors,
-      });
+      if (nextProps.registrationErrorCode) {
+        state.errorCode = nextProps.registrationErrorCode;
+      }
+      this.setState({ ...state });
+      return false;
+    }
+
+    if (this.props.registrationErrorCode !== nextProps.registrationErrorCode) {
+      this.setState({ errorCode: nextProps.registrationErrorCode });
       return false;
     }
 
     if (this.props.thirdPartyAuthContext.pipelineUserDetails !== nextProps.thirdPartyAuthContext.pipelineUserDetails) {
       this.setState({
         ...nextProps.thirdPartyAuthContext.pipelineUserDetails,
+        country: nextProps.thirdPartyAuthContext.countryCode || '',
       });
       return false;
     }
 
-    if (this.props.registrationError !== nextProps.registrationError) {
-      this.setState({
-        formValid: false,
-        registrationErrorsUpdated: true,
-      });
-      return false;
-    }
-
-    if (this.state.registrationErrorsUpdated && this.props.registrationError === nextProps.registrationError) {
-      this.setState({
-        formValid: false,
-        registrationErrorsUpdated: false,
-      });
-      return false;
-    }
-
-    if (this.props.thirdPartyAuthContext.countryCode
-    && this.state.country !== nextProps.thirdPartyAuthContext.countryCode) {
+    if (this.props.thirdPartyAuthContext.countryCode !== nextProps.thirdPartyAuthContext.countryCode) {
       this.setState({
         country: nextProps.thirdPartyAuthContext.countryCode || '',
       });
@@ -182,6 +160,7 @@ class RegistrationPage extends React.Component {
       email: this.state.email,
       country: this.state.country,
       honor_code: true,
+      is_authn_mfe: true,
     };
 
     if (this.props.thirdPartyAuthContext.currentProvider) {
@@ -190,30 +169,34 @@ class RegistrationPage extends React.Component {
       payload.password = this.state.password;
     }
 
-    const postParams = getAllPossibleQueryParam();
-    payload = { ...payload, ...postParams };
+    let errors = {};
+    Object.keys(payload).forEach(key => {
+      errors = this.validateInput(key, payload[key], payload);
+    });
 
-    let finalValidation = this.state.formValid;
-    if (!this.state.formValid) {
-      Object.keys(payload).forEach(key => {
-        finalValidation = this.validateInput(key, payload[key], payload);
-      });
+    if (!this.isFormValid(errors)) {
+      this.setState({ errorCode: FORM_SUBMISSION_ERROR });
+      return;
     }
-    // Since optional fields are not validated we can add it to payload after required fields
-    // have been validated. This will save us unwanted calls to validateInput()
+
+    // Since optional fields and query params are not validated we can add it to payload after
+    // required fields have been validated. This will save us unwanted calls to validateInput()
+    payload = { ...payload, ...this.queryParams };
     this.state.optionalFields.forEach((key) => {
       if (this.state.optionalFieldsState[key]) {
         payload[snakeCase(key)] = this.state.optionalFieldsState[key];
       }
     });
-    if (finalValidation) {
-      payload.totalRegistrationTime = totalRegistrationTime;
-      this.props.registerNewUser(payload);
-    }
+
+    payload.totalRegistrationTime = totalRegistrationTime;
+    this.props.registerNewUser(payload);
   }
 
   handleOnBlur = (e) => {
+    const { name, value } = e.target;
     const payload = {
+      is_authn_mfe: true,
+      form_field_key: name,
       email: this.state.email,
       username: this.state.username,
       password: this.state.password,
@@ -221,29 +204,18 @@ class RegistrationPage extends React.Component {
       honor_code: true,
       country: this.state.country,
     };
-    const { name, value } = e.target;
-    this.setState({
-      updateFieldErrors: false,
-      updateAlertErrors: false,
-      fieldName: e.target.name,
-    }, () => {
-      this.validateInput(name, value, payload, false);
-    });
+    this.validateInput(name, value, payload);
   }
 
   handleOnChange = (e) => {
     if (e.target.name === 'optionalFields') {
+      sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
       this.setState({
         showOptionalField: e.target.checked,
-        updateAlertErrors: false,
-        updateFieldErrors: false,
       });
-      sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
     } else if (!(e.target.name === 'username' && e.target.value.length > 30)) {
       this.setState({
         [e.target.name]: e.target.value,
-        updateFieldErrors: false,
-        updateAlertErrors: false,
       });
     }
   }
@@ -251,49 +223,32 @@ class RegistrationPage extends React.Component {
   handleSuggestionClick = (suggestion) => {
     const fieldName = 'username';
     const payload = {
+      is_authn_mfe: true,
       username: suggestion,
     };
     this.setState({
       ...payload,
-      fieldName,
-      updateFieldErrors: false,
-      updateAlertErrors: false,
     }, () => {
-      this.validateInput(fieldName, suggestion, payload, false);
+      this.validateInput(fieldName, suggestion, payload);
     });
   }
 
-  checkNoAlertErrors(validations) {
-    const keyValidList = Object.entries(validations).map(([key]) => {
-      const validation = validations[key][0];
-      return !validation.user_message;
-    });
-    return keyValidList.every((current) => current === true);
-  }
-
-  checkNoFieldErrors(validations) {
+  isFormValid(validations) {
     const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
     return keyValidList.every((current) => current === true);
   }
 
-  validateInput(inputName, value, payload, updateAlertMessage = true) {
+  validateInput(fieldName, value, payload) {
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
-    const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
-    let {
-      formValid,
-      updateFieldErrors,
-      updateAlertErrors,
-    } = this.state;
-    switch (inputName) {
+    const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
+    switch (fieldName) {
       case 'email':
-        if (value.length < 1) {
-          errors.email = intl.formatMessage(messages['email.validation.message']);
-        } else if (value.length <= 2) {
-          errors.email = intl.formatMessage(messages['email.ratelimit.less.chars.validation.message']);
-        } else if (!emailRegex.test(value)) {
-          errors.email = intl.formatMessage(messages['email.ratelimit.incorrect.format.validation.message']);
+        if (!value) {
+          errors.email = intl.formatMessage(messages['empty.email.field.error']);
+        } else if (value.length <= 2 || !emailRegex.test(value)) {
+          errors.email = intl.formatMessage(messages['email.invalid.format.error']);
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
         } else {
@@ -301,17 +256,15 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'name':
-        if (value.length < 1) {
-          errors.name = intl.formatMessage(messages['fullname.validation.message']);
+        if (!value) {
+          errors.name = intl.formatMessage(messages['empty.name.field.error']);
         } else {
           errors.name = '';
         }
         break;
       case 'username':
-        if (value.length < 1) {
+        if (!value || value.length <= 1 || value.length > 30) {
           errors.username = intl.formatMessage(messages['username.validation.message']);
-        } else if (value.length <= 1 || value.length > 30) {
-          errors.username = intl.formatMessage(messages['username.ratelimit.less.chars.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
           errors.username = intl.formatMessage(messages['username.format.validation.message']);
         } else if (payload && statusCode !== 403) {
@@ -321,14 +274,8 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'password':
-        if (value.length < 1) {
-          errors.password = intl.formatMessage(messages['register.page.password.validation.message']);
-        } else if (value.length < 8) {
-          errors.password = intl.formatMessage(messages['email.ratelimit.password.validation.message']);
-        } else if (!value.match(/.*[0-9].*/i)) {
-          errors.password = intl.formatMessage(messages['username.number.validation.message']);
-        } else if (!value.match(/.*[a-zA-Z].*/i)) {
-          errors.password = intl.formatMessage(messages['username.character.validation.message']);
+        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+          errors.password = intl.formatMessage(messages['password.validation.message']);
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
         } else {
@@ -337,7 +284,7 @@ class RegistrationPage extends React.Component {
         break;
       case 'country':
         if (!value) {
-          errors.country = intl.formatMessage(messages['country.validation.message']);
+          errors.country = intl.formatMessage(messages['empty.country.field.error']);
         } else {
           errors.country = '';
         }
@@ -346,73 +293,8 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    if (updateAlertMessage) {
-      updateFieldErrors = true;
-      updateAlertErrors = true;
-      formValid = this.checkNoFieldErrors(errors);
-    }
-    this.setState({
-      formValid,
-      updateFieldErrors,
-      updateAlertErrors,
-      errors,
-    });
-    return formValid;
-  }
-
-  updateFieldErrors(registrationError) {
-    const {
-      errors,
-    } = this.state;
-    Object.entries(registrationError).map(([key]) => {
-      if (registrationError[key]) {
-        errors[key] = registrationError[key][0].user_message;
-      }
-      return errors;
-    });
-  }
-
-  updateValidationAlertMessages() {
-    const {
-      errors,
-      validationAlertMessages,
-    } = this.state;
-    Object.entries(errors).map(([key, value]) => {
-      if (validationAlertMessages[key]) {
-        validationAlertMessages[key][0].user_message = value;
-      }
-      return validationAlertMessages;
-    });
-  }
-
-  renderErrors() {
-    let errorsObject = null;
-    let { registrationErrorsUpdated } = this.state;
-    const {
-      updateAlertErrors,
-      updateFieldErrors,
-      validationAlertMessages,
-    } = this.state;
-    const { registrationError, submitState } = this.props;
-    if (registrationError && registrationErrorsUpdated) {
-      if (updateFieldErrors && submitState !== PENDING_STATE) {
-        this.updateFieldErrors(registrationError);
-      }
-      registrationErrorsUpdated = false;
-      errorsObject = registrationError;
-    } else {
-      if (updateAlertErrors && submitState !== PENDING_STATE) {
-        this.updateValidationAlertMessages();
-      }
-      errorsObject = !this.checkNoAlertErrors(validationAlertMessages) ? validationAlertMessages : {};
-    }
-    return (
-      <RegistrationFailure
-        errors={errorsObject}
-        isSubmitted={updateAlertErrors}
-        submitButtonState={submitState}
-      />
-    );
+    this.setState({ errors });
+    return errors;
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
@@ -494,13 +376,18 @@ class RegistrationPage extends React.Component {
           redirectToWelcomePage={window.optimizelyExperimentName === 'VAN-504-PP-Exp'}
         />
         <div className="mw-xs mt-3">
-          {this.renderErrors()}
+          {this.state.errorCode ? (
+            <RegistrationFailure errorCode={this.state.errorCode} context={{ provider: currentProvider }} />
+          ) : null}
           {currentProvider && (
-            <ThirdPartyAuthAlert
-              currentProvider={currentProvider}
-              platformName={this.props.thirdPartyAuthContext.platformName}
-              referrer={REGISTER_PAGE}
-            />
+            <>
+              <ThirdPartyAuthAlert
+                currentProvider={currentProvider}
+                platformName={this.props.thirdPartyAuthContext.platformName}
+                referrer={REGISTER_PAGE}
+              />
+              <h4 className="mt-4 mb-4">{intl.formatMessage(messages['registration.using.tpa.form.heading'])}</h4>
+            </>
           )}
           <Form>
             <FormGroup
@@ -589,7 +476,7 @@ class RegistrationPage extends React.Component {
             <StatefulButton
               type="submit"
               variant="brand"
-              className="register-button-width mt-4"
+              className="register-button-width mt-4 mb-4"
               state={submitState}
               labels={{
                 default: intl.formatMessage(messages['create.account.button']),
@@ -603,7 +490,7 @@ class RegistrationPage extends React.Component {
             />
             {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
               && !currentProvider ? (
-                <div className="mt-4 mb-3 h4">
+                <div className="mb-3 h4">
                   {intl.formatMessage(messages['registration.other.options.heading'])}
                 </div>
               ) : null}
@@ -659,7 +546,7 @@ class RegistrationPage extends React.Component {
 RegistrationPage.defaultProps = {
   registrationResult: null,
   registerNewUser: null,
-  registrationError: null,
+  registrationErrorCode: null,
   submitState: DEFAULT_STATE,
   thirdPartyAuthApiStatus: 'pending',
   thirdPartyAuthContext: {
@@ -670,7 +557,7 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
     pipelineUserDetails: null,
   },
-  validations: null,
+  validationDecisions: null,
   statusCode: null,
 };
 
@@ -678,17 +565,12 @@ RegistrationPage.propTypes = {
   intl: intlShape.isRequired,
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func,
+  resetRegistrationForm: PropTypes.func.isRequired,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),
-  registrationError: PropTypes.shape({
-    email: PropTypes.array,
-    username: PropTypes.array,
-    country: PropTypes.array,
-    password: PropTypes.array,
-    name: PropTypes.array,
-  }),
+  registrationErrorCode: PropTypes.string,
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
@@ -707,14 +589,12 @@ RegistrationPage.propTypes = {
     }),
   }),
   fetchRealtimeValidations: PropTypes.func.isRequired,
-  validations: PropTypes.shape({
-    validation_decisions: PropTypes.shape({
-      country: PropTypes.string,
-      email: PropTypes.string,
-      name: PropTypes.string,
-      password: PropTypes.string,
-      username: PropTypes.string,
-    }),
+  validationDecisions: PropTypes.shape({
+    country: PropTypes.string,
+    email: PropTypes.string,
+    name: PropTypes.string,
+    password: PropTypes.string,
+    username: PropTypes.string,
   }),
   statusCode: PropTypes.number,
 };
@@ -723,12 +603,12 @@ const mapStateToProps = state => {
   const registrationResult = registrationRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   return {
-    registrationError: state.register.registrationError,
+    registrationErrorCode: registrationErrorSelector(state),
     submitState: state.register.submitState,
     thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
     registrationResult,
     thirdPartyAuthContext,
-    validations: validationsSelector(state),
+    validationDecisions: validationsSelector(state),
     statusCode: state.register.statusCode,
   };
 };
@@ -739,5 +619,6 @@ export default connect(
     getThirdPartyAuthContext,
     fetchRealtimeValidations,
     registerNewUser,
+    resetRegistrationForm,
   },
 )(injectIntl(RegistrationPage));

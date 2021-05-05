@@ -1,9 +1,9 @@
-import { REGISTER_NEW_USER, REGISTER_FORM_VALIDATIONS } from './actions';
+import { REGISTRATION_FORM, REGISTER_NEW_USER, REGISTER_FORM_VALIDATIONS } from './actions';
 
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 
 export const defaultState = {
-  registrationError: null,
+  registrationError: {},
   registrationResult: {},
   formData: null,
   validations: null,
@@ -12,10 +12,15 @@ export const defaultState = {
 
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
+    case REGISTRATION_FORM.RESET:
+      return {
+        ...defaultState,
+      };
     case REGISTER_NEW_USER.BEGIN:
       return {
         ...state,
         submitState: PENDING_STATE,
+        registrationError: {},
       };
     case REGISTER_NEW_USER.SUCCESS:
       return {
@@ -25,8 +30,9 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_NEW_USER.FAILURE:
       return {
         ...state,
-        registrationError: action.payload.error,
+        registrationError: { ...action.payload },
         submitState: DEFAULT_STATE,
+        validations: null,
       };
     case REGISTER_FORM_VALIDATIONS.BEGIN:
       return {
@@ -40,8 +46,8 @@ const reducer = (state = defaultState, action) => {
     case REGISTER_FORM_VALIDATIONS.FAILURE:
       return {
         ...state,
-        validations: action.payload.error,
-        statusCode: action.payload.statusCode,
+        statusCode: 403,
+        validations: null,
       };
     default:
       return state;
