@@ -10,7 +10,7 @@ export async function registerRequest(registrationInformation) {
 
   const { data } = await getAuthenticatedHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/user_api/v2/account/registration/`,
+      `${getConfig().LMS_BASE_URL}/api/user/v2/account/registration/`,
       querystring.stringify(registrationInformation),
       requestConfig,
     )

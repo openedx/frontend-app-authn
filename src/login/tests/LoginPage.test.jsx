@@ -256,7 +256,7 @@ describe('LoginPage', () => {
                             + 'linked edX account. To link your accounts, sign in now using your edX password.';
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find('#tpa-alert').find('span').text()).toEqual(expectedMessage);
+    expect(loginPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
   });
 
   it('should match forget password confirmation message', () => {

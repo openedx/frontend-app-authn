@@ -34,7 +34,7 @@ const FormGroup = (props) => {
       </Form.Control>
       <TransitionReplace>
         {hasFocus && props.helpText ? (
-          <Form.Control.Feedback key="help-text" className="mt-2 d-block">
+          <Form.Control.Feedback key="help-text" className="d-block">
             {props.helpText.map((message, index) => (
               <span key={`help-text-${index.toString()}`}>
                 {message}
@@ -45,7 +45,7 @@ const FormGroup = (props) => {
         ) : <div key="empty" />}
       </TransitionReplace>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" feedback-for={props.name} className="data-hj-suppress" type="invalid">{props.errorMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
       {props.children}
     </Form.Group>

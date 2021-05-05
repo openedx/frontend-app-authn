@@ -2,84 +2,54 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert, Icon } from '@edx/paragon';
+import { Info } from '@edx/paragon/icons';
 
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './data/constants';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from './data/constants';
 import messages from './messages';
-import { DEFAULT_STATE, PENDING_STATE } from '../data/constants';
 import { windowScrollTo } from '../data/utils';
 
 const RegistrationFailureMessage = (props) => {
-  const errorMessage = props.errors;
-  const { errorCode } = props.errors;
-  const userErrors = [];
+  const { context, errorCode, intl } = props;
 
   useEffect(() => {
-    if (props.isSubmitted && props.submitButtonState !== PENDING_STATE) {
-      windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
-    }
-  });
+    windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  }, [errorCode]);
 
-  let serverError;
+  let errorMessage;
   switch (errorCode) {
     case INTERNAL_SERVER_ERROR:
-      serverError = (
-        <li key={INTERNAL_SERVER_ERROR} className="text-left">
-          {props.intl.formatMessage(messages['registration.request.server.error'])}
-        </li>
-      );
-     userErrors.push(serverError);
+      errorMessage = intl.formatMessage(messages['registration.request.server.error']);
      break;
     case FORBIDDEN_REQUEST:
-      userErrors.push(
-        (
-          <li key={FORBIDDEN_REQUEST} className="text-left">
-            {props.intl.formatMessage(messages['register.rate.limit.reached.message'])}
-          </li>
-        ),
-      );
+      errorMessage = intl.formatMessage(messages['registration.rate.limit.error']);
+      break;
+    case TPA_SESSION_EXPIRED:
+      errorMessage = intl.formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
       break;
     default:
-      Object.keys(errorMessage).forEach((key) => {
-        if (key !== 'error_code') {
-          const errors = errorMessage[key];
-          const suppressionClass = ['email', 'username'].includes(key) ? 'data-hj-suppress' : '';
-          const errorList = errors.map((error) => (
-            (error.user_message) ? (
-              <li key={error} className={`text-left ${suppressionClass}`}>
-                {error.user_message}
-              </li>
-            ) : null
-          ));
-          userErrors.push(errorList);
-        }
-      });
+      errorMessage = intl.formatMessage(messages['registration.empty.form.submission.error']);
+      break;
   }
 
   return (
-    !userErrors.length ? null : (
-      <Alert id="validation-errors" variant="danger">
-        <Alert.Heading>{props.intl.formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
-        <ul>{userErrors}</ul>
-      </Alert>
-    )
+    <Alert id="validation-errors" className="mb-5" variant="danger">
+      <Icon src={Info} className="alert-icon" />
+      <Alert.Heading>{props.intl.formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
+      <p>{errorMessage}</p>
+    </Alert>
   );
 };
 
 RegistrationFailureMessage.defaultProps = {
-  errors: '',
-  submitButtonState: DEFAULT_STATE,
-  isSubmitted: false,
+  context: {},
 };
 
 RegistrationFailureMessage.propTypes = {
-  errors: PropTypes.shape({
-    email: PropTypes.array,
-    username: PropTypes.array,
-    errorCode: PropTypes.string,
+  context: PropTypes.shape({
+    provider: PropTypes.string,
   }),
-  submitButtonState: PropTypes.string,
-  isSubmitted: PropTypes.bool,
+  errorCode: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
 };
 
