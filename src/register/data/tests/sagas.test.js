@@ -31,7 +31,7 @@ describe('fetchRealtimeValidations', () => {
   });
 
   const data = {
-    validation_decisions: {
+    validationDecisions: {
       username: 'Username must be between 2 and 30 characters long.',
     },
   };

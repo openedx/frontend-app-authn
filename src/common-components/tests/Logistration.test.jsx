@@ -40,7 +40,7 @@ describe('Logistration', () => {
     store = mockStore({
       register: {
         registrationResult: { success: false, redirectUrl: '' },
-        registrationError: null,
+        registrationError: {},
       },
       commonComponents: {
         thirdPartyAuthApiStatus: null,
