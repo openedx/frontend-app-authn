@@ -39,15 +39,5 @@ export const validationsSelector = createSelector(
 
 export const usernameSuggestionsSelector = createSelector(
   registerSelector,
-  (register) => {
-    const { registrationError, validations } = register;
-    let usernameSuggestions = validations && validations.usernameSuggestions ? validations.usernameSuggestions : [];
-    if (usernameSuggestions.length === 0) {
-      usernameSuggestions = (
-        registrationError && registrationError.usernameSuggestions ? registrationError.usernameSuggestions : []
-      );
-    }
-
-    return usernameSuggestions;
-  },
+  register => register.usernameSuggestions,
 );
