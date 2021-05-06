@@ -67,7 +67,6 @@ class RegistrationPage extends React.Component {
         country: '',
       },
       errorCode: null,
-      institutionLogin: false,
       optionalFields,
       optionalFieldsState: {},
       showOptionalField: false,
@@ -139,10 +138,6 @@ class RegistrationPage extends React.Component {
         }
       />
     );
-  }
-
-  handleInstitutionLogin = () => {
-    this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
   handleSubmit = (e) => {
@@ -294,7 +289,7 @@ class RegistrationPage extends React.Component {
       thirdPartyComponent = (
         <>
           <RenderInstitutionButton
-            onSubmitHandler={this.handleInstitutionLogin}
+            onSubmitHandler={this.props.handleInstitutionLogin}
             buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
           />
           <div className="row m-0">
@@ -315,13 +310,11 @@ class RegistrationPage extends React.Component {
     finishAuthUrl,
     submitState,
     intl) {
-    if (this.state.institutionLogin) {
+    if (this.props.institutionLogin) {
       return (
         <InstitutionLogistration
-          onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
           headingTitle={intl.formatMessage(messages['register.institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['create.an.account'])}
         />
       );
     }
@@ -561,6 +554,8 @@ RegistrationPage.propTypes = {
   clearUsernameSuggestions: PropTypes.func.isRequired,
   statusCode: PropTypes.number,
   usernameSuggestions: PropTypes.arrayOf(string),
+  institutionLogin: PropTypes.bool.isRequired,
+  handleInstitutionLogin: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

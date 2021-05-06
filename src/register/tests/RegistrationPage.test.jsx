@@ -15,7 +15,6 @@ import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '.
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
-import { RenderInstitutionButton } from '../../common-components';
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -76,6 +75,8 @@ describe('RegistrationPage', () => {
     });
     props = {
       registrationResult: jest.fn(),
+      handleInstitutionLogin: jest.fn(),
+      institutionLogin: false,
     };
   });
 
@@ -132,7 +133,7 @@ describe('RegistrationPage', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       populateRequiredFields(registerPage, payload);
       registerPage.find('button.btn-brand').simulate('click');
@@ -163,7 +164,7 @@ describe('RegistrationPage', () => {
         },
       });
       store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       populateRequiredFields(registerPage, formPayload, true);
       registerPage.find('button.btn-brand').simulate('click');
@@ -173,7 +174,7 @@ describe('RegistrationPage', () => {
     it('should not dispatch registerNewUser on empty form Submission', () => {
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser({}));
     });
@@ -221,7 +222,7 @@ describe('RegistrationPage', () => {
 
     it('should call validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       // enter a valid username so that frontend validations are passed
       registrationPage.find('input#username').simulate('change', { target: { value: 'test', name: 'username' } });
@@ -251,7 +252,7 @@ describe('RegistrationPage', () => {
           },
         },
       });
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />)).find('RegistrationPage');
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
       expect(registrationPage.prop('validationDecisions')).toEqual({
         country: '',
         email: 'It looks like this email address is already registered',
@@ -388,26 +389,7 @@ describe('RegistrationPage', () => {
       window.location = { href: getConfig().BASE_URL };
 
       const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(root.text().includes('Use my institution/campus credentials')).toBe(true);
-    });
-
-    it('should not display institution register button', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            secondaryProviders: [secondaryProviders],
-          },
-        },
-      });
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL };
-
-      const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      root.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
-      expect(root.text().includes('Test University')).toBe(true);
+      expect(root.text().includes('Institution/campus credentials')).toBe(true);
     });
 
     it('should display no password field when current provider is present', () => {
@@ -459,7 +441,7 @@ describe('RegistrationPage', () => {
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      renderer.create(reduxWrapper(<IntlRegistrationPage />));
+      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(window.location.href).toBe(dasboardUrl);
     });
 
@@ -652,7 +634,7 @@ describe('RegistrationPage', () => {
 
   describe('TestOptionalFields', () => {
     it('should toggle optional fields state', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       registrationPage.find('input#optional-field-checkbox').simulate('click', { target: { name: 'optionalFields', checked: true } });
       expect(registrationPage.find('RegistrationPage').state('showOptionalField')).toEqual(true);
@@ -663,7 +645,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should show optional fields section on optional check enabled', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: true } });
       registrationPage.update();
 
@@ -677,19 +659,19 @@ describe('RegistrationPage', () => {
       mergeConfig({
         REGISTRATION_OPTIONAL_FIELDS: '',
       });
-      let registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      let registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find('input#optional-field-checkbox').length).toEqual(0);
 
       mergeConfig({
         REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,levelOfEducation,yearOfBirth',
       });
 
-      registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find('input#optional-field-checkbox').length).toEqual(1);
     });
 
     it('send tracking event on optional checkbox enabled', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       registrationPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: true } });
       expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.register.optional_fields_selected', {});
@@ -717,7 +699,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage />));
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       populateRequiredFields(registerPage, payload);
 
       // submit optional fields

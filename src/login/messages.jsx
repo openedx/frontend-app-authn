@@ -69,12 +69,12 @@ const messages = defineMessages({
   },
   'institution.login.page.back.button': {
     id: 'institution.login.page.back.button',
-    defaultMessage: 'Login',
+    defaultMessage: 'Back to sign in',
     description: 'return to login page',
   },
   'create.an.account': {
     id: 'create.an.account',
-    defaultMessage: 'Register',
+    defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
   'login.other.options.heading': {

@@ -77,7 +77,7 @@ const messages = defineMessages({
   },
   'create.an.account': {
     id: 'create.an.account',
-    defaultMessage: 'Register',
+    defaultMessage: 'Create an account',
     description: 'Message on button to return to register page',
   },
   // Validation messages

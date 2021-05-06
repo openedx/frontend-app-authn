@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form, Hyperlink, Icon, StatefulButton,
@@ -51,7 +51,6 @@ class LoginPage extends React.Component {
         emailOrUsername: '',
         password: '',
       },
-      institutionLogin: false,
       isSubmitted: false,
     };
     this.queryParams = getAllPossibleQueryParam();
@@ -70,12 +69,6 @@ class LoginPage extends React.Component {
 
   getEnterPriseLoginURL() {
     return getConfig().LMS_BASE_URL + ENTERPRISE_LOGIN_URL;
-  }
-
-  handleInstitutionLogin = () => {
-    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    sendPageEvent('login_and_registration', 'institution_login');
-    this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
   handleSubmit = (e) => {
@@ -130,7 +123,7 @@ class LoginPage extends React.Component {
       thirdPartyComponent = (
         <>
           <RenderInstitutionButton
-            onSubmitHandler={this.handleInstitutionLogin}
+            onSubmitHandler={this.props.handleInstitutionLogin}
             buttonTitle={intl.formatMessage(messages['institution.login.button'])}
           />
           <div className="row m-0">
@@ -153,13 +146,11 @@ class LoginPage extends React.Component {
     intl,
   ) {
     const activationMsgType = getActivationStatus();
-    if (this.state.institutionLogin) {
+    if (this.props.institutionLogin) {
       return (
         <InstitutionLogistration
-          onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={thirdPartyAuthContext.secondaryProviders}
           headingTitle={intl.formatMessage(messages['institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['institution.login.page.back.button'])}
         />
       );
     }
@@ -322,6 +313,8 @@ LoginPage.propTypes = {
     secondaryProviders: PropTypes.array,
     finishAuthUrl: PropTypes.string,
   }),
+  institutionLogin: PropTypes.bool.isRequired,
+  handleInstitutionLogin: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

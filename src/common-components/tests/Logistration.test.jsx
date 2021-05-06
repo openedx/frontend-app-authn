@@ -4,10 +4,12 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 
+import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 
 import Logistration from '../Logistration';
+import { RenderInstitutionButton } from '../InstitutionLogistration';
 import { LOGIN_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -18,6 +20,13 @@ const IntlLogistration = injectIntl(Logistration);
 
 describe('Logistration', () => {
   let store = {};
+
+  const secondaryProviders = {
+    id: 'saml-test',
+    name: 'Test University',
+    loginUrl: '/dummy-auth',
+    registerUrl: '/dummy_auth',
+  };
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
@@ -65,5 +74,93 @@ describe('Logistration', () => {
     const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
 
     expect(logistration.find('#main-content').find('LoginPage').exists()).toBeTruthy();
+  });
+
+  it('should display institution login option when secondary providers are present', () => {
+    mergeConfig({
+      SITE_NAME: 'test site',
+    });
+
+    store = mockStore({
+      login: {
+        loginResult: { success: false, redirectUrl: '' },
+      },
+      commonComponents: {
+        thirdPartyAuthContext: {
+          currentProvider: null,
+          finishAuthUrl: null,
+          providers: [],
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+
+    const props = { selectedPage: LOGIN_PAGE };
+    const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
+    expect(logistration.text().includes('Institution/campus credentials')).toBe(true);
+
+    // on clicking "Institution/campus credentials" button, it should display institution login page
+    logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(logistration.text().includes('Test University')).toBe(true);
+
+    mergeConfig({
+      SITE_NAME: 'edX',
+    });
+  });
+
+  it('send tracking and page events when institutional login button is clicked', () => {
+    mergeConfig({
+      SITE_NAME: 'test site',
+    });
+
+    store = mockStore({
+      login: {
+        loginResult: { success: false, redirectUrl: '' },
+      },
+      commonComponents: {
+        thirdPartyAuthContext: {
+          currentProvider: null,
+          finishAuthUrl: null,
+          providers: [],
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+
+    const props = { selectedPage: LOGIN_PAGE };
+    const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
+    logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+
+    mergeConfig({
+      SITE_NAME: 'edX',
+    });
+  });
+
+  it('should not display institution register button', () => {
+    store = mockStore({
+      register: {
+        registrationResult: { success: false, redirectUrl: '' },
+        registrationError: {},
+      },
+      commonComponents: {
+        thirdPartyAuthApiStatus: null,
+        thirdPartyAuthContext: {
+          currentProvider: null,
+          finishAuthUrl: null,
+          providers: [],
+          secondaryProviders: [secondaryProviders],
+        },
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
+
+    const root = mount(reduxWrapper(<IntlLogistration />));
+    root.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(root.text().includes('Test University')).toBe(true);
   });
 });
