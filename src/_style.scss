@@ -343,6 +343,11 @@ select.form-control {
   }
     
 }
+#forgotpassword-success-alert {
+  .alert-link {
+    color: #454545 !important;
+  }
+}
 
 @media (min-width: 1024px) {
   .mw-500 {
