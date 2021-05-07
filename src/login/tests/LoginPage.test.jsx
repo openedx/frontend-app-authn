@@ -244,22 +244,6 @@ describe('LoginPage', () => {
     expect(loginPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
   });
 
-  it('should match forget password confirmation message', () => {
-    store = mockStore({
-      ...initialState,
-      forgotPassword: { status: 'complete', email: 'test@example.com' },
-    });
-
-    const confirmationMessage = 'Check your email'
-      + 'You entered test@example.com. If this email address is associated with your edX account, '
-      + 'we will send a message with password recovery instructions to this email address.If you do not '
-      + 'receive a password reset message after 1 minute, verify that you entered the correct email address, '
-      + 'or check your spam folder.If you need further assistance, contact technical support.';
-
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find('#confirmation-alert').first().text()).toEqual(confirmationMessage);
-  });
-
   it('should match invalid login form error message', () => {
     const errorMessage = 'Please fill in the fields below.';
     store = mockStore({
