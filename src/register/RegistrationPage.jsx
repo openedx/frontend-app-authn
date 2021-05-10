@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
-import Cookies from 'universal-cookie';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -33,7 +32,7 @@ import {
   DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, setSurveyCookie,
 } from '../data/utils';
 
 class RegistrationPage extends React.Component {
@@ -430,15 +429,7 @@ class RegistrationPage extends React.Component {
     }
 
     if (this.props.registrationResult.success) {
-      const cookieName = getConfig().USER_SIGNUP_SURVEY_COOKIE_NAME;
-      if (cookieName) {
-        const cookies = new Cookies();
-        const signupTimestamp = (new Date()).getTime();
-        // set expiry to exactly 24 hours from now
-        const cookieExpiry = new Date(signupTimestamp + 1 * 864e5);
-        const options = { domain: getConfig().COOKIE_DOMAIN, expires: cookieExpiry, path: '/' };
-        cookies.set(cookieName, signupTimestamp, options);
-      }
+      setSurveyCookie('register');
     }
 
     return (

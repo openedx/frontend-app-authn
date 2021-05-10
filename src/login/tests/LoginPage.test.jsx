@@ -5,7 +5,7 @@ import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import { getConfig } from '@edx/frontend-platform';
+import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
@@ -25,6 +25,10 @@ const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
 
 describe('LoginPage', () => {
+  mergeConfig({
+    USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
+  });
+
   const initialState = {
     forgotPassword: { status: null },
     login: {
@@ -500,5 +504,20 @@ describe('LoginPage', () => {
 
     mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.loginUrl);
+  });
+
+  it('should set login survey cookie', () => {
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginResult: {
+          success: true,
+        },
+      },
+    });
+
+    renderer.create(reduxWrapper(<IntlLoginPage />));
+    expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=login`);
   });
 });
