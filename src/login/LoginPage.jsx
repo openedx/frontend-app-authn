@@ -33,7 +33,13 @@ import {
 } from '../data/constants';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, getActivationStatus, windowScrollTo,
+  getTpaHint,
+  getTpaProvider,
+  windowScrollTo,
+  setSurveyCookie,
+  getActivationStatus,
+  getAllPossibleQueryParam,
+  updatePathWithQueryParams,
 } from '../data/utils';
 
 class LoginPage extends React.Component {
@@ -165,6 +171,10 @@ class LoginPage extends React.Component {
           buttonTitle={intl.formatMessage(messages['institution.login.page.back.button'])}
         />
       );
+    }
+
+    if (this.props.loginResult.success) {
+      setSurveyCookie('login');
     }
 
     return (
