@@ -21,7 +21,7 @@ exports[`ThirdPartyAuthAlert should match register page third party auth alert m
   <div
     className="alert-heading h4"
   >
-    Almost done
+    Almost done!
   </div>
   <p>
     You've successfully signed into Google! We just need a little more information before you start learning with edX.

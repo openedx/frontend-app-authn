@@ -38,7 +38,7 @@ const Logistration = (props) => {
               onClick={handleInstitutionLogin}
             >
               {selectedPage === LOGIN_PAGE
-                ? intl.formatMessage(messages['logistration.login'])
+                ? intl.formatMessage(messages['logistration.sign.in'])
                 : intl.formatMessage(messages['logistration.register'])}
             </Button>
           </span>
@@ -49,7 +49,7 @@ const Logistration = (props) => {
               {intl.formatMessage(messages['logistration.register'])}
             </Link>
             <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
-              {intl.formatMessage(messages['logistration.login'])}
+              {intl.formatMessage(messages['logistration.sign.in'])}
             </Link>
           </span>
         )}

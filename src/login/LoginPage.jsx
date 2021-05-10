@@ -27,7 +27,6 @@ import {
   RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
   InstitutionLogistration, FormGroup, PasswordField,
 } from '../common-components';
-import ConfirmationAlert from '../common-components/ConfirmationAlert';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
@@ -178,9 +177,6 @@ class LoginPage extends React.Component {
           {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
-          {this.props.forgotPassword.status === 'complete' && !this.props.loginError ? (
-            <ConfirmationAlert email={this.props.forgotPassword.email} />
-          ) : null}
           <Form className="test">
             <FormGroup
               name="email"
