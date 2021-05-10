@@ -309,6 +309,29 @@ describe('RegistrationPageTests', () => {
     expect(registrationPage.find('#validation-errors').first().text()).toEqual(alertBanner);
   });
 
+  it('should clear field related error messages on input field Focus', () => {
+    const errors = {
+      email: '',
+      name: '',
+      username: '',
+      password: '',
+      country: '',
+    };
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    registrationPage.find('button.btn-brand').simulate('click');
+
+    expect(registrationPage.find('#name-invalid-feedback').text()).toEqual(emptyFieldValidation.name);
+    registrationPage.find('input#name').simulate('focus');
+    expect(registrationPage.find('#username-invalid-feedback').text()).toEqual(emptyFieldValidation.username);
+    registrationPage.find('input#username').simulate('focus');
+    expect(registrationPage.find('#email-invalid-feedback').text()).toEqual(emptyFieldValidation.email);
+    registrationPage.find('input#email').simulate('focus');
+    expect(registrationPage.find('#password-invalid-feedback').text()).toEqual(emptyFieldValidation.password);
+    registrationPage.find('input#password').simulate('focus');
+    registrationPage.find('select#country').simulate('focus', { target: { value: 'US', name: 'country' } });
+    expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+  });
+
   it('should show error message on alert and below the fields in case of 409', () => {
     const errors = {
       email: 'It looks like test@gmail.com belongs to an existing account. Try again with a different email address.',
