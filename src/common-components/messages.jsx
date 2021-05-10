@@ -24,9 +24,9 @@ const messages = defineMessages({
     description: 'Part of message that appears after user requests password change',
   },
   // Logistration strinsg
-  'logistration.login': {
-    id: 'logistration.login',
-    defaultMessage: 'Login',
+  'logistration.sign.in': {
+    id: 'logistration.sign.in',
+    defaultMessage: 'Sign in',
     description: 'Text that appears on the tab to switch between login and register',
   },
   'logistration.register': {
@@ -110,7 +110,7 @@ const messages = defineMessages({
   // third party auth
   'tpa.alert.heading': {
     id: 'tpa.alert.heading',
-    defaultMessage: 'Almost done',
+    defaultMessage: 'Almost done!',
     description: 'Success alert heading after user has successfully signed in with social auth',
   },
   'login.third.party.auth.account.not.linked': {
