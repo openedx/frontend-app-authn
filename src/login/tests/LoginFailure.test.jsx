@@ -10,6 +10,8 @@ import {
   INTERNAL_SERVER_ERROR,
   INVALID_FORM,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
+  FAILED_LOGIN_ATTEMPT,
+  INCORRECT_EMAIL_PASSWORD,
 } from '../data/constants';
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
@@ -62,6 +64,74 @@ describe('LoginFailureMessage', () => {
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
     expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('https://support.edx.org/');
+  });
+
+  it('test match failed login attempt error', () => {
+    props = {
+      loginError: {
+        email: 'text@example.com',
+        errorCode: FAILED_LOGIN_ATTEMPT,
+        context: {
+          remainingAttempts: 3,
+          allowedFailureAttempts: 6,
+          resetLink: '/reset',
+        },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again or '
+                            + 'reset your password Attempts remaining: 3 Warning: After 6 consecutive unsuccessful login attempts, your account will be locked.';
+
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
+  });
+
+  it('test match failed login error first attempt', () => {
+    props = {
+      loginError: {
+        email: 'text@example.com',
+        errorCode: INCORRECT_EMAIL_PASSWORD,
+        context: {
+          failureCount: 1,
+          resetLink: '/reset',
+        },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again.';
+
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
+  });
+
+  it('test match failed login error second attempt', () => {
+    props = {
+      loginError: {
+        email: 'text@example.com',
+        errorCode: INCORRECT_EMAIL_PASSWORD,
+        context: {
+          failureCount: 2,
+          resetLink: '/reset',
+        },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again or reset your password.';
+
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
   it('should match rate limit error message', () => {
