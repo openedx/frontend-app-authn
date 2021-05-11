@@ -22,7 +22,7 @@ describe('AuthnCustomValidationFormGroup', () => {
     const validationFormGroup = mount(<AuthnCustomValidationFormGroup {...props} />);
 
     validationFormGroup.find('input').simulate('focus');
-    expect(validationFormGroup.find('label').prop('className')).toEqual('pt-10 h6 form-label');
+    expect(validationFormGroup.find('label').prop('className')).toEqual('pt-10 focus-out form-label');
   });
 
   it('should keep label hidden for checkbox field', () => {

@@ -235,6 +235,12 @@ class RegistrationPage extends React.Component {
     }
   }
 
+  handleOnFocus(e) {
+    const { errors } = this.state;
+    errors[e.target.name] = '';
+    this.setState({ errors });
+  }
+
   handleOnOptional(e) {
     const optionalEnable = this.state.enableOptionalField;
     const targetValue = e.target.id === 'additionalFields' ? !optionalEnable : e.target.checked;
@@ -479,6 +485,7 @@ class RegistrationPage extends React.Component {
                   value={this.state.name}
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
+                  onFocus={(e) => this.handleOnFocus(e)}
                   helpText={intl.formatMessage(messages['helptext.name'])}
                   inputFieldStyle="border-gray-600"
                 />
@@ -494,6 +501,7 @@ class RegistrationPage extends React.Component {
                   value={this.state.username}
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
+                  onFocus={(e) => this.handleOnFocus(e)}
                   helpText={intl.formatMessage(messages['helptext.username'])}
                   inputFieldStyle="border-gray-600"
                 />
@@ -509,6 +517,7 @@ class RegistrationPage extends React.Component {
                   value={this.state.email}
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
+                  onFocus={(e) => this.handleOnFocus(e)}
                   helpText={intl.formatMessage(messages['helptext.email'])}
                   inputFieldStyle="border-gray-600"
                 />
@@ -524,6 +533,7 @@ class RegistrationPage extends React.Component {
                     value={this.state.password}
                     onBlur={(e) => this.handleOnBlur(e)}
                     onChange={(e) => this.handleOnChange(e)}
+                    onFocus={(e) => this.handleOnFocus(e)}
                     helpText={intl.formatMessage(messages['helptext.password'])}
                     inputFieldStyle="border-gray-600"
                   />
@@ -541,6 +551,7 @@ class RegistrationPage extends React.Component {
                   value={this.state.country}
                   onBlur={(e) => this.handleOnBlur(e)}
                   onChange={(e) => this.handleOnChange(e)}
+                  onFocus={(e) => this.handleOnFocus(e)}
                   selectOptions={this.getCountryOptions()}
                   inputFieldStyle="border-gray-600 custom-select-size"
                 />

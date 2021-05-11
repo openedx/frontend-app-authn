@@ -7,7 +7,9 @@ import {
 } from '@edx/paragon';
 
 const AuthnCustomValidationFormGroup = (props) => {
-  const { onClick, onChange, onBlur } = props;
+  const {
+    onBlur, onChange, onClick, onFocus,
+  } = props;
   const [showHelpText, setShowHelpText] = useState(false);
   const [showLabelText, setShowLabelText] = useState(false);
 
@@ -29,6 +31,11 @@ const AuthnCustomValidationFormGroup = (props) => {
   const onChangeHandler = (e, changeCb) => {
     if (changeCb) {
       changeCb(e);
+    }
+  };
+  const onFocusHandler = (e, focusCb) => {
+    if (focusCb) {
+      focusCb(e);
     }
   };
   const onOptionalHandler = (e, clickCb) => { clickCb(e); };
@@ -68,7 +75,7 @@ const AuthnCustomValidationFormGroup = (props) => {
   inputProps.onChange = (e) => onChangeHandler(e, onChange);
   inputProps.onClick = (e) => onClickHandler(e, onClick);
   inputProps.onBlur = (e) => onBlurHandler(e, onBlur);
-  inputProps.onFocus = (e) => onClickHandler(e, null);
+  inputProps.onFocus = (e) => onFocusHandler(e, onFocus);
 
   if (props.type === 'select') {
     inputProps.options = props.selectOptions;
@@ -122,6 +129,7 @@ AuthnCustomValidationFormGroup.defaultProps = {
   onClick: null,
   onBlur: null,
   onChange: null,
+  onFocus: null,
   isChecked: false,
   checkboxMessage: '',
   selectOptions: null,
@@ -147,6 +155,7 @@ AuthnCustomValidationFormGroup.propTypes = {
   onClick: PropTypes.func,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
+  onFocus: PropTypes.func,
   checkboxMessage: PropTypes.string,
   selectOptions: PropTypes.arrayOf(PropTypes.shape({
     key: PropTypes.string,
