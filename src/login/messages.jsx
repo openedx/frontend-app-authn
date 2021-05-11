@@ -178,15 +178,15 @@ const messages = defineMessages({
     defaultMessage: 'contact {platformName} support',
     description: 'Link text used in inactive user error message to go to learner help center',
   },
-  'login.failed.link.text': {
-    id: 'login.failed.link.text',
-    defaultMessage: 'here',
-    description: 'Link text used in failed login attempt user error message to reset password',
-  },
   'login.incorrect.credentials.error': {
     id: 'login.incorrect.credentials.error',
-    defaultMessage: 'Email or password is incorrect.',
+    defaultMessage: 'The username, email or password you entered is incorrect. Please try again.',
     description: 'Error message for incorrect email or password',
+  },
+  'login.incorrect.credentials.error.with.reset.link': {
+    id: 'login.incorrect.credentials.error.with.reset.link',
+    defaultMessage: 'The username, email or password you entered is incorrect. Please try again or {resetLink}.',
+    description: 'Error message for incorrect email or password with reset link',
   },
   'login.failed.attempt.error': {
     id: 'login.failed.attempt.error',
@@ -202,6 +202,11 @@ const messages = defineMessages({
     id: 'login.form.invalid.error.message',
     defaultMessage: 'Please fill in the fields below.',
     description: 'Login form empty input user message',
+  },
+  'login.incorrect.credentials.error.reset.link.text': {
+    id: 'login.incorrect.credentials.error.reset.link.text',
+    defaultMessage: 'reset your password',
+    description: 'Reset password link text for incorrect email or password credentials',
   },
 });
 
