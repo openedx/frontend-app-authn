@@ -10,7 +10,7 @@ import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n
 
 import Logistration from '../Logistration';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
-import { LOGIN_PAGE } from '../../data/constants';
+import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 analytics.sendPageEvent = jest.fn();
@@ -78,7 +78,7 @@ describe('Logistration', () => {
 
   it('should display institution login option when secondary providers are present', () => {
     mergeConfig({
-      SITE_NAME: 'test site',
+      DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
     store = mockStore({
@@ -92,6 +92,7 @@ describe('Logistration', () => {
           providers: [],
           secondaryProviders: [secondaryProviders],
         },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       },
     });
 
@@ -104,13 +105,13 @@ describe('Logistration', () => {
     expect(logistration.text().includes('Test University')).toBe(true);
 
     mergeConfig({
-      SITE_NAME: 'edX',
+      DISABLE_ENTERPRISE_LOGIN: 'false',
     });
   });
 
   it('send tracking and page events when institutional login button is clicked', () => {
     mergeConfig({
-      SITE_NAME: 'test site',
+      DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
     store = mockStore({
@@ -124,6 +125,7 @@ describe('Logistration', () => {
           providers: [],
           secondaryProviders: [secondaryProviders],
         },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       },
     });
 
@@ -135,24 +137,28 @@ describe('Logistration', () => {
     expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeConfig({
-      SITE_NAME: 'edX',
+      DISABLE_ENTERPRISE_LOGIN: 'false',
     });
   });
 
   it('should not display institution register button', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
     store = mockStore({
       register: {
         registrationResult: { success: false, redirectUrl: '' },
         registrationError: {},
       },
       commonComponents: {
-        thirdPartyAuthApiStatus: null,
         thirdPartyAuthContext: {
           currentProvider: null,
           finishAuthUrl: null,
           providers: [],
           secondaryProviders: [secondaryProviders],
         },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       },
     });
 
@@ -162,5 +168,9 @@ describe('Logistration', () => {
     const root = mount(reduxWrapper(<IntlLogistration />));
     root.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
     expect(root.text().includes('Test University')).toBe(true);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'false',
+    });
   });
 });

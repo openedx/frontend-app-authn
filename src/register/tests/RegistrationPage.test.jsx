@@ -375,6 +375,10 @@ describe('RegistrationPage', () => {
     });
 
     it('should display institution register button', () => {
+      mergeConfig({
+        DISABLE_ENTERPRISE_LOGIN: 'true',
+      });
+
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -390,6 +394,10 @@ describe('RegistrationPage', () => {
 
       const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(root.text().includes('Institution/campus credentials')).toBe(true);
+
+      mergeConfig({
+        DISABLE_ENTERPRISE_LOGIN: 'false',
+      });
     });
 
     it('should display no password field when current provider is present', () => {

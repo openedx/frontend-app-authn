@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccountActivationMessage from './AccountActivationMessage';
 import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
-import { EDX_SITE_NAME, INVALID_FORM } from './data/constants';
+import { INVALID_FORM } from './data/constants';
 import { loginErrorSelector, loginRequestSelector } from './data/selectors';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
@@ -117,22 +117,46 @@ class LoginPage extends React.Component {
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
-    let thirdPartyComponent = null;
-    if ((providers.length || secondaryProviders.length) && !currentProvider) {
-      thirdPartyComponent = (
-        <>
-          <RenderInstitutionButton
-            onSubmitHandler={this.props.handleInstitutionLogin}
-            buttonTitle={intl.formatMessage(messages['institution.login.button'])}
-          />
-          <div className="row m-0">
-            <SocialAuthProviders socialAuthProviders={providers} />
-          </div>
-        </>
-      );
-    } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
-      thirdPartyComponent = <Skeleton className="tpa-skeleton mb-3" height={30} count={2} />;
-    } return thirdPartyComponent;
+    const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
+    const isSocialAuthActive = !!providers.length && !currentProvider;
+    const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+
+    return (
+      <>
+        {(isEnterpriseLoginDisabled === 'false'
+          || ((isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) || isSocialAuthActive))
+           && (
+             <div className="mt-4 mb-3 h4">
+               {intl.formatMessage(messages['login.other.options.heading'])}
+             </div>
+           )}
+
+        {isEnterpriseLoginDisabled === 'false' && (
+          <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={this.getEnterPriseLoginURL()}>
+            <Icon src={Institution} className="institute-icon" />
+            {intl.formatMessage(messages['enterprise.login.btn.text'])}
+          </Hyperlink>
+        )}
+
+        {thirdPartyAuthApiStatus === PENDING_STATE ? (
+          <Skeleton className="tpa-skeleton mb-3" height={30} count={2} />
+        ) : (
+          <>
+            {(isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) && (
+              <RenderInstitutionButton
+                onSubmitHandler={this.props.handleInstitutionLogin}
+                buttonTitle={intl.formatMessage(messages['institution.login.button'])}
+              />
+            )}
+            {isSocialAuthActive && (
+              <div className="row m-0">
+                <SocialAuthProviders socialAuthProviders={providers} />
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
   }
 
   renderForm(
@@ -211,23 +235,7 @@ class LoginPage extends React.Component {
             <Link id="forgot-password" className="btn btn-link font-weight-500 text-body" to={RESET_PAGE}>
               {intl.formatMessage(messages['forgot.password'])}
             </Link>
-            <div className="mt-4 mb-3 h4">
-              {intl.formatMessage(messages['login.other.options.heading'])}
-            </div>
-            { getConfig().SITE_NAME === EDX_SITE_NAME
-              ? (
-                <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={this.getEnterPriseLoginURL()}>
-                  <Icon src={Institution} className="institute-icon" />
-                  {intl.formatMessage(messages['enterprise.login.btn.text'])}
-                </Hyperlink>
-              )
-              : this.renderThirdPartyAuth(
-                providers,
-                secondaryProviders,
-                currentProvider,
-                thirdPartyAuthApiStatus,
-                intl,
-              )}
+            {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
           </Form>
         </div>
       </>

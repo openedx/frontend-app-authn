@@ -33,9 +33,9 @@ const InstitutionLogistration = props => {
     <>
       <div className="d-flex justify-content-left mb-4 mt-4">
         <div className="flex-column">
-          <h3 className="mb-2 font-weight-normal institute-heading">
+          <h4 className="mb-2 font-weight-bold institute-heading">
             {headingTitle}
-          </h3>
+          </h4>
           <p className="mb-2">
             {intl.formatMessage(messages['institution.login.page.sub.heading'])}
           </p>

@@ -284,23 +284,37 @@ class RegistrationPage extends React.Component {
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
-    let thirdPartyComponent = null;
-    if ((providers.length || secondaryProviders.length) && !currentProvider) {
-      thirdPartyComponent = (
-        <>
-          <RenderInstitutionButton
-            onSubmitHandler={this.props.handleInstitutionLogin}
-            buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
-          />
-          <div className="row m-0">
-            <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+    const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
+    const isSocialAuthActive = !!providers.length && !currentProvider;
+    const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+
+    return (
+      <>
+        {((isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) || isSocialAuthActive) && (
+          <div className="mt-4 mb-3 h4">
+            {intl.formatMessage(messages['registration.other.options.heading'])}
           </div>
-        </>
-      );
-    } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
-      thirdPartyComponent = <Skeleton className="tpa-skeleton" height={36} count={2} />;
-    }
-    return thirdPartyComponent;
+        )}
+
+        {thirdPartyAuthApiStatus === PENDING_STATE ? (
+          <Skeleton className="tpa-skeleton" height={36} count={2} />
+        ) : (
+          <>
+            {(isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) && (
+              <RenderInstitutionButton
+                onSubmitHandler={this.props.handleInstitutionLogin}
+                buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
+              />
+            )}
+            {isSocialAuthActive && (
+              <div className="row m-0">
+                <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
   }
 
   renderForm(currentProvider,
@@ -445,9 +459,6 @@ class RegistrationPage extends React.Component {
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            <div className="mt-4 mb-3 h4">
-              {intl.formatMessage(messages['registration.other.options.heading'])}
-            </div>
             {this.renderThirdPartyAuth(providers,
               secondaryProviders,
               currentProvider,

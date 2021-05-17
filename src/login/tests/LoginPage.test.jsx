@@ -169,7 +169,7 @@ describe('LoginPage', () => {
 
   it('should show single sign on provider button', () => {
     mergeConfig({
-      SITE_NAME: 'test site',
+      DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
     store = mockStore({
@@ -187,7 +187,7 @@ describe('LoginPage', () => {
     expect(loginPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
 
     mergeConfig({
-      SITE_NAME: 'edX',
+      DISABLE_ENTERPRISE_LOGIN: 'false',
     });
   });
 
@@ -308,7 +308,7 @@ describe('LoginPage', () => {
 
   it('should redirect to social auth provider url on SSO button click', () => {
     mergeConfig({
-      SITE_NAME: 'test site',
+      DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
     const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
@@ -335,7 +335,7 @@ describe('LoginPage', () => {
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
 
     mergeConfig({
-      SITE_NAME: 'edX',
+      DISABLE_ENTERPRISE_LOGIN: 'false',
     });
   });
 
@@ -385,7 +385,7 @@ describe('LoginPage', () => {
 
   it('should render regular tpa button for invalid tpa_hint value', () => {
     mergeConfig({
-      SITE_NAME: 'test site',
+      DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
     store = mockStore({
@@ -408,7 +408,7 @@ describe('LoginPage', () => {
     expect(loginPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(`${ssoProvider.name}`);
 
     mergeConfig({
-      SITE_NAME: 'edX',
+      DISABLE_ENTERPRISE_LOGIN: 'false',
     });
   });
 
