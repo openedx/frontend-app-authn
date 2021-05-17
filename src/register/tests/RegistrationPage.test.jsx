@@ -191,8 +191,10 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
 
       const alertBanner = 'We couldn\'t create your account.Please check your responses and try again.';
+      registrationPage.find('RegistrationPage').setState({ failureCount: 1 });
 
       expect(registrationPage.find('#validation-errors').first().text()).toEqual(alertBanner);
+      expect(registrationPage.find('RegistrationPage').state('failureCount')).toEqual(1);
     });
 
     it('should update errors for frontend validations', () => {

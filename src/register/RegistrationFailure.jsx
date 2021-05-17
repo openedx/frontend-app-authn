@@ -9,11 +9,13 @@ import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '.
 import messages from './messages';
 
 const RegistrationFailureMessage = (props) => {
-  const { context, errorCode, intl } = props;
+  const {
+    context, errorCode, failureCount, intl,
+  } = props;
 
   useEffect(() => {
     window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-  }, [errorCode]);
+  }, [errorCode, failureCount]);
 
   let errorMessage;
   switch (errorCode) {
@@ -49,6 +51,7 @@ RegistrationFailureMessage.propTypes = {
     provider: PropTypes.string,
   }),
   errorCode: PropTypes.string.isRequired,
+  failureCount: PropTypes.number.isRequired,
   intl: intlShape.isRequired,
 };
 
