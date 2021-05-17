@@ -396,7 +396,7 @@ describe('RegistrationPage', () => {
       expect(root.text().includes('Institution/campus credentials')).toBe(true);
 
       mergeConfig({
-        DISABLE_ENTERPRISE_LOGIN: 'false',
+        DISABLE_ENTERPRISE_LOGIN: '',
       });
     });
 

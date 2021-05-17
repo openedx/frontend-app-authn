@@ -123,15 +123,14 @@ class LoginPage extends React.Component {
 
     return (
       <>
-        {(isEnterpriseLoginDisabled === 'false'
-          || ((isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) || isSocialAuthActive))
+        {(!isEnterpriseLoginDisabled || ((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive))
            && (
              <div className="mt-4 mb-3 h4">
                {intl.formatMessage(messages['login.other.options.heading'])}
              </div>
            )}
 
-        {isEnterpriseLoginDisabled === 'false' && (
+        {!isEnterpriseLoginDisabled && (
           <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={this.getEnterPriseLoginURL()}>
             <Icon src={Institution} className="institute-icon" />
             {intl.formatMessage(messages['enterprise.login.btn.text'])}
@@ -142,7 +141,7 @@ class LoginPage extends React.Component {
           <Skeleton className="tpa-skeleton mb-3" height={30} count={2} />
         ) : (
           <>
-            {(isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) && (
+            {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
               <RenderInstitutionButton
                 onSubmitHandler={this.props.handleInstitutionLogin}
                 buttonTitle={intl.formatMessage(messages['institution.login.button'])}

@@ -105,7 +105,7 @@ describe('Logistration', () => {
     expect(logistration.text().includes('Test University')).toBe(true);
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
@@ -137,7 +137,7 @@ describe('Logistration', () => {
     expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
@@ -170,7 +170,7 @@ describe('Logistration', () => {
     expect(root.text().includes('Test University')).toBe(true);
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 });

@@ -187,7 +187,7 @@ describe('LoginPage', () => {
     expect(loginPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
@@ -335,7 +335,7 @@ describe('LoginPage', () => {
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
@@ -408,7 +408,7 @@ describe('LoginPage', () => {
     expect(loginPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(`${ssoProvider.name}`);
 
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'false',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 

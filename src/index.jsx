@@ -63,7 +63,7 @@ initialize({
         TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
         PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
         REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
-        DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || false,
+        DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || '',
       });
     },
   },

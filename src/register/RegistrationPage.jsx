@@ -290,7 +290,7 @@ class RegistrationPage extends React.Component {
 
     return (
       <>
-        {((isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) || isSocialAuthActive) && (
+        {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
           <div className="mt-4 mb-3 h4">
             {intl.formatMessage(messages['registration.other.options.heading'])}
           </div>
@@ -300,7 +300,7 @@ class RegistrationPage extends React.Component {
           <Skeleton className="tpa-skeleton" height={36} count={2} />
         ) : (
           <>
-            {(isEnterpriseLoginDisabled === 'true' && isInstitutionAuthActive) && (
+            {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
               <RenderInstitutionButton
                 onSubmitHandler={this.props.handleInstitutionLogin}
                 buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
