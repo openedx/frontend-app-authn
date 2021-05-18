@@ -10,7 +10,6 @@ const MediumScreenHeader = (props) => {
 
   return (
     <>
-      <div className="medium-screen-top-stripe" />
       <div className="medium-screen-header">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="row mt-4">
