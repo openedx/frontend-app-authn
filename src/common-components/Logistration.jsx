@@ -19,10 +19,9 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
 
   const handleInstitutionLogin = () => {
-    if (selectedPage === LOGIN_PAGE) {
-      sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-      sendPageEvent('login_and_registration', 'institution_login');
-    }
+    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    sendPageEvent(selectedPage === LOGIN_PAGE ? 'login' : 'register', 'institution_login');
+
     setInstitutionLogin(!institutionLogin);
   };
 
