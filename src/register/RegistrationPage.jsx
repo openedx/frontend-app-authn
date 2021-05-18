@@ -67,6 +67,7 @@ class RegistrationPage extends React.Component {
         country: '',
       },
       errorCode: null,
+      failureCount: 0,
       optionalFields,
       optionalFieldsState: {},
       showOptionalField: false,
@@ -164,7 +165,10 @@ class RegistrationPage extends React.Component {
     });
 
     if (!this.isFormValid(errors)) {
-      this.setState({ errorCode: FORM_SUBMISSION_ERROR });
+      this.setState(prevState => ({
+        errorCode: FORM_SUBMISSION_ERROR,
+        failureCount: prevState.failureCount + 1,
+      }));
       return;
     }
 
@@ -347,7 +351,11 @@ class RegistrationPage extends React.Component {
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
-            <RegistrationFailure errorCode={this.state.errorCode} context={{ provider: currentProvider }} />
+            <RegistrationFailure
+              errorCode={this.state.errorCode}
+              failureCount={this.state.failureCount}
+              context={{ provider: currentProvider }}
+            />
           ) : null}
           {currentProvider && (
             <>
