@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 
-import { Form, TransitionReplace } from '@edx/paragon';
+import {
+  Form, Hyperlink, TransitionReplace,
+} from '@edx/paragon';
 import PropTypes from 'prop-types';
+import AlertDismissible from './AlertDismissible';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
@@ -26,6 +29,7 @@ const FormGroup = (props) => {
         onFocus={handleFocus}
         onBlur={handleOnBlur}
         onChange={props.handleChange}
+        controlClassName={props.borderClass}
 
         trailingElement={props.trailingElement}
         floatingLabel={props.floatingLabel}
@@ -47,6 +51,10 @@ const FormGroup = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
+
+      {props.suggestedTopLevelDomain ? <AlertDismissible msg={props.suggestedTopLevelDomain} variant="danger" /> : null}
+
+      {props.suggestedServiceLevelDomain ? <span className="one-rem-font">{props.suggestedServiceLevelDomain.split(':')[0]}: <Hyperlink destination="#"><u>{props.suggestedServiceLevelDomain.split(':')[1]}</u></Hyperlink></span> : null}
       {props.children}
     </Form.Group>
   );
@@ -55,6 +63,9 @@ const FormGroup = (props) => {
 FormGroup.defaultProps = {
   as: 'input',
   errorMessage: '',
+  borderClass: '',
+  suggestedTopLevelDomain: '',
+  suggestedServiceLevelDomain: '',
   handleBlur: null,
   handleChange: () => {},
   handleFocus: null,
@@ -68,6 +79,9 @@ FormGroup.defaultProps = {
 FormGroup.propTypes = {
   as: PropTypes.string,
   errorMessage: PropTypes.string,
+  borderClass: PropTypes.string,
+  suggestedTopLevelDomain: PropTypes.string,
+  suggestedServiceLevelDomain: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,
