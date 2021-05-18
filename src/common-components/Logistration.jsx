@@ -18,11 +18,10 @@ const Logistration = (props) => {
   const { intl, selectedPage } = props;
   const [institutionLogin, setInstitutionLogin] = useState(false);
 
-  const handleInstitutionLogin = () => {
-    if (selectedPage === LOGIN_PAGE) {
-      sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-      sendPageEvent('login_and_registration', 'institution_login');
-    }
+  const handleInstitutionLogin = (e) => {
+    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    sendPageEvent('login_and_registration', e.target.dataset.eventName);
+
     setInstitutionLogin(!institutionLogin);
   };
 
@@ -35,6 +34,7 @@ const Logistration = (props) => {
             <Button
               variant="link"
               className="nav-item p-0 mb-1 logistration-button"
+              data-event-name={selectedPage === LOGIN_PAGE ? 'login' : 'register'}
               onClick={handleInstitutionLogin}
             >
               {selectedPage === LOGIN_PAGE

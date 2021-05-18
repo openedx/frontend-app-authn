@@ -13,6 +13,7 @@ export const RenderInstitutionButton = props => {
     <Button
       className="btn btn-link btn-sm text-body p-0 mb-4"
       variant="link"
+      data-event-name="institution_login"
       onClick={onSubmitHandler}
     >
       <Icon src={Institution} className="institute-icon" />
