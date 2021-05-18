@@ -10,8 +10,7 @@ const SmallScreenHeader = (props) => {
 
   return (
     <>
-      <div className="small-screen-top-stripe" />
-      <div className="bg-primary">
+      <div className="bg-primary small-screen-header">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="d-flex mt-3">
           <svg className="small-screen-svg-line">
