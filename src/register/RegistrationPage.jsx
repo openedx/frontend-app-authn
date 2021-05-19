@@ -246,12 +246,7 @@ class RegistrationPage extends React.Component {
           errors.email = intl.formatMessage(messages['empty.email.field.error']);
         } else if (value.length <= 2 || !emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-        } else if (payload && statusCode !== 403) {
-          this.props.fetchRealtimeValidations(payload);
-        } else {
-          errors.email = '';
-        }
-        if (emailRegex.test(value)) {
+        } else if (emailRegex.test(value)) {
           let emailLexemes = value.split('@');
           let domainLexemes = emailLexemes[1].split('.');
           const serviceProvider = domainLexemes[0];
@@ -288,6 +283,10 @@ class RegistrationPage extends React.Component {
           }
           emailLexemes = '';
           domainLexemes = '';
+        } else if (payload && statusCode !== 403) {
+          this.props.fetchRealtimeValidations(payload);
+        } else {
+          errors.email = '';
         }
         break;
       case 'name':
