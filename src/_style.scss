@@ -62,6 +62,11 @@ $accent-a-light: #c9f2f5;
   overflow: hidden;
 }
 
+.close {
+  padding-bottom: 0px !important;
+  padding-top: 3px !important;
+}
+
 .focus-out {
   position: absolute;
   padding-left: 17px;
@@ -498,4 +503,12 @@ select.form-control {
 .username-suggestion-label {
   font-size: 0.875rem;
   margin-right: 0.25rem;
+}
+
+.yellow-border {
+  border: 2px solid #F0CC00;
+}
+
+.one-rem-font {
+  font-size: 1rem;
 }
