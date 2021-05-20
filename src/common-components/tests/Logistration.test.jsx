@@ -109,7 +109,7 @@ describe('Logistration', () => {
     });
   });
 
-  it('send tracking and page events when institutional login button is clicked', () => {
+  it('send tracking and page events when institutional login button is clicked on login page', () => {
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
@@ -134,7 +134,39 @@ describe('Logistration', () => {
     logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
 
     expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login', 'institution_login');
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
+  it('send tracking and page events when institutional login button is clicked on register page', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
+    store = mockStore({
+      register: {
+        registrationResult: { success: false, redirectUrl: '' },
+        registrationError: {},
+      },
+      commonComponents: {
+        thirdPartyAuthContext: {
+          currentProvider: null,
+          finishAuthUrl: null,
+          providers: [],
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    const logistration = mount(reduxWrapper(<IntlLogistration />));
+    logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(analytics.sendPageEvent).toHaveBeenCalledWith('register', 'institution_login');
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
