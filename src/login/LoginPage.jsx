@@ -86,21 +86,18 @@ class LoginPage extends React.Component {
     }
 
     const payload = {
-      email: emailOrUsername, password, ...this.queryParams,
+      email_or_username: emailOrUsername, password, ...this.queryParams,
     };
     this.props.loginRequest(payload);
   }
 
   validateEmail(email) {
     const { errors } = this.state;
-    const regex = new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i, 'i');
 
     if (email === '') {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['email.validation.message']);
     } else if (email.length < 3) {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['email.format.validation.less.chars.message']);
-    } else if (!regex.test(email)) {
-      errors.emailOrUsername = this.props.intl.formatMessage(messages['email.format.validation.message']);
     } else {
       errors.emailOrUsername = '';
     }

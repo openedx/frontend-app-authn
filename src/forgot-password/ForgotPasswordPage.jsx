@@ -143,10 +143,8 @@ const ForgotPasswordPage = (props) => {
                     <Hyperlink id="forgot-password" className="btn btn-link font-weight-500 text-body" destination={getConfig().LOGIN_ISSUE_SUPPORT_LINK}>
                       {intl.formatMessage(messages['need.help.sign.in.text'])}
                     </Hyperlink>
-                    <p className="mt-5">{intl.formatMessage(
-                      messages['additional.help.text'],
-                      { infoEmail: process.env.INFO_EMAIL },
-                    )}
+                    <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
+                      <span><Hyperlink destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
                     </p>
                   </Form>
                 </div>
