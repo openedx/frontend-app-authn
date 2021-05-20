@@ -11,7 +11,7 @@ export async function loginRequest(creds) {
 
   const { data } = await getAuthenticatedHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/user_api/v1/account/login_session/`,
+      `${getConfig().LMS_BASE_URL}/api/user/v2/account/login_session/`,
       querystring.stringify(creds),
       requestConfig,
     )
