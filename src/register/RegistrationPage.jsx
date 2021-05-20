@@ -271,6 +271,7 @@ class RegistrationPage extends React.Component {
             let suggestedSld = closest(serviceProvider, DEFAULT_SERVICE_PROVIDER_DOMAINS);
             suggestedSld = `${emailLexemes[0]}@${suggestedSld}.${domainLexemes[1]}`;
             suggestedSld = intl.formatMessage(messages['did.you.mean.alert.text'], { email: suggestedSld });
+            errors.email = '';
             this.setState({
               suggestedServiceLevelDomain: suggestedSld,
               borderClass: 'yellow-border',
