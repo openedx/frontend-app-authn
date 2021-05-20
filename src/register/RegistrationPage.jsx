@@ -75,6 +75,7 @@ class RegistrationPage extends React.Component {
       updateFieldErrors: false,
       updateAlertErrors: false,
       registrationErrorsUpdated: false,
+      optimizelyExperimentName: '',
     };
   }
 
@@ -85,6 +86,7 @@ class RegistrationPage extends React.Component {
       payload.tpa_hint = this.tpaHint;
     }
     this.props.getThirdPartyAuthContext(payload);
+    this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -124,6 +126,14 @@ class RegistrationPage extends React.Component {
 
     return true;
   }
+
+  getExperiments = () => {
+    const { optimizelyExperimentName } = window;
+
+    if (optimizelyExperimentName) {
+      this.setState({ optimizelyExperimentName });
+    }
+  };
 
   getCountryOptions = () => {
     const { intl } = this.props;
@@ -577,7 +587,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'hide_optional_fields' ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"

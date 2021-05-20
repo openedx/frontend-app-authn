@@ -126,6 +126,16 @@ describe('RegistrationPageTests', () => {
     jest.clearAllMocks();
   });
 
+  it('should not show optional field check when optimizely experiment is set', () => {
+    window.optimizelyExperimentName = 'hide_optional_fields';
+
+    const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+    expect(registrationPage.find('RegistrationPage').state('optimizelyExperimentName')).toEqual('hide_optional_fields');
+    expect(registrationPage.find('#optional').length).toEqual(0);
+
+    delete window.optimizelyExperimentName;
+  });
+
   it('should toggle optional fields state on checkbox click', () => {
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
