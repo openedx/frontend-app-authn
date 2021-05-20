@@ -23,7 +23,7 @@ const LoginFailureMessage = (props) => {
   const { context, errorCode, value } = props.loginError;
   let errorList;
   let link;
-  const resetLink = (
+  let resetLink = (
     <>
       <Alert.Link href="/reset">
         {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
@@ -94,18 +94,23 @@ const LoginFailureMessage = (props) => {
       );
       break;
     case FAILED_LOGIN_ATTEMPT: {
+      resetLink = (
+        <>
+          <Alert.Link href="/reset">
+            {intl.formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
+          </Alert.Link>
+        </>
+      );
       errorList = (
         <FormattedMessage
           id="login.incorrect.credentials.error.attempts.text"
           description="Error message for incorrect email or password including attempts"
-          defaultMessage="The username, email or password you entered is incorrect. Please try again or {resetLink}{lineBreak}
-            {lineBreak}Attempts remaining:{remainingAttempts}
-            {lineBreak}{warning}After {allowedFailureAttempts} unsuccessful login attempts, your account will be locked."
+          defaultMessage="The username, email or password you entered is incorrect. You have {remainingAttempts} more sign in
+            attempts before your account is temporarily locked.{lineBreak}
+            {lineBreak}If you've forgotten your password, {resetLink}"
           values={{
             lineBreak: <br />,
-            remainingAttempts: <strong> {context.remainingAttempts}</strong>,
-            warning: <strong>Warning: </strong>,
-            allowedFailureAttempts: <strong>{context.allowedFailureAttempts} consecutive</strong>,
+            remainingAttempts: context.remainingAttempts,
             resetLink,
           }}
         />
@@ -117,12 +122,11 @@ const LoginFailureMessage = (props) => {
         <FormattedMessage
           id="login.locked.out.error.message"
           description="Account locked out user message"
-          defaultMessage="The username, email or password you entered is incorrect. Please try again or {resetLink}{lineBreak}
-          {lineBreak} {blockText}"
+          defaultMessage="To protect your account, its been temporarily locked. Try again in 30 minutes. {lineBreak}
+          {lineBreak} To be on the safe side, you can {resetLink} before try again."
           values={{
             lineBreak: <br />,
             resetLink,
-            blockText: <p className="text-danger"> Your account {props.loginError.email} is blocked for 30 minutes due to reaching the maximum {context.allowedFailureAttempts} failed login attempts.</p>,
           }}
         />
       );
@@ -169,7 +173,7 @@ const LoginFailureMessage = (props) => {
     <Alert id="login-failure-alert" className="mb-5" variant="danger">
       <Icon src={Info} className="alert-icon" />
       <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      { errorList }
+      <span className="one-rem-font">{ errorList }</span>
     </Alert>
   );
 };
