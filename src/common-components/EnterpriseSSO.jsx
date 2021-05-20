@@ -32,21 +32,20 @@ const EnterpriseSSO = (props) => {
       <div className="d-flex justify-content-center m-4">
         <div className="d-flex flex-column">
           <div className="mw-450">
-            <h3>Sign in</h3>
             <Form className="m-0">
               <p>{intl.formatMessage(messages['enterprisetpa.title.heading'], { providerName: tpaProvider.name })}</p>
               <Button
                 id={tpaProvider.id}
                 key={tpaProvider.id}
                 type="submit"
-                variant="primary"
-                className="btn-tpa"
+                variant="link"
+                className={`btn-tpa btn-${tpaProvider.id}`}
                 onClick={(e) => handleSubmit(e, tpaProvider.loginUrl)}
               >
                 {tpaProvider.iconImage ? (
                   <div aria-hidden="true">
                     <img className="icon-image" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
-                    <span className="pl-2" aria-hidden="true">{intl.formatMessage(messages['enterprisetpa.sso.button.title'], { providerName: tpaProvider.name })}</span>
+                    <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
                   </div>
                 )
                   : (
@@ -56,7 +55,7 @@ const EnterpriseSSO = (props) => {
                           icon={SUPPORTED_ICON_CLASSES.includes(tpaProvider.iconClass) ? ['fab', tpaProvider.iconClass] : faSignInAlt}
                         />
                       </div>
-                      <span className="pl-2" aria-hidden="true">{intl.formatMessage(messages['enterprisetpa.sso.button.title'], { providerName: tpaProvider.name })}</span>
+                      <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
                     </>
                   )}
               </Button>
