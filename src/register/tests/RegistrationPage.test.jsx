@@ -532,7 +532,6 @@ describe('RegistrationPage', () => {
     // ******** test hinted third party auth ********
 
     it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
-      const expectedMessage = `Sign in using ${ssoProvider.name}`;
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -550,7 +549,8 @@ describe('RegistrationPage', () => {
       ssoProvider.iconImage = null;
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registerPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(expectedMessage);
+      expect(registerPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
+      expect(registerPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
     });
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {

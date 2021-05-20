@@ -362,7 +362,8 @@ describe('LoginPage', () => {
     ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(`Sign in using ${ssoProvider.name}`);
+    expect(loginPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
+    expect(loginPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
   });
 
   it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
