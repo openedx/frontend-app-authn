@@ -6,23 +6,27 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import messages from './messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { updatePathWithQueryParams } from '../data/utils';
+import { updatePathWithQueryParams, getTpaHint } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 
 const Logistration = (props) => {
   const { intl, selectedPage } = props;
+  const tpa = getTpaHint();
 
   return (
     <div>
-      <span className="nav nav-tabs">
-        <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
-          {intl.formatMessage(messages['logistration.register'])}
-        </Link>
-        <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
-          {intl.formatMessage(messages['logistration.sign.in'])}
-        </Link>
-      </span>
+      {!tpa
+      && (
+        <span className="nav nav-tabs">
+          <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
+            {intl.formatMessage(messages['logistration.register'])}
+          </Link>
+          <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
+            {intl.formatMessage(messages['logistration.sign.in'])}
+          </Link>
+        </span>
+      )}
       <div id="main-content" className="main-content">
         {selectedPage === LOGIN_PAGE ? <LoginPage /> : <RegistrationPage />}
       </div>
