@@ -252,6 +252,7 @@ class RegistrationPage extends React.Component {
         } else if (value.length <= 2 || !emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
         } else if (emailRegex.test(value)) {
+          errors.email = '';
           let emailLexemes = value.split('@');
           let domainLexemes = emailLexemes[1].split('.');
           const serviceProvider = domainLexemes[0];

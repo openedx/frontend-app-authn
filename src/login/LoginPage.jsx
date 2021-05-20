@@ -31,7 +31,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, ENTERPRISE_LOGIN_URL, PENDING_STATE, RESET_PAGE, VALID_EMAIL_REGEX,
+  DEFAULT_STATE, ENTERPRISE_LOGIN_URL, PENDING_STATE, RESET_PAGE,
 } from '../data/constants';
 import {
   getTpaHint,
@@ -91,21 +91,18 @@ class LoginPage extends React.Component {
     }
 
     const payload = {
-      email: emailOrUsername, password, ...this.queryParams,
+      email_or_username: emailOrUsername, password, ...this.queryParams,
     };
     this.props.loginRequest(payload);
   }
 
   validateEmail(email) {
     const { errors } = this.state;
-    const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
     if (email === '') {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['email.validation.message']);
     } else if (email.length < 3) {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['email.format.validation.less.chars.message']);
-    } else if (!regex.test(email)) {
-      errors.emailOrUsername = this.props.intl.formatMessage(messages['email.format.validation.message']);
     } else {
       errors.emailOrUsername = '';
     }

@@ -84,8 +84,8 @@ describe('LoginFailureMessage', () => {
         <IntlLoginFailureMessage {...props} />
       </IntlProvider>,
     );
-    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again or '
-                            + 'reset your password Attempts remaining: 3 Warning: After 6 consecutive unsuccessful login attempts, your account will be locked.';
+    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. '
+                            + 'You have 3 more sign in attempts before your account is temporarily locked. If you\'ve forgotten your password, click here to reset it.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
