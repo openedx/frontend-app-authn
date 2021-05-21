@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'institution.login.page.sub.heading': {
     id: 'institution.login.page.sub.heading',
-    defaultMessage: 'Choose your institution from the list below:',
+    defaultMessage: 'Choose your institution from the list below',
     description: 'Heading of the institutions list',
   },
   // Confirmation Alert Message
