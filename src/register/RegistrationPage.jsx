@@ -70,7 +70,6 @@ class RegistrationPage extends React.Component {
       },
       errorCode: null,
       failureCount: 0,
-      institutionLogin: false,
       optionalFields,
       optionalFieldsState: {},
       showOptionalField: false,
@@ -152,10 +151,6 @@ class RegistrationPage extends React.Component {
         }
       />
     );
-  }
-
-  handleInstitutionLogin = () => {
-    this.setState(prevState => ({ institutionLogin: !prevState.institutionLogin }));
   }
 
   handleSubmit = (e) => {
@@ -343,24 +338,37 @@ class RegistrationPage extends React.Component {
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
-    let thirdPartyComponent = null;
-    if ((providers.length || secondaryProviders.length) && !currentProvider) {
-      thirdPartyComponent = (
-        <>
-          <RenderInstitutionButton
-            onSubmitHandler={this.handleInstitutionLogin}
-            secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
-            buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
-          />
-          <div className="row m-0">
-            <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+    const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
+    const isSocialAuthActive = !!providers.length && !currentProvider;
+    const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+
+    return (
+      <>
+        {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
+          <div className="mt-4 mb-3 h4">
+            {intl.formatMessage(messages['registration.other.options.heading'])}
           </div>
-        </>
-      );
-    } else if (thirdPartyAuthApiStatus === PENDING_STATE) {
-      thirdPartyComponent = <Skeleton className="tpa-skeleton" height={36} count={2} />;
-    }
-    return thirdPartyComponent;
+        )}
+
+        {thirdPartyAuthApiStatus === PENDING_STATE ? (
+          <Skeleton className="tpa-skeleton" height={36} count={2} />
+        ) : (
+          <>
+            {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
+              <RenderInstitutionButton
+                onSubmitHandler={this.props.handleInstitutionLogin}
+                buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
+              />
+            )}
+            {isSocialAuthActive && (
+              <div className="row m-0">
+                <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+              </div>
+            )}
+          </>
+        )}
+      </>
+    );
   }
 
   renderForm(currentProvider,
@@ -370,13 +378,11 @@ class RegistrationPage extends React.Component {
     finishAuthUrl,
     submitState,
     intl) {
-    if (this.state.institutionLogin) {
+    if (this.props.institutionLogin) {
       return (
         <InstitutionLogistration
-          onSubmitHandler={this.handleInstitutionLogin}
           secondaryProviders={this.props.thirdPartyAuthContext.secondaryProviders}
           headingTitle={intl.formatMessage(messages['register.institution.login.page.title'])}
-          buttonTitle={intl.formatMessage(messages['create.an.account'])}
         />
       );
     }
@@ -542,12 +548,6 @@ class RegistrationPage extends React.Component {
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            {(providers.length || secondaryProviders.length || thirdPartyAuthApiStatus === PENDING_STATE)
-              && !currentProvider ? (
-                <div className="mb-3 h4">
-                  {intl.formatMessage(messages['registration.other.options.heading'])}
-                </div>
-              ) : null}
             {this.renderThirdPartyAuth(providers,
               secondaryProviders,
               currentProvider,
@@ -654,6 +654,8 @@ RegistrationPage.propTypes = {
   clearUsernameSuggestions: PropTypes.func.isRequired,
   statusCode: PropTypes.number,
   usernameSuggestions: PropTypes.arrayOf(string),
+  institutionLogin: PropTypes.bool.isRequired,
+  handleInstitutionLogin: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => {

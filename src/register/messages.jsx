@@ -67,7 +67,7 @@ const messages = defineMessages({
   // Institution login
   'register.institution.login.button': {
     id: 'register.institution.login.button',
-    defaultMessage: 'Use my institution/campus credentials',
+    defaultMessage: 'Institution/campus credentials',
     description: 'shows institutions list',
   },
   'register.institution.login.page.title': {
