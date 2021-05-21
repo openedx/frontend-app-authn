@@ -446,6 +446,12 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
+      // Fire optimizely event
+      window.optimizely = window.optimizely || [];
+      window.optimizely.push({
+        type: 'event',
+        eventName: 'user_registered_successfully',
+      });
     }
 
     return (
