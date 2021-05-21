@@ -10,12 +10,13 @@ import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import messages from './messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { updatePathWithQueryParams } from '../data/utils';
+import { updatePathWithQueryParams, getTpaHint } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 
 const Logistration = (props) => {
   const { intl, selectedPage } = props;
+  const tpa = getTpaHint();
   const [institutionLogin, setInstitutionLogin] = useState(false);
 
   const handleInstitutionLogin = (e) => {
@@ -43,7 +44,8 @@ const Logistration = (props) => {
             </Button>
           </span>
         )
-        : (
+        : {!tpa
+        && (
           <span className="nav nav-tabs">
             <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
               {intl.formatMessage(messages['logistration.register'])}
@@ -52,7 +54,7 @@ const Logistration = (props) => {
               {intl.formatMessage(messages['logistration.sign.in'])}
             </Link>
           </span>
-        )}
+      )}
       <div id="main-content" className="main-content">
         {selectedPage === LOGIN_PAGE
           ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
