@@ -15,7 +15,6 @@ import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/ac
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 
-import { RenderInstitutionButton } from '../../common-components';
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -77,6 +76,8 @@ describe('LoginPage', () => {
     store = mockStore(initialState);
     props = {
       loginRequest: jest.fn(),
+      handleInstitutionLogin: jest.fn(),
+      institutionLogin: false,
     };
   });
 
@@ -171,6 +172,10 @@ describe('LoginPage', () => {
   });
 
   it('should show single sign on provider button', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -184,31 +189,15 @@ describe('LoginPage', () => {
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
   });
 
   it('should not display institution login option when no secondary providers are present', () => {
     const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(root.text().includes('Use my university info')).toBe(false);
-  });
-
-  it('should display institution login option when secondary providers are present', () => {
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          secondaryProviders: [secondaryProviders],
-        },
-      },
-    });
-
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.text().includes('Use my university info')).toBe(true);
-
-    // on clicking "Use my university info" button, it should display institution login page
-    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
-    expect(loginPage.text().includes('Test University')).toBe(true);
   });
 
   // ******** test alert messages ********
@@ -322,6 +311,10 @@ describe('LoginPage', () => {
   });
 
   it('should redirect to social auth provider url on SSO button click', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
     const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
       ...initialState,
@@ -344,6 +337,10 @@ describe('LoginPage', () => {
 
     loginPage.find('button#oa2-apple-id').simulate('click');
     expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
   });
 
   // ******** test hinted third party auth ********
@@ -392,6 +389,10 @@ describe('LoginPage', () => {
   });
 
   it('should render regular tpa button for invalid tpa_hint value', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -410,6 +411,10 @@ describe('LoginPage', () => {
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(`${ssoProvider.name}`);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
   });
 
   // ******** miscellaneous tests ********
@@ -422,24 +427,6 @@ describe('LoginPage', () => {
   it('should send page event when login page is rendered', () => {
     mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
-  });
-
-  it('send tracking and page events when institutional button is clicked', () => {
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-          secondaryProviders: [secondaryProviders],
-        },
-      },
-    });
-    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    loginPage.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
-
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
   });
 
   it('tests that form is only scrollable on form submission', () => {

@@ -54,7 +54,7 @@ const messages = defineMessages({
   },
   'institution.login.button': {
     id: 'institution.login.button',
-    defaultMessage: 'Use my university info',
+    defaultMessage: 'Institution/campus credentials',
     description: 'shows institutions list',
   },
   'institution.login.page.title': {
@@ -64,7 +64,7 @@ const messages = defineMessages({
   },
   'institution.login.page.sub.heading': {
     id: 'institution.login.page.sub.heading',
-    defaultMessage: 'Choose your institution from the list below:',
+    defaultMessage: 'Choose your institution from the list below',
     description: 'Heading of the institutions list',
   },
   'institution.login.page.back.button': {
