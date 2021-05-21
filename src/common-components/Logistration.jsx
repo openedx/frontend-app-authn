@@ -44,17 +44,20 @@ const Logistration = (props) => {
             </Button>
           </span>
         )
-        : {!tpa
-        && (
-          <span className="nav nav-tabs">
-            <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
-              {intl.formatMessage(messages['logistration.register'])}
-            </Link>
-            <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
-              {intl.formatMessage(messages['logistration.sign.in'])}
-            </Link>
-          </span>
-      )}
+        : (
+          <>
+            {!tpa && (
+              <span className="nav nav-tabs">
+                <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
+                  {intl.formatMessage(messages['logistration.register'])}
+                </Link>
+                <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
+                  {intl.formatMessage(messages['logistration.sign.in'])}
+                </Link>
+              </span>
+            )}
+          </>
+        )}
       <div id="main-content" className="main-content">
         {selectedPage === LOGIN_PAGE
           ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
