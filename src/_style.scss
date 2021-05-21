@@ -321,6 +321,7 @@ select.form-control {
   box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.3) !important;
 }
 #password-requirement-left {
+  opacity: 1;
   .tooltip-inner {
     @extend .tooltip-shadow;
     background: white;
@@ -335,6 +336,7 @@ select.form-control {
 }
 
 #password-requirement-top {
+  opacity: 1;
   .tooltip-inner {
     background: white;
     max-width: 465px;
