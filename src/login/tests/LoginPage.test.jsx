@@ -87,7 +87,7 @@ describe('LoginPage', () => {
     loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
-    expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email: 'test@example.com', password: 'password' }));
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email_or_username: 'test@example.com', password: 'password' }));
   });
 
   it('should not dispatch loginRequest on empty form submission', () => {
@@ -120,19 +120,6 @@ describe('LoginPage', () => {
 
     loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
     loginPage.find('input#email').simulate('change', { target: { value: 'te', name: 'email' } });
-    loginPage.find('button.btn-brand').simulate('click');
-
-    expect(loginPage.state('errors')).toEqual(errorState);
-  });
-
-  it('should match the state for invalid email format on form submission', () => {
-    const errorState = { emailOrUsername: 'The email address you\'ve provided isn\'t formatted correctly.', password: '' };
-    store.dispatch = jest.fn(store.dispatch);
-
-    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
-
-    loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
-    loginPage.find('input#email').simulate('change', { target: { value: 'test@', name: 'email' } });
     loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.state('errors')).toEqual(errorState);
