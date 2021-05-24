@@ -208,6 +208,11 @@ const messages = defineMessages({
     defaultMessage: 'reset your password',
     description: 'Reset password link text for incorrect email or password credentials',
   },
+  'login.incorrect.credentials.error.before.account.blocked.text': {
+    id: 'login.incorrect.credentials.error.before.account.blocked.text',
+    defaultMessage: 'click here to reset it.',
+    description: 'Reset password link text for incorrect email or password credentials before blocking account',
+  },
 });
 
 export default messages;
