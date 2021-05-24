@@ -337,10 +337,11 @@ select.form-control {
 
 #password-requirement-top {
   opacity: 1;
+  width: 90%;
+  margin-bottom: 10px;
   .tooltip-inner {
+    max-width: inherit;
     background: white;
-    max-width: 465px;
-    width: 465px;
     display: block;
     @extend .tooltip-shadow;
     color: #707070;
