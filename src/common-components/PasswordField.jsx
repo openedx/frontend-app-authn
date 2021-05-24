@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
 import {
-  IconButton, useToggle, Tooltip, OverlayTrigger, Icon,
+  Form, IconButton, useToggle, Tooltip, OverlayTrigger, Icon,
 } from '@edx/paragon';
 import { Check, Remove } from '@edx/paragon/icons';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
-import FormGroup from './FormGroup';
 import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 
@@ -46,20 +45,32 @@ const PasswordField = (props) => {
       </span>
     </Tooltip>
   );
+
   return (
-    <OverlayTrigger key="tooltip" placement={placement} overlay={tooltip} show={showTooltip}>
-      <FormGroup
-        {...props}
-        handleFocus={() => setTimeout(() => setShowTooltip(props.showRequirements && true), 150)}
-        handleBlur={handleBlur}
-        type={isPasswordHidden ? 'password' : 'text'}
-        trailingElement={isPasswordHidden ? ShowButton : HideButton}
-      />
-    </OverlayTrigger>
+    <Form.Group controlId={props.name} className="mb-4" isInvalid={props.errorMessage !== ''}>
+      <OverlayTrigger key="tooltip" placement={placement} overlay={tooltip} show={showTooltip}>
+        <Form.Control
+          as="input"
+          type={isPasswordHidden ? 'password' : 'text'}
+          name={props.name}
+          value={props.value}
+          onFocus={() => setTimeout(() => setShowTooltip(props.showRequirements && true), 150)}
+          onBlur={handleBlur}
+          onChange={props.handleChange}
+          controlClassName={props.borderClass}
+          trailingElement={isPasswordHidden ? ShowButton : HideButton}
+          floatingLabel={props.floatingLabel}
+        />
+      </OverlayTrigger>
+      {props.errorMessage !== '' && (
+        <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
+      )}
+    </Form.Group>
   );
 };
 
 PasswordField.defaultProps = {
+  borderClass: '',
   errorMessage: '',
   handleBlur: null,
   handleChange: () => {},
@@ -67,6 +78,7 @@ PasswordField.defaultProps = {
 };
 
 PasswordField.propTypes = {
+  borderClass: PropTypes.string,
   errorMessage: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
