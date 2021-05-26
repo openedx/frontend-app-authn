@@ -69,6 +69,7 @@ initialize({
         COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
         WELCOME_PAGE_SUPPORT_LINK: process.env.WELCOME_PAGE_SUPPORT_LINK || null,
         DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || '',
+        INFO_EMAIL: process.env.INFO_EMAIL || '',
       });
     },
   },
