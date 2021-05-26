@@ -292,6 +292,32 @@ describe('RegistrationPage', () => {
       expect(registrationPage.state('errorCode')).toEqual('duplicate-username');
     });
 
+    // ******** test clear error messages on focus in ********
+
+    it('should clear field related error messages on input field Focus', () => {
+      const errors = {
+        email: '',
+        name: '',
+        username: '',
+        password: '',
+        country: '',
+      };
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button.btn-brand').simulate('click');
+
+      expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
+      registrationPage.find('input#name').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
+      registrationPage.find('input#username').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="email"]').text()).toEqual(emptyFieldValidation.email);
+      registrationPage.find('input#email').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="password"]').text()).toEqual(emptyFieldValidation.password);
+      registrationPage.find('input#password').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
+      registrationPage.find('select#country').simulate('blur', { target: { value: 'US', name: 'country' } });
+      expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+    });
+
     // ******** test alert messages ********
 
     it('should match third party auth alert', () => {

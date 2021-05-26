@@ -92,6 +92,12 @@ class LoginPage extends React.Component {
     this.props.loginRequest(payload);
   }
 
+  handleOnFocus = (e) => {
+    const { errors } = this.state;
+    errors[e.target.name] = '';
+    this.setState({ errors });
+  }
+
   validateEmail(email) {
     const { errors } = this.state;
 
@@ -201,9 +207,10 @@ class LoginPage extends React.Component {
           {this.props.resetPassword && !this.props.loginError ? <ResetPasswordSuccess /> : null}
           <Form>
             <FormGroup
-              name="email"
+              name="emailOrUsername"
               value={this.state.emailOrUsername}
               handleChange={(e) => this.setState({ emailOrUsername: e.target.value, isSubmitted: false })}
+              handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.emailOrUsername}
               floatingLabel={intl.formatMessage(messages['login.user.identity.label'])}
             />
@@ -212,6 +219,7 @@ class LoginPage extends React.Component {
               value={this.state.password}
               showRequirements={false}
               handleChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
+              handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.password}
               floatingLabel={intl.formatMessage(messages['login.password.label'])}
             />

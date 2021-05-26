@@ -99,6 +99,10 @@ describe('ResetPasswordPage', () => {
     );
     expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual('Password criteria has not been met');
     expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toEqual('Confirm your password');
+    resetPasswordPage.find('input#newPassword').simulate('focus');
+    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
+    resetPasswordPage.find('input#confirmPassword').simulate('focus');
+    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').exists()).toBe(false);
   });
 
   it('should show error message when new and confirm password do not match', () => {
