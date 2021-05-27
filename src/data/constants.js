@@ -37,4 +37,4 @@ export const DEFAULT_TOP_LEVEL_DOMAINS = ['com', 'com.au', 'com.tw', 'ca', 'co.n
   'ie', 'co.il', 'us', 'at', 'be', 'dk', 'hk', 'es', 'gr', 'ch', 'no', 'cz',
   'in', 'net', 'net.au', 'info', 'biz', 'mil', 'co.jp', 'sg', 'hu', 'uk'];
 
-export const DEFAULT_SERVICE_PROVIDER_DOMAINS = ['yahoo', 'hotmail', 'live', 'outlook', 'gmx', 'gmail'];
+export const DEFAULT_SERVICE_PROVIDER_DOMAINS = ['yahoo', 'hotmail', 'live', 'outlook', 'gmx', 'gmail', 'edx'];
