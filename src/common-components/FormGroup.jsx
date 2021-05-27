@@ -38,7 +38,7 @@ const FormGroup = (props) => {
       </Form.Control>
       <TransitionReplace>
         {hasFocus && props.helpText ? (
-          <Form.Control.Feedback key="help-text" className="d-block">
+          <Form.Control.Feedback type="default" key="help-text" className="d-block">
             {props.helpText.map((message, index) => (
               <span key={`help-text-${index.toString()}`}>
                 {message}
@@ -49,7 +49,7 @@ const FormGroup = (props) => {
         ) : <div key="empty" />}
       </TransitionReplace>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
 
       {props.suggestedTopLevelDomain ? <AlertDismissible msg={props.suggestedTopLevelDomain} variant="danger" /> : null}
