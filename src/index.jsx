@@ -15,13 +15,14 @@ import configureStore from './data/configureStore';
 import { RegistrationPage } from './register';
 import { LoginPage } from './login';
 import {
-  LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM,
+  LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM, WELCOME_PAGE,
 } from './data/constants';
 import ForgotPasswordPage from './forgot-password';
 import {
   HeaderLayout, UnAuthOnlyRoute, registerIcons, NotFoundPage,
 } from './common-components';
 import ResetPasswordPage from './reset-password';
+import WelcomePage from './welcome';
 import appMessages from './i18n';
 
 import './index.scss';
@@ -40,6 +41,7 @@ subscribe(APP_READY, () => {
           <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={RegistrationPage} />
           <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
           <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
+          <Route exact path={WELCOME_PAGE} component={WelcomePage} />
           <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
           <Route path="*">
             <Redirect to={PAGE_NOT_FOUND} />
@@ -67,6 +69,7 @@ initialize({
         REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
         USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME || null,
         COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
+        WELCOME_PAGE_SUPPORT_LINK: process.env.WELCOME_PAGE_SUPPORT_LINK || null,
       });
     },
   },
