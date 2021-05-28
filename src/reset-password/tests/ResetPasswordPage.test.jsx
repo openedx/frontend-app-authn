@@ -1,9 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { act } from 'react-dom/test-utils';
-import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as auth from '@edx/frontend-platform/auth';
@@ -12,6 +13,7 @@ import { APIFailureMessage } from '../../common-components';
 
 import ResetPasswordPage from '../ResetPasswordPage';
 import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { PASSWORD_RESET } from '../data/constants';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -27,7 +29,9 @@ describe('ResetPasswordPage', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
+      <MemoryRouter>
+        <Provider store={store}>{children}</Provider>
+      </MemoryRouter>
     </IntlProvider>
   );
 
@@ -47,7 +51,6 @@ describe('ResetPasswordPage', () => {
     props = {
       resetPassword: jest.fn(),
       status: null,
-      token_status: 'pending',
       token: null,
       errors: null,
       match: {
@@ -60,62 +63,9 @@ describe('ResetPasswordPage', () => {
     jest.clearAllMocks();
   });
 
-  it('should match reset password default section snapshot', () => {
-    props = {
-      ...props,
-      token: 'token',
-      token_status: 'valid',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('show spinner component during token validation', () => {
-    props = {
-      ...props,
-      token_status: 'pending',
-      match: {
-        params: {
-          token: 'test-token',
-        },
-      },
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match invalid token message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'invalid',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match pending reset message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-      status: 'pending',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match successful reset message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-      status: 'success',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+  it('show spinner during token validation', () => {
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find('div.spinner-header')).toBeTruthy();
   });
 
   it('should display invalid password message', async () => {
@@ -248,15 +198,14 @@ describe('ResetPasswordPage', () => {
     const bannerMessage = 'Failed to reset passwordAn error has occurred. Try refreshing the page, or check your internet connection.';
     props = {
       ...props,
-      status: 'failure',
-      errors: INTERNAL_SERVER_ERROR,
+      status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
     };
 
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('button.btn-primary').simulate('click');
+    resetPasswordPage.find('button.btn-brand').simulate('click');
 
     resetPasswordPage.update();
-    expect(resetPasswordPage.find('#internal-server-error').first().text()).toEqual(bannerMessage);
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
   });
 
   it('check api failure banner rendered', () => {

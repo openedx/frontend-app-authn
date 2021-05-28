@@ -2,9 +2,9 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
+import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import * as analytics from '@edx/frontend-platform/analytics';
@@ -25,6 +25,11 @@ const initialState = {
 };
 
 describe('ForgotPasswordPage', () => {
+  mergeConfig({
+    LOGIN_ISSUE_SUPPORT_LINK: '',
+    INFO_EMAIL: '',
+  });
+
   let props = {};
   let store = {};
 
@@ -42,32 +47,6 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: jest.fn(),
       status: null,
     };
-  });
-
-  it('should match default section snapshot', () => {
-    const tree = renderer.create(reduxWrapper(<IntlForgotPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match forbidden section snapshot', () => {
-    props = {
-      ...props,
-      status: 'forbidden',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlForgotPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match pending section snapshot', () => {
-    props = {
-      ...props,
-      status: 'pending',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlForgotPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
   });
 
   it('should display need other help signing in button', () => {
@@ -96,7 +75,7 @@ describe('ForgotPasswordPage', () => {
                             + 'An error has occurred. Try refreshing the page, or check your internet connection.';
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    expect(wrapper.find('#internal-server-error').first().text()).toEqual(expectedMessage);
+    expect(wrapper.find('#validation-errors').first().text()).toEqual(expectedMessage);
   });
 
   it('should display empty email validation message', async () => {
