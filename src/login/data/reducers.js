@@ -15,6 +15,7 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         submitState: PENDING_STATE,
+        resetPassword: false,
       };
     case LOGIN_REQUEST.SUCCESS:
       return {
@@ -40,7 +41,6 @@ const reducer = (state = defaultState, action) => {
     default:
       return {
         ...state,
-        resetPassword: false,
       };
   }
 };
