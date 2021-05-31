@@ -139,7 +139,7 @@ describe('ForgotPasswordPage', () => {
     });
 
     forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('.pgn__form-control-description-invalid').text()).toEqual(validationMessage);
+    expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
   });
 
   it('check cookie rendered', () => {

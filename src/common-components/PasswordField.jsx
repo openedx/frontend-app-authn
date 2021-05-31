@@ -63,7 +63,7 @@ const PasswordField = (props) => {
         />
       </OverlayTrigger>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
     </Form.Group>
   );
