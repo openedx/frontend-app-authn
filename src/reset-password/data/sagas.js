@@ -6,15 +6,15 @@ import {
   VALIDATE_TOKEN,
   validateTokenBegin,
   validateTokenSuccess,
-  validateTokenFailure,
   RESET_PASSWORD,
   resetPasswordBegin,
   resetPasswordSuccess,
   resetPasswordFailure,
+  passwordResetFailure,
 } from './actions';
 
 import { validateToken, resetPassword } from './service';
-import { INTERNAL_SERVER_ERROR, API_RATELIMIT_ERROR } from '../../data/constants';
+import { PASSWORD_RESET, PASSWORD_VALIDATION_ERROR } from './constants';
 
 // Services
 export function* handleValidateToken(action) {
@@ -25,15 +25,14 @@ export function* handleValidateToken(action) {
     if (isValid) {
       yield put(validateTokenSuccess(isValid, action.payload.token));
     } else {
-      yield put(validateTokenFailure(isValid));
+      yield put(passwordResetFailure(PASSWORD_RESET.INVALID_TOKEN));
     }
   } catch (err) {
-    const statusCodes = [429];
-    if (err.response && statusCodes.includes(err.response.status)) {
-      yield put(validateTokenFailure(API_RATELIMIT_ERROR));
+    if (err.response && err.response.status === 429) {
+      yield put(passwordResetFailure(PASSWORD_RESET.FORBIDDEN_REQUEST));
       logInfo(err);
     } else {
-      yield put(validateTokenFailure(INTERNAL_SERVER_ERROR));
+      yield put(passwordResetFailure(PASSWORD_RESET.INTERNAL_SERVER_ERROR));
       logError(err);
     }
   }
@@ -49,15 +48,14 @@ export function* handleResetPassword(action) {
     if (resetStatus) {
       yield put(resetPasswordSuccess(resetStatus));
     } else {
-      yield put(resetPasswordFailure(resetErrors));
+      yield put(resetPasswordFailure(PASSWORD_VALIDATION_ERROR, resetErrors));
     }
   } catch (err) {
-    const statusCodes = [429];
-    if (err.response && statusCodes.includes(err.response.status)) {
-      yield put(resetPasswordFailure(API_RATELIMIT_ERROR));
+    if (err.response && err.response.status === 429) {
+      yield put(resetPasswordFailure(PASSWORD_RESET.FORBIDDEN_REQUEST));
       logInfo(err);
     } else {
-      yield put(resetPasswordFailure(INTERNAL_SERVER_ERROR));
+      yield put(resetPasswordFailure(PASSWORD_RESET.INTERNAL_SERVER_ERROR));
       logError(err);
     }
   }

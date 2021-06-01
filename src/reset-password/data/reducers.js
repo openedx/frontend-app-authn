@@ -1,9 +1,10 @@
-import { RESET_PASSWORD, VALIDATE_TOKEN } from './actions';
+import { RESET_PASSWORD, VALIDATE_TOKEN, PASSWORD_RESET_FAILURE } from './actions';
+import { PASSWORD_RESET_ERROR, TOKEN_STATE } from './constants';
 
 export const defaultState = {
-  status: 'token-pending',
+  status: TOKEN_STATE.PENDING,
   token: null,
-  errors: null,
+  errorMsg: null,
 };
 
 const reducer = (state = defaultState, action = null) => {
@@ -11,14 +12,13 @@ const reducer = (state = defaultState, action = null) => {
     case VALIDATE_TOKEN.SUCCESS:
       return {
         ...state,
-        status: 'valid',
+        status: TOKEN_STATE.VALID,
         token: action.payload.token,
       };
-    case VALIDATE_TOKEN.FAILURE:
+    case PASSWORD_RESET_FAILURE:
       return {
         ...state,
-        status: 'invalid',
-        errors: action.payload.errors,
+        status: PASSWORD_RESET_ERROR,
       };
     case RESET_PASSWORD.BEGIN:
       return {
@@ -33,8 +33,8 @@ const reducer = (state = defaultState, action = null) => {
     case RESET_PASSWORD.FAILURE:
       return {
         ...state,
-        status: 'failure',
-        errors: action.payload.errors,
+        status: action.payload.errorCode,
+        errorMsg: action.payload.errorMsg,
       };
     default:
       return state;

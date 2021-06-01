@@ -2,6 +2,12 @@ import { AsyncActionType } from '../../data/utils';
 
 export const RESET_PASSWORD = new AsyncActionType('RESET', 'PASSWORD');
 export const VALIDATE_TOKEN = new AsyncActionType('VALIDATE', 'TOKEN');
+export const PASSWORD_RESET_FAILURE = 'PASSWORD_RESET_FAILURE';
+
+export const passwordResetFailure = (errorCode) => ({
+  type: PASSWORD_RESET_FAILURE,
+  payload: { errorCode },
+});
 
 // Validate confirmation token
 export const validateToken = (token) => ({
@@ -18,9 +24,9 @@ export const validateTokenSuccess = (tokenStatus, token) => ({
   payload: { tokenStatus, token },
 });
 
-export const validateTokenFailure = errors => ({
+export const validateTokenFailure = errorCode => ({
   type: VALIDATE_TOKEN.FAILURE,
-  payload: { errors },
+  payload: { errorCode },
 });
 
 // Reset Password
@@ -38,7 +44,7 @@ export const resetPasswordSuccess = data => ({
   payload: { data },
 });
 
-export const resetPasswordFailure = errors => ({
+export const resetPasswordFailure = (errorCode, errorMsg = null) => ({
   type: RESET_PASSWORD.FAILURE,
-  payload: { errors },
+  payload: { errorCode, errorMsg: errorMsg || errorCode },
 });
