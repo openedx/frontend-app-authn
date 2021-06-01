@@ -410,11 +410,24 @@ select.form-control {
   width: 50vw;
 }
 
-.medium-screen-header {
-  background-color: $white;
-  background-image: linear-gradient(102.02deg, $primary 93%, $white 7%);
-  width: 100vw;
+.medium-screen-container {
+  flex-wrap: nowrap;
+  max-width: inherit;
 }
+
+.medium-screen-header {
+  background-color: $primary;
+}
+
+.medium-screen-polygon {
+  background-color: $white;
+}
+
+.medium-screen-svg {
+  fill: $primary;
+  overflow: inherit;
+}
+
 .small-screen-header {
   width: 100vw;
 }
