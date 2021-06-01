@@ -3,14 +3,14 @@ import { runSaga } from 'redux-saga';
 import {
   resetPasswordBegin,
   resetPasswordSuccess,
-  resetPasswordFailure,
   validateTokenBegin,
-  validateTokenFailure,
+  passwordResetFailure, resetPasswordFailure,
 } from '../actions';
+import { PASSWORD_RESET } from '../constants';
 import { handleResetPassword, handleValidateToken } from '../sagas';
 import * as api from '../service';
+
 import initializeMockLogging from '../../../setupTest';
-import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../../../data/constants';
 
 const { loggingService } = initializeMockLogging();
 
@@ -57,7 +57,7 @@ describe('handleResetPassword', () => {
       response: {
         status: 500,
         data: {
-          errorCode: INTERNAL_SERVER_ERROR,
+          errorCode: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
         },
       },
     };
@@ -73,7 +73,7 @@ describe('handleResetPassword', () => {
 
     expect(loggingService.logError).toHaveBeenCalled();
     expect(resetPassword).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(INTERNAL_SERVER_ERROR)]);
+    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(PASSWORD_RESET.INTERNAL_SERVER_ERROR)]);
     resetPassword.mockClear();
   });
 
@@ -82,7 +82,7 @@ describe('handleResetPassword', () => {
       response: {
         status: 429,
         data: {
-          errorCode: API_RATELIMIT_ERROR,
+          errorCode: PASSWORD_RESET.FORBIDDEN_REQUEST,
         },
       },
     };
@@ -98,7 +98,7 @@ describe('handleResetPassword', () => {
 
     expect(loggingService.logInfo).toHaveBeenCalled();
     expect(resetPassword).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(API_RATELIMIT_ERROR)]);
+    expect(dispatched).toEqual([resetPasswordBegin(), resetPasswordFailure(PASSWORD_RESET.FORBIDDEN_REQUEST)]);
     resetPassword.mockClear();
   });
 });
@@ -121,7 +121,7 @@ describe('handleValidateToken', () => {
       response: {
         status: 500,
         data: {
-          errorCode: INTERNAL_SERVER_ERROR,
+          errorCode: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
         },
       },
     };
@@ -136,16 +136,16 @@ describe('handleValidateToken', () => {
     );
 
     expect(validateToken).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([validateTokenBegin(), validateTokenFailure(INTERNAL_SERVER_ERROR)]);
+    expect(dispatched).toEqual([validateTokenBegin(), passwordResetFailure(PASSWORD_RESET.INTERNAL_SERVER_ERROR)]);
     validateToken.mockClear();
   });
 
-  it('should call service and dispatch ratelimit error', async () => {
+  it('should call service and dispatch rate limit error', async () => {
     const errorResponse = {
       response: {
         status: 429,
         data: {
-          errorCode: API_RATELIMIT_ERROR,
+          errorCode: PASSWORD_RESET.FORBIDDEN_REQUEST,
         },
       },
     };
@@ -161,7 +161,7 @@ describe('handleValidateToken', () => {
 
     expect(loggingService.logInfo).toHaveBeenCalled();
     expect(validateToken).toHaveBeenCalledTimes(1);
-    expect(dispatched).toEqual([validateTokenBegin(), validateTokenFailure(API_RATELIMIT_ERROR)]);
+    expect(dispatched).toEqual([validateTokenBegin(), passwordResetFailure(PASSWORD_RESET.FORBIDDEN_REQUEST)]);
     validateToken.mockClear();
   });
 });

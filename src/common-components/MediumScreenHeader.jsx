@@ -10,7 +10,7 @@ const MediumScreenHeader = (props) => {
 
   return (
     <>
-      <div className="medium-screen-header">
+      <div className="medium-screen-header mb-4">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="row mt-4">
           <svg className="svg-line pl-5">

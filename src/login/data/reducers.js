@@ -1,10 +1,12 @@
 import { LOGIN_REQUEST } from './actions';
 
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
+import { RESET_PASSWORD } from '../../reset-password';
 
 export const defaultState = {
   loginError: null,
   loginResult: {},
+  resetPassword: false,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -13,6 +15,7 @@ const reducer = (state = defaultState, action) => {
       return {
         ...state,
         submitState: PENDING_STATE,
+        resetPassword: false,
       };
     case LOGIN_REQUEST.SUCCESS:
       return {
@@ -30,8 +33,15 @@ const reducer = (state = defaultState, action) => {
         ...state,
         loginError: null,
       };
+    case RESET_PASSWORD.SUCCESS:
+      return {
+        ...state,
+        resetPassword: true,
+      };
     default:
-      return state;
+      return {
+        ...state,
+      };
   }
 };
 
