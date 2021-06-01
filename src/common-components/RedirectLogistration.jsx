@@ -14,6 +14,8 @@ function RedirectLogistration(props) {
     if (finishAuthUrl && !redirectUrl.includes(finishAuthUrl)) {
       window.location.href = getConfig().LMS_BASE_URL + finishAuthUrl;
     } else {
+      // use this component to redirect WelcomePage after successful registration
+      // return <Redirect to={WELCOME_PAGE} />;
       window.location.href = redirectUrl;
     }
   }
