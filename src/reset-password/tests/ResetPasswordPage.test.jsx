@@ -1,17 +1,17 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { act } from 'react-dom/test-utils';
-import renderer from 'react-test-renderer';
-import configureStore from 'redux-mock-store';
-import { mount } from 'enzyme';
-import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import * as auth from '@edx/frontend-platform/auth';
-import { resetPassword } from '../data/actions';
-import { APIFailureMessage } from '../../common-components';
 
+import { mount } from 'enzyme';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+
+import * as auth from '@edx/frontend-platform/auth';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
+import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+
+import { resetPassword } from '../data/actions';
+import { PASSWORD_RESET, TOKEN_STATE } from '../data/constants';
 import ResetPasswordPage from '../ResetPasswordPage';
-import { API_RATELIMIT_ERROR, INTERNAL_SERVER_ERROR } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/auth');
 
@@ -22,22 +22,19 @@ describe('ResetPasswordPage', () => {
   let props = {};
   let store = {};
 
-  const emptyFieldError = 'Please enter your new password.';
-  const validationMessage = 'This password is too short. It must contain at least 8 characters. This password must contain at least 1 number.';
-
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
+      <MemoryRouter>
+        <Provider store={store}>{children}</Provider>
+      </MemoryRouter>
     </IntlProvider>
   );
 
-  const submitForm = async (password) => {
+  const submitForm = (password) => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    await act(async () => {
-      resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: password } });
-    });
-    resetPasswordPage.find('input#confirm-password-input').simulate('change', { target: { value: password } });
-    resetPasswordPage.find('button.btn-primary').simulate('click');
+    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: password, name: 'newPassword' } });
+    resetPasswordPage.find('input#confirmPassword').simulate('change', { target: { value: password, name: 'confirmPassword' } });
+    resetPasswordPage.find('button.btn-brand').simulate('click');
 
     return resetPasswordPage;
   };
@@ -47,7 +44,6 @@ describe('ResetPasswordPage', () => {
     props = {
       resetPassword: jest.fn(),
       status: null,
-      token_status: 'pending',
       token: null,
       errors: null,
       match: {
@@ -60,120 +56,16 @@ describe('ResetPasswordPage', () => {
     jest.clearAllMocks();
   });
 
-  it('should match reset password default section snapshot', () => {
-    props = {
-      ...props,
-      token: 'token',
-      token_status: 'valid',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+  // ******** form submission tests ********
 
-  it('show spinner component during token validation', () => {
-    props = {
-      ...props,
-      token_status: 'pending',
-      match: {
-        params: {
-          token: 'test-token',
-        },
+  it('with valid inputs resetPassword action is dispatched', async () => {
+    const password = 'test-password-1';
+
+    store = mockStore({
+      resetPassword: {
+        status: TOKEN_STATE.VALID,
       },
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match invalid token message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'invalid',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match pending reset message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-      status: 'pending',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should match successful reset message section snapshot', () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-      status: 'success',
-    };
-    const tree = renderer.create(reduxWrapper(<IntlResetPasswordPage {...props} />))
-      .toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it('should display invalid password message', async () => {
-    props = {
-      ...props,
-      token_status: 'valid',
-    };
-
-    auth.getHttpClient = jest.fn(() => ({
-      post: async () => ({
-        data: {
-          validation_decisions: {
-            password: validationMessage,
-          },
-        },
-        catch: () => {},
-      }),
-    }));
-
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-
-    // Focus out of empty field
-    await act(async () => {
-      await resetPasswordPage.find('input#reset-password-input').simulate('blur');
     });
-    resetPasswordPage.update();
-    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
-
-    // Enter non-compliant password
-    await act(async () => {
-      await resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: 'invalid' } });
-    });
-    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(validationMessage);
-  });
-
-  it('should display error message on empty form submission', () => {
-    const bannerMessage = 'We couldn\'t reset your password.'.concat(emptyFieldError);
-    props = {
-      ...props,
-      token_status: 'valid',
-      token: 'token',
-    };
-
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('button.btn-primary').simulate('click');
-
-    resetPasswordPage.update();
-    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
-  });
-
-  it('with valid inputs resetPassword action is dispatch', async () => {
-    const newPassword = 'test-password1';
-    props = {
-      ...props,
-      token_status: 'valid',
-      token: 'token',
-    };
 
     auth.getHttpClient = jest.fn(() => ({
       post: async () => ({
@@ -182,110 +74,83 @@ describe('ResetPasswordPage', () => {
       }),
     }));
 
-    const formPayload = {
-      new_password1: newPassword,
-      new_password2: newPassword,
-    };
-
     store.dispatch = jest.fn(store.dispatch);
+    const resetPasswordPage = submitForm(password);
 
-    const resetPasswordPage = await submitForm(newPassword);
-    expect(store.dispatch).toHaveBeenCalledWith(resetPassword(formPayload, props.token, {}));
+    expect(store.dispatch).toHaveBeenCalledWith(resetPassword(
+      { new_password1: password, new_password2: password }, props.token, {},
+    ));
     resetPasswordPage.unmount();
   });
 
-  it('should dispatch resetPassword action if validations have reached rate limit', async () => {
-    const password = 'test-password';
+  // ******** test reset password field validations ********
 
-    auth.getHttpClient = jest.fn(() => ({
-      post: async () => {
-        throw new Error('error');
+  it('should show error messages for required fields on empty form submission', () => {
+    store = mockStore({
+      resetPassword: {
+        status: TOKEN_STATE.VALID,
       },
-    }));
-    store.dispatch = jest.fn(store.dispatch);
+    });
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('button.btn-brand').simulate('click');
 
-    props = {
-      ...props,
-      token_status: 'valid',
-      token: 'token',
-    };
-
-    const resetPasswordPage = await submitForm(password);
-    expect(store.dispatch).toHaveBeenCalledWith(
-      resetPassword({ new_password1: password, new_password2: password }, props.token, {}),
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
+      'We couldn\'t reset your password.Please check your responses and try again.',
     );
-
-    resetPasswordPage.unmount();
+    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual('Password criteria has not been met');
+    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toEqual('Confirm your password');
   });
 
-  it('should not update the banner message on focus out', async () => {
-    const bannerMessage = 'We couldn\'t reset your password.'.concat(validationMessage);
-    props = {
-      ...props,
-      token_status: 'valid',
-      token: 'token',
-      errors: validationMessage,
-      status: 'failure',
-    };
+  it('should show error message when new and confirm password do not match', () => {
+    store = mockStore({
+      resetPassword: {
+        status: TOKEN_STATE.VALID,
+      },
+    });
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('input#confirmPassword').simulate(
+      'change', { target: { value: 'password-mismatch', name: 'confirmPassword' } },
+    );
+    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toEqual('Passwords do not match');
+  });
+
+  // ******** alert message tests ********
+
+  it('should show reset password rate limit error', () => {
+    store = mockStore({
+      resetPassword: {
+        status: PASSWORD_RESET.FORBIDDEN_REQUEST,
+      },
+    });
 
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
-
-    await act(async () => {
-      await resetPasswordPage.find('input#reset-password-input').simulate('blur', { target: { value: '' } });
-    });
-    // On blur event, the banner message remains same
-    expect(resetPasswordPage.find('#reset-password-input-invalid-feedback').text()).toEqual(emptyFieldError);
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(bannerMessage);
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
+      'Too many requests.An error has occurred because of too many requests. Please try again after some time.',
+    );
   });
+
+  it('should show reset password internal server error', () => {
+    store = mockStore({
+      resetPassword: {
+        status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
+      },
+    });
+
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
+      'We couldn\'t reset your password.An error has occurred. Try refreshing the page, or check your internet connection.',
+    );
+  });
+
+  // ******** miscellaneous tests ********
 
   it('check cookie rendered', () => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(resetPasswordPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
-  it('should display error banner on server error', () => {
-    const bannerMessage = 'Failed to reset passwordAn error has occurred. Try refreshing the page, or check your internet connection.';
-    props = {
-      ...props,
-      status: 'failure',
-      errors: INTERNAL_SERVER_ERROR,
-    };
-
+  it('show spinner during token validation', () => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('button.btn-primary').simulate('click');
-
-    resetPasswordPage.update();
-    expect(resetPasswordPage.find('#internal-server-error').first().text()).toEqual(bannerMessage);
-  });
-
-  it('check api failure banner rendered', () => {
-    props = {
-      ...props,
-      status: 'invalid',
-      errors: INTERNAL_SERVER_ERROR,
-    };
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
-  });
-
-  it('check failure banner rendered on validate token api ratelimit', () => {
-    props = {
-      ...props,
-      status: 'invalid',
-      errors: API_RATELIMIT_ERROR,
-    };
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
-  });
-
-  it('check failure banner rendered on reset password api ratelimit', () => {
-    props = {
-      ...props,
-      status: 'failure',
-      errors: API_RATELIMIT_ERROR,
-    };
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find(<APIFailureMessage />)).toBeTruthy();
+    expect(resetPasswordPage.find('div.spinner-header')).toBeTruthy();
   });
 });

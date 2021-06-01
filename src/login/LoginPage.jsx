@@ -37,6 +37,7 @@ import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, getActivationStatus,
 } from '../data/utils';
 import { forgotPasswordResultSelector } from '../forgot-password';
+import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 class LoginPage extends React.Component {
   constructor(props, context) {
@@ -197,7 +198,8 @@ class LoginPage extends React.Component {
           {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? window.scrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
-          <Form className="test">
+          {this.props.resetPassword && !this.props.loginError ? <ResetPasswordSuccess /> : null}
+          <Form>
             <FormGroup
               name="email"
               value={this.state.emailOrUsername}
@@ -279,6 +281,7 @@ LoginPage.defaultProps = {
   forgotPassword: null,
   loginResult: null,
   loginError: null,
+  resetPassword: false,
   submitState: DEFAULT_STATE,
   thirdPartyAuthApiStatus: 'pending',
   thirdPartyAuthContext: {
@@ -304,6 +307,7 @@ LoginPage.propTypes = {
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),
+  resetPassword: PropTypes.bool,
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
@@ -329,6 +333,7 @@ const mapStateToProps = state => {
     loginError,
     loginResult,
     thirdPartyAuthContext,
+    resetPassword: state.login.resetPassword,
   };
 };
 

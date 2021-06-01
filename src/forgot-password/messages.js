@@ -21,7 +21,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid email address',
     description: 'Invalid email address message for input field.',
   },
-
   'forgot.password.page.email.field.label': {
     id: 'forgot.password.page.email.field.label',
     defaultMessage: 'Email',
@@ -78,7 +77,6 @@ const messages = defineMessages({
     defaultMessage: 'contact technical support',
     description: 'Technical support link text',
   },
-
   'need.help.sign.in.text': {
     id: 'need.help.sign.in.text',
     defaultMessage: 'Need help signing in?',
@@ -91,14 +89,55 @@ const messages = defineMessages({
   },
   'sign.in.text': {
     id: 'sign.in.text',
-    defaultMessage: 'Sign In',
+    defaultMessage: 'Sign in',
     description: 'login page link on password page',
   },
   'extend.field.errors': {
     id: 'extend.field.errors',
-    defaultMessage: ' below.',
+    defaultMessage: '{emailError} below.',
     description: 'extends the field error for alert message',
   },
-
+  // Reset password token validation failure
+  'invalid.token.heading': {
+    id: 'invalid.token.heading',
+    defaultMessage: 'Invalid password reset link',
+    description: 'Alert heading when reset password link is invalid',
+  },
+  'invalid.token.error.message': {
+    id: 'invalid.token.error.message',
+    defaultMessage: 'This link has expired. Enter your email below to receive a new link.',
+    description: 'Alert message when reset password link has expired',
+  },
+  'token.validation.rate.limit.error.heading': {
+    id: 'token.validation.rate.limit.error.heading',
+    defaultMessage: 'Too many requests',
+    description: 'Too many request at server end point',
+  },
+  'token.validation.rate.limit.error': {
+    id: 'token.validation.rate.limit.error',
+    defaultMessage: 'An error has occurred because of too many requests. Please try again after some time.',
+    description: 'Error message that appears when server responds with 429 error code',
+  },
+  'token.validation.internal.sever.error.heading': {
+    id: 'token.validation.internal.sever.error.heading',
+    defaultMessage: 'Token validation failure',
+    description: 'Failed to validate reset password token error message.',
+  },
+  'token.validation.internal.sever.error': {
+    id: 'token.validation.internal.sever.error',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
+    description: 'Error message that appears when server responds with 500 error code',
+  },
+  // Error messages
+  'internal.server.error': {
+    id: 'internal.server.error',
+    defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
+    description: 'Error message that appears when server responds with 500 error code',
+  },
+  'rate.limit.error': {
+    id: 'rate.limit.error',
+    defaultMessage: 'An error has occurred because of too many requests. Please try again after some time.',
+    description: 'Error message that appears when server responds with 429 error code',
+  },
 });
 export default messages;

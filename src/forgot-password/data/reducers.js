@@ -1,8 +1,10 @@
 import { FORGOT_PASSWORD } from './actions';
-import { INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { INTERNAL_SERVER_ERROR, PENDING_STATE } from '../../data/constants';
+import { PASSWORD_RESET_FAILURE } from '../../reset-password/data/actions';
 
 export const defaultState = {
-  status: null,
+  status: '',
+  submitState: '',
 };
 
 const reducer = (state = defaultState, action = null) => {
@@ -11,6 +13,7 @@ const reducer = (state = defaultState, action = null) => {
       case FORGOT_PASSWORD.BEGIN:
         return {
           status: 'pending',
+          submitState: PENDING_STATE,
         };
       case FORGOT_PASSWORD.SUCCESS:
         return {
@@ -25,8 +28,12 @@ const reducer = (state = defaultState, action = null) => {
         return {
           status: INTERNAL_SERVER_ERROR,
         };
+      case PASSWORD_RESET_FAILURE:
+        return {
+          status: action.payload.errorCode,
+        };
       default:
-        return state;
+        return defaultState;
     }
   }
   return state;
