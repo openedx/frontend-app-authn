@@ -406,8 +406,8 @@ select.form-control {
 
 .large-screen-container {
   background-color: $white;
-  background-image: linear-gradient(102.02deg, $primary 73%, $white 45%);
   width: 50vw;
+  flex-wrap: nowrap;
 }
 
 .medium-screen-container {
@@ -415,17 +415,22 @@ select.form-control {
   max-width: inherit;
 }
 
-.medium-screen-header {
+.screen-header {
   background-color: $primary;
 }
 
-.medium-screen-polygon {
+.screen-polygon {
   background-color: $white;
 }
 
 .medium-screen-svg {
   fill: $primary;
   overflow: inherit;
+}
+
+.large-screen-svg {
+  fill: $primary;
+  overflow: hidden;
 }
 
 .small-screen-header {
@@ -436,15 +441,14 @@ select.form-control {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
-    $brand-700,
     $brand-700 10%,
     $brand 10%,
-    $brand 40%,
-    $primary-700 40%,
-    $primary-700 50%,
-    $accent-a 50%,
-    $accent-a 72%,
-    $accent-a-light 72%,
+    $brand 45%,
+    $primary-700 45%,
+    $primary-700 55%,
+    $accent-a 55%,
+    $accent-a 75%,
+    $accent-a-light 75%,
   );
   background-repeat: no-repeat;
 }
@@ -460,6 +464,20 @@ select.form-control {
     $primary-700 90%,
     $primary-700 100%,
   );
+  background-repeat: no-repeat;
+}
+
+.medium-large-screen-top-stripe {
+  height: 0.5rem;
+  background-image: linear-gradient(
+  102.02deg,
+  $brand-700 10%,
+  $brand 10%,
+  $brand 65%,
+  $primary-700 65%,
+  $primary-700 75%,
+  $accent-a 75%,
+  $accent-a 75%);
   background-repeat: no-repeat;
 }
 

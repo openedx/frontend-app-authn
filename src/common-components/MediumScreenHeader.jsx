@@ -10,7 +10,7 @@ const MediumScreenHeader = (props) => {
 
   return (
     <div className="container row p-0 m-0 medium-screen-container">
-      <div className="col-md-10 p-0 medium-screen-header mb-4">
+      <div className="col-md-10 p-0 screen-header mb-4">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="row mt-4">
           <svg className="svg-line pl-5">
@@ -24,7 +24,7 @@ const MediumScreenHeader = (props) => {
           </h1>
         </div>
       </div>
-      <div className="col-md-2 p-0 medium-screen-polygon mb-4">
+      <div className="col-md-2 p-0 screen-polygon mb-4">
         <svg width="100%" height="100%" className="medium-screen-svg" preserveAspectRatio="xMaxYMin meet">
           <g transform="skewX(168)">
             <rect x="0" y="0" height="100%" width="100%" />
