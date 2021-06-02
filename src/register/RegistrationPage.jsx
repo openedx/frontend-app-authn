@@ -153,20 +153,9 @@ class RegistrationPage extends React.Component {
     return (
       <OptionalFields
         values={values}
-        onChangeHandler={(fieldName, value) => this.optionalFieldOnChange(fieldName, value)}
+        onChangeHandler={(fieldName, value) => { this.setState({ [fieldName]: value }); }}
       />
     );
-  }
-
-  optionalFieldOnChange = (fieldName, value) => {
-    this.setState({ [fieldName]: value });
-    if (value) {
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: `van_504_${fieldName}`,
-      });
-    }
   }
 
   handleInstitutionLogin = () => {
@@ -463,6 +452,14 @@ class RegistrationPage extends React.Component {
         window.optimizely.push({
           type: 'event',
           eventName: 'van_504_conversion_rate',
+        });
+        ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
+          if (this.state[fieldName]) {
+            window.optimizely.push({
+              type: 'event',
+              eventName: `van_504_${fieldName}`,
+            });
+          }
         });
       }
     }
