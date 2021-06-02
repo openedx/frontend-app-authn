@@ -151,7 +151,7 @@ const WelcomePage = (props) => {
             />
             <p>
               <Hyperlink
-                className="mt-1 text-dark"
+                className="mt-1 text-dark small"
                 destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
                 target="_blank"
               >
