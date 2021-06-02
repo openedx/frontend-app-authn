@@ -153,9 +153,20 @@ class RegistrationPage extends React.Component {
     return (
       <OptionalFields
         values={values}
-        onChangeHandler={(fieldName, value) => { this.setState({ [fieldName]: value }); }}
+        onChangeHandler={(fieldName, value) => this.optionalFieldOnChange(fieldName, value)}
       />
     );
+  }
+
+  optionalFieldOnChange = (fieldName, value) => {
+    this.setState({ [fieldName]: value });
+    if (value) {
+      window.optimizely = window.optimizely || [];
+      window.optimizely.push({
+        type: 'event',
+        eventName: `van_504_${fieldName}`,
+      });
+    }
   }
 
   handleInstitutionLogin = () => {
@@ -447,11 +458,13 @@ class RegistrationPage extends React.Component {
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
       // Fire optimizely event
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: 'user_registered_successfully',
-      });
+      if (this.state.optimizelyExperimentName !== 'progressive_profiling_phase1') {
+        window.optimizely = window.optimizely || [];
+        window.optimizely.push({
+          type: 'event',
+          eventName: 'van_504_conversion_rate',
+        });
+      }
     }
 
     return (
@@ -465,6 +478,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
+          redirectToWelcomePage={this.state.optimizelyExperimentName === 'progressive_profiling_phase1'}
         />
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column">
@@ -593,7 +607,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'hide_optional_fields' ? (
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressive_profiling_phase1' ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
