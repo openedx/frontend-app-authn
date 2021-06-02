@@ -61,8 +61,17 @@ const WelcomePage = (props) => {
     })),
   });
 
+  const fireOptimizelyEvent = () => {
+    window.optimizely = window.optimizely || [];
+    window.optimizely.push({
+      type: 'event',
+      eventName: 'van_504_conversion_rate',
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    fireOptimizelyEvent();
     if (registrationResult.success) {
       window.location.href = registrationResult.redirectUrl;
     }
@@ -71,11 +80,20 @@ const WelcomePage = (props) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
+    fireOptimizelyEvent();
     window.location.href = registrationResult.redirectUrl;
     return null;
   };
+
   const onChangeHandler = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
+    if (e.target.value) {
+      window.optimizely = window.optimizely || [];
+      window.optimizely.push({
+        type: 'event',
+        eventName: `van_504_${e.target.name}`,
+      });
+    }
   };
 
   return (

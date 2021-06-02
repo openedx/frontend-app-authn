@@ -1,10 +1,16 @@
 import React from 'react';
+
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 
+import { WELCOME_PAGE } from '../data/constants';
+
 function RedirectLogistration(props) {
-  const { finishAuthUrl, redirectUrl, success } = props;
+  const {
+    finishAuthUrl, redirectUrl, redirectToWelcomePage, success,
+  } = props;
 
   if (success) {
     // If we're in a third party auth pipeline, we must complete the pipeline
@@ -13,6 +19,9 @@ function RedirectLogistration(props) {
     // enterprise selection page and then complete the auth workflow
     if (finishAuthUrl && !redirectUrl.includes(finishAuthUrl)) {
       window.location.href = getConfig().LMS_BASE_URL + finishAuthUrl;
+    } else if (redirectToWelcomePage) {
+      const welcomeProps = { redirectUrl, success };
+      return <Redirect to={WELCOME_PAGE} registrationResult={welcomeProps} />;
     } else {
       // use this component to redirect WelcomePage after successful registration
       // return <Redirect to={WELCOME_PAGE} />;
@@ -26,12 +35,14 @@ RedirectLogistration.defaultProps = {
   finishAuthUrl: null,
   success: false,
   redirectUrl: '',
+  redirectToWelcomePage: false,
 };
 
 RedirectLogistration.propTypes = {
   finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
   redirectUrl: PropTypes.string,
+  redirectToWelcomePage: PropTypes.bool,
 };
 
 export default RedirectLogistration;
