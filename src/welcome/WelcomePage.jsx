@@ -72,6 +72,15 @@ const WelcomePage = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     fireOptimizelyEvent();
+    window.optimizely = window.optimizely || [];
+    ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
+      if (values[fieldName]) {
+        window.optimizely.push({
+          type: 'event',
+          eventName: `van_504_${fieldName}`,
+        });
+      }
+    });
     if (registrationResult.success) {
       window.location.href = registrationResult.redirectUrl;
     }
@@ -87,13 +96,6 @@ const WelcomePage = (props) => {
 
   const onChangeHandler = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    if (e.target.value) {
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: `van_504_${e.target.name}`,
-      });
-    }
   };
 
   return (
