@@ -431,6 +431,8 @@ select.form-control {
 .large-screen-svg {
   fill: $primary;
   overflow: hidden;
+  margin-left: -1px;
+  margin-top: -1px;
 }
 
 .small-screen-header {
