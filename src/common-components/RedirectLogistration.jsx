@@ -21,12 +21,12 @@ function RedirectLogistration(props) {
     if (finishAuthUrl && !redirectUrl.includes(finishAuthUrl)) {
       finalRedirectUrl = getConfig().LMS_BASE_URL + finishAuthUrl;
     } else {
-      // use this component to redirect WelcomePage after successful registration
-      // return <Redirect to={WELCOME_PAGE} />;
       finalRedirectUrl = redirectUrl;
     }
 
     if (redirectToWelcomePage) {
+      // use this component to redirect WelcomePage after successful registration
+      // return <Redirect to={WELCOME_PAGE} />;
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return <Redirect to={{ pathname: WELCOME_PAGE, state: { registrationResult } }} />;
     }
