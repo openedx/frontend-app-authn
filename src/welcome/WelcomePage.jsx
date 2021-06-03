@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -17,12 +16,12 @@ import {
 import messages from './messages';
 
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from '../register/data/constants';
-import { registrationRequestSelector } from '../register/data/selectors';
 import { AuthnValidationFormGroup } from '../common-components';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const WelcomePage = (props) => {
-  const { intl, registrationResult } = props;
+  const { intl } = props;
+  const [registrationResult, setRegistrationResult] = useState({});
   const [values, setValues] = useState({});
   const [ready, setReady] = useState(false);
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
@@ -33,11 +32,15 @@ const WelcomePage = (props) => {
         setReady(true);
       });
     });
+
+    if (props.location.state && props.location.state.registrationResult) {
+      setRegistrationResult(props.location.state.registrationResult);
+    }
   }, []);
 
   const authenticatedUser = getAuthenticatedUser();
 
-  if (!registrationResult.redirectUrl) {
+  if (!props.location.state || !props.location.state.registrationResult) {
     global.location.assign(DASHBOARD_URL);
     return null;
   }
@@ -188,21 +191,13 @@ const WelcomePage = (props) => {
 
 WelcomePage.propTypes = {
   intl: intlShape.isRequired,
-  registrationResult: PropTypes.shape({
-    redirectUrl: PropTypes.string,
-    success: PropTypes.bool,
+  location: PropTypes.shape({
+    state: PropTypes.object,
   }),
 };
 
 WelcomePage.defaultProps = {
-  registrationResult: {},
+  location: { state: {} },
 };
 
-const mapStateToProps = state => {
-  const registrationResult = registrationRequestSelector(state);
-  return { registrationResult };
-};
-
-export default connect(
-  mapStateToProps,
-)(injectIntl(WelcomePage));
+export default (injectIntl(WelcomePage));
