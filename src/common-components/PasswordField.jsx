@@ -21,6 +21,13 @@ const PasswordField = (props) => {
     setShowTooltip(props.showRequirements && false);
   };
 
+  const handleFocus = (e) => {
+    if (props.handleFocus) {
+      props.handleFocus(e);
+    }
+    setTimeout(() => setShowTooltip(props.showRequirements && true), 150);
+  };
+
   const HideButton = (
     <IconButton icon={faEyeSlash} onClick={setHiddenTrue} alt={formatMessage(messages['hide.password'])} aria-label={formatMessage(messages['hide.password'])} />
   );
@@ -54,7 +61,7 @@ const PasswordField = (props) => {
           type={isPasswordHidden ? 'password' : 'text'}
           name={props.name}
           value={props.value}
-          onFocus={() => setTimeout(() => setShowTooltip(props.showRequirements && true), 150)}
+          onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={props.handleChange}
           controlClassName={props.borderClass}
@@ -73,6 +80,7 @@ PasswordField.defaultProps = {
   borderClass: '',
   errorMessage: '',
   handleBlur: null,
+  handleFocus: null,
   handleChange: () => {},
   showRequirements: true,
 };
@@ -82,6 +90,7 @@ PasswordField.propTypes = {
   errorMessage: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
+  handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
   intl: intlShape.isRequired,
   name: PropTypes.string.isRequired,

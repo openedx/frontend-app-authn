@@ -87,7 +87,7 @@ describe('LoginPage', () => {
     store.dispatch = jest.fn(store.dispatch);
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
 
-    loginPage.find('input#email').simulate('change', { target: { value: 'test@example.com' } });
+    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: 'test@example.com' } });
     loginPage.find('input#password').simulate('change', { target: { value: 'password' } });
     loginPage.find('button.btn-brand').simulate('click');
 
@@ -123,9 +123,21 @@ describe('LoginPage', () => {
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
 
     loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
-    loginPage.find('input#email').simulate('change', { target: { value: 'te', name: 'email' } });
+    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: 'te', name: 'email' } });
     loginPage.find('button.btn-brand').simulate('click');
 
+    expect(loginPage.state('errors')).toEqual(errorState);
+  });
+
+  it('should reset field related error messages on onFocus event', () => {
+    const errorState = { emailOrUsername: '', password: '' };
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
+    loginPage.find('button.btn-brand').simulate('click');
+
+    loginPage.find('input#emailOrUsername').simulate('focus');
+    loginPage.find('input#password').simulate('focus');
     expect(loginPage.state('errors')).toEqual(errorState);
   });
 

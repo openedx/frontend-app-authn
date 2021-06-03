@@ -13,6 +13,7 @@ describe('FormGroup', () => {
     helpText: ['Email field help text'],
     name: 'email',
     value: '',
+    handleFocus: jest.fn(),
   };
 
   it('should show help text on field focus', () => {
@@ -33,6 +34,7 @@ describe('PasswordField', () => {
       floatingLabel: 'Password',
       name: 'password',
       value: 'password123',
+      handleFocus: jest.fn(),
     };
   });
 

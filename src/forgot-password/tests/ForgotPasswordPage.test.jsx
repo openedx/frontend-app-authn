@@ -121,6 +121,18 @@ describe('ForgotPasswordPage', () => {
     expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
   });
 
+  it('should clear error message on focus event', async () => {
+    const validationMessage = 'Enter your email';
+    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    await act(async () => { await forgotPasswordPage.find('button.btn-brand').simulate('click'); });
+
+    forgotPasswordPage.update();
+    expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
+
+    forgotPasswordPage.find('input#email').simulate('focus');
+    expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
+  });
+
   it('check cookie rendered', () => {
     const forgotPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     expect(forgotPage.find(<CookiePolicyBanner />)).toBeTruthy();
