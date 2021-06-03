@@ -84,6 +84,10 @@ const ResetPasswordPage = (props) => {
     validateInput('confirmPassword', value);
   };
 
+  const handleOnFocus = (e) => {
+    setFormErrors({ [e.target.name]: '' });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -137,6 +141,7 @@ const ResetPasswordPage = (props) => {
                 value={newPassword}
                 handleChange={(e) => setNewPassword(e.target.value)}
                 handleBlur={(e) => validateInput(e.target.name, e.target.value)}
+                handleFocus={handleOnFocus}
                 errorMessage={formErrors.newPassword}
                 floatingLabel={intl.formatMessage(messages['new.password.label'])}
               />
@@ -144,6 +149,7 @@ const ResetPasswordPage = (props) => {
                 name="confirmPassword"
                 value={confirmPassword}
                 handleChange={handleConfirmPasswordChange}
+                handleFocus={handleOnFocus}
                 errorMessage={formErrors.confirmPassword}
                 showRequirements={false}
                 floatingLabel={intl.formatMessage(messages['confirm.password.label'])}
