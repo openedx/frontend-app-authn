@@ -215,6 +215,12 @@ class RegistrationPage extends React.Component {
     }
   }
 
+  handleOnFocus = (e) => {
+    const { errors } = this.state;
+    errors[e.target.name] = '';
+    this.setState({ errors });
+  }
+
   handleSuggestionClick = (suggestion) => {
     const { errors } = this.state;
     errors.username = '';
@@ -414,6 +420,7 @@ class RegistrationPage extends React.Component {
               value={this.state.name}
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
+              handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.name}
               floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
             />
@@ -422,6 +429,7 @@ class RegistrationPage extends React.Component {
               value={this.state.username}
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
+              handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.username}
               helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
               floatingLabel={intl.formatMessage(messages['registration.username.label'])}
@@ -434,6 +442,7 @@ class RegistrationPage extends React.Component {
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
               errorMessage={this.state.errors.email}
+              handleFocus={this.handleOnFocus}
               helpText={[intl.formatMessage(messages['help.text.email'])]}
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
               borderClass={this.state.borderClass}
@@ -447,6 +456,7 @@ class RegistrationPage extends React.Component {
                 value={this.state.password}
                 handleBlur={this.handleOnBlur}
                 handleChange={this.handleOnChange}
+                handleFocus={this.handleOnFocus}
                 errorMessage={this.state.errors.password}
                 floatingLabel={intl.formatMessage(messages['registration.password.label'])}
               />
@@ -457,6 +467,7 @@ class RegistrationPage extends React.Component {
               value={this.state.country}
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
+              handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.country}
               floatingLabel={intl.formatMessage(messages['registration.country.label'])}
               trailingElement={<Icon src={ExpandMore} />}
