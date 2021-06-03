@@ -11,6 +11,7 @@ function RedirectLogistration(props) {
   const {
     finishAuthUrl, redirectUrl, redirectToWelcomePage, success,
   } = props;
+  let finalRedirectUrl = '';
 
   if (success) {
     // If we're in a third party auth pipeline, we must complete the pipeline
@@ -18,15 +19,19 @@ function RedirectLogistration(props) {
     // Note: For multiple enterprise use case, we need to make sure that user first visits the
     // enterprise selection page and then complete the auth workflow
     if (finishAuthUrl && !redirectUrl.includes(finishAuthUrl)) {
-      window.location.href = getConfig().LMS_BASE_URL + finishAuthUrl;
-    } else if (redirectToWelcomePage) {
-      const welcomeProps = { redirectUrl, success };
-      return <Redirect to={WELCOME_PAGE} registrationResult={welcomeProps} />;
+      finalRedirectUrl = getConfig().LMS_BASE_URL + finishAuthUrl;
     } else {
+      finalRedirectUrl = redirectUrl;
+    }
+
+    if (redirectToWelcomePage) {
       // use this component to redirect WelcomePage after successful registration
       // return <Redirect to={WELCOME_PAGE} />;
-      window.location.href = redirectUrl;
+      const registrationResult = { redirectUrl: finalRedirectUrl, success };
+      return <Redirect to={{ pathname: WELCOME_PAGE, state: { registrationResult } }} />;
     }
+
+    window.location.href = finalRedirectUrl;
   }
   return <></>;
 }
