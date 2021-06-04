@@ -73,7 +73,7 @@ const messages = defineMessages({
   },
   'start.learning': {
     id: 'start.learning',
-    defaultMessage: 'Start Learning',
+    defaultMessage: 'Start learning',
     description: 'Header text for logistration MFE pages',
   },
   'with.site.name': {
