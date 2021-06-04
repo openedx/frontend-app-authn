@@ -406,15 +406,32 @@ select.form-control {
 
 .large-screen-container {
   background-color: $white;
-  background-image: linear-gradient(102.02deg, $primary 73%, $white 45%);
   width: 50vw;
 }
 
-.medium-screen-header {
-  background-color: $white;
-  background-image: linear-gradient(102.02deg, $primary 93%, $white 7%);
-  width: 100vw;
+.medium-screen-container {
+  flex-wrap: nowrap;
+  max-width: inherit;
 }
+
+.screen-header {
+  background-color: $primary;
+}
+
+.screen-polygon {
+  background-color: $white;
+}
+
+.medium-screen-svg {
+  fill: $primary;
+  overflow: inherit;
+}
+
+.large-screen-svg {
+  fill: $primary;
+  overflow: hidden;
+}
+
 .small-screen-header {
   width: 100vw;
 }
@@ -423,15 +440,14 @@ select.form-control {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
-    $brand-700,
     $brand-700 10%,
     $brand 10%,
-    $brand 40%,
-    $primary-700 40%,
-    $primary-700 50%,
-    $accent-a 50%,
-    $accent-a 72%,
-    $accent-a-light 72%,
+    $brand 45%,
+    $primary-700 45%,
+    $primary-700 55%,
+    $accent-a 55%,
+    $accent-a 75%,
+    $accent-a-light 75%,
   );
   background-repeat: no-repeat;
 }
@@ -450,6 +466,20 @@ select.form-control {
   background-repeat: no-repeat;
 }
 
+.medium-large-screen-top-stripe {
+  height: 0.5rem;
+  background-image: linear-gradient(
+  102.02deg,
+  $brand-700 10%,
+  $brand 10%,
+  $brand 65%,
+  $primary-700 65%,
+  $primary-700 75%,
+  $accent-a 75%,
+  $accent-a 75%);
+  background-repeat: no-repeat;
+}
+
 .small-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
@@ -461,7 +491,15 @@ select.form-control {
   background-repeat: no-repeat;
 }
 
-.svg-line {
+.large-screen-svg-line {
+  padding-top: 0.5rem;
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+  width: 5.5rem;
+  height: 240px;
+}
+
+.medium-screen-svg-line {
   padding-top: 0.5rem;
   stroke: $accent-b;
   stroke-width: 0.5rem;
@@ -478,6 +516,14 @@ select.form-control {
 }
 
 .large-heading {
+  margin-left: 8px;
+  color: $white;
+  max-width: 24rem;
+  line-height: 78px;
+  font-size: 78px;
+}
+
+.medium-heading {
   padding-left: 1rem;
   color: $white;
   max-width: 24rem;
