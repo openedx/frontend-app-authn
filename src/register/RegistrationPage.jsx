@@ -32,7 +32,7 @@ import {
   DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, setSurveyCookie,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, setSurveyCookie, setCookie,
 } from '../data/utils';
 
 class RegistrationPage extends React.Component {
@@ -446,6 +446,7 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
+      setCookie('van-504-returning-user', true);
       // Fire optimizely event
       if (this.state.optimizelyExperimentName !== 'progressive_profiling_phase1') {
         window.optimizely = window.optimizely || [];
