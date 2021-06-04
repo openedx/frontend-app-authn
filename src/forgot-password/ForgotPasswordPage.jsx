@@ -100,6 +100,7 @@ const ForgotPasswordPage = (props) => {
                   state={submitState}
                   labels={{
                     default: intl.formatMessage(messages['forgot.password.page.submit.button']),
+                    pending: '',
                   }}
                   icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={handleSubmit}
