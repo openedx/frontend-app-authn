@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { getConfig } from '@edx/frontend-platform';
 
 import { WELCOME_PAGE } from '../data/constants';
+import { setCookie } from '../data/utils';
 
 function RedirectLogistration(props) {
   const {
@@ -25,6 +26,7 @@ function RedirectLogistration(props) {
     }
 
     if (redirectToWelcomePage) {
+      setCookie('van-504-returning-user', true);
       // use this component to redirect WelcomePage after successful registration
       // return <Redirect to={WELCOME_PAGE} />;
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
