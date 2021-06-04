@@ -10,7 +10,7 @@ const LargeScreenLeftLayout = (props) => {
 
   return (
     <div className="min-vh-100 pr-0 mt-lg-n2 d-flex align-items-center">
-      <svg className="svg-line pl-5">
+      <svg className="large-screen-svg-line ml-5">
         <line x1="50" y1="0" x2="10" y2="215" />
       </svg>
       <h1 className="large-heading">
