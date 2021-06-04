@@ -12,8 +12,11 @@ const BaseComponent = ({ children }) => (
     <Responsive maxWidth={767}>
       <div className="col-md-12 small-screen-top-stripe" />
     </Responsive>
-    <Responsive minWidth={768} maxWidth={1199}>
+    <Responsive minWidth={768} maxWidth={799}>
       <div className="col-md-12 medium-screen-top-stripe" />
+    </Responsive>
+    <Responsive minWidth={800} maxWidth={1199}>
+      <div className="col-md-12 medium-large-screen-top-stripe" />
     </Responsive>
     <Responsive minWidth={1200}>
       <div className="col-md-12 large-screen-top-stripe" />
