@@ -11,7 +11,7 @@ const LargeScreenLayout = () => (
       <LargeScreenLeftLayout />
     </div>
     <div className="col-md-4 p-0 screen-polygon">
-      <svg width="100%" height="100%" className="large-screen-svg" preserveAspectRatio="xMaxYMin meet">
+      <svg width="100%" height="100%" className="ml-n1 large-screen-svg" preserveAspectRatio="xMaxYMin meet">
         <g transform="skewX(168)">
           <rect x="0" y="0" height="100%" width="100%" />
         </g>

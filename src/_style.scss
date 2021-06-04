@@ -407,7 +407,6 @@ select.form-control {
 .large-screen-container {
   background-color: $white;
   width: 50vw;
-  flex-wrap: nowrap;
 }
 
 .medium-screen-container {
@@ -431,7 +430,6 @@ select.form-control {
 .large-screen-svg {
   fill: $primary;
   overflow: hidden;
-  margin-left: -1px;
 }
 
 .small-screen-header {
@@ -493,7 +491,15 @@ select.form-control {
   background-repeat: no-repeat;
 }
 
-.svg-line {
+.large-screen-svg-line {
+  padding-top: 0.5rem;
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+  width: 5.5rem;
+  height: 240px;
+}
+
+.medium-screen-svg-line {
   padding-top: 0.5rem;
   stroke: $accent-b;
   stroke-width: 0.5rem;
@@ -510,6 +516,14 @@ select.form-control {
 }
 
 .large-heading {
+  margin-left: 8px;
+  color: $white;
+  max-width: 24rem;
+  line-height: 78px;
+  font-size: 78px;
+}
+
+.medium-heading {
   padding-left: 1rem;
   color: $white;
   max-width: 24rem;

@@ -13,10 +13,10 @@ const MediumScreenHeader = (props) => {
       <div className="col-md-10 p-0 screen-header mb-4">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="row mt-4">
-          <svg className="svg-line pl-5">
+          <svg className="medium-screen-svg-line pl-5">
             <line x1="50" y1="0" x2="10" y2="215" />
           </svg>
-          <h1 className="large-heading pb-4">
+          <h1 className="medium-heading pb-4">
             {intl.formatMessage(messages['start.learning'])}
             <span className="text-accent-a"><br />
               {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
