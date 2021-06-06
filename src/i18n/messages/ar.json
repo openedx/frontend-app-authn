@@ -136,5 +136,11 @@
   "reset.password.token.validation.sever.error": "Token validation failure",
   "reset.server.ratelimit.error": "Too many requests.",
   "reset.password.confirmation.support.link": "Sign in to your account.",
-  "reset.password.request.success.header.description.message": "Your password has been reset. {loginPasswordLink}"
+  "reset.password.request.success.header.description.message": "Your password has been reset. {loginPasswordLink}",
+  "optional.fields.page.title": "Optional Fields | {siteName}",
+  "optional.fields.page.heading": "Support education research by providing additional information.",
+  "welcome.to.edx": "Welcome to edX, {username}!",
+  "optional.fields.information.link": "Learn more about how we use this information.",
+  "optional.fields.submit.button": "Submit",
+  "optional.fields.skip.button": "Skip for now"
 }
