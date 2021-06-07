@@ -367,6 +367,7 @@ describe('LoginPage', () => {
   });
 
   it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
+    secondaryProviders.skipHintedLogin = true;
     store = mockStore({
       ...initialState,
       commonComponents: {
