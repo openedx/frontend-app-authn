@@ -111,7 +111,7 @@ const WelcomePage = (props) => {
       <div className="d-flex justify-content-center m-4">
         <div className="d-flex flex-column">
           <Form className="mw-500">
-            <p className="mb-4">
+            <p className="mb-4" data-hj-suppress>
               { intl.formatMessage(messages['welcome.to.edx'], { username: authenticatedUser.username }) }
             </p>
             <hr className="mb-3 border-gray-200" />
