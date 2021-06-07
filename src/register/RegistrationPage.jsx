@@ -173,7 +173,7 @@ class RegistrationPage extends React.Component {
 
     let errors = {};
     Object.keys(payload).forEach(key => {
-      errors = this.validateInput(key, payload[key], payload);
+      errors = this.validateInput(key, payload[key], { ...payload, form_field_key: key });
     });
 
     if (!this.isFormValid(errors)) {
