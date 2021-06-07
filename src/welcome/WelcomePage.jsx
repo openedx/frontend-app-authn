@@ -12,7 +12,9 @@ import {
   Form,
   StatefulButton,
   Hyperlink,
+  Icon,
 } from '@edx/paragon';
+import { ExpandMore } from '@edx/paragon/icons';
 
 import messages from './messages';
 
@@ -23,7 +25,7 @@ import { DEFAULT_REDIRECT_URL } from '../data/constants';
 const WelcomePage = (props) => {
   const { intl } = props;
   const [registrationResult, setRegistrationResult] = useState({});
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState({ levelOfEducation: '', yearOfBirth: '', gender: '' });
   const [ready, setReady] = useState(false);
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
@@ -51,20 +53,27 @@ const WelcomePage = (props) => {
     return null;
   }
 
-  const getOptions = () => ({
-    yearOfBirthOptions: [{
-      value: '',
-      label: intl.formatMessage(messages['registration.year.of.birth.label']),
-    }].concat(YEAR_OF_BIRTH_OPTIONS),
-    educationLevelOptions: EDUCATION_LEVELS.map(key => ({
-      value: key,
-      label: intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`]),
-    })),
-    genderOptions: GENDER_OPTIONS.map(key => ({
-      value: key,
-      label: intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`]),
-    })),
-  });
+  const getOptions = (fieldName) => {
+    const options = {
+      yearOfBirth: [{
+        value: '',
+        label: intl.formatMessage(messages['registration.year.of.birth.label']),
+      }].concat(YEAR_OF_BIRTH_OPTIONS),
+      levelOfEducation: EDUCATION_LEVELS.map(key => ({
+        value: key,
+        label: intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`]),
+      })),
+      gender: GENDER_OPTIONS.map(key => ({
+        value: key,
+        label: intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`]),
+      })),
+    };
+
+    return [
+      options[fieldName].map(({ value, label }) => (
+        <option className="data-hj-suppress" key={value} value={value}>{label}</option>)),
+    ];
+  };
 
   const fireOptimizelyEvent = () => {
     window.optimizely = window.optimizely || [];
@@ -118,40 +127,40 @@ const WelcomePage = (props) => {
             <hr className="mb-3 border-gray-200" />
             <h1 className="mb-3 h3">{intl.formatMessage(messages['optional.fields.page.heading'])}</h1>
             <FormGroup
-              label={intl.formatMessage(messages['registration.field.education.levels.label'])}
+              floatingLabel={intl.formatMessage(messages['registration.field.education.levels.label'])}
               for="levelOfEducation"
               name="levelOfEducation"
-              type="select"
+              as="select"
               key="levelOfEducation"
               className="mb-3 data-hj-suppress"
               value={values.levelOfEducation}
-              onChange={(e) => onChangeHandler(e)}
-              selectOptions={getOptions().educationLevelOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              handleChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              options={() => getOptions('levelOfEducation')}
             />
             <FormGroup
-              label={intl.formatMessage(messages['registration.year.of.birth.label'])}
+              floatingLabel={intl.formatMessage(messages['registration.year.of.birth.label'])}
               for="yearOfBirth"
               name="yearOfBirth"
-              type="select"
+              as="select"
               key="yearOfBirth"
               value={values.yearOfBirth}
               className="mb-3 data-hj-suppress"
-              onChange={(e) => onChangeHandler(e)}
-              selectOptions={getOptions().yearOfBirthOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              handleChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              options={() => getOptions('yearOfBirth')}
             />
             <FormGroup
-              label={intl.formatMessage(messages['registration.field.gender.options.label'])}
+              floatingLabel={intl.formatMessage(messages['registration.field.gender.options.label'])}
               for="gender"
               name="gender"
-              type="select"
+              as="select"
               key="gender"
               value={values.gender}
               className="mb-3 data-hj-suppress"
-              onChange={(e) => onChangeHandler(e)}
-              selectOptions={getOptions().genderOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              handleChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              options={() => getOptions('gender')}
             />
             <p>
               <Hyperlink
