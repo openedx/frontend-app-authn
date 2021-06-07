@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
@@ -29,15 +30,6 @@ describe('ResetPasswordPage', () => {
       </MemoryRouter>
     </IntlProvider>
   );
-
-  const submitForm = (password) => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: password, name: 'newPassword' } });
-    resetPasswordPage.find('input#confirmPassword').simulate('change', { target: { value: password, name: 'confirmPassword' } });
-    resetPasswordPage.find('button.btn-brand').simulate('click');
-
-    return resetPasswordPage;
-  };
 
   beforeEach(() => {
     store = mockStore();
@@ -75,7 +67,13 @@ describe('ResetPasswordPage', () => {
     }));
 
     store.dispatch = jest.fn(store.dispatch);
-    const resetPasswordPage = submitForm(password);
+    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: password, name: 'newPassword' } });
+    resetPasswordPage.find('input#confirmPassword').simulate('change', { target: { value: password, name: 'confirmPassword' } });
+
+    await act(async () => {
+      await resetPasswordPage.find('button.btn-brand').simulate('click');
+    });
 
     expect(store.dispatch).toHaveBeenCalledWith(resetPassword(
       { new_password1: password, new_password2: password }, props.token, {},

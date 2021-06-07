@@ -105,8 +105,8 @@ const messages = defineMessages({
   },
   'invalid.token.error.message': {
     id: 'invalid.token.error.message',
-    defaultMessage: 'This link has expired. Enter your email below to receive a new link.',
-    description: 'Alert message when reset password link has expired',
+    defaultMessage: 'This password reset link is invalid. It may have been used already. Enter your email below to receive a new link.',
+    description: 'Alert message when reset password link has expired or is invalidForgotPasswordPage.test.jsx',
   },
   'token.validation.rate.limit.error.heading': {
     id: 'token.validation.rate.limit.error.heading',
