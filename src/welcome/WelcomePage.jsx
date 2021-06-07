@@ -17,7 +17,7 @@ import {
 import messages from './messages';
 
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from '../register/data/constants';
-import { AuthnValidationFormGroup } from '../common-components';
+import { FormGroup } from '../common-components';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const WelcomePage = (props) => {
@@ -117,7 +117,7 @@ const WelcomePage = (props) => {
             </p>
             <hr className="mb-3 border-gray-200" />
             <h1 className="mb-3 h3">{intl.formatMessage(messages['optional.fields.page.heading'])}</h1>
-            <AuthnValidationFormGroup
+            <FormGroup
               label={intl.formatMessage(messages['registration.field.education.levels.label'])}
               for="levelOfEducation"
               name="levelOfEducation"
@@ -129,7 +129,7 @@ const WelcomePage = (props) => {
               selectOptions={getOptions().educationLevelOptions}
               inputFieldStyle="border-gray-600 custom-select-size"
             />
-            <AuthnValidationFormGroup
+            <FormGroup
               label={intl.formatMessage(messages['registration.year.of.birth.label'])}
               for="yearOfBirth"
               name="yearOfBirth"
@@ -141,7 +141,7 @@ const WelcomePage = (props) => {
               selectOptions={getOptions().yearOfBirthOptions}
               inputFieldStyle="border-gray-600 custom-select-size"
             />
-            <AuthnValidationFormGroup
+            <FormGroup
               label={intl.formatMessage(messages['registration.field.gender.options.label'])}
               for="gender"
               name="gender"

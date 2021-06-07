@@ -584,6 +584,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
+      secondaryProviders.skipHintedLogin = true;
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -597,7 +598,7 @@ describe('RegistrationPage', () => {
       });
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+      window.location = { href: getConfig().BASE_URL.concat('/register'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
       secondaryProviders.iconImage = null;
 
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
