@@ -85,7 +85,7 @@ const ResetPasswordPage = (props) => {
   };
 
   const handleOnFocus = (e) => {
-    setFormErrors({ [e.target.name]: '' });
+    setFormErrors({ ...formErrors, [e.target.name]: '' });
   };
 
   const handleSubmit = (e) => {
