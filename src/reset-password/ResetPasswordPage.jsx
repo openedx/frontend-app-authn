@@ -157,9 +157,11 @@ const ResetPasswordPage = (props) => {
               <StatefulButton
                 type="submit"
                 variant="brand"
+                className="stateful-button-width"
                 state={props.status}
                 labels={{
                   default: intl.formatMessage(messages['reset.password']),
+                  pending: '',
                 }}
                 icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                 onClick={e => handleSubmit(e)}
