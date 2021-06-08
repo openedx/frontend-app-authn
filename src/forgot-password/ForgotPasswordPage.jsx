@@ -91,6 +91,7 @@ const ForgotPasswordPage = (props) => {
                   value={values.email}
                   handleBlur={() => getValidationMessage(values.email)}
                   handleChange={e => setFieldValue('email', e.target.value)}
+                  handleFocus={() => setValidationError('')}
                   helpText={[intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })]}
                 />
                 <StatefulButton
