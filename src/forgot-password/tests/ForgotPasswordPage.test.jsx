@@ -1,16 +1,19 @@
 import React from 'react';
+
+import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
+
+import * as analytics from '@edx/frontend-platform/analytics';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import * as analytics from '@edx/frontend-platform/analytics';
 
 import ForgotPasswordPage from '../ForgotPasswordPage';
 import { INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { PASSWORD_RESET } from '../../reset-password/data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
@@ -20,7 +23,7 @@ const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
 const initialState = {
   forgotPassword: {
-    status: null,
+    status: '',
   },
 };
 
@@ -138,7 +141,7 @@ describe('ForgotPasswordPage', () => {
     expect(forgotPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
-  it('should display success message after email is sent', async () => {
+  it('should display success message after email is sent', () => {
     store = mockStore({
       ...initialState,
       forgotPassword: {
@@ -151,5 +154,20 @@ describe('ForgotPasswordPage', () => {
 
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     expect(wrapper.find('.alert-success').text()).toEqual(successMessage);
+  });
+
+  it('should display invalid password reset link error', () => {
+    store = mockStore({
+      ...initialState,
+      forgotPassword: {
+        status: PASSWORD_RESET.INVALID_TOKEN,
+      },
+    });
+    const successMessage = 'Invalid password reset link'
+                            + 'This password reset link is invalid. It may have been used already. '
+                            + 'Enter your email below to receive a new link.';
+
+    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    expect(wrapper.find('.alert-danger').text()).toEqual(successMessage);
   });
 });

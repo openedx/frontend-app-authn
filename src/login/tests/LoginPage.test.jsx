@@ -450,7 +450,7 @@ describe('LoginPage', () => {
       },
     });
 
-    renderer.create(reduxWrapper(<IntlLoginPage />));
+    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
     expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=login`);
   });
 

@@ -548,7 +548,7 @@ class RegistrationPage extends React.Component {
             <StatefulButton
               type="submit"
               variant="brand"
-              className="register-button-width mt-4 mb-4"
+              className="stateful-button-width mt-4 mb-4"
               state={submitState}
               labels={{
                 default: intl.formatMessage(messages['create.account.button']),
