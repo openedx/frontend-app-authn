@@ -89,7 +89,7 @@ describe('RegistrationPage', () => {
     registerPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
     registerPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
     registerPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
-    registerPage.find('select#country').simulate('change', { target: { value: payload.country, name: 'country' } });
+    registerPage.find('input#country').simulate('change', { target: { value: payload.country } });
 
     if (!isThirdPartyAuth) {
       registerPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
@@ -138,7 +138,7 @@ describe('RegistrationPage', () => {
 
       populateRequiredFields(registerPage, payload);
       registerPage.find('button.btn-brand').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(payload));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
 
     it('should submit form without password field when current provider is present', () => {
@@ -169,7 +169,7 @@ describe('RegistrationPage', () => {
 
       populateRequiredFields(registerPage, formPayload, true);
       registerPage.find('button.btn-brand').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(formPayload));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
     });
 
     it('should not dispatch registerNewUser on empty form Submission', () => {
@@ -219,7 +219,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
       registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
       registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
-      registrationPage.find('select#country').simulate('blur', { target: { value: '', name: 'country' } });
+      registrationPage.find('input#country').simulate('blur', { target: { value: '', name: 'country' } });
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(emptyFieldValidation);
     });
 
@@ -315,7 +315,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
       registrationPage.find('input#password').simulate('focus');
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
-      registrationPage.find('select#country').simulate('blur', { target: { value: 'US', name: 'country' } });
+      registrationPage.find('input#country').simulate('blur', { target: { value: 'US', name: 'country' } });
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
     });
 
@@ -784,7 +784,7 @@ describe('RegistrationPage', () => {
       registerPage.find('textarea#goals').simulate('change', { target: { value: 'edX goals', name: 'goals' } });
 
       registerPage.find('button.btn-brand').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser(payload));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
   });
 });

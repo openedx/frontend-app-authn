@@ -425,13 +425,11 @@ select.form-control {
 .medium-screen-svg {
   fill: $primary;
   overflow: inherit;
-  position: absolute;
 }
 
 .large-screen-svg {
   fill: $primary;
   overflow: hidden;
-  position: absolute;
 }
 
 .small-screen-header {
@@ -518,7 +516,7 @@ select.form-control {
 }
 
 .large-heading {
-  margin-left: 7px;
+  margin-left: 8px;
   color: $white;
   max-width: 24rem;
   line-height: 78px;
@@ -541,9 +539,9 @@ select.form-control {
 }
 
 .logo {
-  width: 4.44rem;
-  margin-top: 1.5rem;
-  margin-left: 1.5rem;
+  width: 4.5rem;
+  padding-top: 2rem;
+  padding-left: 25px;
 }
 
 .username-suggestion {
@@ -611,4 +609,34 @@ select.form-control {
 .logistration-button:hover{
   color: $gray-700;
   text-decoration: none;
+}
+
+.dropdown-item:active {
+    background-color: #F2F0EF;
+}
+
+.dropdown-container {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    max-height: 200px;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.25rem;
+    overflow-y: scroll;
+    position: absolute;
+    background-color: #fff;
+    width: 464px;
+}
+
+@media (max-width: 464px) {
+  .dropdown-container {
+    width: auto;
+    left: 0;
+    right: 0;
+    position: relative;
+  }
+}
+
+.-mt-4 {
+    margin-top: -1.5rem;
 }
