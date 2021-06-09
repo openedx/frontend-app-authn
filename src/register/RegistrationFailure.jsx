@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import { Info } from '@edx/paragon/icons';
+import { Alert } from '@edx/paragon';
+import { Error } from '@edx/paragon/icons';
 
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from './data/constants';
 import messages from './messages';
@@ -35,8 +35,7 @@ const RegistrationFailureMessage = (props) => {
   }
 
   return (
-    <Alert id="validation-errors" className="mb-5" variant="danger">
-      <Icon src={Info} className="alert-icon" />
+    <Alert id="validation-errors" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{props.intl.formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
       <p>{errorMessage}</p>
     </Alert>

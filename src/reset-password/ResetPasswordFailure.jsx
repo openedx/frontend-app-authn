@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import { Info } from '@edx/paragon/icons';
+import { Alert } from '@edx/paragon';
+import { Error } from '@edx/paragon/icons';
 
 import { FORM_SUBMISSION_ERROR, PASSWORD_RESET, PASSWORD_VALIDATION_ERROR } from './data/constants';
 
@@ -34,8 +34,7 @@ const ResetPasswordFailure = (props) => {
 
   if (errorMessage) {
     return (
-      <Alert id="validation-errors" className="mb-5" variant="danger">
-        <Icon src={Info} className="alert-icon" />
+      <Alert id="validation-errors" className="mb-5" variant="danger" icon={Error}>
         <Alert.Heading>{heading}</Alert.Heading>
         <p>{errorMessage}</p>
       </Alert>
