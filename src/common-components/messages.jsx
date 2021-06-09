@@ -107,6 +107,11 @@ const messages = defineMessages({
     defaultMessage: '8 Characters',
     description: 'password requirement to have a minimum of 8 characters',
   },
+  'password.sr.only.helping.text': {
+    id: 'password.sr.only.helping.text',
+    defaultMessage: 'Password must contain at least 8 characters, at least one letter, and at least one number',
+    description: 'Password helping text for the sr-only class',
+  },
   // third party auth
   'tpa.alert.heading': {
     id: 'tpa.alert.heading',
