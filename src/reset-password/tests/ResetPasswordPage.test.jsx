@@ -95,8 +95,8 @@ describe('ResetPasswordPage', () => {
     expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
       'We couldn\'t reset your password.Please check your responses and try again.',
     );
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual('Password criteria has not been met');
-    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toEqual('Confirm your password');
+    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toContain('Password criteria has not been met');
+    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toContain('Confirm your password');
     resetPasswordPage.find('input#newPassword').simulate('focus');
     expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
     resetPasswordPage.find('input#confirmPassword').simulate('focus');
@@ -113,7 +113,7 @@ describe('ResetPasswordPage', () => {
     resetPasswordPage.find('input#confirmPassword').simulate(
       'change', { target: { value: 'password-mismatch', name: 'confirmPassword' } },
     );
-    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toEqual('Passwords do not match');
+    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toContain('Passwords do not match');
   });
 
   // ******** alert message tests ********

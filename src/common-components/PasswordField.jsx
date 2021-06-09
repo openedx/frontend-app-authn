@@ -5,8 +5,9 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form, IconButton, useToggle, Tooltip, OverlayTrigger, Icon,
 } from '@edx/paragon';
-import { Check, Remove } from '@edx/paragon/icons';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import {
+  Check, Remove, Visibility, VisibilityOff,
+} from '@edx/paragon/icons';
 
 import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
@@ -29,11 +30,11 @@ const PasswordField = (props) => {
   };
 
   const HideButton = (
-    <IconButton icon={faEyeSlash} onClick={setHiddenTrue} alt={formatMessage(messages['hide.password'])} aria-label={formatMessage(messages['hide.password'])} />
+    <IconButton src={VisibilityOff} iconAs={Icon} onClick={setHiddenTrue} variant="secondary" alt={formatMessage(messages['hide.password'])} />
   );
 
   const ShowButton = (
-    <IconButton icon={faEye} onClick={setHiddenFalse} alt={formatMessage(messages['show.password'])} aria-label={formatMessage(messages['show.password'])} />
+    <IconButton src={Visibility} iconAs={Icon} onClick={setHiddenFalse} variant="secondary" alt={formatMessage(messages['show.password'])} />
   );
   const placement = window.innerWidth < 768 ? 'top' : 'left';
   const tooltip = (
@@ -70,7 +71,10 @@ const PasswordField = (props) => {
         />
       </OverlayTrigger>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">
+          {props.errorMessage}
+          <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>
+        </Form.Control.Feedback>
       )}
     </Form.Group>
   );
