@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import { CheckCircle, Info } from '@edx/paragon/icons';
+import { Alert } from '@edx/paragon';
+import { CheckCircle, Error } from '@edx/paragon/icons';
 
 import messages from './messages';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
@@ -69,8 +69,12 @@ const ForgotPasswordAlert = (props) => {
 
   if (message) {
     return (
-      <Alert id="validation-errors" className="mb-5" variant={`${status === 'complete' ? 'success' : 'danger'}`}>
-        {status === 'complete' ? <Icon src={CheckCircle} className="alert-icon" /> : <Icon src={Info} className="alert-icon" />}
+      <Alert
+        id="validation-errors"
+        className="mb-5"
+        variant={`${status === 'complete' ? 'success' : 'danger'}`}
+        icon={status === 'complete' ? CheckCircle : Error}
+      >
         <Alert.Heading>{heading}</Alert.Heading>
         <p>{message}</p>
       </Alert>
