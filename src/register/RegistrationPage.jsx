@@ -396,9 +396,15 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
-      // Fire optimizely event
+      window.optimizely = window.optimizely || [];
+
+      // Fire optimizely events
+      window.optimizely.push({
+        type: 'event',
+        eventName: 'van_504_total_registrations',
+      });
+
       if (this.state.optimizelyExperimentName !== 'progressive_profiling_phase1') {
-        window.optimizely = window.optimizely || [];
         window.optimizely.push({
           type: 'event',
           eventName: 'van_504_conversion_rate',

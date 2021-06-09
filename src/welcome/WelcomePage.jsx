@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import { getConfig } from '@edx/frontend-platform';
+import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   ensureAuthenticatedUser, hydrateAuthenticatedUser, getAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
@@ -37,6 +38,7 @@ const WelcomePage = (props) => {
 
     if (props.location.state && props.location.state.registrationResult) {
       setRegistrationResult(props.location.state.registrationResult);
+      sendPageEvent('login_and_registration', 'welcome');
     }
   }, []);
 
