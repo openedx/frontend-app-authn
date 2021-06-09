@@ -13,9 +13,8 @@ import {
 } from '@edx/frontend-platform/i18n';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
-  Form, Hyperlink, Icon, StatefulButton,
+  Form, Hyperlink, StatefulButton,
 } from '@edx/paragon';
-import { ExpandMore } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { closest } from 'fastest-levenshtein';
 
@@ -45,6 +44,7 @@ import {
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie,
 } from '../data/utils';
+import CountryDropdown from './CountryDropdown';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -130,12 +130,6 @@ class RegistrationPage extends React.Component {
       this.setState({ optimizelyExperimentName });
     }
   };
-
-  getCountryOptions = () => [
-    { code: '', name: this.props.intl.formatMessage(messages['registration.country.label']) },
-  ].concat(getCountryList(getLocale())).map(({ code, name }) => (
-    <option className="data-hj-suppress" key={code} value={code}>{name}</option>
-  ));
 
   getOptionalFields() {
     return (
@@ -498,19 +492,20 @@ class RegistrationPage extends React.Component {
                 floatingLabel={intl.formatMessage(messages['registration.password.label'])}
               />
             )}
-            <FormGroup
-              as="select"
+            <CountryDropdown
               name="country"
+              floatingLabel={intl.formatMessage(messages['registration.country.label'])}
+              options={getCountryList(getLocale())}
+              valueKey="code"
+              displayValueKey="name"
               value={this.state.country}
               handleBlur={this.handleOnBlur}
-              handleChange={this.handleOnChange}
               handleFocus={this.handleOnFocus}
-              errorMessage={this.state.errors.country}
-              floatingLabel={intl.formatMessage(messages['registration.country.label'])}
-              trailingElement={<Icon src={ExpandMore} />}
-              options={this.getCountryOptions}
+              errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
+              handleChange={(value) => this.setState({ country: value })}
+              errorCode={this.state.errorCode}
             />
-            <div id="honor-code" className="small">
+            <div id="honor-code" className="small mt-4">
               <FormattedMessage
                 id="register.page.terms.of.service.and.honor.code"
                 defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each

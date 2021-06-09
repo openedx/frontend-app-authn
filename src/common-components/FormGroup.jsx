@@ -13,6 +13,9 @@ const FormGroup = (props) => {
     setHasFocus(true);
     if (props.handleFocus) { props.handleFocus(e); }
   };
+  const handleClick = (e) => {
+    if (props.handleClick) { props.handleClick(e); }
+  };
   const handleOnBlur = (e) => {
     setHasFocus(false);
     if (props.handleBlur) { props.handleBlur(e); }
@@ -24,10 +27,12 @@ const FormGroup = (props) => {
         as={props.as}
         type={props.type}
 
+        autoComplete={props.autoComplete}
         name={props.name}
         value={props.value}
         onFocus={handleFocus}
         onBlur={handleOnBlur}
+        onClick={handleClick}
         onChange={props.handleChange}
         controlClassName={props.borderClass}
 
@@ -66,9 +71,11 @@ FormGroup.defaultProps = {
   borderClass: '',
   suggestedTopLevelDomain: '',
   suggestedServiceLevelDomain: '',
+  autoComplete: null,
   handleBlur: null,
   handleChange: () => {},
   handleFocus: null,
+  handleClick: null,
   helpText: [],
   options: null,
   trailingElement: null,
@@ -82,10 +89,12 @@ FormGroup.propTypes = {
   borderClass: PropTypes.string,
   suggestedTopLevelDomain: PropTypes.string,
   suggestedServiceLevelDomain: PropTypes.string,
+  autoComplete: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,
   handleFocus: PropTypes.func,
+  handleClick: PropTypes.func,
   helpText: PropTypes.arrayOf(PropTypes.string),
   name: PropTypes.string.isRequired,
   options: PropTypes.func,
