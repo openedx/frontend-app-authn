@@ -25,81 +25,63 @@ const LoginFailureMessage = (props) => {
   let link;
   let resetLink = (
     <>
-      <Alert.Link href="/reset">
+      <a href="/reset">
         {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
-      </Alert.Link>
+      </a>
     </>
   );
 
   switch (errorCode) {
     case NON_COMPLIANT_PASSWORD_EXCEPTION: {
       errorList = (
-        <li key="password-non-compliance">
-          <FormattedMessage
-            id="non.compliant.password.error"
-            defaultMessage="{passwordComplaintRequirements} {lineBreak}Your current password does not meet the new security
-            requirements. We just sent a password-reset message to the email address associated with this account.
-            Thank you for helping us keep your data safe."
-            values={{
-              passwordComplaintRequirements: <strong>{intl.formatMessage(messages['non.compliant.password.title'])}</strong>,
-              lineBreak: <br />,
-            }}
-          />
-        </li>
+        <FormattedMessage
+          id="non.compliant.password.error"
+          defaultMessage="{passwordComplaintRequirements} {lineBreak}Your current password does not meet the new security
+          requirements. We just sent a password-reset message to the email address associated with this account.
+          Thank you for helping us keep your data safe."
+          values={{
+            passwordComplaintRequirements: <strong>{intl.formatMessage(messages['non.compliant.password.title'])}</strong>,
+            lineBreak: <br />,
+          }}
+        />
       );
       break;
     }
     case FORBIDDEN_REQUEST:
-      errorList = (
-        <li key={FORBIDDEN_REQUEST}>
-          {intl.formatMessage(messages['login.rate.limit.reached.message'])}
-        </li>
-      );
+      errorList = intl.formatMessage(messages['login.rate.limit.reached.message']);
       break;
     case INACTIVE_USER: {
       const supportLink = (
-        <Alert.Link href={context.supportLink}>
+        <a href={context.supportLink}>
           {intl.formatMessage(messages['contact.support.link'], { platformName: context.platformName })}
-        </Alert.Link>
+        </a>
       );
       errorList = (
-        <li key={INACTIVE_USER}>
-          <FormattedMessage
-            id="login.inactive.user.error"
-            defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
-            {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
-            check your spam folders or {supportLink}."
-            values={{
-              lineBreak: <br />,
-              email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
-              supportLink,
-            }}
-          />
-        </li>
+        <FormattedMessage
+          id="login.inactive.user.error"
+          defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
+          {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
+          check your spam folders or {supportLink}."
+          values={{
+            lineBreak: <br />,
+            email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
+            supportLink,
+          }}
+        />
       );
       break;
     }
     case INTERNAL_SERVER_ERROR:
-      errorList = (
-        <li key={INTERNAL_SERVER_ERROR}>
-          {intl.formatMessage(messages['internal.server.error.message'])}
-        </li>
-      );
+      errorList = intl.formatMessage(messages['internal.server.error.message']);
       break;
     case INVALID_FORM:
-      errorList = (
-        <p>
-          {intl.formatMessage(messages['login.form.invalid.error.message'])}
-        </p>
-      );
+      errorList = intl.formatMessage(messages['login.form.invalid.error.message']);
       break;
     case FAILED_LOGIN_ATTEMPT: {
       resetLink = (
-        <>
-          <Alert.Link href="/reset">
-            {intl.formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
-          </Alert.Link>
-        </>
+        <a href="/reset">
+          {intl.formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
+        </a>
       );
       errorList = (
         <FormattedMessage
@@ -160,7 +142,7 @@ const LoginFailureMessage = (props) => {
           return (
             <li key={error}>
               {beforeLink}
-              <Alert.Link href={link}>{linkText}</Alert.Link>
+              <a href={link}>{linkText}</a>
               {afterLink}
             </li>
           );
@@ -172,7 +154,7 @@ const LoginFailureMessage = (props) => {
   return (
     <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      <span className="one-rem-font">{ errorList }</span>
+      <p>{ errorList }</p>
     </Alert>
   );
 };
