@@ -189,7 +189,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
       expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
       expect(registrationPage.find('div[feedback-for="email"]').text()).toEqual(emptyFieldValidation.email);
-      expect(registrationPage.find('div[feedback-for="password"]').text()).toEqual(emptyFieldValidation.password);
+      expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
 
       const alertBanner = 'We couldn\'t create your account.Please check your responses and try again.';
@@ -312,7 +312,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#username').simulate('focus');
       expect(registrationPage.find('div[feedback-for="email"]').text()).toEqual(emptyFieldValidation.email);
       registrationPage.find('input#email').simulate('focus');
-      expect(registrationPage.find('div[feedback-for="password"]').text()).toEqual(emptyFieldValidation.password);
+      expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
       registrationPage.find('input#password').simulate('focus');
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
       registrationPage.find('select#country').simulate('blur', { target: { value: 'US', name: 'country' } });
