@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert, Icon } from '@edx/paragon';
-import { Info } from '@edx/paragon/icons';
+import { Alert } from '@edx/paragon';
+import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import processLink from '../data/utils';
@@ -170,8 +170,7 @@ const LoginFailureMessage = (props) => {
   }
 
   return (
-    <Alert id="login-failure-alert" className="mb-5" variant="danger">
-      <Icon src={Info} className="alert-icon" />
+    <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
       <span className="one-rem-font">{ errorList }</span>
     </Alert>

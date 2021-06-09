@@ -2,29 +2,33 @@
 
 exports[`ThirdPartyAuthAlert should match login page third party auth alert message snapshot 1`] = `
 <div
-  className="fade alert-warning mt-n2 alert show"
+  className="fade alert-content alert-warning mt-n2 alert show"
   id="tpa-alert"
   role="alert"
 >
-  <p>
-    You have successfully signed into Google, but your Google account does not have a linked edX account. To link your accounts, sign in now using your edX password.
-  </p>
+  <div>
+    <p>
+      You have successfully signed into Google, but your Google account does not have a linked edX account. To link your accounts, sign in now using your edX password.
+    </p>
+  </div>
 </div>
 `;
 
 exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
 <div
-  className="fade alert-success mt-n2 alert show"
+  className="fade alert-content alert-success mt-n2 alert show"
   id="tpa-alert"
   role="alert"
 >
-  <div
-    className="alert-heading h4"
-  >
-    Almost done!
+  <div>
+    <div
+      className="alert-heading h4"
+    >
+      Almost done!
+    </div>
+    <p>
+      You've successfully signed into Google! We just need a little more information before you start learning with edX.
+    </p>
   </div>
-  <p>
-    You've successfully signed into Google! We just need a little more information before you start learning with edX.
-  </p>
 </div>
 `;

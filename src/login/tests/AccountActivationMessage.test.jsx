@@ -17,7 +17,7 @@ describe('AccountActivationMessage', () => {
     );
 
     const expectedMessage = 'This account has already been activated.';
-    expect(accountActivationMessage.find('#account-activation-message').find('div').text()).toEqual(expectedMessage);
+    expect(accountActivationMessage.find('#account-activation-message').find('div').first().text()).toEqual(expectedMessage);
   });
 
   it('should match account activated success message', () => {
