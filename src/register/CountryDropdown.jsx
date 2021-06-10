@@ -133,7 +133,7 @@ class CountryDropdown extends React.Component {
           handleChange={this.handleOnChange}
           handleClick={this.handleClick}
           handleBlur={this.handleOnBlur}
-          handleFocus={this.handleOnFocus}
+          handleFocus={this.handleFocus}
           value={this.state.displayValue}
           errorMessage={this.state.errorMessage}
         />
