@@ -20,6 +20,18 @@ class CountryDropdown extends React.Component {
     this.handleOnBlur = this.handleOnBlur.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.value !== nextProps.value) {
+      const opt = this.props.options.find((o) => o[this.props.valueKey] === nextProps.value);
+      if (opt && opt[this.props.displayValueKey] !== this.state.displayValue) {
+        this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
+      }
+      return false;
+    }
+
+    return true;
+  }
+
   static getDerivedStateFromProps(props, state) {
     if (props.errorCode === FORM_SUBMISSION_ERROR && state.showFieldError) {
       return { errorMessage: props.errorMessage };
@@ -59,7 +71,7 @@ class CountryDropdown extends React.Component {
 
     const opt = this.props.options.find((o) => o[this.props.valueKey] === value);
     if (opt && opt[this.props.displayValueKey] !== this.state.displayValue) {
-      this.setState({ displayValue: opt[this.props.displayValueKey] });
+      this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
     }
   }
 
@@ -68,10 +80,10 @@ class CountryDropdown extends React.Component {
     const opt = this.props.options.find((o) => o[this.props.displayValueKey].toLowerCase() === normalized);
     if (opt) {
       this.setValue(opt[this.props.valueKey]);
-      this.setState({ displayValue: opt[this.props.displayValueKey] });
+      this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
     } else {
       this.setValue(null);
-      this.setState({ displayValue: value });
+      this.setState({ displayValue: value, showFieldError: !value });
     }
   }
 
@@ -153,6 +165,7 @@ CountryDropdown.defaultProps = {
   handleBlur: null,
   value: null,
   errorMessage: null,
+  errorCode: null,
 };
 
 CountryDropdown.propTypes = {
@@ -165,7 +178,7 @@ CountryDropdown.propTypes = {
   handleBlur: PropTypes.func,
   value: PropTypes.string,
   errorMessage: PropTypes.string,
-  errorCode: PropTypes.string.isRequired,
+  errorCode: PropTypes.string,
   name: PropTypes.string.isRequired,
 };
 
