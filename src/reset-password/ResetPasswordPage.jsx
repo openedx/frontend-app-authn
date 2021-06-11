@@ -8,7 +8,7 @@ import { Form, Spinner, StatefulButton } from '@edx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getQueryParameters, getConfig } from '@edx/frontend-platform';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import messages from './messages';
 import { resetPassword, validateToken } from './data/actions';
@@ -163,7 +163,6 @@ const ResetPasswordPage = (props) => {
                   default: intl.formatMessage(messages['reset.password']),
                   pending: '',
                 }}
-                icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                 onClick={e => handleSubmit(e)}
                 onMouseDown={(e) => e.preventDefault()}
               />

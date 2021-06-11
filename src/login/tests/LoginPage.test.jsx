@@ -160,9 +160,8 @@ describe('LoginPage', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     const button = loginPage.find('button[type="submit"] span').first();
 
-    // test pending state icon and that pending state icon has title associated with it
-    expect(button.find('svg').prop('className')).toEqual(expect.stringContaining('fa-spinner'));
-    expect(button.find('svg').find('title').text()).toEqual('Loading');
+    // test pending state has icon
+    expect(button.find('.pgn__stateful-btn-icon').length).toEqual(1);
   });
 
   it('should show forgot password link', () => {
