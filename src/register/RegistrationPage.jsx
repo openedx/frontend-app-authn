@@ -267,6 +267,7 @@ class RegistrationPage extends React.Component {
               suggestedTopLevelDomain: suggestedTld,
               suggestedTldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
               suggestedServiceLevelDomain: '',
+              suggestedSldMessage: '',
               borderClass: '',
               skipEmailValidation: false,
             });
@@ -278,15 +279,17 @@ class RegistrationPage extends React.Component {
           if (DEFAULT_SERVICE_PROVIDER_DOMAINS.indexOf(serviceProvider) < 0) {
             let suggestedSld = closest(serviceProvider, DEFAULT_SERVICE_PROVIDER_DOMAINS);
             suggestedSld = `${emailLexemes[0]}@${suggestedSld}.${domainLexemes[1]}`;
-            suggestedSld = intl.formatMessage(messages['did.you.mean.alert.text.with.email'], { email: suggestedSld });
             errors.email = '';
+
             this.setState({
               suggestedServiceLevelDomain: suggestedSld,
+              suggestedSldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
               borderClass: 'yellow-border',
             });
           } else {
             this.setState({
               suggestedServiceLevelDomain: '',
+              suggestedSldMessage: '',
               borderClass: '',
             });
           }
@@ -343,19 +346,24 @@ class RegistrationPage extends React.Component {
   handleOnClose() {
     const { errors } = this.state;
     errors.email = '';
-    this.setState({ errors, suggestedTopLevelDomain: '', skipEmailValidation: true });
+    this.setState({
+      errors,
+      suggestedTopLevelDomain: '',
+      skipEmailValidation: true,
+      suggestedTldMessage: '',
+    });
   }
 
   renderEmailFeedback() {
     if (this.state.suggestedTopLevelDomain) {
       return (
-        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pb-1 pt-1" icon={Error}>
-          {this.state.suggestedTopLevelDomain}
+        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pb-2 pt-2 mt-2" icon={Error}>
+          <p className="mb-0">{this.state.suggestedTldMessage}<Alert.Link href="#">{this.state.suggestedTopLevelDomain}</Alert.Link>?</p>
         </Alert>
       );
     }
     if (this.state.suggestedServiceLevelDomain) {
-      return <span className="one-rem-font">{this.state.suggestedServiceLevelDomain}</span>;
+      return <span className="one-rem-font">{this.state.suggestedSldMessage}<Alert.Link href="#">{this.state.suggestedServiceLevelDomain}</Alert.Link>?</span>;
     }
 
     return null;
