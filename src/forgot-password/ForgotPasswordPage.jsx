@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Formik } from 'formik';
 import PropTypes from 'prop-types';
@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton, Hyperlink } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -29,6 +29,11 @@ const ForgotPasswordPage = (props) => {
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
   const [validationError, setValidationError] = useState('');
 
+  useEffect(() => {
+    sendPageEvent('login_and_registration', 'reset');
+    sendTrackEvent('edx.bi.password_reset_form.viewed', { category: 'user-engagement' });
+  }, []);
+
   const getValidationMessage = (email) => {
     let error = '';
 
@@ -41,8 +46,6 @@ const ForgotPasswordPage = (props) => {
     setValidationError(error);
     return error;
   };
-
-  sendPageEvent('login_and_registration', 'reset');
 
   return (
     <div>

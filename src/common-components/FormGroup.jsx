@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 
 import {
-  Form, Hyperlink, TransitionReplace,
+  Form, TransitionReplace,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
-import AlertDismissible from './AlertDismissible';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
@@ -56,10 +55,6 @@ const FormGroup = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
-
-      {props.suggestedTopLevelDomain ? <AlertDismissible msg={props.suggestedTopLevelDomain} variant="danger" /> : null}
-
-      {props.suggestedServiceLevelDomain ? <span className="one-rem-font">{props.suggestedServiceLevelDomain.split(':')[0]}: <Hyperlink destination="#"><u>{props.suggestedServiceLevelDomain.split(':')[1]}</u></Hyperlink></span> : null}
       {props.children}
     </Form.Group>
   );
@@ -69,8 +64,6 @@ FormGroup.defaultProps = {
   as: 'input',
   errorMessage: '',
   borderClass: '',
-  suggestedTopLevelDomain: '',
-  suggestedServiceLevelDomain: '',
   autoComplete: null,
   handleBlur: null,
   handleChange: () => {},
@@ -87,8 +80,6 @@ FormGroup.propTypes = {
   as: PropTypes.string,
   errorMessage: PropTypes.string,
   borderClass: PropTypes.string,
-  suggestedTopLevelDomain: PropTypes.string,
-  suggestedServiceLevelDomain: PropTypes.string,
   autoComplete: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
