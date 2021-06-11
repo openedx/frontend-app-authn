@@ -262,21 +262,22 @@ class RegistrationPage extends React.Component {
             let suggestedTld = closest(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS);
             suggestedTld = `${emailLexemes[0]}@${domainLexemes[0]}.${suggestedTld}`;
             errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-            suggestedTld = intl.formatMessage(messages['did.you.mean.alert.text'], { email: suggestedTld });
+
             this.setState({
               suggestedTopLevelDomain: suggestedTld,
+              suggestedTldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
               suggestedServiceLevelDomain: '',
               borderClass: '',
             });
             break;
           } else {
-            this.setState({ suggestedTopLevelDomain: '' });
+            this.setState({ suggestedTopLevelDomain: '', suggestedTldMessage: '' });
           }
 
           if (DEFAULT_SERVICE_PROVIDER_DOMAINS.indexOf(serviceProvider) < 0) {
             let suggestedSld = closest(serviceProvider, DEFAULT_SERVICE_PROVIDER_DOMAINS);
             suggestedSld = `${emailLexemes[0]}@${suggestedSld}.${domainLexemes[1]}`;
-            suggestedSld = intl.formatMessage(messages['did.you.mean.alert.text'], { email: suggestedSld });
+            suggestedSld = intl.formatMessage(messages['did.you.mean.alert.text.with.email'], { email: suggestedSld });
             errors.email = '';
             this.setState({
               suggestedServiceLevelDomain: suggestedSld,
@@ -478,6 +479,7 @@ class RegistrationPage extends React.Component {
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
               borderClass={this.state.borderClass}
               suggestedTopLevelDomain={this.state.suggestedTopLevelDomain}
+              suggestedTldMessage={this.state.suggestedTldMessage}
               suggestedServiceLevelDomain={this.state.suggestedServiceLevelDomain}
             />
 

@@ -8,8 +8,8 @@ function AlertDismissible(props) {
   const [show, setShow] = useState(true);
 
   return show ? (
-    <Alert variant={props.variant} onClose={() => setShow(false)} dismissible className="pb-1 pt-1" icon={Info}>
-      <p>{props.msg}</p>
+    <Alert variant={props.variant} onClose={() => setShow(false)} dismissible className="pb-2 pt-2 mt-2" icon={Info}>
+      <p className="mb-0">{props.msg}{' '}<Alert.Link href="#">{props.email}</Alert.Link>?</p>
     </Alert>
   ) : null;
 }
@@ -17,6 +17,7 @@ function AlertDismissible(props) {
 AlertDismissible.propTypes = {
   variant: PropTypes.string.isRequired,
   msg: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
 };
 
 export default injectIntl(AlertDismissible);

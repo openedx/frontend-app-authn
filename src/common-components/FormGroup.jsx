@@ -57,9 +57,17 @@ const FormGroup = (props) => {
         <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
 
-      {props.suggestedTopLevelDomain ? <AlertDismissible msg={props.suggestedTopLevelDomain} variant="danger" /> : null}
+      {props.suggestedTopLevelDomain
+        ? (
+          <AlertDismissible
+            email={props.suggestedTopLevelDomain}
+            msg={props.suggestedTldMessage}
+            variant="danger"
+          />
+        )
+        : null}
 
-      {props.suggestedServiceLevelDomain ? <span className="one-rem-font">{props.suggestedServiceLevelDomain.split(':')[0]}: <Hyperlink destination="#"><u>{props.suggestedServiceLevelDomain.split(':')[1]}</u></Hyperlink></span> : null}
+      {props.suggestedServiceLevelDomain ? <span className="one-rem-font">{props.suggestedServiceLevelDomain.split(':')[0]}: <Hyperlink destination="#"><u>{props.suggestedServiceLevelDomain.split(':')[1]}</u></Hyperlink>?</span> : null}
       {props.children}
     </Form.Group>
   );
@@ -70,6 +78,7 @@ FormGroup.defaultProps = {
   errorMessage: '',
   borderClass: '',
   suggestedTopLevelDomain: '',
+  suggestedTldMessage: '',
   suggestedServiceLevelDomain: '',
   autoComplete: null,
   handleBlur: null,
@@ -88,6 +97,7 @@ FormGroup.propTypes = {
   errorMessage: PropTypes.string,
   borderClass: PropTypes.string,
   suggestedTopLevelDomain: PropTypes.string,
+  suggestedTldMessage: PropTypes.string,
   suggestedServiceLevelDomain: PropTypes.string,
   autoComplete: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
