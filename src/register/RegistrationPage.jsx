@@ -11,11 +11,9 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
   Form, Hyperlink, StatefulButton,
 } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { closest } from 'fastest-levenshtein';
 
 import {
@@ -548,9 +546,6 @@ class RegistrationPage extends React.Component {
               labels={{
                 default: intl.formatMessage(messages['create.account.button']),
                 pending: '',
-              }}
-              icons={{
-                pending: <FontAwesomeIcon title={intl.formatMessage(messages['create.an.account.btn.pending.state'])} icon={faSpinner} spin />,
               }}
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
