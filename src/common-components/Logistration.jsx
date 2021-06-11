@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button } from '@edx/paragon';
+import { Button, Tabs, Tab } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +18,7 @@ const Logistration = (props) => {
   const { intl, selectedPage } = props;
   const tpa = getTpaHint();
   const [institutionLogin, setInstitutionLogin] = useState(false);
+  const [key, setKey] = useState('');
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -47,17 +48,16 @@ const Logistration = (props) => {
         : (
           <>
             {!tpa && (
-              <span className="nav nav-tabs">
-                <Link className={`nav-item nav-link ${selectedPage === REGISTER_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(REGISTER_PAGE)}>
-                  {intl.formatMessage(messages['logistration.register'])}
-                </Link>
-                <Link className={`nav-item nav-link ${selectedPage === LOGIN_PAGE ? 'active' : ''}`} to={updatePathWithQueryParams(LOGIN_PAGE)}>
-                  {intl.formatMessage(messages['logistration.sign.in'])}
-                </Link>
-              </span>
+              <Tabs defaultActiveKey={selectedPage} id="controlled-tab-example" onSelect={(k) => setKey(k)}>
+                <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+              </Tabs>
             )}
           </>
         )}
+      { key && (
+        <Redirect to={updatePathWithQueryParams(key)} />
+      )}
       <div id="main-content" className="main-content">
         {selectedPage === LOGIN_PAGE
           ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
