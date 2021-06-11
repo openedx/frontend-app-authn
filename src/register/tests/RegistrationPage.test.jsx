@@ -251,7 +251,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('RegistrationPage').state('suggestedTopLevelDomain')).toEqual('test@gmail.com');
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@fmail.com', name: 'email' } });
-      expect(registrationPage.find('RegistrationPage').state('suggestedServiceLevelDomain')).toEqual('Did you mean: test@gmail.com');
+      expect(registrationPage.find('RegistrationPage').state('suggestedServiceLevelDomain')).toEqual('test@gmail.com');
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@hotmail.com', name: 'email' } });
       expect(registrationPage.find('RegistrationPage').state('suggestedServiceLevelDomain')).toEqual('');
