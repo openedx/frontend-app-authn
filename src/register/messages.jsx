@@ -257,8 +257,8 @@ const messages = defineMessages({
   },
   'did.you.mean.alert.text': {
     id: 'did.you.mean.alert.text',
-    defaultMessage: 'Did you mean: {email}?',
-    description: 'Did you mean email alert suggestion',
+    defaultMessage: 'Did you mean: ',
+    description: 'Did you mean alert suggestion',
   },
 });
 

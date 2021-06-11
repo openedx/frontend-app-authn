@@ -557,6 +557,7 @@ select.form-control {
 
 .one-rem-font {
   font-size: 0.99rem;
+  color: #707070;
 }
 
 @media (max-width: 767px) {
@@ -632,4 +633,16 @@ select.form-control {
 
 .-mt-4 {
     margin-top: -1.5rem;
+}
+
+.alert .alert-icon {
+  margin-top: 3px;
+}
+.alert-dismissible .close {
+  top: 4px;
+  font-weight: 500;
+
+  :hover {
+      font-weight: 700;
+    }
 }
