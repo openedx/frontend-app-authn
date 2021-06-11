@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form, Hyperlink, Icon, StatefulButton,
@@ -100,6 +100,10 @@ class LoginPage extends React.Component {
     errors[e.target.name] = '';
     this.setState({ errors });
   }
+
+  handleForgotPasswordLinkClickEvent = () => {
+    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
+  };
 
   validateEmail(email) {
     const { errors } = this.state;
@@ -242,7 +246,12 @@ class LoginPage extends React.Component {
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            <Link id="forgot-password" className="btn btn-link font-weight-500 text-body" to={RESET_PAGE}>
+            <Link
+              id="forgot-password"
+              className="btn btn-link font-weight-500 text-body"
+              to={RESET_PAGE}
+              onClick={this.handleForgotPasswordLinkClickEvent}
+            >
               {intl.formatMessage(messages['forgot.password'])}
             </Link>
             {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
