@@ -405,7 +405,7 @@ select.form-control {
 }
 
 .screen-header {
-  background-color: $primary;
+  background-color: $primary-400;
 }
 
 .screen-polygon {
@@ -413,18 +413,19 @@ select.form-control {
 }
 
 .medium-screen-svg {
-  fill: $primary;
+  fill: $primary-400;
   overflow: inherit;
   position: absolute;
 }
 
 .large-screen-svg {
-  fill: $primary;
+  fill: $primary-400;
   overflow: hidden;
   position: absolute;
 }
 
 .small-screen-header {
+  background-color: $primary-400;
   width: 100vw;
 }
 
