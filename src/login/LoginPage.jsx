@@ -13,8 +13,6 @@ import {
   Form, Hyperlink, Icon, StatefulButton,
 } from '@edx/paragon';
 import { Institution } from '@edx/paragon/icons';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AccountActivationMessage from './AccountActivationMessage';
 import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
@@ -240,9 +238,6 @@ class LoginPage extends React.Component {
               labels={{
                 default: intl.formatMessage(messages['sign.in.button']),
                 pending: '',
-              }}
-              icons={{
-                pending: <FontAwesomeIcon title={intl.formatMessage(messages['sign.in.btn.pending.state'])} icon={faSpinner} spin />,
               }}
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}

@@ -11,7 +11,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton, Hyperlink } from '@edx/paragon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
@@ -103,7 +103,6 @@ const ForgotPasswordPage = (props) => {
                     default: intl.formatMessage(messages['forgot.password.page.submit.button']),
                     pending: '',
                   }}
-                  icons={{ pending: <FontAwesomeIcon icon={faSpinner} spin /> }}
                   onClick={handleSubmit}
                   onMouseDown={(e) => e.preventDefault()}
                 />
@@ -111,7 +110,7 @@ const ForgotPasswordPage = (props) => {
                   {intl.formatMessage(messages['need.help.sign.in.text'])}
                 </Hyperlink>
                 <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
-                  <span><Hyperlink destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
+                  <span><Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
                 </p>
               </Form>
             </>
