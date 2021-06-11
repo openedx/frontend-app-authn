@@ -35,21 +35,11 @@ $accent-a-light: #c9f2f5;
 .nav-tabs {
   a {
     color: $primary !important;
+    background: transparent !important;
 
     :hover {
       color: $primary !important;
     }
-  }
-
-  .nav-link.active {
-    border-bottom: 0.175rem solid $primary;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-  }
-
-  :hover {
-    border: none;
   }
 }
 

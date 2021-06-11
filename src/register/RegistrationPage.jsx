@@ -11,11 +11,10 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
-  Form, Hyperlink, StatefulButton,
+  Alert, Form, Hyperlink, StatefulButton,
 } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Error } from '@edx/paragon/icons';
 import { closest } from 'fastest-levenshtein';
 
 import {
@@ -50,8 +49,8 @@ class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     sendPageEvent('login_and_registration', 'register');
-
     const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS ? getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',') : [];
+    this.handleOnClose = this.handleOnClose.bind(this);
 
     this.queryParams = getAllPossibleQueryParam();
     this.tpaHint = getTpaHint();
@@ -75,6 +74,7 @@ class RegistrationPage extends React.Component {
       showOptionalField: false,
       startTime: Date.now(),
       optimizelyExperimentName: '',
+      skipEmailValidation: false,
     };
   }
 
@@ -222,7 +222,7 @@ class RegistrationPage extends React.Component {
   handleOnFocus = (e) => {
     const { errors } = this.state;
     errors[e.target.name] = '';
-    this.setState({ errors });
+    this.setState({ errors, skipEmailValidation: false });
   }
 
   handleSuggestionClick = (suggestion) => {
@@ -251,12 +251,12 @@ class RegistrationPage extends React.Component {
           errors.email = intl.formatMessage(messages['empty.email.field.error']);
         } else if (value.length <= 2 || !emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-        } else if (emailRegex.test(value)) {
+        } else if (emailRegex.test(value) && !this.state.skipEmailValidation) {
           errors.email = '';
           let emailLexemes = value.split('@');
           let domainLexemes = emailLexemes[1].split('.');
-          const serviceProvider = domainLexemes[0];
-          const topLevelDomain = domainLexemes[1];
+          const serviceProvider = domainLexemes.slice(-2)[0];
+          const topLevelDomain = domainLexemes.slice(-1)[0];
 
           if (DEFAULT_TOP_LEVEL_DOMAINS.indexOf(topLevelDomain) < 0) {
             let suggestedTld = closest(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS);
@@ -268,6 +268,7 @@ class RegistrationPage extends React.Component {
               suggestedTldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
               suggestedServiceLevelDomain: '',
               borderClass: '',
+              skipEmailValidation: false,
             });
             break;
           } else {
@@ -337,6 +338,27 @@ class RegistrationPage extends React.Component {
 
     this.setState({ errors });
     return errors;
+  }
+
+  handleOnClose() {
+    const { errors } = this.state;
+    errors.email = '';
+    this.setState({ errors, suggestedTopLevelDomain: '', skipEmailValidation: true });
+  }
+
+  renderEmailFeedback() {
+    if (this.state.suggestedTopLevelDomain) {
+      return (
+        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pb-1 pt-1" icon={Error}>
+          {this.state.suggestedTopLevelDomain}
+        </Alert>
+      );
+    }
+    if (this.state.suggestedServiceLevelDomain) {
+      return <span className="one-rem-font">{this.state.suggestedServiceLevelDomain}</span>;
+    }
+
+    return null;
   }
 
   renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl) {
@@ -478,10 +500,9 @@ class RegistrationPage extends React.Component {
               helpText={[intl.formatMessage(messages['help.text.email'])]}
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
               borderClass={this.state.borderClass}
-              suggestedTopLevelDomain={this.state.suggestedTopLevelDomain}
-              suggestedTldMessage={this.state.suggestedTldMessage}
-              suggestedServiceLevelDomain={this.state.suggestedServiceLevelDomain}
-            />
+            >
+              {this.renderEmailFeedback()}
+            </FormGroup>
 
             {!currentProvider && (
               <PasswordField
@@ -550,9 +571,6 @@ class RegistrationPage extends React.Component {
               labels={{
                 default: intl.formatMessage(messages['create.account.button']),
                 pending: '',
-              }}
-              icons={{
-                pending: <FontAwesomeIcon title={intl.formatMessage(messages['create.an.account.btn.pending.state'])} icon={faSpinner} spin />,
               }}
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}

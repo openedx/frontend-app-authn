@@ -344,6 +344,7 @@ describe('RegistrationPage', () => {
       const expectedMessage = 'We couldn\'t create your account.An error has occurred. Try refreshing the page, or check your internet connection.';
       props = {
         errorCode: INTERNAL_SERVER_ERROR,
+        failureCount: 0,
       };
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
@@ -355,6 +356,7 @@ describe('RegistrationPage', () => {
       const expectedMessage = 'We couldn\'t create your account.Too many failed registration attempts. Try again later.';
       props = {
         errorCode: FORBIDDEN_REQUEST,
+        failureCount: 0,
       };
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
@@ -365,10 +367,11 @@ describe('RegistrationPage', () => {
     it('should match tpa session expired error message', () => {
       const expectedMessage = 'We couldn\'t create your account.Registration using Google has timed out.';
       props = {
-        errorCode: TPA_SESSION_EXPIRED,
         context: {
           provider: 'Google',
         },
+        errorCode: TPA_SESSION_EXPIRED,
+        failureCount: 0,
       };
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
@@ -395,9 +398,8 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       const button = registrationPage.find('button[type="submit"] span').first();
 
-      // test pending state icon and that pending state icon has title associated with it
-      expect(button.find('svg').prop('className')).toEqual(expect.stringContaining('fa-spinner'));
-      expect(button.find('svg').find('title').text()).toEqual('Loading');
+      // test pending state has icon
+      expect(button.find('.pgn__stateful-btn-icon').length).toEqual(1);
     });
 
     it('should show single sign on provider button', () => {
@@ -469,7 +471,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      renderer.create(reduxWrapper(<IntlRegistrationPage />));
+      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=register`);
     });
 

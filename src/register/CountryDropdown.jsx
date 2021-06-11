@@ -21,7 +21,7 @@ class CountryDropdown extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.value !== nextProps.value) {
+    if (this.props.value !== nextProps.value && nextProps.value !== null) {
       const opt = this.props.options.find((o) => o[this.props.valueKey] === nextProps.value);
       if (opt && opt[this.props.displayValueKey] !== this.state.displayValue) {
         this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
@@ -87,12 +87,15 @@ class CountryDropdown extends React.Component {
     }
   }
 
-  handleClick = () => {
+  handleClick = (e) => {
     if (!this.props.value) {
-      const dropDownItems = this.getItems();
+      const dropDownItems = this.getItems(e.target.value);
       this.setState({
         dropDownItems, icon: ExpandLess, errorMessage: '', showFieldError: false,
       });
+    }
+    if (this.state.dropDownItems?.length > 0) {
+      this.setState({ dropDownItems: '', icon: ExpandMore });
     }
   }
 
