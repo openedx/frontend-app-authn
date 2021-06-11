@@ -222,7 +222,11 @@ class RegistrationPage extends React.Component {
   handleOnFocus = (e) => {
     const { errors } = this.state;
     errors[e.target.name] = '';
-    this.setState({ errors, skipEmailValidation: false });
+    const state = { errors };
+    if (e.target.name === 'email') {
+      state.skipEmailValidation = false;
+    }
+    this.setState({ ...state });
   }
 
   handleSuggestionClick = (suggestion) => {
