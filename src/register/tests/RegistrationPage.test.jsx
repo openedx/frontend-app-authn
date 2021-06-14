@@ -398,8 +398,7 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       const button = registrationPage.find('button[type="submit"] span').first();
 
-      // test pending state has icon
-      expect(button.find('.pgn__stateful-btn-icon').length).toEqual(1);
+      expect(button.find('.sr-only').text()).toEqual('pending');
     });
 
     it('should show single sign on provider button', () => {
