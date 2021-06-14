@@ -18,10 +18,11 @@ const UsernameField = (props) => {
           {usernameSuggestions.map((username, index) => (
             <Button
               type="button"
+              name="username"
               variant="outline-dark"
               className="username-suggestion"
               key={`suggestion-${index.toString()}`}
-              onClick={() => props.handleSuggestionClick(username, index)}
+              onClick={(e) => props.handleSuggestionClick(e, username)}
             >
               {username}
             </Button>

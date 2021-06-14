@@ -229,14 +229,27 @@ class RegistrationPage extends React.Component {
     this.setState({ ...state });
   }
 
-  handleSuggestionClick = (suggestion) => {
+  handleSuggestionClick = (e, suggestion) => {
     const { errors } = this.state;
-    errors.username = '';
-    this.setState({
-      username: suggestion,
-      errors,
-    });
-    this.props.clearUsernameSuggestions();
+    if (e.target.name === 'username') {
+      errors.username = '';
+      this.setState({
+        username: suggestion,
+        errors,
+      });
+      this.props.clearUsernameSuggestions();
+    } else if (e.target.name === 'email') {
+      errors.email = '';
+      this.setState({
+        email: suggestion,
+        suggestedServiceLevelDomain: '',
+        suggestedSldMessage: '',
+        suggestedTopLevelDomain: '',
+        suggestedTldMessage: '',
+        borderClass: '',
+        errors,
+      });
+    }
   }
 
   isFormValid(validations) {
@@ -362,12 +375,31 @@ class RegistrationPage extends React.Component {
     if (this.state.suggestedTopLevelDomain) {
       return (
         <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pb-2 pt-2 mt-2" icon={Error}>
-          <p className="mb-0">{this.state.suggestedTldMessage}<Alert.Link href="#">{this.state.suggestedTopLevelDomain}</Alert.Link>?</p>
+          <p className="mb-0">{this.state.suggestedTldMessage}
+            <Alert.Link
+              href="#"
+              name="email"
+              onClick={e => { e.preventDefault(); this.handleSuggestionClick(e, this.state.suggestedTopLevelDomain); }}
+            >{this.state.suggestedTopLevelDomain}
+            </Alert.Link>?
+          </p>
         </Alert>
       );
     }
     if (this.state.suggestedServiceLevelDomain) {
-      return <span className="one-rem-font">{this.state.suggestedSldMessage}<Alert.Link href="#">{this.state.suggestedServiceLevelDomain}</Alert.Link>?</span>;
+      return (
+        <span className="one-rem-font">{this.state.suggestedSldMessage}
+          <Alert.Link
+            href="#"
+            name="email"
+            onClick={e => {
+              e.preventDefault();
+              this.handleSuggestionClick(e, this.state.suggestedServiceLevelDomain);
+            }}
+          >{this.state.suggestedServiceLevelDomain}
+          </Alert.Link>?
+        </span>
+      );
     }
 
     return null;
