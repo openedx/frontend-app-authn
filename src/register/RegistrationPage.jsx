@@ -540,7 +540,7 @@ class RegistrationPage extends React.Component {
               handleChange={(value) => this.setState({ country: value })}
               errorCode={this.state.errorCode}
             />
-            <div id="honor-code" className="small mt-4">
+            <div id="honor-code" className="micro mt-4">
               <FormattedMessage
                 id="register.page.terms.of.service.and.honor.code"
                 defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
@@ -549,12 +549,12 @@ class RegistrationPage extends React.Component {
                 values={{
                   platformName: getConfig().SITE_NAME,
                   tosAndHonorCode: (
-                    <Hyperlink destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
+                    <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
                       {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
                     </Hyperlink>
                   ),
                   privacyPolicy: (
-                    <Hyperlink destination={getConfig().PRIVACY_POLICY || '#'} target="_blank">
+                    <Hyperlink variant="muted" destination={getConfig().PRIVACY_POLICY || '#'} target="_blank">
                       {intl.formatMessage(messages['privacy.policy'])}
                     </Hyperlink>
                   ),
