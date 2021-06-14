@@ -127,10 +127,10 @@ describe('RegistrationPageTests', () => {
   });
 
   it('should not show optional field check when optimizely experiment is set', () => {
-    window.optimizelyExperimentName = 'progressive_profiling_phase1';
+    window.optimizelyExperimentName = 'progressiveProfilingConcept1';
 
     const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-    expect(registrationPage.find('RegistrationPage').state('optimizelyExperimentName')).toEqual('progressive_profiling_phase1');
+    expect(registrationPage.find('RegistrationPage').state('optimizelyExperimentName')).toEqual('progressiveProfilingConcept1');
     expect(registrationPage.find('#optional').length).toEqual(0);
 
     delete window.optimizelyExperimentName;
