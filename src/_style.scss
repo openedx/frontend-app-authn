@@ -402,6 +402,7 @@ select.form-control {
 .medium-screen-container {
   flex-wrap: nowrap;
   max-width: inherit;
+  height: 282px;
 }
 
 .screen-header {
@@ -497,7 +498,7 @@ select.form-control {
   stroke: $accent-b;
   stroke-width: 0.5rem;
   width: 7em;
-  height: 240px;
+  height: 115px;
 }
 
 .small-screen-svg-line {
@@ -519,9 +520,9 @@ select.form-control {
 .medium-heading {
   padding-left: 1rem;
   color: $white;
-  max-width: 24rem;
-  line-height: 78px;
-  font-size: 78px;
+  max-width: 27rem;
+  line-height: 60px;
+  font-size: 60px;
 }
 
 .small-heading {
