@@ -299,6 +299,10 @@ class RegistrationPage extends React.Component {
           }
           emailLexemes = '';
           domainLexemes = '';
+
+          if (errors.email === '' && payload && statusCode !== 403) {
+            this.props.fetchRealtimeValidations(payload);
+          }
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
         } else {
