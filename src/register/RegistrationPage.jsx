@@ -454,7 +454,7 @@ class RegistrationPage extends React.Component {
         eventName: 'van_504_total_registrations',
       });
 
-      if (this.state.optimizelyExperimentName !== 'progressive_profiling_phase1') {
+      if (this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1') {
         window.optimizely.push({
           type: 'event',
           eventName: 'van_504_conversion_rate',
@@ -481,7 +481,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={this.state.optimizelyExperimentName === 'progressive_profiling_phase1'}
+          redirectToWelcomePage={this.state.optimizelyExperimentName === 'progressiveProfilingConcept1'}
         />
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column">
@@ -610,7 +610,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressive_profiling_phase1' ? (
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1' ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
