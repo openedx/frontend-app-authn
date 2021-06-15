@@ -35,8 +35,6 @@ $accent-a-light: #c9f2f5;
 .nav-tabs {
   a {
     color: $primary !important;
-    background: transparent !important;
-
     :hover {
       color: $primary !important;
     }
@@ -662,4 +660,10 @@ select.form-control {
     width: 1.5rem !important;
     color: $gray-500;
   }
+}
+
+.arrow-back-icon {
+  max-width: 1rem;
+  max-height: 1rem;
+  margin-top:6px;
 }
