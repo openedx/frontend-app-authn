@@ -54,7 +54,7 @@ describe('ForgotPasswordPage', () => {
 
   it('should display need other help signing in button', () => {
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(wrapper.find('#forgot-password.btn-link').first().text()).toEqual('Need help signing in?');
+    expect(wrapper.find('#forgot-password').first().text()).toEqual('Need help signing in?');
   });
 
   it('should display email validation error message', async () => {
