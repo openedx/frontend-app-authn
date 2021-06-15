@@ -96,7 +96,26 @@ class RegistrationPage extends React.Component {
       if (nextProps.registrationErrorCode) {
         state.errorCode = nextProps.registrationErrorCode;
       }
-      this.setState({ ...state });
+      let {
+        suggestedTldMessage,
+        suggestedTopLevelDomain,
+        suggestedSldMessage,
+        suggestedServiceLevelDomain,
+
+      } = this.state;
+      if (state.errors.email) {
+        suggestedTldMessage = '';
+        suggestedTopLevelDomain = '';
+        suggestedSldMessage = '';
+        suggestedServiceLevelDomain = '';
+      }
+      this.setState({
+        ...state,
+        suggestedTldMessage,
+        suggestedTopLevelDomain,
+        suggestedSldMessage,
+        suggestedServiceLevelDomain,
+      });
       return false;
     }
 
@@ -319,6 +338,9 @@ class RegistrationPage extends React.Component {
           }
           emailLexemes = '';
           domainLexemes = '';
+          if (payload && statusCode !== 403) {
+            this.props.fetchRealtimeValidations(payload);
+          }
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
         } else {
@@ -386,6 +408,7 @@ class RegistrationPage extends React.Component {
             <Alert.Link
               href="#"
               name="email"
+              className="email-top-domain-suggestion-alert-link"
               onClick={e => { e.preventDefault(); this.handleSuggestionClick(e, this.state.suggestedTopLevelDomain); }}
             >{this.state.suggestedTopLevelDomain}
             </Alert.Link>?
