@@ -650,3 +650,9 @@ select.form-control {
 .email-top-domain-suggestion-alert-link {
   color: $primary !important;
 }
+
+#forgot-password {
+ &:hover {
+      text-decoration: underline;
+    }
+}

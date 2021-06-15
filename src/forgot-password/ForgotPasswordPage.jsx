@@ -28,6 +28,7 @@ const ForgotPasswordPage = (props) => {
   const platformName = getConfig().SITE_NAME;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
   const [validationError, setValidationError] = useState('');
+  const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'reset');
@@ -109,8 +110,15 @@ const ForgotPasswordPage = (props) => {
                   onClick={handleSubmit}
                   onMouseDown={(e) => e.preventDefault()}
                 />
-                <Hyperlink id="forgot-password" className="btn btn-link font-weight-500 text-body" destination={getConfig().LOGIN_ISSUE_SUPPORT_LINK}>
-                  {intl.formatMessage(messages['need.help.sign.in.text'])}
+                <Hyperlink
+                  id="forgot-password"
+                  className="ml-4 font-weight-500 text-body"
+                  destination={supportUrl}
+                  onClick={e => {
+                    e.preventDefault();
+                    window.open(supportUrl, '_blank');
+                  }}
+                >{intl.formatMessage(messages['need.help.sign.in.text'])}
                 </Hyperlink>
                 <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
                   <span><Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
