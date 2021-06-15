@@ -268,6 +268,13 @@ class RegistrationPage extends React.Component {
           errors.email = intl.formatMessage(messages['empty.email.field.error']);
         } else if (value.length <= 2 || !emailRegex.test(value)) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
+          this.setState({
+            suggestedServiceLevelDomain: '',
+            suggestedSldMessage: '',
+            borderClass: '',
+            suggestedTopLevelDomain: '',
+            suggestedTldMessage: '',
+          });
         } else if (emailRegex.test(value) && !this.state.skipEmailValidation) {
           errors.email = '';
           let emailLexemes = value.split('@');
