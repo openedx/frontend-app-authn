@@ -647,3 +647,9 @@ select.form-control {
       font-weight: 700;
     }
 }
+
+#forgot-password {
+ &:hover {
+      text-decoration: underline;
+    }
+}
