@@ -4,49 +4,34 @@ import 'regenerator-runtime/runtime';
 import {
   APP_INIT_ERROR, APP_READY, subscribe, initialize, mergeConfig,
 } from '@edx/frontend-platform';
-import { AppProvider, ErrorPage } from '@edx/frontend-platform/react';
+import { ErrorPage } from '@edx/frontend-platform/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { messages as headerMessages } from '@edx/frontend-component-header';
 
-import {
-  BaseComponent, UnAuthOnlyRoute, registerIcons, NotFoundPage, Logistration,
-} from './common-components';
-import configureStore from './data/configureStore';
-import {
-  LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM, WELCOME_PAGE,
-} from './data/constants';
-import appMessages from './i18n';
-import './index.scss';
+const RedesignApp = React.lazy(() => import('./redesign/index.jsx'));
+const LegacyApp = React.lazy(() => import('./legacy/index.jsx'));
 
-import ForgotPasswordPage from './forgot-password';
-import ResetPasswordPage from './reset-password';
-import WelcomePage from './welcome';
+const redesignAppMessages = React.lazy(() => import('./redesign/i18n'));
+const legacyAppMessages = React.lazy(() => import('./legacy/i18n'));
 
-registerIcons();
+const OLD_DESIGN = 'legacy';
+const NEW_DESIGN = 'redesign';
+const DEFAULT_DESIGN = process.env.DEFAULT_DESIGN || OLD_DESIGN;
+const CHOSEN_DESIGN = localStorage.getItem('DESIGN_NAME') || DEFAULT_DESIGN;
+const REGISTRATION_OPTIONAL_FIELDS = CHOSEN_DESIGN === DEFAULT_DESIGN ? process.env.REGISTRATION_OPTIONAL_FIELDS : '';
+
+const AppSelector = () => (
+  <React.Suspense fallback={<></>}>
+    {(CHOSEN_DESIGN === OLD_DESIGN) && <LegacyApp />}
+    {(CHOSEN_DESIGN === NEW_DESIGN) && <RedesignApp />}
+  </React.Suspense>
+);
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <AppProvider store={configureStore()}>
-      <BaseComponent>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to={REGISTER_PAGE} />
-          </Route>
-          <UnAuthOnlyRoute exact path={LOGIN_PAGE} render={() => <Logistration selectedPage={LOGIN_PAGE} />} />
-          <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />
-          <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
-          <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
-          <Route exact path={WELCOME_PAGE} component={WelcomePage} />
-          <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
-          <Route path="*">
-            <Redirect to={PAGE_NOT_FOUND} />
-          </Route>
-        </Switch>
-      </BaseComponent>
-    </AppProvider>,
+    <AppSelector />,
     document.getElementById('root'),
   );
 });
@@ -64,7 +49,7 @@ initialize({
         PASSWORD_RESET_SUPPORT_LINK: process.env.PASSWORD_RESET_SUPPORT_LINK || null,
         TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
         PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
-        REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
+        REGISTRATION_OPTIONAL_FIELDS,
         USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME || null,
         COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
         WELCOME_PAGE_SUPPORT_LINK: process.env.WELCOME_PAGE_SUPPORT_LINK || null,
@@ -74,7 +59,7 @@ initialize({
     },
   },
   messages: [
-    appMessages,
+    CHOSEN_DESIGN === DEFAULT_DESIGN ? legacyAppMessages : redesignAppMessages,
     headerMessages,
   ],
 });

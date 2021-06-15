@@ -6,7 +6,10 @@ module.exports = createConfig('jest', {
   ],
   coveragePathIgnorePatterns: [
     'src/setupTest.js',
-    'src/i18n',
+    'src/legacy/i18n',
+    'src/redesign/i18n',
     'src/index.jsx',
+    'src/legacy/index.jsx',
+    'src/redesign/index.jsx',
   ],
 });
