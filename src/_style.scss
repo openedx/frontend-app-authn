@@ -656,3 +656,10 @@ select.form-control {
       text-decoration: underline;
     }
 }
+.password-visibility{
+  .btn-icon__icon-container .btn-icon__icon {
+    height: 1.5rem !important;
+    width: 1.5rem !important;
+    color: $gray-500;
+  }
+}

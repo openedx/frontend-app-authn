@@ -37,7 +37,10 @@ const ForgotPasswordAlert = (props) => {
               <Alert.Link
                 className="alert-link"
                 href={supportUrl}
-                onClick={() => { window.open(supportUrl, '_blank'); }}
+                onClick={e => {
+                  e.preventDefault();
+                  window.open(supportUrl, '_blank');
+                }}
               >
                 {intl.formatMessage(messages['confirmation.support.link'])}
               </Alert.Link>
