@@ -9,7 +9,7 @@ const MediumScreenHeader = (props) => {
   const { intl } = props;
 
   return (
-    <div className="container row p-0 m-0 medium-screen-container">
+    <div className="container row p-0 mb-3 medium-screen-container">
       <div className="col-md-10 p-0 screen-header">
         <img alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         <div className="row mt-4 justify-content-center">
