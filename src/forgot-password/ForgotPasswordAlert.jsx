@@ -20,6 +20,7 @@ const ForgotPasswordAlert = (props) => {
 
   let message = '';
   let heading = intl.formatMessage(messages['forgot.password.error.alert.title']);
+  const supportUrl = getConfig().PASSWORD_RESET_SUPPORT_LINK;
   switch (status) {
     case 'complete':
       heading = intl.formatMessage(messages['confirmation.message.title']);

@@ -96,7 +96,26 @@ class RegistrationPage extends React.Component {
       if (nextProps.registrationErrorCode) {
         state.errorCode = nextProps.registrationErrorCode;
       }
-      this.setState({ ...state });
+      let {
+        suggestedTldMessage,
+        suggestedTopLevelDomain,
+        suggestedSldMessage,
+        suggestedServiceLevelDomain,
+
+      } = this.state;
+      if (state.errors.email) {
+        suggestedTldMessage = '';
+        suggestedTopLevelDomain = '';
+        suggestedSldMessage = '';
+        suggestedServiceLevelDomain = '';
+      }
+      this.setState({
+        ...state,
+        suggestedTldMessage,
+        suggestedTopLevelDomain,
+        suggestedSldMessage,
+        suggestedServiceLevelDomain,
+      });
       return false;
     }
 
@@ -225,6 +244,8 @@ class RegistrationPage extends React.Component {
     const state = { errors };
     if (e.target.name === 'email') {
       state.skipEmailValidation = false;
+    } else if (e.target.name === 'username') {
+      this.props.clearUsernameSuggestions();
     }
     this.setState({ ...state });
   }
@@ -319,6 +340,9 @@ class RegistrationPage extends React.Component {
           }
           emailLexemes = '';
           domainLexemes = '';
+          if (payload && statusCode !== 403) {
+            this.props.fetchRealtimeValidations(payload);
+          }
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
         } else {
@@ -386,6 +410,7 @@ class RegistrationPage extends React.Component {
             <Alert.Link
               href="#"
               name="email"
+              className="email-top-domain-suggestion-alert-link"
               onClick={e => { e.preventDefault(); this.handleSuggestionClick(e, this.state.suggestedTopLevelDomain); }}
             >{this.state.suggestedTopLevelDomain}
             </Alert.Link>?
@@ -527,6 +552,7 @@ class RegistrationPage extends React.Component {
               handleChange={this.handleOnChange}
               handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.name}
+              helpText={[intl.formatMessage(messages['help.text.name'])]}
               floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
             />
             <UsernameField
@@ -579,7 +605,7 @@ class RegistrationPage extends React.Component {
               handleChange={(value) => this.setState({ country: value })}
               errorCode={this.state.errorCode}
             />
-            <div id="honor-code" className="micro mt-4">
+            <div id="honor-code" className="micro text-muted mt-4">
               <FormattedMessage
                 id="register.page.terms.of.service.and.honor.code"
                 defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each

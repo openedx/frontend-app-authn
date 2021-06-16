@@ -658,3 +658,8 @@ select.form-control {
     color: $gray-500;
   }
 }
+#forgot-password {
+ &:hover {
+      text-decoration: underline;
+    }
+}
