@@ -244,6 +244,11 @@ class RegistrationPage extends React.Component {
     const state = { errors };
     if (e.target.name === 'email') {
       state.skipEmailValidation = false;
+      state.suggestedServiceLevelDomain = '';
+      state.suggestedSldMessage = '';
+      state.suggestedTopLevelDomain = '';
+      state.suggestedTldMessage = '';
+      state.borderClass = '';
     } else if (e.target.name === 'username') {
       this.props.clearUsernameSuggestions();
     }
