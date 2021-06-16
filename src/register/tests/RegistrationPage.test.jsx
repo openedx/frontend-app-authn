@@ -10,7 +10,12 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
 
-import { fetchRealtimeValidations, registerNewUser, resetRegistrationForm } from '../data/actions';
+import {
+  clearUsernameSuggestions,
+  fetchRealtimeValidations,
+  registerNewUser,
+  resetRegistrationForm,
+} from '../data/actions';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '../data/constants';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
@@ -293,7 +298,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.state('errorCode')).toEqual('duplicate-username');
     });
 
-    // ******** test clear error messages on focus in ********
+    // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {
       const errors = {
@@ -317,6 +322,15 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
       registrationPage.find('input#country').simulate('blur', { target: { value: 'US', name: 'country' } });
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+    });
+
+    it('should clear username suggestions when username field is focused in', () => {
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#username').simulate('focus');
+
+      expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
     // ******** test alert messages ********
