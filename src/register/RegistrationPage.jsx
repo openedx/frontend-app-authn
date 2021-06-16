@@ -244,6 +244,8 @@ class RegistrationPage extends React.Component {
     const state = { errors };
     if (e.target.name === 'email') {
       state.skipEmailValidation = false;
+    } else if (e.target.name === 'username') {
+      this.props.clearUsernameSuggestions();
     }
     this.setState({ ...state });
   }
