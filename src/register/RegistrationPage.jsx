@@ -552,6 +552,7 @@ class RegistrationPage extends React.Component {
               handleChange={this.handleOnChange}
               handleFocus={this.handleOnFocus}
               errorMessage={this.state.errors.name}
+              helpText={[intl.formatMessage(messages['help.text.name'])]}
               floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
             />
             <UsernameField
@@ -604,7 +605,7 @@ class RegistrationPage extends React.Component {
               handleChange={(value) => this.setState({ country: value })}
               errorCode={this.state.errorCode}
             />
-            <div id="honor-code" className="micro mt-4">
+            <div id="honor-code" className="micro text-muted mt-4">
               <FormattedMessage
                 id="register.page.terms.of.service.and.honor.code"
                 defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each

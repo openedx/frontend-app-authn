@@ -33,6 +33,11 @@ const messages = defineMessages({
     description: 'Placeholder for the country options dropdown.',
   },
   // Help text
+  'help.text.name': {
+    id: 'help.text.name',
+    defaultMessage: 'This name will be used by any certificates that you earn.',
+    description: 'Help text for fullname field on registration page',
+  },
   'help.text.username.1': {
     id: 'help.text.username.1',
     defaultMessage: 'The name that will identify you in your courses.',
