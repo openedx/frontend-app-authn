@@ -81,7 +81,7 @@ const ForgotPasswordPage = (props) => {
                 </title>
               </Helmet>
               <Form className="mw-xs">
-                <ForgotPasswordAlert email={values.email} emailError={errors.email} status={status} />
+                <ForgotPasswordAlert email={props.email} emailError={errors.email} status={status} />
                 <h4>
                   {intl.formatMessage(messages['forgot.password.page.heading'])}
                 </h4>
@@ -134,12 +134,14 @@ const ForgotPasswordPage = (props) => {
 
 ForgotPasswordPage.propTypes = {
   intl: intlShape.isRequired,
+  email: PropTypes.string,
   forgotPassword: PropTypes.func.isRequired,
   status: PropTypes.string,
   submitState: PropTypes.string,
 };
 
 ForgotPasswordPage.defaultProps = {
+  email: '',
   status: null,
   submitState: DEFAULT_STATE,
 };

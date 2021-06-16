@@ -5,6 +5,7 @@ import { PASSWORD_RESET_FAILURE } from '../../reset-password/data/actions';
 export const defaultState = {
   status: '',
   submitState: '',
+  email: '',
 };
 
 const reducer = (state = defaultState, action = null) => {
