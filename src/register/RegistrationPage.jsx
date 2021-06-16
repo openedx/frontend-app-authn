@@ -451,23 +451,23 @@ class RegistrationPage extends React.Component {
       // Fire optimizely events
       window.optimizely.push({
         type: 'event',
-        eventName: 'van_504_total_registrations',
+        eventName: 'user_registered_successfully',
       });
 
-      if (this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1') {
-        window.optimizely.push({
-          type: 'event',
-          eventName: 'van_504_conversion_rate',
-        });
-        ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
-          if (this.state[fieldName]) {
-            window.optimizely.push({
-              type: 'event',
-              eventName: `van_504_${fieldName}`,
-            });
-          }
-        });
-      }
+      // if (this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1') {
+      //   window.optimizely.push({
+      //     type: 'event',
+      //     eventName: 'van_504_conversion_rate',
+      //   });
+      //   ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
+      //     if (this.state[fieldName]) {
+      //       window.optimizely.push({
+      //         type: 'event',
+      //         eventName: `van_504_${fieldName}`,
+      //       });
+      //     }
+      //   });
+      // }
     }
 
     return (
@@ -481,7 +481,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={this.state.optimizelyExperimentName === 'progressiveProfilingConcept1'}
+          // redirectToWelcomePage={this.state.optimizelyExperimentName === 'progressiveProfilingConcept1'}
         />
         <div className="d-flex justify-content-center m-4">
           <div className="d-flex flex-column">
@@ -610,7 +610,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1' ? (
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'hide_optional_fields' ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
