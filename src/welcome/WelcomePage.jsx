@@ -70,14 +70,13 @@ const WelcomePage = (props) => {
     window.optimizely = window.optimizely || [];
     window.optimizely.push({
       type: 'event',
-      eventName: 'van_504_conversion_rate',
+      eventName: 'VAN-504-conversion',
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     fireOptimizelyEvent();
-    window.optimizely = window.optimizely || [];
     ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
       if (values[fieldName]) {
         window.optimizely.push({
