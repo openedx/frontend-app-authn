@@ -128,7 +128,7 @@ const WelcomePage = (props) => {
               value={values.levelOfEducation}
               onChange={(e) => onChangeHandler(e)}
               selectOptions={getOptions().educationLevelOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              inputFieldStyle="border-gray-600"
             />
             <AuthnValidationFormGroup
               label={intl.formatMessage(messages['registration.year.of.birth.label'])}
@@ -140,7 +140,7 @@ const WelcomePage = (props) => {
               className="mb-3 data-hj-suppress"
               onChange={(e) => onChangeHandler(e)}
               selectOptions={getOptions().yearOfBirthOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              inputFieldStyle="border-gray-600"
             />
             <AuthnValidationFormGroup
               label={intl.formatMessage(messages['registration.field.gender.options.label'])}
@@ -152,7 +152,7 @@ const WelcomePage = (props) => {
               className="mb-3 data-hj-suppress"
               onChange={(e) => onChangeHandler(e)}
               selectOptions={getOptions().genderOptions}
-              inputFieldStyle="border-gray-600 custom-select-size"
+              inputFieldStyle="border-gray-600"
             />
             <p>
               <Hyperlink
