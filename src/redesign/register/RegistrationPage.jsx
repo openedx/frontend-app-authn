@@ -494,7 +494,7 @@ class RegistrationPage extends React.Component {
       // Fire optimizely events
       window.optimizely.push({
         type: 'event',
-        eventName: 'VAN-504-user-registered',
+        eventName: 'authn-register-conversion',
       });
 
       if (window.optimizelyExperimentName !== 'VAN-504-PP-Exp') {
@@ -626,7 +626,7 @@ class RegistrationPage extends React.Component {
                 }}
               />
             </div>
-            {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressive_profiling_phase1' ? (
+            {getConfig().REGISTRATION_OPTIONAL_FIELDS && localStorage.getItem('DESIGN_NAME') !== 'redesign' ? (
               <Form.Group className="mb-0 mt-2 small">
                 <Form.Check
                   id="optional-field-checkbox"

@@ -660,16 +660,6 @@ describe('RegistrationPage', () => {
       expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
-    it('should not show optional field check when optimizely experiment is set', () => {
-      window.optimizelyExperimentName = 'progressive_profiling_phase1';
-
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('RegistrationPage').state('optimizelyExperimentName')).toEqual('progressive_profiling_phase1');
-      expect(registrationPage.find('#optional').length).toEqual(0);
-
-      delete window.optimizelyExperimentName;
-    });
-
     // ******** shouldComponentUpdate tests ********
 
     it('should populate form with pipeline user details', () => {
