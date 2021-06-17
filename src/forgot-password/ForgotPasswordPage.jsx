@@ -4,14 +4,20 @@ import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton, Hyperlink } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import {
+  Form,
+  StatefulButton,
+  Hyperlink,
+  Tabs,
+  Tab,
+  Icon,
+} from '@edx/paragon';
+import { ArrowBackIos } from '@edx/paragon/icons';
 
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
@@ -28,6 +34,7 @@ const ForgotPasswordPage = (props) => {
   const platformName = getConfig().SITE_NAME;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
   const [validationError, setValidationError] = useState('');
+  const [key, setKey] = useState('');
   const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
 
   useEffect(() => {
@@ -48,13 +55,21 @@ const ForgotPasswordPage = (props) => {
     return error;
   };
 
+  const tabTitle = (
+    <div className="d-flex">
+      <Icon src={ArrowBackIos} className="arrow-back-icon" />
+      <span className="ml-2">{intl.formatMessage(messages['sign.in.text'])}</span>
+    </div>
+  );
+
   return (
     <div>
-      <span className="nav nav-tabs">
-        <Link className="nav-item nav-link" to={updatePathWithQueryParams(LOGIN_PAGE)}>
-          <FontAwesomeIcon className="mr-2" icon={faChevronLeft} /> {intl.formatMessage(messages['sign.in.text'])}
-        </Link>
-      </span>
+      <Tabs activeKey="" id="controlled-tab-example" onSelect={(k) => setKey(k)}>
+        <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+      </Tabs>
+      { key && (
+        <Redirect to={updatePathWithQueryParams(key)} />
+      )}
       <div id="main-content" className="main-content">
         <Formik
           initialValues={{ email: '' }}
