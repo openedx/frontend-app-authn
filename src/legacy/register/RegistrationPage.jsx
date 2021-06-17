@@ -446,12 +446,12 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
-      window.optimizely = window.optimizely || [];
 
       // Fire optimizely events
+      window.optimizely = window.optimizely || [];
       window.optimizely.push({
         type: 'event',
-        eventName: 'van_504_total_registrations',
+        eventName: 'authn-register-conversion',
       });
 
       if (this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1') {
@@ -610,7 +610,7 @@ class RegistrationPage extends React.Component {
                     }}
                   />
                 </div>
-                {getConfig().REGISTRATION_OPTIONAL_FIELDS && this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1' ? (
+                {getConfig().REGISTRATION_OPTIONAL_FIELDS && localStorage.getItem('DESIGN_NAME') !== 'redesign' ? (
                   <AuthnValidationFormGroup
                     label={intl.formatMessage(messages['support.education.research'])}
                     for="optional"
