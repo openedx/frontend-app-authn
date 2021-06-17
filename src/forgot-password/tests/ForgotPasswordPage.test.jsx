@@ -3,8 +3,9 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
+import { createMemoryHistory } from 'history';
 
 import * as analytics from '@edx/frontend-platform/analytics';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
@@ -12,7 +13,7 @@ import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
 import ForgotPasswordPage from '../ForgotPasswordPage';
-import { INTERNAL_SERVER_ERROR } from '../../data/constants';
+import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -21,6 +22,8 @@ analytics.sendPageEvent = jest.fn();
 
 const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
+const history = createMemoryHistory();
+
 const initialState = {
   forgotPassword: {
     status: '',
@@ -169,5 +172,18 @@ describe('ForgotPasswordPage', () => {
 
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     expect(wrapper.find('.alert-danger').text()).toEqual(successMessage);
+  });
+
+  it('should redirect onto login page', async () => {
+    const forgotPasswordPage = mount(reduxWrapper(
+      <Router history={history}>
+        <IntlForgotPasswordPage {...props} />
+      </Router>,
+    ));
+
+    await act(async () => { await forgotPasswordPage.find('nav').find('a').first().simulate('click'); });
+
+    forgotPasswordPage.update();
+    expect(history.location.pathname).toEqual(LOGIN_PAGE);
   });
 });
