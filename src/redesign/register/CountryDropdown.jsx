@@ -88,12 +88,15 @@ class CountryDropdown extends React.Component {
   }
 
   handleClick = (e) => {
-    if (!this.props.value) {
-      const dropDownItems = this.getItems(e.target.value);
-      this.setState({
-        dropDownItems, icon: ExpandLess, errorMessage: '', showFieldError: false,
-      });
+    let dropDownItems = this.getItems(e.target.value);
+
+    if (dropDownItems?.length === 1) {
+      dropDownItems = this.getItems();
     }
+    this.setState({
+      dropDownItems, icon: ExpandLess, errorMessage: '', showFieldError: false,
+    });
+
     if (this.state.dropDownItems?.length > 0) {
       this.setState({ dropDownItems: '', icon: ExpandMore });
     }
