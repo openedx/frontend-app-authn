@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SocialAuthProviders should match social auth provider with default icon snapshot 1`] = `
+<button
+  className="btn-social btn-oa2-apple-id mr-3"
+  data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
+  id="oa2-apple-id"
+  onClick={[Function]}
+  type="button"
+>
+  <div
+    aria-hidden="true"
+    className="font-container"
+  >
+    <svg
+      aria-hidden="true"
+      className="svg-inline--fa fa-sign-in-alt fa-w-16 "
+      data-icon="sign-in-alt"
+      data-prefix="fas"
+      focusable="false"
+      role="img"
+      style={Object {}}
+      viewBox="0 0 512 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M416 448h-84c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h84c17.7 0 32-14.3 32-32V160c0-17.7-14.3-32-32-32h-84c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h84c53 0 96 43 96 96v192c0 53-43 96-96 96zm-47-201L201 79c-15-15-41-4.5-41 17v96H24c-13.3 0-24 10.7-24 24v96c0 13.3 10.7 24 24 24h136v96c0 21.5 26 32 41 17l168-168c9.3-9.4 9.3-24.6 0-34z"
+        fill="currentColor"
+        style={Object {}}
+      />
+    </svg>
+  </div>
+  <span
+    aria-hidden="true"
+    className="mr-auto pl-2"
+    id="provider-name"
+  >
+    Apple
+  </span>
+  <span
+    className="sr-only"
+  >
+    Sign in with Apple
+  </span>
+</button>
+`;
+
+exports[`SocialAuthProviders should match social auth provider with iconClass snapshot 1`] = `
+<button
+  className="btn-social btn-oa2-apple-id mr-3"
+  data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
+  id="oa2-apple-id"
+  onClick={[Function]}
+  type="button"
+>
+  <div
+    aria-hidden="true"
+    className="font-container"
+  >
+    <svg
+      aria-hidden="true"
+      className="svg-inline--fa fa-google fa-w-16 "
+      data-icon="google"
+      data-prefix="fab"
+      focusable="false"
+      role="img"
+      style={Object {}}
+      viewBox="0 0 488 512"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
+        fill="currentColor"
+        style={Object {}}
+      />
+    </svg>
+  </div>
+  <span
+    aria-hidden="true"
+    className="mr-auto pl-2"
+    id="provider-name"
+  >
+    Apple
+  </span>
+  <span
+    className="sr-only"
+  >
+    Sign in with Apple
+  </span>
+</button>
+`;
+
+exports[`SocialAuthProviders should match social auth provider with iconImage snapshot 1`] = `
+Array [
+  <button
+    className="btn-social btn-oa2-apple-id mr-3"
+    data-provider-url="/auth/login/apple-id/?auth_entry=login&next=/dashboard"
+    id="oa2-apple-id"
+    onClick={[Function]}
+    type="button"
+  >
+    <div
+      aria-hidden="true"
+      className="ml-auto"
+    >
+      <img
+        alt="icon Apple"
+        className="icon-image"
+        src="https://edx.devstack.lms/logo.png"
+      />
+    </div>
+    <span
+      aria-hidden="true"
+      className="mr-auto pl-2"
+      id="provider-name"
+    >
+      Apple
+    </span>
+    <span
+      className="sr-only"
+    >
+      Sign in with Apple
+    </span>
+  </button>,
+  <button
+    className="btn-social btn-oa2-facebook "
+    data-provider-url="/auth/login/facebook/?auth_entry=login&next=/dashboard"
+    id="oa2-facebook"
+    onClick={[Function]}
+    type="button"
+  >
+    <div
+      aria-hidden="true"
+      className="ml-auto"
+    >
+      <img
+        alt="icon Facebook"
+        className="icon-image"
+        src="https://edx.devstack.lms/facebook-logo.png"
+      />
+    </div>
+    <span
+      aria-hidden="true"
+      className="mr-auto pl-2"
+      id="provider-name"
+    >
+      Facebook
+    </span>
+    <span
+      className="sr-only"
+    >
+      Sign in with Facebook
+    </span>
+  </button>,
+]
+`;
