@@ -87,6 +87,18 @@ const messages = defineMessages({
     defaultMessage: 'We recently changed our password requirements',
     description: 'A title that appears in bold before error message for non-compliant password',
   },
+  'non.compliant.password.message': {
+    id: 'non.compliant.password.message',
+    defaultMessage: 'Your current password does not meet the new security requirements. '
+                    + 'We just sent a password-reset message to the email address associated with this account. '
+                    + 'Thank you for helping us keep your data safe.',
+    description: 'Error message for non-compliant password',
+  },
+  'account.locked.out.message.1': {
+    id: 'account.locked.out.message.1',
+    defaultMessage: 'To protect your account, it\'s been temporarily locked. Try again in 30 minutes.',
+    description: 'Part of message for when user account has been locked out after multiple failed login attempts',
+  },
   'first.time.here': {
     id: 'first.time.here',
     defaultMessage: 'First time here?',
@@ -180,13 +192,8 @@ const messages = defineMessages({
   },
   'login.incorrect.credentials.error': {
     id: 'login.incorrect.credentials.error',
-    defaultMessage: 'The username, email or password you entered is incorrect. Please try again.',
+    defaultMessage: 'The username, email, or password you entered is incorrect. Please try again.',
     description: 'Error message for incorrect email or password',
-  },
-  'login.incorrect.credentials.error.with.reset.link': {
-    id: 'login.incorrect.credentials.error.with.reset.link',
-    defaultMessage: 'The username, email or password you entered is incorrect. Please try again or {resetLink}.',
-    description: 'Error message for incorrect email or password with reset link',
   },
   'login.failed.attempt.error': {
     id: 'login.failed.attempt.error',
