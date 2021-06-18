@@ -32,7 +32,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'We couldn\'t sign you in.We recently changed our password requirements '
+    const expectedMessage = 'We couldn\'t sign you in.We recently changed our password requirements'
                             + 'Your current password does not meet the new security requirements. We just sent a '
                             + 'password-reset message to the email address associated with this account. '
                             + 'Thank you for helping us keep your data safe.';
@@ -85,7 +85,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
     const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. '
-                            + 'You have 3 more sign in attempts before your account is temporarily locked. If you\'ve forgotten your password, click here to reset it.';
+                            + 'You have 3 more sign in attempts before your account is temporarily locked.If you\'ve forgotten your password, click here to reset it.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
@@ -107,7 +107,7 @@ describe('LoginFailureMessage', () => {
         <IntlLoginFailureMessage {...props} />
       </IntlProvider>,
     );
-    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again.';
+    const expectedMessage = 'We couldn\'t sign you in.The username, email, or password you entered is incorrect. Please try again.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
@@ -129,7 +129,7 @@ describe('LoginFailureMessage', () => {
         <IntlLoginFailureMessage {...props} />
       </IntlProvider>,
     );
-    const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. Please try again or reset your password.';
+    const expectedMessage = 'We couldn\'t sign you in.The username, email, or password you entered is incorrect. Please try again or reset your password.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
