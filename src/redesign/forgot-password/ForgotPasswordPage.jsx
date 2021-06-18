@@ -17,7 +17,7 @@ import {
   Tab,
   Icon,
 } from '@edx/paragon';
-import { ArrowBackIos } from '@edx/paragon/icons';
+import { ChevronLeft } from '@edx/paragon/icons';
 
 import { forgotPassword } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
@@ -57,7 +57,7 @@ const ForgotPasswordPage = (props) => {
 
   const tabTitle = (
     <div className="d-flex">
-      <Icon src={ArrowBackIos} className="arrow-back-icon" />
+      <Icon src={ChevronLeft} className="arrow-back-icon" />
       <span className="ml-2">{intl.formatMessage(messages['sign.in.text'])}</span>
     </div>
   );

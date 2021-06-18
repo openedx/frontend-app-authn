@@ -4,7 +4,8 @@ import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 import * as auth from '@edx/frontend-platform/auth';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
@@ -12,12 +13,14 @@ import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
 import { resetPassword } from '../data/actions';
 import { PASSWORD_RESET, TOKEN_STATE } from '../data/constants';
+import { LOGIN_PAGE } from '../../data/constants';
 import ResetPasswordPage from '../ResetPasswordPage';
 
 jest.mock('@edx/frontend-platform/auth');
 
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
+const history = createMemoryHistory();
 
 describe('ResetPasswordPage', () => {
   let props = {};
@@ -154,5 +157,20 @@ describe('ResetPasswordPage', () => {
   it('show spinner during token validation', () => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(resetPasswordPage.find('div.spinner-header')).toBeTruthy();
+  });
+
+  // ******** redirection tests ********
+
+  it('by clicking on sign in tab should redirect onto login page', async () => {
+    const resetPasswordPage = mount(reduxWrapper(
+      <Router history={history}>
+        <IntlResetPasswordPage {...props} />
+      </Router>,
+    ));
+
+    await act(async () => { await resetPasswordPage.find('nav').find('a').first().simulate('click'); });
+
+    resetPasswordPage.update();
+    expect(history.location.pathname).toEqual(LOGIN_PAGE);
   });
 });
