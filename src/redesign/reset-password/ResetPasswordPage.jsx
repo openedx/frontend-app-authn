@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
-import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import {
+  Form,
+  Spinner,
+  StatefulButton,
+  Tabs,
+  Tab,
+  Icon,
+} from '@edx/paragon';
+import { ChevronLeft } from '@edx/paragon/icons';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getQueryParameters, getConfig } from '@edx/frontend-platform';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 import messages from './messages';
 import { resetPassword, validateToken } from './data/actions';
@@ -31,6 +37,7 @@ const ResetPasswordPage = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [errorCode, setErrorCode] = useState(null);
+  const [key, setKey] = useState('');
 
   useEffect(() => {
     if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
@@ -107,6 +114,13 @@ const ResetPasswordPage = (props) => {
     }
   };
 
+  const tabTitle = (
+    <div className="d-flex">
+      <Icon src={ChevronLeft} className="arrow-back-icon" />
+      <span className="ml-2">{intl.formatMessage(messages['sign.in'])}</span>
+    </div>
+  );
+
   if (props.status === TOKEN_STATE.PENDING) {
     const { token } = props.match.params;
     if (token) {
@@ -125,11 +139,12 @@ const ResetPasswordPage = (props) => {
             { siteName: getConfig().SITE_NAME })}
           </title>
         </Helmet>
-        <span className="nav nav-tabs">
-          <Link className="nav-item nav-link" to={updatePathWithQueryParams(LOGIN_PAGE)}>
-            <FontAwesomeIcon className="mr-2" icon={faChevronLeft} /> {intl.formatMessage(messages['sign.in'])}
-          </Link>
-        </span>
+        <Tabs activeKey="" id="controlled-tab" onSelect={(k) => setKey(k)}>
+          <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+        </Tabs>
+        { key && (
+          <Redirect to={updatePathWithQueryParams(key)} />
+        )}
         <div id="main-content" className="main-content">
           <div className="mw-xs">
             <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />

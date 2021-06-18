@@ -4,9 +4,12 @@ import { Redirect } from 'react-router-dom';
 
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Button, Tabs, Tab } from '@edx/paragon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import {
+  Tabs,
+  Tab,
+  Icon,
+} from '@edx/paragon';
+import { ChevronLeft } from '@edx/paragon/icons';
 
 import messages from './messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
@@ -32,23 +35,24 @@ const Logistration = (props) => {
     setKey(tabKey);
   };
 
+  const tabTitle = (
+    <div className="d-flex">
+      <Icon src={ChevronLeft} className="left-icon" />
+      <span className="ml-2">
+        {selectedPage === LOGIN_PAGE
+          ? intl.formatMessage(messages['logistration.sign.in'])
+          : intl.formatMessage(messages['logistration.register'])}
+      </span>
+    </div>
+  );
+
   return (
     <div>
       {institutionLogin
         ? (
-          <span className="nav nav-tabs mt-2 pb-2">
-            <FontAwesomeIcon className="mr-2 mt-1 ml-3" icon={faChevronLeft} />
-            <Button
-              variant="link"
-              className="nav-item p-0 mb-1 logistration-button"
-              data-event-name={selectedPage === LOGIN_PAGE ? 'login' : 'register'}
-              onClick={handleInstitutionLogin}
-            >
-              {selectedPage === LOGIN_PAGE
-                ? intl.formatMessage(messages['logistration.sign.in'])
-                : intl.formatMessage(messages['logistration.register'])}
-            </Button>
-          </span>
+          <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+            <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+          </Tabs>
         )
         : (
           <>
