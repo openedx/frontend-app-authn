@@ -24,31 +24,23 @@ const LoginFailureMessage = (props) => {
   let errorList;
   let link;
   let resetLink = (
-    <>
-      <a href="/reset">
-        {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
-      </a>
-    </>
+    <a href="/reset">
+      {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
+    </a>
   );
 
   switch (errorCode) {
     case NON_COMPLIANT_PASSWORD_EXCEPTION: {
       errorList = (
-        <FormattedMessage
-          id="non.compliant.password.error"
-          defaultMessage="{passwordComplaintRequirements} {lineBreak}Your current password does not meet the new security
-          requirements. We just sent a password-reset message to the email address associated with this account.
-          Thank you for helping us keep your data safe."
-          values={{
-            passwordComplaintRequirements: <strong>{intl.formatMessage(messages['non.compliant.password.title'])}</strong>,
-            lineBreak: <br />,
-          }}
-        />
+        <>
+          <strong>{intl.formatMessage(messages['non.compliant.password.title'])}</strong>
+          <p>{intl.formatMessage(messages['non.compliant.password.message'])}</p>
+        </>
       );
       break;
     }
     case FORBIDDEN_REQUEST:
-      errorList = intl.formatMessage(messages['login.rate.limit.reached.message']);
+      errorList = <p>{intl.formatMessage(messages['login.rate.limit.reached.message'])}</p>;
       break;
     case INACTIVE_USER: {
       const supportLink = (
@@ -57,25 +49,27 @@ const LoginFailureMessage = (props) => {
         </a>
       );
       errorList = (
-        <FormattedMessage
-          id="login.inactive.user.error"
-          defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
-          {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
-          check your spam folders or {supportLink}."
-          values={{
-            lineBreak: <br />,
-            email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
-            supportLink,
-          }}
-        />
+        <p>
+          <FormattedMessage
+            id="login.inactive.user.error"
+            defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
+            {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
+            check your spam folders or {supportLink}."
+            values={{
+              lineBreak: <br />,
+              email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
+              supportLink,
+            }}
+          />
+        </p>
       );
       break;
     }
     case INTERNAL_SERVER_ERROR:
-      errorList = intl.formatMessage(messages['internal.server.error.message']);
+      errorList = <p>{intl.formatMessage(messages['internal.server.error.message'])}</p>;
       break;
     case INVALID_FORM:
-      errorList = intl.formatMessage(messages['login.form.invalid.error.message']);
+      errorList = <p>{intl.formatMessage(messages['login.form.invalid.error.message'])}</p>;
       break;
     case FAILED_LOGIN_ATTEMPT: {
       resetLink = (
@@ -84,33 +78,41 @@ const LoginFailureMessage = (props) => {
         </a>
       );
       errorList = (
-        <FormattedMessage
-          id="login.incorrect.credentials.error.attempts.text"
-          description="Error message for incorrect email or password including attempts"
-          defaultMessage="The username, email or password you entered is incorrect. You have {remainingAttempts} more sign in
-            attempts before your account is temporarily locked.{lineBreak}
-            {lineBreak}If you've forgotten your password, {resetLink}"
-          values={{
-            lineBreak: <br />,
-            remainingAttempts: context.remainingAttempts,
-            resetLink,
-          }}
-        />
+        <>
+          <p>
+            <FormattedMessage
+              id="login.incorrect.credentials.error.attempts.text.1"
+              description="Error message for incorrect email or password"
+              defaultMessage="The username, email or password you entered is incorrect. You have {remainingAttempts} more sign in
+                attempts before your account is temporarily locked."
+              values={{ remainingAttempts: context.remainingAttempts }}
+            />
+          </p>
+          <p>
+            <FormattedMessage
+              id="login.incorrect.credentials.error.attempts.text.2"
+              description="Part of error message for incorrect email or password"
+              defaultMessage="If you've forgotten your password, {resetLink}"
+              values={{ resetLink }}
+            />
+          </p>
+        </>
       );
       break;
     }
     case ACCOUNT_LOCKED_OUT: {
       errorList = (
-        <FormattedMessage
-          id="login.locked.out.error.message"
-          description="Account locked out user message"
-          defaultMessage="To protect your account, its been temporarily locked. Try again in 30 minutes. {lineBreak}
-          {lineBreak} To be on the safe side, you can {resetLink} before try again."
-          values={{
-            lineBreak: <br />,
-            resetLink,
-          }}
-        />
+        <>
+          <p>{intl.formatMessage(messages['account.locked.out.message.1'])}</p>
+          <p>
+            <FormattedMessage
+              id="account.locked.out.message.2"
+              description="Part of message for when user account has been locked out after multiple failed login attempts"
+              defaultMessage="To be on the safe side, you can {resetLink} before trying again."
+              values={{ resetLink }}
+            />
+          </p>
+        </>
       );
       break;
     }
@@ -119,11 +121,13 @@ const LoginFailureMessage = (props) => {
         errorList = intl.formatMessage(messages['login.incorrect.credentials.error']);
       } else if (context.failureCount === 2) {
         errorList = (
-          <FormattedMessage
-            id="login.incorrect.credentials.error.with.reset.link"
-            defaultMessage="The username, email or password you entered is incorrect. Please try again or {resetLink}."
-            values={{ resetLink }}
-          />
+          <p>
+            <FormattedMessage
+              id="login.incorrect.credentials.error.with.reset.link"
+              defaultMessage="The username, email, or password you entered is incorrect. Please try again or {resetLink}."
+              values={{ resetLink }}
+            />
+          </p>
         );
       }
       break;
@@ -154,7 +158,7 @@ const LoginFailureMessage = (props) => {
   return (
     <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      <p>{ errorList }</p>
+      { errorList }
     </Alert>
   );
 };
