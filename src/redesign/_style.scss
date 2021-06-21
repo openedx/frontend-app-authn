@@ -624,25 +624,45 @@ select.form-control {
   }
 }
 
-.alert .alert-icon {
-  margin-top: 3px;
-}
-.alert-dismissible .close {
-  top: 4px;
-  font-weight: 500;
+.email-error-alert {
+  padding: 0.5rem 1rem;
 
-  :hover {
-      font-weight: 700;
+  .alert-icon {
+    margin-top: 4px;
+  }
+
+  .alert-close {
+    float: right;
+    margin-top: 3px;
+
+    &:hover {
+      cursor: pointer;
     }
+  }
+
+  .alert-link {
+    color: $primary !important;
+
+    &:hover {
+      text-decoration: underline;
+      color: $info-700 !important;
+    }
+  }
 }
-.email-top-domain-suggestion-alert-link {
-  color: $primary !important;
+
+.email-warning-alert-link {
+  color: $info-500 !important;
+
+  &:hover {
+    text-decoration: underline;
+    color: $info-700 !important;
+  }
 }
 
 #forgot-password {
- &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .arrow-back-icon {
