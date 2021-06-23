@@ -81,6 +81,8 @@ $accent-a-light: #c9f2f5;
 
 .form-control {
   background-color: white !important;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .btn-social {
@@ -658,4 +660,11 @@ select.form-control {
 
 .icon-size {
   width: 2.3rem;
+}
+.has-floating-label {
+  color: $gray-500;
+}
+.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
