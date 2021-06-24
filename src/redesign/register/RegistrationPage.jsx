@@ -15,12 +15,13 @@ import {
   Alert, Form, Hyperlink, StatefulButton,
 } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
-import { closest } from 'fastest-levenshtein';
 
 import {
   clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
 } from './data/actions';
-import { FORM_SUBMISSION_ERROR } from './data/constants';
+import {
+  FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_VALID_EMAIL_DOMAINS,
+} from './data/constants';
 import {
   registrationErrorSelector, registrationRequestSelector, validationsSelector, usernameSuggestionsSelector,
 } from './data/selectors';
@@ -37,13 +38,13 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, DEFAULT_TOP_LEVEL_DOMAINS,
-  DEFAULT_SERVICE_PROVIDER_DOMAINS, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX,
+  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie,
 } from '../data/utils';
 import CountryDropdown from './CountryDropdown';
+import getLevenshteinSuggestion from './utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -67,6 +68,8 @@ class RegistrationPage extends React.Component {
         password: '',
         country: '',
       },
+      emailErrorSuggestion: null,
+      emailWarningSuggestion: null,
       errorCode: null,
       failureCount: 0,
       optionalFields,
@@ -74,7 +77,6 @@ class RegistrationPage extends React.Component {
       showOptionalField: false,
       startTime: Date.now(),
       optimizelyExperimentName: '',
-      skipEmailValidation: false,
     };
   }
 
@@ -242,9 +244,7 @@ class RegistrationPage extends React.Component {
     const { errors } = this.state;
     errors[e.target.name] = '';
     const state = { errors };
-    if (e.target.name === 'email') {
-      state.skipEmailValidation = false;
-    } else if (e.target.name === 'username') {
+    if (e.target.name === 'username') {
       this.props.clearUsernameSuggestions();
     }
     this.setState({ ...state });
@@ -260,14 +260,13 @@ class RegistrationPage extends React.Component {
       });
       this.props.clearUsernameSuggestions();
     } else if (e.target.name === 'email') {
+      e.preventDefault();
       errors.email = '';
       this.setState({
-        email: suggestion,
-        suggestedServiceLevelDomain: '',
-        suggestedSldMessage: '',
-        suggestedTopLevelDomain: '',
-        suggestedTldMessage: '',
         borderClass: '',
+        email: suggestion,
+        emailErrorSuggestion: null,
+        emailWarningSuggestion: null,
         errors,
       });
     }
@@ -281,72 +280,53 @@ class RegistrationPage extends React.Component {
   validateInput(fieldName, value, payload) {
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
-
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
+
     switch (fieldName) {
       case 'email':
         if (!value) {
           errors.email = intl.formatMessage(messages['empty.email.field.error']);
-        } else if (value.length <= 2 || !emailRegex.test(value)) {
+        } else if (value.length <= 2) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-          this.setState({
-            suggestedServiceLevelDomain: '',
-            suggestedSldMessage: '',
-            borderClass: '',
-            suggestedTopLevelDomain: '',
-            suggestedTldMessage: '',
-          });
-        } else if (emailRegex.test(value) && !this.state.skipEmailValidation) {
-          errors.email = '';
-          let emailLexemes = value.split('@');
-          let domainLexemes = emailLexemes[1].split('.');
-          const serviceProvider = domainLexemes.slice(-2)[0];
-          const topLevelDomain = domainLexemes.slice(-1)[0];
-
-          if (DEFAULT_TOP_LEVEL_DOMAINS.indexOf(topLevelDomain) < 0) {
-            let suggestedTld = closest(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS);
-            suggestedTld = `${emailLexemes[0]}@${domainLexemes[0]}.${suggestedTld}`;
-            errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-
-            this.setState({
-              suggestedTopLevelDomain: suggestedTld,
-              suggestedTldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
-              suggestedServiceLevelDomain: '',
-              suggestedSldMessage: '',
-              borderClass: '',
-              skipEmailValidation: false,
-            });
-            break;
-          } else {
-            this.setState({ suggestedTopLevelDomain: '', suggestedTldMessage: '' });
-          }
-
-          if (DEFAULT_SERVICE_PROVIDER_DOMAINS.indexOf(serviceProvider) < 0) {
-            let suggestedSld = closest(serviceProvider, DEFAULT_SERVICE_PROVIDER_DOMAINS);
-            suggestedSld = `${emailLexemes[0]}@${suggestedSld}.${domainLexemes[1]}`;
-            errors.email = '';
-
-            this.setState({
-              suggestedServiceLevelDomain: suggestedSld,
-              suggestedSldMessage: intl.formatMessage(messages['did.you.mean.alert.text']),
-              borderClass: 'yellow-border',
-            });
-          } else {
-            this.setState({
-              suggestedServiceLevelDomain: '',
-              suggestedSldMessage: '',
-              borderClass: '',
-            });
-          }
-          emailLexemes = '';
-          domainLexemes = '';
-          if (payload && statusCode !== 403) {
-            this.props.fetchRealtimeValidations(payload);
-          }
-        } else if (payload && statusCode !== 403) {
-          this.props.fetchRealtimeValidations(payload);
         } else {
-          errors.email = '';
+          let borderClass = '';
+          let emailWarningSuggestion = null;
+          let emailErrorSuggestion = null;
+
+          const [username, domainName] = value.split('@');
+          const suggestion = getLevenshteinSuggestion(domainName, COMMON_VALID_EMAIL_DOMAINS);
+
+          // Check if email address is invalid. If we have a suggestion for invalid email provide that along with
+          // error message.
+          if (!emailRegex.test(value)) {
+            errors.email = intl.formatMessage(messages['email.invalid.format.error']);
+            emailErrorSuggestion = suggestion ? `${username}@${suggestion}` : null;
+          } else {
+            const [serviceLevelDomain, topLevelDomain] = domainName.split('.');
+            const tldSuggestion = getLevenshteinSuggestion(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS, 2);
+            const serviceSuggestion = getLevenshteinSuggestion(serviceLevelDomain, DEFAULT_SERVICE_PROVIDER_DOMAINS, 2);
+
+            if (tldSuggestion) {
+              emailErrorSuggestion = suggestion ? `${username}@${suggestion}` : `${username}@${serviceSuggestion || serviceLevelDomain}.${tldSuggestion}`;
+            } else if (serviceSuggestion) {
+              borderClass = 'yellow-border';
+              emailWarningSuggestion = suggestion ? `${username}@${suggestion}` : `${username}@${serviceSuggestion}.${topLevelDomain}`;
+            } else if (suggestion) {
+              // If both TLD and service level domain are correct and we have a suggestion from common email domains,
+              // give preference to that choice.
+              borderClass = 'yellow-border';
+              emailWarningSuggestion = `${username}@${suggestion}`;
+            }
+
+            if (tldSuggestion) {
+              errors.email = intl.formatMessage(messages['email.invalid.format.error']);
+            } else if (payload && statusCode !== 403) {
+              this.props.fetchRealtimeValidations(payload);
+            } else {
+              errors.email = '';
+            }
+          }
+          this.setState({ emailWarningSuggestion, emailErrorSuggestion, borderClass });
         }
         break;
       case 'name':
@@ -392,43 +372,36 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnClose() {
-    const { errors } = this.state;
-    errors.email = '';
-    this.setState({
-      errors,
-      suggestedTopLevelDomain: '',
-      skipEmailValidation: true,
-      suggestedTldMessage: '',
-    });
+    this.setState({ emailErrorSuggestion: null });
   }
 
   renderEmailFeedback() {
-    if (this.state.suggestedTopLevelDomain) {
+    if (this.state.emailErrorSuggestion) {
       return (
-        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pb-2 pt-2 mt-2" icon={Error}>
-          <p className="mb-0">{this.state.suggestedTldMessage}
+        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pt-2 pb-2 mt-2" icon={Error}>
+          <span className="small">
+            {this.props.intl.formatMessage(messages['did.you.mean.alert.text'])}{' '}
             <Alert.Link
               href="#"
               name="email"
-              className="email-top-domain-suggestion-alert-link"
-              onClick={e => { e.preventDefault(); this.handleSuggestionClick(e, this.state.suggestedTopLevelDomain); }}
-            >{this.state.suggestedTopLevelDomain}
+              onClick={e => { this.handleSuggestionClick(e, this.state.emailErrorSuggestion); }}
+            >
+              {this.state.emailErrorSuggestion}
             </Alert.Link>?
-          </p>
+          </span>
         </Alert>
       );
     }
-    if (this.state.suggestedServiceLevelDomain) {
+    if (this.state.emailWarningSuggestion) {
       return (
-        <span className="one-rem-font">{this.state.suggestedSldMessage}
+        <span className="small">
+          {this.props.intl.formatMessage(messages['did.you.mean.alert.text'])}:{' '}
           <Alert.Link
             href="#"
             name="email"
-            onClick={e => {
-              e.preventDefault();
-              this.handleSuggestionClick(e, this.state.suggestedServiceLevelDomain);
-            }}
-          >{this.state.suggestedServiceLevelDomain}
+            onClick={e => { this.handleSuggestionClick(e, this.state.emailWarningSuggestion); }}
+          >
+            {this.state.emailWarningSuggestion}
           </Alert.Link>?
         </span>
       );

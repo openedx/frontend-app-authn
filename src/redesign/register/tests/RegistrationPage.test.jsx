@@ -253,13 +253,13 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
-      expect(registrationPage.find('RegistrationPage').state('suggestedTopLevelDomain')).toEqual('test@gmail.com');
+      expect(registrationPage.find('RegistrationPage').state('emailErrorSuggestion')).toEqual('test@gmail.com');
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@fmail.com', name: 'email' } });
-      expect(registrationPage.find('RegistrationPage').state('suggestedServiceLevelDomain')).toEqual('test@gmail.com');
+      expect(registrationPage.find('RegistrationPage').state('emailWarningSuggestion')).toEqual('test@gmail.com');
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@hotmail.com', name: 'email' } });
-      expect(registrationPage.find('RegistrationPage').state('suggestedServiceLevelDomain')).toEqual('');
+      expect(registrationPage.find('RegistrationPage').state('emailWarningSuggestion')).toEqual(null);
     });
 
     it('should update props with validations returned by registration api', () => {

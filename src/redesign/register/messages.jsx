@@ -262,7 +262,7 @@ const messages = defineMessages({
   },
   'did.you.mean.alert.text': {
     id: 'did.you.mean.alert.text',
-    defaultMessage: 'Did you mean: ',
+    defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
   },
 });
