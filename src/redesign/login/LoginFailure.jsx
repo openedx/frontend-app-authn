@@ -24,9 +24,9 @@ const LoginFailureMessage = (props) => {
   let errorList;
   let link;
   let resetLink = (
-    <a href="/reset">
+    <Hyperlink destination="/reset" isInline>
       {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
-    </a>
+    </Hyperlink>
   );
 
   switch (errorCode) {
