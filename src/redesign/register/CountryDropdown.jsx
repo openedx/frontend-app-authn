@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '@edx/paragon';
+import { Icon, IconButton } from '@edx/paragon';
 import { ExpandMore, ExpandLess } from '@edx/paragon/icons';
 import onClickOutside from 'react-onclickoutside';
 import PropTypes from 'prop-types';
@@ -11,7 +11,7 @@ class CountryDropdown extends React.Component {
     super(props);
     this.state = {
       displayValue: '',
-      icon: ExpandMore,
+      icon: this.expandMoreButton(),
       errorMessage: '',
       showFieldError: true,
     };
@@ -83,22 +83,18 @@ class CountryDropdown extends React.Component {
       this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
     } else {
       this.setValue(null);
-      this.setState({ displayValue: value, showFieldError: !value });
+      this.setState({ displayValue: value, showFieldError: true });
     }
   }
 
   handleClick = (e) => {
-    let dropDownItems = this.getItems(e.target.value);
-
-    if (dropDownItems?.length === 1) {
-      dropDownItems = this.getItems();
+    const dropDownItems = this.getItems(e.target.value);
+    if (dropDownItems?.length > 1) {
+      this.setState({ dropDownItems, icon: this.expandLessButton(), errorMessage: '' });
     }
-    this.setState({
-      dropDownItems, icon: ExpandLess, errorMessage: '', showFieldError: false,
-    });
 
     if (this.state.dropDownItems?.length > 0) {
-      this.setState({ dropDownItems: '', icon: ExpandMore });
+      this.setState({ dropDownItems: '', icon: this.expandMoreButton(), errorMessage: '' });
     }
   }
 
@@ -107,9 +103,9 @@ class CountryDropdown extends React.Component {
 
     if (findstr.length > 0) {
       const filteredItems = this.getItems(findstr);
-      this.setState({ dropDownItems: filteredItems, icon: ExpandLess, errorMessage: '' });
+      this.setState({ dropDownItems: filteredItems, icon: this.expandLessButton(), errorMessage: '' });
     } else {
-      this.setState({ dropDownItems: '', icon: ExpandMore, errorMessage: this.props.errorMessage });
+      this.setState({ dropDownItems: '', icon: this.expandMoreButton(), errorMessage: this.props.errorMessage });
     }
 
     this.setDisplayValue(e.target.value);
@@ -119,11 +115,22 @@ class CountryDropdown extends React.Component {
     if (this.state.dropDownItems?.length > 0) {
       const msg = this.state.displayValue === '' ? this.props.errorMessage : '';
       this.setState(() => ({
-        icon: ExpandMore,
+        icon: this.expandMoreButton(),
         dropDownItems: '',
         errorMessage: msg,
       }));
     }
+  }
+
+  handleExpandLess() {
+    this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
+  }
+
+  handleExpandMore(e) {
+    const dropDownItems = this.getItems(e.target.value);
+    this.setState({
+      dropDownItems, icon: this.expandLessButton(), errorMessage: '', showFieldError: false,
+    });
   }
 
   handleFocus(e) {
@@ -136,7 +143,35 @@ class CountryDropdown extends React.Component {
 
   handleItemClick(e) {
     this.setValue(e.target.value);
-    this.setState({ dropDownItems: '', icon: ExpandMore });
+    this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
+  }
+
+  expandMoreButton() {
+    return (
+      <IconButton
+        className="expand-more"
+        src={ExpandMore}
+        iconAs={Icon}
+        size="sm"
+        variant="secondary"
+        alt="expand-more"
+        onClick={(e) => { this.handleExpandMore(e); }}
+      />
+    );
+  }
+
+  expandLessButton() {
+    return (
+      <IconButton
+        className="expand-less"
+        src={ExpandLess}
+        iconAs={Icon}
+        size="sm"
+        variant="secondary"
+        alt="expand-less"
+        onClick={(e) => { this.handleExpandLess(e); }}
+      />
+    );
   }
 
   render() {
@@ -147,7 +182,7 @@ class CountryDropdown extends React.Component {
           name={this.props.name}
           autoComplete="off"
           floatingLabel={this.props.floatingLabel}
-          trailingElement={<Icon src={this.state.icon} className="icon-size" />}
+          trailingElement={this.state.icon}
           handleChange={this.handleOnChange}
           handleClick={this.handleClick}
           handleBlur={this.handleOnBlur}
