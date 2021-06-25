@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
@@ -24,9 +24,9 @@ const LoginFailureMessage = (props) => {
   let errorList;
   let link;
   let resetLink = (
-    <a href="/reset">
+    <Hyperlink destination="/reset" isInline>
       {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
-    </a>
+    </Hyperlink>
   );
 
   switch (errorCode) {
@@ -73,9 +73,9 @@ const LoginFailureMessage = (props) => {
       break;
     case FAILED_LOGIN_ATTEMPT: {
       resetLink = (
-        <a href="/reset">
+        <Hyperlink destination="/reset" isInline>
           {intl.formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
-        </a>
+        </Hyperlink>
       );
       errorList = (
         <>

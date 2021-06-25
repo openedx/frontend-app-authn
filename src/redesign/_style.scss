@@ -81,6 +81,8 @@ $accent-a-light: #c9f2f5;
 
 .form-control {
   background-color: white !important;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .btn-social {
@@ -528,12 +530,11 @@ select.form-control {
 }
 
 .username-suggestion {
-  padding: 0.15rem 0.5rem;
+  padding: 2px 0.5rem;
   margin: 0.25rem;
   border-radius: 0.5rem;
-  line-height: 2rem;
-  font-weight: 400;
-  font-size: 0.875rem;
+  line-height: 24px;
+  font-size: 12px;
 }
 
 .username-suggestion-label {
@@ -659,4 +660,11 @@ select.form-control {
 
 .icon-size {
   width: 2.3rem;
+}
+.has-floating-label {
+  color: $gray-500;
+}
+.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
