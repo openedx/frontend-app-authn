@@ -76,6 +76,7 @@ class RegistrationPage extends React.Component {
       updateAlertErrors: false,
       registrationErrorsUpdated: false,
       optimizelyExperimentName: '',
+      totalRegistrationTime: 0,
     };
   }
 
@@ -164,7 +165,8 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const totalRegistrationTime = (Date.now() - this.state.startTime) / 1000;
+    const { startTime } = this.state;
+    const totalRegistrationTime = (Date.now() - startTime) / 1000;
     let payload = {
       name: this.state.name,
       username: this.state.username,
@@ -199,7 +201,11 @@ class RegistrationPage extends React.Component {
     });
     if (finalValidation) {
       payload.totalRegistrationTime = totalRegistrationTime;
-      this.props.registerNewUser(payload);
+      this.setState({
+        totalRegistrationTime,
+      }, () => {
+        this.props.registerNewUser(payload);
+      });
     }
   }
 
@@ -452,6 +458,9 @@ class RegistrationPage extends React.Component {
       window.optimizely.push({
         type: 'event',
         eventName: 'authn-register-conversion',
+        tags: {
+          value: this.state.totalRegistrationTime,
+        },
       });
 
       if (this.state.optimizelyExperimentName !== 'progressiveProfilingConcept1') {
