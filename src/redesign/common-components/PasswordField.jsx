@@ -30,11 +30,11 @@ const PasswordField = (props) => {
   };
 
   const HideButton = (
-    <IconButton className="password-visibility" src={VisibilityOff} iconAs={Icon} onClick={setHiddenTrue} size="sm" variant="secondary" alt={formatMessage(messages['hide.password'])} />
+    <IconButton onFocus={handleFocus} onBlur={handleBlur} name="passwordValidation" className="password-visibility" src={VisibilityOff} iconAs={Icon} onClick={setHiddenTrue} size="sm" variant="secondary" alt={formatMessage(messages['hide.password'])} />
   );
 
   const ShowButton = (
-    <IconButton className="password-visibility" src={Visibility} iconAs={Icon} onClick={setHiddenFalse} size="sm" variant="secondary" alt={formatMessage(messages['show.password'])} />
+    <IconButton onFocus={handleFocus} onBlur={handleBlur} name="passwordValidation" className="password-visibility" src={Visibility} iconAs={Icon} onClick={setHiddenFalse} size="sm" variant="secondary" alt={formatMessage(messages['show.password'])} />
   );
   const placement = window.innerWidth < 768 ? 'top' : 'left';
   const tooltip = (
