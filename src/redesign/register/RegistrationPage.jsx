@@ -219,7 +219,11 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnBlur = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === 'passwordValidation') {
+      name = 'password';
+      value = this.state.password;
+    }
     const payload = {
       is_authn_mfe: true,
       form_field_key: name,
@@ -252,6 +256,9 @@ class RegistrationPage extends React.Component {
     const state = { errors };
     if (e.target.name === 'username') {
       this.props.clearUsernameSuggestions();
+    }
+    if (e.target.name === 'passwordValidation') {
+      state.errors.password = '';
     }
     this.setState({ ...state });
   }
