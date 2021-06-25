@@ -1,13 +1,16 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
+import { Hyperlink, Image } from '@edx/paragon';
 
 import LargeScreenLeftLayout from './LargeScreenLeftLayout';
 
 const LargeScreenLayout = () => (
   <div className="container row p-0 m-0 large-screen-container">
     <div className="col-md-9 p-0 screen-header">
-      <img alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
+      <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
+        <Image alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
+      </Hyperlink>
       <LargeScreenLeftLayout />
     </div>
     <div className="col-md-3 p-0 screen-polygon">
