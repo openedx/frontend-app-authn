@@ -42,10 +42,16 @@ export const getTpaHint = () => {
 };
 
 export const updatePathWithQueryParams = (path) => {
-  const queryParams = window.location.search;
+  let queryParams = window.location.search;
 
   if (!queryParams) {
     return path;
+  }
+
+  if (queryParams.indexOf('track=pwreset') > -1) {
+    queryParams = queryParams.replace(
+      '?track=pwreset&', '?',
+    ).replace('?track=pwreset', '').replace('&track=pwreset', '').replace('?&', '?');
   }
 
   return `${path}${queryParams}`;

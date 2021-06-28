@@ -10,7 +10,7 @@ import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM, WELCOME_PAGE,
 } from './data/constants';
 import configureStore from './data/configureStore';
-
+import { updatePathWithQueryParams } from './data/utils';
 import ForgotPasswordPage from './forgot-password';
 import ResetPasswordPage from './reset-password';
 import WelcomePage from './welcome';
@@ -23,7 +23,7 @@ const RedesignApp = () => (
     <BaseComponent>
       <Switch>
         <Route exact path="/">
-          <Redirect to={REGISTER_PAGE} />
+          <Redirect to={updatePathWithQueryParams(REGISTER_PAGE)} />
         </Route>
         <UnAuthOnlyRoute exact path={LOGIN_PAGE} render={() => <Logistration selectedPage={LOGIN_PAGE} />} />
         <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />

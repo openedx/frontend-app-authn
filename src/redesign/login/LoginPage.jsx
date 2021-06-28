@@ -38,6 +38,7 @@ import {
   setSurveyCookie,
   getActivationStatus,
   getAllPossibleQueryParam,
+  updatePathWithQueryParams,
 } from '../data/utils';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
@@ -256,7 +257,7 @@ class LoginPage extends React.Component {
             <Link
               id="forgot-password"
               className="btn btn-link font-weight-500 text-body"
-              to={RESET_PAGE}
+              to={updatePathWithQueryParams(RESET_PAGE)}
               onClick={this.handleForgotPasswordLinkClickEvent}
             >
               {intl.formatMessage(messages['forgot.password'])}
