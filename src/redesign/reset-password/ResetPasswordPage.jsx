@@ -128,9 +128,9 @@ const ResetPasswordPage = (props) => {
       return <Spinner animation="border" variant="primary" className="mt-5" />;
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
-    return <Redirect to={RESET_PAGE} />;
+    return <Redirect to={updatePathWithQueryParams(RESET_PAGE)} />;
   } else if (props.status === 'success') {
-    return <Redirect to={LOGIN_PAGE} />;
+    return <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />;
   } else {
     return (
       <div>
