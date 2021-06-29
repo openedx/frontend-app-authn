@@ -12,9 +12,9 @@ import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
 import {
-  Alert, Form, Hyperlink, StatefulButton,
+  Alert, Form, Hyperlink, StatefulButton, Icon,
 } from '@edx/paragon';
-import { Error } from '@edx/paragon/icons';
+import { Error, Close } from '@edx/paragon/icons';
 
 import {
   clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
@@ -391,7 +391,7 @@ class RegistrationPage extends React.Component {
   renderEmailFeedback() {
     if (this.state.emailErrorSuggestion) {
       return (
-        <Alert variant="danger" onClose={this.handleOnClose} dismissible className="pt-2 pb-2 mt-2" icon={Error}>
+        <Alert variant="danger" className="email-error-alert" icon={Error}>
           <span className="small">
             {this.props.intl.formatMessage(messages['did.you.mean.alert.text'])}{' '}
             <Alert.Link
@@ -400,7 +400,7 @@ class RegistrationPage extends React.Component {
               onClick={e => { this.handleSuggestionClick(e, this.state.emailErrorSuggestion); }}
             >
               {this.state.emailErrorSuggestion}
-            </Alert.Link>?
+            </Alert.Link>?<Icon src={Close} className="alert-close" onClick={this.handleOnClose} tabIndex="0" />
           </span>
         </Alert>
       );
@@ -412,6 +412,7 @@ class RegistrationPage extends React.Component {
           <Alert.Link
             href="#"
             name="email"
+            className="email-warning-alert-link"
             onClick={e => { this.handleSuggestionClick(e, this.state.emailWarningSuggestion); }}
           >
             {this.state.emailWarningSuggestion}
