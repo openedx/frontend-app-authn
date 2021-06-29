@@ -181,6 +181,7 @@ class CountryDropdown extends React.Component {
           as="input"
           name={this.props.name}
           autoComplete="off"
+          className="mb-0"
           floatingLabel={this.props.floatingLabel}
           trailingElement={this.state.icon}
           handleChange={this.handleOnChange}
@@ -190,7 +191,7 @@ class CountryDropdown extends React.Component {
           value={this.state.displayValue}
           errorMessage={this.state.errorMessage}
         />
-        <div className="dropdown-container -mt-4">
+        <div className="dropdown-container">
           { this.state.dropDownItems?.length > 0 ? this.state.dropDownItems : null }
         </div>
       </div>
