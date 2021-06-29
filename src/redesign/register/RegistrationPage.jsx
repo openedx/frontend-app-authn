@@ -20,7 +20,7 @@ import {
   clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
 } from './data/actions';
 import {
-  FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_VALID_EMAIL_DOMAINS,
+  FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_EMAIL_PROVIDERS,
 } from './data/constants';
 import {
   registrationErrorSelector, registrationRequestSelector, validationsSelector, usernameSuggestionsSelector,
@@ -44,7 +44,7 @@ import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie, setCookie,
 } from '../data/utils';
 import CountryDropdown from './CountryDropdown';
-import getLevenshteinSuggestion from './utils';
+import { getLevenshteinSuggestion, getSuggestionForInvalidEmail } from './utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {
@@ -302,36 +302,39 @@ class RegistrationPage extends React.Component {
         } else if (value.length <= 2) {
           errors.email = intl.formatMessage(messages['email.invalid.format.error']);
         } else {
-          let borderClass = '';
           let emailWarningSuggestion = null;
           let emailErrorSuggestion = null;
 
           const [username, domainName] = value.split('@');
-          const suggestion = getLevenshteinSuggestion(domainName, COMMON_VALID_EMAIL_DOMAINS);
 
           // Check if email address is invalid. If we have a suggestion for invalid email provide that along with
           // error message.
           if (!emailRegex.test(value)) {
             errors.email = intl.formatMessage(messages['email.invalid.format.error']);
-            emailErrorSuggestion = suggestion ? `${username}@${suggestion}` : null;
+            emailErrorSuggestion = getSuggestionForInvalidEmail(domainName, username);
           } else {
+            let suggestion = null;
+            const hasMultipleSubdomains = value.match(/\./g).length > 1;
             const [serviceLevelDomain, topLevelDomain] = domainName.split('.');
-            const tldSuggestion = getLevenshteinSuggestion(topLevelDomain, DEFAULT_TOP_LEVEL_DOMAINS, 2);
+            const tldSuggestion = !DEFAULT_TOP_LEVEL_DOMAINS.includes(topLevelDomain);
             const serviceSuggestion = getLevenshteinSuggestion(serviceLevelDomain, DEFAULT_SERVICE_PROVIDER_DOMAINS, 2);
 
-            if (tldSuggestion) {
-              emailErrorSuggestion = suggestion ? `${username}@${suggestion}` : `${username}@${serviceSuggestion || serviceLevelDomain}.${tldSuggestion}`;
-            } else if (serviceSuggestion) {
-              borderClass = 'yellow-border';
-              emailWarningSuggestion = suggestion ? `${username}@${suggestion}` : `${username}@${serviceSuggestion}.${topLevelDomain}`;
-            } else if (suggestion) {
-              // If both TLD and service level domain are correct and we have a suggestion from common email domains,
-              // give preference to that choice.
-              borderClass = 'yellow-border';
-              emailWarningSuggestion = `${username}@${suggestion}`;
+            if (DEFAULT_SERVICE_PROVIDER_DOMAINS.includes(serviceSuggestion || serviceLevelDomain)) {
+              suggestion = `${username}@${serviceSuggestion || serviceLevelDomain}.com`;
             }
 
-            if (tldSuggestion) {
+            if (!hasMultipleSubdomains && tldSuggestion) {
+              emailErrorSuggestion = suggestion;
+            } else if (serviceSuggestion) {
+              emailWarningSuggestion = suggestion;
+            } else {
+              suggestion = getLevenshteinSuggestion(domainName, COMMON_EMAIL_PROVIDERS, 3);
+              if (suggestion) {
+                emailWarningSuggestion = `${username}@${suggestion}`;
+              }
+            }
+
+            if (!hasMultipleSubdomains && tldSuggestion) {
               errors.email = intl.formatMessage(messages['email.invalid.format.error']);
             } else if (payload && statusCode !== 403) {
               this.props.fetchRealtimeValidations(payload);
@@ -339,7 +342,11 @@ class RegistrationPage extends React.Component {
               errors.email = '';
             }
           }
-          this.setState({ emailWarningSuggestion, emailErrorSuggestion, borderClass });
+          this.setState({
+            emailWarningSuggestion,
+            emailErrorSuggestion,
+            borderClass: emailWarningSuggestion ? 'yellow-border' : null,
+          });
         }
         break;
       case 'name':
