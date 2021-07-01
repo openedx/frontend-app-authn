@@ -30,6 +30,7 @@ describe('RegistrationPageTests', () => {
     REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,level_of_education,year_of_birth',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
     USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
+    REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
   });
 
   const initialState = {
@@ -577,6 +578,7 @@ describe('RegistrationPageTests', () => {
 
     renderer.create(reduxWrapper(<IntlRegistrationPage />));
     expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=register`);
+    expect(document.cookie).toMatch(`${getConfig().REGISTER_CONVERSION_COOKIE_NAME}=true`);
   });
 
   it('should display institution register button', () => {
