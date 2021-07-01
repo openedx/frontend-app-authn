@@ -37,6 +37,7 @@ describe('RegistrationPage', () => {
     REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,levelOfEducation,yearOfBirth',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
     USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
+    REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
   });
 
   let props = {};
@@ -486,6 +487,7 @@ describe('RegistrationPage', () => {
 
       renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=register`);
+      expect(document.cookie).toMatch(`${getConfig().REGISTER_CONVERSION_COOKIE_NAME}=true`);
     });
 
     it('should show username suggestions in case of conflict with an existing username', () => {
