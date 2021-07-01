@@ -41,7 +41,7 @@ import {
   DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie,
+  getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie, setCookie,
 } from '../data/utils';
 import CountryDropdown from './CountryDropdown';
 import getLevenshteinSuggestion from './utils';
@@ -476,9 +476,10 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
-      window.optimizely = window.optimizely || [];
+      setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
 
       // Fire optimizely events
+      window.optimizely = window.optimizely || [];
       window.optimizely.push({
         type: 'event',
         eventName: 'authn-register-conversion',

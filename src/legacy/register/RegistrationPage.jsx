@@ -32,7 +32,7 @@ import {
   DEFAULT_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, setSurveyCookie,
+  getTpaProvider, getTpaHint, updatePathWithQueryParams, getAllPossibleQueryParam, setSurveyCookie, setCookie,
 } from '../data/utils';
 
 class RegistrationPage extends React.Component {
@@ -452,6 +452,7 @@ class RegistrationPage extends React.Component {
 
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
+      setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
 
       // Fire optimizely events
       window.optimizely = window.optimizely || [];
