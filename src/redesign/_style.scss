@@ -84,7 +84,7 @@ $accent-a-light: #c9f2f5;
   font-size: 0.875rem;
   line-height: 1.5;
   height: 2.75rem;
-  
+
 }
 
 .btn-social {
@@ -315,7 +315,7 @@ select.form-control {
     border-left-color: #fff;
     @extend .tooltip-shadow;
   }
-    
+
 }
 
 #password-requirement-top {
@@ -333,7 +333,7 @@ select.form-control {
     border-top-color: #fff;
     @extend .tooltip-shadow;
   }
-    
+
 }
 #forgotpassword-success-alert {
   .alert-link {
@@ -689,4 +689,9 @@ select.form-control {
 
 .pgn__form-group {
   margin-bottom: 1.75rem;
+}
+
+.form-text-size {
+  margin-top: 0.188rem !important;
+  line-height: 1.25rem;
 }

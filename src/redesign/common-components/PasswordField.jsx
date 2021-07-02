@@ -71,7 +71,7 @@ const PasswordField = (props) => {
         />
       </OverlayTrigger>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">
+        <Form.Control.Feedback key="error" className="form-text-size" hasIcon={false} feedback-for={props.name} type="invalid">
           {props.errorMessage}
           <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>
         </Form.Control.Feedback>
