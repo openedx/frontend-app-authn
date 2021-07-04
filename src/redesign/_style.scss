@@ -687,6 +687,16 @@ select.form-control {
   font-size: 0.75rem;
 }
 
+.form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+    font-size: 16px;
+    color: $primary-700;
+}
+
+.form-field .form-control:not([value='']):not(:focus) ~
+  .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 16px;
+}
+
 .pgn__form-group {
   margin-bottom: 1.75rem;
 }

@@ -25,7 +25,7 @@ const FormGroup = (props) => {
       <Form.Control
         as={props.as}
         type={props.type}
-
+        className="form-field"
         autoComplete={props.autoComplete}
         name={props.name}
         value={props.value}
