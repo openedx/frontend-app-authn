@@ -25,7 +25,7 @@ const FormGroup = (props) => {
       <Form.Control
         as={props.as}
         type={props.type}
-
+        className="form-field"
         autoComplete={props.autoComplete}
         name={props.name}
         value={props.value}
@@ -42,7 +42,7 @@ const FormGroup = (props) => {
       </Form.Control>
       <TransitionReplace>
         {hasFocus && props.helpText ? (
-          <Form.Control.Feedback type="default" key="help-text" className="d-block">
+          <Form.Control.Feedback type="default" key="help-text" className="d-block form-text-size">
             {props.helpText.map((message, index) => (
               <span key={`help-text-${index.toString()}`}>
                 {message}
@@ -53,7 +53,7 @@ const FormGroup = (props) => {
         ) : <div key="empty" />}
       </TransitionReplace>
       {props.errorMessage !== '' && (
-        <Form.Control.Feedback key="error" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
+        <Form.Control.Feedback key="error" className="form-text-size" hasIcon={false} feedback-for={props.name} type="invalid">{props.errorMessage}</Form.Control.Feedback>
       )}
       {props.children}
     </Form.Group>
