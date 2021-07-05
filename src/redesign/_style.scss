@@ -631,16 +631,20 @@ select.form-control {
   padding: 0.5rem 1rem;
 
   .alert-icon {
-    margin-top: 4px;
+    margin-top: 3px;
   }
 
   .alert-close {
     float: right;
-    margin-top: 3px;
 
     &:hover {
       cursor: pointer;
     }
+  }
+
+  .alert-text {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
   }
 
   .alert-link {

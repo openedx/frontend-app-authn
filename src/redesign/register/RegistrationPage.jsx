@@ -392,7 +392,7 @@ class RegistrationPage extends React.Component {
     if (this.state.emailErrorSuggestion) {
       return (
         <Alert variant="danger" className="email-error-alert" icon={Error}>
-          <span className="small">
+          <span className="alert-text">
             {this.props.intl.formatMessage(messages['did.you.mean.alert.text'])}{' '}
             <Alert.Link
               href="#"
