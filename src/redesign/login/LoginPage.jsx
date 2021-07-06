@@ -245,7 +245,7 @@ class LoginPage extends React.Component {
             <StatefulButton
               type="submit"
               variant="brand"
-              className="login-button-width"
+              className={submitState === 'pending' ? 'login-button-width no-opacity' : 'login-button-width'}
               state={submitState}
               labels={{
                 default: intl.formatMessage(messages['sign.in.button']),
