@@ -630,10 +630,6 @@ select.form-control {
 .email-error-alert {
   padding: 0.5rem 1rem;
 
-  .alert-icon {
-    margin-top: 3px;
-  }
-
   .alert-close {
     float: right;
 
@@ -713,5 +709,11 @@ select.form-control {
 @media (max-height: 500px) {
   .large-screen-svg-line, .large-heading {
     margin-top: 5rem;
+  }
+}
+
+.alert {
+  p:last-child {
+    margin-bottom: 0;
   }
 }
