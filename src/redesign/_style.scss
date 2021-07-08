@@ -709,3 +709,9 @@ select.form-control {
   margin-top: 0.188rem !important;
   line-height: 1.25rem;
 }
+
+@media (max-height: 500px) {
+  .large-screen-svg-line, .large-heading {
+    margin-top: 5rem;
+  }
+}
