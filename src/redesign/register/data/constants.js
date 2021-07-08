@@ -34,11 +34,11 @@ export const GENDER_OPTIONS = ['', 'f', 'm', 'o'];
 // Other constants
 export const FORM_FIELDS = ['name', 'email', 'password', 'username', 'country'];
 
-export const COMMON_VALID_EMAIL_DOMAINS = [
-  'edx.org', 'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com', 'gmail.com',
+export const COMMON_EMAIL_PROVIDERS = [
+  'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com', 'gmail.com', 'aol.com',
 ];
 
-export const DEFAULT_SERVICE_PROVIDER_DOMAINS = ['yahoo', 'hotmail', 'live', 'outlook', 'gmail', 'edx'];
+export const DEFAULT_SERVICE_PROVIDER_DOMAINS = ['yahoo', 'aol', 'hotmail', 'live', 'outlook', 'gmail'];
 
 export const DEFAULT_TOP_LEVEL_DOMAINS = [
   'aaa', 'aarp', 'abarth', 'abb', 'abbott', 'abbvie', 'abc', 'able', 'abogado', 'abudhabi', 'ac', 'academy',
