@@ -20,7 +20,7 @@ const UsernameField = (props) => {
               type="button"
               name="username"
               variant="outline-dark"
-              className="username-suggestion"
+              className="username-suggestion data-hj-suppress"
               key={`suggestion-${index.toString()}`}
               onClick={(e) => props.handleSuggestionClick(e, username)}
             >

@@ -53,7 +53,7 @@ class CountryDropdown extends React.Component {
       }
 
       return (
-        <button type="button" className="dropdown-item" value={value} key={value} onClick={(e) => { this.handleItemClick(e); }}>
+        <button type="button" className="dropdown-item data-hj-suppress" value={value} key={value} onClick={(e) => { this.handleItemClick(e); }}>
           {displayValue}
         </button>
       );
