@@ -117,7 +117,7 @@ describe('LoginPage', () => {
   });
 
   it('should match state for invalid email (less than 3 characters), on form submission', () => {
-    const errorState = { emailOrUsername: 'Email must have at least 3 characters.', password: '' };
+    const errorState = { emailOrUsername: 'Username or Email must have at least 3 characters.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
