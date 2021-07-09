@@ -717,3 +717,10 @@ select.form-control {
     margin-bottom: 0;
   }
 }
+
+@media screen and (min-width: 960px) {
+  html {
+    margin-right: calc(100% - 100vw);
+    margin-left: 0;
+  }
+}
