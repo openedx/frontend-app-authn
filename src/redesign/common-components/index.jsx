@@ -1,4 +1,3 @@
-export { default as BaseComponent } from './BaseComponent';
 export { default as RedirectLogistration } from './RedirectLogistration';
 export { default as registerIcons } from './RegisterFaIcons';
 export { default as UnAuthOnlyRoute } from './UnAuthOnlyRoute';

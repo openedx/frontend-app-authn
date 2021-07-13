@@ -1,35 +1,50 @@
 import React, { useState, useEffect } from 'react';
+
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
-import { getConfig } from '@edx/frontend-platform';
+import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
-  ensureAuthenticatedUser, hydrateAuthenticatedUser, getAuthenticatedUser,
+  configure as configureAuth,
+  AxiosJwtAuthService,
+  ensureAuthenticatedUser,
+  hydrateAuthenticatedUser,
+  getAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getLoggingService } from '@edx/frontend-platform/logging';
 import {
+  Alert,
   Form,
   StatefulButton,
   Hyperlink,
   Icon,
 } from '@edx/paragon';
-import { ExpandMore } from '@edx/paragon/icons';
+import { ExpandMore, Error } from '@edx/paragon/icons';
 
+import { saveUserProfile } from './data/actions';
+import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
 
+import { RedirectLogistration } from '../common-components';
+import { DEFAULT_REDIRECT_URL, DEFAULT_STATE } from '../data/constants';
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from '../register/data/constants';
-import { FormGroup } from '../common-components';
-import { DEFAULT_REDIRECT_URL } from '../data/constants';
+import WelcomePageModal from './WelcomePageModal';
 
 const WelcomePage = (props) => {
-  const { intl } = props;
-  const [registrationResult, setRegistrationResult] = useState({});
-  const [values, setValues] = useState({ levelOfEducation: '', yearOfBirth: '', gender: '' });
+  const { intl, submitState, showError } = props;
+
   const [ready, setReady] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
+  const [values, setValues] = useState({ levelOfEducation: '', yearOfBirth: '', gender: '' });
+  const [openDialog, setOpenDialog] = useState(false);
+
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   useEffect(() => {
+    configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService, config: getConfig() });
     ensureAuthenticatedUser(DASHBOARD_URL).then(() => {
       hydrateAuthenticatedUser().then(() => {
         setReady(true);
@@ -42,8 +57,6 @@ const WelcomePage = (props) => {
     }
   }, []);
 
-  const authenticatedUser = getAuthenticatedUser();
-
   if (!props.location.state || !props.location.state.registrationResult) {
     global.location.assign(DASHBOARD_URL);
     return null;
@@ -55,56 +68,41 @@ const WelcomePage = (props) => {
 
   const getOptions = (fieldName) => {
     const options = {
-      yearOfBirth: [{
-        value: '',
-        label: intl.formatMessage(messages['registration.year.of.birth.label']),
-      }].concat(YEAR_OF_BIRTH_OPTIONS),
-      levelOfEducation: EDUCATION_LEVELS.map(key => ({
-        value: key,
-        label: intl.formatMessage(messages[`registration.field.education.levels.${key || 'label'}`]),
-      })),
-      gender: GENDER_OPTIONS.map(key => ({
-        value: key,
-        label: intl.formatMessage(messages[`registration.field.gender.options.${key || 'label'}`]),
-      })),
+      yearOfBirth: YEAR_OF_BIRTH_OPTIONS.map(({ value, label }) => (
+        <option className="data-hj-suppress" key={value} value={value}>{label}</option>
+      )),
+      levelOfEducation: EDUCATION_LEVELS.map(key => (
+        <option className="data-hj-suppress" key={key} value={key}>
+          {intl.formatMessage(messages[`education.levels.${key || 'label'}`])}
+        </option>
+      )),
+      gender: GENDER_OPTIONS.map(key => (
+        <option className="data-hj-suppress" key={key} value={key}>
+          {intl.formatMessage(messages[`gender.options.${key || 'label'}`])}
+        </option>
+      )),
     };
 
-    return [
-      options[fieldName].map(({ value, label }) => (
-        <option className="data-hj-suppress" key={value} value={value}>{label}</option>)),
-    ];
-  };
-
-  const fireOptimizelyEvent = () => {
-    window.optimizely = window.optimizely || [];
-    window.optimizely.push({
-      type: 'event',
-      eventName: 'VAN-504-conversion',
-    });
+    return options[fieldName];
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fireOptimizelyEvent();
+    const payload = {};
+    const authenticatedUser = getAuthenticatedUser();
+
     ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
       if (values[fieldName]) {
-        window.optimizely.push({
-          type: 'event',
-          eventName: `van_504_${fieldName}`,
-        });
+        payload[fieldName] = values[fieldName];
       }
     });
-    if (registrationResult.success) {
-      window.location.href = registrationResult.redirectUrl;
-    }
-    return null;
+
+    props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
   };
 
   const handleSkip = (e) => {
     e.preventDefault();
-    fireOptimizelyEvent();
-    window.location.href = registrationResult.redirectUrl;
-    return null;
+    setOpenDialog(true);
   };
 
   const onChangeHandler = (e) => {
@@ -114,86 +112,102 @@ const WelcomePage = (props) => {
   return (
     <>
       <Helmet>
-        <title>{intl.formatMessage(messages['optional.fields.page.title'],
+        <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
-      <div className="d-flex justify-content-center m-4">
-        <div className="d-flex flex-column">
-          <Form className="mw-500">
-            <p className="mb-4" data-hj-suppress>
-              { intl.formatMessage(messages['welcome.to.edx'], { username: authenticatedUser.username }) }
-            </p>
-            <hr className="mb-3 border-gray-200" />
-            <h1 className="mb-3 h3">{intl.formatMessage(messages['optional.fields.page.heading'])}</h1>
-            <FormGroup
-              floatingLabel={intl.formatMessage(messages['registration.field.education.levels.label'])}
-              for="levelOfEducation"
-              name="levelOfEducation"
-              as="select"
-              key="levelOfEducation"
-              className="mb-3 data-hj-suppress"
-              value={values.levelOfEducation}
-              handleChange={(e) => onChangeHandler(e)}
-              trailingElement={<Icon src={ExpandMore} />}
-              options={() => getOptions('levelOfEducation')}
-            />
-            <FormGroup
-              floatingLabel={intl.formatMessage(messages['registration.year.of.birth.label'])}
-              for="yearOfBirth"
-              name="yearOfBirth"
-              as="select"
-              key="yearOfBirth"
-              value={values.yearOfBirth}
-              className="mb-3 data-hj-suppress"
-              handleChange={(e) => onChangeHandler(e)}
-              trailingElement={<Icon src={ExpandMore} />}
-              options={() => getOptions('yearOfBirth')}
-            />
-            <FormGroup
-              floatingLabel={intl.formatMessage(messages['registration.field.gender.options.label'])}
-              for="gender"
-              name="gender"
-              as="select"
-              key="gender"
-              value={values.gender}
-              className="mb-3 data-hj-suppress"
-              handleChange={(e) => onChangeHandler(e)}
-              trailingElement={<Icon src={ExpandMore} />}
-              options={() => getOptions('gender')}
-            />
-            <p>
-              <Hyperlink
-                className="mt-1 text-dark small"
-                destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
-                target="_blank"
-              >
-                {intl.formatMessage(messages['optional.fields.information.link'])}
-              </Hyperlink>
-            </p>
-            <div className="d-flex mt-3">
-              <StatefulButton
-                type="submit"
-                variant="brand"
-                labels={{
-                  default: intl.formatMessage(messages['optional.fields.submit.button']),
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-              <StatefulButton
-                type="submit"
-                variant="link"
-                className="ml-1 text-dark"
-                labels={{
-                  default: intl.formatMessage(messages['optional.fields.skip.button']),
-                }}
-                onClick={handleSkip}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-            </div>
-          </Form>
+      <WelcomePageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
+      {props.shouldRedirect ? (
+        <RedirectLogistration
+          success
+          redirectUrl={registrationResult.redirectUrl}
+        />
+      ) : null}
+      <div className="mw-xs welcome-page-content">
+        <div className="welcome-page-heading">
+          <h2 className="h3 text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
         </div>
+        <hr className="border-light-700 mb-4" />
+        {showError ? (
+          <Alert id="welcome-page-errors" className="mb-3" variant="danger" icon={Error}>
+            <Alert.Heading>{intl.formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
+            <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
+          </Alert>
+        ) : null}
+        <Form>
+          <Form.Group controlId="levelOfEducation">
+            <Form.Control
+              as="select"
+              name="levelOfEducation"
+              value={values.levelOfEducation}
+              onChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              floatingLabel={intl.formatMessage(messages['education.levels.label'])}
+            >
+              {getOptions('levelOfEducation')}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="yearOfBirth">
+            <Form.Control
+              as="select"
+              name="yearOfBirth"
+              value={values.yearOfBirth}
+              onChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              floatingLabel={intl.formatMessage(messages['year.of.birth.label'])}
+            >
+              <option value="">{intl.formatMessage(messages['year.of.birth.label'])}</option>
+              {getOptions('yearOfBirth')}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="gender" className="mb-3">
+            <Form.Control
+              as="select"
+              name="gender"
+              value={values.gender}
+              onChange={(e) => onChangeHandler(e)}
+              trailingElement={<Icon src={ExpandMore} />}
+              floatingLabel={intl.formatMessage(messages['gender.options.label'])}
+            >
+              {getOptions('gender')}
+            </Form.Control>
+          </Form.Group>
+          <span className="progressive-profiling-support">
+            <Hyperlink
+              isInline
+              variant="muted"
+              destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
+              target="_blank"
+              showLaunchIcon={false}
+            >
+              {intl.formatMessage(messages['optional.fields.information.link'])}
+            </Hyperlink>
+          </span>
+          <div className="d-flex mt-4">
+            <StatefulButton
+              type="submit"
+              variant="brand"
+              className="login-button-width"
+              state={submitState}
+              labels={{
+                default: intl.formatMessage(messages['optional.fields.submit.button']),
+                pending: '',
+              }}
+              onClick={handleSubmit}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <StatefulButton
+              className="text-gray-700 font-weight-500"
+              type="submit"
+              variant="link"
+              labels={{
+                default: intl.formatMessage(messages['optional.fields.skip.button']),
+              }}
+              onClick={handleSkip}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </div>
+        </Form>
       </div>
     </>
   );
@@ -204,10 +218,28 @@ WelcomePage.propTypes = {
   location: PropTypes.shape({
     state: PropTypes.object,
   }),
+  saveUserProfile: PropTypes.func.isRequired,
+  showError: PropTypes.bool,
+  shouldRedirect: PropTypes.bool,
+  submitState: PropTypes.string,
 };
 
 WelcomePage.defaultProps = {
   location: { state: {} },
+  shouldRedirect: false,
+  showError: false,
+  submitState: DEFAULT_STATE,
 };
 
-export default (injectIntl(WelcomePage));
+const mapStateToProps = state => ({
+  shouldRedirect: welcomePageSelector(state).success,
+  submitState: welcomePageSelector(state).submitState,
+  showError: welcomePageSelector(state).showError,
+});
+
+export default connect(
+  mapStateToProps,
+  {
+    saveUserProfile,
+  },
+)(injectIntl(WelcomePage));

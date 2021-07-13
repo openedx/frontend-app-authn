@@ -6,12 +6,12 @@ import { Hyperlink, Image } from '@edx/paragon';
 
 import messages from './messages';
 
-const MediumScreenHeader = (props) => {
+const MediumLayout = (props) => {
   const { intl } = props;
 
   return (
     <div className="container row p-0 mb-3 medium-screen-container">
-      <div className="col-md-10 p-0 screen-header">
+      <div className="col-md-10 p-0 screen-header-primary">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
@@ -28,7 +28,7 @@ const MediumScreenHeader = (props) => {
         </div>
       </div>
       <div className="col-md-2 p-0 screen-polygon">
-        <svg width="100%" height="100%" className="medium-screen-svg" preserveAspectRatio="xMaxYMin meet">
+        <svg width="100%" height="100%" className="medium-screen-svg-primary" preserveAspectRatio="xMaxYMin meet">
           <g transform="skewX(168)">
             <rect x="0" y="0" height="100%" width="100%" />
           </g>
@@ -38,8 +38,8 @@ const MediumScreenHeader = (props) => {
   );
 };
 
-MediumScreenHeader.propTypes = {
+MediumLayout.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(MediumScreenHeader);
+export default injectIntl(MediumLayout);

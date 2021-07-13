@@ -57,6 +57,7 @@ initialize({
         INFO_EMAIL: process.env.INFO_EMAIL || '',
         REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME || null,
         DESIGN_NAME: CHOSEN_DESIGN,
+        ENABLE_PROGRESSIVE_PROFILING: process.env.ENABLE_PROGRESSIVE_PROFILING || false,
       });
     },
   },

@@ -76,7 +76,6 @@ class RegistrationPage extends React.Component {
       optionalFieldsState: {},
       showOptionalField: false,
       startTime: Date.now(),
-      optimizelyExperimentName: '',
       totalRegistrationTime: 0,
     };
   }
@@ -144,14 +143,6 @@ class RegistrationPage extends React.Component {
 
     return true;
   }
-
-  getExperiments = () => {
-    const { optimizelyExperimentName } = window;
-
-    if (optimizelyExperimentName) {
-      this.setState({ optimizelyExperimentName });
-    }
-  };
 
   getOptionalFields() {
     return (
@@ -494,21 +485,6 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
-
-      if (window.optimizelyExperimentName !== 'VAN-504-PP-Exp') {
-        window.optimizely.push({
-          type: 'event',
-          eventName: 'VAN-504-conversion',
-        });
-        ['yearOfBirth', 'gender', 'levelOfEducation'].forEach(fieldName => {
-          if (this.state[fieldName]) {
-            window.optimizely.push({
-              type: 'event',
-              eventName: `van_504_${fieldName}`,
-            });
-          }
-        });
-      }
     }
 
     return (
@@ -522,7 +498,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={window.optimizelyExperimentName === 'VAN-504-PP-Exp'}
+          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING}
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
