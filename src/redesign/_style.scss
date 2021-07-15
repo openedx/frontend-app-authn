@@ -232,6 +232,7 @@ $accent-a-light: #c9f2f5;
   @extend .text-gray;
 
   display: inline-block;
+  margin-bottom: 0.25rem;
   height: 18px;
   width: 18px;
 
@@ -723,4 +724,15 @@ select.form-control {
     margin-right: calc(100% - 100vw);
     margin-left: 0;
   }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: $light-200;
+}
+
+.secondary-provider-link {
+  font-weight: normal;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: $primary-700
 }

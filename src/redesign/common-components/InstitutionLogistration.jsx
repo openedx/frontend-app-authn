@@ -11,7 +11,7 @@ export const RenderInstitutionButton = props => {
 
   return (
     <Button
-      className="btn btn-link btn-sm text-body p-0 mb-4"
+      className="btn-sm text-body p-0 mb-4 border-0"
       variant="link"
       data-event-name="institution_login"
       onClick={onSubmitHandler}
@@ -32,7 +32,7 @@ const InstitutionLogistration = props => {
 
   return (
     <>
-      <div className="d-flex justify-content-left mb-4 mt-4">
+      <div className="d-flex justify-content-left mb-4 mt-2">
         <div className="flex-column">
           <h4 className="mb-2 font-weight-bold institute-heading">
             {headingTitle}
@@ -49,7 +49,7 @@ const InstitutionLogistration = props => {
               <tr key={provider} className="pgn__data-table-row">
                 <td>
                   <Hyperlink
-                    className="btn nav-item p-0 mb-1"
+                    className="btn nav-item p-0 mb-1 secondary-provider-link"
                     destination={lmsBaseUrl + provider.loginUrl}
                   >
                     {provider.name}
