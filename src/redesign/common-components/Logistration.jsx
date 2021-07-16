@@ -25,7 +25,11 @@ const Logistration = (props) => {
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    sendPageEvent('login_and_registration', e.target.dataset.eventName);
+    if (typeof e === 'string') {
+      sendPageEvent('login_and_registration', e === '/login' ? 'login' : 'register');
+    } else {
+      sendPageEvent('login_and_registration', e.target.dataset.eventName);
+    }
 
     setInstitutionLogin(!institutionLogin);
   };
@@ -57,7 +61,7 @@ const Logistration = (props) => {
         : (
           <>
             {!tpa && (
-              <Tabs defaultActiveKey={selectedPage} id="controlled-tab-example" onSelect={handleOnSelect}>
+              <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
                 <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                 <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
               </Tabs>
