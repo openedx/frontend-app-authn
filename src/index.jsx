@@ -56,6 +56,7 @@ initialize({
         DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || '',
         INFO_EMAIL: process.env.INFO_EMAIL || '',
         REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME || null,
+        DESIGN_NAME: CHOSEN_DESIGN,
       });
     },
   },

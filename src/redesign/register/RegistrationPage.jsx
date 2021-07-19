@@ -624,7 +624,7 @@ class RegistrationPage extends React.Component {
                 }}
               />
             </div>
-            {getConfig().REGISTRATION_OPTIONAL_FIELDS && localStorage.getItem('DESIGN_NAME') !== 'redesign' ? (
+            {getConfig().REGISTRATION_OPTIONAL_FIELDS && getConfig().DESIGN_NAME !== 'redesign' ? (
               <Form.Group className="mb-0 mt-2 small">
                 <Form.Check
                   id="optional-field-checkbox"
