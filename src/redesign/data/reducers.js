@@ -21,11 +21,17 @@ import {
   storeName as resetPasswordStoreName,
 } from '../reset-password';
 
+import {
+  reducer as welcomePageReducers,
+  storeName as welcomePageStoreName,
+} from '../welcome';
+
 const createRootReducer = () => combineReducers({
   [loginStoreName]: loginReducer,
   [registerStoreName]: registerReducer,
   [commonComponentsStoreName]: commonComponentsReducer,
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
+  [welcomePageStoreName]: welcomePageReducers,
 });
 export default createRootReducer;

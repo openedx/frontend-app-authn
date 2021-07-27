@@ -2,16 +2,16 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 
-import LargeScreenLayout from '../LargeScreenLayout';
-import MediumScreenHeader from '../MediumScreenHeader';
-import SmallScreenHeader from '../SmallScreenHeader';
+import LargeLayout from '../LargeLayout';
+import MediumLayout from '../MediumLayout';
+import SmallLayout from '../SmallLayout';
 
 describe('ScreenLayout', () => {
   it('should display the form, pass as a child in SmallScreenLayout', () => {
     const smallScreen = mount(
       <IntlProvider locale="en">
         <div>
-          <SmallScreenHeader />
+          <SmallLayout />
           <form>
             <input type="text" />
           </form>
@@ -25,7 +25,7 @@ describe('ScreenLayout', () => {
     const mediumScreen = mount(
       <IntlProvider locale="en">
         <div>
-          <MediumScreenHeader />
+          <MediumLayout />
           <form>
             <input type="text" />
           </form>
@@ -39,7 +39,7 @@ describe('ScreenLayout', () => {
     const largeScreen = mount(
       <IntlProvider locale="en">
         <div>
-          <LargeScreenLayout />
+          <LargeLayout />
           <form>
             <input type="text" />
           </form>

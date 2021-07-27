@@ -144,7 +144,7 @@ const LoginFailureMessage = (props) => {
             link = `/login?next=${href}`;
           }
           return (
-            <p>
+            <p key={error}>
               {beforeLink}
               <a href={link}>{linkText}</a>
               {afterLink}

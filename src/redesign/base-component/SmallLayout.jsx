@@ -6,12 +6,12 @@ import { Hyperlink, Image } from '@edx/paragon';
 
 import messages from './messages';
 
-const SmallScreenHeader = (props) => {
+const SmallLayout = (props) => {
   const { intl } = props;
 
   return (
     <>
-      <div className="small-screen-header">
+      <div className="small-screen-header-primary">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
@@ -32,8 +32,8 @@ const SmallScreenHeader = (props) => {
   );
 };
 
-SmallScreenHeader.propTypes = {
+SmallLayout.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(SmallScreenHeader);
+export default injectIntl(SmallLayout);

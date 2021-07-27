@@ -3,8 +3,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { AppProvider } from '@edx/frontend-platform/react';
 
+import BaseComponent from './base-component';
 import {
-  BaseComponent, UnAuthOnlyRoute, registerIcons, NotFoundPage, Logistration,
+  UnAuthOnlyRoute, registerIcons, NotFoundPage, Logistration,
 } from './common-components';
 import {
   LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM, WELCOME_PAGE,
