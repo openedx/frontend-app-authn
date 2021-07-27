@@ -20,6 +20,10 @@ $accent-a-light: #c9f2f5;
   min-width: 464px !important;
 }
 
+.welcome-page-content {
+  min-width: 464px !important;
+}
+
 .stateful-button-width {
   width: 12rem;
 }
@@ -202,31 +206,6 @@ $accent-a-light: #c9f2f5;
   margin-bottom: 2rem;
 }
 
-.section-heading-line {
-  position: relative;
-  text-align: center;
-
-  &:before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 20%;
-    background-color: gray;
-    height: 1px;
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 20%;
-    background-color: gray;
-    height: 1px;
-  }
-}
-
 .institute-icon {
   @extend .mr-1;
   @extend .text-gray;
@@ -342,55 +321,28 @@ select.form-control {
   }
 }
 
-@media (min-width: 1024px) {
-  .mw-500 {
-    width: 500px;
-  }
+.screen-header-light {
+  background-color: $light-200;
 }
 
-@media (max-width: 600px) {
-  .form-control {
-    width: 100%;
-  }
-}
-
-@media (min-width: 463px) {
-  .reset-password-container {
-    width: 420px;
-    max-width: 420px;
-  }
-
-  .tpa-skeleton {
-    min-width: 464px !important;
-  }
-}
-
-@media (max-width: 464px) {
-  .section-heading-line {
-    position: relative;
-    text-align: center;
-
-    &:before,
-    &:after {
-      width: 10%;
-    }
-  }
-
-  .btn-social {
-    min-width: 100%;
-    margin-bottom: 0.75rem;
-    margin-right: 0 !important;
-  }
-
-  .main-content {
-    min-width: 100vw !important;
-    padding: 1.5rem !important;
-  }
+.screen-header-primary {
+  background-color: $primary-400;
 }
 
 .large-screen-container {
   background-color: $white;
   width: 50vw;
+}
+
+.large-screen-svg-light,
+.large-screen-svg-primary {
+  fill: $light-200;
+  overflow: hidden;
+  position: absolute;
+}
+
+.large-screen-svg-primary {
+  fill: $primary-400;
 }
 
 .medium-screen-container {
@@ -399,32 +351,32 @@ select.form-control {
   height: 282px;
 }
 
-.screen-header {
-  background-color: $primary-400;
+.medium-screen-svg-light,
+.medium-screen-svg-primary {
+  fill: $light-200;
+  overflow: inherit;
+  position: absolute;
+}
+
+.medium-screen-svg-primary {
+  fill: $primary-400;
 }
 
 .screen-polygon {
   background-color: $white;
 }
 
-.medium-screen-svg {
-  fill: $primary-400;
-  overflow: inherit;
-  position: absolute;
-}
-
-.large-screen-svg {
-  fill: $primary-400;
-  overflow: hidden;
-  position: absolute;
-}
-
-.small-screen-header {
-  background-color: $primary-400;
+.small-screen-header-light,
+.small-screen-header-primary {
+  background-color: $light-200;
   width: 100vw;
 }
 
-.large-screen-top-stripe {
+.small-screen-header-primary {
+  background-color: $primary-400;
+}
+
+.extra-large-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
     102.02deg,
@@ -454,7 +406,7 @@ select.form-control {
   background-repeat: no-repeat;
 }
 
-.medium-large-screen-top-stripe {
+.large-screen-top-stripe {
   height: 0.5rem;
   background-image: linear-gradient(
   102.02deg,
@@ -479,6 +431,53 @@ select.form-control {
   background-repeat: no-repeat;
 }
 
+// Progressive profiling base component classes
+.medium-container {
+  flex-wrap: nowrap;
+  max-width: inherit;
+  height: 260px;
+}
+
+.extra-extra-large-svg-line {
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+
+  width: 5.5rem;
+  height: 150px;
+}
+
+.extra-large-svg-line {
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+
+  width: 5.5rem;
+  height: 110px;
+}
+
+.medium-svg-line {
+  stroke: $accent-b;
+  stroke-width: 0.5rem;
+  width: 7em;
+  height: 110px;
+}
+
+.small-svg-line {
+  stroke: $accent-b;
+  stroke-width: 0.25rem;
+
+  width: 4em;
+  height: 90px;
+}
+
+.extra-small-svg-line {
+  stroke: $accent-b;
+  stroke-width: 0.25rem;
+
+  width: 4em;
+  height: 80px;
+}
+
+// Non-Auth Screen Svg Lines
 .large-screen-svg-line {
   padding-top: 0.5rem;
   stroke: $accent-b;
@@ -557,38 +556,6 @@ select.form-control {
   color: #707070;
 }
 
-@media (max-width: 767px) {
-  .layout {
-    display: flex;
-    align-items: center;
-    flex-direction:column;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 1199px) and (min-width: 768px) {
-  .layout {
-    display: flex;
-    align-items: center;
-    flex-direction:column;
-    justify-content: center;
-  }
-}
-
-@media (min-width: 1200px) {
-  .layout{
-    display: flex;
-    justify-content: space-between;
-
-  }
-  .content {
-    width: 50vw;
-    display: flex;
-    justify-content: center;
-    margin-top: 4rem;
-  }
-}
-
 .institute-heading {
   color: $primary-700;
 }
@@ -617,15 +584,6 @@ select.form-control {
     position: absolute;
     background-color: #fff;
     width: 464px;
-}
-
-@media (max-width: 464px) {
-  .dropdown-container {
-    width: auto;
-    left: 0;
-    right: 0;
-    position: relative;
-  }
 }
 
 .email-error-alert {
@@ -707,6 +665,81 @@ select.form-control {
   line-height: 1.25rem;
 }
 
+.progressive-profiling-support {
+  font-size: 0.875rem;
+  font-weight: 400;
+}
+
+
+@media (min-width: 1024px) {
+  .mw-500 {
+    width: 500px;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-control {
+    width: 100%;
+  }
+}
+
+@media (min-width: 463px) {
+  .reset-password-container {
+    width: 420px;
+    max-width: 420px;
+  }
+
+  .tpa-skeleton {
+    min-width: 464px !important;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .welcome-page-content {
+    padding-top: 1.5rem !important;
+  }
+
+  .layout {
+    display: flex;
+    align-items: center;
+    flex-direction:column;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  .layout {
+    display: flex;
+    align-items: center;
+    flex-direction:column;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .layout{
+    display: flex;
+    justify-content: space-between;
+
+  }
+  .content {
+    width: 50vw;
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+  }
+}
+
+@media (max-width: 464px) {
+  .dropdown-container {
+    width: auto;
+    left: 0;
+    right: 0;
+    position: relative;
+  }
+}
+
 @media (max-height: 500px) {
   .large-screen-svg-line, .large-heading {
     margin-top: 5rem;
@@ -723,6 +756,27 @@ select.form-control {
   html {
     margin-right: calc(100% - 100vw);
     margin-left: 0;
+  }
+}
+
+// Smaller than Extra Small (Mobile Screens)
+@media (max-width: 464px) {
+  .btn-social {
+    min-width: 100%;
+    margin-bottom: 0.75rem;
+    margin-right: 0 !important;
+  }
+
+  .welcome-page-content,
+  .main-content {
+    min-width: 100vw !important;
+    padding: 1.5rem !important;
+  }
+
+  .progressive-profiling-support {
+    font-size: 0.688rem;
+    font-weight: normal;
+    line-height: 0.938rem;
   }
 }
 

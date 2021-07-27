@@ -71,16 +71,6 @@ const messages = defineMessages({
     defaultMessage: 'Create account using {providerName}',
     description: 'Screen reader text that appears before social auth provider name',
   },
-  'start.learning': {
-    id: 'start.learning',
-    defaultMessage: 'Start learning',
-    description: 'Header text for logistration MFE pages',
-  },
-  'with.site.name': {
-    id: 'with.site.name',
-    defaultMessage: 'with {siteName}',
-    description: 'Header text with site name for logistration MFE pages',
-  },
   // password field strings
   'show.password': {
     id: 'show.password',

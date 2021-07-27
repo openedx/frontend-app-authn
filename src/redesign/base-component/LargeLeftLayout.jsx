@@ -5,7 +5,7 @@ import { getConfig } from '@edx/frontend-platform';
 
 import messages from './messages';
 
-const LargeScreenLeftLayout = (props) => {
+const LargeLeftLayout = (props) => {
   const { intl } = props;
 
   return (
@@ -23,8 +23,8 @@ const LargeScreenLeftLayout = (props) => {
   );
 };
 
-LargeScreenLeftLayout.propTypes = {
+LargeLeftLayout.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(LargeScreenLeftLayout);
+export default injectIntl(LargeLeftLayout);
