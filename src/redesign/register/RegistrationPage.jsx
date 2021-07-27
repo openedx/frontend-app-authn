@@ -77,6 +77,7 @@ class RegistrationPage extends React.Component {
       showOptionalField: false,
       startTime: Date.now(),
       totalRegistrationTime: 0,
+      optimizelyExperimentName: '',
     };
   }
 
@@ -88,7 +89,7 @@ class RegistrationPage extends React.Component {
     }
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
-    // this.getExperiments();
+    this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -143,6 +144,14 @@ class RegistrationPage extends React.Component {
 
     return true;
   }
+
+  getExperiments = () => {
+    const { optimizelyExperimentName } = window;
+
+    if (optimizelyExperimentName) {
+      this.setState({ optimizelyExperimentName });
+    }
+  };
 
   getOptionalFields() {
     return (
@@ -475,6 +484,7 @@ class RegistrationPage extends React.Component {
     if (this.props.registrationResult.success) {
       setSurveyCookie('register');
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
+      setCookie('authn-returning-user');
 
       // Fire optimizely events
       window.optimizely = window.optimizely || [];
@@ -498,7 +508,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING}
+          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING && this.state.optimizelyExperimentName === 'release-pp-concept-1'}
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
