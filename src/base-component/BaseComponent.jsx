@@ -6,6 +6,8 @@ import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import {
   ExtraSmall, Small, Medium, Large, ExtraLarge, ExtraExtraLarge,
 } from '@edx/paragon';
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
+import { getLocale } from '@edx/frontend-platform/i18n';
 
 import LargeLayout from './LargeLayout';
 import MediumLayout from './MediumLayout';
@@ -20,6 +22,7 @@ const BaseComponent = ({ children }) => {
 
   return (
     <>
+      <CookiePolicyBanner languageCode={getLocale()} />
       <ExtraLarge>
         <div className="col-md-12 extra-large-screen-top-stripe" />
       </ExtraLarge>
