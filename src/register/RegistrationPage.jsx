@@ -77,11 +77,18 @@ class RegistrationPage extends React.Component {
       showOptionalField: false,
       startTime: Date.now(),
       totalRegistrationTime: 0,
-      optimizelyExperimentName: '',
+      optimizelyExperimentName: '', // eslint-disable-line react/no-unused-state
     };
   }
 
   componentDidMount() {
+    window.optimizely = window.optimizely || [];
+    window.optimizely.push({
+      type: 'page',
+      pageName: 'authn_registration_page',
+      isActive: true,
+    });
+
     const payload = { ...this.queryParams };
 
     if (this.tpaHint) {
@@ -89,7 +96,6 @@ class RegistrationPage extends React.Component {
     }
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
-    this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -149,6 +155,7 @@ class RegistrationPage extends React.Component {
     const { optimizelyExperimentName } = window;
 
     if (optimizelyExperimentName) {
+      // eslint-disable-next-line react/no-unused-state
       this.setState({ optimizelyExperimentName });
     }
   };
@@ -496,7 +503,7 @@ class RegistrationPage extends React.Component {
         },
       });
 
-      if (this.state.optimizelyExperimentName !== 'release-pp-concept-1') {
+      if (window.optimizelyExperimentName !== 'release-pp-concept-1') {
         window.optimizely.push({
           type: 'event',
           eventName: 'authn_pp_conversion',
@@ -515,7 +522,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING && this.state.optimizelyExperimentName === 'release-pp-concept-1'}
+          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING && window.optimizelyExperimentName === 'release-pp-concept-1'}
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
