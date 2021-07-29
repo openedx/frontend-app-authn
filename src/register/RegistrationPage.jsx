@@ -495,6 +495,13 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
+
+      if (this.state.optimizelyExperimentName !== 'release-pp-concept-1') {
+        window.optimizely.push({
+          type: 'event',
+          eventName: 'authn_pp_conversion',
+        });
+      }
     }
 
     return (
