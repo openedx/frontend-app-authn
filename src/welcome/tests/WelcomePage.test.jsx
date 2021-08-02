@@ -8,7 +8,7 @@ import configureStore from 'redux-mock-store';
 import { mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import * as auth from '@edx/frontend-platform/auth';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { injectIntl, IntlProvider, configure } from '@edx/frontend-platform/i18n';
 
 import { saveUserProfile } from '../data/actions';
 import WelcomePage from '../WelcomePage';
@@ -50,6 +50,14 @@ describe('WelcomePageTests', () => {
   beforeEach(() => {
     store = mockStore({});
     auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
+    configure({
+      loggingService: { logError: jest.fn() },
+      config: {
+        ENVIRONMENT: 'production',
+        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
+      },
+      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+    });
   });
 
   it('should submit user profile details on form submission', async () => {

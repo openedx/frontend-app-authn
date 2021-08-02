@@ -8,11 +8,13 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 
+import * as auth from '@edx/frontend-platform/auth';
 import Logistration from '../Logistration';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/auth');
 analytics.sendPageEvent = jest.fn();
 
 const mockStore = configureStore();
@@ -36,6 +38,9 @@ describe('Logistration', () => {
     </IntlProvider>
   );
 
+  beforeEach(() => {
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
+  });
   it('should render registration page', () => {
     configure({
       loggingService: { logError: jest.fn() },
@@ -163,7 +168,7 @@ describe('Logistration', () => {
     });
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL };
+    window.location = { hostname: getConfig().SITE_NAME, href: getConfig().BASE_URL };
 
     const root = mount(reduxWrapper(<IntlLogistration />));
     root.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });

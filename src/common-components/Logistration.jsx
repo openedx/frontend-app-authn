@@ -16,6 +16,7 @@ import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { updatePathWithQueryParams, getTpaHint } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
+import BaseComponent from '../base-component';
 
 const Logistration = (props) => {
   const { intl, selectedPage } = props;
@@ -51,32 +52,34 @@ const Logistration = (props) => {
   );
 
   return (
-    <div>
-      {institutionLogin
-        ? (
-          <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-            <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
-          </Tabs>
-        )
-        : (
-          <>
-            {!tpa && (
-              <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-              </Tabs>
-            )}
-          </>
+    <BaseComponent>
+      <div>
+        {institutionLogin
+          ? (
+            <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+              <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+            </Tabs>
+          )
+          : (
+            <>
+              {!tpa && (
+                <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                  <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                  <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                </Tabs>
+              )}
+            </>
+          )}
+        { key && (
+          <Redirect to={updatePathWithQueryParams(key)} />
         )}
-      { key && (
-        <Redirect to={updatePathWithQueryParams(key)} />
-      )}
-      <div id="main-content" className="main-content">
-        {selectedPage === LOGIN_PAGE
-          ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-          : <RegistrationPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />}
+        <div id="main-content" className="main-content">
+          {selectedPage === LOGIN_PAGE
+            ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+            : <RegistrationPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />}
+        </div>
       </div>
-    </div>
+    </BaseComponent>
   );
 };
 
