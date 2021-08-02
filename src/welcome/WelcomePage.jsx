@@ -44,6 +44,7 @@ const WelcomePage = (props) => {
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   useEffect(() => {
+    window.optimizely = window.optimizely || [];
     configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService, config: getConfig() });
     ensureAuthenticatedUser(DASHBOARD_URL).then(() => {
       hydrateAuthenticatedUser().then(() => {
@@ -87,7 +88,6 @@ const WelcomePage = (props) => {
   };
 
   const fireOptimizelyEvent = () => {
-    window.optimizely = window.optimizely || [];
     window.optimizely.push({
       type: 'event',
       eventName: 'authn_pp_conversion',
@@ -107,12 +107,21 @@ const WelcomePage = (props) => {
     });
 
     props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
+    window.optimizely.push({
+      type: 'event',
+      eventName: 'authn_welcome_page_submit_btn_clicked',
+    });
   };
 
   const handleSkip = (e) => {
     e.preventDefault();
     fireOptimizelyEvent();
     setOpenDialog(true);
+
+    window.optimizely.push({
+      type: 'event',
+      eventName: 'authn_welcome_page_skip_btn_clicked',
+    });
   };
 
   const onChangeHandler = (e) => {
