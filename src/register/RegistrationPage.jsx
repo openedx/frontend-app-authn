@@ -502,13 +502,6 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
-
-      if (window.optimizelyExperimentName !== 'release-pp-concept-1') {
-        window.optimizely.push({
-          type: 'event',
-          eventName: 'authn_pp_conversion',
-        });
-      }
     }
 
     return (
@@ -522,7 +515,7 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING && window.optimizelyExperimentName === 'release-pp-concept-1'}
+          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING}
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
