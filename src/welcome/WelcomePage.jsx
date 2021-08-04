@@ -87,16 +87,8 @@ const WelcomePage = (props) => {
     return options[fieldName];
   };
 
-  const fireOptimizelyEvent = () => {
-    window.optimizely.push({
-      type: 'event',
-      eventName: 'authn_pp_conversion',
-    });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    fireOptimizelyEvent();
     const payload = {};
     const authenticatedUser = getAuthenticatedUser();
 
@@ -115,7 +107,6 @@ const WelcomePage = (props) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
-    fireOptimizelyEvent();
     setOpenDialog(true);
 
     window.optimizely.push({
