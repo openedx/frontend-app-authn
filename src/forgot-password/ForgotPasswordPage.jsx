@@ -27,6 +27,7 @@ import { FormGroup } from '../common-components';
 import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 import ForgotPasswordAlert from './ForgotPasswordAlert';
+import BaseComponent from '../base-component';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status, submitState } = props;
@@ -63,87 +64,89 @@ const ForgotPasswordPage = (props) => {
   );
 
   return (
-    <div>
-      <Tabs activeKey="" id="controlled-tab-example" onSelect={(k) => setKey(k)}>
-        <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
-      </Tabs>
-      { key && (
-        <Redirect to={updatePathWithQueryParams(key)} />
-      )}
-      <div id="main-content" className="main-content">
-        <Formik
-          initialValues={{ email: '' }}
-          validateOnChange={false}
-          validate={(values) => {
-            const validationMessage = getValidationMessage(values.email);
+    <BaseComponent>
+      <div>
+        <Tabs activeKey="" id="controlled-tab-example" onSelect={(k) => setKey(k)}>
+          <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+        </Tabs>
+        { key && (
+          <Redirect to={updatePathWithQueryParams(key)} />
+        )}
+        <div id="main-content" className="main-content">
+          <Formik
+            initialValues={{ email: '' }}
+            validateOnChange={false}
+            validate={(values) => {
+              const validationMessage = getValidationMessage(values.email);
 
-            if (validationMessage !== '') {
-              windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
-              return { email: validationMessage };
-            }
+              if (validationMessage !== '') {
+                windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
+                return { email: validationMessage };
+              }
 
-            return {};
-          }}
-          onSubmit={(values) => { props.forgotPassword(values.email); }}
-        >
-          {({
-            errors, handleSubmit, setFieldValue, values,
-          }) => (
-            <>
-              <Helmet>
-                <title>{intl.formatMessage(messages['forgot.password.page.title'],
-                  { siteName: getConfig().SITE_NAME })}
-                </title>
-              </Helmet>
-              <Form className="mw-xs">
-                <ForgotPasswordAlert email={props.email} emailError={errors.email} status={status} />
-                <h4>
-                  {intl.formatMessage(messages['forgot.password.page.heading'])}
-                </h4>
-                <p className="mb-4">
-                  {intl.formatMessage(messages['forgot.password.page.instructions'])}
-                </p>
-                <FormGroup
-                  floatingLabel={intl.formatMessage(messages['forgot.password.page.email.field.label'])}
-                  name="email"
-                  errorMessage={validationError}
-                  value={values.email}
-                  handleBlur={() => getValidationMessage(values.email)}
-                  handleChange={e => setFieldValue('email', e.target.value)}
-                  handleFocus={() => setValidationError('')}
-                  helpText={[intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })]}
-                />
-                <StatefulButton
-                  type="submit"
-                  variant="brand"
-                  className="login-button-width"
-                  state={submitState}
-                  labels={{
-                    default: intl.formatMessage(messages['forgot.password.page.submit.button']),
-                    pending: '',
-                  }}
-                  onClick={handleSubmit}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-                <Hyperlink
-                  id="forgot-password"
-                  className="ml-4 font-weight-500 text-body"
-                  destination={supportUrl}
-                  onClick={e => {
-                    e.preventDefault();
-                    window.open(supportUrl, '_blank');
-                  }}
-                >{intl.formatMessage(messages['need.help.sign.in.text'])}
-                </Hyperlink>
-                <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
-                  <span><Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
-                </p>
-              </Form>
-            </>
-          )}
-        </Formik>
+              return {};
+            }}
+            onSubmit={(values) => { props.forgotPassword(values.email); }}
+          >
+            {({
+              errors, handleSubmit, setFieldValue, values,
+            }) => (
+              <>
+                <Helmet>
+                  <title>{intl.formatMessage(messages['forgot.password.page.title'],
+                    { siteName: getConfig().SITE_NAME })}
+                  </title>
+                </Helmet>
+                <Form className="mw-xs">
+                  <ForgotPasswordAlert email={props.email} emailError={errors.email} status={status} />
+                  <h4>
+                    {intl.formatMessage(messages['forgot.password.page.heading'])}
+                  </h4>
+                  <p className="mb-4">
+                    {intl.formatMessage(messages['forgot.password.page.instructions'])}
+                  </p>
+                  <FormGroup
+                    floatingLabel={intl.formatMessage(messages['forgot.password.page.email.field.label'])}
+                    name="email"
+                    errorMessage={validationError}
+                    value={values.email}
+                    handleBlur={() => getValidationMessage(values.email)}
+                    handleChange={e => setFieldValue('email', e.target.value)}
+                    handleFocus={() => setValidationError('')}
+                    helpText={[intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })]}
+                  />
+                  <StatefulButton
+                    type="submit"
+                    variant="brand"
+                    className="login-button-width"
+                    state={submitState}
+                    labels={{
+                      default: intl.formatMessage(messages['forgot.password.page.submit.button']),
+                      pending: '',
+                    }}
+                    onClick={handleSubmit}
+                    onMouseDown={(e) => e.preventDefault()}
+                  />
+                  <Hyperlink
+                    id="forgot-password"
+                    className="ml-4 font-weight-500 text-body"
+                    destination={supportUrl}
+                    onClick={e => {
+                      e.preventDefault();
+                      window.open(supportUrl, '_blank');
+                    }}
+                  >{intl.formatMessage(messages['need.help.sign.in.text'])}
+                  </Hyperlink>
+                  <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
+                    <span><Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
+                  </p>
+                </Form>
+              </>
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
+    </BaseComponent>
   );
 };
 

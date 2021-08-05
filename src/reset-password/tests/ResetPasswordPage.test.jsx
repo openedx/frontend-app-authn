@@ -9,7 +9,7 @@ import { createMemoryHistory } from 'history';
 
 import * as auth from '@edx/frontend-platform/auth';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
+import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
 
 import { resetPassword } from '../data/actions';
 import { PASSWORD_RESET, TOKEN_STATE } from '../data/constants';
@@ -36,6 +36,14 @@ describe('ResetPasswordPage', () => {
 
   beforeEach(() => {
     store = mockStore();
+    configure({
+      loggingService: { logError: jest.fn() },
+      config: {
+        ENVIRONMENT: 'production',
+        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
+      },
+      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+    });
     props = {
       resetPassword: jest.fn(),
       status: null,

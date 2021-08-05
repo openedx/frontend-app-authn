@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { AppProvider } from '@edx/frontend-platform/react';
 
-import BaseComponent from './base-component';
 import {
   UnAuthOnlyRoute, registerIcons, NotFoundPage, Logistration,
 } from './common-components';
@@ -21,22 +20,20 @@ registerIcons();
 
 const MainApp = () => (
   <AppProvider store={configureStore()}>
-    <BaseComponent>
-      <Switch>
-        <Route exact path="/">
-          <Redirect to={updatePathWithQueryParams(REGISTER_PAGE)} />
-        </Route>
-        <UnAuthOnlyRoute exact path={LOGIN_PAGE} render={() => <Logistration selectedPage={LOGIN_PAGE} />} />
-        <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />
-        <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
-        <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
-        <Route exact path={WELCOME_PAGE} component={WelcomePage} />
-        <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
-        <Route path="*">
-          <Redirect to={PAGE_NOT_FOUND} />
-        </Route>
-      </Switch>
-    </BaseComponent>
+    <Switch>
+      <Route exact path="/">
+        <Redirect to={updatePathWithQueryParams(REGISTER_PAGE)} />
+      </Route>
+      <UnAuthOnlyRoute exact path={LOGIN_PAGE} render={() => <Logistration selectedPage={LOGIN_PAGE} />} />
+      <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />
+      <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
+      <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
+      <Route exact path={WELCOME_PAGE} component={WelcomePage} />
+      <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
+      <Route path="*">
+        <Redirect to={PAGE_NOT_FOUND} />
+      </Route>
+    </Switch>
   </AppProvider>
 );
 
