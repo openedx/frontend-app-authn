@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router-dom';
-import { AppContext } from '@edx/frontend-platform/react';
-
+import { getConfig } from '@edx/frontend-platform';
+import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 /**
@@ -9,14 +9,26 @@ import { DEFAULT_REDIRECT_URL } from '../data/constants';
  * already authenticated.
  */
 const UnAuthOnlyRoute = (props) => {
-  const { authenticatedUser, config } = React.useContext(AppContext);
+  const [authUser, setAuthUser] = useState({});
+  const [isReady, setIsReady] = useState(false);
 
-  if (authenticatedUser) {
-    global.location.href = config.LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-    return null;
+  useEffect(() => {
+    fetchAuthenticatedUser({ forceRefresh: !!getAuthenticatedUser() }).then((authenticatedUser) => {
+      setAuthUser(authenticatedUser);
+      setIsReady(true);
+    });
+  }, []);
+
+  if (isReady) {
+    if (authUser && authUser.username) {
+      global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+      return null;
+    }
+
+    return <Route {...props} />;
   }
 
-  return <Route {...props} />;
+  return <></>;
 };
 
 export default UnAuthOnlyRoute;
