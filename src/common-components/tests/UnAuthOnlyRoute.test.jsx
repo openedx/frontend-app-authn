@@ -2,10 +2,12 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { BrowserRouter as Router, MemoryRouter, Switch } from 'react-router-dom';
 
-import { getConfig } from '@edx/frontend-platform';
+import * as auth from '@edx/frontend-platform/auth';
 
 import { UnAuthOnlyRoute } from '..';
-import { DEFAULT_REDIRECT_URL, LOGIN_PAGE } from '../../data/constants';
+import { LOGIN_PAGE } from '../../data/constants';
+
+jest.mock('@edx/frontend-platform/auth');
 
 const RRD = require('react-router-dom');
 // Just render plain div with its children
@@ -30,34 +32,29 @@ describe('UnAuthOnlyRoute', () => {
     </MemoryRouter>
   );
 
-  it('should redirect to dashboard if already logged in', () => {
-    const dashboardURL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-    delete window.location;
-    window.location = { href: '' };
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should have called with forceRefresh true', () => {
     const user = {
       username: 'gonzo',
       other: 'data',
     };
-    const mockUseContext = jest.fn().mockImplementation(() => ({
-      authenticatedUser: user,
-      config: getConfig(),
-    }));
+    auth.getAuthenticatedUser = jest.fn(() => user);
+    auth.fetchAuthenticatedUser = jest.fn(() => ({ then: () => auth.getAuthenticatedUser() }));
 
-    React.useContext = mockUseContext;
     mount(routerWrapper());
 
-    expect(window.location.href).toBe(dashboardURL);
+    expect(auth.fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
   });
 
-  it('should render test login components', () => {
-    const mockUseContext = jest.fn().mockImplementation(() => ({
-      authenticatedUser: null,
-      config: {},
-    }));
+  it('should have called with forceRefresh false', () => {
+    auth.getAuthenticatedUser = jest.fn(() => null);
+    auth.fetchAuthenticatedUser = jest.fn(() => ({ then: () => auth.getAuthenticatedUser() }));
 
-    React.useContext = mockUseContext;
-    const wrapper = mount(routerWrapper());
+    mount(routerWrapper());
 
-    expect(wrapper.find('span').text()).toBe('Login Page');
+    expect(auth.fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
   });
 });
