@@ -116,6 +116,11 @@ const messages = defineMessages({
     defaultMessage: 'Username must be between 2 and 30 characters',
     description: 'Error message for empty username field',
   },
+  'name.validation.message': {
+    id: 'name.validation.message',
+    defaultMessage: 'Enter a valid name',
+    description: 'Validation message that appears when fullname contain URL',
+  },
   'password.validation.message': {
     id: 'password.validation.message',
     defaultMessage: 'Password criteria has not been met',
