@@ -334,6 +334,12 @@ describe('RegistrationPage', () => {
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
+    it('should set readOnly state false if focus on country field', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#country').simulate('focus');
+      expect(registrationPage.find('RegistrationPage').state('readOnly')).toEqual(false);
+    });
+
     // ******** test alert messages ********
 
     it('should match third party auth alert', () => {

@@ -24,6 +24,7 @@ const FormGroup = (props) => {
     <Form.Group controlId={props.name} className={props.className} isInvalid={props.errorMessage !== ''}>
       <Form.Control
         as={props.as}
+        readOnly={props.readOnly}
         type={props.type}
         className="form-field"
         autoComplete={props.autoComplete}
@@ -65,6 +66,7 @@ FormGroup.defaultProps = {
   errorMessage: '',
   borderClass: '',
   autoComplete: null,
+  readOnly: false,
   handleBlur: null,
   handleChange: () => {},
   handleFocus: null,
@@ -82,6 +84,7 @@ FormGroup.propTypes = {
   errorMessage: PropTypes.string,
   borderClass: PropTypes.string,
   autoComplete: PropTypes.string,
+  readOnly: PropTypes.bool,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,

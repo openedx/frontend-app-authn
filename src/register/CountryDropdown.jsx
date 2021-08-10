@@ -180,7 +180,8 @@ class CountryDropdown extends React.Component {
         <FormGroup
           as="input"
           name={this.props.name}
-          autoComplete="off"
+          readOnly={this.props.readOnly}
+          autoComplete="chrome-off"
           className="mb-0"
           floatingLabel={this.props.floatingLabel}
           trailingElement={this.state.icon}
@@ -208,6 +209,7 @@ CountryDropdown.defaultProps = {
   value: null,
   errorMessage: null,
   errorCode: null,
+  readOnly: false,
 };
 
 CountryDropdown.propTypes = {
@@ -222,6 +224,7 @@ CountryDropdown.propTypes = {
   errorMessage: PropTypes.string,
   errorCode: PropTypes.string,
   name: PropTypes.string.isRequired,
+  readOnly: PropTypes.bool,
 };
 
 export default onClickOutside(CountryDropdown);
