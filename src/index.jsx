@@ -38,7 +38,7 @@ initialize({
         DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || '',
         INFO_EMAIL: process.env.INFO_EMAIL || '',
         REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME || null,
-        ENABLE_PROGRESSIVE_PROFILING: process.env.ENABLE_PROGRESSIVE_PROFILING || false,
+        ENABLE_PROGRESSIVE_PROFILING: true,
       });
     },
   },

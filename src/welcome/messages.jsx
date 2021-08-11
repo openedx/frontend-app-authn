@@ -31,6 +31,26 @@ const messages = defineMessages({
     defaultMessage: 'Other/Prefer not to say',
     description: 'The label for catch-all gender option.',
   },
+  'reason.options.label': {
+    id: 'reason.options.label',
+    defaultMessage: 'Purpose (optional)',
+    description: 'Placeholder for the reasons options dropdown',
+  },
+  'reason.options.job': {
+    id: 'reason.options.job',
+    defaultMessage: 'Finding a job',
+    description: 'edX grants unlimited opportunities to expand and grow one\' career',
+  },
+  'reason.options.learn': {
+    id: 'reason.options.learn',
+    defaultMessage: 'Learning tons of shit',
+    description: 'edX ever increasing catalog of a wide array of courses allows one to explore new ares of knowledge and challenge their perception of the world.',
+  },
+  'reason.options.boss': {
+    id: 'reason.options.boss',
+    defaultMessage: 'My boss made me',
+    description: 'edX allows businesses and institutions to empower their employees on a mass scale, offering opportunities to learn to countless learners.',
+  },
   'education.levels.label': {
     id: 'education.levels.label',
     defaultMessage: 'Highest level of education completed (optional)',

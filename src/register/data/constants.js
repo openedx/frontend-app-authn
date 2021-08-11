@@ -29,6 +29,8 @@ export const EDUCATION_LEVELS = [
   'other',
 ];
 
+export const REGISTRATION_REASONS = ['', 'job', 'learn', 'boss'];
+
 export const GENDER_OPTIONS = ['', 'f', 'm', 'o'];
 
 // Other constants

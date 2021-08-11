@@ -30,7 +30,7 @@ import messages from './messages';
 
 import { RedirectLogistration } from '../common-components';
 import { DEFAULT_REDIRECT_URL, DEFAULT_STATE } from '../data/constants';
-import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from '../register/data/constants';
+import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS, REGISTRATION_REASONS } from '../register/data/constants';
 import WelcomePageModal from './WelcomePageModal';
 import BaseComponent from '../base-component';
 
@@ -39,7 +39,8 @@ const WelcomePage = (props) => {
 
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
-  const [values, setValues] = useState({ levelOfEducation: '', yearOfBirth: '', gender: '' });
+  const [values, setValues] = useState({ levelOfEducation: '', yearOfBirth: '', gender: '', reason: '' });
+  const [openCareerDialog, setOpenCareerDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
@@ -83,12 +84,19 @@ const WelcomePage = (props) => {
           {intl.formatMessage(messages[`gender.options.${key || 'label'}`])}
         </option>
       )),
+      reason: REGISTRATION_REASONS.map(key => (
+        <option className="data-hj-suppress" key={key} value={key}>
+          {intl.formatMessage(messages[`reason.options.${key || 'label'}`])}
+        </option>
+      )),
     };
 
     return options[fieldName];
   };
 
   const handleSubmit = (e) => {
+    // console.log("HAHAHAHAHAHA");
+    console.log(values.reason);
     e.preventDefault();
     const payload = {};
     const authenticatedUser = getAuthenticatedUser();
@@ -147,6 +155,8 @@ const WelcomePage = (props) => {
             </Alert>
           ) : null}
           <Form>
+
+
             <Form.Group controlId="levelOfEducation">
               <Form.Control
                 as="select"
@@ -159,6 +169,9 @@ const WelcomePage = (props) => {
                 {getOptions('levelOfEducation')}
               </Form.Control>
             </Form.Group>
+
+
+
             <Form.Group controlId="yearOfBirth">
               <Form.Control
                 as="select"
@@ -172,6 +185,9 @@ const WelcomePage = (props) => {
                 {getOptions('yearOfBirth')}
               </Form.Control>
             </Form.Group>
+
+
+
             <Form.Group controlId="gender" className="mb-3">
               <Form.Control
                 as="select"
@@ -184,6 +200,22 @@ const WelcomePage = (props) => {
                 {getOptions('gender')}
               </Form.Control>
             </Form.Group>
+
+
+            <Form.Group controlId="purposeOfAccountCreation" className="mb-3">
+              <Form.Control
+                as="select"
+                name="reason"
+                value={values.reason}
+                onChange={(e) => onChangeHandler(e)}
+                trailingElement={<Icon src={ExpandMore} />}
+                floatingLabel={intl.formatMessage(messages['reason.options.label'])}
+              >
+                {getOptions('reason')}
+              </Form.Control>
+            </Form.Group>
+
+
             <span className="progressive-profiling-support">
               <Hyperlink
                 isInline
