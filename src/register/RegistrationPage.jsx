@@ -78,6 +78,7 @@ class RegistrationPage extends React.Component {
       startTime: Date.now(),
       totalRegistrationTime: 0,
       optimizelyExperimentName: '', // eslint-disable-line react/no-unused-state
+      readOnly: true,
     };
   }
 
@@ -263,6 +264,9 @@ class RegistrationPage extends React.Component {
     const state = { errors };
     if (e.target.name === 'username') {
       this.props.clearUsernameSuggestions();
+    }
+    if (e.target.name === 'country') {
+      state.readOnly = false;
     }
     if (e.target.name === 'passwordValidation') {
       state.errors.password = '';
@@ -595,6 +599,7 @@ class RegistrationPage extends React.Component {
               errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
               handleChange={(value) => this.setState({ country: value })}
               errorCode={this.state.errorCode}
+              readOnly={this.state.readOnly}
             />
             <div id="honor-code" className="micro text-muted mt-4">
               <FormattedMessage
