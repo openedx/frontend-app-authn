@@ -207,15 +207,16 @@ describe('RegistrationPage', () => {
 
     it('should update errors for frontend validations', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#name').simulate('blur', { target: { value: 'http://test.com', name: 'name' } });
 
       registrationPage.find('input#password').simulate('blur', { target: { value: 'pas', name: 'password' } });
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual({
-        email: '', name: '', username: '', password: 'Password criteria has not been met', country: '',
+        email: '', name: 'Enter a valid name', username: '', password: 'Password criteria has not been met', country: '',
       });
 
       registrationPage.find('input#password').simulate('blur', { target: { value: 'invalid-email', name: 'email' } });
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual({
-        email: 'Enter a valid email address', name: '', username: '', password: 'Password criteria has not been met', country: '',
+        email: 'Enter a valid email address', name: 'Enter a valid name', username: '', password: 'Password criteria has not been met', country: '',
       });
     });
 

@@ -38,7 +38,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX,
+  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX, VALID_NAME_REGEX,
 } from '../data/constants';
 import {
   getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie, setCookie,
@@ -305,6 +305,7 @@ class RegistrationPage extends React.Component {
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
+    const urlRegex = new RegExp(VALID_NAME_REGEX);
 
     switch (fieldName) {
       case 'email':
@@ -363,6 +364,8 @@ class RegistrationPage extends React.Component {
       case 'name':
         if (!value) {
           errors.name = intl.formatMessage(messages['empty.name.field.error']);
+        } else if (value && value.match(urlRegex)) {
+          errors.name = intl.formatMessage(messages['name.validation.message']);
         } else {
           errors.name = '';
         }
