@@ -11,7 +11,7 @@ import {
 import messages from './messages';
 
 const AuthMediumLayout = (props) => {
-  const { intl, username } = props;
+  const { intl, username, toggleWelcomeText } = props;
 
   return (
     <div className="container row p-0 mb-3 medium-container">
@@ -33,13 +33,15 @@ const AuthMediumLayout = (props) => {
                     messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username },
                   )}
                 </h3>
-                <div className="display-1 text-primary">
-                  {intl.formatMessage(messages['complete.your.profile.1'])}
-                  <span className="text-accent-a">
-                    <br />
-                    {intl.formatMessage(messages['complete.your.profile.2'])}
-                  </span>
-                </div>
+                { !toggleWelcomeText ? (
+                  <div className="display-1 text-primary">
+                    {intl.formatMessage(messages['complete.your.profile.1'])}
+                    <span className="text-accent-a">
+                      <br />
+                      {intl.formatMessage(messages['complete.your.profile.2'])}
+                    </span>
+                  </div>
+                ) : null}
               </Col>
             </Row>
           </div>
@@ -61,9 +63,15 @@ const AuthMediumLayout = (props) => {
   );
 };
 
+AuthMediumLayout.defaultProps = {
+  toggleWelcomeText: false,
+};
+
+
 AuthMediumLayout.propTypes = {
   intl: intlShape.isRequired,
   username: PropTypes.string.isRequired,
+  toggleWelcomeText: PropTypes.bool,
 };
 
 export default injectIntl(AuthMediumLayout);

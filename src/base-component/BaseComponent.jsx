@@ -17,7 +17,7 @@ import AuthExtraLargeLayout from './AuthExtraLargeLayout';
 import AuthMediumLayout from './AuthMediumLayout';
 import AuthSmallLayout from './AuthSmallLayout';
 
-const BaseComponent = ({ children }) => {
+const BaseComponent = ({ children, toggleWelcomeText }) => {
   const authenticatedUser = getAuthenticatedUser();
 
   return (
@@ -33,25 +33,25 @@ const BaseComponent = ({ children }) => {
       <div className={classNames('layout', { authenticated: authenticatedUser })}>
         <ExtraSmall>
           <div className="col-md-12 small-screen-top-stripe" />
-          {authenticatedUser ? <AuthSmallLayout variant="xs" username={authenticatedUser.username} /> : <SmallLayout />}
+          {authenticatedUser ? <AuthSmallLayout toggleWelcomeText={toggleWelcomeText} variant="xs" username={authenticatedUser.username} /> : <SmallLayout />}
         </ExtraSmall>
         <Small>
           <div className="col-md-12 small-screen-top-stripe" />
-          {authenticatedUser ? <AuthSmallLayout username={authenticatedUser.username} /> : <SmallLayout />}
+          {authenticatedUser ? <AuthSmallLayout toggleWelcomeText={toggleWelcomeText} username={authenticatedUser.username} /> : <SmallLayout />}
         </Small>
         <Medium>
           <div className="w-100 medium-screen-top-stripe" />
-          {authenticatedUser ? <AuthMediumLayout username={authenticatedUser.username} /> : <MediumLayout />}
+          {authenticatedUser ? <AuthMediumLayout toggleWelcomeText={toggleWelcomeText} username={authenticatedUser.username} /> : <MediumLayout />}
         </Medium>
         <Large>
           <div className="w-100 large-screen-top-stripe" />
-          {authenticatedUser ? <AuthMediumLayout username={authenticatedUser.username} /> : <MediumLayout />}
+          {authenticatedUser ? <AuthMediumLayout toggleWelcomeText={toggleWelcomeText} username={authenticatedUser.username} /> : <MediumLayout />}
         </Large>
         <ExtraLarge>
-          {authenticatedUser ? <AuthExtraLargeLayout username={authenticatedUser.username} /> : <LargeLayout />}
+          {authenticatedUser ? <AuthExtraLargeLayout toggleWelcomeText={toggleWelcomeText} username={authenticatedUser.username} /> : <LargeLayout />}
         </ExtraLarge>
         <ExtraExtraLarge>
-          {authenticatedUser ? <AuthExtraLargeLayout variant="xxl" username={authenticatedUser.username} /> : <LargeLayout />}
+          {authenticatedUser ? <AuthExtraLargeLayout toggleWelcomeText={toggleWelcomeText} variant="xxl" username={authenticatedUser.username} /> : <LargeLayout />}
         </ExtraExtraLarge>
 
         <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
@@ -64,6 +64,11 @@ const BaseComponent = ({ children }) => {
 
 BaseComponent.propTypes = {
   children: PropTypes.node.isRequired,
+  toggleWelcomeText: PropTypes.bool,
 };
+
+BaseComponent.defaultProps = {
+  toggleWelcomeText: false,
+}
 
 export default BaseComponent;

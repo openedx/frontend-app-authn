@@ -12,7 +12,7 @@ import {
 import messages from './messages';
 
 const AuthSmallLayout = (props) => {
-  const { intl, username, variant } = props;
+  const { intl, username, variant, toggleWelcomeText } = props;
 
   return (
     <div className="small-screen-header-light">
@@ -40,13 +40,15 @@ const AuthSmallLayout = (props) => {
                   messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username },
                 )}
               </h5>
-              <h1>
-                {intl.formatMessage(messages['complete.your.profile.1'])}
-                <br />
-                <span className="text-accent-a">
-                  {intl.formatMessage(messages['complete.your.profile.2'])}
-                </span>
-              </h1>
+              { !toggleWelcomeText ? (
+                <h1>
+                  {intl.formatMessage(messages['complete.your.profile.1'])}
+                  <br />
+                  <span className="text-accent-a">
+                    {intl.formatMessage(messages['complete.your.profile.2'])}
+                  </span>
+                </h1>
+              ) : null}
             </Col>
           </Row>
         </div>
@@ -57,12 +59,14 @@ const AuthSmallLayout = (props) => {
 
 AuthSmallLayout.defaultProps = {
   variant: 'sm',
+  toggleWelcomeText: false,
 };
 
 AuthSmallLayout.propTypes = {
   intl: intlShape.isRequired,
   username: PropTypes.string.isRequired,
   variant: PropTypes.oneOf(['sm', 'xs']),
+  toggleWelcomeText: PropTypes.bool,
 };
 
 export default injectIntl(AuthSmallLayout);

@@ -12,7 +12,7 @@ import {
 import messages from './messages';
 
 const AuthExtraLargeLayout = (props) => {
-  const { intl, username, variant } = props;
+  const { intl, username, variant, toggleWelcomeText } = props;
 
   return (
     <div className="container row p-0 m-0 large-screen-container">
@@ -48,21 +48,23 @@ const AuthExtraLargeLayout = (props) => {
                     messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username },
                   )}
                 </div>
-                <div
-                  className={classNames(
-                    'text-primary',
-                    {
-                      'display-1': variant === 'xl',
-                      'display-2': variant === 'xxl',
-                    },
-                  )}
-                >
-                  {intl.formatMessage(messages['complete.your.profile.1'])}
-                  <span className="text-accent-a">
-                    <br />
-                    {intl.formatMessage(messages['complete.your.profile.2'])}
-                  </span>
-                </div>
+                { !toggleWelcomeText ? (
+                  <div
+                    className={classNames(
+                      'text-primary',
+                      {
+                        'display-1': variant === 'xl',
+                        'display-2': variant === 'xxl',
+                      },
+                    )}
+                  >
+                    {intl.formatMessage(messages['complete.your.profile.1'])}
+                    <span className="text-accent-a">
+                      <br />
+                      {intl.formatMessage(messages['complete.your.profile.2'])}
+                    </span>
+                  </div>
+                ) : null}
               </Col>
             </Row>
           </div>
@@ -86,12 +88,14 @@ const AuthExtraLargeLayout = (props) => {
 
 AuthExtraLargeLayout.defaultProps = {
   variant: 'xl',
+  toggleWelcomeText: false,
 };
 
 AuthExtraLargeLayout.propTypes = {
   intl: intlShape.isRequired,
   username: PropTypes.string.isRequired,
   variant: PropTypes.oneOf(['xl', 'xxl']),
+  toggleWelcomeText: PropTypes.bool,
 };
 
 export default injectIntl(AuthExtraLargeLayout);

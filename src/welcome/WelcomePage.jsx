@@ -32,6 +32,7 @@ import { RedirectLogistration } from '../common-components';
 import { DEFAULT_REDIRECT_URL, DEFAULT_STATE } from '../data/constants';
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS, REGISTRATION_REASONS } from '../register/data/constants';
 import WelcomePageModal from './WelcomePageModal';
+import PartnerWelcome from './PartnerWelcome';
 import BaseComponent from '../base-component';
 
 const WelcomePage = (props) => {
@@ -95,8 +96,6 @@ const WelcomePage = (props) => {
   };
 
   const handleSubmit = (e) => {
-    // console.log("HAHAHAHAHAHA");
-    console.log(values.reason);
     e.preventDefault();
     const payload = {};
     const authenticatedUser = getAuthenticatedUser();
@@ -107,11 +106,19 @@ const WelcomePage = (props) => {
       }
     });
 
-    props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
-    window.optimizely.push({
-      type: 'event',
-      eventName: 'authn_welcome_page_submit_btn_clicked',
-    });
+    if (!openCareerDialog) {
+      if (values.reason === 'job') {
+        setOpenCareerDialog(true);
+      } else {
+        props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
+        window.optimizely.push({
+          type: 'event',
+          eventName: 'authn_welcome_page_submit_btn_clicked',
+        });
+      }
+    } else {
+      props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
+    }
   };
 
   const handleSkip = (e) => {
@@ -130,7 +137,7 @@ const WelcomePage = (props) => {
 
   return (
     <>
-      <BaseComponent>
+      <BaseComponent toggleWelcomeText={openCareerDialog}>
         <Helmet>
           <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
             { siteName: getConfig().SITE_NAME })}
@@ -145,7 +152,13 @@ const WelcomePage = (props) => {
         ) : null}
         <div className="mw-xs welcome-page-content">
           <div className="welcome-page-heading">
-            <h2 className="h3 text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
+            { !openCareerDialog ? (
+              <h2 className="h3 text-primary">
+                {intl.formatMessage(messages['progressive.profiling.page.heading'])}
+              </h2>
+            ) : (
+              <h2 className="h3 text-primary">Advance your career by signing up with one of our partners. </h2>
+            ) }
           </div>
           <hr className="border-light-700 mb-4" />
           {showError ? (
@@ -154,104 +167,94 @@ const WelcomePage = (props) => {
               <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
             </Alert>
           ) : null}
-          <Form>
-
-
-            <Form.Group controlId="levelOfEducation">
-              <Form.Control
-                as="select"
-                name="levelOfEducation"
-                value={values.levelOfEducation}
-                onChange={(e) => onChangeHandler(e)}
-                trailingElement={<Icon src={ExpandMore} />}
-                floatingLabel={intl.formatMessage(messages['education.levels.label'])}
-              >
-                {getOptions('levelOfEducation')}
-              </Form.Control>
-            </Form.Group>
-
-
-
-            <Form.Group controlId="yearOfBirth">
-              <Form.Control
-                as="select"
-                name="yearOfBirth"
-                value={values.yearOfBirth}
-                onChange={(e) => onChangeHandler(e)}
-                trailingElement={<Icon src={ExpandMore} />}
-                floatingLabel={intl.formatMessage(messages['year.of.birth.label'])}
-              >
-                <option value="">{intl.formatMessage(messages['year.of.birth.label'])}</option>
-                {getOptions('yearOfBirth')}
-              </Form.Control>
-            </Form.Group>
-
-
-
-            <Form.Group controlId="gender" className="mb-3">
-              <Form.Control
-                as="select"
-                name="gender"
-                value={values.gender}
-                onChange={(e) => onChangeHandler(e)}
-                trailingElement={<Icon src={ExpandMore} />}
-                floatingLabel={intl.formatMessage(messages['gender.options.label'])}
-              >
-                {getOptions('gender')}
-              </Form.Control>
-            </Form.Group>
-
-
-            <Form.Group controlId="purposeOfAccountCreation" className="mb-3">
-              <Form.Control
-                as="select"
-                name="reason"
-                value={values.reason}
-                onChange={(e) => onChangeHandler(e)}
-                trailingElement={<Icon src={ExpandMore} />}
-                floatingLabel={intl.formatMessage(messages['reason.options.label'])}
-              >
-                {getOptions('reason')}
-              </Form.Control>
-            </Form.Group>
-
-
-            <span className="progressive-profiling-support">
-              <Hyperlink
-                isInline
-                variant="muted"
-                destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
-                target="_blank"
-                showLaunchIcon={false}
-              >
-                {intl.formatMessage(messages['optional.fields.information.link'])}
-              </Hyperlink>
-            </span>
-            <div className="d-flex mt-4">
-              <StatefulButton
-                type="submit"
-                variant="brand"
-                className="login-button-width"
-                state={submitState}
-                labels={{
-                  default: intl.formatMessage(messages['optional.fields.submit.button']),
-                  pending: '',
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-              <StatefulButton
-                className="text-gray-700 font-weight-500"
-                type="submit"
-                variant="link"
-                labels={{
-                  default: intl.formatMessage(messages['optional.fields.skip.button']),
-                }}
-                onClick={handleSkip}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-            </div>
-          </Form>
+          { !openCareerDialog ? (
+            <Form>
+              <Form.Group controlId="levelOfEducation">
+                <Form.Control
+                  as="select"
+                  name="levelOfEducation"
+                  value={values.levelOfEducation}
+                  onChange={(e) => onChangeHandler(e)}
+                  trailingElement={<Icon src={ExpandMore}/>}
+                  floatingLabel={intl.formatMessage(messages['education.levels.label'])}
+                >
+                  {getOptions('levelOfEducation')}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="yearOfBirth">
+                <Form.Control
+                  as="select"
+                  name="yearOfBirth"
+                  value={values.yearOfBirth}
+                  onChange={(e) => onChangeHandler(e)}
+                  trailingElement={<Icon src={ExpandMore}/>}
+                  floatingLabel={intl.formatMessage(messages['year.of.birth.label'])}
+                >
+                  <option value="">{intl.formatMessage(messages['year.of.birth.label'])}</option>
+                  {getOptions('yearOfBirth')}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="gender" className="mb-3">
+                <Form.Control
+                  as="select"
+                  name="gender"
+                  value={values.gender}
+                  onChange={(e) => onChangeHandler(e)}
+                  trailingElement={<Icon src={ExpandMore}/>}
+                  floatingLabel={intl.formatMessage(messages['gender.options.label'])}
+                >
+                  {getOptions('gender')}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="purposeOfAccountCreation" className="mb-3">
+                <Form.Control
+                  as="select"
+                  name="reason"
+                  value={values.reason}
+                  onChange={(e) => onChangeHandler(e)}
+                  trailingElement={<Icon src={ExpandMore}/>}
+                  floatingLabel={intl.formatMessage(messages['reason.options.label'])}
+                >
+                  {getOptions('reason')}
+                </Form.Control>
+              </Form.Group>
+              <span className="progressive-profiling-support">
+                <Hyperlink
+                  isInline
+                  variant="muted"
+                  destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
+                  target="_blank"
+                  showLaunchIcon={false}
+                >
+                  {intl.formatMessage(messages['optional.fields.information.link'])}
+                </Hyperlink>
+              </span>
+              <div className="d-flex mt-4">
+                <StatefulButton
+                  type="submit"
+                  variant="brand"
+                  className="login-button-width"
+                  state={submitState}
+                  labels={{
+                    default: intl.formatMessage(messages['optional.fields.submit.button']),
+                    pending: '',
+                  }}
+                  onClick={handleSubmit}
+                  onMouseDown={(e) => e.preventDefault()}
+                />
+                <StatefulButton
+                  className="text-gray-700 font-weight-500"
+                  type="submit"
+                  variant="link"
+                  labels={{
+                    default: intl.formatMessage(messages['optional.fields.skip.button']),
+                  }}
+                  onClick={handleSkip}
+                  onMouseDown={(e) => e.preventDefault()}
+                />
+              </div>
+            </Form>
+          ) : <PartnerWelcome onComplete={handleSubmit} /> }
         </div>
       </BaseComponent>
     </>
