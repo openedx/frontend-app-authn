@@ -17,8 +17,8 @@ import AuthExtraLargeLayout from './AuthExtraLargeLayout';
 import AuthMediumLayout from './AuthMediumLayout';
 import AuthSmallLayout from './AuthSmallLayout';
 
-const BaseComponent = ({ children }) => {
-  const authenticatedUser = getAuthenticatedUser();
+const BaseComponent = ({ children, showWelcomeBanner }) => {
+  const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;
 
   return (
     <>
@@ -62,8 +62,13 @@ const BaseComponent = ({ children }) => {
   );
 };
 
+BaseComponent.defaultProps = {
+  showWelcomeBanner: false,
+};
+
 BaseComponent.propTypes = {
   children: PropTypes.node.isRequired,
+  showWelcomeBanner: PropTypes.bool,
 };
 
 export default BaseComponent;
