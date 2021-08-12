@@ -122,7 +122,7 @@ const WelcomePage = (props) => {
 
   return (
     <>
-      <BaseComponent>
+      <BaseComponent showWelcomeBanner>
         <Helmet>
           <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
             { siteName: getConfig().SITE_NAME })}
