@@ -123,6 +123,7 @@
   "email.invalid.format.error": "Introduce una dirección de correo electrónico válida",
   "email.ratelimit.less.chars.validation.message": "El correo electrónico debe tener 3 caracteres.",
   "username.validation.message": "El nombre de usuario debe tener entre 2 y 30 caracteres",
+  "name.validation.message": "Enter a valid name",
   "username.format.validation.message": "Los nombres de usuario únicamente pueden contener las letras (A-Z, a-z), números (0-9), guión bajo (_) y guiones (-).",
   "support.education.research": "Apoya la investigación sobre educación proporcionando información adicional. (Opcional)",
   "registration.request.failure.header": "No pudimos crear tu cuenta.",

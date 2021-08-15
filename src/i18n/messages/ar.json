@@ -123,6 +123,7 @@
   "email.invalid.format.error": "Enter a valid email address",
   "email.ratelimit.less.chars.validation.message": "Email must have 3 characters.",
   "username.validation.message": "Username must be between 2 and 30 characters",
+  "name.validation.message": "Enter a valid name",
   "username.format.validation.message": "Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-).",
   "support.education.research": "Support education research by providing additional information. (Optional)",
   "registration.request.failure.header": "We couldn't create your account.",
