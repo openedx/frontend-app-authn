@@ -47,6 +47,17 @@ describe('WelcomePageTests', () => {
     </IntlProvider>
   );
 
+  const getWelcomePage = async () => {
+    const welcomePage = mount(reduxWrapper(<IntlWelcomePage {...props} />));
+    await act(async () => {
+      await Promise.resolve(welcomePage);
+      await new Promise(resolve => setImmediate(resolve));
+      welcomePage.update();
+    });
+
+    return welcomePage;
+  };
+
   beforeEach(() => {
     store = mockStore({});
     auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
@@ -68,12 +79,7 @@ describe('WelcomePageTests', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    const welcomePage = mount(reduxWrapper(<IntlWelcomePage {...props} />));
-    await act(async () => {
-      await Promise.resolve(welcomePage);
-      await new Promise(resolve => setImmediate(resolve));
-      welcomePage.update();
-    });
+    const welcomePage = await getWelcomePage();
 
     welcomePage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
     welcomePage.find('select#yearOfBirth').simulate('change', { target: { value: 1997, name: 'yearOfBirth' } });
@@ -81,18 +87,28 @@ describe('WelcomePageTests', () => {
 
     welcomePage.find('button.btn-brand').simulate('click');
     expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('edX', formPayload));
+
+    const customProps = {
+      isGenderSelected: true,
+      isYearOfBirthSelected: true,
+      isLevelOfEducationSelected: true,
+    };
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', customProps);
   });
 
   it('should open modal on pressing skip for now button', async () => {
-    const welcomePage = mount(reduxWrapper(<IntlWelcomePage {...props} />));
-    await act(async () => {
-      await Promise.resolve(welcomePage);
-      await new Promise(resolve => setImmediate(resolve));
-      welcomePage.update();
-    });
+    const welcomePage = await getWelcomePage();
 
     welcomePage.find('button.btn-link').simulate('click');
     expect(welcomePage.find('.pgn__modal-content-container').exists()).toBeTruthy();
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked');
+  });
+
+  it('should send analytic event for support link click', async () => {
+    const welcomePage = await getWelcomePage();
+
+    welcomePage.find('.progressive-profiling-support a[target="_blank"]').simulate('click');
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
   });
 
   it('should show error message when patch request fails', async () => {
@@ -101,12 +117,7 @@ describe('WelcomePageTests', () => {
         showError: true,
       },
     });
-    const welcomePage = mount(reduxWrapper(<IntlWelcomePage {...props} />));
-    await act(async () => {
-      await Promise.resolve(welcomePage);
-      await new Promise(resolve => setImmediate(resolve));
-      welcomePage.update();
-    });
+    const welcomePage = await getWelcomePage();
     expect(welcomePage.find('#welcome-page-errors').exists()).toBeTruthy();
   });
 });

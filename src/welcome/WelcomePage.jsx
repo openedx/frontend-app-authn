@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   configure as configureAuth,
   AxiosJwtAuthService,
@@ -100,6 +100,16 @@ const WelcomePage = (props) => {
     });
 
     props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
+
+    sendTrackEvent(
+      'edx.bi.welcome.page.submit.clicked',
+      {
+        isGenderSelected: !!payload.gender,
+        isYearOfBirthSelected: !!payload.yearOfBirth,
+        isLevelOfEducationSelected: !!payload.levelOfEducation,
+      },
+    );
+
     window.optimizely.push({
       type: 'event',
       eventName: 'authn_welcome_page_submit_btn_clicked',
@@ -109,6 +119,7 @@ const WelcomePage = (props) => {
   const handleSkip = (e) => {
     e.preventDefault();
     setOpenDialog(true);
+    sendTrackEvent('edx.bi.welcome.page.skip.link.clicked');
 
     window.optimizely.push({
       type: 'event',
@@ -191,6 +202,7 @@ const WelcomePage = (props) => {
                 destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
                 target="_blank"
                 showLaunchIcon={false}
+                onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
               >
                 {intl.formatMessage(messages['optional.fields.information.link'])}
               </Hyperlink>
