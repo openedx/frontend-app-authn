@@ -118,7 +118,7 @@ const LoginFailureMessage = (props) => {
     }
     case INCORRECT_EMAIL_PASSWORD:
       if (context.failureCount <= 1) {
-        errorList = intl.formatMessage(messages['login.incorrect.credentials.error']);
+        errorList = <p>{intl.formatMessage(messages['login.incorrect.credentials.error'])}</p>;
       } else if (context.failureCount === 2) {
         errorList = (
           <p>
