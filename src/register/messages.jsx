@@ -270,6 +270,11 @@ const messages = defineMessages({
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
   },
+  'certificate.msg': {
+    id: 'certificate.msg',
+    defaultMessage: '*Offer not eligible for GTx’s Analytics: Essential Tools and Methods MicroMasters Program, ColumbiaX’s Corporate Finance Professional Certificate Program, or courses or programs offered by Wharton, and NYIF.',
+    description: 'Text for the 15% discount experiment',
+  },
 });
 
 export default messages;

@@ -52,7 +52,7 @@ const Logistration = (props) => {
   );
 
   return (
-    <BaseComponent>
+    <BaseComponent isRegistrationPage={selectedPage === REGISTER_PAGE}>
       <div>
         {institutionLogin
           ? (

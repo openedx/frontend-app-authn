@@ -1,17 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { Hyperlink, Image } from '@edx/paragon';
 
 import LargeScreenLeftLayout from './LargeLeftLayout';
 
-const LargeLayout = () => (
+const LargeLayout = ({ experimentName, isRegistrationPage }) => (
   <div className="container row p-0 m-0 large-screen-container">
     <div className="col-md-9 p-0 screen-header-primary">
       <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
         <Image alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
       </Hyperlink>
-      <LargeScreenLeftLayout />
+      <LargeScreenLeftLayout experimentName={experimentName} isRegistrationPage={isRegistrationPage} />
     </div>
     <div className="col-md-3 p-0 screen-polygon">
       <svg
@@ -27,5 +28,15 @@ const LargeLayout = () => (
     </div>
   </div>
 );
+
+LargeLayout.defaultProps = {
+  experimentName: '',
+  isRegistrationPage: false,
+};
+
+LargeLayout.propTypes = {
+  experimentName: PropTypes.string,
+  isRegistrationPage: PropTypes.bool,
+};
 
 export default LargeLayout;
