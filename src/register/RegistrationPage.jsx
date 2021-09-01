@@ -657,6 +657,13 @@ class RegistrationPage extends React.Component {
               thirdPartyAuthApiStatus,
               intl)}
           </Form>
+          {(this.state.optimizelyExperimentName === 'variation1' || this.state.optimizelyExperimentName === 'variation2')
+            ? (
+              <div id="certificate-msg" className="mt-4 micro text-gray-500">
+                {intl.formatMessage(messages['certificate.msg'])}
+              </div>
+            )
+            : null}
         </div>
       </>
     );
