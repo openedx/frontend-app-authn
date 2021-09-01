@@ -97,6 +97,7 @@ class RegistrationPage extends React.Component {
     }
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
+    this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -153,11 +154,11 @@ class RegistrationPage extends React.Component {
   }
 
   getExperiments = () => {
-    const { optimizelyExperimentName } = window;
+    const { experimentName } = window;
 
-    if (optimizelyExperimentName) {
+    if (experimentName) {
       // eslint-disable-next-line react/no-unused-state
-      this.setState({ optimizelyExperimentName });
+      this.setState({ optimizelyExperimentName: experimentName });
     }
   };
 
@@ -659,7 +660,7 @@ class RegistrationPage extends React.Component {
           </Form>
           {(this.state.optimizelyExperimentName === 'variation1' || this.state.optimizelyExperimentName === 'variation2')
             ? (
-              <div id="certificate-msg" className="mt-4 micro text-gray-500">
+              <div id="certificate-msg" className="mt-4 mb-3 micro text-gray-500">
                 {intl.formatMessage(messages['certificate.msg'])}
               </div>
             )
