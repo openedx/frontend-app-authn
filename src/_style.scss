@@ -513,6 +513,21 @@ select.form-control {
   width: 4em;
   height: 72px;
 }
+.dicount-heading{
+  margin-left: 7px;
+}
+
+.hover-text:hover {
+  color: $black !important;
+
+  .hover-icon {
+    color: $black !important;
+  }
+}
+
+.hover-discount-icon:hover {
+  color: $white !important;
+}
 
 .large-heading {
   margin-left: 7px;
@@ -689,7 +704,7 @@ select.form-control {
 .dashed-border {
   border-style: dashed;
   border-width: thin;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 
 @media (min-width: 1024px) {
