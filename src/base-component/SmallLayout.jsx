@@ -13,6 +13,7 @@ import ClipboardJS from 'clipboard';
 import { faCut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import messages from './messages';
+import SideDiscountBanner from './SideDiscountBanner';
 
 const SmallLayout = (props) => {
   const { intl, isRegistrationPage, experimentName } = props;
@@ -46,7 +47,7 @@ const SmallLayout = (props) => {
             </h1>
             {(experimentName === 'variation1' && isRegistrationPage) ? (
               <div className="small text-light-300 pl-2">
-                <span className="mr-1.5">Get <span className="text-accent-a h3">15% off</span> your first verified <br />certificate* with code</span>
+                <SideDiscountBanner />
                 <span className="dashed-border h6 text-white d-inline-flex flex-wrap align-items-center">
                   <span id="edx-welcome" className="edx-welcome mr-1">EDXWELCOME</span>
                   <FontAwesomeIcon

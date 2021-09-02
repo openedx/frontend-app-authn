@@ -11,6 +11,15 @@ import { PageBanner } from '@edx/paragon';
 export default function DiscountExperimentBanner() {
   const [show, setShow] = useState(true);
   new ClipboardJS('.copyIcon'); // eslint-disable-line no-new
+  const getDiscountText = () => (
+    <strong>
+      15% <FormattedMessage
+        id="top.discount.message.15.off"
+        defaultMessage="off"
+        description="Text used with discounts e.g. 15% off"
+      />
+    </strong>
+  );
 
   return (
     <>
@@ -22,11 +31,11 @@ export default function DiscountExperimentBanner() {
         <span className="text-primary-700 small variation2-text-alignment">
           <span className="mr-1">
             <FormattedMessage
-              id="discount.message.body"
+              id="top.discount.message.body"
               defaultMessage="Get {discount} your first verified certificate* with code"
               description="Message body for edX discount"
               values={{
-                discount: <strong> 15% off </strong>,
+                discount: getDiscountText(),
               }}
             />
           </span>
