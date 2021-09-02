@@ -11,6 +11,7 @@ import { faCut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import messages from './messages';
+import SideDiscountBanner from './SideDiscountBanner';
 
 const LargeLeftLayout = (props) => {
   const { intl, isRegistrationPage, experimentName } = props;
@@ -40,7 +41,9 @@ const LargeLeftLayout = (props) => {
         </h1>
         {experimentName === 'variation1' && isRegistrationPage ? (
           <span className="text-light-300">
-            <span className="lead mr-2.5">Get <span className="text-accent-a h2">15% off</span> your first verified <br /> certificate* with code</span>
+            <span className="lead mr-2.5">
+              <SideDiscountBanner />
+            </span>
             <span className="dashed-border d-inline-flex flex-wrap align-items-center">
               <span id="edx-welcome" className="text-white edx-welcome font-weight-bold mr-1">EDXWELCOME</span>
               <FontAwesomeIcon
