@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import classNames from 'classnames';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
-import { Hyperlink, Image } from '@edx/paragon';
+import { Hyperlink, Image, Toast } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import ClipboardJS from 'clipboard';
@@ -16,6 +16,7 @@ import SideDiscountBanner from './SideDiscountBanner';
 
 const MediumLayout = (props) => {
   const { intl, isRegistrationPage, experimentName } = props;
+  const [showToast, setToastShow] = useState(false);
   new ClipboardJS('.copyIcon'); // eslint-disable-line no-new
 
   return (
@@ -26,6 +27,12 @@ const MediumLayout = (props) => {
       },
     )}
     >
+      <Toast
+        onClose={() => setToastShow(false)}
+        show={showToast}
+      >
+        {intl.formatMessage(messages['code.copied'])}
+      </Toast>
       <div className="col-md-10 p-0 screen-header-primary">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
@@ -57,10 +64,11 @@ const MediumLayout = (props) => {
                 <span className="dashed-border h5 text-white">
                   <span id="edx-welcome" className="edx-welcome">EDXWELCOME </span>
                   <FontAwesomeIcon
-                    className="text-light-700 copyIcon ml-1"
+                    className="text-light-700 copyIcon ml-1 hover-discount-icon"
                     icon={faCut}
                     data-clipboard-action="copy"
                     data-clipboard-target="#edx-welcome"
+                    onClick={() => setToastShow(true)}
                   />
                 </span>
               </div>

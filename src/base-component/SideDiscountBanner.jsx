@@ -12,15 +12,25 @@ export default function SideDiscountBanner() {
       />
     </span>
   );
+  const getCerificateMsg = () => (
+    <span className="dicount-heading">
+      <FormattedMessage
+        id="certificate.message"
+        defaultMessage="certificate* with code"
+        description="Text with certificate"
+      />
+    </span>
+  );
   return (
     <span className="mr-1.5">
       <FormattedMessage
         id="side.discount.message.body"
-        defaultMessage="Get {discountText} your first verified {lineBreak}certificate* with code"
+        defaultMessage="Get {discountText} your first verified {lineBreak} {certificateMsg}"
         description="Message body for edX discount"
         values={{
           discountText: getDiscountText(),
           lineBreak: <br />,
+          certificateMsg: getCerificateMsg(),
         }}
       />
     </span>
