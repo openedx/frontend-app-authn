@@ -74,9 +74,9 @@ describe('PasswordField', () => {
     });
     passwordField.update();
 
-    expect(passwordField.find('#letter-check span').prop('className')).toEqual('pgn__icon mr-1');
-    expect(passwordField.find('#number-check span').prop('className')).toEqual('pgn__icon mr-1');
-    expect(passwordField.find('#characters-check span').prop('className')).toEqual('pgn__icon mr-1');
+    expect(passwordField.find('#letter-check span').prop('className')).toEqual('pgn__icon mr-1 text-light-700');
+    expect(passwordField.find('#number-check span').prop('className')).toEqual('pgn__icon mr-1 text-light-700');
+    expect(passwordField.find('#characters-check span').prop('className')).toEqual('pgn__icon mr-1 text-light-700');
   });
 
   it('should update password requirement checks', async () => {
