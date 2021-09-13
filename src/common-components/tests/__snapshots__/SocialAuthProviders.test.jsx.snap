@@ -32,7 +32,7 @@ exports[`SocialAuthProviders should match social auth provider with default icon
   </div>
   <span
     aria-hidden="true"
-    className="mr-auto pl-2"
+    className="notranslate mr-auto pl-2"
     id="provider-name"
   >
     Apple
@@ -77,7 +77,7 @@ exports[`SocialAuthProviders should match social auth provider with iconClass sn
   </div>
   <span
     aria-hidden="true"
-    className="mr-auto pl-2"
+    className="notranslate mr-auto pl-2"
     id="provider-name"
   >
     Apple
@@ -110,7 +110,7 @@ Array [
     </div>
     <span
       aria-hidden="true"
-      className="mr-auto pl-2"
+      className="notranslate mr-auto pl-2"
       id="provider-name"
     >
       Apple
@@ -139,7 +139,7 @@ Array [
     </div>
     <span
       aria-hidden="true"
-      className="mr-auto pl-2"
+      className="notranslate mr-auto pl-2"
       id="provider-name"
     >
       Facebook
