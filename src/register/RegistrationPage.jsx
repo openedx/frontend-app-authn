@@ -103,6 +103,12 @@ class RegistrationPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if (this.props.usernameSuggestions.length > 0 && this.state.username === '') {
+      this.setState({
+        username: ' ',
+      });
+      return false;
+    }
     if (this.props.validationDecisions !== nextProps.validationDecisions) {
       const state = { errors: { ...this.state.errors, ...nextProps.validationDecisions } };
       let validatePassword = false;
@@ -210,7 +216,7 @@ class RegistrationPage extends React.Component {
 
     let errors = {};
     Object.keys(payload).forEach(key => {
-      errors = this.validateInput(key, payload[key], { ...payload, form_field_key: key });
+      errors = this.validateInput(key, payload[key], { ...payload, form_field_key: key }, 'handleSubmit');
     });
 
     if (!this.isFormValid(errors)) {
@@ -308,12 +314,25 @@ class RegistrationPage extends React.Component {
     }
   }
 
+  handleUsernameSuggestionClose = () => {
+    this.setState({
+      username: '',
+    });
+    this.props.clearUsernameSuggestions();
+    // Fire optimizely events
+    window.optimizely = window.optimizely || [];
+    window.optimizely.push({
+      type: 'event',
+      eventName: 'authn-register-reject-username-suggestions-using-fullname',
+    });
+  }
+
   isFormValid(validations) {
     const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
     return keyValidList.every((current) => current === true);
   }
 
-  validateInput(fieldName, value, payload) {
+  validateInput(fieldName, value, payload, callee = null) {
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -381,8 +400,21 @@ class RegistrationPage extends React.Component {
         } else {
           errors.name = '';
         }
+        if (!this.state.username && this.state.optimizelyExperimentName === 'suggestUsernameUsingFullname') {
+          this.props.fetchRealtimeValidations(payload);
+          // Fire optimizely events
+          window.optimizely = window.optimizely || [];
+          window.optimizely.push({
+            type: 'event',
+            eventName: 'authn-register-suggest-username-using-fullname',
+          });
+        }
         break;
       case 'username':
+        if (value === ' ' && this.props.usernameSuggestions.length > 0 && callee !== 'handleSubmit') {
+          errors.username = '';
+          break;
+        }
         if (!value || value.length <= 1 || value.length > 30) {
           errors.username = intl.formatMessage(messages['username.validation.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
@@ -574,18 +606,6 @@ class RegistrationPage extends React.Component {
               helpText={[intl.formatMessage(messages['help.text.name'])]}
               floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
             />
-            <UsernameField
-              name="username"
-              value={this.state.username}
-              handleBlur={this.handleOnBlur}
-              handleChange={this.handleOnChange}
-              handleFocus={this.handleOnFocus}
-              errorMessage={this.state.errors.username}
-              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
-              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
-              handleSuggestionClick={this.handleSuggestionClick}
-              usernameSuggestions={this.props.usernameSuggestions}
-            />
             <FormGroup
               name="email"
               value={this.state.email}
@@ -599,6 +619,20 @@ class RegistrationPage extends React.Component {
             >
               {this.renderEmailFeedback()}
             </FormGroup>
+
+            <UsernameField
+              name="username"
+              value={this.state.username}
+              handleBlur={this.handleOnBlur}
+              handleChange={this.handleOnChange}
+              handleFocus={this.handleOnFocus}
+              errorMessage={this.state.errors.username}
+              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
+              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+              handleSuggestionClick={this.handleSuggestionClick}
+              usernameSuggestions={this.props.usernameSuggestions}
+              handleUsernameSuggestionClose={this.handleUsernameSuggestionClose}
+            />
 
             {!currentProvider && (
               <PasswordField

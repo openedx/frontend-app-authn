@@ -262,8 +262,8 @@ const messages = defineMessages({
   // miscellaneous strings
   'registration.username.suggestion.label': {
     id: 'registration.username.suggestion.label',
-    defaultMessage: 'Available:',
-    description: 'Available usernames label text.',
+    defaultMessage: 'Suggested:',
+    description: 'Suggested usernames label text.',
   },
   'registration.using.tpa.form.heading': {
     id: 'registration.using.tpa.form.heading',
