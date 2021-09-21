@@ -383,12 +383,11 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'password':
+        errors.password = '';
         if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
           errors.password = intl.formatMessage(messages['password.validation.message']);
         } else if (payload && statusCode !== 403) {
           this.props.fetchRealtimeValidations(payload);
-        } else {
-          errors.password = '';
         }
         break;
       case 'country':
