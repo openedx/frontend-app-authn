@@ -838,3 +838,12 @@ select.form-control {
   line-height: 1.5rem;
   color: $primary-700
 }
+
+.opt-checkbox {
+  .pgn__form-label {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+  margin-top: 1rem;
+  margin-left: 3px;
+}

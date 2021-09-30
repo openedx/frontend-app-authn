@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
 
 // Actions
@@ -24,7 +24,14 @@ export function* handleNewUserRegistration(action) {
     yield put(registerNewUserBegin());
 
     const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
-
+    const { experimentName } = window;
+    if (getConfig().MARKETING_EMAILS_OPT_IN === 'true'
+      && success && experimentName && experimentName === 'marketing_opt_in') {
+      window.optimizely.push({
+        type: 'event',
+        eventName: `marketing-emails-opt-${action.payload.registrationInfo.opt === true ? 'in' : 'out'}`,
+      });
+    }
     yield put(registerNewUserSuccess(
       redirectUrl,
       success,
