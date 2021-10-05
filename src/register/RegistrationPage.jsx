@@ -79,6 +79,7 @@ class RegistrationPage extends React.Component {
       totalRegistrationTime: 0,
       optimizelyExperimentName: '', // eslint-disable-line react/no-unused-state
       readOnly: true,
+      validatePassword: false,
     };
   }
 
@@ -103,7 +104,11 @@ class RegistrationPage extends React.Component {
   shouldComponentUpdate(nextProps) {
     if (this.props.validationDecisions !== nextProps.validationDecisions) {
       const state = { errors: { ...this.state.errors, ...nextProps.validationDecisions } };
+      let validatePassword = false;
 
+      if (state.errors.password) {
+        validatePassword = true;
+      }
       if (nextProps.registrationErrorCode) {
         state.errorCode = nextProps.registrationErrorCode;
       }
@@ -126,6 +131,7 @@ class RegistrationPage extends React.Component {
         suggestedTopLevelDomain,
         suggestedSldMessage,
         suggestedServiceLevelDomain,
+        validatePassword,
       });
       return false;
     }
@@ -380,6 +386,9 @@ class RegistrationPage extends React.Component {
           this.props.fetchRealtimeValidations(payload);
         } else {
           errors.username = '';
+        }
+        if (this.state.validatePassword) {
+          this.props.fetchRealtimeValidations({ ...payload, form_field_key: 'password' });
         }
         break;
       case 'password':
