@@ -61,6 +61,7 @@ class RegistrationPage extends React.Component {
       name: '',
       password: '',
       username: '',
+      marketingOptIn: true,
       errors: {
         email: '',
         name: '',
@@ -196,6 +197,10 @@ class RegistrationPage extends React.Component {
       honor_code: true,
       is_authn_mfe: true,
     };
+
+    if (getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in') {
+      payload.marketing_emails_opt_in = this.state.marketingOptIn;
+    }
 
     if (this.props.thirdPartyAuthContext.currentProvider) {
       payload.social_auth_provider = this.props.thirdPartyAuthContext.currentProvider;
@@ -613,6 +618,17 @@ class RegistrationPage extends React.Component {
               errorCode={this.state.errorCode}
               readOnly={this.state.readOnly}
             />
+            {(getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in')
+            && (
+              <Form.Checkbox
+                className="opt-checkbox"
+                name="marketing_emails_opt_in"
+                checked={this.state.marketingOptIn}
+                onChange={(e) => this.setState({ marketingOptIn: e.target.checked })}
+              >
+                {intl.formatMessage(messages['registration.opt.in.label'])}
+              </Form.Checkbox>
+            )}
             <div id="honor-code" className="micro text-muted mt-4">
               <FormattedMessage
                 id="register.page.terms.of.service.and.honor.code"

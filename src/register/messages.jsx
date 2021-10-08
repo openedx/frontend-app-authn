@@ -32,6 +32,11 @@ const messages = defineMessages({
     defaultMessage: 'Country/Region',
     description: 'Placeholder for the country options dropdown.',
   },
+  'registration.opt.in.label': {
+    id: 'registration.opt.in.label',
+    defaultMessage: 'You will be receive marketing emails by checking it',
+    description: 'You will be receive marketing emails by checking it',
+  },
   // Help text
   'help.text.name': {
     id: 'help.text.name',
