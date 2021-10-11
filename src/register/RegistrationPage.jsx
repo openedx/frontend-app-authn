@@ -523,6 +523,13 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
+
+      if (getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in') {
+        window.optimizely.push({
+          type: 'event',
+          eventName: `marketing-emails-opt-${this.state.marketingOptIn === true ? 'in' : 'out'}`,
+        });
+      }
     }
 
     return (
