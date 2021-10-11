@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   'registration.opt.in.label': {
     id: 'registration.opt.in.label',
-    defaultMessage: 'You will be receive marketing emails by checking it',
+    defaultMessage: 'Receive marketing emails',
     description: 'You will be receive marketing emails by checking it',
   },
   // Help text
