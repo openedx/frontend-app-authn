@@ -170,19 +170,22 @@ const WelcomePage = (props) => {
                 {getOptions('levelOfEducation')}
               </Form.Control>
             </Form.Group>
-            <Form.Group controlId="yearOfBirth">
-              <Form.Control
-                as="select"
-                name="yearOfBirth"
-                value={values.yearOfBirth}
-                onChange={(e) => onChangeHandler(e)}
-                trailingElement={<Icon src={ExpandMore} />}
-                floatingLabel={intl.formatMessage(messages['year.of.birth.label'])}
-              >
-                <option value="">{intl.formatMessage(messages['year.of.birth.label'])}</option>
-                {getOptions('yearOfBirth')}
-              </Form.Control>
-            </Form.Group>
+            {(getConfig().COLLECT_YEAR_OF_BIRTH === 'true')
+              && (
+                <Form.Group controlId="yearOfBirth">
+                  <Form.Control
+                    as="select"
+                    name="yearOfBirth"
+                    value={values.yearOfBirth}
+                    onChange={(e) => onChangeHandler(e)}
+                    trailingElement={<Icon src={ExpandMore} />}
+                    floatingLabel={intl.formatMessage(messages['year.of.birth.label'])}
+                  >
+                    <option value="">{intl.formatMessage(messages['year.of.birth.label'])}</option>
+                    {getOptions('yearOfBirth')}
+                  </Form.Control>
+                </Form.Group>
+              )}
             <Form.Group controlId="gender" className="mb-3">
               <Form.Control
                 as="select"
