@@ -5,5 +5,4 @@ nick: Authn MFE
 oeps: {}
 owner: edx/vanguards
 openedx-release:
-  maybe: true   # Delete this "maybe" line when you have decided about Open edX inclusion.
   ref: master
