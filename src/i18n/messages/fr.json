@@ -114,6 +114,7 @@
   "registration.username.label": "Nom d'utilisateur public",
   "registration.password.label": "Mot de passe",
   "registration.country.label": "Pays/Région",
+  "registration.opt.in.label": "Receive marketing emails",
   "help.text.name": "Ce nom sera utilisé pour toutes les attestations que vous obtiendrez.",
   "help.text.username.1": "Le nom qui vous identifiera dans vos cours.",
   "help.text.username.2": "Cela ne peut pas être modifié ultérieurement.",
