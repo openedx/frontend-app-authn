@@ -77,7 +77,9 @@ describe('WelcomePageTests', () => {
       level_of_education: 'other',
       gender: 'm',
     };
-
+    mergeConfig({
+      COLLECT_YEAR_OF_BIRTH: 'true',
+    });
     store.dispatch = jest.fn(store.dispatch);
     const welcomePage = await getWelcomePage();
 
