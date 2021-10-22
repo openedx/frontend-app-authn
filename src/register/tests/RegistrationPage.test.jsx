@@ -271,14 +271,14 @@ describe('RegistrationPage', () => {
           ...initialState.register,
           registrationError: {
             username: [{ userMessage: 'It looks like this username is already taken' }],
-            email: [{ userMessage: 'It looks like this email address is already registered' }],
+            email: [{ userMessage: 'This email is already associated with an existing or previous edX account' }],
           },
         },
       });
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
       expect(registrationPage.prop('validationDecisions')).toEqual({
         country: '',
-        email: 'It looks like this email address is already registered',
+        email: 'This email is already associated with an existing or previous edX account',
         name: '',
         password: '',
         username: 'It looks like this username is already taken',
