@@ -400,7 +400,7 @@ class RegistrationPage extends React.Component {
         } else {
           errors.name = '';
         }
-        if (!this.state.username && this.state.optimizelyExperimentName === 'suggestUsernameUsingFullname') {
+        if (!this.state.username.trim() && this.state.optimizelyExperimentName === 'suggestUsernameUsingFullname') {
           this.props.fetchRealtimeValidations(payload);
           // Fire optimizely events
           window.optimizely = window.optimizely || [];
