@@ -507,11 +507,45 @@ describe('RegistrationPage', () => {
       });
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(props);
       registerPage.find('RegistrationPage').setState({ errors: { username: 'It looks like this username is already taken' } });
-
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
       registerPage.find('button.username-suggestion').at(0).simulate('click');
       expect(registerPage.find('RegistrationPage').state('username')).toEqual('test_1');
+    });
+
+    it('should show username suggestions when full name is populated', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          usernameSuggestions: ['testname', 't.name', 'test_0'],
+        },
+      });
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
+
+      expect(registerPage.find('button.username-suggestion').length).toEqual(3);
+      registerPage.find('button.username-suggestion').at(0).simulate('click');
+      expect(registerPage.find('RegistrationPage').state('username')).toEqual('testname');
+    });
+
+    it('should clear username suggestions when close icon is clicked', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          usernameSuggestions: ['testname', 't.name', 'test_0'],
+        },
+      });
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
+
+      registerPage.find('button.suggested-username-close-button').at(0).simulate('click');
+      expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
     it('should redirect to url returned in registration result after successful account creation', () => {

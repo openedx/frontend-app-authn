@@ -847,3 +847,18 @@ select.form-control {
   margin-top: 1rem;
   margin-left: 3px;
 }
+.suggested-username {
+  position: relative;
+  margin-top: -8.7%;
+  margin-left: 15px;
+}
+.suggested-username-close-button {
+  right: 0;
+  position: absolute;
+}
+.suggested-username-with-error {
+  position: relative;
+  margin-top: -13.7%;
+  margin-bottom: 11%;
+  margin-left: 15px;
+}
