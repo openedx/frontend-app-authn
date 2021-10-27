@@ -34,8 +34,8 @@ const messages = defineMessages({
   },
   'registration.opt.in.label': {
     id: 'registration.opt.in.label',
-    defaultMessage: 'Receive marketing emails',
-    description: 'You will be receive marketing emails by checking it',
+    defaultMessage: 'By creating an account, I agree that {siteName} may send me marketing messages.',
+    description: 'Text for opt in option on register page.',
   },
   // Help text
   'help.text.name': {
