@@ -16,18 +16,20 @@ const UsernameField = (props) => {
   const suggestedUsernames = () => (
     <div className={className}>
       <span className="text-gray username-suggestion-label">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
-      {usernameSuggestions.map((username, index) => (
-        <Button
-          type="button"
-          name="username"
-          variant="outline-dark"
-          className="username-suggestion data-hj-suppress"
-          key={`suggestion-${index.toString()}`}
-          onClick={(e) => props.handleSuggestionClick(e, username)}
-        >
-          {username}
-        </Button>
-      ))}
+      <div className="scroll-suggested-username">
+        {usernameSuggestions.map((username, index) => (
+          <Button
+            type="button"
+            name="username"
+            variant="outline-dark"
+            className="username-suggestion data-hj-suppress"
+            key={`suggestion-${index.toString()}`}
+            onClick={(e) => props.handleSuggestionClick(e, username)}
+          >
+            {username}
+          </Button>
+        ))}
+      </div>
       {iconButton}
     </div>
   );
