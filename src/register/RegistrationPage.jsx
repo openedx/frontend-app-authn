@@ -667,7 +667,7 @@ class RegistrationPage extends React.Component {
                 checked={this.state.marketingOptIn}
                 onChange={(e) => this.setState({ marketingOptIn: e.target.checked })}
               >
-                {intl.formatMessage(messages['registration.opt.in.label'])}
+                {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
               </Form.Checkbox>
             )}
             <div id="honor-code" className="micro text-muted mt-4">
