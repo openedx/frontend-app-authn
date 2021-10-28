@@ -68,6 +68,11 @@ const WelcomePage = (props) => {
     return null;
   }
 
+  if (getConfig().ENABLE_COPPA_COMPLIANCE && EDUCATION_LEVELS) {
+    const index = EDUCATION_LEVELS.indexOf('el');
+    EDUCATION_LEVELS.splice(index, 1);
+  }
+
   const getOptions = (fieldName) => {
     const options = {
       yearOfBirth: YEAR_OF_BIRTH_OPTIONS.map(({ value, label }) => (
@@ -170,7 +175,7 @@ const WelcomePage = (props) => {
                 {getOptions('levelOfEducation')}
               </Form.Control>
             </Form.Group>
-            {(getConfig().COLLECT_YEAR_OF_BIRTH === 'true')
+            {(!getConfig().ENABLE_COPPA_COMPLIANCE)
               && (
                 <Form.Group controlId="yearOfBirth">
                   <Form.Control

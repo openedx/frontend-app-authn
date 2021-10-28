@@ -40,7 +40,7 @@ initialize({
         REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME || null,
         ENABLE_PROGRESSIVE_PROFILING: process.env.ENABLE_PROGRESSIVE_PROFILING || false,
         MARKETING_EMAILS_OPT_IN: process.env.MARKETING_EMAILS_OPT_IN || 'false',
-        COLLECT_YEAR_OF_BIRTH: process.env.COLLECT_YEAR_OF_BIRTH || 'true',
+        ENABLE_COPPA_COMPLIANCE: process.env.ENABLE_COPPA_COMPLIANCE || '',
       });
     },
   },

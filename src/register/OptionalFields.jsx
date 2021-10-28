@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
 import { Form, Icon } from '@edx/paragon';
 import { ExpandMore } from '@edx/paragon/icons';
 
@@ -13,7 +14,12 @@ const OptionalFields = (props) => {
     intl, optionalFields, onChangeHandler, values,
   } = props;
 
+  if (getConfig().ENABLE_COPPA_COMPLIANCE && EDUCATION_LEVELS) {
+    const index = EDUCATION_LEVELS.indexOf('el');
+    EDUCATION_LEVELS.splice(index, 1);
+  }
   const getOptions = () => ({
+
     yearOfBirthOptions: YEAR_OF_BIRTH_OPTIONS.map(({ value, label }) => (
       <option className="data-hj-suppress" key={value} value={value}>{label}</option>
     )),
