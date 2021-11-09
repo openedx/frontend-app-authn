@@ -34,6 +34,11 @@ const messages = defineMessages({
     defaultMessage: 'Register',
     description: 'Text that appears on the tab to switch between login and register',
   },
+  'register.for.free': {
+    id: 'register.for.free',
+    defaultMessage: 'Register for free',
+    description: 'Text that appears on the tab to switch between login and registration forms',
+  },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',

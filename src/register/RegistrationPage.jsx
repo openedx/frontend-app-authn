@@ -81,6 +81,8 @@ class RegistrationPage extends React.Component {
       optimizelyExperimentName: '', // eslint-disable-line react/no-unused-state
       readOnly: true,
       validatePassword: false,
+      // TODO: Remove after VAN-704 is complete
+      registerRenameExpVariation: '',
     };
   }
 
@@ -167,11 +169,15 @@ class RegistrationPage extends React.Component {
   }
 
   getExperiments = () => {
-    const { experimentName } = window;
+    const { experimentName, renameRegisterExperiment } = window;
 
     if (experimentName) {
       // eslint-disable-next-line react/no-unused-state
       this.setState({ optimizelyExperimentName: experimentName });
+    }
+
+    if (renameRegisterExperiment) {
+      this.setState({ registerRenameExpVariation: renameRegisterExperiment });
     }
   };
 
@@ -712,7 +718,9 @@ class RegistrationPage extends React.Component {
               className="stateful-button-width mt-4 mb-4"
               state={submitState}
               labels={{
-                default: intl.formatMessage(messages['create.account.button']),
+                default: this.state.registerRenameExpVariation === 'variation2' ? (
+                  intl.formatMessage(messages['register.for.free.button'])
+                ) : intl.formatMessage(messages['create.account.button']),
                 pending: '',
               }}
               onClick={this.handleSubmit}
