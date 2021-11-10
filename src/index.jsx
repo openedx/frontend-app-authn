@@ -39,7 +39,7 @@ initialize({
         INFO_EMAIL: process.env.INFO_EMAIL || '',
         REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME || null,
         ENABLE_PROGRESSIVE_PROFILING: process.env.ENABLE_PROGRESSIVE_PROFILING || false,
-        MARKETING_EMAILS_OPT_IN: process.env.MARKETING_EMAILS_OPT_IN || 'false',
+        MARKETING_EMAILS_OPT_IN: process.env.MARKETING_EMAILS_OPT_IN || '',
         ENABLE_COPPA_COMPLIANCE: process.env.ENABLE_COPPA_COMPLIANCE || '',
       });
     },

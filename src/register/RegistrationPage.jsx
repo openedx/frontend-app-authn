@@ -210,7 +210,7 @@ class RegistrationPage extends React.Component {
       is_authn_mfe: true,
     };
 
-    if (getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in') {
+    if (getConfig().MARKETING_EMAILS_OPT_IN) {
       payload.marketing_emails_opt_in = this.state.marketingOptIn;
     }
 
@@ -562,13 +562,6 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
-
-      if (getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in') {
-        window.optimizely.push({
-          type: 'event',
-          eventName: `marketing-emails-opt-${this.state.marketingOptIn === true ? 'in' : 'out'}`,
-        });
-      }
     }
 
     return (
@@ -666,7 +659,7 @@ class RegistrationPage extends React.Component {
               errorCode={this.state.errorCode}
               readOnly={this.state.readOnly}
             />
-            {(getConfig().MARKETING_EMAILS_OPT_IN === 'true' && this.state.optimizelyExperimentName === 'marketing_opt_in')
+            {(getConfig().MARKETING_EMAILS_OPT_IN)
             && (
               <Form.Checkbox
                 className="opt-checkbox"
