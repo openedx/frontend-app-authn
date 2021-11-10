@@ -752,6 +752,19 @@ describe('RegistrationPage', () => {
 
       expect(registrationPage.find('RegistrationPage').state('errorCode')).toEqual(INTERNAL_SERVER_ERROR);
     });
+
+    it('should display opt-in/opt-out checkbox', () => {
+      mergeConfig({
+        MARKETING_EMAILS_OPT_IN: 'true',
+      });
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registerPage.find('div.opt-checkbox').length).toEqual(1);
+
+      mergeConfig({
+        MARKETING_EMAILS_OPT_IN: '',
+      });
+    });
   });
 
   describe('TestOptionalFields', () => {
