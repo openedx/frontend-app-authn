@@ -64,6 +64,11 @@ const messages = defineMessages({
     defaultMessage: 'Create an account',
     description: 'Button label that appears on register page',
   },
+  'register.for.free.button': {
+    id: 'register.for.free.button',
+    defaultMessage: 'Register for free',
+    description: 'Label text for registration form submission button',
+  },
   'create.an.account.btn.pending.state': {
     id: 'create.an.account.btn.pending.state',
     defaultMessage: 'Loading',

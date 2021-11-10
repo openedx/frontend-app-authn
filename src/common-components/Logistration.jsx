@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
@@ -23,6 +23,17 @@ const Logistration = (props) => {
   const tpa = getTpaHint();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
+
+  // TODO: Remove after VAN-704 is complete
+  const [registerRenameExpVariation, setRegisterRenameExpVariation] = useState('');
+
+  useEffect(() => {
+    const { renameRegisterExperiment } = window;
+
+    if (renameRegisterExperiment) {
+      setRegisterRenameExpVariation(renameRegisterExperiment);
+    }
+  });
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -64,7 +75,12 @@ const Logistration = (props) => {
             <>
               {!tpa && (
                 <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                  <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                  <Tab
+                    title={registerRenameExpVariation === 'variation1' ? (
+                      intl.formatMessage(messages['register.for.free'])
+                    ) : intl.formatMessage(messages['logistration.register'])}
+                    eventKey={REGISTER_PAGE}
+                  />
                   <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                 </Tabs>
               )}
