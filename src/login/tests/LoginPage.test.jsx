@@ -215,8 +215,8 @@ describe('LoginPage', () => {
 
   it('should match account activation message', () => {
     const activationMessage = 'Success! You have activated your account.'
-      + 'You will now receive email updates and alerts from us related '
-      + 'to the courses you are enrolled in. Sign in to continue.';
+                              + 'You will now receive email updates and alerts from us related '
+                              + 'to the courses you are enrolled in. Sign in to continue.';
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?account_activation_status=success' };

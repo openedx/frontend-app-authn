@@ -13,6 +13,8 @@ const AccountActivationMessage = (props) => {
   const { intl, messageType } = props;
   const variant = messageType === ACCOUNT_ACTIVATION_MESSAGE.ERROR ? 'danger' : messageType;
 
+  const activationOrVerification = getConfig().MARKETING_EMAILS_OPT_IN ? 'confirmation' : 'activation';
+
   let activationMessage;
   let heading;
 
@@ -23,12 +25,12 @@ const AccountActivationMessage = (props) => {
 
   switch (messageType) {
     case ACCOUNT_ACTIVATION_MESSAGE.SUCCESS: {
-      heading = intl.formatMessage(messages['account.activation.success.message.title']);
-      activationMessage = intl.formatMessage(messages['account.activation.success.message']);
+      heading = intl.formatMessage(messages[`account.${activationOrVerification}.success.message.title`]);
+      activationMessage = <span>{intl.formatMessage(messages[`account.${activationOrVerification}.success.message`])}</span>;
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.INFO: {
-      activationMessage = intl.formatMessage(messages['account.already.activated.message']);
+      activationMessage = intl.formatMessage(messages[`account.${activationOrVerification}.info.message`]);
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.ERROR: {
@@ -38,7 +40,7 @@ const AccountActivationMessage = (props) => {
         </Alert.Link>
       );
 
-      heading = intl.formatMessage(messages['account.activation.error.message.title']);
+      heading = intl.formatMessage(messages[`account.${activationOrVerification}.error.message.title`]);
       activationMessage = (
         <FormattedMessage
           id="account.activation.error.message"

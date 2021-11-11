@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
+import { mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 
 import AccountActivationMessage from '../AccountActivationMessage';
@@ -9,6 +10,12 @@ import { ACCOUNT_ACTIVATION_MESSAGE } from '../data/constants';
 const IntlAccountActivationMessage = injectIntl(AccountActivationMessage);
 
 describe('AccountActivationMessage', () => {
+  beforeEach(() => {
+    mergeConfig({
+      MARKETING_EMAILS_OPT_IN: '',
+    });
+  });
+
   it('should match account already activated message', () => {
     const accountActivationMessage = mount(
       <IntlProvider locale="en">
@@ -53,5 +60,47 @@ describe('AccountActivationMessage', () => {
     );
 
     expect(accountActivationMessage).toEqual({});
+  });
+});
+
+describe('EmailConfirmationMessage', () => {
+  beforeEach(() => {
+    mergeConfig({
+      MARKETING_EMAILS_OPT_IN: 'true',
+    });
+  });
+
+  it('should match email already confirmed message', () => {
+    const accountVerificationMessage = mount(
+      <IntlProvider locale="en">
+        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
+      </IntlProvider>,
+    );
+
+    const expectedMessage = 'This email has already been confirmed.';
+    expect(accountVerificationMessage.find('#account-activation-message').find('div').first().text()).toEqual(expectedMessage);
+  });
+
+  it('should match email confirmation success message', () => {
+    const accountVerificationMessage = mount(
+      <IntlProvider locale="en">
+        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
+      </IntlProvider>,
+    );
+
+    const expectedMessage = 'Success! You have confirmed your email.Sign in to continue.';
+    expect(accountVerificationMessage.find('#account-activation-message').first().text()).toEqual(expectedMessage);
+  });
+
+  it('should match email confirmation error message', () => {
+    const accountVerificationMessage = mount(
+      <IntlProvider locale="en">
+        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+      </IntlProvider>,
+    );
+
+    const expectedMessage = 'Your email could not be confirmed'
+                            + 'Something went wrong, please contact support to resolve this issue.';
+    expect(accountVerificationMessage.find('#account-activation-message').first().text()).toEqual(expectedMessage);
   });
 });
