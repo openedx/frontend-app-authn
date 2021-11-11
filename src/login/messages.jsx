@@ -155,8 +155,8 @@ const messages = defineMessages({
     defaultMessage: 'You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.',
     description: 'Message show to learners when their account has been activated successfully',
   },
-  'account.already.activated.message': {
-    id: 'account.already.activated.message',
+  'account.activation.info.message': {
+    id: 'account.activation.info.message',
     defaultMessage: 'This account has already been activated.',
     description: 'Message shown when learner account has already been activated',
   },
@@ -169,6 +169,27 @@ const messages = defineMessages({
     id: 'account.activation.support.link',
     defaultMessage: 'contact support',
     description: 'Link text used in account activation error message to go to learner help center',
+  },
+  // Email Confirmation Strings
+  'account.confirmation.success.message.title': {
+    id: 'account.confirmation.success.message.title',
+    defaultMessage: 'Success! You have confirmed your email.',
+    description: 'Account verification success message title',
+  },
+  'account.confirmation.success.message': {
+    id: 'account.confirmation.success.message',
+    defaultMessage: 'Sign in to continue.',
+    description: 'Message show to learners when their account has been activated successfully',
+  },
+  'account.confirmation.info.message': {
+    id: 'account.confirmation.info.message',
+    defaultMessage: 'This email has already been confirmed.',
+    description: 'Message shown when learner account has already been verified',
+  },
+  'account.confirmation.error.message.title': {
+    id: 'account.confirmation.error.message.title',
+    defaultMessage: 'Your email could not be confirmed',
+    description: 'Account verification error message title',
   },
   'internal.server.error.message': {
     id: 'internal.server.error.message',
