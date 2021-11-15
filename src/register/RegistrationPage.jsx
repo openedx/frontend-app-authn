@@ -325,12 +325,6 @@ class RegistrationPage extends React.Component {
       username: '',
     });
     this.props.clearUsernameSuggestions();
-    // Fire optimizely events
-    window.optimizely = window.optimizely || [];
-    window.optimizely.push({
-      type: 'event',
-      eventName: 'authn-register-reject-username-suggestions-using-fullname',
-    });
   }
 
   isFormValid(validations) {
@@ -407,14 +401,9 @@ class RegistrationPage extends React.Component {
           errors.name = '';
         }
 
-        if (!this.state.username.trim() && this.state.optimizelyExperimentName === 'suggestUsernameUsingFullname') {
+        if (!this.state.username.trim() && value) {
+          // fetch username suggestions based on the full name
           this.props.fetchRealtimeValidations(payload);
-          // Fire optimizely events
-          window.optimizely = window.optimizely || [];
-          window.optimizely.push({
-            type: 'event',
-            eventName: 'authn-register-suggest-username-using-fullname',
-          });
         }
         break;
       case 'username':
