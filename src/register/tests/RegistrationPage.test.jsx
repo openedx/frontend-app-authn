@@ -703,6 +703,14 @@ describe('RegistrationPage', () => {
       expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
+    it('should send track event for save_for_later param', () => {
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat('/register'), search: '?save_for_later=true' };
+      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.save.course.enroll.clicked',
+        { category: 'save-for-later' });
+    });
+
     // ******** shouldComponentUpdate tests ********
 
     it('should populate form with pipeline user details', () => {
