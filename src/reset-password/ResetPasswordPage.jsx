@@ -53,7 +53,11 @@ const ResetPasswordPage = (props) => {
   const validatePasswordFromBackend = async (password) => {
     let errorMessage = '';
     try {
-      errorMessage = await validatePassword(password);
+      const payload = {
+        reset_password_page: true,
+        password,
+      };
+      errorMessage = await validatePassword(payload);
     } catch (err) {
       errorMessage = '';
     }
@@ -83,6 +87,24 @@ const ResetPasswordPage = (props) => {
     }
     setFormErrors({ ...formErrors });
     return !Object.values(formErrors).some(x => (x !== ''));
+  };
+
+  const handleOnBlur = (event) => {
+    let { name, value } = event.target;
+
+    // Do not validate when focus out from 'newPassword' and focus on 'passwordValidation' icon
+    // for better user experience.
+    if (event.relatedTarget
+      && event.relatedTarget.name === 'passwordValidation'
+      && name === 'newPassword'
+    ) {
+      return;
+    }
+    if (name === 'passwordValidation') {
+      name = 'newPassword';
+      value = newPassword;
+    }
+    validateInput(name, value);
   };
 
   const handleConfirmPasswordChange = (e) => {
@@ -157,7 +179,7 @@ const ResetPasswordPage = (props) => {
                   name="newPassword"
                   value={newPassword}
                   handleChange={(e) => setNewPassword(e.target.value)}
-                  handleBlur={(e) => validateInput(e.target.name, e.target.value)}
+                  handleBlur={handleOnBlur}
                   handleFocus={handleOnFocus}
                   errorMessage={formErrors.newPassword}
                   floatingLabel={intl.formatMessage(messages['new.password.label'])}
