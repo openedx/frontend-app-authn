@@ -39,14 +39,14 @@ export async function resetPassword(payload, token, queryParams) {
   return data;
 }
 
-export async function validatePassword(password) {
+export async function validatePassword(payload) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   };
   const { data } = await getHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
-      formurlencoded({ password }),
+      formurlencoded(payload),
       requestConfig,
     )
     .catch((e) => {
