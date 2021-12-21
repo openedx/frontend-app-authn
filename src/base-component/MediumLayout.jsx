@@ -35,7 +35,7 @@ const MediumLayout = (props) => {
       </Toast>
       <div className="col-md-10 p-0 screen-header-primary">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-          <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
+          <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="row mt-4 justify-content-center">
           <svg className={classNames(

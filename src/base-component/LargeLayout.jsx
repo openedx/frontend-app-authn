@@ -10,7 +10,7 @@ const LargeLayout = ({ experimentName, isRegistrationPage }) => (
   <div className="container row p-0 m-0 large-screen-container">
     <div className="col-md-9 p-0 screen-header-primary">
       <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-        <Image alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
+        <Image alt={getConfig().SITE_NAME} className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
       </Hyperlink>
       <LargeScreenLeftLayout experimentName={experimentName} isRegistrationPage={isRegistrationPage} />
     </div>

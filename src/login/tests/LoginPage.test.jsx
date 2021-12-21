@@ -238,8 +238,9 @@ describe('LoginPage', () => {
       },
     });
 
-    const expectedMessage = 'You have successfully signed into Apple, but your Apple account does not have a '
-                            + 'linked edX account. To link your accounts, sign in now using your edX password.';
+    const expectedMessage = `${'You have successfully signed into Apple, but your Apple account does not have a '
+                            + 'linked '}${ getConfig().SITE_NAME } account. To link your accounts, sign in now using your ${
+                             getConfig().SITE_NAME } password.`;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);

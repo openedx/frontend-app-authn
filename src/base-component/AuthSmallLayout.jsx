@@ -17,7 +17,7 @@ const AuthSmallLayout = (props) => {
   return (
     <div className="small-screen-header-light">
       <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-        <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
+        <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
       </Hyperlink>
       <div className={classNames('d-flex mt-3', { 'pl-6': variant === 'sm' })}>
         <div>

@@ -17,7 +17,7 @@ const AuthMediumLayout = (props) => {
     <div className="container row p-0 mb-3 medium-container">
       <div className="col-md-10 p-0 screen-header-light">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-          <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
+          <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="d-flex align-items-center justify-content-center ml-6">
           <div>
