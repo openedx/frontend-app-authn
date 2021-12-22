@@ -30,7 +30,7 @@ const SmallLayout = (props) => {
           {intl.formatMessage(messages['code.copied'])}
         </Toast>
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-          <Image alt="edx" className="logo" src={getConfig().LOGO_WHITE_URL} />
+          <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="d-flex mt-3">
           <svg className={classNames(
