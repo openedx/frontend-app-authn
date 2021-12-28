@@ -18,7 +18,7 @@ const AuthExtraLargeLayout = (props) => {
     <div className="container row p-0 m-0 large-screen-container">
       <div className="col-md-9 p-0 screen-header-light">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-          <Image alt="edx" className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
+          <Image alt={getConfig().SITE_NAME} className="logo position-absolute" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="min-vh-100 d-flex align-items-center">
           <div>
