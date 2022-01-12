@@ -214,22 +214,13 @@ class RegistrationPage extends React.Component {
       is_authn_mfe: true,
     };
 
-    if (getConfig().MARKETING_EMAILS_OPT_IN) {
-      payload.marketing_emails_opt_in = this.state.marketingOptIn;
-    }
-
     if (this.props.thirdPartyAuthContext.currentProvider) {
       payload.social_auth_provider = this.props.thirdPartyAuthContext.currentProvider;
     } else {
       payload.password = this.state.password;
     }
 
-    let errors = {};
-    Object.keys(payload).forEach(key => {
-      errors = this.validateInput(key, payload[key], { ...payload, form_field_key: key }, 'handleSubmit');
-    });
-
-    if (!this.isFormValid(errors)) {
+    if (!this.isFormValid(payload)) {
       this.setState(prevState => ({
         errorCode: FORM_SUBMISSION_ERROR,
         failureCount: prevState.failureCount + 1,
@@ -237,8 +228,12 @@ class RegistrationPage extends React.Component {
       return;
     }
 
+    if (getConfig().MARKETING_EMAILS_OPT_IN) {
+      payload.marketing_emails_opt_in = this.state.marketingOptIn;
+    }
+
     // Since optional fields and query params are not validated we can add it to payload after
-    // required fields have been validated. This will save us unwanted calls to validateInput()
+    // required fields have been validated.
     payload = { ...payload, ...this.queryParams };
     this.state.optionalFields.forEach((key) => {
       if (this.state.optionalFieldsState[key]) {
@@ -331,12 +326,25 @@ class RegistrationPage extends React.Component {
     this.props.clearUsernameSuggestions();
   }
 
-  isFormValid(validations) {
-    const keyValidList = Object.entries(validations).map(([key]) => !validations[key]);
-    return keyValidList.every((current) => current === true);
+  isFormValid(payload) {
+    const { errors } = this.state;
+    let isValid = true;
+
+    Object.keys(payload).forEach(key => {
+      if (!payload[key]) {
+        errors[key] = this.props.intl.formatMessage(messages[`empty.${key}.field.error`]);
+      }
+      // Mark form invalid, if there was already a validation error for this key or we added empty field error
+      if (errors[key]) {
+        isValid = false;
+      }
+    });
+
+    this.setState({ errors });
+    return isValid;
   }
 
-  validateInput(fieldName, value, payload, callee = null) {
+  validateInput(fieldName, value, payload) {
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -411,7 +419,7 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'username':
-        if (value === ' ' && this.props.usernameSuggestions.length > 0 && callee !== 'handleSubmit') {
+        if (value === ' ' && this.props.usernameSuggestions.length > 0) {
           errors.username = '';
           break;
         }
@@ -847,10 +855,10 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   {
+    clearUsernameSuggestions,
     getThirdPartyAuthContext,
     fetchRealtimeValidations,
     registerNewUser,
     resetRegistrationForm,
-    clearUsernameSuggestions,
   },
 )(injectIntl(RegistrationPage));
