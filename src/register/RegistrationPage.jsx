@@ -97,7 +97,7 @@ class RegistrationPage extends React.Component {
     const payload = { ...this.queryParams };
 
     if (payload.save_for_later === 'true') {
-      sendTrackEvent('edx.bi.user.save.course.enroll.clicked', { category: 'save-for-later' });
+      sendTrackEvent('edx.bi.user.saveforlater.course.enroll.clicked', { category: 'save-for-later' });
     }
 
     if (this.tpaHint) {

@@ -707,7 +707,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat('/register'), search: '?save_for_later=true' };
       renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.save.course.enroll.clicked',
+      expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.saveforlater.course.enroll.clicked',
         { category: 'save-for-later' });
     });
 
