@@ -106,6 +106,16 @@ const messages = defineMessages({
     defaultMessage: 'Enter your email',
     description: 'Error message for empty email field',
   },
+  'empty.username.field.error': {
+    id: 'empty.username.field.error',
+    defaultMessage: 'Username must be between 2 and 30 characters',
+    description: 'Error message for empty username field',
+  },
+  'empty.password.field.error': {
+    id: 'empty.password.field.error',
+    defaultMessage: 'Password criteria has not been met',
+    description: 'Error message for empty password field',
+  },
   'empty.country.field.error': {
     id: 'empty.country.field.error',
     defaultMessage: 'Select your country or region of residence',
