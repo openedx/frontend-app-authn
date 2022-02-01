@@ -3,9 +3,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import {
-  ExtraSmall, Small, Medium, Large, ExtraLarge, ExtraExtraLarge,
-} from '@edx/paragon';
+import MediaQuery from 'react-responsive';
+import { breakpoints } from '@edx/paragon';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getLocale } from '@edx/frontend-platform/i18n';
 
@@ -34,48 +33,48 @@ const BaseComponent = ({ children, isRegistrationPage, showWelcomeBanner }) => {
     <>
       {isRegistrationPage && optimizelyExperimentName === 'variation2' ? <DiscountExperimentBanner /> : null}
       <CookiePolicyBanner languageCode={getLocale()} />
-      <ExtraLarge>
+      <MediaQuery minWidth={breakpoints.extraLarge.minWidth} maxWidth={breakpoints.extraLarge.maxWidth}>
         <div className="col-md-12 extra-large-screen-top-stripe" />
-      </ExtraLarge>
-      <ExtraExtraLarge>
+      </MediaQuery>
+      <MediaQuery minWidth={breakpoints.extraExtraLarge.minWidth} maxWidth={breakpoints.extraExtraLarge.maxWidth}>
         <div className="col-md-12 extra-large-screen-top-stripe" />
-      </ExtraExtraLarge>
+      </MediaQuery>
 
       <div className={classNames('layout', { authenticated: authenticatedUser })}>
-        <ExtraSmall>
+        <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth}>
           <div className="col-md-12 small-screen-top-stripe" />
           {authenticatedUser ? <AuthSmallLayout variant="xs" username={authenticatedUser.username} /> : (
             <SmallLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </ExtraSmall>
-        <Small>
+        </MediaQuery>
+        <MediaQuery minWidth={breakpoints.small.minWidth} maxWidth={breakpoints.small.maxWidth}>
           <div className="col-md-12 small-screen-top-stripe" />
           {authenticatedUser ? <AuthSmallLayout username={authenticatedUser.username} /> : (
             <SmallLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </Small>
-        <Medium>
+        </MediaQuery>
+        <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.medium.maxWidth}>
           <div className="w-100 medium-screen-top-stripe" />
           {authenticatedUser ? <AuthMediumLayout username={authenticatedUser.username} /> : (
             <MediumLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </Medium>
-        <Large>
+        </MediaQuery>
+        <MediaQuery minWidth={breakpoints.large.minWidth} maxWidth={breakpoints.large.maxWidth}>
           <div className="w-100 large-screen-top-stripe" />
           {authenticatedUser ? <AuthMediumLayout username={authenticatedUser.username} /> : (
             <MediumLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </Large>
-        <ExtraLarge>
+        </MediaQuery>
+        <MediaQuery minWidth={breakpoints.extraLarge.minWidth} maxWidth={breakpoints.extraLarge.maxWidth}>
           {authenticatedUser ? <AuthExtraLargeLayout username={authenticatedUser.username} /> : (
             <LargeLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </ExtraLarge>
-        <ExtraExtraLarge>
+        </MediaQuery>
+        <MediaQuery minWidth={breakpoints.extraExtraLarge.minWidth} maxWidth={breakpoints.extraExtraLarge.maxWidth}>
           {authenticatedUser ? <AuthExtraLargeLayout variant="xxl" username={authenticatedUser.username} /> : (
             <LargeLayout experimentName={optimizelyExperimentName} isRegistrationPage={isRegistrationPage} />
           )}
-        </ExtraExtraLarge>
+        </MediaQuery>
 
         <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
           {children}

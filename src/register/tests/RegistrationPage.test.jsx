@@ -404,7 +404,7 @@ describe('RegistrationPage', () => {
 
     it('should match default button state', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual(' Create an account ');
+      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual('Create an account');
     });
 
     it('should match pending button state', () => {
@@ -419,7 +419,7 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       const button = registrationPage.find('button[type="submit"] span').first();
 
-      expect(button.find('.sr-only').text()).toEqual(' pending ');
+      expect(button.find('.sr-only').text()).toEqual('pending');
     });
 
     it('should show single sign on provider button', () => {
