@@ -132,6 +132,8 @@
   "register.institution.login.page.title": "Register with institution/campus credentials",
   "empty.name.field.error": "Enter your full name",
   "empty.email.field.error": "Enter your email",
+  "empty.username.field.error": "Username must be between 2 and 30 characters",
+  "empty.password.field.error": "Password criteria has not been met",
   "empty.country.field.error": "Select your country or region of residence",
   "email.invalid.format.error": "Enter a valid email address",
   "email.ratelimit.less.chars.validation.message": "Email must have 3 characters.",
