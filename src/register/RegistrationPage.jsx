@@ -1,6 +1,5 @@
 import React from 'react';
 
-import snakeCase from 'lodash.snakecase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
@@ -184,7 +183,7 @@ class RegistrationPage extends React.Component {
     e.preventDefault();
     const { startTime } = this.state;
     const totalRegistrationTime = (Date.now() - startTime) / 1000;
-    let payload = {
+    const payload = {
       name: this.state.name,
       username: this.state.username,
       email: this.state.email,
