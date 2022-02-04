@@ -34,7 +34,6 @@ const mockStore = configureStore();
 describe('RegistrationPage', () => {
   mergeConfig({
     PRIVACY_POLICY: 'http://privacy-policy.com',
-    REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,levelOfEducation,yearOfBirth',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
     USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
     REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
@@ -772,88 +771,6 @@ describe('RegistrationPage', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
       });
-    });
-  });
-
-  describe('TestOptionalFields', () => {
-    it('should toggle optional fields state', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-
-      registrationPage.find('input#optional-field-checkbox').simulate('click', { target: { name: 'optionalFields', checked: true } });
-      expect(registrationPage.find('RegistrationPage').state('showOptionalField')).toEqual(true);
-
-      // it should also works when change is made directly instead of click
-      registrationPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: false } });
-      expect(registrationPage.find('RegistrationPage').state('showOptionalField')).toEqual(false);
-    });
-
-    it('should show optional fields section on optional check enabled', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: true } });
-      registrationPage.update();
-
-      expect(registrationPage.find('textarea#goals').length).toEqual(1);
-      expect(registrationPage.find('select#levelOfEducation').length).toEqual(1);
-      expect(registrationPage.find('select#yearOfBirth').length).toEqual(1);
-      expect(registrationPage.find('select#gender').length).toEqual(1);
-    });
-
-    it('should show optional field check based on environment variable', () => {
-      mergeConfig({
-        REGISTRATION_OPTIONAL_FIELDS: '',
-      });
-      let registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('input#optional-field-checkbox').length).toEqual(0);
-
-      mergeConfig({
-        REGISTRATION_OPTIONAL_FIELDS: 'gender,goals,levelOfEducation,yearOfBirth',
-      });
-
-      registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('input#optional-field-checkbox').length).toEqual(1);
-    });
-
-    it('send tracking event on optional checkbox enabled', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-
-      registrationPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: true } });
-      expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.register.optional_fields_selected', {});
-    });
-
-    it('should submit form with optional fields', () => {
-      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
-
-      const payload = {
-        name: 'John Doe',
-        username: 'john_doe',
-        email: 'john.doe@example.com',
-        password: 'password1',
-        country: 'Pakistan',
-        gender: 'm',
-        year_of_birth: '1997',
-        level_of_education: 'other',
-        goals: 'edX goals',
-        honor_code: true,
-        totalRegistrationTime: 0,
-        is_authn_mfe: true,
-      };
-
-      store.dispatch = jest.fn(store.dispatch);
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL };
-
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      populateRequiredFields(registerPage, payload);
-
-      // submit optional fields
-      registerPage.find('input#optional-field-checkbox').simulate('change', { target: { name: 'optionalFields', checked: true } });
-      registerPage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
-      registerPage.find('select#yearOfBirth').simulate('change', { target: { value: '1997', name: 'yearOfBirth' } });
-      registerPage.find('select#levelOfEducation').simulate('change', { target: { value: 'other', name: 'levelOfEducation' } });
-      registerPage.find('textarea#goals').simulate('change', { target: { value: 'edX goals', name: 'goals' } });
-
-      registerPage.find('button.btn-brand').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
   });
 });
