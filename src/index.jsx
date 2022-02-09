@@ -31,7 +31,6 @@ initialize({
         PASSWORD_RESET_SUPPORT_LINK: process.env.PASSWORD_RESET_SUPPORT_LINK || null,
         TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
         PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
-        REGISTRATION_OPTIONAL_FIELDS: process.env.REGISTRATION_OPTIONAL_FIELDS || '',
         USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME || null,
         COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
         WELCOME_PAGE_SUPPORT_LINK: process.env.WELCOME_PAGE_SUPPORT_LINK || null,

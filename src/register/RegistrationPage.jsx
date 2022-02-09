@@ -1,6 +1,5 @@
 import React from 'react';
 
-import snakeCase from 'lodash.snakecase';
 import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
@@ -26,7 +25,6 @@ import {
   registrationErrorSelector, registrationRequestSelector, validationsSelector, usernameSuggestionsSelector,
 } from './data/selectors';
 import messages from './messages';
-import OptionalFields from './OptionalFields';
 import RegistrationFailure from './RegistrationFailure';
 import UsernameField from './UsernameField';
 
@@ -50,7 +48,6 @@ class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
     sendPageEvent('login_and_registration', 'register');
-    const optionalFields = getConfig().REGISTRATION_OPTIONAL_FIELDS ? getConfig().REGISTRATION_OPTIONAL_FIELDS.split(',') : [];
     this.handleOnClose = this.handleOnClose.bind(this);
 
     this.queryParams = getAllPossibleQueryParam();
@@ -73,9 +70,6 @@ class RegistrationPage extends React.Component {
       emailWarningSuggestion: null,
       errorCode: null,
       failureCount: 0,
-      optionalFields,
-      optionalFieldsState: {},
-      showOptionalField: false,
       startTime: Date.now(),
       totalRegistrationTime: 0,
       optimizelyExperimentName: '', // eslint-disable-line react/no-unused-state
@@ -185,27 +179,11 @@ class RegistrationPage extends React.Component {
     }
   };
 
-  getOptionalFields() {
-    return (
-      <OptionalFields
-        optionalFields={this.state.optionalFields}
-        values={this.state.optionalFieldsState}
-        onChangeHandler={
-          (fieldName, value) => {
-            this.setState(prevState => ({
-              optionalFieldsState: { ...prevState.optionalFieldsState, [fieldName]: value },
-            }));
-          }
-        }
-      />
-    );
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
     const { startTime } = this.state;
     const totalRegistrationTime = (Date.now() - startTime) / 1000;
-    let payload = {
+    const payload = {
       name: this.state.name,
       username: this.state.username,
       email: this.state.email,
@@ -231,15 +209,6 @@ class RegistrationPage extends React.Component {
     if (getConfig().MARKETING_EMAILS_OPT_IN) {
       payload.marketing_emails_opt_in = this.state.marketingOptIn;
     }
-
-    // Since optional fields and query params are not validated we can add it to payload after
-    // required fields have been validated.
-    payload = { ...payload, ...this.queryParams };
-    this.state.optionalFields.forEach((key) => {
-      if (this.state.optionalFieldsState[key]) {
-        payload[snakeCase(key)] = this.state.optionalFieldsState[key];
-      }
-    });
 
     payload.totalRegistrationTime = totalRegistrationTime;
     this.setState({
@@ -269,12 +238,7 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnChange = (e) => {
-    if (e.target.name === 'optionalFields') {
-      sendTrackEvent('edx.bi.user.register.optional_fields_selected', {});
-      this.setState({
-        showOptionalField: e.target.checked,
-      });
-    } else if (!(e.target.name === 'username' && e.target.value.length > 30)) {
+    if (!(e.target.name === 'username' && e.target.value.length > 30)) {
       this.setState({
         [e.target.name]: e.target.value,
       });
@@ -692,20 +656,6 @@ class RegistrationPage extends React.Component {
                 }}
               />
             </div>
-            {getConfig().REGISTRATION_OPTIONAL_FIELDS ? (
-              <Form.Group className="mb-0 mt-2 small">
-                <Form.Check
-                  id="optional-field-checkbox"
-                  type="checkbox"
-                  name="optionalFields"
-                  value={this.state.showOptionalField}
-                  onClick={this.handleOnChange}
-                  onChange={this.handleOnChange}
-                  label={intl.formatMessage(messages['support.education.research'])}
-                />
-              </Form.Group>
-            ) : null}
-            { this.state.showOptionalField ? this.getOptionalFields() : null }
             <StatefulButton
               type="submit"
               variant="brand"
