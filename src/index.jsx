@@ -40,6 +40,7 @@ initialize({
         ENABLE_PROGRESSIVE_PROFILING: process.env.ENABLE_PROGRESSIVE_PROFILING || false,
         MARKETING_EMAILS_OPT_IN: process.env.MARKETING_EMAILS_OPT_IN || '',
         ENABLE_COPPA_COMPLIANCE: process.env.ENABLE_COPPA_COMPLIANCE || '',
+        SHOW_DYNAMIC_PROFILING_PAGE: process.env.SHOW_DYNAMIC_PROFILING_PAGE || false,
       });
     },
   },
