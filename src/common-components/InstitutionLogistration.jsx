@@ -70,7 +70,7 @@ const LogistrationDefaultProps = {
 };
 const LogistrationProps = {
   secondaryProviders: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequried,
+    name: PropTypes.string.isRequired,
     loginUrl: PropTypes.string.isRequired,
   })),
 };

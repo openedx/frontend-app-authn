@@ -19,6 +19,7 @@ export const API_RATELIMIT_ERROR = 'api-ratelimit-error';
 export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';
 export const COMPLETE_STATE = 'complete';
+export const FAILURE_STATE = 'failure';
 
 // Regex
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'
