@@ -20,7 +20,7 @@ const messages = defineMessages({
   'sign.in.button': {
     id: 'sign.in.button',
     defaultMessage: 'Sign in',
-    description: 'Button label that appears on login page',
+    description: 'Sign in button label that appears on login page',
   },
   'sign.in.btn.pending.state': {
     id: 'sign.in.btn.pending.state',

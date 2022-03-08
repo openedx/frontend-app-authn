@@ -77,6 +77,7 @@
   },
   "devDependencies": {
     "@edx/frontend-build": "9.0.6",
+    "@edx/reactifex": "1.0.3",
     "babel-plugin-react-intl": "8.2.25",
     "codecov": "3.8.2",
     "enzyme": "3.11.0",
@@ -86,7 +87,6 @@
     "history": "5.2.0",
     "husky": "7.0.4",
     "jest": "27.5.1",
-    "react-test-renderer": "16.14.0",
-    "reactifex": "1.1.1"
+    "react-test-renderer": "16.14.0"
   }
 }
