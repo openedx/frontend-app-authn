@@ -26,15 +26,7 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
 
-  // TODO: Remove after VAN-704 is complete
-  const [registerRenameExpVariation, setRegisterRenameExpVariation] = useState('');
-
   useEffect(() => {
-    const { renameRegisterExperiment } = window;
-
-    if (renameRegisterExperiment) {
-      setRegisterRenameExpVariation(renameRegisterExperiment);
-    }
     const authService = getAuthService();
     if (authService) {
       authService.getCsrfTokenService().getCsrfToken(getConfig().LMS_BASE_URL);
@@ -81,12 +73,7 @@ const Logistration = (props) => {
             <>
               {!tpa && (
                 <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                  <Tab
-                    title={registerRenameExpVariation === 'variation1' ? (
-                      intl.formatMessage(messages['register.for.free'])
-                    ) : intl.formatMessage(messages['logistration.register'])}
-                    eventKey={REGISTER_PAGE}
-                  />
+                  <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                   <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                 </Tabs>
               )}
