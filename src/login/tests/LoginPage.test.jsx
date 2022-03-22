@@ -145,7 +145,7 @@ describe('LoginPage', () => {
 
   it('should match default button state', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find('button[type="submit"] span').first().text()).toEqual(' Sign in ');
+    expect(loginPage.find('button[type="submit"] span').first().text()).toEqual('Sign in');
   });
 
   it('should match pending button state', () => {
@@ -160,7 +160,7 @@ describe('LoginPage', () => {
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     const button = loginPage.find('button[type="submit"] span').first();
 
-    expect(button.find('.sr-only').text()).toEqual(' pending ');
+    expect(button.find('.sr-only').text()).toEqual('pending');
   });
 
   it('should show forgot password link', () => {
