@@ -148,7 +148,7 @@ const ResetPasswordPage = (props) => {
     const { token } = props.match.params;
     if (token) {
       props.validateToken(token);
-      return <Spinner animation="border" variant="primary" className="mt-5" />;
+      return <Spinner animation="border" variant="primary" className="centered-align-spinner" />;
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
     return <Redirect to={updatePathWithQueryParams(RESET_PAGE)} />;
