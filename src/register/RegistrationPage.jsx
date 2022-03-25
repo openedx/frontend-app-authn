@@ -676,7 +676,7 @@ class RegistrationPage extends React.Component {
               className={classNames(
                 'mt-4 mb-4',
                 { 'stateful-button-variation1-width': this.state.registerRenameExpVariation === 'variation1' },
-                { 'stateful-button-width': !this.state.registerRenameExpVariation === 'variation1' },
+                { 'stateful-button-width': this.state.registerRenameExpVariation !== 'variation1' },
               )}
               state={submitState}
               labels={{
