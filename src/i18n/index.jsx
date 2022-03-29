@@ -4,6 +4,10 @@ import caMessages from './messages/ca.json';
 import es419Messages from './messages/es_419.json';
 import frMessages from './messages/fr.json';
 import zhcnMessages from './messages/zh_CN.json';
+import ititMessages from './messages/it_IT.json';
+import ptptMessages from './messages/pt_PT.json';
+import dedeMessages from './messages/de_DE.json';
+import hiMessages from './messages/hi.json';
 import heMessages from './messages/he.json';
 import idMessages from './messages/id.json';
 import kokrMessages from './messages/ko_kr.json';
@@ -19,6 +23,9 @@ const messages = {
   'es-419': es419Messages,
   fr: frMessages,
   'zh-cn': zhcnMessages,
+  'it-it': ititMessages,
+  'pt-pt': ptptMessages,
+  'de-de': dedeMessages,
   ca: caMessages,
   he: heMessages,
   id: idMessages,
@@ -28,6 +35,7 @@ const messages = {
   ru: ruMessages,
   th: thMessages,
   uk: ukMessages,
+  hi: hiMessages,
 };
 
 export default messages;
