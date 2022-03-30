@@ -263,14 +263,14 @@ describe('LoginPage', () => {
   // ******** test redirection ********
 
   it('should redirect to url returned by login endpoint', () => {
-    const dasboardUrl = 'http://localhost:18000/enterprise/select/active/?success_url=/dashboard';
+    const dashboardUrl = 'http://localhost:18000/enterprise/select/active/?success_url=/dashboard';
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
         loginResult: {
           success: true,
-          redirectUrl: dasboardUrl,
+          redirectUrl: dashboardUrl,
         },
       },
     });
@@ -278,7 +278,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
     renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(dasboardUrl);
+    expect(window.location.href).toBe(dashboardUrl);
   });
 
   it('should redirect to finishAuthUrl upon successful login via SSO', () => {

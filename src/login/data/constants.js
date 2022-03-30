@@ -7,6 +7,8 @@ export const FORBIDDEN_REQUEST = 'forbidden-request';
 export const FAILED_LOGIN_ATTEMPT = 'failed-login-attempt';
 export const ACCOUNT_LOCKED_OUT = 'account-locked-out';
 export const INCORRECT_EMAIL_PASSWORD = 'incorrect-email-or-password';
+export const NUDGE_PASSWORD_CHANGE = 'nudge-password-change';
+export const REQUIRE_PASSWORD_CHANGE = 'require-password-change';
 
 // Account Activation Message
 export const ACCOUNT_ACTIVATION_MESSAGE = {

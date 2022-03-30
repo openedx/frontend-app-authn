@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 
@@ -12,6 +13,8 @@ import {
   NON_COMPLIANT_PASSWORD_EXCEPTION,
   FAILED_LOGIN_ATTEMPT,
   INCORRECT_EMAIL_PASSWORD,
+  NUDGE_PASSWORD_CHANGE,
+  REQUIRE_PASSWORD_CHANGE,
 } from '../data/constants';
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
@@ -220,5 +223,49 @@ describe('LoginFailureMessage', () => {
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
     expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('/reset');
+  });
+
+  it('should show modal that nudges users to change password', () => {
+    props = {
+      loginError: {
+        errorCode: NUDGE_PASSWORD_CHANGE,
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <IntlLoginFailureMessage {...props} />
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    expect(loginFailureMessage.find('.pgn__modal-title').text()).toEqual('Password security');
+    expect(loginFailureMessage.find('.pgn__modal-body').text()).toEqual(
+      'Our system detected that your password is vulnerable. '
+               + 'We recommend you change it so that your account stays secure.',
+    );
+  });
+
+  it('should show modal that requires users to change password', () => {
+    props = {
+      loginError: {
+        errorCode: REQUIRE_PASSWORD_CHANGE,
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <IntlLoginFailureMessage {...props} />
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    expect(loginFailureMessage.find('.pgn__modal-title').text()).toEqual('Password change required');
+    expect(loginFailureMessage.find('.pgn__modal-body').text()).toEqual(
+      'Our system detected that your password is vulnerable. '
+               + 'Change your password so that your account stays secure.',
+    );
   });
 });
