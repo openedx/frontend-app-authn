@@ -1,6 +1,6 @@
 import { getConfig } from '@edx/frontend-platform';
 import { getHttpClient, getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
-import querystring from 'querystring';
+import * as QueryString from 'query-string';
 
 export async function registerRequest(registrationInformation) {
   const requestConfig = {
@@ -11,7 +11,7 @@ export async function registerRequest(registrationInformation) {
   const { data } = await getAuthenticatedHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/user/v2/account/registration/`,
-      querystring.stringify(registrationInformation),
+      QueryString.stringify(registrationInformation),
       requestConfig,
     )
     .catch((e) => {
@@ -32,7 +32,7 @@ export async function getFieldsValidations(formPayload) {
   const { data } = await getHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
-      querystring.stringify(formPayload),
+      QueryString.stringify(formPayload),
       requestConfig,
     )
     .catch((e) => {

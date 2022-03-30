@@ -1,6 +1,6 @@
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
-import querystring from 'querystring';
+import * as QueryString from 'query-string';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function loginRequest(creds) {
@@ -12,7 +12,7 @@ export async function loginRequest(creds) {
   const { data } = await getAuthenticatedHttpClient()
     .post(
       `${getConfig().LMS_BASE_URL}/api/user/v2/account/login_session/`,
-      querystring.stringify(creds),
+      QueryString.stringify(creds),
       requestConfig,
     )
     .catch((e) => {
