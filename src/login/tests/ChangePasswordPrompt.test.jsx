@@ -17,6 +17,15 @@ const history = createMemoryHistory();
 describe('ChangePasswordPromptTests', () => {
   let props = {};
 
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: query,
+      })),
+    });
+  });
+
   it('[nudge modal] should redirect to next url when user clicks close button', () => {
     const dashboardUrl = getConfig().BASE_URL.concat('/dashboard');
     props = {

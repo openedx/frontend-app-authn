@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 
+import classNames from 'classnames';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  ActionRow, Button, ModalDialog, useToggle,
+  ActionRow, ModalDialog, useToggle,
 } from '@edx/paragon';
 
 import messages from './messages';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
+import useMobileResponsive from '../data/utils/useMobileResponsive';
 
 const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
+  const isMobileView = useMobileResponsive();
   const [redirectToResetPasswordPage, setRedirectToResetPasswordPage] = useState(false);
   const handlers = {
     handleToggleOff: () => {
@@ -35,6 +38,7 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
       title="Password security"
       isOpen={isOpen}
       onClose={close}
+      size={isMobileView ? 'sm' : 'md'}
       hasCloseButton={false}
     >
       <ModalDialog.Header>
@@ -46,15 +50,21 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
         {intl.formatMessage(messages[`password.security.${variant}.body`])}
       </ModalDialog.Body>
       <ModalDialog.Footer>
-        <ActionRow>
+        <ActionRow className={classNames(
+          { 'd-flex flex-column': isMobileView },
+        )}
+        >
           {variant === 'nudge' ? (
-            <Button id="password-security-close" variant="tertiary" onClick={close}>
+            <ModalDialog.CloseButton id="password-security-close" variant="tertiary">
               {intl.formatMessage(messages['password.security.close.button'])}
-            </Button>
+            </ModalDialog.CloseButton>
           ) : null}
           <Link
             id="password-security-reset-password"
-            className="btn btn-primary"
+            className={classNames(
+              'btn btn-primary',
+              { 'w-100': isMobileView },
+            )}
             to={updatePathWithQueryParams(RESET_PAGE)}
           >
             {intl.formatMessage(messages['password.security.redirect.to.reset.password.button'])}

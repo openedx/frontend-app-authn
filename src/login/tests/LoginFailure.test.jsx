@@ -22,6 +22,15 @@ const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 describe('LoginFailureMessage', () => {
   let props = {};
 
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: query,
+      })),
+    });
+  });
+
   it('should match non compliant password error message', () => {
     props = {
       loginError: {
