@@ -280,17 +280,21 @@ select.form-control {
 .pt-10 {
   padding-top: 10px;
 }
+
 .tooltip-shadow {
-  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.3) !important;
+  box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.3) !important;
 }
+
 #password-requirement-left {
   opacity: 1;
+
   .tooltip-inner {
     @extend .tooltip-shadow;
     background: white;
     display: block;
     color: #707070;
   }
+
   .arrow::before {
     border-left-color: #fff;
     @extend .tooltip-shadow;
@@ -302,6 +306,7 @@ select.form-control {
   opacity: 1;
   width: 90%;
   margin-bottom: 10px;
+
   .tooltip-inner {
     max-width: inherit;
     background: white;
@@ -309,12 +314,14 @@ select.form-control {
     @extend .tooltip-shadow;
     color: #707070;
   }
+
   .arrow::before {
     border-top-color: #fff;
     @extend .tooltip-shadow;
   }
 
 }
+
 #forgotpassword-success-alert {
   .alert-link {
     color: #454545 !important;
@@ -382,56 +389,52 @@ select.form-control {
 
 .extra-large-screen-top-stripe {
   height: 0.5rem;
-  background-image: linear-gradient(
-    102.02deg,
-    $brand-700 10%,
-    $brand 10%,
-    $brand 45%,
-    $primary-700 45%,
-    $primary-700 55%,
-    $accent-a 55%,
-    $accent-a 75%,
-    $accent-a-light 75%,
-  );
+  background-image: linear-gradient(102.02deg,
+      $brand-700 10%,
+      $brand 10%,
+      $brand 45%,
+      $primary-700 45%,
+      $primary-700 55%,
+      $accent-a 55%,
+      $accent-a 75%,
+      $accent-a-light 75%,
+    );
   background-repeat: no-repeat;
 }
 
 .medium-screen-top-stripe {
   height: 0.5rem;
-  background-image: linear-gradient(
-    102.02deg,
-    $brand-700,
-    $brand-700 10%,
-    $brand 10%,
-    $brand 90%,
-    $primary-700 90%,
-    $primary-700 100%,
-  );
+  background-image: linear-gradient(102.02deg,
+      $brand-700,
+      $brand-700 10%,
+      $brand 10%,
+      $brand 90%,
+      $primary-700 90%,
+      $primary-700 100%,
+    );
   background-repeat: no-repeat;
 }
 
 .large-screen-top-stripe {
   height: 0.5rem;
-  background-image: linear-gradient(
-  102.02deg,
-  $brand-700 10%,
-  $brand 10%,
-  $brand 65%,
-  $primary-700 65%,
-  $primary-700 75%,
-  $accent-a 75%,
-  $accent-a 75%);
+  background-image: linear-gradient(102.02deg,
+      $brand-700 10%,
+      $brand 10%,
+      $brand 65%,
+      $primary-700 65%,
+      $primary-700 75%,
+      $accent-a 75%,
+      $accent-a 75%);
   background-repeat: no-repeat;
 }
 
 .small-screen-top-stripe {
   height: 0.25rem;
-  background-image: linear-gradient(
-    102.02deg,
-    $brand-700,
-    $brand-700 20%,
-    $brand 20%,
-  );
+  background-image: linear-gradient(102.02deg,
+      $brand-700,
+      $brand-700 20%,
+      $brand 20%,
+    );
   background-repeat: no-repeat;
 }
 
@@ -513,7 +516,8 @@ select.form-control {
   width: 4em;
   height: 72px;
 }
-.dicount-heading{
+
+.dicount-heading {
   margin-left: 7px;
 }
 
@@ -591,26 +595,26 @@ select.form-control {
   color: $gray-700;
 }
 
-.logistration-button:hover{
+.logistration-button:hover {
   color: $gray-700;
   text-decoration: none;
 }
 
 .dropdown-item:active {
-    background-color: #F2F0EF;
+  background-color: #F2F0EF;
 }
 
 .dropdown-container {
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    max-height: 200px;
-    font-size: 1rem;
-    font-weight: normal;
-    line-height: 1.25rem;
-    overflow-y: scroll;
-    position: absolute;
-    background-color: #fff;
-    width: 464px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  max-height: 200px;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.25rem;
+  overflow-y: scroll;
+  position: absolute;
+  background-color: #fff;
+  width: 464px;
 }
 
 .email-error-alert {
@@ -655,15 +659,17 @@ select.form-control {
 }
 
 .arrow-back-icon {
-  margin-top:2px;
+  margin-top: 2px;
 }
 
 .icon-size {
   width: 2.3rem;
 }
+
 .has-floating-label {
   color: $gray-500;
 }
+
 .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
   font-size: 0.875rem;
   line-height: 1.5;
@@ -673,13 +679,12 @@ select.form-control {
   font-size: 0.75rem;
 }
 
-.form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
-    font-size: 16px;
-    color: $primary-700;
+.form-field .form-control:focus~.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 16px;
+  color: $primary-700;
 }
 
-.form-field .form-control:not([value='']):not(:focus) ~
-  .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+.form-field .form-control:not([value='']):not(:focus)~.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
   font-size: 16px;
 }
 
@@ -739,7 +744,7 @@ select.form-control {
   .layout {
     display: flex;
     align-items: center;
-    flex-direction:column;
+    flex-direction: column;
     justify-content: center;
   }
 
@@ -754,17 +759,18 @@ select.form-control {
   .layout {
     display: flex;
     align-items: center;
-    flex-direction:column;
+    flex-direction: column;
     justify-content: center;
   }
 }
 
 @media (min-width: 1200px) {
-  .layout{
+  .layout {
     display: flex;
     justify-content: space-between;
 
   }
+
   .content {
     width: 50vw;
     display: flex;
@@ -783,7 +789,9 @@ select.form-control {
 }
 
 @media (max-height: 500px) {
-  .large-screen-svg-line, .large-heading {
+
+  .large-screen-svg-line,
+  .large-heading {
     margin-top: 5rem;
   }
 }
@@ -844,27 +852,38 @@ select.form-control {
     font-size: 0.75rem;
     line-height: 1.25rem;
   }
+
   margin-top: 1rem;
   margin-left: 3px;
 }
+
 .suggested-username {
   position: relative;
   margin-top: -8.7%;
   margin-left: 15px;
 }
+
 .suggested-username-close-button {
   right: 0;
   position: absolute;
 }
+
 .suggested-username-with-error {
   position: relative;
   margin-top: -13.7%;
   margin-bottom: 11%;
   margin-left: 15px;
 }
+
 .scroll-suggested-username {
   width: 21rem;
   white-space: nowrap;
   overflow-x: auto;
   display: inline-flex;
 }
+
+//style the login buttons for Google and MS (Azure) here
+//.btn-oa2-google-oauth2 {
+//  background-color: #2f80ed;
+//
+//}

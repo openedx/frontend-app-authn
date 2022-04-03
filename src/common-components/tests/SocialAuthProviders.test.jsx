@@ -14,7 +14,7 @@ describe('SocialAuthProviders', () => {
     id: 'oa2-apple-id',
     name: 'Apple',
     iconClass: null,
-    iconImage: 'https://edx.devstack.lms/logo.png',
+    iconImage: '/media/logo.png',
     loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
   };
 
@@ -22,7 +22,7 @@ describe('SocialAuthProviders', () => {
     id: 'oa2-facebook',
     name: 'Facebook',
     iconClass: null,
-    iconImage: 'https://edx.devstack.lms/facebook-logo.png',
+    iconImage: '/media/facebook-logo.png',
     loginUrl: '/auth/login/facebook/?auth_entry=login&next=/dashboard',
   };
 

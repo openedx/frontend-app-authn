@@ -140,9 +140,9 @@ describe('RegistrationPage', () => {
 
       store.dispatch = jest.fn(store.dispatch);
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-
+      registerPage.find('button#signupwemail').simulate('click');
       populateRequiredFields(registerPage, payload);
-      registerPage.find('button.btn-brand').simulate('click');
+      registerPage.find('button#createaccount').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
 
@@ -171,9 +171,10 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('button#signupwemail').simulate('click');
 
       populateRequiredFields(registerPage, formPayload, true);
-      registerPage.find('button.btn-brand').simulate('click');
+      registerPage.find('button#createaccount').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
     });
 
@@ -181,7 +182,8 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('button.btn-brand').simulate('click');
+      registrationPage.find('button#signupwemail').simulate('click');
+      registrationPage.find('button#createaccount').simulate('click');
       expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser({}));
     });
 
@@ -189,7 +191,9 @@ describe('RegistrationPage', () => {
 
     it('should show error messages for required fields on empty form submission', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('button.btn-brand').simulate('click');
+
+      registrationPage.find('button#signupwemail').simulate('click');
+      registrationPage.find('button#createaccount').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
       expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
@@ -206,6 +210,7 @@ describe('RegistrationPage', () => {
 
     it('should update errors for frontend validations', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       registrationPage.find('input#name').simulate('blur', { target: { value: 'http://test.com', name: 'name' } });
 
       registrationPage.find('input#password').simulate('blur', { target: { value: 'pas', name: 'password' } });
@@ -221,6 +226,7 @@ describe('RegistrationPage', () => {
 
     it('should validate fields on blur event', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
       registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
       registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
@@ -233,6 +239,7 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
+      registrationPage.find('button#signupwemail').simulate('click');
       // enter a valid username so that frontend validations are passed
       registrationPage.find('input#username').simulate('change', { target: { value: 'test', name: 'username' } });
       registrationPage.find('input#username').simulate('blur');
@@ -252,6 +259,7 @@ describe('RegistrationPage', () => {
 
     it('should validate the did you mean suggestions', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
       expect(registrationPage.find('RegistrationPage').state('emailErrorSuggestion')).toEqual('test@gmail.com');
@@ -270,14 +278,14 @@ describe('RegistrationPage', () => {
           ...initialState.register,
           registrationError: {
             username: [{ userMessage: 'It looks like this username is already taken' }],
-            email: [{ userMessage: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account` }],
+            email: [{ userMessage: `This email is already associated with an existing or previous ${getConfig().SITE_NAME} account` }],
           },
         },
       });
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
       expect(registrationPage.prop('validationDecisions')).toEqual({
         country: '',
-        email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`,
+        email: `This email is already associated with an existing or previous ${getConfig().SITE_NAME} account`,
         name: '',
         password: '',
         username: 'It looks like this username is already taken',
@@ -310,7 +318,8 @@ describe('RegistrationPage', () => {
         country: '',
       };
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('button.btn-brand').simulate('click');
+      registrationPage.find('button#signupwemail').simulate('click');
+      registrationPage.find('button#createaccount').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
       registrationPage.find('input#name').simulate('focus');
@@ -329,6 +338,7 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       registrationPage.find('input#username').simulate('focus');
 
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
@@ -336,6 +346,7 @@ describe('RegistrationPage', () => {
 
     it('should set readOnly state false if focus on country field', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       registrationPage.find('input#country').simulate('focus');
       expect(registrationPage.find('RegistrationPage').state('readOnly')).toEqual(false);
     });
@@ -355,7 +366,7 @@ describe('RegistrationPage', () => {
       });
 
       const expectedMessage = `${'You\'ve successfully signed into Apple! We just need a little more information before '
-                              + 'you start learning with '}${ getConfig().SITE_NAME }.`;
+        + 'you start learning with '}${getConfig().SITE_NAME}.`;
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registerPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
@@ -404,6 +415,7 @@ describe('RegistrationPage', () => {
 
     it('should match default button state', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual(' Create an account ');
     });
 
@@ -417,6 +429,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       const button = registrationPage.find('button[type="submit"] span').first();
 
       expect(button.find('.sr-only').text()).toEqual(' pending ');
@@ -477,6 +490,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button#signupwemail').simulate('click');
       expect(registrationPage.find('input#password').length).toEqual(0);
     });
 
@@ -506,6 +520,7 @@ describe('RegistrationPage', () => {
       });
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('button#signupwemail').simulate('click');
       registerPage.find('RegistrationPage').instance().shouldComponentUpdate(props);
       registerPage.find('RegistrationPage').setState({ errors: { username: 'It looks like this username is already taken' } });
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
@@ -523,6 +538,7 @@ describe('RegistrationPage', () => {
       });
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('button#signupwemail').simulate('click');
       registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
@@ -541,6 +557,7 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('button#signupwemail').simulate('click');
       registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
       registerPage.find('button.suggested-username-close-button').at(0).simulate('click');
@@ -766,6 +783,7 @@ describe('RegistrationPage', () => {
       });
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('button#signupwemail').simulate('click');
       expect(registerPage.find('div.opt-checkbox').length).toEqual(1);
 
       mergeConfig({

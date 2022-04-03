@@ -11,7 +11,7 @@ import {
   injectIntl, intlShape, getCountryList, getLocale, FormattedMessage,
 } from '@edx/frontend-platform/i18n';
 import {
-  Alert, Form, Hyperlink, StatefulButton, Icon,
+  Alert, Form, Hyperlink, StatefulButton, Icon, Button,
 } from '@edx/paragon';
 import { Error, Close } from '@edx/paragon/icons';
 
@@ -77,6 +77,7 @@ class RegistrationPage extends React.Component {
       validatePassword: false,
       // TODO: Remove after VAN-704 is complete
       registerRenameExpVariation: '',
+      signUpWithEmailVisible: false,
     };
   }
 
@@ -290,6 +291,10 @@ class RegistrationPage extends React.Component {
     this.props.clearUsernameSuggestions();
   }
 
+  handleSignUpEmailClick = () => {
+    this.setState({ signUpWithEmailVisible: true });
+  }
+
   isFormValid(payload) {
     const { errors } = this.state;
     let isValid = true;
@@ -472,7 +477,7 @@ class RegistrationPage extends React.Component {
       <>
         {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
           <div className="mt-4 mb-3 h4">
-            {intl.formatMessage(messages['registration.other.options.heading'])}
+            {intl.formatMessage(messages['registration.create.account.heading'])}
           </div>
         )}
 
@@ -493,6 +498,124 @@ class RegistrationPage extends React.Component {
             )}
           </>
         )}
+      </>
+    );
+  }
+
+  renderSignUpForm(intl, currentProvider, submitState) {
+    return (
+      <>
+        <FormGroup
+          name="name"
+          value={this.state.name}
+          handleBlur={this.handleOnBlur}
+          handleChange={this.handleOnChange}
+          handleFocus={this.handleOnFocus}
+          errorMessage={this.state.errors.name}
+          helpText={[intl.formatMessage(messages['help.text.name'])]}
+          floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
+        />
+        <FormGroup
+          name="email"
+          value={this.state.email}
+          handleBlur={this.handleOnBlur}
+          handleChange={this.handleOnChange}
+          errorMessage={this.state.errors.email}
+          handleFocus={this.handleOnFocus}
+          helpText={[intl.formatMessage(messages['help.text.email'])]}
+          floatingLabel={intl.formatMessage(messages['registration.email.label'])}
+          borderClass={this.state.borderClass}
+        >
+          {this.renderEmailFeedback()}
+        </FormGroup>
+
+        <UsernameField
+          name="username"
+          value={this.state.username}
+          handleBlur={this.handleOnBlur}
+          handleChange={this.handleOnChange}
+          handleFocus={this.handleOnFocus}
+          errorMessage={this.state.errors.username}
+          helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
+          floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+          handleSuggestionClick={this.handleSuggestionClick}
+          usernameSuggestions={this.props.usernameSuggestions}
+          handleUsernameSuggestionClose={this.handleUsernameSuggestionClose}
+        />
+
+        {!currentProvider && (
+          <PasswordField
+            name="password"
+            value={this.state.password}
+            handleBlur={this.handleOnBlur}
+            handleChange={this.handleOnChange}
+            handleFocus={this.handleOnFocus}
+            errorMessage={this.state.errors.password}
+            floatingLabel={intl.formatMessage(messages['registration.password.label'])}
+          />
+        )}
+        <CountryDropdown
+          name="country"
+          floatingLabel={intl.formatMessage(messages['registration.country.label'])}
+          options={getCountryList(getLocale())}
+          valueKey="code"
+          displayValueKey="name"
+          value={this.state.country}
+          handleBlur={this.handleOnBlur}
+          handleFocus={this.handleOnFocus}
+          errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
+          handleChange={(value) => this.setState({ country: value })}
+          errorCode={this.state.errorCode}
+          readOnly={this.state.readOnly}
+        />
+        {(getConfig().MARKETING_EMAILS_OPT_IN)
+          && (
+            <Form.Checkbox
+              className="opt-checkbox"
+              name="marketing_emails_opt_in"
+              checked={this.state.marketingOptIn}
+              onChange={(e) => this.setState({ marketingOptIn: e.target.checked })}
+            >
+              {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
+            </Form.Checkbox>
+          )}
+        <div id="honor-code" className="micro text-muted mt-4">
+          <FormattedMessage
+            id="register.page.terms.of.service.and.honor.code"
+            defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
+        Member process your personal data in accordance with the {privacyPolicy}."
+            description="Text that appears on registration form stating honor code and privacy policy"
+            values={{
+              platformName: getConfig().SITE_NAME,
+              tosAndHonorCode: (
+                <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
+                  {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
+                </Hyperlink>
+              ),
+              privacyPolicy: (
+                <Hyperlink variant="muted" destination={getConfig().PRIVACY_POLICY || '#'} target="_blank">
+                  {intl.formatMessage(messages['privacy.policy'])}
+                </Hyperlink>
+              ),
+            }}
+          />
+        </div>
+        <StatefulButton
+          name="createaccount"
+          id="createaccount"
+          type="submit"
+          variant="brand"
+          className="stateful-button-width mt-4 mb-4"
+          state={submitState}
+          labels={{
+            default: this.state.registerRenameExpVariation === 'variation2' ? (
+              intl.formatMessage(messages['register.for.free.button'])
+            ) : intl.formatMessage(messages['create.account.button']),
+            pending: '',
+          }}
+          onClick={this.handleSubmit}
+          onMouseDown={(e) => e.preventDefault()}
+        />
       </>
     );
   }
@@ -561,120 +684,18 @@ class RegistrationPage extends React.Component {
             </>
           )}
           <Form>
-            <FormGroup
-              name="name"
-              value={this.state.name}
-              handleBlur={this.handleOnBlur}
-              handleChange={this.handleOnChange}
-              handleFocus={this.handleOnFocus}
-              errorMessage={this.state.errors.name}
-              helpText={[intl.formatMessage(messages['help.text.name'])]}
-              floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
-            />
-            <FormGroup
-              name="email"
-              value={this.state.email}
-              handleBlur={this.handleOnBlur}
-              handleChange={this.handleOnChange}
-              errorMessage={this.state.errors.email}
-              handleFocus={this.handleOnFocus}
-              helpText={[intl.formatMessage(messages['help.text.email'])]}
-              floatingLabel={intl.formatMessage(messages['registration.email.label'])}
-              borderClass={this.state.borderClass}
-            >
-              {this.renderEmailFeedback()}
-            </FormGroup>
-
-            <UsernameField
-              name="username"
-              value={this.state.username}
-              handleBlur={this.handleOnBlur}
-              handleChange={this.handleOnChange}
-              handleFocus={this.handleOnFocus}
-              errorMessage={this.state.errors.username}
-              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
-              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
-              handleSuggestionClick={this.handleSuggestionClick}
-              usernameSuggestions={this.props.usernameSuggestions}
-              handleUsernameSuggestionClose={this.handleUsernameSuggestionClose}
-            />
-
-            {!currentProvider && (
-              <PasswordField
-                name="password"
-                value={this.state.password}
-                handleBlur={this.handleOnBlur}
-                handleChange={this.handleOnChange}
-                handleFocus={this.handleOnFocus}
-                errorMessage={this.state.errors.password}
-                floatingLabel={intl.formatMessage(messages['registration.password.label'])}
-              />
-            )}
-            <CountryDropdown
-              name="country"
-              floatingLabel={intl.formatMessage(messages['registration.country.label'])}
-              options={getCountryList(getLocale())}
-              valueKey="code"
-              displayValueKey="name"
-              value={this.state.country}
-              handleBlur={this.handleOnBlur}
-              handleFocus={this.handleOnFocus}
-              errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
-              handleChange={(value) => this.setState({ country: value })}
-              errorCode={this.state.errorCode}
-              readOnly={this.state.readOnly}
-            />
-            {(getConfig().MARKETING_EMAILS_OPT_IN)
-            && (
-              <Form.Checkbox
-                className="opt-checkbox"
-                name="marketing_emails_opt_in"
-                checked={this.state.marketingOptIn}
-                onChange={(e) => this.setState({ marketingOptIn: e.target.checked })}
-              >
-                {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
-              </Form.Checkbox>
-            )}
-            <div id="honor-code" className="micro text-muted mt-4">
-              <FormattedMessage
-                id="register.page.terms.of.service.and.honor.code"
-                defaultMessage="By creating an account, you agree to the {tosAndHonorCode} and you acknowledge that {platformName} and each
-                Member process your personal data in accordance with the {privacyPolicy}."
-                description="Text that appears on registration form stating honor code and privacy policy"
-                values={{
-                  platformName: getConfig().SITE_NAME,
-                  tosAndHonorCode: (
-                    <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
-                      {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
-                    </Hyperlink>
-                  ),
-                  privacyPolicy: (
-                    <Hyperlink variant="muted" destination={getConfig().PRIVACY_POLICY || '#'} target="_blank">
-                      {intl.formatMessage(messages['privacy.policy'])}
-                    </Hyperlink>
-                  ),
-                }}
-              />
-            </div>
-            <StatefulButton
-              type="submit"
-              variant="brand"
-              className="stateful-button-width mt-4 mb-4"
-              state={submitState}
-              labels={{
-                default: this.state.registerRenameExpVariation === 'variation2' ? (
-                  intl.formatMessage(messages['register.for.free.button'])
-                ) : intl.formatMessage(messages['create.account.button']),
-                pending: '',
-              }}
-              onClick={this.handleSubmit}
-              onMouseDown={(e) => e.preventDefault()}
-            />
             {this.renderThirdPartyAuth(providers,
               secondaryProviders,
               currentProvider,
               thirdPartyAuthApiStatus,
               intl)}
+            <div className="mt-4 mb-3 h4">
+              {intl.formatMessage(messages['register.signupwith.or.heading'])}
+            </div>
+            {!this.state.signUpWithEmailVisible
+              ? <Button name="signupwemail" id="signupwemail" variant="brand" onClick={this.handleSignUpEmailClick}>{intl.formatMessage(messages['register.signupwith.email.button'])}</Button>
+              : this.renderSignUpForm(intl, currentProvider, submitState)}
+
           </Form>
           {(this.state.optimizelyExperimentName === 'variation1' || this.state.optimizelyExperimentName === 'variation2')
             ? (

@@ -105,7 +105,7 @@ Array [
       <img
         alt="icon Apple"
         className="icon-image"
-        src="https://edx.devstack.lms/logo.png"
+        src="http://localhost:18000/media/logo.png"
       />
     </div>
     <span
@@ -134,7 +134,7 @@ Array [
       <img
         alt="icon Facebook"
         className="icon-image"
-        src="https://edx.devstack.lms/facebook-logo.png"
+        src="http://localhost:18000/media/facebook-logo.png"
       />
     </div>
     <span

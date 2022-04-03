@@ -5,7 +5,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-
+import { Image } from '@edx/paragon';
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 
@@ -19,37 +19,40 @@ function SocialAuthProviders(props) {
     window.location.href = getConfig().LMS_BASE_URL + url;
   }
 
-  const socialAuth = socialAuthProviders.map((provider, index) => (
-    <button
-      id={provider.id}
-      key={provider.id}
-      type="button"
-      className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
-      data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
-      onClick={handleSubmit}
-    >
-      {provider.iconImage ? (
-        <div aria-hidden="true">
-          <img className="icon-image" src={provider.iconImage} alt={`icon ${provider.name}`} />
-        </div>
-      )
-        : (
-          <>
-            <div className="font-container" aria-hidden="true">
-              <FontAwesomeIcon
-                icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
-              />
-            </div>
-          </>
-        )}
-      <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
-      <span className="sr-only">
-        {referrer === LOGIN_PAGE
-          ? intl.formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
-          : intl.formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
-      </span>
-    </button>
-  ));
+  const socialAuth = socialAuthProviders.map((provider, index) => {
+    const baseLmsUrl = getConfig().LMS_BASE_URL;
+    return (
+      <button
+        id={provider.id}
+        key={provider.id}
+        type="button"
+        className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
+        data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
+        onClick={handleSubmit}
+      >
+        {provider.iconImage ? (
+          <div aria-hidden="true">
+            <Image className="icon-image" src={baseLmsUrl + provider.iconImage} alt={`icon ${provider.name}`} />
+          </div>
+        )
+          : (
+            <>
+              <div className="font-container" aria-hidden="true">
+                <FontAwesomeIcon
+                  icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
+                />
+              </div>
+            </>
+          )}
+        <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
+        <span className="sr-only">
+          {referrer === LOGIN_PAGE
+            ? intl.formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
+            : intl.formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
+        </span>
+      </button>
+    );
+  });
 
   return <>{socialAuth}</>;
 }

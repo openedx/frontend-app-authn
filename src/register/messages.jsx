@@ -79,6 +79,21 @@ const messages = defineMessages({
     defaultMessage: 'Or register with:',
     description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
   },
+  'registration.create.account.heading': {
+    id: 'registration.create.account.heading',
+    defaultMessage: 'Create account using',
+    description: 'A message appears that above the 3rd party Auth providers',
+  },
+  'register.signupwith.email.button': {
+    id: 'register.signupwith.email.button',
+    defaultMessage: 'Sign up with email',
+    description: 'Message on the registration page sign up button',
+  },
+  'register.signupwith.or.heading': {
+    id: 'register.signupwith.or.heading',
+    defaultMessage: 'Or',
+    description: 'Heading just above the sign up email button',
+  },
   // Institution login
   'register.institution.login.button': {
     id: 'register.institution.login.button',
