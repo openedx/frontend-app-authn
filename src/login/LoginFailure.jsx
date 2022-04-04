@@ -15,8 +15,11 @@ import {
   INTERNAL_SERVER_ERROR,
   INVALID_FORM,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
+  NUDGE_PASSWORD_CHANGE,
+  REQUIRE_PASSWORD_CHANGE,
 } from './data/constants';
 import messages from './messages';
+import ChangePasswordPrompt from './ChangePasswordPrompt';
 
 const LoginFailureMessage = (props) => {
   const { intl } = props;
@@ -131,6 +134,15 @@ const LoginFailureMessage = (props) => {
         );
       }
       break;
+    case NUDGE_PASSWORD_CHANGE:
+      return (
+        <ChangePasswordPrompt
+          redirectUrl={props.loginError.redirectUrl}
+          variant="nudge"
+        />
+      );
+    case REQUIRE_PASSWORD_CHANGE:
+      return <ChangePasswordPrompt />;
     default:
       // TODO: use errorCode instead of processing error messages on frontend
       errorList = value.trim().split('\n');
@@ -165,6 +177,7 @@ const LoginFailureMessage = (props) => {
 
 LoginFailureMessage.defaultProps = {
   loginError: {
+    redirectUrl: null,
     errorCode: null,
     value: '',
   },
@@ -176,6 +189,7 @@ LoginFailureMessage.propTypes = {
     email: PropTypes.string,
     errorCode: PropTypes.string,
     value: PropTypes.string,
+    redirectUrl: PropTypes.string,
   }),
   intl: intlShape.isRequired,
 };

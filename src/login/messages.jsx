@@ -241,6 +241,39 @@ const messages = defineMessages({
     defaultMessage: 'click here to reset it.',
     description: 'Reset password link text for incorrect email or password credentials before blocking account',
   },
+  // Vulnerable password change prompt
+  'password.security.nudge.title': {
+    id: 'password.security.nudge.title',
+    defaultMessage: 'Password security',
+    description: 'Title for prompt that nudges user to change their vulnerable password',
+  },
+  'password.security.block.title': {
+    id: 'password.security.block.title',
+    defaultMessage: 'Password change required',
+    description: 'Title for prompt that asks user to change their vulnerable password',
+  },
+  'password.security.nudge.body': {
+    id: 'password.security.nudge.body',
+    defaultMessage: 'Our system detected that your password is vulnerable. '
+                    + 'We recommend you change it so that your account stays secure.',
+    description: 'Message copy for prompt that nudges user to change their vulnerable password',
+  },
+  'password.security.block.body': {
+    id: 'password.security.block.body',
+    defaultMessage: 'Our system detected that your password is vulnerable. '
+                    + 'Change your password so that your account stays secure.',
+    description: 'Message copy for prompt that asks user to change their vulnerable password',
+  },
+  'password.security.close.button': {
+    id: 'password.security.close.button',
+    defaultMessage: 'Close',
+    description: 'Button to close popup',
+  },
+  'password.security.redirect.to.reset.password.button': {
+    id: 'password.security.redirect.to.reset.password.button',
+    defaultMessage: 'Reset your password',
+    description: 'Button to redirect users to Reset Password page',
+  },
 });
 
 export default messages;
