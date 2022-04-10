@@ -53,6 +53,7 @@
     "formik": "2.2.9",
     "lodash.camelcase": "4.3.0",
     "lodash.snakecase": "4.1.1",
+    "postcss": "^8.4.12",
     "prop-types": "15.8.1",
     "query-string": "5.1.1",
     "react": "16.14.0",
