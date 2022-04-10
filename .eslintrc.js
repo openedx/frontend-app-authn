@@ -20,5 +20,6 @@ module.exports = createConfig('eslint', {
       assert: 'htmlFor',
       depth: 25
     }],
+    'import/no-extraneous-dependencies': "off"
   },
 });
