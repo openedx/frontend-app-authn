@@ -476,7 +476,7 @@ class RegistrationPage extends React.Component {
     return (
       <>
         {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
-          <div className="mt-4 mb-3 h4">
+          <div className="d-flex mt-4 mb-3 h4 justify-content-center">
             {intl.formatMessage(messages['registration.create.account.heading'])}
           </div>
         )}
@@ -689,11 +689,15 @@ class RegistrationPage extends React.Component {
               currentProvider,
               thirdPartyAuthApiStatus,
               intl)}
-            <div className="mt-4 mb-3 h4">
+            <div className="d-flex mt-4 mb-3 h4 justify-content-center">
               {intl.formatMessage(messages['register.signupwith.or.heading'])}
             </div>
             {!this.state.signUpWithEmailVisible
-              ? <Button name="signupwemail" id="signupwemail" variant="brand" onClick={this.handleSignUpEmailClick}>{intl.formatMessage(messages['register.signupwith.email.button'])}</Button>
+              ? (
+                <div className="d-flex mt-4 mb-3 justify-content-center">
+                  <Button name="signupwemail" id="signupwemail" variant="brand" onClick={this.handleSignUpEmailClick}>{intl.formatMessage(messages['register.signupwith.email.button'])}</Button>
+                </div>
+              )
               : this.renderSignUpForm(intl, currentProvider, submitState)}
 
           </Form>
