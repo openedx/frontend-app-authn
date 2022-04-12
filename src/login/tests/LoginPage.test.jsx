@@ -9,6 +9,7 @@ import renderer from 'react-test-renderer';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
+import * as auth from '@edx/frontend-platform/auth';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
 import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/actions';
@@ -18,9 +19,11 @@ import LoginPage from '../LoginPage';
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/auth');
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
+auth.getAuthService = jest.fn();
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 const IntlLoginPage = injectIntl(LoginPage);

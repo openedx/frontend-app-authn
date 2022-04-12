@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import * as auth from '@edx/frontend-platform/auth';
 
 import LoginFailureMessage from '../LoginFailure';
 import {
@@ -16,6 +17,9 @@ import {
   NUDGE_PASSWORD_CHANGE,
   REQUIRE_PASSWORD_CHANGE,
 } from '../data/constants';
+
+jest.mock('@edx/frontend-platform/auth');
+auth.getAuthService = jest.fn();
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 
