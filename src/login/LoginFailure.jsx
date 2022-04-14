@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { getAuthService } from '@edx/frontend-platform/auth';
 import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -24,6 +25,7 @@ import ChangePasswordPrompt from './ChangePasswordPrompt';
 const LoginFailureMessage = (props) => {
   const { intl } = props;
   const { context, errorCode, value } = props.loginError;
+  const authService = getAuthService();
   let errorList;
   let link;
   let resetLink = (
@@ -135,6 +137,10 @@ const LoginFailureMessage = (props) => {
       }
       break;
     case NUDGE_PASSWORD_CHANGE:
+      // Need to clear the CSRF token here to fetch a new one because token is already rotated after successful login.
+      if (authService) {
+        authService.getCsrfTokenService().clearCsrfTokenCache();
+      }
       return (
         <ChangePasswordPrompt
           redirectUrl={props.loginError.redirectUrl}
