@@ -15,6 +15,15 @@ $apple-black: #000000;
 $apple-focus-black: $apple-black;
 $accent-a-light: #c9f2f5;
 
+.centered-align-spinner {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  position: absolute;
+  margin: auto;
+}
+
 .main-content {
   @extend .pt-4;
   min-width: 464px !important;
