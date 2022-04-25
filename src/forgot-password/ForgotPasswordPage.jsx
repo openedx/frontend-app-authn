@@ -99,9 +99,9 @@ const ForgotPasswordPage = (props) => {
                 </Helmet>
                 <Form className="mw-xs">
                   <ForgotPasswordAlert email={props.email} emailError={errors.email} status={status} />
-                  <h4>
+                  <h2 className="h4">
                     {intl.formatMessage(messages['forgot.password.page.heading'])}
-                  </h4>
+                  </h2>
                   <p className="mb-4">
                     {intl.formatMessage(messages['forgot.password.page.instructions'])}
                   </p>
