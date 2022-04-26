@@ -176,7 +176,7 @@ class CountryDropdown extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="mb-4">
         <FormGroup
           as="input"
           name={this.props.name}

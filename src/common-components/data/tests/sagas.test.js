@@ -26,7 +26,7 @@ describe('fetchThirdPartyAuthContext', () => {
 
   it('should call service and dispatch success action', async () => {
     const getThirdPartyAuthContext = jest.spyOn(api, 'getThirdPartyAuthContext')
-      .mockImplementation(() => Promise.resolve({ thirdPartyAuthContext: data }));
+      .mockImplementation(() => Promise.resolve({ thirdPartyAuthContext: data, fieldDescriptions: {} }));
 
     const dispatched = [];
     await runSaga(
@@ -38,7 +38,7 @@ describe('fetchThirdPartyAuthContext', () => {
     expect(getThirdPartyAuthContext).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([
       actions.getThirdPartyAuthContextBegin(),
-      actions.getThirdPartyAuthContextSuccess(data),
+      actions.getThirdPartyAuthContextSuccess({}, data),
     ]);
     getThirdPartyAuthContext.mockClear();
   });

@@ -188,6 +188,16 @@ const messages = defineMessages({
     defaultMessage: 'Privacy Policy',
     description: 'Text for the hyperlink that redirects user to privacy policy',
   },
+  'honor.code': {
+    id: 'honor.code',
+    defaultMessage: 'Honor Code',
+    description: 'Text for the hyperlink that redirects user to the honor code',
+  },
+  'terms.of.service': {
+    id: 'terms.of.service',
+    defaultMessage: 'Terms of Service',
+    description: 'Text for the hyperlink that redirects user to the terms of service',
+  },
   // Optional fields
   'registration.year.of.birth.label': {
     id: 'registration.year.of.birth.label',
