@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Skeleton from 'react-loading-skeleton';
 import { Helmet } from 'react-helmet';
 import PropTypes, { string } from 'prop-types';
-import classNames from 'classnames';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -76,8 +75,6 @@ class RegistrationPage extends React.Component {
       optimizelyExperimentName: '',
       readOnly: true,
       validatePassword: false,
-      // TODO: Remove after VAN-876 experimentation is complete.
-      registerRenameExpVariation: '',
     };
   }
 
@@ -89,13 +86,6 @@ class RegistrationPage extends React.Component {
       pageName: 'authn_registration_page',
       isActive: true,
     });
-
-    if (payload.register_for_free === 'true') {
-      window.optimizely.push({
-        type: 'event',
-        eventName: 'van-876-authn-registration-page',
-      });
-    }
 
     if (payload.save_for_later === 'true') {
       sendTrackEvent('edx.bi.user.saveforlater.course.enroll.clicked', { category: 'save-for-later' });
@@ -174,14 +164,10 @@ class RegistrationPage extends React.Component {
   }
 
   getExperiments = () => {
-    const { experimentName, renameRegisterExperiment } = window;
+    const { experimentName } = window;
 
     if (experimentName) {
       this.setState({ optimizelyExperimentName: experimentName });
-    }
-
-    if (renameRegisterExperiment) {
-      this.setState({ registerRenameExpVariation: renameRegisterExperiment });
     }
   };
 
@@ -523,7 +509,6 @@ class RegistrationPage extends React.Component {
       setSurveyCookie('register');
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
       setCookie('authn-returning-user');
-      const payload = { ...this.queryParams };
 
       // Fire optimizely events
       window.optimizely = window.optimizely || [];
@@ -534,13 +519,6 @@ class RegistrationPage extends React.Component {
           value: this.state.totalRegistrationTime,
         },
       });
-
-      if (payload.register_for_free === 'true') {
-        window.optimizely.push({
-          type: 'event',
-          eventName: 'van-876-authn-register-for-free-conversion',
-        });
-      }
     }
 
     return (
@@ -673,16 +651,10 @@ class RegistrationPage extends React.Component {
             <StatefulButton
               type="submit"
               variant="brand"
-              className={classNames(
-                'mt-4 mb-4',
-                { 'stateful-button-variation1-width': this.state.registerRenameExpVariation === 'variation1' },
-                { 'stateful-button-width': this.state.registerRenameExpVariation !== 'variation1' },
-              )}
+              className="register-stateful-button-width mt-4 mb-4"
               state={submitState}
               labels={{
-                default: this.state.registerRenameExpVariation === 'variation1' ? (
-                  intl.formatMessage(messages['create.account.for.free.button'])
-                ) : intl.formatMessage(messages['create.account.button']),
+                default: intl.formatMessage(messages['create.account.for.free.button']),
                 pending: '',
               }}
               onClick={this.handleSubmit}

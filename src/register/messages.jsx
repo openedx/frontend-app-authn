@@ -59,11 +59,6 @@ const messages = defineMessages({
     description: 'Help text for email field on registration page',
   },
   // Form buttons
-  'create.account.button': {
-    id: 'create.account.button',
-    defaultMessage: 'Create an account',
-    description: 'Button label that appears on register page',
-  },
   'create.account.for.free.button': {
     id: 'create.account.for.free.button',
     defaultMessage: 'Create an account for free',
