@@ -404,7 +404,7 @@ describe('RegistrationPage', () => {
 
     it('should match default button state', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual('Create an account');
+      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual('Create an account for free');
     });
 
     it('should match pending button state', () => {
