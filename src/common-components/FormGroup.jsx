@@ -26,6 +26,7 @@ const FormGroup = (props) => {
         as={props.as}
         readOnly={props.readOnly}
         type={props.type}
+        aria-invalid={props.errorMessage !== ''}
         className="form-field"
         autoComplete={props.autoComplete}
         name={props.name}

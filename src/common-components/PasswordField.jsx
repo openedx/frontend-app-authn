@@ -63,6 +63,7 @@ const PasswordField = (props) => {
           type={isPasswordHidden ? 'password' : 'text'}
           name={props.name}
           value={props.value}
+          aria-invalid={props.errorMessage !== ''}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={props.handleChange}
