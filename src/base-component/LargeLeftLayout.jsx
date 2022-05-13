@@ -20,51 +20,53 @@ const LargeLeftLayout = (props) => {
   new ClipboardJS('.copyIcon'); // eslint-disable-line no-new
 
   return (
-    <div className="min-vh-100 pr-0 mt-lg-n2 d-flex align-items-center">
-      <Toast
-        onClose={() => setToastShow(false)}
-        show={showToast}
-      >
-        {intl.formatMessage(messages['code.copied'])}
-      </Toast>
-      <svg className={classNames(
-        'large-screen-svg-line',
-        {
-          'variation1-bar-color mt-n6 pt-0 ml-5': experimentName === 'variation1' && isRegistrationPage,
-          'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
-          'ml-5': experimentName !== 'variation1' || !isRegistrationPage,
-        },
-      )}
-      >
-        <line x1="50" y1="0" x2="10" y2="215" />
-      </svg>
-      <div className={classNames({ 'pl-4': experimentName === 'variation1' && isRegistrationPage })}>
-        <h1 className={classNames('large-heading', { 'mb-4.5': experimentName === 'variation1' && isRegistrationPage })}>
-          {intl.formatMessage(messages['start.learning'])}
-          <span
-            className={((experimentName === 'variation1' || experimentName === 'variation2') && isRegistrationPage) ? 'text-accent-b' : 'text-accent-a'}
-          >
-            <br />
-            {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
-          </span>
-        </h1>
-        {experimentName === 'variation1' && isRegistrationPage ? (
-          <span className="text-light-300 dicount-heading">
-            <span className="lead mr-3">
-              <SideDiscountBanner />
+    <div className="min-vh-100 d-flex justify-content-left align-items-center">
+      <div className="d-flex pr-0 mt-lg-n2">
+        <Toast
+          onClose={() => setToastShow(false)}
+          show={showToast}
+        >
+          {intl.formatMessage(messages['code.copied'])}
+        </Toast>
+        <svg className={classNames(
+          'large-screen-svg-line',
+          {
+            'variation1-bar-color mt-n6 pt-0 ml-5': experimentName === 'variation1' && isRegistrationPage,
+            'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
+            'ml-5': experimentName !== 'variation1' || !isRegistrationPage,
+          },
+        )}
+        >
+          <line x1="50" y1="0" x2="10" y2="215" />
+        </svg>
+        <div className={classNames({ 'pl-4': experimentName === 'variation1' && isRegistrationPage })}>
+          <h1 className={classNames('large-heading', { 'mb-4.5': experimentName === 'variation1' && isRegistrationPage })}>
+            {intl.formatMessage(messages['start.learning'])}
+            <span
+              className={((experimentName === 'variation1' || experimentName === 'variation2') && isRegistrationPage) ? 'text-accent-b' : 'text-accent-a'}
+            >
+              <br />
+              {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
             </span>
-            <span className="dashed-border d-inline-flex flex-wrap align-items-center">
-              <span id="edx-welcome" className="text-white edx-welcome font-weight-bold mr-1">EDXWELCOME</span>
-              <FontAwesomeIcon
-                className="text-light-700 copyIcon ml-1.5 hover-discount-icon"
-                icon={faCut}
-                data-clipboard-action="copy"
-                data-clipboard-target="#edx-welcome"
-                onClick={() => setToastShow(true)}
-              />
+          </h1>
+          {experimentName === 'variation1' && isRegistrationPage ? (
+            <span className="text-light-300 dicount-heading">
+              <span className="lead mr-3">
+                <SideDiscountBanner />
+              </span>
+              <span className="dashed-border d-inline-flex flex-wrap align-items-center">
+                <span id="edx-welcome" className="text-white edx-welcome font-weight-bold mr-1">EDXWELCOME</span>
+                <FontAwesomeIcon
+                  className="text-light-700 copyIcon ml-1.5 hover-discount-icon"
+                  icon={faCut}
+                  data-clipboard-action="copy"
+                  data-clipboard-target="#edx-welcome"
+                  onClick={() => setToastShow(true)}
+                />
+              </span>
             </span>
-          </span>
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </div>
   );
