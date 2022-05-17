@@ -552,7 +552,7 @@ class RegistrationPage extends React.Component {
               <h4 className="mt-4 mb-4">{intl.formatMessage(messages['registration.using.tpa.form.heading'])}</h4>
             </>
           )}
-          <Form>
+          <Form id="registration-form" name="registration-form">
             <FormGroup
               name="name"
               value={this.state.name}
@@ -649,6 +649,8 @@ class RegistrationPage extends React.Component {
               />
             </div>
             <StatefulButton
+              name="register-user"
+              id="register-user"
               type="submit"
               variant="brand"
               className="register-stateful-button-width mt-4 mb-4"

@@ -224,7 +224,7 @@ class LoginPage extends React.Component {
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? windowScrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
           {this.props.resetPassword && !this.props.loginError ? <ResetPasswordSuccess /> : null}
-          <Form>
+          <Form name="sign-in-form" id="sign-in-form">
             <FormGroup
               name="emailOrUsername"
               value={this.state.emailOrUsername}
@@ -243,6 +243,8 @@ class LoginPage extends React.Component {
               floatingLabel={intl.formatMessage(messages['login.password.label'])}
             />
             <StatefulButton
+              name="sign-in"
+              id="sign-in"
               type="submit"
               variant="brand"
               className="login-button-width"
@@ -256,6 +258,7 @@ class LoginPage extends React.Component {
             />
             <Link
               id="forgot-password"
+              name="forgot-password"
               className="btn btn-link font-weight-500 text-body"
               to={updatePathWithQueryParams(RESET_PAGE)}
               onClick={this.handleForgotPasswordLinkClickEvent}
