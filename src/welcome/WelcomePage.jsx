@@ -162,7 +162,7 @@ const WelcomePage = (props) => {
               <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
             </Alert>
           ) : null}
-          <Form>
+          <Form id="welcome-page-profile-form" name="welcome-page-profile-form">
             <Form.Group controlId="levelOfEducation">
               <Form.Control
                 as="select"
@@ -217,6 +217,8 @@ const WelcomePage = (props) => {
             </span>
             <div className="d-flex mt-4">
               <StatefulButton
+                name="submit-profile"
+                id="submit-profile"
                 type="submit"
                 variant="brand"
                 className="login-button-width"
@@ -229,6 +231,8 @@ const WelcomePage = (props) => {
                 onMouseDown={(e) => e.preventDefault()}
               />
               <StatefulButton
+                id="skip-profile"
+                name="skip-profile"
                 className="text-gray-700 font-weight-500"
                 type="submit"
                 variant="link"

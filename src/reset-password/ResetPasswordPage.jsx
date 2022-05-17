@@ -174,7 +174,7 @@ const ResetPasswordPage = (props) => {
               <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
               <h4>{intl.formatMessage(messages['reset.password'])}</h4>
               <p className="mb-4">{intl.formatMessage(messages['reset.password.page.instructions'])}</p>
-              <Form>
+              <Form id="set-reset-password-form" name="set-reset-password-form">
                 <PasswordField
                   name="newPassword"
                   value={newPassword}
@@ -194,6 +194,8 @@ const ResetPasswordPage = (props) => {
                   floatingLabel={intl.formatMessage(messages['confirm.password.label'])}
                 />
                 <StatefulButton
+                  id="submit-new-password"
+                  name="submit-new-password"
                   type="submit"
                   variant="brand"
                   className="stateful-button-width"
