@@ -16,13 +16,17 @@ import {
 import { Error, Close } from '@edx/paragon/icons';
 
 import {
-  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
+  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations, registerSetFormData,
 } from './data/actions';
 import {
   FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_EMAIL_PROVIDERS,
 } from './data/constants';
 import {
-  registrationErrorSelector, registrationRequestSelector, validationsSelector, usernameSuggestionsSelector,
+  registrationErrorSelector,
+  registrationRequestSelector,
+  validationsSelector,
+  usernameSuggestionsSelector,
+  registerFormDataSelector,
 } from './data/selectors';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
@@ -53,21 +57,21 @@ class RegistrationPage extends React.Component {
     this.queryParams = getAllPossibleQueryParam();
     this.tpaHint = getTpaHint();
     this.state = {
-      country: '',
-      email: '',
-      name: '',
-      password: '',
-      username: '',
-      marketingOptIn: true,
+      country: this.props.registrationData.country || '',
+      email: this.props.registrationData.email || '',
+      name: this.props.registrationData.name || '',
+      password: this.props.registrationData.password || '',
+      username: this.props.registrationData.username || '',
+      marketingOptIn: this.props.registrationData.marketingOptIn || true,
       errors: {
-        email: '',
-        name: '',
-        username: '',
-        password: '',
-        country: '',
+        email: this.props.registrationData.errors.email || '',
+        name: this.props.registrationData.errors.name || '',
+        username: this.props.registrationData.errors.username || '',
+        password: this.props.registrationData.errors.password || '',
+        country: this.props.registrationData.errors.country || '',
       },
-      emailErrorSuggestion: null,
-      emailWarningSuggestion: null,
+      emailErrorSuggestion: this.props.registrationData.emailErrorSuggestion || null,
+      emailWarningSuggestion: this.props.registrationData.emailWarningSuggestion || null,
       errorCode: null,
       failureCount: 0,
       startTime: Date.now(),
@@ -101,6 +105,10 @@ class RegistrationPage extends React.Component {
 
   shouldComponentUpdate(nextProps) {
     if (this.props.usernameSuggestions.length > 0 && this.state.username === '') {
+      this.props.registerSetFormData({
+        ...this.props.registrationData,
+        username: ' ',
+      });
       this.setState({
         username: ' ',
       });
@@ -154,6 +162,10 @@ class RegistrationPage extends React.Component {
     }
 
     if (this.props.thirdPartyAuthContext.countryCode !== nextProps.thirdPartyAuthContext.countryCode) {
+      this.props.registerSetFormData({
+        ...this.props.registrationData,
+        country: nextProps.thirdPartyAuthContext.countryCode || '',
+      });
       this.setState({
         country: nextProps.thirdPartyAuthContext.countryCode || '',
       });
@@ -250,6 +262,10 @@ class RegistrationPage extends React.Component {
     if (e.target.name === 'passwordValidation') {
       state.errors.password = '';
     }
+    this.props.registerSetFormData({
+      ...this.props.registrationData,
+      errors: state.errors,
+    });
     this.setState({ ...state });
   }
 
@@ -257,6 +273,11 @@ class RegistrationPage extends React.Component {
     const { errors } = this.state;
     if (e.target.name === 'username') {
       errors.username = '';
+      this.props.registerSetFormData({
+        ...this.props.registrationData,
+        username: suggestion,
+        errors,
+      });
       this.setState({
         username: suggestion,
         errors,
@@ -272,11 +293,22 @@ class RegistrationPage extends React.Component {
         emailWarningSuggestion: null,
         errors,
       });
+      this.props.registerSetFormData({
+        ...this.props.registrationData,
+        email: suggestion,
+        emailErrorSuggestion: null,
+        emailWarningSuggestion: null,
+        errors,
+      });
     }
   }
 
   handleUsernameSuggestionClose = () => {
     this.setState({
+      username: '',
+    });
+    this.props.registerSetFormData({
+      ...this.props.registrationData,
       username: '',
     });
     this.props.clearUsernameSuggestions();
@@ -297,11 +329,16 @@ class RegistrationPage extends React.Component {
     });
 
     this.setState({ errors });
+    this.props.registerSetFormData({
+      ...this.props.registrationData,
+      errors,
+    });
     return isValid;
   }
 
   validateInput(fieldName, value, payload) {
-    const { errors } = this.state;
+    let { state } = this;
+    let { errors } = state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
     const urlRegex = new RegExp(VALID_NAME_REGEX);
@@ -353,11 +390,12 @@ class RegistrationPage extends React.Component {
               errors.email = '';
             }
           }
-          this.setState({
+          state = {
+            ...state,
             emailWarningSuggestion,
             emailErrorSuggestion,
             borderClass: emailWarningSuggestion ? 'yellow-border' : null,
-          });
+          };
         }
         break;
       case 'name':
@@ -411,11 +449,27 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    this.setState({ errors });
+    state = {
+      ...state,
+      errors,
+    };
+
+    this.props.registerSetFormData({
+      ...this.props.registrationData,
+      [fieldName]: value,
+      ...state,
+    });
+    this.setState({
+      ...state,
+    });
     return errors;
   }
 
   handleOnClose() {
+    this.props.registerSetFormData({
+      ...this.props.registrationData,
+      emailErrorSuggestion: null,
+    });
     this.setState({ emailErrorSuggestion: null });
   }
 
@@ -732,6 +786,23 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
     pipelineUserDetails: null,
   },
+  registrationData: {
+    country: '',
+    email: '',
+    name: '',
+    password: '',
+    username: '',
+    marketingOptIn: true,
+    errors: {
+      email: '',
+      name: '',
+      username: '',
+      password: '',
+      country: '',
+    },
+    emailErrorSuggestion: null,
+    emailWarningSuggestion: null,
+  },
   validationDecisions: null,
   statusCode: null,
   usernameSuggestions: [],
@@ -742,6 +813,7 @@ RegistrationPage.propTypes = {
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func,
   resetRegistrationForm: PropTypes.func.isRequired,
+  registerSetFormData: PropTypes.func.isRequired,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -749,6 +821,23 @@ RegistrationPage.propTypes = {
   registrationErrorCode: PropTypes.string,
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
+  registrationData: PropTypes.shape({
+    country: PropTypes.string,
+    email: PropTypes.string,
+    name: PropTypes.string,
+    password: PropTypes.string,
+    username: PropTypes.string,
+    marketingOptIn: PropTypes.bool,
+    errors: PropTypes.shape({
+      email: PropTypes.string,
+      name: PropTypes.string,
+      username: PropTypes.string,
+      password: PropTypes.string,
+      country: PropTypes.string,
+    }),
+    emailErrorSuggestion: PropTypes.string,
+    emailWarningSuggestion: PropTypes.string,
+  }),
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -791,6 +880,7 @@ const mapStateToProps = state => {
     validationDecisions: validationsSelector(state),
     statusCode: state.register.statusCode,
     usernameSuggestions: usernameSuggestionsSelector(state),
+    registrationData: registerFormDataSelector(state),
   };
 };
 
@@ -802,5 +892,6 @@ export default connect(
     fetchRealtimeValidations,
     registerNewUser,
     resetRegistrationForm,
+    registerSetFormData,
   },
 )(injectIntl(RegistrationPage));

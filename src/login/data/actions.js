@@ -1,6 +1,7 @@
 import { AsyncActionType } from '../../data/utils';
 
 export const LOGIN_REQUEST = new AsyncActionType('LOGIN', 'REQUEST');
+export const LOGIN_SET_FORM_DATA = 'LOGIN_PERSIST_FORM_DATA';
 
 // Login
 export const loginRequest = creds => ({
@@ -24,4 +25,10 @@ export const loginRequestFailure = (loginError) => ({
 
 export const loginRequestReset = () => ({
   type: LOGIN_REQUEST.RESET,
+});
+
+// Persist Form Data
+export const loginSetFormData = (formData) => ({
+  type: LOGIN_SET_FORM_DATA,
+  payload: { formData },
 });

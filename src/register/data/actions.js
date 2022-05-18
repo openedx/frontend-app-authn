@@ -4,6 +4,7 @@ export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_N
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 export const REGISTRATION_FORM = new AsyncActionType('REGISTRATION', 'REGISTRATION_FORM');
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
+export const REGISTER_SET_FORM_DATA = 'REGISTER_SET_FORM_DATA';
 
 // Reset Form
 export const resetRegistrationForm = () => ({
@@ -52,4 +53,10 @@ export const fetchRealtimeValidationsFailure = () => ({
 
 export const clearUsernameSuggestions = () => ({
   type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+});
+
+// Persist Form Data
+export const registerSetFormData = (formData) => ({
+  type: REGISTER_SET_FORM_DATA,
+  payload: { formData },
 });

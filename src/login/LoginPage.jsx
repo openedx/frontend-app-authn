@@ -15,9 +15,11 @@ import {
 import { Institution } from '@edx/paragon/icons';
 
 import AccountActivationMessage from './AccountActivationMessage';
-import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
+import {
+  loginRequest, loginRequestFailure, loginRequestReset, loginSetFormData,
+} from './data/actions';
 import { INVALID_FORM } from './data/constants';
-import { loginErrorSelector, loginRequestSelector } from './data/selectors';
+import { loginErrorSelector, loginFormDataSelector, loginRequestSelector } from './data/selectors';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 
@@ -49,11 +51,11 @@ class LoginPage extends React.Component {
 
     sendPageEvent('login_and_registration', 'login');
     this.state = {
-      password: '',
-      emailOrUsername: '',
+      password: this.props.loginData.password || '',
+      emailOrUsername: this.props.loginData.emailOrUsername || '',
       errors: {
-        emailOrUsername: '',
-        password: '',
+        emailOrUsername: this.props.loginData.errors.emailOrUsername || '',
+        password: this.props.loginData.errors.password || '',
       },
       isSubmitted: false,
     };
@@ -78,12 +80,18 @@ class LoginPage extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.setState({ isSubmitted: true });
-
     const { emailOrUsername, password } = this.state;
     const emailValidationError = this.validateEmail(emailOrUsername);
     const passwordValidationError = this.validatePassword(password);
 
     if (emailValidationError !== '' || passwordValidationError !== '') {
+      this.props.loginSetFormData({
+        ...this.props.loginData,
+        errors: {
+          emailOrUsername: emailValidationError,
+          password: passwordValidationError,
+        },
+      });
       this.props.loginRequestFailure({
         errorCode: INVALID_FORM,
       });
@@ -100,6 +108,18 @@ class LoginPage extends React.Component {
     const { errors } = this.state;
     errors[e.target.name] = '';
     this.setState({ errors });
+    this.props.loginSetFormData({
+      ...this.props.loginData,
+      errors,
+    });
+  }
+
+  handleOnBlur = (e) => {
+    const payload = {
+      ...this.props.loginData,
+      [e.target.name]: e.target.value,
+    };
+    this.props.loginSetFormData(payload);
   }
 
   handleForgotPasswordLinkClickEvent = () => {
@@ -125,6 +145,10 @@ class LoginPage extends React.Component {
     errors.password = password.length > 0 ? '' : this.props.intl.formatMessage(messages['password.validation.message']);
 
     this.setState({ errors });
+    this.props.loginSetFormData({
+      ...this.props.loginData,
+      errors,
+    });
     return errors.password;
   }
 
@@ -230,6 +254,7 @@ class LoginPage extends React.Component {
               value={this.state.emailOrUsername}
               handleChange={(e) => this.setState({ emailOrUsername: e.target.value, isSubmitted: false })}
               handleFocus={this.handleOnFocus}
+              handleBlur={this.handleOnBlur}
               errorMessage={this.state.errors.emailOrUsername}
               floatingLabel={intl.formatMessage(messages['login.user.identity.label'])}
             />
@@ -239,6 +264,7 @@ class LoginPage extends React.Component {
               showRequirements={false}
               handleChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
               handleFocus={this.handleOnFocus}
+              handleBlur={this.handleOnBlur}
               errorMessage={this.state.errors.password}
               floatingLabel={intl.formatMessage(messages['login.password.label'])}
             />
@@ -313,6 +339,14 @@ LoginPage.defaultProps = {
   forgotPassword: null,
   loginResult: null,
   loginError: null,
+  loginData: {
+    emailOrUsername: '',
+    password: '',
+    errors: {
+      emailOrUsername: '',
+      password: '',
+    },
+  },
   resetPassword: false,
   submitState: DEFAULT_STATE,
   thirdPartyAuthApiStatus: 'pending',
@@ -335,9 +369,18 @@ LoginPage.propTypes = {
   loginRequest: PropTypes.func.isRequired,
   loginRequestFailure: PropTypes.func.isRequired,
   loginRequestReset: PropTypes.func.isRequired,
+  loginSetFormData: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
+  }),
+  loginData: PropTypes.shape({
+    emailOrUsername: PropTypes.string,
+    password: PropTypes.string,
+    errors: PropTypes.shape({
+      emailOrUsername: PropTypes.string,
+      password: PropTypes.string,
+    }),
   }),
   resetPassword: PropTypes.bool,
   submitState: PropTypes.string,
@@ -358,6 +401,7 @@ const mapStateToProps = state => {
   const loginResult = loginRequestSelector(state);
   const thirdPartyAuthContext = thirdPartyAuthContextSelector(state);
   const loginError = loginErrorSelector(state);
+  const loginData = loginFormDataSelector(state);
   return {
     submitState: state.login.submitState,
     thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
@@ -365,6 +409,7 @@ const mapStateToProps = state => {
     loginError,
     loginResult,
     thirdPartyAuthContext,
+    loginData,
     resetPassword: state.login.resetPassword,
   };
 };
@@ -376,5 +421,6 @@ export default connect(
     loginRequest,
     loginRequestFailure,
     loginRequestReset,
+    loginSetFormData,
   },
 )(injectIntl(LoginPage));

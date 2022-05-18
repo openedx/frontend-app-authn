@@ -13,7 +13,7 @@ import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n
 import {
   clearUsernameSuggestions,
   fetchRealtimeValidations,
-  registerNewUser,
+  registerNewUser, registerSetFormData,
   resetRegistrationForm,
 } from '../data/actions';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '../data/constants';
@@ -771,6 +771,32 @@ describe('RegistrationPage', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
       });
+    });
+
+    // ******** persist state tests ********
+
+    it.only('should set form data in redux store on onFocus', () => {
+      const formData = {
+        country: '',
+        email: '',
+        name: '',
+        password: '',
+        username: '',
+        marketingOptIn: true,
+        errors: {
+          email: '',
+          name: '',
+          username: '',
+          password: '',
+          country: '',
+        },
+        emailErrorSuggestion: null,
+        emailWarningSuggestion: null,
+      };
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#name').simulate('focus');
+      expect(store.dispatch).toHaveBeenCalledWith(registerSetFormData(formData));
     });
   });
 });

@@ -1,5 +1,6 @@
 import {
   REGISTRATION_FORM, REGISTER_NEW_USER, REGISTER_FORM_VALIDATIONS, REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+  REGISTER_SET_FORM_DATA,
 } from './actions';
 
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
@@ -7,7 +8,23 @@ import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 export const defaultState = {
   registrationError: {},
   registrationResult: {},
-  formData: null,
+  formData: {
+    country: '',
+    email: '',
+    name: '',
+    password: '',
+    username: '',
+    marketingOptIn: true,
+    errors: {
+      email: '',
+      name: '',
+      username: '',
+      password: '',
+      country: '',
+    },
+    emailErrorSuggestion: null,
+    emailWarningSuggestion: null,
+  },
   validations: null,
   statusCode: null,
   usernameSuggestions: [],
@@ -18,6 +35,8 @@ const reducer = (state = defaultState, action) => {
     case REGISTRATION_FORM.RESET:
       return {
         ...defaultState,
+        formData: state.formData,
+        usernameSuggestions: state.usernameSuggestions,
       };
     case REGISTER_NEW_USER.BEGIN:
       return {
@@ -63,6 +82,13 @@ const reducer = (state = defaultState, action) => {
         ...state,
         usernameSuggestions: [],
       };
+    case REGISTER_SET_FORM_DATA: {
+      const { formData } = action.payload;
+      return {
+        ...state,
+        formData,
+      };
+    }
     default:
       return state;
   }
