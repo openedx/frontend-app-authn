@@ -624,6 +624,7 @@ select.form-control {
     position: absolute;
     background-color: #fff;
     width: 464px;
+    z-index: 100 !important;
 }
 
 .email-error-alert {
@@ -857,7 +858,6 @@ select.form-control {
     font-size: 0.75rem;
     line-height: 1.25rem;
   }
-  margin-top: 1rem;
   margin-left: 3px;
 }
 .suggested-username {

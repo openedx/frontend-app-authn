@@ -1,8 +1,14 @@
 import {
-  REGISTRATION_FORM, REGISTER_NEW_USER, REGISTER_FORM_VALIDATIONS, REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+  REGISTRATION_FORM,
+  REGISTER_NEW_USER,
+  REGISTER_FORM_VALIDATIONS,
+  REGISTER_CLEAR_USERNAME_SUGGESTIONS,
 } from './actions';
 
-import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
+import {
+  DEFAULT_STATE,
+  PENDING_STATE,
+} from '../../data/constants';
 
 export const defaultState = {
   registrationError: {},
@@ -11,6 +17,9 @@ export const defaultState = {
   validations: null,
   statusCode: null,
   usernameSuggestions: [],
+  extendedProfile: [],
+  fieldDescriptions: {},
+  formRenderState: DEFAULT_STATE,
 };
 
 const reducer = (state = defaultState, action) => {

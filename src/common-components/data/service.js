@@ -18,6 +18,11 @@ export async function getThirdPartyAuthContext(urlParams) {
       throw (e);
     });
   return {
-    thirdPartyAuthContext: camelCaseObject(convertKeyNames(data, { fullname: 'name' })),
+    fieldDescriptions: data.registration_fields || {},
+    // For backward compatibility with the API, once https://github.com/openedx/edx-platform/pull/30198 is merged
+    // and deployed update it to use data.context_data
+    thirdPartyAuthContext: camelCaseObject(
+      convertKeyNames(data.context_data || data, { fullname: 'name' }),
+    ),
   };
 }

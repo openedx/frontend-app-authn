@@ -55,7 +55,6 @@ export function* fetchRealtimeValidations(action) {
     }
   }
 }
-
 export default function* saga() {
   yield takeEvery(REGISTER_NEW_USER.BASE, handleNewUserRegistration);
   yield takeEvery(REGISTER_FORM_VALIDATIONS.BASE, fetchRealtimeValidations);

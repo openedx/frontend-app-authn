@@ -14,6 +14,9 @@ describe('register reducer', () => {
         validations: null,
         statusCode: null,
         usernameSuggestions: [],
+        extendedProfile: [],
+        fieldDescriptions: {},
+        formRenderState: DEFAULT_STATE,
       },
     );
   });

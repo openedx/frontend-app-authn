@@ -16,7 +16,9 @@ import {
   registerNewUser,
   resetRegistrationForm,
 } from '../data/actions';
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '../data/constants';
+import {
+  FIELDS, FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED,
+} from '../data/constants';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
@@ -771,6 +773,89 @@ describe('RegistrationPage', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
       });
+    });
+  });
+
+  describe('TestDynamicFields', () => {
+    it('should render fields returned by backend', () => {
+      mergeConfig({
+        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      });
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            country: { name: 'country', error_message: true },
+            profession: { name: 'profession', type: 'text', label: 'Profession' },
+            honor_code: { name: FIELDS.HONOR_CODE, error_message: 'You must agree to Honor Code of our site' },
+            terms_of_service: {
+              name: FIELDS.TERMS_OF_SERVICE,
+              error_message: 'You must agree to the Terms and Service agreement of our site',
+            },
+          },
+        },
+      });
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registerPage.find('#country').exists()).toBeTruthy();
+      expect(registerPage.find('#profession').exists()).toBeTruthy();
+      expect(registerPage.find('#honor-code').exists()).toBeTruthy();
+      expect(registerPage.find('#tos').exists()).toBeTruthy();
+    });
+
+    it('should submit form with fields returned by backend in payload', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            country: { name: 'country', error_message: true },
+            profession: { name: 'profession', type: 'text', label: 'Profession' },
+            honor_code: { name: 'honor_code', type: 'tos_and_honor_code' },
+          },
+          extendedProfile: ['profession'],
+        },
+      });
+
+      const payload = {
+        name: 'John Doe',
+        username: 'john_doe',
+        email: 'john.doe@example.com',
+        password: 'password1',
+        country: 'Pakistan',
+        totalRegistrationTime: 0,
+        is_authn_mfe: true,
+        honor_code: true,
+        extended_profile: [{ field_name: 'profession', field_value: 'Engineer' }],
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      populateRequiredFields(registerPage, payload);
+      registerPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
+      registerPage.find('button.btn-brand').simulate('click');
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+    });
+
+    it('should show error message for fields returned by backend', () => {
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: {
+              name: 'profession', type: 'text', label: 'Profession', error_message: 'Enter profession',
+            },
+          },
+        },
+      });
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button.btn-brand').simulate('click');
+
+      expect(registrationPage.find('#profession-error').last().text()).toEqual('Enter profession');
     });
   });
 });

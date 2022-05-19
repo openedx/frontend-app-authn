@@ -102,4 +102,96 @@ describe('FieldRendererTests', () => {
     const fieldRenderer = mount(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
     expect(fieldRenderer.html()).toBeNull();
   });
+
+  it('should run onBlur and onFocus functions for a field if given', () => {
+    const fieldData = { type: 'text', label: 'Test', name: 'test-field' };
+    let functionValue = '';
+
+    const onBlur = (e) => {
+      functionValue = `${e.target.name} blurred`;
+    };
+
+    const onFocus = (e) => {
+      functionValue = `${e.target.name} focussed`;
+    };
+
+    const fieldRenderer = mount(
+      <FieldRenderer
+        handleFocus={onFocus}
+        handleBlur={onBlur}
+        value={value}
+        fieldData={fieldData}
+        onChangeHandler={changeHandler}
+      />,
+    );
+    const field = fieldRenderer.find('#test-field').last();
+
+    field.simulate('focus');
+    expect(functionValue).toEqual('test-field focussed');
+
+    field.simulate('blur');
+    expect(functionValue).toEqual('test-field blurred');
+  });
+
+  it('should render error message for required text fields', () => {
+    const fieldData = { type: 'text', label: 'First Name', name: 'first-name-field' };
+
+    const fieldRenderer = mount(
+      <FieldRenderer
+        isRequired
+        fieldData={fieldData}
+        onChangeHandler={changeHandler}
+        errorMessage="Enter your first name"
+      />,
+    );
+
+    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Enter your first name');
+  });
+
+  it('should render error message for required select fields', () => {
+    const fieldData = {
+      type: 'select', label: 'Preference', name: 'preference-field', options: [['a', 'Opt 1'], ['b', 'Opt 2']],
+    };
+
+    const fieldRenderer = mount(
+      <FieldRenderer
+        isRequired
+        fieldData={fieldData}
+        onChangeHandler={changeHandler}
+        errorMessage="Select your preference"
+      />,
+    );
+
+    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Select your preference');
+  });
+
+  it('should render error message for required textarea fields', () => {
+    const fieldData = { type: 'textarea', label: 'Goals', name: 'goals-field' };
+
+    const fieldRenderer = mount(
+      <FieldRenderer
+        isRequired
+        fieldData={fieldData}
+        onChangeHandler={changeHandler}
+        errorMessage="Tell us your goals"
+      />,
+    );
+
+    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Tell us your goals');
+  });
+
+  it('should render error message for required checkbox fields', () => {
+    const fieldData = { type: 'checkbox', label: 'Honor Code', name: 'honor-code-field' };
+
+    const fieldRenderer = mount(
+      <FieldRenderer
+        isRequired
+        fieldData={fieldData}
+        onChangeHandler={changeHandler}
+        errorMessage="You must agree to our Honor Code"
+      />,
+    );
+
+    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('You must agree to our Honor Code');
+  });
 });

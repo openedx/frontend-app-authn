@@ -3,6 +3,8 @@ import { THIRD_PARTY_AUTH_CONTEXT } from './actions';
 import { PENDING_STATE, COMPLETE_STATE } from '../../data/constants';
 
 export const defaultState = {
+  extendedProfile: [],
+  fieldDescriptions: {},
   thirdPartyAuthApiStatus: null,
 };
 
@@ -16,6 +18,8 @@ const reducer = (state = defaultState, action) => {
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
       return {
         ...state,
+        extendedProfile: action.payload.fieldDescriptions.extendedProfile,
+        fieldDescriptions: action.payload.fieldDescriptions.fields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
       };
