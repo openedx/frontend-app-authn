@@ -10,7 +10,7 @@ const { loggingService } = initializeMockLogging();
 describe('handleForgotPassword', () => {
   const params = {
     payload: {
-      formData: {
+      forgotPasswordFormData: {
         email: 'test@test.com',
       },
     },

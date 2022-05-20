@@ -19,7 +19,7 @@ import {
 } from '@edx/paragon';
 import { ChevronLeft } from '@edx/paragon/icons';
 
-import { forgotPassword } from './data/actions';
+import { forgotPassword, setForgotPasswordFormData } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 
 import messages from './messages';
@@ -34,7 +34,7 @@ const ForgotPasswordPage = (props) => {
 
   const platformName = getConfig().SITE_NAME;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
-  const [validationError, setValidationError] = useState('');
+  const [validationError, setValidationError] = useState(props.emailValidationError || '');
   const [key, setKey] = useState('');
   const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
 
@@ -56,6 +56,11 @@ const ForgotPasswordPage = (props) => {
     return error;
   };
 
+  const onBlur = (email) => {
+    const emailValidationError = getValidationMessage(email);
+    props.setForgotPasswordFormData({ email, emailValidationError });
+  };
+
   const tabTitle = (
     <div className="d-flex">
       <Icon src={ChevronLeft} className="arrow-back-icon" />
@@ -74,7 +79,7 @@ const ForgotPasswordPage = (props) => {
         )}
         <div id="main-content" className="main-content">
           <Formik
-            initialValues={{ email: '' }}
+            initialValues={{ email: props.email || '' }}
             validateOnChange={false}
             validate={(values) => {
               const validationMessage = getValidationMessage(values.email);
@@ -110,7 +115,7 @@ const ForgotPasswordPage = (props) => {
                     name="email"
                     errorMessage={validationError}
                     value={values.email}
-                    handleBlur={() => getValidationMessage(values.email)}
+                    handleBlur={() => onBlur(values.email)}
                     handleChange={e => setFieldValue('email', e.target.value)}
                     handleFocus={() => setValidationError('')}
                     helpText={[intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })]}
@@ -156,13 +161,16 @@ const ForgotPasswordPage = (props) => {
 ForgotPasswordPage.propTypes = {
   intl: intlShape.isRequired,
   email: PropTypes.string,
+  emailValidationError: PropTypes.string,
   forgotPassword: PropTypes.func.isRequired,
+  setForgotPasswordFormData: PropTypes.func.isRequired,
   status: PropTypes.string,
   submitState: PropTypes.string,
 };
 
 ForgotPasswordPage.defaultProps = {
   email: '',
+  emailValidationError: '',
   status: null,
   submitState: DEFAULT_STATE,
 };
@@ -171,5 +179,6 @@ export default connect(
   forgotPasswordResultSelector,
   {
     forgotPassword,
+    setForgotPasswordFormData,
   },
 )(injectIntl(ForgotPasswordPage));
