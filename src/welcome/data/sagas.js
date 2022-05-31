@@ -1,17 +1,13 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import {
-  GET_FIELDS_DATA,
-  getFieldDataBegin,
-  getFieldDataFailure,
-  getFieldDataSuccess,
   SAVE_USER_PROFILE,
   saveUserProfileBegin,
   saveUserProfileFailure,
   saveUserProfileSuccess,
 } from './actions';
 
-import { patchAccount, getOptionalFieldData } from './service';
+import { patchAccount } from './service';
 
 export function* saveUserProfileInformation(action) {
   try {
@@ -24,17 +20,6 @@ export function* saveUserProfileInformation(action) {
   }
 }
 
-export function* getFieldData() {
-  try {
-    yield put(getFieldDataBegin());
-    const data = yield call(getOptionalFieldData);
-    yield put(getFieldDataSuccess(data.fields, data.extended_profile));
-  } catch (e) {
-    yield put(getFieldDataFailure());
-  }
-}
-
 export default function* saga() {
   yield takeEvery(SAVE_USER_PROFILE.BASE, saveUserProfileInformation);
-  yield takeEvery(GET_FIELDS_DATA.BASE, getFieldData);
 }

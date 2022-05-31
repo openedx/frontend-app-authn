@@ -10,7 +10,7 @@ import { setCookie } from '../data/utils';
 
 function RedirectLogistration(props) {
   const {
-    finishAuthUrl, redirectUrl, redirectToWelcomePage, success,
+    finishAuthUrl, redirectUrl, redirectToWelcomePage, success, optionalFields,
   } = props;
   let finalRedirectUrl = '';
 
@@ -30,7 +30,16 @@ function RedirectLogistration(props) {
       // use this component to redirect WelcomePage after successful registration
       // return <Redirect to={WELCOME_PAGE} />;
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
-      return <Redirect to={{ pathname: WELCOME_PAGE, state: { registrationResult } }} />;
+      return (
+        <Redirect to={{
+          pathname: WELCOME_PAGE,
+          state: {
+            registrationResult,
+            optionalFields,
+          },
+        }}
+        />
+      );
     }
 
     window.location.href = finalRedirectUrl;
@@ -43,6 +52,7 @@ RedirectLogistration.defaultProps = {
   success: false,
   redirectUrl: '',
   redirectToWelcomePage: false,
+  optionalFields: {},
 };
 
 RedirectLogistration.propTypes = {
@@ -50,6 +60,7 @@ RedirectLogistration.propTypes = {
   success: PropTypes.bool,
   redirectUrl: PropTypes.string,
   redirectToWelcomePage: PropTypes.bool,
+  optionalFields: PropTypes.shape({}),
 };
 
 export default RedirectLogistration;

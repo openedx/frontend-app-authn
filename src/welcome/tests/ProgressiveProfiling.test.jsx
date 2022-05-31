@@ -11,10 +11,10 @@ import * as auth from '@edx/frontend-platform/auth';
 import * as logging from '@edx/frontend-platform/logging';
 import { injectIntl, IntlProvider, configure } from '@edx/frontend-platform/i18n';
 
-import { getFieldData, saveUserProfile } from '../data/actions';
+import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
 import {
-  COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE, PENDING_STATE,
+  COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE,
 } from '../../data/constants';
 
 const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
@@ -36,8 +36,18 @@ describe('ProgressiveProfilingTests', () => {
   mergeConfig({
     WELCOME_PAGE_SUPPORT_LINK: 'http://localhost:1999/welcome',
   });
-
-  const registrationResult = { redirectUrl: 'http://localhost:18000/dashboard', success: true };
+  const registrationResult = { redirectUrl: getConfig().LMS_BASE_URL + DEFAULT_REDIRECT_URL, success: true };
+  const fields = {
+    company: { name: 'company', type: 'text', label: 'Company' },
+    gender: {
+      name: 'gender',
+      type: 'select',
+      label: 'Gender',
+      options: [['m', 'Male'], ['f', 'Female'], ['o', 'Other/Prefer Not to Say']],
+    },
+  };
+  const extendedProfile = ['company'];
+  const optionalFields = { fields, extended_profile: extendedProfile };
   let props = {};
   let store = {};
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
@@ -79,43 +89,13 @@ describe('ProgressiveProfilingTests', () => {
       location: {
         state: {
           registrationResult,
+          optionalFields,
         },
       },
     };
   });
 
-  it('should fire action to get form fields', async () => {
-    store.dispatch = jest.fn(store.dispatch);
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-
-    progressiveProfilingPage.find('button.btn-link').simulate('click');
-    expect(store.dispatch).toHaveBeenCalledWith(getFieldData());
-  });
-
-  it('should show spinner until fields are fetched', async () => {
-    store = mockStore({
-      welcomePage: {
-        formRenderState: PENDING_STATE,
-      },
-    });
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    expect(progressiveProfilingPage.find('#loader').exists()).toBeTruthy();
-  });
-
   it('should render fields returned by backend api', async () => {
-    store = mockStore({
-      welcomePage: {
-        ...initialState.welcomePage,
-        fieldDescriptions: {
-          gender: {
-            name: 'gender',
-            type: 'select',
-            label: 'Gender',
-            options: [['m', 'Male'], ['f', 'Female'], ['o', 'Other/Prefer Not to Say']],
-          },
-        },
-      },
-    });
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
   });
@@ -126,27 +106,7 @@ describe('ProgressiveProfilingTests', () => {
       gender: 'm',
       extended_profile: [{ field_name: 'company', field_value: 'edx' }],
     };
-    store = mockStore({
-      welcomePage: {
-        ...initialState.welcomePage,
-        extendedProfile: ['company'],
-        fieldDescriptions: {
-          gender: {
-            name: 'gender',
-            type: 'select',
-            label: 'Gender',
-            options: [['m', 'Male'], ['f', 'Female'], ['o', 'Other/Prefer Not to Say']],
-          },
-          company: {
-            name: 'company',
-            type: 'text',
-            label: 'Company',
-          },
-        },
-      },
-    });
     store.dispatch = jest.fn(store.dispatch);
-
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     progressiveProfilingPage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
     progressiveProfilingPage.find('input#company').simulate('change', { target: { value: 'edx', name: 'company' } });

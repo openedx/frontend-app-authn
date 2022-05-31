@@ -1,6 +1,6 @@
-import { GET_FIELDS_DATA, SAVE_USER_PROFILE } from './actions';
+import { SAVE_USER_PROFILE } from './actions';
 import {
-  DEFAULT_STATE, PENDING_STATE, COMPLETE_STATE, FAILURE_STATE,
+  DEFAULT_STATE, PENDING_STATE,
 } from '../../data/constants';
 
 export const defaultState = {
@@ -14,23 +14,6 @@ export const defaultState = {
 
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case GET_FIELDS_DATA.BEGIN:
-      return {
-        ...state,
-        formRenderState: PENDING_STATE,
-      };
-    case GET_FIELDS_DATA.SUCCESS:
-      return {
-        ...state,
-        extendedProfile: action.payload.extendedProfile,
-        fieldDescriptions: action.payload.data,
-        formRenderState: COMPLETE_STATE,
-      };
-    case GET_FIELDS_DATA.FAILURE:
-      return {
-        ...state,
-        formRenderState: FAILURE_STATE,
-      };
     case SAVE_USER_PROFILE.BEGIN:
       return {
         ...state,
