@@ -12,7 +12,9 @@ import * as analytics from '@edx/frontend-platform/analytics';
 import * as auth from '@edx/frontend-platform/auth';
 import { IntlProvider, injectIntl } from '@edx/frontend-platform/i18n';
 
-import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/actions';
+import {
+  loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+} from '../data/actions';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 
@@ -35,6 +37,7 @@ describe('LoginPage', () => {
   });
   let props = {};
   let store = {};
+  let loginFormData = {};
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
@@ -81,6 +84,14 @@ describe('LoginPage', () => {
       loginRequest: jest.fn(),
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
+    };
+    loginFormData = {
+      emailOrUsername: '',
+      password: '',
+      errors: {
+        emailOrUsername: '',
+        password: '',
+      },
     };
   });
 
@@ -464,5 +475,43 @@ describe('LoginPage', () => {
 
     expect(store.dispatch).toHaveBeenCalledWith(loginRequestReset());
     expect(loginPage.state('errors')).toEqual(errorState);
+  });
+
+  // persists form data tests
+
+  it('should set errors in redux store on submit form for invalid input', () => {
+    loginFormData = {
+      ...loginFormData,
+      errors: {
+        emailOrUsername: 'Enter your username or email',
+        password: 'Enter your password',
+      },
+    };
+    store.dispatch = jest.fn(store.dispatch);
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: '' } });
+    loginPage.find('input#password').simulate('change', { target: { value: '' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData(loginFormData));
+  });
+
+  it('should set form data in redux store on onBlur', () => {
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find('input#emailOrUsername').simulate('blur');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData(loginFormData));
+  });
+
+  it('should clear form field errors in redux store on onFocus', () => {
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find('input#emailOrUsername').simulate('focus');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData(loginFormData));
   });
 });
