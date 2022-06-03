@@ -41,5 +41,5 @@ jobs:
     - name: Build
       run: npm run build
 
-      - name: Run Code Coverage
-        uses: codecov/codecov-action@v2
+    - name: Run Code Coverage
+      uses: codecov/codecov-action@v2
