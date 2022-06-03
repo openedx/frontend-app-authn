@@ -3,7 +3,6 @@ import {
   REGISTER_NEW_USER,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
-  REGISTER_PERSIST_FORM_DATA,
 } from './actions';
 
 import {
@@ -14,24 +13,7 @@ import {
 export const defaultState = {
   registrationError: {},
   registrationResult: {},
-  registrationFormData: {
-    country: '',
-    email: '',
-    name: '',
-    password: '',
-    username: '',
-    marketingOptIn: true,
-    errors: {
-      email: '',
-      name: '',
-      username: '',
-      password: '',
-      country: '',
-    },
-    emailFieldBorderClass: '',
-    emailErrorSuggestion: null,
-    emailWarningSuggestion: null,
-  },
+  formData: null,
   validations: null,
   statusCode: null,
   usernameSuggestions: [],
@@ -45,8 +27,6 @@ const reducer = (state = defaultState, action) => {
     case REGISTRATION_FORM.RESET:
       return {
         ...defaultState,
-        registrationFormData: state.registrationFormData,
-        usernameSuggestions: state.usernameSuggestions,
       };
     case REGISTER_NEW_USER.BEGIN:
       return {
@@ -92,13 +72,6 @@ const reducer = (state = defaultState, action) => {
         ...state,
         usernameSuggestions: [],
       };
-    case REGISTER_PERSIST_FORM_DATA: {
-      const { registrationFormData } = action.payload;
-      return {
-        ...state,
-        registrationFormData,
-      };
-    }
     default:
       return state;
   }

@@ -16,7 +16,7 @@ import {
 import { Error, Close } from '@edx/paragon/icons';
 import FormFieldRenderer from '../field-renderer';
 import {
-  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations, setRegistrationFormData,
+  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
 } from './data/actions';
 import {
   FIELDS, FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_EMAIL_PROVIDERS,
@@ -26,7 +26,6 @@ import {
   registrationRequestSelector,
   validationsSelector,
   usernameSuggestionsSelector,
-  registrationFormDataSelector,
 } from './data/selectors';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
@@ -67,21 +66,20 @@ class RegistrationPage extends React.Component {
     this.tpaHint = getTpaHint();
     this.state = {
       country: '',
-      email: this.props.registrationFormData.email || '',
-      name: this.props.registrationFormData.name || '',
-      password: this.props.registrationFormData.password || '',
-      username: this.props.registrationFormData.username || '',
-      marketingOptIn: this.props.registrationFormData.marketingOptIn || true,
+      email: '',
+      name: '',
+      password: '',
+      username: '',
+      marketingOptIn: true,
       errors: {
-        email: this.props.registrationFormData.errors.email || '',
-        name: this.props.registrationFormData.errors.name || '',
-        username: this.props.registrationFormData.errors.username || '',
-        password: this.props.registrationFormData.errors.password || '',
+        email: '',
+        name: '',
+        username: '',
+        password: '',
         country: '',
       },
-      emailFieldBorderClass: this.props.registrationFormData.emailFieldBorderClass || '',
-      emailErrorSuggestion: this.props.registrationFormData.emailErrorSuggestion || null,
-      emailWarningSuggestion: this.props.registrationFormData.emailWarningSuggestion || null,
+      emailErrorSuggestion: null,
+      emailWarningSuggestion: null,
       errorCode: null,
       failureCount: 0,
       startTime: Date.now(),
@@ -120,12 +118,6 @@ class RegistrationPage extends React.Component {
         username: ' ',
       });
       return false;
-    }
-    if (this.props.registrationFormData !== nextProps.registrationFormData) {
-      const state = { ...this.state, ...nextProps.registrationFormData };
-      this.setState({
-        ...state,
-      });
     }
     if (this.props.validationDecisions !== nextProps.validationDecisions) {
       const state = { errors: { ...this.state.errors, ...nextProps.validationDecisions } };
@@ -295,27 +287,24 @@ class RegistrationPage extends React.Component {
   handleOnFocus = (e) => {
     const { errors } = this.state;
     errors[e.target.name] = '';
+    const state = { errors };
     if (e.target.name === 'username') {
       this.props.clearUsernameSuggestions();
     }
     if (e.target.name === 'country') {
-      this.setState({ readOnly: false });
+      state.readOnly = false;
     }
     if (e.target.name === 'passwordValidation') {
-      errors.password = '';
+      state.errors.password = '';
     }
-    this.props.setRegistrationFormData({
-      ...this.props.registrationFormData,
-      errors,
-    });
+    this.setState({ ...state });
   }
 
   handleSuggestionClick = (e, suggestion) => {
     const { errors } = this.state;
     if (e.target.name === 'username') {
       errors.username = '';
-      this.props.setRegistrationFormData({
-        ...this.props.registrationFormData,
+      this.setState({
         username: suggestion,
         errors,
       });
@@ -323,20 +312,18 @@ class RegistrationPage extends React.Component {
     } else if (e.target.name === 'email') {
       e.preventDefault();
       errors.email = '';
-      this.props.setRegistrationFormData({
-        ...this.props.registrationFormData,
+      this.setState({
+        borderClass: '',
         email: suggestion,
         emailErrorSuggestion: null,
         emailWarningSuggestion: null,
-        emailFieldBorderClass: '',
         errors,
       });
     }
   }
 
   handleUsernameSuggestionClose = () => {
-    this.props.setRegistrationFormData({
-      ...this.props.registrationFormData,
+    this.setState({
       username: '',
     });
     this.props.clearUsernameSuggestions();
@@ -365,15 +352,11 @@ class RegistrationPage extends React.Component {
       }
     });
 
-    this.props.setRegistrationFormData({
-      ...this.props.registrationFormData,
-      errors,
-    });
+    this.setState({ errors });
     return isValid;
   }
 
   validateInput(fieldName, value, payload) {
-    let state = {};
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -426,11 +409,11 @@ class RegistrationPage extends React.Component {
               errors.email = '';
             }
           }
-          state = {
+          this.setState({
             emailWarningSuggestion,
             emailErrorSuggestion,
-            emailFieldBorderClass: emailWarningSuggestion ? 'yellow-border' : null,
-          };
+            borderClass: emailWarningSuggestion ? 'yellow-border' : null,
+          });
         }
         break;
       case 'name':
@@ -484,21 +467,12 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    this.props.setRegistrationFormData({
-      ...this.props.registrationFormData,
-      ...state,
-      [fieldName]: value,
-      errors,
-    });
-
+    this.setState({ errors });
     return errors;
   }
 
   handleOnClose() {
-    this.props.setRegistrationFormData({
-      ...this.props.registrationFormData,
-      emailErrorSuggestion: null,
-    });
+    this.setState({ emailErrorSuggestion: null });
   }
 
   renderEmailFeedback() {
@@ -721,7 +695,7 @@ class RegistrationPage extends React.Component {
               handleFocus={this.handleOnFocus}
               helpText={[intl.formatMessage(messages['help.text.email'])]}
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
-              borderClass={this.state.emailFieldBorderClass}
+              borderClass={this.state.borderClass}
             >
               {this.renderEmailFeedback()}
             </FormGroup>
@@ -871,24 +845,6 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
     pipelineUserDetails: null,
   },
-  registrationFormData: {
-    country: '',
-    email: '',
-    name: '',
-    password: '',
-    username: '',
-    marketingOptIn: true,
-    errors: {
-      email: '',
-      name: '',
-      username: '',
-      password: '',
-      country: '',
-    },
-    emailFieldBorderClass: '',
-    emailErrorSuggestion: null,
-    emailWarningSuggestion: null,
-  },
   validationDecisions: null,
   statusCode: null,
   usernameSuggestions: [],
@@ -901,7 +857,6 @@ RegistrationPage.propTypes = {
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func,
   resetRegistrationForm: PropTypes.func.isRequired,
-  setRegistrationFormData: PropTypes.func.isRequired,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -909,24 +864,6 @@ RegistrationPage.propTypes = {
   registrationErrorCode: PropTypes.string,
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
-  registrationFormData: PropTypes.shape({
-    country: PropTypes.string,
-    email: PropTypes.string,
-    name: PropTypes.string,
-    password: PropTypes.string,
-    username: PropTypes.string,
-    marketingOptIn: PropTypes.bool,
-    errors: PropTypes.shape({
-      email: PropTypes.string,
-      name: PropTypes.string,
-      username: PropTypes.string,
-      password: PropTypes.string,
-      country: PropTypes.string,
-    }),
-    emailFieldBorderClass: PropTypes.string,
-    emailErrorSuggestion: PropTypes.string,
-    emailWarningSuggestion: PropTypes.string,
-  }),
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -969,7 +906,6 @@ const mapStateToProps = state => {
     validationDecisions: validationsSelector(state),
     statusCode: state.register.statusCode,
     usernameSuggestions: usernameSuggestionsSelector(state),
-    registrationFormData: registrationFormDataSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
     extendedProfile: extendedProfileSelector(state),
   };
@@ -983,6 +919,5 @@ export default connect(
     fetchRealtimeValidations,
     registerNewUser,
     resetRegistrationForm,
-    setRegistrationFormData,
   },
 )(injectIntl(RegistrationPage));

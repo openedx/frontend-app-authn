@@ -13,7 +13,7 @@ import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n
 import {
   clearUsernameSuggestions,
   fetchRealtimeValidations,
-  registerNewUser, setRegistrationFormData,
+  registerNewUser,
   resetRegistrationForm,
 } from '../data/actions';
 import {
@@ -43,7 +43,6 @@ describe('RegistrationPage', () => {
 
   let props = {};
   let store = {};
-  let registrationFormData = {};
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
@@ -86,24 +85,6 @@ describe('RegistrationPage', () => {
       registrationResult: jest.fn(),
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
-    };
-    registrationFormData = {
-      country: '',
-      email: '',
-      name: '',
-      password: '',
-      username: '',
-      marketingOptIn: true,
-      errors: {
-        email: '',
-        name: '',
-        username: '',
-        password: '',
-        country: '',
-      },
-      emailFieldBorderClass: '',
-      emailErrorSuggestion: null,
-      emailWarningSuggestion: null,
     };
   });
 
@@ -269,6 +250,19 @@ describe('RegistrationPage', () => {
         honor_code: true,
       };
       expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
+    });
+
+    it('should validate the did you mean suggestions', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
+      expect(registrationPage.find('RegistrationPage').state('emailErrorSuggestion')).toEqual('test@gmail.com');
+
+      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@fmail.com', name: 'email' } });
+      expect(registrationPage.find('RegistrationPage').state('emailWarningSuggestion')).toEqual('test@gmail.com');
+
+      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@hotmail.com', name: 'email' } });
+      expect(registrationPage.find('RegistrationPage').state('emailWarningSuggestion')).toEqual(null);
     });
 
     it('should update props with validations returned by registration api', () => {
@@ -517,6 +511,8 @@ describe('RegistrationPage', () => {
       registerPage.find('RegistrationPage').instance().shouldComponentUpdate(props);
       registerPage.find('RegistrationPage').setState({ errors: { username: 'It looks like this username is already taken' } });
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
+      registerPage.find('button.username-suggestion').at(0).simulate('click');
+      expect(registerPage.find('RegistrationPage').state('username')).toEqual('test_1');
     });
 
     it('should show username suggestions when full name is populated', () => {
@@ -532,6 +528,8 @@ describe('RegistrationPage', () => {
       registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
+      registerPage.find('button.username-suggestion').at(0).simulate('click');
+      expect(registerPage.find('RegistrationPage').state('username')).toEqual('testname');
     });
 
     it('should clear username suggestions when close icon is clicked', () => {
@@ -764,30 +762,6 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('RegistrationPage').state('errorCode')).toEqual(INTERNAL_SERVER_ERROR);
     });
 
-    it('should update form fields state if updated in redux store', () => {
-      const nextProps = {
-        thirdPartyAuthContext,
-        registrationFormData: {
-          name: 'John Doe',
-          username: 'john_doe',
-          email: 'john.doe@example.com',
-          password: 'password1',
-          country: 'Pakistan',
-          emailErrorSuggestion: 'test@gmail.com',
-        },
-      };
-
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
-
-      expect(registrationPage.find('RegistrationPage').state('name')).toEqual('John Doe');
-      expect(registrationPage.find('RegistrationPage').state('username')).toEqual('john_doe');
-      expect(registrationPage.find('RegistrationPage').state('email')).toEqual('john.doe@example.com');
-      expect(registrationPage.find('RegistrationPage').state('emailErrorSuggestion')).toEqual('test@gmail.com');
-      expect(registrationPage.find('RegistrationPage').state('password')).toEqual('password1');
-      expect(registrationPage.find('RegistrationPage').state('country')).toEqual('Pakistan');
-    });
-
     it('should display opt-in/opt-out checkbox', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: 'true',
@@ -799,115 +773,6 @@ describe('RegistrationPage', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
       });
-    });
-
-    // ******** persist state tests ********
-
-    it('should clear form field errors in redux store on onFocus', () => {
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#name').simulate('focus');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should set username in redux store if usernameSuggestion is clicked', () => {
-      registrationFormData = {
-        ...registrationFormData,
-        username: 'testname',
-      };
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registerPage.find('button.username-suggestion').at(0).simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should set email in redux store if emailSuggestion is clicked', () => {
-      registrationFormData = {
-        ...registrationFormData,
-        email: 'test@gmail.com',
-      };
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
-      registrationPage.find('RegistrationPage').setState({ emailErrorSuggestion: 'test@gmail.com' });
-      registrationPage.find('.alert-link').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should clear username in redux store if usernameSuggestion close button is clicked', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registerPage.find('button.suggested-username-close-button').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should clear emailErrorSuggestion in redux store if close button is clicked', () => {
-      registrationFormData = {
-        ...registrationFormData,
-        email: '',
-      };
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
-      registrationPage.find('RegistrationPage').setState({ emailErrorSuggestion: 'test@gmail.com' });
-      registrationPage.find('.alert-close').at(0).simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should set errors in redux store if form payload is invalid', () => {
-      registrationFormData = {
-        ...registrationFormData,
-        errors: {
-          ...registrationFormData.errors,
-          name: 'Enter your full name',
-        },
-      };
-
-      const payload = {
-        name: '',
-        username: 'john_doe',
-        email: 'john.doe@example.com',
-        password: 'password1',
-        country: 'Pakistan',
-        honor_code: true,
-        totalRegistrationTime: 0,
-        is_authn_mfe: true,
-      };
-
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-
-      populateRequiredFields(registerPage, payload);
-      registerPage.find('button.btn-brand').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
     });
   });
 

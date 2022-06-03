@@ -16,7 +16,6 @@ import * as auth from '@edx/frontend-platform/auth';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
-import { setForgotPasswordFormData } from '../data/actions';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth');
@@ -197,25 +196,5 @@ describe('ForgotPasswordPage', () => {
 
     forgotPasswordPage.update();
     expect(history.location.pathname).toEqual(LOGIN_PAGE);
-  });
-
-  // *********** persists form data on going back to sign in page ***********
-
-  it('should set form data in redux store on onBlur', () => {
-    const forgotPasswordFormData = {
-      email: 'test@gmail',
-      emailValidationError: 'Enter a valid email address',
-    };
-
-    props = {
-      ...props,
-      email: 'test@gmail',
-      emailValidationError: '',
-    };
-
-    store.dispatch = jest.fn(store.dispatch);
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    wrapper.find('input#email').simulate('blur');
-    expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
   });
 });

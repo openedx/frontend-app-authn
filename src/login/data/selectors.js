@@ -13,8 +13,3 @@ export const loginErrorSelector = createSelector(
   loginSelector,
   login => login.loginError,
 );
-
-export const loginFormDataSelector = createSelector(
-  loginSelector,
-  login => login.loginFormData,
-);
