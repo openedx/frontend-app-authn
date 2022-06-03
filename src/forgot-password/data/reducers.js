@@ -1,4 +1,4 @@
-import { FORGOT_PASSWORD, FORGOT_PASSWORD_PERSIST_FORM_DATA } from './actions';
+import { FORGOT_PASSWORD } from './actions';
 import { INTERNAL_SERVER_ERROR, PENDING_STATE } from '../../data/constants';
 import { PASSWORD_RESET_FAILURE } from '../../reset-password/data/actions';
 
@@ -6,7 +6,6 @@ export const defaultState = {
   status: '',
   submitState: '',
   email: '',
-  emailValidationError: '',
 };
 
 const reducer = (state = defaultState, action = null) => {
@@ -34,20 +33,8 @@ const reducer = (state = defaultState, action = null) => {
         return {
           status: action.payload.errorCode,
         };
-      case FORGOT_PASSWORD_PERSIST_FORM_DATA: {
-        const { forgotPasswordFormData } = action.payload;
-        return {
-          ...state,
-          email: forgotPasswordFormData.email,
-          emailValidationError: forgotPasswordFormData.emailValidationError,
-        };
-      }
       default:
-        return {
-          ...defaultState,
-          email: state.email,
-          emailValidationError: state.emailValidationError,
-        };
+        return defaultState;
     }
   }
   return state;

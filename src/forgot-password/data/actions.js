@@ -1,7 +1,6 @@
 import { AsyncActionType } from '../../data/utils';
 
 export const FORGOT_PASSWORD = new AsyncActionType('FORGOT', 'PASSWORD');
-export const FORGOT_PASSWORD_PERSIST_FORM_DATA = 'FORGOT_PASSWORD_PERSIST_FORM_DATA';
 
 // Forgot Password
 export const forgotPassword = email => ({
@@ -24,9 +23,4 @@ export const forgotPasswordForbidden = () => ({
 
 export const forgotPasswordServerError = () => ({
   type: FORGOT_PASSWORD.FAILURE,
-});
-
-export const setForgotPasswordFormData = (forgotPasswordFormData) => ({
-  type: FORGOT_PASSWORD_PERSIST_FORM_DATA,
-  payload: { forgotPasswordFormData },
 });
