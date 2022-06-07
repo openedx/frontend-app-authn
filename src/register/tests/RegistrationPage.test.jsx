@@ -859,6 +859,48 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('#profession-error').last().text()).toEqual('Enter profession');
     });
 
+    it('should show error message for confirm email field returned by backend', () => {
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email', error_message: 'Enter your confirm email',
+            },
+          },
+        },
+      });
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button.btn-brand').simulate('click');
+
+      expect(registrationPage.find('#confirm_email-error').last().text()).toEqual('Enter your confirm email');
+    });
+
+    it('should show error if email and confirm email fields not match', () => {
+      mergeConfig({
+        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      });
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email',
+            },
+          },
+        },
+      });
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('RegistrationPage').setState({ email: 'test1@gmail.com' });
+      registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test@gmail.com', name: 'confirm_email' } });
+
+      expect(registrationPage.find('#confirm_email-error').last().text()).toEqual('The email addresses do not match.');
+    });
+
     it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING: true,
