@@ -1,21 +1,20 @@
 import React from 'react';
-
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import * as auth from '@edx/frontend-platform/auth';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import * as logging from '@edx/frontend-platform/logging';
-import { injectIntl, IntlProvider, configure } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
+import configureStore from 'redux-mock-store';
 
-import { saveUserProfile } from '../data/actions';
-import ProgressiveProfiling from '../ProgressiveProfiling';
 import {
   COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE,
 } from '../../data/constants';
+import { saveUserProfile } from '../data/actions';
+import ProgressiveProfiling from '../ProgressiveProfiling';
 
 const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
 const mockStore = configureStore();

@@ -1,9 +1,10 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
 
-import ThirdPartyAuthAlert from '../ThirdPartyAuthAlert';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
+import renderer from 'react-test-renderer';
+
 import { REGISTER_PAGE } from '../../data/constants';
+import ThirdPartyAuthAlert from '../ThirdPartyAuthAlert';
 
 describe('ThirdPartyAuthAlert', () => {
   let props = {};

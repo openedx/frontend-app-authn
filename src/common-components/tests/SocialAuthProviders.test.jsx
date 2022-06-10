@@ -1,9 +1,10 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
 
-import SocialAuthProviders from '../SocialAuthProviders';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
+import renderer from 'react-test-renderer';
+
 import registerIcons from '../RegisterFaIcons';
+import SocialAuthProviders from '../SocialAuthProviders';
 
 registerIcons();
 

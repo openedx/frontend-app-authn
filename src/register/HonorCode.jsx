@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape, FormattedMessage } from '@edx/frontend-platform/i18n';
-import { Hyperlink, Form } from '@edx/paragon';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Form, Hyperlink } from '@edx/paragon';
+import PropTypes from 'prop-types';
+
 import messages from './messages';
 
 const HonorCode = (props) => {

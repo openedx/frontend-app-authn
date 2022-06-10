@@ -1,4 +1,4 @@
-import { RESET_PASSWORD, VALIDATE_TOKEN, PASSWORD_RESET_FAILURE } from './actions';
+import { PASSWORD_RESET_FAILURE, RESET_PASSWORD, VALIDATE_TOKEN } from './actions';
 import { PASSWORD_RESET_ERROR, TOKEN_STATE } from './constants';
 
 export const defaultState = {

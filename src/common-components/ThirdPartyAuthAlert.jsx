@@ -1,12 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
+import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import messages from './messages';
 
 const ThirdPartyAuthAlert = (props) => {
   const { currentProvider, intl, referrer } = props;

@@ -5,11 +5,10 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import {
   FORGOT_PASSWORD,
   forgotPasswordBegin,
-  forgotPasswordSuccess,
   forgotPasswordForbidden,
   forgotPasswordServerError,
+  forgotPasswordSuccess,
 } from './actions';
-
 import { forgotPassword } from './service';
 
 // Services

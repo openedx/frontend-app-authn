@@ -1,22 +1,22 @@
 import React from 'react';
+
+import * as auth from '@edx/frontend-platform/auth';
+import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import * as auth from '@edx/frontend-platform/auth';
-
-import LoginFailureMessage from '../LoginFailure';
 import {
+  FAILED_LOGIN_ATTEMPT,
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
+  INCORRECT_EMAIL_PASSWORD,
   INTERNAL_SERVER_ERROR,
   INVALID_FORM,
   NON_COMPLIANT_PASSWORD_EXCEPTION,
-  FAILED_LOGIN_ATTEMPT,
-  INCORRECT_EMAIL_PASSWORD,
   NUDGE_PASSWORD_CHANGE,
   REQUIRE_PASSWORD_CHANGE,
 } from '../data/constants';
+import LoginFailureMessage from '../LoginFailure';
 
 jest.mock('@edx/frontend-platform/auth');
 auth.getAuthService = jest.fn();

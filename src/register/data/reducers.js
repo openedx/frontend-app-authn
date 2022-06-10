@@ -1,14 +1,13 @@
 import {
-  REGISTRATION_FORM,
-  REGISTER_NEW_USER,
-  REGISTER_FORM_VALIDATIONS,
-  REGISTER_CLEAR_USERNAME_SUGGESTIONS,
-} from './actions';
-
-import {
   DEFAULT_STATE,
   PENDING_STATE,
 } from '../../data/constants';
+import {
+  REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+  REGISTER_FORM_VALIDATIONS,
+  REGISTER_NEW_USER,
+  REGISTRATION_FORM,
+} from './actions';
 
 export const defaultState = {
   registrationError: {},

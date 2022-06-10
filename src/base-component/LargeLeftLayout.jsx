@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 
-import classNames from 'classnames';
-
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getConfig } from '@edx/frontend-platform';
-import PropTypes from 'prop-types';
-import ClipboardJS from 'clipboard';
-
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Toast } from '@edx/paragon';
 import { faCut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Toast } from '@edx/paragon';
+import classNames from 'classnames';
+import ClipboardJS from 'clipboard';
+import PropTypes from 'prop-types';
 
 import messages from './messages';
 import SideDiscountBanner from './SideDiscountBanner';

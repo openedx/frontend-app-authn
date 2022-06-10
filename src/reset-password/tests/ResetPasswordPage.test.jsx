@@ -1,19 +1,18 @@
 import React from 'react';
-
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 
-import * as auth from '@edx/frontend-platform/auth';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
+import * as auth from '@edx/frontend-platform/auth';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
+import { act } from 'react-dom/test-utils';
+import { MemoryRouter, Router } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
 
+import { LOGIN_PAGE } from '../../data/constants';
 import { resetPassword } from '../data/actions';
 import { PASSWORD_RESET, TOKEN_STATE } from '../data/constants';
-import { LOGIN_PAGE } from '../../data/constants';
 import ResetPasswordPage from '../ResetPasswordPage';
 
 jest.mock('@edx/frontend-platform/auth');

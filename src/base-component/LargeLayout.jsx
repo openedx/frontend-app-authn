@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { Hyperlink, Image } from '@edx/paragon';
+import PropTypes from 'prop-types';
 
 import LargeScreenLeftLayout from './LargeLeftLayout';
 

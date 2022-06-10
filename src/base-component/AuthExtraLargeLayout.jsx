@@ -1,13 +1,12 @@
 import React from 'react';
 
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Col, Hyperlink, Image, Row,
 } from '@edx/paragon';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
 import messages from './messages';
 

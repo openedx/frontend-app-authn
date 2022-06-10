@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Route } from 'react-router-dom';
+
 import { getConfig } from '@edx/frontend-platform';
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { Route } from 'react-router-dom';
+
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 /**

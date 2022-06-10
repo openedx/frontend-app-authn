@@ -1,8 +1,8 @@
 import React from 'react';
-import { mount } from 'enzyme';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
 
 import AccountActivationMessage from '../AccountActivationMessage';
 import { ACCOUNT_ACTIVATION_MESSAGE } from '../data/constants';

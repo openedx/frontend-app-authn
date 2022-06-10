@@ -1,6 +1,5 @@
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { THIRD_PARTY_AUTH_CONTEXT } from './actions';
-
-import { PENDING_STATE, COMPLETE_STATE } from '../../data/constants';
 
 export const defaultState = {
   extendedProfile: [],

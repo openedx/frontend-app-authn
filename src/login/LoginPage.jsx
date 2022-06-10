@@ -1,10 +1,5 @@
 import React from 'react';
-
-import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
-import Skeleton from 'react-loading-skeleton';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -13,17 +8,14 @@ import {
   Form, Hyperlink, Icon, StatefulButton,
 } from '@edx/paragon';
 import { Institution } from '@edx/paragon/icons';
-
-import AccountActivationMessage from './AccountActivationMessage';
-import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
-import { INVALID_FORM } from './data/constants';
-import { loginErrorSelector, loginRequestSelector } from './data/selectors';
-import LoginFailureMessage from './LoginFailure';
-import messages from './messages';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import Skeleton from 'react-loading-skeleton';
+import { Link } from 'react-router-dom';
 
 import {
-  RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
-  InstitutionLogistration, FormGroup, PasswordField,
+  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration,
+  RenderInstitutionButton, SocialAuthProviders, ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
@@ -32,16 +24,22 @@ import {
   DEFAULT_STATE, ENTERPRISE_LOGIN_URL, PENDING_STATE, RESET_PAGE,
 } from '../data/constants';
 import {
-  getTpaHint,
-  getTpaProvider,
-  windowScrollTo,
-  setSurveyCookie,
   getActivationStatus,
   getAllPossibleQueryParam,
+  getTpaHint,
+  getTpaProvider,
+  setSurveyCookie,
   updatePathWithQueryParams,
+  windowScrollTo,
 } from '../data/utils';
 import { forgotPasswordResultSelector } from '../forgot-password';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
+import AccountActivationMessage from './AccountActivationMessage';
+import { loginRequest, loginRequestFailure, loginRequestReset } from './data/actions';
+import { INVALID_FORM } from './data/constants';
+import { loginErrorSelector, loginRequestSelector } from './data/selectors';
+import LoginFailureMessage from './LoginFailure';
+import messages from './messages';
 
 class LoginPage extends React.Component {
   constructor(props, context) {

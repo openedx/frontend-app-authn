@@ -1,7 +1,6 @@
-import { LOGIN_REQUEST } from './actions';
-
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
+import { LOGIN_REQUEST } from './actions';
 
 export const defaultState = {
   loginError: null,

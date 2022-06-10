@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { getLocale } from '@edx/frontend-platform/i18n';
+import { breakpoints } from '@edx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import MediaQuery from 'react-responsive';
-import { breakpoints } from '@edx/paragon';
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import { getLocale } from '@edx/frontend-platform/i18n';
-
-import LargeLayout from './LargeLayout';
-import MediumLayout from './MediumLayout';
-import SmallLayout from './SmallLayout';
 
 import AuthExtraLargeLayout from './AuthExtraLargeLayout';
 import AuthMediumLayout from './AuthMediumLayout';
 import AuthSmallLayout from './AuthSmallLayout';
 import DiscountExperimentBanner from './DiscountBanner';
+import LargeLayout from './LargeLayout';
+import MediumLayout from './MediumLayout';
+import SmallLayout from './SmallLayout';
 
 const BaseComponent = ({ children, isRegistrationPage, showWelcomeBanner }) => {
   const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;

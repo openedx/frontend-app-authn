@@ -1,20 +1,18 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
-// Actions
 import {
+  passwordResetFailure,
+  RESET_PASSWORD,
+  resetPasswordBegin,
+  resetPasswordFailure,
+  resetPasswordSuccess,
   VALIDATE_TOKEN,
   validateTokenBegin,
   validateTokenSuccess,
-  RESET_PASSWORD,
-  resetPasswordBegin,
-  resetPasswordSuccess,
-  resetPasswordFailure,
-  passwordResetFailure,
 } from './actions';
-
-import { validateToken, resetPassword } from './service';
 import { PASSWORD_RESET, PASSWORD_VALIDATION_ERROR } from './constants';
+import { resetPassword, validateToken } from './service';
 
 // Services
 export function* handleValidateToken(action) {

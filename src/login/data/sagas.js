@@ -1,18 +1,14 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
-
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
-// Actions
 import {
   LOGIN_REQUEST,
   loginRequestBegin,
   loginRequestFailure,
   loginRequestSuccess,
 } from './actions';
-
-// Services
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
 import {
   loginRequest,
 } from './service';

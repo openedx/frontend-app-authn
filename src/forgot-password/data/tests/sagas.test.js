@@ -1,9 +1,9 @@
 import { runSaga } from 'redux-saga';
 
+import initializeMockLogging from '../../../setupTest';
 import * as actions from '../actions';
 import { handleForgotPassword } from '../sagas';
 import * as api from '../service';
-import initializeMockLogging from '../../../setupTest';
 
 const { loggingService } = initializeMockLogging();
 

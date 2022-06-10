@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
-
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { ActionRow, Button, ModalDialog } from '@edx/paragon';
+import PropTypes from 'prop-types';
+
 import messages from './messages';
 
 const WelcomePageModal = (props) => {

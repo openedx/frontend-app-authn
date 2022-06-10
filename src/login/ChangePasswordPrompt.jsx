@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
 
-import classNames from 'classnames';
-import { Link, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@edx/paragon';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { Link, Redirect } from 'react-router-dom';
 
-import messages from './messages';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
+import messages from './messages';
 
 const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
   const isMobileView = useMobileResponsive();

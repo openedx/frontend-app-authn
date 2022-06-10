@@ -1,6 +1,7 @@
 // Utility functions
 
 import * as QueryString from 'query-string';
+
 import { AUTH_PARAMS } from '../constants';
 
 export default function processLink(link) {

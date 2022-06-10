@@ -1,8 +1,8 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import { Form, Icon } from '@edx/paragon';
 import { ExpandMore } from '@edx/paragon/icons';
+import PropTypes from 'prop-types';
 
 const FormFieldRenderer = (props) => {
   let formField = null;

@@ -1,16 +1,16 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
-  UnAuthOnlyRoute, registerIcons, NotFoundPage, Logistration,
+  Logistration, NotFoundPage, registerIcons, UnAuthOnlyRoute,
 } from './common-components';
-import {
-  LOGIN_PAGE, PAGE_NOT_FOUND, REGISTER_PAGE, RESET_PAGE, PASSWORD_RESET_CONFIRM, WELCOME_PAGE,
-} from './data/constants';
 import configureStore from './data/configureStore';
+import {
+  LOGIN_PAGE, PAGE_NOT_FOUND, PASSWORD_RESET_CONFIRM, REGISTER_PAGE, RESET_PAGE, WELCOME_PAGE,
+} from './data/constants';
 import { updatePathWithQueryParams } from './data/utils';
 import ForgotPasswordPage from './forgot-password';
 import ResetPasswordPage from './reset-password';

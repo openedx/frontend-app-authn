@@ -1,16 +1,16 @@
 import React from 'react';
-
-import { mount } from 'enzyme';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import renderer from 'react-test-renderer';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
-import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
+import renderer from 'react-test-renderer';
+import configureStore from 'redux-mock-store';
 
+import { COMPLETE_STATE, PENDING_STATE, WELCOME_PAGE } from '../../data/constants';
 import {
   clearUsernameSuggestions,
   fetchRealtimeValidations,
@@ -22,8 +22,6 @@ import {
 } from '../data/constants';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
-
-import { COMPLETE_STATE, PENDING_STATE, WELCOME_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
