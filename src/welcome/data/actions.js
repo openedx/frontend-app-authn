@@ -20,21 +20,3 @@ export const saveUserProfileSuccess = () => ({
 export const saveUserProfileFailure = () => ({
   type: SAVE_USER_PROFILE.FAILURE,
 });
-
-// get field data from platform
-export const getFieldData = () => ({
-  type: GET_FIELDS_DATA.BASE,
-});
-
-export const getFieldDataBegin = () => ({
-  type: GET_FIELDS_DATA.BEGIN,
-});
-
-export const getFieldDataSuccess = (data, extendedProfile) => ({
-  type: GET_FIELDS_DATA.SUCCESS,
-  payload: { data, extendedProfile },
-});
-
-export const getFieldDataFailure = () => ({
-  type: GET_FIELDS_DATA.FAILURE,
-});

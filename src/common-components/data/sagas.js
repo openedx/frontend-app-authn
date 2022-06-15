@@ -18,10 +18,12 @@ import {
 export function* fetchThirdPartyAuthContext(action) {
   try {
     yield put(getThirdPartyAuthContextBegin());
-    const { fieldDescriptions, thirdPartyAuthContext } = yield call(getThirdPartyAuthContext, action.payload.urlParams);
+    const { fieldDescriptions, optionalFields, thirdPartyAuthContext } = yield call(
+      getThirdPartyAuthContext, action.payload.urlParams,
+    );
 
     yield put(getThirdPartyAuthContextSuccess(
-      fieldDescriptions, thirdPartyAuthContext,
+      fieldDescriptions, optionalFields, thirdPartyAuthContext,
     ));
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());

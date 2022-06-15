@@ -40,6 +40,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
   extendedProfileSelector,
   fieldDescriptionSelector,
+  optionalFieldsSelector,
   thirdPartyAuthContextSelector,
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
@@ -64,6 +65,7 @@ class RegistrationPage extends React.Component {
     // permanent part of Authn and remove extra code
     this.showDynamicRegistrationFields = getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS;
     this.tpaHint = getTpaHint();
+    this.isRegistered = true;
     this.state = {
       country: '',
       email: '',
@@ -107,6 +109,7 @@ class RegistrationPage extends React.Component {
     if (this.tpaHint) {
       payload.tpa_hint = this.tpaHint;
     }
+    payload.is_registered = this.isRegistered;
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
     this.getExperiments();
@@ -655,7 +658,14 @@ class RegistrationPage extends React.Component {
           success={this.props.registrationResult.success}
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
-          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING}
+          optionalFields={this.props.optionalFields}
+          redirectToWelcomePage={
+            // eslint-disable-next-line no-nested-ternary
+            getConfig().ENABLE_PROGRESSIVE_PROFILING
+              ? (getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS
+                ? Object.keys(this.props.optionalFields).length !== 0 : true
+              ) : false
+          }
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
@@ -832,6 +842,7 @@ class RegistrationPage extends React.Component {
 RegistrationPage.defaultProps = {
   extendedProfile: [],
   fieldDescriptions: {},
+  optionalFields: {},
   registrationResult: null,
   registerNewUser: null,
   registrationErrorCode: null,
@@ -853,6 +864,7 @@ RegistrationPage.defaultProps = {
 RegistrationPage.propTypes = {
   extendedProfile: PropTypes.arrayOf(PropTypes.string),
   fieldDescriptions: PropTypes.shape({}),
+  optionalFields: PropTypes.shape({}),
   intl: intlShape.isRequired,
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func,
@@ -907,6 +919,7 @@ const mapStateToProps = state => {
     statusCode: state.register.statusCode,
     usernameSuggestions: usernameSuggestionsSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
+    optionalFields: optionalFieldsSelector(state),
     extendedProfile: extendedProfileSelector(state),
   };
 };

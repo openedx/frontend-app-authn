@@ -32,7 +32,7 @@ const MainApp = () => (
       <Route
         exact
         path={WELCOME_PAGE}
-        component={(getConfig().SHOW_DYNAMIC_PROFILING_PAGE) ? ProgressiveProfiling : WelcomePage}
+        component={(getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS) ? ProgressiveProfiling : WelcomePage}
       />
       <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
       <Route path="*">

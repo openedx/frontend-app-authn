@@ -9,6 +9,7 @@ import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
 import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   clearUsernameSuggestions,
@@ -22,7 +23,7 @@ import {
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
-import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
+import { COMPLETE_STATE, PENDING_STATE, WELCOME_PAGE } from '../../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics');
 
@@ -856,6 +857,64 @@ describe('RegistrationPage', () => {
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('#profession-error').last().text()).toEqual('Enter profession');
+    });
+
+    it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING: true,
+        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      });
+      const dasboardUrl = 'http://test.com/testing-dashboard/';
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+            redirectUrl: dasboardUrl,
+          },
+          commonComponents: {
+            optionalFields: {},
+          },
+        },
+      });
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL };
+      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(window.location.href).toBe(dasboardUrl);
+    });
+
+    it('should redirect to welcome page when optional fields are configured with feature flags', () => {
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING: true,
+        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      });
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          optionalFields: {
+            country: { name: 'country', error_message: false },
+          },
+        },
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+          },
+
+        },
+      });
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL + WELCOME_PAGE };
+      renderer.create(reduxWrapper(
+        <IntlProvider locale="en">
+          <MemoryRouter>
+            <Provider store={store}><IntlRegistrationPage {...props} /></Provider>
+          </MemoryRouter>
+        </IntlProvider>,
+      ));
+      expect(window.location.href).toBe(getConfig().BASE_URL + WELCOME_PAGE);
     });
   });
 });

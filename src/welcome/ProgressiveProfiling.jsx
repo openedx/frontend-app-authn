@@ -20,17 +20,16 @@ import {
   Form,
   StatefulButton,
   Hyperlink,
-  Spinner,
 } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 
-import { getFieldData, saveUserProfile } from './data/actions';
+import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
 
 import { RedirectLogistration } from '../common-components';
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE, COMPLETE_STATE,
+  DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE,
 } from '../data/constants';
 import FormFieldRenderer from '../field-renderer';
 import WelcomePageModal from './WelcomePageModal';
@@ -38,9 +37,10 @@ import BaseComponent from '../base-component';
 
 const ProgressiveProfiling = (props) => {
   const {
-    extendedProfile, fieldDescriptions, formRenderState, intl, submitState, showError,
+    formRenderState, intl, submitState, showError,
   } = props;
-
+  const optionalFields = props.location.state.optionalFields.fields;
+  const extendedProfile = props.location.state.optionalFields.extended_profile;
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [values, setValues] = useState({});
@@ -52,7 +52,6 @@ const ProgressiveProfiling = (props) => {
     configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     ensureAuthenticatedUser(DASHBOARD_URL).then(() => {
       hydrateAuthenticatedUser().then(() => {
-        props.getFieldData();
         setReady(true);
       });
     });
@@ -108,8 +107,8 @@ const ProgressiveProfiling = (props) => {
     }
   };
 
-  const formFields = Object.keys(fieldDescriptions).map((fieldName) => {
-    const fieldData = fieldDescriptions[fieldName];
+  const formFields = Object.keys(optionalFields).map((fieldName) => {
+    const fieldData = optionalFields[fieldName];
     return (
       <span key={fieldData.name}>
         <FormFieldRenderer
@@ -121,89 +120,86 @@ const ProgressiveProfiling = (props) => {
     );
   });
 
-  if (formRenderState === COMPLETE_STATE) {
-    return (
-      <>
-        <BaseComponent showWelcomeBanner>
-          <Helmet>
-            <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
-              { siteName: getConfig().SITE_NAME })}
-            </title>
-          </Helmet>
-          <WelcomePageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
-          {props.shouldRedirect ? (
-            <RedirectLogistration
-              success
-              redirectUrl={registrationResult.redirectUrl}
-            />
-          ) : null}
-          <div className="mw-xs pp-page-content">
-            <div className="pp-page-heading">
-              <h2 className="h3 text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
-            </div>
-            <hr className="border-light-700 mb-4" />
-            {showError ? (
-              <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
-                <Alert.Heading>{intl.formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
-                <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
-              </Alert>
-            ) : null}
-            <Form>
-              {formFields}
-              <span className="progressive-profiling-support">
-                <Hyperlink
-                  isInline
-                  variant="muted"
-                  destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
-                  target="_blank"
-                  showLaunchIcon={false}
-                  onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
-                >
-                  {intl.formatMessage(messages['optional.fields.information.link'])}
-                </Hyperlink>
-              </span>
-              <div className="d-flex mt-4 mb-3">
-                <StatefulButton
-                  type="submit"
-                  variant="brand"
-                  className="login-button-width"
-                  state={submitState}
-                  labels={{
-                    default: intl.formatMessage(messages['optional.fields.submit.button']),
-                    pending: '',
-                  }}
-                  onClick={handleSubmit}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-                <StatefulButton
-                  className="text-gray-700 font-weight-500"
-                  type="submit"
-                  variant="link"
-                  labels={{
-                    default: intl.formatMessage(messages['optional.fields.skip.button']),
-                  }}
-                  onClick={handleSkip}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-              </div>
-            </Form>
+  return (
+    <>
+      <BaseComponent showWelcomeBanner>
+        <Helmet>
+          <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
+            { siteName: getConfig().SITE_NAME })}
+          </title>
+        </Helmet>
+        <WelcomePageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
+        {props.shouldRedirect ? (
+          <RedirectLogistration
+            success
+            redirectUrl={registrationResult.redirectUrl}
+          />
+        ) : null}
+        <div className="mw-xs pp-page-content">
+          <div className="pp-page-heading">
+            <h2 className="h3 text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
           </div>
-        </BaseComponent>
-      </>
-    );
-  }
-  return <Spinner id="loader" animation="border" variant="primary" className="centered-align-spinner" />;
+          <hr className="border-light-700 mb-4" />
+          {showError ? (
+            <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
+              <Alert.Heading>{intl.formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
+              <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
+            </Alert>
+          ) : null}
+          <Form>
+            {formFields}
+            <span className="progressive-profiling-support">
+              <Hyperlink
+                isInline
+                variant="muted"
+                destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
+                target="_blank"
+                showLaunchIcon={false}
+                onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
+              >
+                {intl.formatMessage(messages['optional.fields.information.link'])}
+              </Hyperlink>
+            </span>
+            <div className="d-flex mt-4 mb-3">
+              <StatefulButton
+                type="submit"
+                variant="brand"
+                className="login-button-width"
+                state={submitState}
+                labels={{
+                  default: intl.formatMessage(messages['optional.fields.submit.button']),
+                  pending: '',
+                }}
+                onClick={handleSubmit}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+              <StatefulButton
+                className="text-gray-700 font-weight-500"
+                type="submit"
+                variant="link"
+                labels={{
+                  default: intl.formatMessage(messages['optional.fields.skip.button']),
+                }}
+                onClick={handleSkip}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+            </div>
+          </Form>
+        </div>
+      </BaseComponent>
+    </>
+  );
 };
 
 ProgressiveProfiling.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   extendedProfile: PropTypes.arrayOf(PropTypes.string),
-  fieldDescriptions: PropTypes.shape({}),
+  optionalFields: PropTypes.shape({}),
   formRenderState: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }),
-  getFieldData: PropTypes.func.isRequired,
   saveUserProfile: PropTypes.func.isRequired,
   showError: PropTypes.bool,
   shouldRedirect: PropTypes.bool,
@@ -212,7 +208,7 @@ ProgressiveProfiling.propTypes = {
 
 ProgressiveProfiling.defaultProps = {
   extendedProfile: [],
-  fieldDescriptions: {},
+  optionalFields: {},
   location: { state: {} },
   shouldRedirect: false,
   showError: false,
@@ -220,8 +216,6 @@ ProgressiveProfiling.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  extendedProfile: welcomePageSelector(state).extendedProfile,
-  fieldDescriptions: welcomePageSelector(state).fieldDescriptions,
   formRenderState: welcomePageSelector(state).formRenderState,
   shouldRedirect: welcomePageSelector(state).success,
   submitState: welcomePageSelector(state).submitState,
@@ -232,6 +226,5 @@ export default connect(
   mapStateToProps,
   {
     saveUserProfile,
-    getFieldData,
   },
 )(injectIntl(ProgressiveProfiling));
