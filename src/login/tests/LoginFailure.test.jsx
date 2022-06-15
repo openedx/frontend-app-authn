@@ -201,11 +201,10 @@ describe('LoginFailureMessage', () => {
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
   });
 
-  it('should match direct render of error message', () => {
-    const errorMessage = 'Email or password is incorrect.';
+  it('should match internal server of error message', () => {
     props = {
       loginError: {
-        value: errorMessage,
+        errorCode: 'invalid-error-code',
       },
     };
 
@@ -215,27 +214,8 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const expectedMessage = 'We couldn\'t sign you in.'.concat(errorMessage);
+    const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your internet connection.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
-  });
-
-  it('should match error message containing link snapshot', () => {
-    props = {
-      loginError: {
-        value: 'To be on the safe side, you can reset your password <a href="/reset">here</a> before you try again.\n',
-      },
-    };
-
-    const loginFailureMessage = mount(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
-
-    const expectedMessage = 'We couldn\'t sign you in.To be on the safe side, you can reset your password here before you try again.';
-
-    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
-    expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('/reset');
   });
 
   it('should show modal that nudges users to change password', () => {

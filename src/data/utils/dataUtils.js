@@ -1,16 +1,7 @@
 // Utility functions
-
 import * as QueryString from 'query-string';
 
 import { AUTH_PARAMS } from '../constants';
-
-export default function processLink(link) {
-  let matches;
-  link.replace(/(.*?)<a href=["']([^"']*).*?>([^<]+)<\/a>(.*)/g, function () { // eslint-disable-line func-names
-    matches = Array.prototype.slice.call(arguments, 1, 5); // eslint-disable-line  prefer-rest-params
-  });
-  return matches;
-}
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
   let tpaProvider = null;

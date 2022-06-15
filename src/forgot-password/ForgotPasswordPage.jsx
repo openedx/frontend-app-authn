@@ -31,10 +31,11 @@ const ForgotPasswordPage = (props) => {
   const { intl, status, submitState } = props;
 
   const platformName = getConfig().SITE_NAME;
+  const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
+
   const [validationError, setValidationError] = useState('');
   const [key, setKey] = useState('');
-  const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'reset');
@@ -55,8 +56,8 @@ const ForgotPasswordPage = (props) => {
   };
 
   const tabTitle = (
-    <div className="d-flex">
-      <Icon src={ChevronLeft} className="arrow-back-icon" />
+    <div className="d-inline-flex flex-wrap align-items-center">
+      <Icon src={ChevronLeft} />
       <span className="ml-2">{intl.formatMessage(messages['sign.in.text'])}</span>
     </div>
   );
@@ -64,7 +65,7 @@ const ForgotPasswordPage = (props) => {
   return (
     <BaseComponent>
       <div>
-        <Tabs activeKey="" id="controlled-tab-example" onSelect={(k) => setKey(k)}>
+        <Tabs activeKey="" id="controlled-tab" onSelect={(k) => setKey(k)}>
           <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
         </Tabs>
         { key && (
@@ -132,14 +133,16 @@ const ForgotPasswordPage = (props) => {
                     name="forgot-password"
                     className="ml-4 font-weight-500 text-body"
                     destination={supportUrl}
-                    onClick={e => {
-                      e.preventDefault();
-                      window.open(supportUrl, '_blank');
-                    }}
-                  >{intl.formatMessage(messages['need.help.sign.in.text'])}
+                    target="_blank"
+                    showLaunchIcon={false}
+                  >
+                    {intl.formatMessage(messages['need.help.sign.in.text'])}
                   </Hyperlink>
-                  <p className="mt-5 one-rem-font">{intl.formatMessage(messages['additional.help.text'])}
-                    <span><Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink></span>
+                  <p className="mt-5 small text-gray-700">
+                    {intl.formatMessage(messages['additional.help.text'], { platformName })}
+                    <span>
+                      <Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink>
+                    </span>
                   </p>
                 </Form>
               </>
