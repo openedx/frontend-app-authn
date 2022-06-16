@@ -333,10 +333,14 @@ class RegistrationPage extends React.Component {
   }
 
   validateDynamicFields = (e) => {
+    const { intl } = this.props;
     const { errors } = this.state;
     const { name, value } = e.target;
     if (!value) {
       errors[name] = this.props.fieldDescriptions[name].error_message;
+    }
+    if (name === 'confirm_email' && value.length > 0 && this.state.email && value !== this.state.email) {
+      errors.confirm_email = intl.formatMessage(messages['email.do.not.match']);
     }
     this.setState({ errors });
   }
@@ -410,6 +414,9 @@ class RegistrationPage extends React.Component {
               this.props.fetchRealtimeValidations(payload);
             } else {
               errors.email = '';
+            }
+            if (this.state.values && this.state.values.confirm_email && value !== this.state.values.confirm_email) {
+              errors.confirm_email = intl.formatMessage(messages['email.do.not.match']);
             }
           }
           this.setState({
