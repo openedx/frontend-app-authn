@@ -1,7 +1,7 @@
-import { SAVE_USER_PROFILE } from './actions';
 import {
   DEFAULT_STATE, PENDING_STATE,
 } from '../../data/constants';
+import { SAVE_USER_PROFILE } from './actions';
 
 export const defaultState = {
   extendedProfile: [],

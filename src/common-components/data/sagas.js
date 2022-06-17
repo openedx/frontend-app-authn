@@ -1,16 +1,12 @@
+import { logError } from '@edx/frontend-platform/logging';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { logError } from '@edx/frontend-platform/logging';
-
-// Actions
 import {
-  THIRD_PARTY_AUTH_CONTEXT,
   getThirdPartyAuthContextBegin,
-  getThirdPartyAuthContextSuccess,
   getThirdPartyAuthContextFailure,
+  getThirdPartyAuthContextSuccess,
+  THIRD_PARTY_AUTH_CONTEXT,
 } from './actions';
-
-// Services
 import {
   getThirdPartyAuthContext,
 } from './service';

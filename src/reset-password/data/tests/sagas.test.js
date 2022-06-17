@@ -1,16 +1,15 @@
 import { runSaga } from 'redux-saga';
 
+import initializeMockLogging from '../../../setupTest';
 import {
+  passwordResetFailure,
   resetPasswordBegin,
-  resetPasswordSuccess,
-  validateTokenBegin,
-  passwordResetFailure, resetPasswordFailure,
+  resetPasswordFailure,
+  resetPasswordSuccess, validateTokenBegin,
 } from '../actions';
 import { PASSWORD_RESET } from '../constants';
 import { handleResetPassword, handleValidateToken } from '../sagas';
 import * as api from '../service';
-
-import initializeMockLogging from '../../../setupTest';
 
 const { loggingService } = initializeMockLogging();
 

@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
+import { getConfig, getQueryParameters } from '@edx/frontend-platform';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form,
+  Icon,
   Spinner,
   StatefulButton,
-  Tabs,
   Tab,
-  Icon,
+  Tabs,
 } from '@edx/paragon';
 import { ChevronLeft } from '@edx/paragon/icons';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { getQueryParameters, getConfig } from '@edx/frontend-platform';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import { Redirect } from 'react-router-dom';
 
-import messages from './messages';
-import { resetPassword, validateToken } from './data/actions';
-import { resetPasswordResultSelector } from './data/selectors';
-import { validatePassword } from './data/service';
-import ResetPasswordFailure from './ResetPasswordFailure';
+import BaseComponent from '../base-component';
 import { PasswordField } from '../common-components';
 import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
+import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { resetPassword, validateToken } from './data/actions';
 import {
   FORM_SUBMISSION_ERROR, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
 } from './data/constants';
-import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
-import BaseComponent from '../base-component';
+import { resetPasswordResultSelector } from './data/selectors';
+import { validatePassword } from './data/service';
+import messages from './messages';
+import ResetPasswordFailure from './ResetPasswordFailure';
 
 const ResetPasswordPage = (props) => {
   const { intl } = props;

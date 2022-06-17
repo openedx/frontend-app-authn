@@ -1,40 +1,22 @@
 import React from 'react';
-
 import { connect } from 'react-redux';
-import Skeleton from 'react-loading-skeleton';
-import { Helmet } from 'react-helmet';
-import PropTypes, { string } from 'prop-types';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
-  injectIntl, intlShape, getCountryList, getLocale,
+  getCountryList, getLocale, injectIntl, intlShape,
 } from '@edx/frontend-platform/i18n';
 import {
-  Alert, Form, StatefulButton, Icon,
+  Alert, Form, Icon, StatefulButton,
 } from '@edx/paragon';
-import { Error, Close } from '@edx/paragon/icons';
-import FormFieldRenderer from '../field-renderer';
-import {
-  clearUsernameSuggestions, registerNewUser, resetRegistrationForm, fetchRealtimeValidations,
-} from './data/actions';
-import {
-  FIELDS, FORM_SUBMISSION_ERROR, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, COMMON_EMAIL_PROVIDERS,
-} from './data/constants';
-import {
-  registrationErrorSelector,
-  registrationRequestSelector,
-  validationsSelector,
-  usernameSuggestionsSelector,
-} from './data/selectors';
-import messages from './messages';
-import RegistrationFailure from './RegistrationFailure';
-import UsernameField from './UsernameField';
-import HonorCode from './HonorCode';
+import { Close, Error } from '@edx/paragon/icons';
+import PropTypes, { string } from 'prop-types';
+import { Helmet } from 'react-helmet';
+import Skeleton from 'react-loading-skeleton';
 
 import {
-  RedirectLogistration, SocialAuthProviders, ThirdPartyAuthAlert, RenderInstitutionButton,
-  InstitutionLogistration, FormGroup, PasswordField,
+  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration,
+  RenderInstitutionButton, SocialAuthProviders, ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
@@ -45,14 +27,31 @@ import {
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, LETTER_REGEX, NUMBER_REGEX, VALID_NAME_REGEX,
+  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX, VALID_NAME_REGEX,
 } from '../data/constants';
 import {
-  getTpaProvider, getTpaHint, getAllPossibleQueryParam, setSurveyCookie, setCookie,
+  getAllPossibleQueryParam, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
 } from '../data/utils';
+import FormFieldRenderer from '../field-renderer';
 import CountryDropdown from './CountryDropdown';
-import { getLevenshteinSuggestion, getSuggestionForInvalidEmail } from './utils';
+import {
+  clearUsernameSuggestions, fetchRealtimeValidations, registerNewUser, resetRegistrationForm,
+} from './data/actions';
+import {
+  COMMON_EMAIL_PROVIDERS, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, FIELDS, FORM_SUBMISSION_ERROR,
+} from './data/constants';
+import {
+  registrationErrorSelector,
+  registrationRequestSelector,
+  usernameSuggestionsSelector,
+  validationsSelector,
+} from './data/selectors';
+import HonorCode from './HonorCode';
+import messages from './messages';
+import RegistrationFailure from './RegistrationFailure';
 import TermsOfService from './TermsOfService';
+import UsernameField from './UsernameField';
+import { getLevenshteinSuggestion, getSuggestionForInvalidEmail } from './utils';
 
 class RegistrationPage extends React.Component {
   constructor(props, context) {

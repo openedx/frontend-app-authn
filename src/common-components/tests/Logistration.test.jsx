@@ -1,17 +1,17 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-
 import * as auth from '@edx/frontend-platform/auth';
-import Logistration from '../Logistration';
-import { RenderInstitutionButton } from '../InstitutionLogistration';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+
 import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
+import { RenderInstitutionButton } from '../InstitutionLogistration';
+import Logistration from '../Logistration';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth');

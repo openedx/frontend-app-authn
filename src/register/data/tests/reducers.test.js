@@ -1,8 +1,8 @@
-import reducer from '../reducers';
+import { DEFAULT_STATE } from '../../../data/constants';
 import {
   REGISTER_CLEAR_USERNAME_SUGGESTIONS, REGISTER_FORM_VALIDATIONS, REGISTER_NEW_USER,
 } from '../actions';
-import { DEFAULT_STATE } from '../../../data/constants';
+import reducer from '../reducers';
 
 describe('register reducer', () => {
   it('should return the initial state', () => {

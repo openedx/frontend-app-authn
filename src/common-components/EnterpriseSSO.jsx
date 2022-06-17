@@ -1,14 +1,13 @@
 import React from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import PropTypes from 'prop-types';
 import { getConfig } from '@edx/frontend-platform';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
-
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Form, Button,
+  Button, Form,
 } from '@edx/paragon';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';

@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { CheckCircle, Error } from '@edx/paragon/icons';
+import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import { PASSWORD_RESET } from '../reset-password/data/constants';
+import messages from './messages';
 
 const ForgotPasswordAlert = (props) => {
   const { email, emailError, intl } = props;

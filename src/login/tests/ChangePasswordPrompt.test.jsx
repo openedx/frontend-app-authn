@@ -1,15 +1,14 @@
 import React from 'react';
 
-import { createMemoryHistory } from 'history';
-import { act } from 'react-dom/test-utils';
-import { mount } from 'enzyme';
-import { MemoryRouter, Router } from 'react-router-dom';
-
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
+import { act } from 'react-dom/test-utils';
+import { MemoryRouter, Router } from 'react-router-dom';
 
-import ChangePasswordPrompt from '../ChangePasswordPrompt';
 import { RESET_PAGE } from '../../data/constants';
+import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
 const IntlChangePasswordPrompt = injectIntl(ChangePasswordPrompt);
 const history = createMemoryHistory();

@@ -1,4 +1,5 @@
 import { distance } from 'fastest-levenshtein';
+
 import { COMMON_EMAIL_PROVIDERS } from './data/constants';
 
 export function getLevenshteinSuggestion(word, knownWords, similarityThreshold = 4) {

@@ -1,9 +1,8 @@
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-
-import { getConfig } from '@edx/frontend-platform';
 
 import { WELCOME_PAGE } from '../data/constants';
 import { setCookie } from '../data/utils';

@@ -1,21 +1,20 @@
 import React from 'react';
-
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
-import { MemoryRouter, Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
-import { createMemoryHistory } from 'history';
 
-import * as analytics from '@edx/frontend-platform/analytics';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { mergeConfig } from '@edx/frontend-platform';
-import { IntlProvider, injectIntl, configure } from '@edx/frontend-platform/i18n';
-
+import * as analytics from '@edx/frontend-platform/analytics';
 import * as auth from '@edx/frontend-platform/auth';
-import ForgotPasswordPage from '../ForgotPasswordPage';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
+import { act } from 'react-dom/test-utils';
+import { MemoryRouter, Router } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
+
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
+import ForgotPasswordPage from '../ForgotPasswordPage';
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/auth');

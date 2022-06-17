@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+
 import { FORM_FIELDS } from './constants';
 
 export const storeName = 'register';

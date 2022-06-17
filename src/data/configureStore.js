@@ -1,9 +1,9 @@
 import { getConfig } from '@edx/frontend-platform';
-import { applyMiddleware, createStore, compose } from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from '@redux-devtools/extension';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
+import thunkMiddleware from 'redux-thunk';
 
 import createRootReducer from './reducers';
 import rootSaga from './sagas';

@@ -1,12 +1,13 @@
 import React from 'react';
 
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getAuthService } from '@edx/frontend-platform/auth';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import processLink from '../data/utils';
+import ChangePasswordPrompt from './ChangePasswordPrompt';
 import {
   ACCOUNT_LOCKED_OUT,
   FAILED_LOGIN_ATTEMPT,
@@ -20,7 +21,6 @@ import {
   REQUIRE_PASSWORD_CHANGE,
 } from './data/constants';
 import messages from './messages';
-import ChangePasswordPrompt from './ChangePasswordPrompt';
 
 const LoginFailureMessage = (props) => {
   const { intl } = props;

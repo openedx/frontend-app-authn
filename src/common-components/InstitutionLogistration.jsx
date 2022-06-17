@@ -1,9 +1,11 @@
 import React from 'react';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+
 import { getConfig } from '@edx/frontend-platform';
-import PropTypes from 'prop-types';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Button, Hyperlink, Icon } from '@edx/paragon';
 import { Institution } from '@edx/paragon/icons';
+import PropTypes from 'prop-types';
+
 import messages from './messages';
 
 export const RenderInstitutionButton = props => {

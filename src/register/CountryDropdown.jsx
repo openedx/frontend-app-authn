@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { Icon, IconButton } from '@edx/paragon';
-import { ExpandMore, ExpandLess } from '@edx/paragon/icons';
-import onClickOutside from 'react-onclickoutside';
+import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
+import onClickOutside from 'react-onclickoutside';
+
 import { FormGroup } from '../common-components';
 import { FORM_SUBMISSION_ERROR } from './data/constants';
 

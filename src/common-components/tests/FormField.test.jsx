@@ -1,8 +1,8 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 
 import FormGroup from '../FormGroup';
 import PasswordField from '../PasswordField';

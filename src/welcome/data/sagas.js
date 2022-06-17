@@ -6,7 +6,6 @@ import {
   saveUserProfileFailure,
   saveUserProfileSuccess,
 } from './actions';
-
 import { patchAccount } from './service';
 
 export function* saveUserProfileInformation(action) {

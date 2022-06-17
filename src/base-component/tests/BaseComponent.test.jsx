@@ -1,6 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
+
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { mount } from 'enzyme';
 
 import LargeLayout from '../LargeLayout';
 import MediumLayout from '../MediumLayout';

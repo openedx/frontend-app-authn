@@ -1,8 +1,8 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { BrowserRouter as Router, MemoryRouter, Switch } from 'react-router-dom';
 
 import * as auth from '@edx/frontend-platform/auth';
+import { mount } from 'enzyme';
+import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { UnAuthOnlyRoute } from '..';
 import { LOGIN_PAGE } from '../../data/constants';

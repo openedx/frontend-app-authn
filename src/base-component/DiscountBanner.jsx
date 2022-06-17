@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-import ClipboardJS from 'clipboard';
-
-import { injectIntl, intlShape, FormattedMessage } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { PageBanner, Toast } from '@edx/paragon';
 import { faCut } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ClipboardJS from 'clipboard';
 
-import { Toast, PageBanner } from '@edx/paragon';
 import messages from './messages';
 
 const DiscountExperimentBanner = (props) => {

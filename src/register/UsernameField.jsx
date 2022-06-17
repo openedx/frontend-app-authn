@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes, { string } from 'prop-types';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
-import { Button, IconButton, Icon } from '@edx/paragon';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
+import PropTypes, { string } from 'prop-types';
 
 import { FormGroup } from '../common-components';
 import messages from './messages';

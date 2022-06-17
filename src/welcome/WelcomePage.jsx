@@ -1,38 +1,36 @@
-import React, { useState, useEffect } from 'react';
-
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
-  configure as configureAuth,
   AxiosJwtAuthService,
+  configure as configureAuth,
   ensureAuthenticatedUser,
-  hydrateAuthenticatedUser,
   getAuthenticatedUser,
+  hydrateAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { getLoggingService } from '@edx/frontend-platform/logging';
 import {
   Alert,
   Form,
-  StatefulButton,
   Hyperlink,
   Icon,
+  StatefulButton,
 } from '@edx/paragon';
-import { ExpandMore, Error } from '@edx/paragon/icons';
+import { Error, ExpandMore } from '@edx/paragon/icons';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 
-import { saveUserProfile } from './data/actions';
-import { welcomePageSelector } from './data/selectors';
-import messages from './messages';
-
+import BaseComponent from '../base-component';
 import { RedirectLogistration } from '../common-components';
 import { DEFAULT_REDIRECT_URL, DEFAULT_STATE } from '../data/constants';
 import { EDUCATION_LEVELS, GENDER_OPTIONS, YEAR_OF_BIRTH_OPTIONS } from '../register/data/constants';
+import { saveUserProfile } from './data/actions';
+import { welcomePageSelector } from './data/selectors';
+import messages from './messages';
 import WelcomePageModal from './WelcomePageModal';
-import BaseComponent from '../base-component';
 
 const WelcomePage = (props) => {
   const { intl, submitState, showError } = props;

@@ -20,5 +20,31 @@ module.exports = createConfig('eslint', {
       assert: 'htmlFor',
       depth: 25
     }],
+    'sort-imports': ['error', {ignoreCase: true, ignoreDeclarationSort: true}],
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          ['sibling', 'parent'],
+          'index',
+        ],
+        pathGroups: [
+          {
+            pattern: '@(react|react-dom|react-redux)',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
   },
 });

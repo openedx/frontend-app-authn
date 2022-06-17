@@ -1,22 +1,18 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
-
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
-// Actions
 import {
+  fetchRealtimeValidationsBegin,
+  fetchRealtimeValidationsFailure,
+  fetchRealtimeValidationsSuccess,
+  REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   registerNewUserBegin,
   registerNewUserFailure,
   registerNewUserSuccess,
-  REGISTER_FORM_VALIDATIONS,
-  fetchRealtimeValidationsBegin,
-  fetchRealtimeValidationsSuccess,
-  fetchRealtimeValidationsFailure,
 } from './actions';
 import { INTERNAL_SERVER_ERROR } from './constants';
-
-// Services
 import { getFieldsValidations, registerRequest } from './service';
 
 export function* handleNewUserRegistration(action) {

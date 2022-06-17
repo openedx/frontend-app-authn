@@ -1,33 +1,31 @@
-import React, { useState, useEffect } from 'react';
-
-import { Formik } from 'formik';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Helmet } from 'react-helmet';
-import { Redirect } from 'react-router-dom';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
   Form,
-  StatefulButton,
   Hyperlink,
-  Tabs,
-  Tab,
   Icon,
+  StatefulButton,
+  Tab,
+  Tabs,
 } from '@edx/paragon';
 import { ChevronLeft } from '@edx/paragon/icons';
+import { Formik } from 'formik';
+import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
+import { Redirect } from 'react-router-dom';
 
-import { forgotPassword } from './data/actions';
-import { forgotPasswordResultSelector } from './data/selectors';
-
-import messages from './messages';
+import BaseComponent from '../base-component';
 import { FormGroup } from '../common-components';
 import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { forgotPassword } from './data/actions';
+import { forgotPasswordResultSelector } from './data/selectors';
 import ForgotPasswordAlert from './ForgotPasswordAlert';
-import BaseComponent from '../base-component';
+import messages from './messages';
 
 const ForgotPasswordPage = (props) => {
   const { intl, status, submitState } = props;

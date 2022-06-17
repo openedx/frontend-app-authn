@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import {
-  Form, IconButton, useToggle, Tooltip, OverlayTrigger, Icon,
+  Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
 } from '@edx/paragon';
 import {
   Check, Remove, Visibility, VisibilityOff,
 } from '@edx/paragon/icons';
+import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
+import messages from './messages';
 
 const PasswordField = (props) => {
   const { formatMessage } = props.intl;

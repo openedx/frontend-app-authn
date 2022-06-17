@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
+
+import { getConfig } from '@edx/frontend-platform';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthService } from '@edx/frontend-platform/auth';
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import {
+  Icon,
+  Tab,
+  Tabs,
+} from '@edx/paragon';
+import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthService } from '@edx/frontend-platform/auth';
-import {
-  Tabs,
-  Tab,
-  Icon,
-} from '@edx/paragon';
-import { ChevronLeft } from '@edx/paragon/icons';
-
-import messages from './messages';
+import BaseComponent from '../base-component';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { updatePathWithQueryParams, getTpaHint } from '../data/utils';
+import { getTpaHint, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
-import BaseComponent from '../base-component';
+import messages from './messages';
 
 const Logistration = (props) => {
   const { intl, selectedPage } = props;

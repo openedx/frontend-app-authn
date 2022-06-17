@@ -1,12 +1,11 @@
+import { camelCaseObject } from '@edx/frontend-platform';
 import { runSaga } from 'redux-saga';
 
-import { camelCaseObject } from '@edx/frontend-platform';
-
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
+import initializeMockLogging from '../../../setupTest';
 import * as actions from '../actions';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
 import { handleLoginRequest } from '../sagas';
 import * as api from '../service';
-import initializeMockLogging from '../../../setupTest';
 
 const { loggingService } = initializeMockLogging();
 

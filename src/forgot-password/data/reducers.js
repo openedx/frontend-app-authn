@@ -1,6 +1,6 @@
-import { FORGOT_PASSWORD } from './actions';
 import { INTERNAL_SERVER_ERROR, PENDING_STATE } from '../../data/constants';
 import { PASSWORD_RESET_FAILURE } from '../../reset-password/data/actions';
+import { FORGOT_PASSWORD } from './actions';
 
 export const defaultState = {
   status: '',
