@@ -138,6 +138,7 @@
   "register.institution.login.page.title": "Registo com credenciais da instituição/campus",
   "empty.name.field.error": "Enter your full name",
   "empty.email.field.error": "Enter your email",
+  "email.do.not.match": "The email addresses do not match.",
   "empty.username.field.error": "Username must be between 2 and 30 characters",
   "empty.password.field.error": "Password criteria has not been met",
   "empty.country.field.error": "Select your country or region of residence",
