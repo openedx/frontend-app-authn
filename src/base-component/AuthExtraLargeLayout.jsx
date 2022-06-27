@@ -23,13 +23,17 @@ const AuthExtraLargeLayout = (props) => {
           <div>
             <Row>
               <Col xs={3}>
-                <svg className={classNames(
-                  'ml-5 mt-5',
-                  {
-                    'extra-large-svg-line': variant === 'xl',
-                    'extra-extra-large-svg-line': variant === 'xxl',
-                  },
-                )}
+                <svg
+                  role="img"
+                  aria-label=""
+                  focusable={false}
+                  className={classNames(
+                    'ml-5 mt-5',
+                    {
+                      'extra-large-svg-line': variant === 'xl',
+                      'extra-extra-large-svg-line': variant === 'xxl',
+                    },
+                  )}
                 >
                   <line x1="60" y1="0" x2="5" y2="220" />
                 </svg>

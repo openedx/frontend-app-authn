@@ -22,13 +22,17 @@ const AuthSmallLayout = (props) => {
         <div>
           <Row>
             <Col xs={3}>
-              <svg className={classNames(
-                'mt-4\.5', // eslint-disable-line no-useless-escape
-                {
-                  'extra-small-svg-line': variant === 'xs',
-                  'small-svg-line': variant === 'sm',
-                },
-              )}
+              <svg
+                role="img"
+                aria-label=""
+                focusable={false}
+                className={classNames(
+                  'mt-4\.5', // eslint-disable-line no-useless-escape
+                  {
+                    'extra-small-svg-line': variant === 'xs',
+                    'small-svg-line': variant === 'sm',
+                  },
+                )}
               >
                 <line x1="60" y1="0" x2="5" y2="220" />
               </svg>

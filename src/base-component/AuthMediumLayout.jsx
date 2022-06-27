@@ -22,7 +22,12 @@ const AuthMediumLayout = (props) => {
           <div>
             <Row>
               <Col xs={3}>
-                <svg className="medium-svg-line ml-5 mt-5">
+                <svg
+                  role="img"
+                  aria-label=""
+                  focusable={false}
+                  className="medium-svg-line ml-5 mt-5"
+                >
                   <line x1="60" y1="0" x2="5" y2="220" />
                 </svg>
               </Col>

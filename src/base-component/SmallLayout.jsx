@@ -30,13 +30,17 @@ const SmallLayout = (props) => {
           <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="d-flex mt-3">
-          <svg className={classNames(
-            'small-screen-svg-line',
-            {
-              'variation1-bar-color': experimentName === 'variation1' && isRegistrationPage,
-              'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
-            },
-          )}
+          <svg
+            role="img"
+            aria-label=""
+            focusable={false}
+            className={classNames(
+              'small-screen-svg-line',
+              {
+                'variation1-bar-color': experimentName === 'variation1' && isRegistrationPage,
+                'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
+              },
+            )}
           >
             <line x1="55" y1="0" x2="40" y2="65" />
           </svg>
