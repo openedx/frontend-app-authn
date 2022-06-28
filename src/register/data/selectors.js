@@ -42,3 +42,8 @@ export const usernameSuggestionsSelector = createSelector(
   registerSelector,
   register => register.usernameSuggestions,
 );
+
+export const registrationFormDataSelector = createSelector(
+  registerSelector,
+  register => register.registrationFormData,
+);

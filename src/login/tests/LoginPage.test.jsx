@@ -12,7 +12,9 @@ import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
-import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/actions';
+import {
+  loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+} from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
@@ -34,6 +36,7 @@ describe('LoginPage', () => {
   });
   let props = {};
   let store = {};
+  let loginFormData = {};
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
@@ -80,6 +83,14 @@ describe('LoginPage', () => {
       loginRequest: jest.fn(),
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
+    };
+    loginFormData = {
+      emailOrUsername: '',
+      password: '',
+      errors: {
+        emailOrUsername: '',
+        password: '',
+      },
     };
   });
 
@@ -463,5 +474,61 @@ describe('LoginPage', () => {
 
     expect(store.dispatch).toHaveBeenCalledWith(loginRequestReset());
     expect(loginPage.state('errors')).toEqual(errorState);
+  });
+
+  // persists form data tests
+
+  it('should set errors in redux store on submit form for invalid input', () => {
+    const formData = {
+      errors: {
+        emailOrUsername: 'Enter your username or email',
+        password: 'Enter your password',
+      },
+    };
+    store.dispatch = jest.fn(store.dispatch);
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+
+    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: '' } });
+    loginPage.find('input#password').simulate('change', { target: { value: '' } });
+    loginPage.find('button.btn-brand').simulate('click');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData(formData));
+  });
+
+  it('should set form data in redux store on onBlur', () => {
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find('input#emailOrUsername').simulate('blur');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData({ emailOrUsername: '' }));
+  });
+
+  it('should clear form field errors in redux store on onFocus', () => {
+    store.dispatch = jest.fn(store.dispatch);
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find('input#emailOrUsername').simulate('focus');
+
+    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData({
+      errors: {
+        ...loginFormData.errors,
+      },
+    }));
+  });
+
+  it('should update form fields state if updated in redux store', () => {
+    const nextProps = {
+      loginFormData: {
+        emailOrUsername: 'john_doe',
+        password: 'password1',
+      },
+    };
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.find('LoginPage').instance().shouldComponentUpdate(nextProps);
+
+    expect(loginPage.find('LoginPage').state('emailOrUsername')).toEqual('john_doe');
+    expect(loginPage.find('LoginPage').state('password')).toEqual('password1');
   });
 });

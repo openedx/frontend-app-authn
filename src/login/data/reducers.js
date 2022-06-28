@@ -1,11 +1,19 @@
 import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
 import { RESET_PASSWORD } from '../../reset-password';
-import { LOGIN_REQUEST } from './actions';
+import { LOGIN_PERSIST_FORM_DATA, LOGIN_REQUEST } from './actions';
 
 export const defaultState = {
   loginError: null,
   loginResult: {},
   resetPassword: false,
+  loginFormData: {
+    password: '',
+    emailOrUsername: '',
+    errors: {
+      emailOrUsername: '',
+      password: '',
+    },
+  },
 };
 
 const reducer = (state = defaultState, action) => {
@@ -37,6 +45,17 @@ const reducer = (state = defaultState, action) => {
         ...state,
         resetPassword: true,
       };
+    case LOGIN_PERSIST_FORM_DATA: {
+      const { formData } = action.payload;
+      return {
+        ...state,
+        resetPassword: false,
+        loginFormData: {
+          ...state.loginFormData,
+          ...formData,
+        },
+      };
+    }
     default:
       return {
         ...state,

@@ -1,5 +1,6 @@
 import { runSaga } from 'redux-saga';
 
+import { setCountryFromThirdPartyAuthContext } from '../../../register/data/actions';
 import initializeMockLogging from '../../../setupTest';
 import * as actions from '../actions';
 import { fetchThirdPartyAuthContext } from '../sagas';
@@ -42,6 +43,7 @@ describe('fetchThirdPartyAuthContext', () => {
     expect(getThirdPartyAuthContext).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([
       actions.getThirdPartyAuthContextBegin(),
+      setCountryFromThirdPartyAuthContext(),
       actions.getThirdPartyAuthContextSuccess({}, {}, data),
     ]);
     getThirdPartyAuthContext.mockClear();
