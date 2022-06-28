@@ -26,14 +26,18 @@ const LargeLeftLayout = (props) => {
         >
           {intl.formatMessage(messages['code.copied'])}
         </Toast>
-        <svg className={classNames(
-          'large-screen-svg-line',
-          {
-            'variation1-bar-color mt-n6 pt-0 ml-5': experimentName === 'variation1' && isRegistrationPage,
-            'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
-            'ml-5': experimentName !== 'variation1' || !isRegistrationPage,
-          },
-        )}
+        <svg
+          role="img"
+          aria-label=""
+          focusable={false}
+          className={classNames(
+            'large-screen-svg-line',
+            {
+              'variation1-bar-color mt-n6 pt-0 ml-5': experimentName === 'variation1' && isRegistrationPage,
+              'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
+              'ml-5': experimentName !== 'variation1' || !isRegistrationPage,
+            },
+          )}
         >
           <line x1="50" y1="0" x2="10" y2="215" />
         </svg>
