@@ -15,6 +15,8 @@ $apple-black: #000000;
 $apple-focus-black: $apple-black;
 $accent-a-light: #c9f2f5;
 
+$elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
+
 .centered-align-spinner {
   left: 0;
   right: 0;
@@ -293,24 +295,19 @@ select.form-control {
 .pt-10 {
   padding-top: 10px;
 }
-.tooltip-shadow {
-  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.3) !important;
-}
 
 #password-requirement-left {
   opacity: 1;
   @extend .x-small;
+  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   .tooltip-inner {
-    @extend .tooltip-shadow;
     background: white;
     display: block;
     color: #707070;
   }
   .arrow::before {
     border-left-color: #fff;
-    @extend .tooltip-shadow;
   }
-
 }
 
 #password-requirement-top {
@@ -318,16 +315,15 @@ select.form-control {
   width: 90%;
   margin-bottom: 10px;
   @extend .x-small;
+  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   .tooltip-inner {
     max-width: inherit;
     background: white;
     display: block;
-    @extend .tooltip-shadow;
     color: #707070;
   }
   .arrow::before {
     border-top-color: #fff;
-    @extend .tooltip-shadow;
   }
 
 }
