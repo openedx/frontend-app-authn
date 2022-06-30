@@ -84,7 +84,7 @@ const messages = defineMessages({
   },
   'additional.help.text': {
     id: 'additional.help.text',
-    defaultMessage: 'For additional help, contact edX support at ',
+    defaultMessage: 'For additional help, contact {platformName} support at ',
     description: 'additional help text on forgot password page',
   },
   'sign.in.text': {

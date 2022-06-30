@@ -1,5 +1,4 @@
 export {
-  default,
   getTpaProvider,
   getTpaHint,
   updatePathWithQueryParams,
