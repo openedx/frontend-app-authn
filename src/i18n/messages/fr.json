@@ -50,7 +50,7 @@
   "confirmation.message.title": "Vérifiez votre email",
   "confirmation.support.link": "contacter le support technique",
   "need.help.sign.in.text": "Besoin d'aide pour vous enregistrer?",
-  "additional.help.text": "Pour une aide supplémentaire, contactez le support edX à ",
+  "additional.help.text": "For additional help, contact {platformName} support at ",
   "sign.in.text": "Connectez-vous",
   "extend.field.errors": "{emailError} ci-dessous.",
   "invalid.token.heading": "Lien de réinitialisation du mot de passe non valide",
