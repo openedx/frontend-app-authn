@@ -36,13 +36,17 @@ const MediumLayout = (props) => {
           <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="row mt-4 justify-content-center">
-          <svg className={classNames(
-            'medium-screen-svg-line pl-5',
-            {
-              'variation1-bar-color': experimentName === 'variation1' && isRegistrationPage,
-              'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
-            },
-          )}
+          <svg
+            role="img"
+            aria-label=""
+            focusable={false}
+            className={classNames(
+              'medium-screen-svg-line pl-5',
+              {
+                'variation1-bar-color': experimentName === 'variation1' && isRegistrationPage,
+                'variation2-bar-color': experimentName === 'variation2' && isRegistrationPage,
+              },
+            )}
           >
             <line x1="50" y1="0" x2="10" y2="215" />
           </svg>

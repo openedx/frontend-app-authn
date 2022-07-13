@@ -594,11 +594,6 @@ select.form-control {
   border: 2px solid #F0CC00;
 }
 
-.one-rem-font {
-  font-size: 0.99rem;
-  color: #707070;
-}
-
 .institute-heading {
   color: $primary-700;
 }
@@ -671,16 +666,13 @@ select.form-control {
   }
 }
 
-.arrow-back-icon {
-  margin-top:2px;
-}
-
 .icon-size {
   width: 2.3rem;
 }
 .has-floating-label {
   color: $gray-500;
 }
+
 .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
   font-size: 0.875rem;
   line-height: 1.5;

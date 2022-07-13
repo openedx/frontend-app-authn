@@ -13,6 +13,7 @@ import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { loginRequest, loginRequestFailure, loginRequestReset } from '../data/actions';
+import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 
@@ -201,12 +202,12 @@ describe('LoginPage', () => {
   // ******** test alert messages ********
 
   it('should match login error message', () => {
-    const errorMessage = 'Email or password is incorrect.';
+    const errorMessage = 'An error has occurred. Try refreshing the page, or check your internet connection.';
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
-        loginError: { value: errorMessage },
+        loginError: { errorCode: INTERNAL_SERVER_ERROR },
       },
     });
 

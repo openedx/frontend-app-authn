@@ -50,7 +50,7 @@
   "confirmation.message.title": "Check your email",
   "confirmation.support.link": "contatta il supporto tecnico",
   "need.help.sign.in.text": "Hai bisogno di aiuto per l'accesso? ",
-  "additional.help.text": "For additional help, contact edX support at ",
+  "additional.help.text": "For additional help, contact {platformName} support at ",
   "sign.in.text": "Sign in",
   "extend.field.errors": "{emailError} below.",
   "invalid.token.heading": "Link di ripristino della password non valido",

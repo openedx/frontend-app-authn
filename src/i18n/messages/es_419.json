@@ -50,7 +50,7 @@
   "confirmation.message.title": "Verifica tu correo electrónico",
   "confirmation.support.link": "entra en contacto con el equipo de soporte técnico",
   "need.help.sign.in.text": "¿Necesitas ayuda para iniciar sesión?",
-  "additional.help.text": "Para obtener ayuda, pónte en contacto con el servicio de soporte de edX en ",
+  "additional.help.text": "For additional help, contact {platformName} support at ",
   "sign.in.text": "Iniciar sesión",
   "extend.field.errors": "{emailError} a continuación.",
   "invalid.token.heading": "Enlace de restablecimiento de contraseña inválido",

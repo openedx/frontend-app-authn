@@ -138,8 +138,8 @@ const ResetPasswordPage = (props) => {
   };
 
   const tabTitle = (
-    <div className="d-flex">
-      <Icon src={ChevronLeft} className="arrow-back-icon" />
+    <div className="d-inline-flex flex-wrap align-items-center">
+      <Icon src={ChevronLeft} />
       <span className="ml-2">{intl.formatMessage(messages['sign.in'])}</span>
     </div>
   );

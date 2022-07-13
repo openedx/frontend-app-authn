@@ -6,7 +6,6 @@ import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import processLink from '../data/utils';
 import ChangePasswordPrompt from './ChangePasswordPrompt';
 import {
   ACCOUNT_LOCKED_OUT,
@@ -24,10 +23,9 @@ import messages from './messages';
 
 const LoginFailureMessage = (props) => {
   const { intl } = props;
-  const { context, errorCode, value } = props.loginError;
+  const { context, errorCode } = props.loginError;
   const authService = getAuthService();
   let errorList;
-  let link;
   let resetLink = (
     <Hyperlink destination="/reset" isInline>
       {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
@@ -70,9 +68,6 @@ const LoginFailureMessage = (props) => {
       );
       break;
     }
-    case INTERNAL_SERVER_ERROR:
-      errorList = <p>{intl.formatMessage(messages['internal.server.error.message'])}</p>;
-      break;
     case INVALID_FORM:
       errorList = <p>{intl.formatMessage(messages['login.form.invalid.error.message'])}</p>;
       break;
@@ -149,28 +144,10 @@ const LoginFailureMessage = (props) => {
       );
     case REQUIRE_PASSWORD_CHANGE:
       return <ChangePasswordPrompt />;
+    case INTERNAL_SERVER_ERROR:
     default:
-      // TODO: use errorCode instead of processing error messages on frontend
-      errorList = value.trim().split('\n');
-      errorList = errorList.map((error) => {
-        let matches;
-        if (error.includes('a href')) {
-          matches = processLink(error);
-          const [beforeLink, href, linkText, afterLink] = matches;
-          link = href;
-          if (href.indexOf('/dashboard?tpa_hint') === 0) {
-            link = `/login?next=${href}`;
-          }
-          return (
-            <p key={error}>
-              {beforeLink}
-              <a href={link}>{linkText}</a>
-              {afterLink}
-            </p>
-          );
-        }
-        return <p key={error}>{error}</p>;
-      });
+      errorList = <p>{intl.formatMessage(messages['internal.server.error.message'])}</p>;
+      break;
   }
 
   return (
@@ -185,7 +162,6 @@ LoginFailureMessage.defaultProps = {
   loginError: {
     redirectUrl: null,
     errorCode: null,
-    value: '',
   },
 };
 
@@ -194,7 +170,6 @@ LoginFailureMessage.propTypes = {
     context: PropTypes.object,
     email: PropTypes.string,
     errorCode: PropTypes.string,
-    value: PropTypes.string,
     redirectUrl: PropTypes.string,
   }),
   intl: intlShape.isRequired,
