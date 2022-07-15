@@ -300,6 +300,7 @@ select.form-control {
   opacity: 1;
   @extend .x-small;
   filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
+  margin-right: 0.2rem;
   .tooltip-inner {
     background: white;
     display: block;
