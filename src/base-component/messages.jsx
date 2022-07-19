@@ -11,11 +11,6 @@ const messages = defineMessages({
     defaultMessage: 'with {siteName}',
     description: 'Header text with site name for logistration MFE pages',
   },
-  'code.copied': {
-    id: 'code.copied',
-    defaultMessage: 'Code copied',
-    description: 'part of 15% discount code copied',
-  },
   // authenticated user base component text
   'complete.your.profile.1': {
     id: 'complete.your.profile.1',

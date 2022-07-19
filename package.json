@@ -45,7 +45,6 @@
     "@fortawesome/react-fontawesome": "0.1.18",
     "@redux-devtools/extension": "3.2.2",
     "classnames": "2.3.1",
-    "clipboard": "2.0.10",
     "core-js": "3.21.1",
     "extract-react-intl-messages": "4.1.1",
     "fastest-levenshtein": "1.0.12",
