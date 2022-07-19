@@ -85,7 +85,6 @@ class RegistrationPage extends React.Component {
       failureCount: 0,
       startTime: Date.now(),
       totalRegistrationTime: 0,
-      optimizelyExperimentName: '',
       readOnly: true,
       validatePassword: false,
       values: {},
@@ -111,7 +110,6 @@ class RegistrationPage extends React.Component {
     payload.is_registered = this.isRegistered;
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
-    this.getExperiments();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -177,14 +175,6 @@ class RegistrationPage extends React.Component {
 
     return true;
   }
-
-  getExperiments = () => {
-    const { experimentName } = window;
-
-    if (experimentName) {
-      this.setState({ optimizelyExperimentName: experimentName });
-    }
-  };
 
   onChangeHandler = (e) => {
     const { name, value, checked } = e.target;
@@ -795,13 +785,6 @@ class RegistrationPage extends React.Component {
               thirdPartyAuthApiStatus,
               intl)}
           </Form>
-          {(this.state.optimizelyExperimentName === 'variation1' || this.state.optimizelyExperimentName === 'variation2')
-            ? (
-              <div id="certificate-msg" className="mt-4 mb-3 micro text-gray-500">
-                {intl.formatMessage(messages['certificate.msg'])}
-              </div>
-            )
-            : null}
         </div>
       </>
     );

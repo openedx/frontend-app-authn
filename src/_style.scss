@@ -364,10 +364,6 @@ select.form-control {
   height: 282px;
 }
 
-.variation1-medium-screen {
-  height: 300px !important;
-}
-
 .medium-screen-svg-light,
 .medium-screen-svg-primary {
   fill: $light-200;
@@ -503,14 +499,6 @@ select.form-control {
   height: 240px;
 }
 
-.variation1-bar-color {
-  stroke: $brand !important;
-}
-
-.variation2-bar-color {
-  stroke: $accent-a !important;
-}
-
 .medium-screen-svg-line {
   padding-top: 0.5rem;
   stroke: $accent-b;
@@ -525,21 +513,6 @@ select.form-control {
   stroke-width: 0.25rem;
   width: 4em;
   height: 72px;
-}
-.dicount-heading{
-  margin-left: 7px;
-}
-
-.hover-text:hover {
-  color: $black !important;
-
-  .hover-icon {
-    color: $black !important;
-  }
-}
-
-.hover-discount-icon:hover {
-  color: $white !important;
 }
 
 .large-heading {
@@ -703,16 +676,6 @@ select.form-control {
   font-weight: 400;
 }
 
-.discount-banner {
-  background-color: #03C7E8;
-}
-
-.dashed-border {
-  border-style: dashed;
-  border-width: thin;
-  padding: 0.5rem;
-}
-
 @media (min-width: 1024px) {
   .mw-500 {
     width: 500px;
@@ -747,12 +710,6 @@ select.form-control {
     align-items: center;
     flex-direction:column;
     justify-content: center;
-  }
-
-  .dashed-border {
-    border-style: dashed;
-    border-width: thin;
-    padding: 0.25rem 0.5rem;
   }
 }
 
@@ -804,12 +761,6 @@ select.form-control {
   html {
     margin-right: calc(100% - 100vw);
     margin-left: 0;
-  }
-}
-
-@media (max-width: 550px) {
-  .variation2-text-alignment {
-    text-align: left;
   }
 }
 
