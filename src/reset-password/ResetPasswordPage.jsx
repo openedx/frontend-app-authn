@@ -45,10 +45,9 @@ const ResetPasswordPage = (props) => {
       setErrorCode(props.status);
     }
     if (props.status === PASSWORD_VALIDATION_ERROR) {
-      formErrors.newPassword = intl.formatMessage(messages['password.validation.message']);
-      setFormErrors({ ...formErrors });
+      setFormErrors({ newPassword: intl.formatMessage(messages['password.validation.message']) });
     }
-  }, [props.errorMsg]);
+  }, [props.status, intl]);
 
   const validatePasswordFromBackend = async (password) => {
     let errorMessage = '';

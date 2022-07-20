@@ -55,7 +55,7 @@ const WelcomePage = (props) => {
       setRegistrationResult(props.location.state.registrationResult);
       sendPageEvent('login_and_registration', 'welcome');
     }
-  }, []);
+  }, [DASHBOARD_URL, props.location.state]);
 
   if (!props.location.state || !props.location.state.registrationResult) {
     global.location.assign(DASHBOARD_URL);

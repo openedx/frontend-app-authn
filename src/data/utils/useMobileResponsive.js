@@ -17,7 +17,7 @@ const useMobileResponsive = (breakpoint) => {
     window.addEventListener('resize', checkForMobile);
     // return this function here to clean up the event listener
     return () => window.removeEventListener('resize', checkForMobile);
-  }, []);
+  });
   return isMobileWindow;
 };
 
