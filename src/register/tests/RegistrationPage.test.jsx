@@ -85,6 +85,7 @@ describe('RegistrationPage', () => {
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
     };
+    window.location = { search: '' };
   });
 
   afterEach(() => {
@@ -128,6 +129,9 @@ describe('RegistrationPage', () => {
     it('should submit form for valid input', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL, search: '?next=/course/demo-course-url' };
+
       const payload = {
         name: 'John Doe',
         username: 'john_doe',
@@ -137,6 +141,7 @@ describe('RegistrationPage', () => {
         honor_code: true,
         totalRegistrationTime: 0,
         is_authn_mfe: true,
+        next: '/course/demo-course-url',
       };
 
       store.dispatch = jest.fn(store.dispatch);
