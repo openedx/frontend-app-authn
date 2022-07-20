@@ -242,6 +242,9 @@ class RegistrationPage extends React.Component {
 
     payload = snakeCaseObject(payload);
     payload.totalRegistrationTime = totalRegistrationTime;
+
+    // add query params to the payload
+    payload = { ...payload, ...this.queryParams };
     this.setState({
       totalRegistrationTime,
     }, () => {
