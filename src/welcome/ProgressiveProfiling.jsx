@@ -58,7 +58,7 @@ const ProgressiveProfiling = (props) => {
       setRegistrationResult(props.location.state.registrationResult);
       sendPageEvent('login_and_registration', 'welcome');
     }
-  }, []);
+  }, [DASHBOARD_URL, props.location.state]);
 
   if (!props.location.state || !props.location.state.registrationResult || formRenderState === FAILURE_STATE) {
     global.location.assign(DASHBOARD_URL);
