@@ -29,6 +29,7 @@ const FormGroup = (props) => {
         aria-invalid={props.errorMessage !== ''}
         className="form-field"
         autoComplete={props.autoComplete}
+        spellCheck={props.spellCheck}
         name={props.name}
         value={props.value}
         onFocus={handleFocus}
@@ -64,41 +65,43 @@ const FormGroup = (props) => {
 
 FormGroup.defaultProps = {
   as: 'input',
-  errorMessage: '',
-  borderClass: '',
   autoComplete: null,
-  readOnly: false,
-  handleBlur: null,
-  handleChange: () => {},
-  handleFocus: null,
-  handleClick: null,
-  helpText: [],
-  options: null,
-  trailingElement: null,
-  type: 'text',
+  borderClass: '',
   children: null,
   className: '',
+  errorMessage: '',
+  handleBlur: null,
+  handleChange: () => {},
+  handleClick: null,
+  handleFocus: null,
+  helpText: [],
+  options: null,
+  readOnly: false,
+  spellCheck: null,
+  trailingElement: null,
+  type: 'text',
 };
 
 FormGroup.propTypes = {
   as: PropTypes.string,
-  errorMessage: PropTypes.string,
-  borderClass: PropTypes.string,
   autoComplete: PropTypes.string,
-  readOnly: PropTypes.bool,
+  borderClass: PropTypes.string,
+  children: PropTypes.element,
+  className: PropTypes.string,
+  errorMessage: PropTypes.string,
   floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleChange: PropTypes.func,
-  handleFocus: PropTypes.func,
   handleClick: PropTypes.func,
+  handleFocus: PropTypes.func,
   helpText: PropTypes.arrayOf(PropTypes.string),
   name: PropTypes.string.isRequired,
   options: PropTypes.func,
+  readOnly: PropTypes.bool,
+  spellCheck: PropTypes.string,
   trailingElement: PropTypes.element,
   type: PropTypes.string,
   value: PropTypes.string.isRequired,
-  children: PropTypes.element,
-  className: PropTypes.string,
 };
 
 export default FormGroup;
