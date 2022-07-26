@@ -73,12 +73,14 @@ const ProgressiveProfiling = (props) => {
     e.preventDefault();
     const authenticatedUser = getAuthenticatedUser();
     const payload = { ...values, extendedProfile: [] };
-    extendedProfile.forEach(fieldName => {
-      if (values[fieldName]) {
-        payload.extendedProfile.push({ fieldName, fieldValue: values[fieldName] });
-      }
-      delete payload[fieldName];
-    });
+    if (Object.keys(extendedProfile).length > 0) {
+      extendedProfile.forEach(fieldName => {
+        if (values[fieldName]) {
+          payload.extendedProfile.push({ fieldName, fieldValue: values[fieldName] });
+        }
+        delete payload[fieldName];
+      });
+    }
     props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
 
     sendTrackEvent(

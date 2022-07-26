@@ -10,7 +10,7 @@ const IntlTermsOfService = injectIntl(TermsOfService);
 
 describe('TermsOfServiceTest', () => {
   mergeConfig({
-    TOS_LINK: 'http://tos-and-honot-code.com',
+    TOS_LINK: 'http://tos-and-honor-code.com',
   });
   let value = false;
 
