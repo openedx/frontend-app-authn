@@ -4,6 +4,8 @@ export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_N
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 export const REGISTRATION_FORM = new AsyncActionType('REGISTRATION', 'REGISTRATION_FORM');
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
+export const REGISTER_PERSIST_FORM_DATA = 'REGISTER_PERSIST_FORM_DATA';
+export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 
 // Reset Form
 export const resetRegistrationForm = () => ({
@@ -52,4 +54,14 @@ export const fetchRealtimeValidationsFailure = () => ({
 
 export const clearUsernameSuggestions = () => ({
   type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+});
+
+export const setRegistrationFormData = (formData, clearRegistrationError = false) => ({
+  type: REGISTER_PERSIST_FORM_DATA,
+  payload: { formData, clearRegistrationError },
+});
+
+export const setCountryFromThirdPartyAuthContext = (countryCode) => ({
+  type: REGISTER_SET_COUNTRY_CODE,
+  payload: { countryCode },
 });

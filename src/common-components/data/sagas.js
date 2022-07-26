@@ -1,6 +1,7 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
+import { setCountryFromThirdPartyAuthContext } from '../../register/data/actions';
 import {
   getThirdPartyAuthContextBegin,
   getThirdPartyAuthContextFailure,
@@ -18,6 +19,7 @@ export function* fetchThirdPartyAuthContext(action) {
       getThirdPartyAuthContext, action.payload.urlParams,
     );
 
+    yield put(setCountryFromThirdPartyAuthContext(thirdPartyAuthContext.countryCode));
     yield put(getThirdPartyAuthContextSuccess(
       fieldDescriptions, optionalFields, thirdPartyAuthContext,
     ));

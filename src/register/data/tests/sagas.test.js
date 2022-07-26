@@ -15,7 +15,7 @@ const { loggingService } = initializeMockLogging();
 describe('fetchRealtimeValidations', () => {
   const params = {
     payload: {
-      formData: {
+      registrationFormData: {
         email: 'test@test.com',
         username: '',
         password: 'test-password',
@@ -112,7 +112,7 @@ describe('fetchRealtimeValidations', () => {
 describe('handleNewUserRegistration', () => {
   const params = {
     payload: {
-      formData: {
+      registrationFormData: {
         email: 'test@test.com',
         username: 'test-username',
         password: 'test-password',

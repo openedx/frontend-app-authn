@@ -35,13 +35,18 @@ import {
 import FormFieldRenderer from '../field-renderer';
 import CountryDropdown from './CountryDropdown';
 import {
-  clearUsernameSuggestions, fetchRealtimeValidations, registerNewUser, resetRegistrationForm,
+  clearUsernameSuggestions,
+  fetchRealtimeValidations,
+  registerNewUser,
+  resetRegistrationForm,
+  setRegistrationFormData,
 } from './data/actions';
 import {
   COMMON_EMAIL_PROVIDERS, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, FIELDS, FORM_SUBMISSION_ERROR,
 } from './data/constants';
 import {
   registrationErrorSelector,
+  registrationFormDataSelector,
   registrationRequestSelector,
   usernameSuggestionsSelector,
   validationsSelector,
@@ -65,22 +70,24 @@ class RegistrationPage extends React.Component {
     this.showDynamicRegistrationFields = getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS;
     this.tpaHint = getTpaHint();
     this.isRegistered = true;
+    const { registrationFormData } = this.props;
     this.state = {
       country: '',
-      email: '',
-      name: '',
-      password: '',
-      username: '',
-      marketingOptIn: true,
+      email: registrationFormData.email,
+      name: registrationFormData.name,
+      password: registrationFormData.password,
+      username: registrationFormData.username,
+      marketingOptIn: registrationFormData.marketingOptIn,
       errors: {
-        email: '',
-        name: '',
-        username: '',
-        password: '',
+        email: registrationFormData.errors.email,
+        name: registrationFormData.errors.name,
+        username: registrationFormData.errors.username,
+        password: registrationFormData.errors.password,
         country: '',
       },
-      emailErrorSuggestion: null,
-      emailWarningSuggestion: null,
+      emailFieldBorderClass: registrationFormData.emailFieldBorderClass,
+      emailErrorSuggestion: registrationFormData.emailErrorSuggestion,
+      emailWarningSuggestion: registrationFormData.emailWarningSuggestion,
       errorCode: null,
       failureCount: 0,
       startTime: Date.now(),
@@ -88,6 +95,7 @@ class RegistrationPage extends React.Component {
       readOnly: true,
       validatePassword: false,
       values: {},
+      focusedField: '',
     };
   }
 
@@ -113,62 +121,88 @@ class RegistrationPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if (this.props.registrationFormData !== nextProps.registrationFormData) {
+      if (nextProps.registrationFormData) {
+        // do not set focused field's value from redux store to retain entered data in focused field
+        const { focusedField } = this.state;
+        const { [focusedField]: _, ...registrationData } = nextProps.registrationFormData;
+        this.setState({
+          ...registrationData,
+        });
+      }
+    }
+
     if (this.props.usernameSuggestions.length > 0 && this.state.username === '') {
-      this.setState({
+      this.props.setRegistrationFormData({
         username: ' ',
       });
       return false;
     }
+
     if (this.props.validationDecisions !== nextProps.validationDecisions) {
-      const state = { errors: { ...this.state.errors, ...nextProps.validationDecisions } };
-      let validatePassword = false;
+      if (nextProps.validationDecisions) {
+        const state = {};
+        const errors = { ...this.state.errors, ...nextProps.validationDecisions };
+        let validatePassword = false;
 
-      if (state.errors.password) {
-        validatePassword = true;
-      }
-      if (nextProps.registrationErrorCode) {
-        state.errorCode = nextProps.registrationErrorCode;
-      }
-      let {
-        suggestedTldMessage,
-        suggestedTopLevelDomain,
-        suggestedSldMessage,
-        suggestedServiceLevelDomain,
+        if (errors.password) {
+          validatePassword = true;
+        }
 
-      } = this.state;
-      if (state.errors.email) {
-        suggestedTldMessage = '';
-        suggestedTopLevelDomain = '';
-        suggestedSldMessage = '';
-        suggestedServiceLevelDomain = '';
-      }
-      this.setState({
-        ...state,
-        suggestedTldMessage,
-        suggestedTopLevelDomain,
-        suggestedSldMessage,
-        suggestedServiceLevelDomain,
-        validatePassword,
-      });
-      return false;
-    }
+        if (nextProps.registrationErrorCode) {
+          state.errorCode = nextProps.registrationErrorCode;
+        }
 
-    if (this.props.registrationErrorCode !== nextProps.registrationErrorCode) {
-      this.setState({ errorCode: nextProps.registrationErrorCode });
+        let {
+          suggestedTldMessage,
+          suggestedTopLevelDomain,
+          suggestedSldMessage,
+          suggestedServiceLevelDomain,
+        } = this.state;
+
+        if (errors.email) {
+          suggestedTldMessage = '';
+          suggestedTopLevelDomain = '';
+          suggestedSldMessage = '';
+          suggestedServiceLevelDomain = '';
+        }
+
+        this.setState({
+          ...state,
+          suggestedTldMessage,
+          suggestedTopLevelDomain,
+          suggestedSldMessage,
+          suggestedServiceLevelDomain,
+          validatePassword,
+        });
+
+        this.props.setRegistrationFormData({
+          errors,
+        }, true);
+      }
       return false;
     }
 
     if (this.props.thirdPartyAuthContext.pipelineUserDetails !== nextProps.thirdPartyAuthContext.pipelineUserDetails) {
-      this.setState({
-        ...nextProps.thirdPartyAuthContext.pipelineUserDetails,
-        country: nextProps.thirdPartyAuthContext.countryCode || '',
+      const { pipelineUserDetails } = nextProps.thirdPartyAuthContext;
+      const { registrationFormData } = this.props;
+
+      // Added a conditional errors check to not fall back on pipelines data when a user explicitly edits the form.
+      this.props.setRegistrationFormData({
+        name: registrationFormData.errors.name ? registrationFormData.name
+          : (registrationFormData.name || pipelineUserDetails.name || ''),
+        email: registrationFormData.errors.email ? registrationFormData.email
+          : (registrationFormData.email || pipelineUserDetails.email || ''),
+        username: registrationFormData.errors.username ? registrationFormData.username
+          : (registrationFormData.username || pipelineUserDetails.username || ''),
+        country: registrationFormData.country || nextProps.thirdPartyAuthContext.countryCode,
       });
       return false;
     }
 
     if (this.props.thirdPartyAuthContext.countryCode !== nextProps.thirdPartyAuthContext.countryCode) {
-      this.setState({
-        country: nextProps.thirdPartyAuthContext.countryCode || '',
+      this.props.setRegistrationFormData({
+        country: this.props.registrationFormData.country || nextProps.thirdPartyAuthContext.countryCode,
       });
       return false;
     }
@@ -191,9 +225,11 @@ class RegistrationPage extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+
     const { startTime } = this.state;
     const totalRegistrationTime = (Date.now() - startTime) / 1000;
     const dynamicFieldErrorMessages = {};
+
     let payload = {
       name: this.state.name,
       username: this.state.username,
@@ -254,6 +290,10 @@ class RegistrationPage extends React.Component {
 
   handleOnBlur = (e) => {
     let { name, value } = e.target;
+    this.setState({
+      focusedField: '',
+    });
+
     if (name === 'passwordValidation') {
       name = 'password';
       value = this.state.password;
@@ -279,27 +319,51 @@ class RegistrationPage extends React.Component {
     }
   }
 
+  handleCountryChange = (value) => {
+    // TODO: Remove this function once error message is passed as props from
+    // RegistrationPage to CountryDropdown component.
+    if (this.props.registrationFormData.errors.country) {
+      this.props.setRegistrationFormData({
+        country: value,
+        errors: {
+          ...this.props.registrationFormData.errors,
+          country: '',
+        },
+      });
+    } else {
+      this.props.setRegistrationFormData({
+        country: value,
+      });
+    }
+  }
+
   handleOnFocus = (e) => {
+    const fieldName = e.target.name;
+    this.setState({
+      focusedField: fieldName,
+    });
     const { errors } = this.state;
-    errors[e.target.name] = '';
-    const state = { errors };
-    if (e.target.name === 'username') {
+    errors[fieldName] = '';
+    if (fieldName === 'username') {
       this.props.clearUsernameSuggestions();
     }
-    if (e.target.name === 'country') {
-      state.readOnly = false;
+    if (fieldName === 'country') {
+      this.setState({ readOnly: false });
     }
-    if (e.target.name === 'passwordValidation') {
-      state.errors.password = '';
+    if (fieldName === 'passwordValidation') {
+      errors.password = '';
     }
-    this.setState({ ...state });
+
+    this.props.setRegistrationFormData({
+      errors,
+    });
   }
 
   handleSuggestionClick = (e, suggestion) => {
     const { errors } = this.state;
     if (e.target.name === 'username') {
       errors.username = '';
-      this.setState({
+      this.props.setRegistrationFormData({
         username: suggestion,
         errors,
       });
@@ -307,18 +371,18 @@ class RegistrationPage extends React.Component {
     } else if (e.target.name === 'email') {
       e.preventDefault();
       errors.email = '';
-      this.setState({
-        borderClass: '',
+      this.props.setRegistrationFormData({
         email: suggestion,
         emailErrorSuggestion: null,
         emailWarningSuggestion: null,
+        emailFieldBorderClass: '',
         errors,
       });
     }
   }
 
   handleUsernameSuggestionClose = () => {
-    this.setState({
+    this.props.setRegistrationFormData({
       username: '',
     });
     this.props.clearUsernameSuggestions();
@@ -340,7 +404,6 @@ class RegistrationPage extends React.Component {
   isFormValid(payload, dynamicFieldError) {
     const { errors } = this.state;
     let isValid = true;
-
     Object.keys(payload).forEach(key => {
       if (!payload[key]) {
         errors[key] = (key in dynamicFieldError) ? dynamicFieldError[key] : this.props.intl.formatMessage(messages[`empty.${key}.field.error`]);
@@ -351,11 +414,15 @@ class RegistrationPage extends React.Component {
       }
     });
 
-    this.setState({ errors });
+    const state = { ...payload, errors };
+    this.props.setRegistrationFormData({
+      ...state,
+    });
     return isValid;
   }
 
   validateInput(fieldName, value, payload) {
+    let state = {};
     const { errors } = this.state;
     const { intl, statusCode } = this.props;
     const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -411,11 +478,11 @@ class RegistrationPage extends React.Component {
               errors.confirm_email = intl.formatMessage(messages['email.do.not.match']);
             }
           }
-          this.setState({
+          state = {
             emailWarningSuggestion,
             emailErrorSuggestion,
-            borderClass: emailWarningSuggestion ? 'yellow-border' : null,
-          });
+            emailFieldBorderClass: emailWarningSuggestion ? 'yellow-border' : null,
+          };
         }
         break;
       case 'name':
@@ -446,6 +513,7 @@ class RegistrationPage extends React.Component {
         } else {
           errors.username = '';
         }
+
         if (this.state.validatePassword) {
           this.props.fetchRealtimeValidations({ ...payload, form_field_key: 'password' });
         }
@@ -469,12 +537,25 @@ class RegistrationPage extends React.Component {
         break;
     }
 
-    this.setState({ errors });
+    if (fieldName !== 'country') {
+      state = {
+        ...state,
+        [fieldName]: value,
+      };
+    }
+
+    this.props.setRegistrationFormData({
+      ...state,
+      errors,
+    });
+
     return errors;
   }
 
   handleOnClose() {
-    this.setState({ emailErrorSuggestion: null });
+    this.props.setRegistrationFormData({
+      emailErrorSuggestion: null,
+    });
   }
 
   renderEmailFeedback() {
@@ -704,7 +785,7 @@ class RegistrationPage extends React.Component {
               handleFocus={this.handleOnFocus}
               helpText={[intl.formatMessage(messages['help.text.email'])]}
               floatingLabel={intl.formatMessage(messages['registration.email.label'])}
-              borderClass={this.state.borderClass}
+              borderClass={this.state.emailFieldBorderClass}
             >
               {this.renderEmailFeedback()}
             </FormGroup>
@@ -748,7 +829,7 @@ class RegistrationPage extends React.Component {
                 handleBlur={this.handleOnBlur}
                 handleFocus={this.handleOnFocus}
                 errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
-                handleChange={(value) => this.setState({ country: value })}
+                handleChange={(value) => this.handleCountryChange(value)}
                 errorCode={this.state.errorCode}
                 readOnly={this.state.readOnly}
               />
@@ -760,7 +841,9 @@ class RegistrationPage extends React.Component {
                 className="opt-checkbox"
                 name="marketing_emails_opt_in"
                 checked={this.state.marketingOptIn}
-                onChange={(e) => this.setState({ marketingOptIn: e.target.checked })}
+                onChange={(e) => this.props.setRegistrationFormData({
+                  marketingOptIn: e.target.checked,
+                })}
               >
                 {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
               </Form.Checkbox>
@@ -850,6 +933,24 @@ RegistrationPage.defaultProps = {
     secondaryProviders: [],
     pipelineUserDetails: null,
   },
+  registrationFormData: {
+    country: '',
+    email: '',
+    name: '',
+    password: '',
+    username: '',
+    marketingOptIn: true,
+    errors: {
+      email: '',
+      name: '',
+      username: '',
+      password: '',
+      country: '',
+    },
+    emailFieldBorderClass: '',
+    emailErrorSuggestion: null,
+    emailWarningSuggestion: null,
+  },
   validationDecisions: null,
   statusCode: null,
   usernameSuggestions: [],
@@ -863,6 +964,7 @@ RegistrationPage.propTypes = {
   getThirdPartyAuthContext: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func,
   resetRegistrationForm: PropTypes.func.isRequired,
+  setRegistrationFormData: PropTypes.func.isRequired,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -870,6 +972,24 @@ RegistrationPage.propTypes = {
   registrationErrorCode: PropTypes.string,
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
+  registrationFormData: PropTypes.shape({
+    country: PropTypes.string,
+    email: PropTypes.string,
+    name: PropTypes.string,
+    password: PropTypes.string,
+    username: PropTypes.string,
+    marketingOptIn: PropTypes.bool,
+    errors: PropTypes.shape({
+      email: PropTypes.string,
+      name: PropTypes.string,
+      username: PropTypes.string,
+      password: PropTypes.string,
+      country: PropTypes.string,
+    }),
+    emailFieldBorderClass: PropTypes.string,
+    emailErrorSuggestion: PropTypes.string,
+    emailWarningSuggestion: PropTypes.string,
+  }),
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
@@ -879,7 +999,7 @@ RegistrationPage.propTypes = {
     countryCode: PropTypes.string,
     pipelineUserDetails: PropTypes.shape({
       email: PropTypes.string,
-      fullname: PropTypes.string,
+      name: PropTypes.string,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
       username: PropTypes.string,
@@ -912,6 +1032,7 @@ const mapStateToProps = state => {
     validationDecisions: validationsSelector(state),
     statusCode: state.register.statusCode,
     usernameSuggestions: usernameSuggestionsSelector(state),
+    registrationFormData: registrationFormDataSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
     optionalFields: optionalFieldsSelector(state),
     extendedProfile: extendedProfileSelector(state),
@@ -926,5 +1047,6 @@ export default connect(
     fetchRealtimeValidations,
     registerNewUser,
     resetRegistrationForm,
+    setRegistrationFormData,
   },
 )(injectIntl(RegistrationPage));

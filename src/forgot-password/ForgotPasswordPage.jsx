@@ -22,19 +22,23 @@ import BaseComponent from '../base-component';
 import { FormGroup } from '../common-components';
 import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
-import { forgotPassword } from './data/actions';
+import { forgotPassword, setForgotPasswordFormData } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
 import ForgotPasswordAlert from './ForgotPasswordAlert';
 import messages from './messages';
 
 const ForgotPasswordPage = (props) => {
-  const { intl, status, submitState } = props;
+  const {
+    intl, status, submitState, emailValidationError,
+  } = props;
 
   const platformName = getConfig().SITE_NAME;
   const supportUrl = getConfig().LOGIN_ISSUE_SUPPORT_LINK;
   const regex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
-  const [validationError, setValidationError] = useState('');
+  const [bannerEmail, setBannerEmail] = useState('');
+  const [email, setEmail] = useState(props.email);
+  const [validationError, setValidationError] = useState(emailValidationError);
   const [key, setKey] = useState('');
 
   useEffect(() => {
@@ -42,17 +46,35 @@ const ForgotPasswordPage = (props) => {
     sendTrackEvent('edx.bi.password_reset_form.viewed', { category: 'user-engagement' });
   }, []);
 
-  const getValidationMessage = (email) => {
+  useEffect(() => {
+    setValidationError(emailValidationError);
+    if (status === 'complete') {
+      setEmail('');
+    } else {
+      setEmail(props.email);
+    }
+  }, [emailValidationError, props.email, status]);
+
+  const getValidationMessage = (value) => {
     let error = '';
 
-    if (email === '') {
+    if (value === '') {
       error = intl.formatMessage(messages['forgot.password.empty.email.field.error']);
-    } else if (!regex.test(email)) {
+    } else if (!regex.test(value)) {
       error = intl.formatMessage(messages['forgot.password.page.invalid.email.message']);
     }
 
-    setValidationError(error);
     return error;
+  };
+
+  const onBlur = (value) => {
+    const emailError = getValidationMessage(value);
+    setBannerEmail(value);
+    props.setForgotPasswordFormData({ email: value, emailValidationError: emailError });
+  };
+
+  const onFocus = () => {
+    props.setForgotPasswordFormData({ emailValidationError: '' });
   };
 
   const tabTitle = (
@@ -73,7 +95,8 @@ const ForgotPasswordPage = (props) => {
         )}
         <div id="main-content" className="main-content">
           <Formik
-            initialValues={{ email: '' }}
+            initialValues={{ email }}
+            enableReinitialize={props.email === ''}
             validateOnChange={false}
             validate={(values) => {
               const validationMessage = getValidationMessage(values.email);
@@ -85,7 +108,10 @@ const ForgotPasswordPage = (props) => {
 
               return {};
             }}
-            onSubmit={(values) => { props.forgotPassword(values.email); }}
+            onSubmit={(values) => {
+              onBlur(values.email);
+              props.forgotPassword(values.email);
+            }}
           >
             {({
               errors, handleSubmit, setFieldValue, values,
@@ -97,7 +123,7 @@ const ForgotPasswordPage = (props) => {
                   </title>
                 </Helmet>
                 <Form id="forget-password-form" name="forget-password-form" className="mw-xs">
-                  <ForgotPasswordAlert email={props.email} emailError={errors.email} status={status} />
+                  <ForgotPasswordAlert email={bannerEmail} emailError={errors.email} status={status} />
                   <h2 className="h4">
                     {intl.formatMessage(messages['forgot.password.page.heading'])}
                   </h2>
@@ -109,9 +135,9 @@ const ForgotPasswordPage = (props) => {
                     name="email"
                     errorMessage={validationError}
                     value={values.email}
-                    handleBlur={() => getValidationMessage(values.email)}
+                    handleBlur={() => onBlur(values.email)}
                     handleChange={e => setFieldValue('email', e.target.value)}
-                    handleFocus={() => setValidationError('')}
+                    handleFocus={() => onFocus()}
                     helpText={[intl.formatMessage(messages['forgot.password.email.help.text'], { platformName })]}
                   />
                   <StatefulButton
@@ -157,13 +183,16 @@ const ForgotPasswordPage = (props) => {
 ForgotPasswordPage.propTypes = {
   intl: intlShape.isRequired,
   email: PropTypes.string,
+  emailValidationError: PropTypes.string,
   forgotPassword: PropTypes.func.isRequired,
+  setForgotPasswordFormData: PropTypes.func.isRequired,
   status: PropTypes.string,
   submitState: PropTypes.string,
 };
 
 ForgotPasswordPage.defaultProps = {
   email: '',
+  emailValidationError: '',
   status: null,
   submitState: DEFAULT_STATE,
 };
@@ -172,5 +201,6 @@ export default connect(
   forgotPasswordResultSelector,
   {
     forgotPassword,
+    setForgotPasswordFormData,
   },
 )(injectIntl(ForgotPasswordPage));

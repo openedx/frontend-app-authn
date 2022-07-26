@@ -14,6 +14,7 @@ import configureStore from 'redux-mock-store';
 
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
+import { setForgotPasswordFormData } from '../data/actions';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
 jest.mock('@edx/frontend-platform/analytics');
@@ -124,28 +125,61 @@ describe('ForgotPasswordPage', () => {
     expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
   });
 
-  it('should display error message on blur event', async () => {
-    const validationMessage = 'Enter your email';
+  it('should set error in redux store on onBlur', () => {
+    const forgotPasswordFormData = {
+      email: 'test@gmail',
+      emailValidationError: 'Enter a valid email address',
+    };
+
+    props = {
+      ...props,
+      email: 'test@gmail',
+      emailValidationError: '',
+    };
+
+    store.dispatch = jest.fn(store.dispatch);
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    const emailInput = forgotPasswordPage.find('input#email');
+    forgotPasswordPage.find('input#email').simulate('blur');
+    expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
+  });
 
-    await act(async () => {
-      await emailInput.simulate('blur', { target: { value: '', name: 'email' } });
-    });
-
+  it('should display error message if available in props', async () => {
+    const validationMessage = 'Enter your email';
+    props = {
+      ...props,
+      emailValidationError: validationMessage,
+      email: '',
+    };
+    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     forgotPasswordPage.update();
     expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
   });
 
-  it('should clear error message on focus event', async () => {
-    const validationMessage = 'Enter your email';
+  it('should clear error in redux store on onFocus', () => {
+    const forgotPasswordFormData = {
+      emailValidationError: '',
+    };
+
+    props = {
+      ...props,
+      email: 'test@gmail',
+      emailValidationError: 'Enter a valid email address',
+    };
+
+    store.dispatch = jest.fn(store.dispatch);
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    await act(async () => { await forgotPasswordPage.find('button.btn-brand').simulate('click'); });
-
-    forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
-
     forgotPasswordPage.find('input#email').simulate('focus');
+    expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
+  });
+
+  it('should clear error message when cleared in props on focus', async () => {
+    props = {
+      ...props,
+      emailValidationError: '',
+      email: '',
+    };
+    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    forgotPasswordPage.update();
     expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
   });
 
