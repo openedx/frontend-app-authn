@@ -255,6 +255,7 @@ class LoginPage extends React.Component {
               handleBlur={this.handleOnBlur}
               errorMessage={this.state.errors.emailOrUsername}
               floatingLabel={intl.formatMessage(messages['login.user.identity.label'])}
+              autoComplete="off"
             />
             <PasswordField
               name="password"
