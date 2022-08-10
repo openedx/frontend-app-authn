@@ -100,7 +100,7 @@ const ForgotPasswordPage = (props) => {
             validateOnChange={false}
             validate={(values) => {
               const validationMessage = getValidationMessage(values.email);
-
+              props.setForgotPasswordFormData({ emailValidationError: validationMessage });
               if (validationMessage !== '') {
                 windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
                 return { email: validationMessage };

@@ -70,13 +70,17 @@ class LoginPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.loginFormData !== nextProps.loginFormData) {
-      if (nextProps.loginFormData) {
-        this.setState({
-          ...nextProps.loginFormData,
-        });
-        return false;
-      }
+    if (nextProps.loginFormData && this.props.loginFormData !== nextProps.loginFormData) {
+      // Ensuring browser's autofill user credentials get filled and their state persists in the redux store.
+      const nextState = {
+        emailOrUsername: nextProps.loginFormData.emailOrUsername || this.state.emailOrUsername,
+        password: nextProps.loginFormData.password || this.state.password,
+      };
+      this.setState({
+        ...nextProps.loginFormData,
+        ...nextState,
+      });
+      return false;
     }
     return true;
   }
