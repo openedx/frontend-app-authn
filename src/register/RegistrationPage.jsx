@@ -69,7 +69,6 @@ class RegistrationPage extends React.Component {
     // permanent part of Authn and remove extra code
     this.showDynamicRegistrationFields = getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS;
     this.tpaHint = getTpaHint();
-    this.isRegistered = true;
     const { registrationFormData } = this.props;
     this.state = {
       country: '',
@@ -115,7 +114,7 @@ class RegistrationPage extends React.Component {
     if (this.tpaHint) {
       payload.tpa_hint = this.tpaHint;
     }
-    payload.is_registered = this.isRegistered;
+    payload.is_register_page = true;
     this.props.resetRegistrationForm();
     this.props.getThirdPartyAuthContext(payload);
   }

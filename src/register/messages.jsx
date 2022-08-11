@@ -148,7 +148,7 @@ const messages = defineMessages({
   },
   'username.format.validation.message': {
     id: 'username.format.validation.message',
-    defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces.',
+    defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces',
     description: 'Validation message that appears when username format is invalid',
   },
   'support.education.research': {
