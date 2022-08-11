@@ -312,13 +312,16 @@ select.form-control {
 }
 
 #password-requirement-top {
+  @extend .x-small;
+  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   opacity: 1;
   width: 90%;
   margin-bottom: 10px;
-  @extend .x-small;
-  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
+  display: flex;
+  justify-content: center;
+
   .tooltip-inner {
-    max-width: inherit;
+    min-width: 464px !important;
     background: white;
     display: block;
     color: #707070;
@@ -776,6 +779,14 @@ select.form-control {
   .main-content {
     min-width: 100vw !important;
     padding: 1.5rem !important;
+  }
+
+  #password-requirement-top {
+    display: unset;
+    .tooltip-inner {
+      max-width: inherit;
+      min-width: unset !important;
+    }
   }
 
   .progressive-profiling-support {
