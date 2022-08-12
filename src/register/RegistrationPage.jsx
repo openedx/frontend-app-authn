@@ -120,15 +120,19 @@ class RegistrationPage extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.registrationFormData !== nextProps.registrationFormData) {
-      if (nextProps.registrationFormData) {
-        // do not set focused field's value from redux store to retain entered data in focused field
-        const { focusedField } = this.state;
-        const { [focusedField]: _, ...registrationData } = nextProps.registrationFormData;
-        this.setState({
-          ...registrationData,
-        });
-      }
+    if (nextProps.registrationFormData && this.props.registrationFormData !== nextProps.registrationFormData) {
+      // Ensuring browser's autofill user credentials get filled and their state persists in the redux store.
+      const nextState = {
+        username: nextProps.registrationFormData.username || this.state.username,
+        password: nextProps.registrationFormData.password || this.state.password,
+      };
+
+      // do not set focused field's value from redux store to retain entered data in focused field\
+      const { focusedField } = this.state;
+      const { [focusedField]: _, ...registrationData } = { ...nextProps.registrationFormData, ...nextState };
+      this.setState({
+        ...registrationData,
+      });
     }
 
     if (this.props.usernameSuggestions.length > 0 && this.state.username === '') {
