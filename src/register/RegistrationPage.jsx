@@ -791,7 +791,6 @@ class RegistrationPage extends React.Component {
 
             <UsernameField
               name="username"
-              autoComplete="off"
               spellCheck="false"
               value={this.state.username}
               handleBlur={this.handleOnBlur}
