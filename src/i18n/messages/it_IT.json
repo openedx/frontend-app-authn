@@ -140,7 +140,7 @@
   "email.ratelimit.less.chars.validation.message": "Email deve avere 3 caratteri.",
   "username.validation.message": "Username must be between 2 and 30 characters",
   "name.validation.message": "Enter a valid name",
-  "username.format.validation.message": "Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces.",
+  "username.format.validation.message": "Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces",
   "support.education.research": "Supportare la ricerca del livello di istruzione fornendo informazioni aggiuntive. (Facoltativo)",
   "registration.request.failure.header": "Impossibile creare il tuo account.",
   "registration.empty.form.submission.error": "Please check your responses and try again.",
