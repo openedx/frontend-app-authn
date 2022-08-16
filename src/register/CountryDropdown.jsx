@@ -101,15 +101,9 @@ class CountryDropdown extends React.Component {
   }
 
   handleOnChange = (e) => {
-    const findstr = e.target.value;
+    const filteredItems = this.getItems(e.target.value);
 
-    if (findstr.length > 0) {
-      const filteredItems = this.getItems(findstr);
-      this.setState({ dropDownItems: filteredItems, icon: this.expandLessButton(), errorMessage: '' });
-    } else {
-      this.setState({ dropDownItems: '', icon: this.expandMoreButton(), errorMessage: this.props.errorMessage });
-    }
-
+    this.setState({ dropDownItems: filteredItems, icon: this.expandLessButton(), errorMessage: '' });
     this.setDisplayValue(e.target.value);
   }
 
@@ -136,6 +130,7 @@ class CountryDropdown extends React.Component {
   }
 
   handleFocus(e) {
+    this.setState({ showFieldError: false });
     if (this.props.handleFocus) { this.props.handleFocus(e); }
   }
 
@@ -146,6 +141,7 @@ class CountryDropdown extends React.Component {
   handleItemClick(e) {
     this.setValue(e.target.value);
     this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
+    this.handleOnBlur(e);
   }
 
   expandMoreButton() {
