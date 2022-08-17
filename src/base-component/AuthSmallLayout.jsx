@@ -2,70 +2,37 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
-import {
-  Col, Hyperlink, Image, Row,
-} from '@edx/paragon';
-import classNames from 'classnames';
+import { Hyperlink, Image } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const AuthSmallLayout = (props) => {
-  const { intl, username, variant } = props;
-
-  return (
-    <div className="small-screen-header-light">
-      <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-        <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
-      </Hyperlink>
-      <div className={classNames('d-flex mt-3', { 'pl-6': variant === 'sm' })}>
-        <div>
-          <Row>
-            <Col xs={3}>
-              <svg
-                role="img"
-                aria-label=""
-                focusable={false}
-                className={classNames(
-                  'mt-4\.5', // eslint-disable-line no-useless-escape
-                  {
-                    'extra-small-svg-line': variant === 'xs',
-                    'small-svg-line': variant === 'sm',
-                  },
-                )}
-              >
-                <line x1="60" y1="0" x2="5" y2="220" />
-              </svg>
-            </Col>
-            <Col xs={9}>
-              <h5 className="data-hj-suppress">
-                {intl.formatMessage(
-                  messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username },
-                )}
-              </h5>
-              <h1>
-                {intl.formatMessage(messages['complete.your.profile.1'])}
-                <br />
-                <span className="text-accent-a">
-                  {intl.formatMessage(messages['complete.your.profile.2'])}
-                </span>
-              </h1>
-            </Col>
-          </Row>
-        </div>
+const AuthSmallLayout = ({ intl, username }) => (
+  <div className="min-vw-100 bg-light-200">
+    <div className="col-md-12 small-screen-top-stripe" />
+    <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
+      <Image className="logo-small" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
+    </Hyperlink>
+    <div className="d-flex align-items-center mb-3 mt-3 mr-3">
+      <div className="small-yellow-line mt-4.5" />
+      <div>
+        <h1 className="h5 data-hj-suppress">
+          {intl.formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username })}
+        </h1>
+        <h2 className="h1">
+          {intl.formatMessage(messages['complete.your.profile.1'])}
+          <div className="text-accent-a">
+            {intl.formatMessage(messages['complete.your.profile.2'])}
+          </div>
+        </h2>
       </div>
     </div>
-  );
-};
-
-AuthSmallLayout.defaultProps = {
-  variant: 'sm',
-};
+  </div>
+);
 
 AuthSmallLayout.propTypes = {
   intl: intlShape.isRequired,
   username: PropTypes.string.isRequired,
-  variant: PropTypes.oneOf(['sm', 'xs']),
 };
 
 export default injectIntl(AuthSmallLayout);

@@ -151,7 +151,7 @@ const WelcomePage = (props) => {
         ) : null}
         <div className="mw-xs welcome-page-content">
           <div className="welcome-page-heading">
-            <h2 className="h3 text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
+            <h2 className="pp-page-heading text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
           </div>
           <hr className="border-light-700 mb-4" />
           {showError ? (
