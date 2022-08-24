@@ -395,7 +395,7 @@ class RegistrationPage extends React.Component {
     const { intl } = this.props;
     const { errors } = this.state;
     const { name, value } = e.target;
-    if (!value) {
+    if (!value.trim()) {
       errors[name] = this.props.fieldDescriptions[name].error_message;
     }
     if (name === 'confirm_email' && value.length > 0 && this.state.email && value !== this.state.email) {
@@ -489,7 +489,7 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'name':
-        if (!value) {
+        if (!value.trim()) {
           errors.name = intl.formatMessage(messages['empty.name.field.error']);
         } else if (value && value.match(urlRegex)) {
           errors.name = intl.formatMessage(messages['name.validation.message']);
@@ -530,7 +530,7 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'country':
-        if (!value) {
+        if (!value.trim()) {
           errors.country = intl.formatMessage(messages['empty.country.field.error']);
         } else {
           errors.country = '';

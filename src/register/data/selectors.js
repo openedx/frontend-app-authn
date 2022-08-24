@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect';
 
-import { FORM_FIELDS } from './constants';
-
 export const storeName = 'register';
 
 export const registerSelector = state => ({ ...state[storeName] });
@@ -26,11 +24,12 @@ export const validationsSelector = createSelector(
     }
 
     if (Object.keys(registrationError).length > 0) {
-      const validationDecisions = {};
-      FORM_FIELDS.forEach(field => {
-        validationDecisions[field] = registrationError[field] ? registrationError[field][0].userMessage : '';
-      });
+      const fields = Object.keys(registrationError).filter((fieldName) => !(fieldName in ['errorCode', 'usernameSuggestions']));
 
+      const validationDecisions = {};
+      fields.forEach(field => {
+        validationDecisions[field] = registrationError[field][0].userMessage || '';
+      });
       return validationDecisions;
     }
 
