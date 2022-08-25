@@ -172,7 +172,10 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   background-color: $google-blue;
 
   .icon-image {
-    margin-left: 2px;
+    margin-left: -6px;
+    max-height: 34px;
+    max-width: 34px;
+    height: 34px;
   }
 
   &:hover,
