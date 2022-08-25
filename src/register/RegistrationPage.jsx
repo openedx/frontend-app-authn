@@ -854,7 +854,7 @@ class RegistrationPage extends React.Component {
               <HonorCode
                 fieldType="tos_and_honor_code"
               />
-            ) : <div className="mt-4">{honorCode}</div>}
+            ) : <div>{honorCode}</div>}
             <StatefulButton
               name="register-user"
               id="register-user"
