@@ -301,10 +301,7 @@ describe('RegistrationPage', () => {
       });
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
       expect(registrationPage.prop('validationDecisions')).toEqual({
-        country: '',
         email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`,
-        name: '',
-        password: '',
         username: 'It looks like this username is already taken',
       });
     });

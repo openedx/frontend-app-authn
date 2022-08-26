@@ -38,9 +38,6 @@ export const EDUCATION_LEVELS = [
 
 export const GENDER_OPTIONS = ['', 'f', 'm', 'o'];
 
-// Other constants
-export const FORM_FIELDS = ['name', 'email', 'password', 'username', 'country'];
-
 export const COMMON_EMAIL_PROVIDERS = [
   'hotmail.com', 'yahoo.com', 'outlook.com', 'live.com', 'gmail.com',
 ];
