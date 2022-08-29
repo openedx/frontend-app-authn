@@ -6,46 +6,32 @@ import { Hyperlink, Image } from '@edx/paragon';
 
 import messages from './messages';
 
-const MediumLayout = (props) => {
-  const { intl } = props;
-
-  return (
-    <div className="container row p-0 mb-3 medium-screen-container">
-      <div className="col-md-10 p-0 screen-header-primary">
+const MediumLayout = ({ intl }) => (
+  <>
+    <div className="w-100 medium-screen-top-stripe" />
+    <div className="w-100 p-0 mb-3 d-flex">
+      <div className="col-md-10 bg-primary-400">
         <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image alt={getConfig().SITE_NAME} className="logo" src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
-        <div className="row mt-4 justify-content-center">
-          <svg
-            role="img"
-            aria-label=""
-            focusable={false}
-            className="medium-screen-svg-line pl-5"
-          >
-            <line x1="50" y1="0" x2="10" y2="215" />
-          </svg>
-          <div className="pb-4">
-            <h1 className="medium-heading">
-              {intl.formatMessage(messages['start.learning'])}
-              <span className="text-accent-a">
-                <br />
-                {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
-              </span>
-            </h1>
-          </div>
-        </div>
+        <h1 className="display-1 text-white mt-5 mb-5 ml-4.5 mr-2">
+          {intl.formatMessage(messages['start.learning'])}
+          <span className="text-accent-a ml-2">
+            {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+          </span>
+        </h1>
         <div />
       </div>
-      <div className="col-md-2 p-0 screen-polygon">
-        <svg width="100%" height="100%" className="medium-screen-svg-primary" preserveAspectRatio="xMaxYMin meet">
+      <div className="col-md-2 bg-white p-0">
+        <svg className="w-100 h-100 medium-screen-svg-primary" preserveAspectRatio="xMaxYMin meet">
           <g transform="skewX(168)">
             <rect x="0" y="0" height="100%" width="100%" />
           </g>
         </svg>
       </div>
     </div>
-  );
-};
+  </>
+);
 
 MediumLayout.propTypes = {
   intl: intlShape.isRequired,
