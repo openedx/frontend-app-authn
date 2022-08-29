@@ -183,7 +183,7 @@ describe('LoginPage', () => {
 
   it('should show single sign on provider button', () => {
     mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'true',
+      DISABLE_ENTERPRISE_LOGIN: '',
     });
 
     store = mockStore({
@@ -192,7 +192,9 @@ describe('LoginPage', () => {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [ssoProvider],
+          providers: [{
+            ...ssoProvider,
+          }],
         },
       },
     });
@@ -208,6 +210,30 @@ describe('LoginPage', () => {
   it('should not display institution login option when no secondary providers are present', () => {
     const root = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(root.text().includes('Use my university info')).toBe(false);
+  });
+
+  it('should not show sign-in header and enterprise login once user authenticated through SSO', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [{
+            ...ssoProvider,
+          }],
+          currentProvider: 'Apple',
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Company or school credentials')).toBe(false);
+    expect(loginPage.text().includes('Or sign in with:')).toBe(false);
   });
 
   // ******** test alert messages ********
