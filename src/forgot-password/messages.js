@@ -51,11 +51,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter your email',
     description: 'Error message that appears when user tries to submit empty email field',
   },
-  'forgot.password.invalid.email.heading': {
-    id: 'forgot.password.invalid.email',
-    defaultMessage: 'An error occurred.',
-    description: 'heading for invalid email',
-  },
   'forgot.password.invalid.email.message': {
     id: 'forgot.password.invalid.email.message',
     defaultMessage: "The email address you've provided isn't formatted correctly.",

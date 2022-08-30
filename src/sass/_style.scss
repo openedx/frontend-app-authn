@@ -19,6 +19,11 @@ $apple-focus-black: $apple-black;
 
 $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
+// Forgot Password Page
+.forgot-password-button-width {
+  min-width: 6rem;
+}
+
 .centered-align-spinner {
   left: 0;
   right: 0;

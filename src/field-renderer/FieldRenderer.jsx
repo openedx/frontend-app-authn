@@ -74,7 +74,7 @@ const FormFieldRenderer = (props) => {
     }
     case 'text': {
       formField = (
-        <Form.Group controlId={fieldData.name} isInvalid={isRequired && errorMessage}>
+        <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
           <Form.Control
             name={fieldData.name}
             value={value}
