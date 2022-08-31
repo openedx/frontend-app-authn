@@ -12,14 +12,16 @@ export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
 export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];
 
 // Error Codes
+export const FORM_SUBMISSION_ERROR = 'form-submission-error';
 export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 export const API_RATELIMIT_ERROR = 'api-ratelimit-error';
 
-// States
+// Common States
 export const DEFAULT_STATE = 'default';
 export const PENDING_STATE = 'pending';
 export const COMPLETE_STATE = 'complete';
 export const FAILURE_STATE = 'failure';
+export const FORBIDDEN_STATE = 'forbidden';
 
 // Regex
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'

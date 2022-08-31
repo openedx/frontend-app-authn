@@ -6,23 +6,24 @@ import { Alert } from '@edx/paragon';
 import { CheckCircle, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import { INTERNAL_SERVER_ERROR } from '../data/constants';
+import {
+  COMPLETE_STATE, FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR,
+} from '../data/constants';
 import { PASSWORD_RESET } from '../reset-password/data/constants';
 import messages from './messages';
 
 const ForgotPasswordAlert = (props) => {
   const { email, emailError, intl } = props;
+  let message = '';
+  let heading = intl.formatMessage(messages['forgot.password.error.alert.title']);
   let { status } = props;
 
   if (emailError) {
-    status = 'form-submission-error';
+    status = FORM_SUBMISSION_ERROR;
   }
 
-  let message = '';
-  let heading = intl.formatMessage(messages['forgot.password.error.alert.title']);
-  const supportUrl = getConfig().PASSWORD_RESET_SUPPORT_LINK;
   switch (status) {
-    case 'complete':
+    case COMPLETE_STATE:
       heading = intl.formatMessage(messages['confirmation.message.title']);
       message = (
         <FormattedMessage
@@ -34,14 +35,7 @@ const ForgotPasswordAlert = (props) => {
           values={{
             email: <span className="data-hj-suppress">{email}</span>,
             supportLink: (
-              <Alert.Link
-                className="alert-link"
-                href={supportUrl}
-                onClick={e => {
-                  e.preventDefault();
-                  window.open(supportUrl, '_blank');
-                }}
-              >
+              <Alert.Link href={getConfig().PASSWORD_RESET_SUPPORT_LINK} target="_blank">
                 {intl.formatMessage(messages['confirmation.support.link'])}
               </Alert.Link>
             ),
@@ -52,11 +46,11 @@ const ForgotPasswordAlert = (props) => {
     case INTERNAL_SERVER_ERROR:
       message = intl.formatMessage(messages['internal.server.error']);
       break;
-    case 'forbidden':
+    case FORBIDDEN_STATE:
       heading = intl.formatMessage(messages['forgot.password.error.message.title']);
       message = intl.formatMessage(messages['forgot.password.request.in.progress.message']);
       break;
-    case 'form-submission-error':
+    case FORM_SUBMISSION_ERROR:
       message = intl.formatMessage(messages['extend.field.errors'], { emailError });
       break;
     case PASSWORD_RESET.INVALID_TOKEN:
@@ -79,7 +73,7 @@ const ForgotPasswordAlert = (props) => {
     return (
       <Alert
         id="validation-errors"
-        className="mb-5"
+        className="mb-4"
         variant={`${status === 'complete' ? 'success' : 'danger'}`}
         icon={status === 'complete' ? CheckCircle : Error}
       >
