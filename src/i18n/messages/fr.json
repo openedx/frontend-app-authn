@@ -38,7 +38,6 @@
   "forgot.password.error.message.title": "Une erreur est survenue.",
   "forgot.password.request.in.progress.message": "Your previous request is in progress, please try again in a few moments.",
   "forgot.password.empty.email.field.error": "Saisissez votre courriel",
-  "forgot.password.invalid.email": "Une erreur est survenue.",
   "forgot.password.invalid.email.message": "L'adresse email que vous avez fournie est incorrecte.",
   "forgot.password.email.help.text": "L'adresse courriel que vous avez utilisée pour vous inscrire sur  {platformName}",
   "confirmation.message.title": "Vérifiez votre email",

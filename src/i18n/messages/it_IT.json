@@ -38,7 +38,6 @@
   "forgot.password.error.message.title": "Si è verificato un errore. ",
   "forgot.password.request.in.progress.message": "La tua richiesta precedente è in corso di elaborazione, riprova tra qualche istante. ",
   "forgot.password.empty.email.field.error": "Enter your email",
-  "forgot.password.invalid.email": "Si è verificato un errore. ",
   "forgot.password.invalid.email.message": "L'indirizzo email che hai fornito non è formattato correttamente. ",
   "forgot.password.email.help.text": "L'indirizzo email che hai utilizzato per registrarti con {platformName}",
   "confirmation.message.title": "Check your email",
