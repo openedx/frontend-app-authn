@@ -5,8 +5,8 @@ import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
 
-import { FormGroup } from '../common-components';
-import { FORM_SUBMISSION_ERROR } from './data/constants';
+import { FormGroup } from '../../common-components';
+import { FORM_SUBMISSION_ERROR } from '../data/constants';
 
 class CountryDropdown extends React.Component {
   constructor(props) {

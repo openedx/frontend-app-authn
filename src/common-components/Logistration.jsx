@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -18,6 +19,7 @@ import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { getTpaHint, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
+import { backupRegistrationForm } from '../register/data/actions';
 import messages from './messages';
 
 const Logistration = (props) => {
@@ -46,6 +48,9 @@ const Logistration = (props) => {
 
   const handleOnSelect = (tabKey) => {
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
+    if (tabKey === LOGIN_PAGE) {
+      props.backupRegistrationForm();
+    }
     setKey(tabKey);
   };
 
@@ -95,10 +100,16 @@ const Logistration = (props) => {
 Logistration.propTypes = {
   intl: intlShape.isRequired,
   selectedPage: PropTypes.string,
+  backupRegistrationForm: PropTypes.func.isRequired,
 };
 
 Logistration.defaultProps = {
   selectedPage: REGISTER_PAGE,
 };
 
-export default injectIntl(Logistration);
+export default connect(
+  null,
+  {
+    backupRegistrationForm,
+  },
+)(injectIntl(Logistration));

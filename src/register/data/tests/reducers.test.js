@@ -1,11 +1,10 @@
 import { DEFAULT_STATE } from '../../../data/constants';
 import {
+  BACKUP_REGISTRATION_DATA,
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
-  REGISTER_PERSIST_FORM_DATA,
   REGISTER_SET_COUNTRY_CODE,
-  REGISTRATION_FORM,
 } from '../actions';
 import reducer from '../reducers';
 
@@ -16,29 +15,21 @@ describe('register reducer', () => {
         registrationError: {},
         registrationResult: {},
         registrationFormData: {
-          country: '',
-          email: '',
-          name: '',
-          password: '',
-          username: '',
-          marketingOptIn: true,
-          errors: {
-            email: '',
-            name: '',
-            username: '',
-            password: '',
-            country: '',
+          formFields: {
+            name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
           },
-          emailFieldBorderClass: '',
-          emailErrorSuggestion: null,
-          emailWarningSuggestion: null,
+          errors: {
+            name: '', email: '', username: '', password: '',
+          },
+          emailSuggestion: {
+            suggestion: '', type: '',
+          },
         },
         validations: null,
-        statusCode: null,
+        submitState: DEFAULT_STATE,
+        validationApiRateLimited: false,
         usernameSuggestions: [],
-        extendedProfile: [],
-        fieldDescriptions: {},
-        formRenderState: DEFAULT_STATE,
+        shouldBackupState: false,
       },
     );
   });
@@ -46,25 +37,8 @@ describe('register reducer', () => {
   it('should set username suggestions upon validation failed case', () => {
     const state = {
       usernameSuggestions: [],
-      registrationFormData: {
-        country: '',
-        email: '',
-        name: '',
-        password: '',
-        username: '',
-        marketingOptIn: true,
-        errors: {
-          email: '',
-          name: '',
-          username: '',
-          password: '',
-          country: '',
-        },
-        emailFieldBorderClass: '',
-        emailErrorSuggestion: null,
-        emailWarningSuggestion: null,
-      },
     };
+
     const validations = { usernameSuggestions: ['test12'], validationDecisions: {} };
     const action = {
       type: REGISTER_FORM_VALIDATIONS.SUCCESS,
@@ -76,24 +50,6 @@ describe('register reducer', () => {
     ).toEqual(
       {
         validations,
-        registrationFormData: {
-          country: '',
-          email: '',
-          name: '',
-          password: '',
-          username: '',
-          marketingOptIn: true,
-          errors: {
-            email: '',
-            name: '',
-            username: '',
-            password: '',
-            country: '',
-          },
-          emailFieldBorderClass: '',
-          emailErrorSuggestion: null,
-          emailWarningSuggestion: null,
-        },
         usernameSuggestions: validations.usernameSuggestions,
       },
     );
@@ -142,31 +98,25 @@ describe('register reducer', () => {
       registrationError: {},
       registrationResult: {},
       registrationFormData: {
-        country: 'PK',
-        email: 'test@email.com',
-        name: 'John Doe',
-        password: 'johndoe',
-        username: 'john',
-        marketingOptIn: true,
-        errors: {
-          email: '',
-          name: '',
-          username: '',
-          password: '',
-          country: '',
+        formFields: {
+          name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
         },
-        emailErrorSuggestion: 'test@email.com',
-        emailWarningSuggestion: 'test@email.com',
+        errors: {
+          name: '', email: '', username: '', password: '',
+        },
+        emailSuggestion: {
+          suggestion: '', type: '',
+        },
       },
       validations: null,
-      statusCode: null,
-      extendedProfile: [],
-      fieldDescriptions: {},
-      formRenderState: DEFAULT_STATE,
+      submitState: DEFAULT_STATE,
+      validationApiRateLimited: false,
       usernameSuggestions: ['test1', 'test2'],
+      shouldBackupState: false,
     };
     const action = {
-      type: REGISTRATION_FORM.RESET,
+      type: BACKUP_REGISTRATION_DATA.BEGIN,
+      payload: { ...state.registrationFormData },
     };
 
     expect(
@@ -176,77 +126,18 @@ describe('register reducer', () => {
     );
   });
 
-  it('should set registrationFormData', () => {
-    const state = {
-      registrationFormData: {
-        country: '',
-        email: '',
-        name: '',
-        password: '',
-        username: '',
-        marketingOptIn: true,
-        errors: {
-          email: '',
-          name: '',
-          username: '',
-          password: '',
-          country: '',
-        },
-        emailErrorSuggestion: null,
-        emailWarningSuggestion: null,
-      },
-    };
-    const formData = {
-      country: 'PK',
-      email: 'test@email.com',
-      name: 'John Doe',
-      password: 'johndoe',
-      username: 'john',
-      emailErrorSuggestion: 'test@email.com',
-      emailWarningSuggestion: 'test@email.com',
-    };
-
-    const action = {
-      type: REGISTER_PERSIST_FORM_DATA,
-      payload: { formData },
-    };
-
-    expect(
-      reducer(state, action),
-    ).toEqual(
-      {
-        registrationFormData: {
-          ...state.registrationFormData,
-          country: 'PK',
-          email: 'test@email.com',
-          name: 'John Doe',
-          password: 'johndoe',
-          username: 'john',
-          emailErrorSuggestion: 'test@email.com',
-          emailWarningSuggestion: 'test@email.com',
-        },
-      },
-    );
-  });
-
   it('should set country code from context', () => {
     const state = {
       registrationFormData: {
-        country: '',
-        email: '',
-        name: '',
-        password: '',
-        username: '',
-        marketingOptIn: true,
-        errors: {
-          email: '',
-          name: '',
-          username: '',
-          password: '',
-          country: '',
+        formFields: {
+          name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
         },
-        emailErrorSuggestion: null,
-        emailWarningSuggestion: null,
+        errors: {
+          name: '', email: '', username: '', password: '',
+        },
+        emailSuggestion: {
+          suggestion: '', type: '',
+        },
       },
     };
     const countryCode = 'PK';
