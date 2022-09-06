@@ -24,7 +24,7 @@ const FormFieldRenderer = (props) => {
         return null;
       }
       formField = (
-        <Form.Group controlId={fieldData.name} isInvalid={isRequired && errorMessage}>
+        <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
           <Form.Control
             as="select"
             name={fieldData.name}
@@ -52,7 +52,7 @@ const FormFieldRenderer = (props) => {
     }
     case 'textarea': {
       formField = (
-        <Form.Group controlId={fieldData.name} isInvalid={isRequired && errorMessage}>
+        <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
           <Form.Control
             as="textarea"
             name={fieldData.name}
@@ -95,7 +95,7 @@ const FormFieldRenderer = (props) => {
     }
     case 'checkbox': {
       formField = (
-        <Form.Group isInvalid={isRequired && errorMessage}>
+        <Form.Group isInvalid={!!(isRequired && errorMessage)}>
           <Form.Checkbox
             id={fieldData.name}
             checked={!!value}
