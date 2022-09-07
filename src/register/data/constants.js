@@ -169,3 +169,6 @@ export const DEFAULT_TOP_LEVEL_DOMAINS = [
   'xyz', 'yachts', 'yahoo', 'yamaxun', 'yandex', 'ye', 'yodobashi', 'yoga', 'yokohama', 'you', 'youtube', 'yt',
   'yun', 'za', 'zappos', 'zara', 'zero', 'zip', 'zippo', 'zm', 'zone', 'zuerich', 'zw',
 ];
+
+export const COUNTRY_CODE_KEY = 'code';
+export const COUNTRY_DISPLAY_KEY = 'name';
