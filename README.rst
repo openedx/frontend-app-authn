@@ -11,7 +11,7 @@ Development
 Start Devstack
 ^^^^^^^^^^^^^^
 
-To use this application `devstack <https://github.com/edx/devstack>`__ must be running.
+To use this application `devstack <https://github.com/openedx/devstack>`__ must be running.
 
 -  Start devstack
 
@@ -38,7 +38,7 @@ This MFE is configured via node environment variables supplied at build time. Se
 
 
 For more information see the document: `Micro-frontend applications in Open
-edX <https://github.com/edx/edx-developer-docs/blob/5191e800bf16cf42f25c58c58f983bdaf7f9305d/docs/micro-frontends-in-open-edx.rst>`__.
+edX <https://github.com/openedx/edx-developer-docs/blob/5191e800bf16cf42f25c58c58f983bdaf7f9305d/docs/micro-frontends-in-open-edx.rst>`__.
 
 .. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-authn.svg?branch=master
    :target: https://travis-ci.com/edx/frontend-app-authn
