@@ -42,7 +42,8 @@ import {
   setRegistrationFormData,
 } from './data/actions';
 import {
-  COMMON_EMAIL_PROVIDERS, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS, FIELDS, FORM_SUBMISSION_ERROR,
+  COMMON_EMAIL_PROVIDERS, COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, DEFAULT_SERVICE_PROVIDER_DOMAINS,
+  DEFAULT_TOP_LEVEL_DOMAINS, FIELDS, FORM_SUBMISSION_ERROR,
 } from './data/constants';
 import {
   registrationErrorSelector,
@@ -63,7 +64,7 @@ class RegistrationPage extends React.Component {
     super(props, context);
     sendPageEvent('login_and_registration', 'register');
     this.handleOnClose = this.handleOnClose.bind(this);
-
+    this.countryList = getCountryList(getLocale());
     this.queryParams = getAllPossibleQueryParam();
     // TODO: Once we have tested it and ready for openedX we can remove this flag and make the code
     // permanent part of Authn and remove extra code
@@ -91,7 +92,6 @@ class RegistrationPage extends React.Component {
       failureCount: 0,
       startTime: Date.now(),
       totalRegistrationTime: 0,
-      readOnly: true,
       validatePassword: false,
       values: {},
       focusedField: '',
@@ -126,9 +126,11 @@ class RegistrationPage extends React.Component {
         username: nextProps.registrationFormData.username || this.state.username,
         password: nextProps.registrationFormData.password || this.state.password,
       };
+      // Do not set focused field's value from redux store to retain entered data in focused field.
+      let { focusedField } = this.state;
 
-      // do not set focused field's value from redux store to retain entered data in focused field\
-      const { focusedField } = this.state;
+      // Exemption for country field's value as we need to set updated value from the store.
+      if (focusedField === 'country') { focusedField = ''; }
       const { [focusedField]: _, ...registrationData } = { ...nextProps.registrationFormData, ...nextState };
       this.setState({
         ...registrationData,
@@ -322,24 +324,6 @@ class RegistrationPage extends React.Component {
     }
   }
 
-  handleCountryChange = (value) => {
-    // TODO: Remove this function once error message is passed as props from
-    // RegistrationPage to CountryDropdown component.
-    if (this.props.registrationFormData.errors.country) {
-      this.props.setRegistrationFormData({
-        country: value,
-        errors: {
-          ...this.props.registrationFormData.errors,
-          country: '',
-        },
-      });
-    } else {
-      this.props.setRegistrationFormData({
-        country: value,
-      });
-    }
-  }
-
   handleOnFocus = (e) => {
     const fieldName = e.target.name;
     this.setState({
@@ -350,8 +334,8 @@ class RegistrationPage extends React.Component {
     if (fieldName === 'username') {
       this.props.clearUsernameSuggestions();
     }
-    if (fieldName === 'country') {
-      this.setState({ readOnly: false });
+    if (fieldName === 'countryExpand') {
+      errors.country = '';
     }
     if (fieldName === 'passwordValidation') {
       errors.password = '';
@@ -530,23 +514,35 @@ class RegistrationPage extends React.Component {
         }
         break;
       case 'country':
-        if (!value.trim()) {
-          errors.country = intl.formatMessage(messages['empty.country.field.error']);
-        } else {
-          errors.country = '';
+        value = value.trim(); // eslint-disable-line no-param-reassign
+        if (value) {
+          const normalizedValue = value.toLowerCase();
+          let selectedCountry = this.countryList.find((o) => o[COUNTRY_DISPLAY_KEY].toLowerCase() === normalizedValue);
+          if (selectedCountry) {
+            value = selectedCountry[COUNTRY_CODE_KEY]; // eslint-disable-line no-param-reassign
+            errors.country = '';
+            break;
+          } else {
+            // Handling a case here where user enters a valid country code that needs to be
+            // evaluated and set its value as a valid value.
+            selectedCountry = this.countryList.find((o) => o[COUNTRY_CODE_KEY].toLowerCase() === normalizedValue);
+            if (selectedCountry) {
+              value = selectedCountry[COUNTRY_CODE_KEY]; // eslint-disable-line no-param-reassign
+              errors.country = '';
+              break;
+            }
+          }
         }
+        errors.country = intl.formatMessage(messages['empty.country.field.error']);
         break;
       default:
         break;
     }
 
-    if (fieldName !== 'country') {
-      state = {
-        ...state,
-        [fieldName]: value,
-      };
-    }
-
+    state = {
+      ...state,
+      [fieldName]: value,
+    };
     this.props.setRegistrationFormData({
       ...state,
       errors,
@@ -674,9 +670,7 @@ class RegistrationPage extends React.Component {
                 <CountryDropdown
                   name="country"
                   floatingLabel={intl.formatMessage(messages['registration.country.label'])}
-                  options={getCountryList(getLocale())}
-                  valueKey="code"
-                  displayValueKey="name"
+                  options={this.countryList}
                   value={this.state.values[fieldData.name]}
                   handleBlur={this.handleOnBlur}
                   handleFocus={this.handleOnFocus}
@@ -685,7 +679,6 @@ class RegistrationPage extends React.Component {
                     (value) => this.setState(prevState => ({ values: { ...prevState.values, country: value } }))
                   }
                   errorCode={this.state.errorCode}
-                  readOnly={this.state.readOnly}
                 />
               </span>
             );
@@ -824,16 +817,12 @@ class RegistrationPage extends React.Component {
               <CountryDropdown
                 name="country"
                 floatingLabel={intl.formatMessage(messages['registration.country.label'])}
-                options={getCountryList(getLocale())}
-                valueKey="code"
-                displayValueKey="name"
+                options={this.countryList}
                 value={this.state.country}
                 handleBlur={this.handleOnBlur}
                 handleFocus={this.handleOnFocus}
-                errorMessage={intl.formatMessage(messages['empty.country.field.error'])}
-                handleChange={(value) => this.handleCountryChange(value)}
+                errorMessage={this.state.errors.country}
                 errorCode={this.state.errorCode}
-                readOnly={this.state.readOnly}
               />
             )}
             {formFields}

@@ -6,31 +6,51 @@ import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
 
 import { FormGroup } from '../common-components';
-import { FORM_SUBMISSION_ERROR } from './data/constants';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR } from './data/constants';
 
 class CountryDropdown extends React.Component {
   constructor(props) {
     super(props);
+    this.handleFocus = this.handleFocus.bind(this);
+    this.handleOnBlur = this.handleOnBlur.bind(this);
+
     this.state = {
       displayValue: '',
       icon: this.expandMoreButton(),
       errorMessage: '',
       showFieldError: true,
     };
-
-    this.handleFocus = this.handleFocus.bind(this);
-    this.handleOnBlur = this.handleOnBlur.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
-    if (this.props.value !== nextProps.value && nextProps.value !== null) {
-      const opt = this.props.options.find((o) => o[this.props.valueKey] === nextProps.value);
-      if (opt && opt[this.props.displayValueKey] !== this.state.displayValue) {
-        this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
+    const selectedCountry = this.props.options.find((o) => o[COUNTRY_CODE_KEY] === nextProps.value);
+    if (this.props.value !== nextProps.value) {
+      if (selectedCountry) {
+        this.setState({
+          displayValue: selectedCountry[COUNTRY_DISPLAY_KEY],
+          showFieldError: false,
+          errorMessage: nextProps.errorMessage,
+        });
+        return false;
       }
+      // Set persisted country value as display value.
+      this.setState({ displayValue: nextProps.value, showFieldError: true, errorMessage: nextProps.errorMessage });
+      return false;
+      // eslint-disable-next-line no-else-return
+    } else if (nextProps.value && selectedCountry && this.state.displayValue === nextProps.value) {
+      // Handling a case here where user enters a valid country code that needs to be
+      // evaluated and set its display value.
+      this.setState({ displayValue: selectedCountry[COUNTRY_DISPLAY_KEY] });
       return false;
     }
-
+    if (this.props.errorCode !== nextProps.errorCode && nextProps.errorCode === 'invalid-country') {
+      this.setState({ showFieldError: true, errorMessage: nextProps.errorMessage });
+      return false;
+    }
+    if (this.state.errorMessage !== nextProps.errorMessage) {
+      this.setState({ showFieldError: true, errorMessage: nextProps.errorMessage });
+      return false;
+    }
     return true;
   }
 
@@ -48,72 +68,30 @@ class CountryDropdown extends React.Component {
     }
 
     return options.map((opt) => {
-      const value = opt[this.props.valueKey];
-      let displayValue = opt[this.props.displayValueKey];
-      if (displayValue.length > 30) {
-        displayValue = displayValue.substring(0, 30).concat('...');
-      }
+      const value = opt[COUNTRY_CODE_KEY];
+      const displayValue = opt[COUNTRY_DISPLAY_KEY];
 
       return (
-        <button type="button" className="dropdown-item data-hj-suppress" value={value} key={value} onClick={(e) => { this.handleItemClick(e); }}>
-          {displayValue}
+        <button type="button" name="countryItem" className="dropdown-item data-hj-suppress" value={displayValue} key={value} onClick={(e) => { this.handleItemClick(e); }}>
+          {displayValue.length > 30 ? displayValue.substring(0, 30).concat('...') : displayValue}
         </button>
       );
     });
   }
 
-  setValue(value) {
-    if (this.props.value === value) {
-      return;
-    }
-
-    if (this.props.handleChange) {
-      this.props.handleChange(value);
-    }
-
-    const opt = this.props.options.find((o) => o[this.props.valueKey] === value);
-    if (opt && opt[this.props.displayValueKey] !== this.state.displayValue) {
-      this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
-    }
-  }
-
-  setDisplayValue(value) {
-    const normalized = value.toLowerCase();
-    const opt = this.props.options.find((o) => o[this.props.displayValueKey].toLowerCase() === normalized);
-    if (opt) {
-      this.setValue(opt[this.props.valueKey]);
-      this.setState({ displayValue: opt[this.props.displayValueKey], showFieldError: false });
-    } else {
-      this.setValue(null);
-      this.setState({ displayValue: value, showFieldError: true });
-    }
-  }
-
-  handleClick = (e) => {
-    const dropDownItems = this.getItems(e.target.value);
-    if (dropDownItems?.length > 1) {
-      this.setState({ dropDownItems, icon: this.expandLessButton(), errorMessage: '' });
-    }
-
-    if (this.state.dropDownItems?.length > 0) {
-      this.setState({ dropDownItems: '', icon: this.expandMoreButton(), errorMessage: '' });
-    }
-  }
-
   handleOnChange = (e) => {
     const filteredItems = this.getItems(e.target.value);
-
-    this.setState({ dropDownItems: filteredItems, icon: this.expandLessButton(), errorMessage: '' });
-    this.setDisplayValue(e.target.value);
+    this.setState({
+      dropDownItems: filteredItems,
+      displayValue: e.target.value,
+    });
   }
 
   handleClickOutside = () => {
     if (this.state.dropDownItems?.length > 0) {
-      const msg = this.state.displayValue === '' ? this.props.errorMessage : '';
       this.setState(() => ({
         icon: this.expandMoreButton(),
         dropDownItems: '',
-        errorMessage: msg,
       }));
     }
   }
@@ -122,32 +100,51 @@ class CountryDropdown extends React.Component {
     this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
   }
 
-  handleExpandMore(e) {
-    const dropDownItems = this.getItems(e.target.value);
-    this.setState({
-      dropDownItems, icon: this.expandLessButton(), errorMessage: '', showFieldError: false,
-    });
+  handleExpandMore() {
+    this.setState(prevState => ({
+      dropDownItems: this.getItems(prevState.displayValue), icon: this.expandLessButton(), errorMessage: '', showFieldError: false,
+    }));
   }
 
   handleFocus(e) {
-    this.setState({ showFieldError: false });
+    const { name, value } = e.target;
+    this.setState(prevState => ({
+      dropDownItems: this.getItems(name === 'country' ? value : prevState.displayValue),
+      icon: this.expandLessButton(),
+      errorMessage: '',
+      showFieldError: false,
+    }));
     if (this.props.handleFocus) { this.props.handleFocus(e); }
   }
 
-  handleOnBlur(e) {
-    if (this.props.handleBlur) { this.props.handleBlur(e); }
+  handleOnBlur(e, itemClicked = false) {
+    const { name } = e.target;
+    const countryValue = itemClicked ? e.target.value : this.state.displayValue;
+    // For a better user experience, do not validate when focus out from 'country' field
+    // and focus on 'countryItem' or 'countryExpand' button.
+    if (e.relatedTarget && e.relatedTarget.name === 'countryItem' && (name === 'country' || name === 'countryExpand')) {
+      return;
+    }
+    const normalized = countryValue.toLowerCase();
+    const selectedCountry = this.props.options.find((o) => o[COUNTRY_DISPLAY_KEY].toLowerCase() === normalized);
+    if (!selectedCountry) {
+      this.setState({ errorMessage: this.props.errorMessage, showFieldError: true });
+    }
+    if (this.props.handleBlur) { this.props.handleBlur({ target: { name: 'country', value: countryValue } }); }
   }
 
   handleItemClick(e) {
-    this.setValue(e.target.value);
     this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
-    this.handleOnBlur(e);
+    this.handleOnBlur(e, true);
   }
 
   expandMoreButton() {
     return (
       <IconButton
         className="expand-more"
+        onFocus={this.handleFocus}
+        onBlur={this.handleOnBlur}
+        name="countryExpand"
         src={ExpandMore}
         iconAs={Icon}
         size="sm"
@@ -162,6 +159,9 @@ class CountryDropdown extends React.Component {
     return (
       <IconButton
         className="expand-less"
+        onFocus={this.handleFocus}
+        onBlur={this.handleOnBlur}
+        name="countryExpand"
         src={ExpandLess}
         iconAs={Icon}
         size="sm"
@@ -178,13 +178,11 @@ class CountryDropdown extends React.Component {
         <FormGroup
           as="input"
           name={this.props.name}
-          readOnly={this.props.readOnly}
           autoComplete="chrome-off"
           className="mb-0"
           floatingLabel={this.props.floatingLabel}
           trailingElement={this.state.icon}
           handleChange={this.handleOnChange}
-          handleClick={this.handleClick}
           handleBlur={this.handleOnBlur}
           handleFocus={this.handleFocus}
           value={this.state.displayValue}
@@ -202,27 +200,21 @@ CountryDropdown.defaultProps = {
   options: null,
   floatingLabel: null,
   handleFocus: null,
-  handleChange: null,
   handleBlur: null,
   value: null,
   errorMessage: null,
   errorCode: null,
-  readOnly: false,
 };
 
 CountryDropdown.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   floatingLabel: PropTypes.string,
-  valueKey: PropTypes.string.isRequired,
-  displayValueKey: PropTypes.string.isRequired,
   handleFocus: PropTypes.func,
-  handleChange: PropTypes.func,
   handleBlur: PropTypes.func,
   value: PropTypes.string,
   errorMessage: PropTypes.string,
   errorCode: PropTypes.string,
   name: PropTypes.string.isRequired,
-  readOnly: PropTypes.bool,
 };
 
 export default onClickOutside(CountryDropdown);

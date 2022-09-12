@@ -350,7 +350,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
       registrationPage.find('input#password').simulate('focus');
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
-      registrationPage.find('input#country').simulate('blur', { target: { value: 'US', name: 'country' } });
+      registrationPage.find('input#country').simulate('focus');
       expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
     });
 
@@ -361,12 +361,6 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#username').simulate('focus');
 
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
-    });
-
-    it('should set readOnly state false if focus on country field', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#country').simulate('focus');
-      expect(registrationPage.find('RegistrationPage').state('readOnly')).toEqual(false);
     });
 
     // ******** test alert messages ********
@@ -958,11 +952,40 @@ describe('RegistrationPage', () => {
       expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
     });
 
-    it('should set country in redux store on country change', () => {
+    it('should set country code in redux store on country field blur', () => {
+      const formData = {
+        country: 'PK',
+        errors: {
+          country: '',
+          email: '',
+          name: '',
+          password: '',
+          username: '',
+        },
+      };
       store.dispatch = jest.fn(store.dispatch);
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#country').simulate('change', { target: { value: 'Pakistan', name: 'country' } });
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData({ country: 'PK' }));
+      registerPage.find('RegistrationPage').setState({ country: 'PK' });
+      registerPage.find('input#country').simulate('blur');
+      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
+    });
+
+    it('should set country value with field error in redux store on country field blur', () => {
+      const formData = {
+        country: 'test',
+        errors: {
+          country: 'Select your country or region of residence',
+          email: '',
+          name: '',
+          password: '',
+          username: '',
+        },
+      };
+      store.dispatch = jest.fn(store.dispatch);
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('RegistrationPage').setState({ country: 'test' });
+      registerPage.find('input#country').simulate('blur');
+      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
     });
 
     it('should set country in component state on country change', () => {
@@ -1042,6 +1065,7 @@ describe('RegistrationPage', () => {
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       populateRequiredFields(registerPage, payload);
+      registerPage.find('RegistrationPage').setState({ values: { country: 'PK' } });
       registerPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
       registerPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
