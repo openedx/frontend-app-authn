@@ -328,6 +328,13 @@ describe('RegistrationPage', () => {
       expect(registrationPage.state('errorCode')).toEqual('duplicate-username');
     });
 
+    it('should remove space from the start of username', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#username').simulate('change', { target: { value: ' edX', name: 'username' } });
+
+      expect(registrationPage.find('input#username').prop('value')).toEqual('edX');
+    });
+
     // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {

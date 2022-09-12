@@ -317,11 +317,19 @@ class RegistrationPage extends React.Component {
   }
 
   handleOnChange = (e) => {
-    if (!(e.target.name === 'username' && e.target.value.length > 30)) {
-      this.setState({
-        [e.target.name]: e.target.value,
-      });
+    let { value } = e.target;
+    if (e.target.name === 'username') {
+      if (value.length > 30) {
+        return;
+      }
+      if (value.startsWith(' ')) {
+        value = value.substring(1);
+      }
     }
+
+    this.setState({
+      [e.target.name]: value,
+    });
   }
 
   handleOnFocus = (e) => {
