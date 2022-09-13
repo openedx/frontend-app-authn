@@ -743,13 +743,8 @@ class RegistrationPage extends React.Component {
           redirectUrl={this.props.registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
           optionalFields={this.props.optionalFields}
-          redirectToWelcomePage={
-            // eslint-disable-next-line no-nested-ternary
-            getConfig().ENABLE_PROGRESSIVE_PROFILING
-              ? (getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS
-                ? Object.keys(this.props.optionalFields).length !== 0 : true
-              ) : false
-          }
+          redirectToWelcomePage={getConfig().ENABLE_PROGRESSIVE_PROFILING
+                 && Object.keys(this.props.optionalFields).length !== 0}
         />
         <div className="mw-xs mt-3">
           {this.state.errorCode ? (
