@@ -111,6 +111,7 @@ const reducer = (state = defaultState, action) => {
           registrationFormData: {
             ...state.registrationFormData,
             country: countryCode,
+            errors: { ...state.registrationFormData.errors, country: '' },
           },
         };
       }
