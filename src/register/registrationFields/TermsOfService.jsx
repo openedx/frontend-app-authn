@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/
 import { Form, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import messages from './messages';
+import messages from '../messages';
 
 const TermsOfService = (props) => {
   const {
