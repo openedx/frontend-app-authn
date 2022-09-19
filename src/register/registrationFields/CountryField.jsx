@@ -5,10 +5,10 @@ import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import onClickOutside from 'react-onclickoutside';
 
-import { FormGroup } from '../common-components';
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR } from './data/constants';
+import { FormGroup } from '../../common-components';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR } from '../data/constants';
 
-class CountryDropdown extends React.Component {
+class CountryField extends React.Component {
   constructor(props) {
     super(props);
     this.handleFocus = this.handleFocus.bind(this);
@@ -196,7 +196,7 @@ class CountryDropdown extends React.Component {
   }
 }
 
-CountryDropdown.defaultProps = {
+CountryField.defaultProps = {
   options: null,
   floatingLabel: null,
   handleFocus: null,
@@ -206,7 +206,7 @@ CountryDropdown.defaultProps = {
   errorCode: null,
 };
 
-CountryDropdown.propTypes = {
+CountryField.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
   floatingLabel: PropTypes.string,
   handleFocus: PropTypes.func,
@@ -217,4 +217,4 @@ CountryDropdown.propTypes = {
   name: PropTypes.string.isRequired,
 };
 
-export default onClickOutside(CountryDropdown);
+export default onClickOutside(CountryField);

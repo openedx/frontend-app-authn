@@ -15,14 +15,15 @@ describe('register reducer', () => {
         registrationError: {},
         registrationResult: {},
         registrationFormData: {
+          configurableFormFields: {},
           formFields: {
             name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
           },
-          errors: {
-            name: '', email: '', username: '', password: '',
-          },
           emailSuggestion: {
             suggestion: '', type: '',
+          },
+          errors: {
+            name: '', email: '', username: '', password: '',
           },
         },
         validations: null,
@@ -98,14 +99,15 @@ describe('register reducer', () => {
       registrationError: {},
       registrationResult: {},
       registrationFormData: {
+        configurableFormFields: {},
         formFields: {
           name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
         },
-        errors: {
-          name: '', email: '', username: '', password: '',
-        },
         emailSuggestion: {
           suggestion: '', type: '',
+        },
+        errors: {
+          name: '', email: '', username: '', password: '',
         },
       },
       validations: null,
@@ -129,14 +131,15 @@ describe('register reducer', () => {
   it('should set country code from context', () => {
     const state = {
       registrationFormData: {
+        configurableFormFields: {},
         formFields: {
           name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
         },
-        errors: {
-          name: '', email: '', username: '', password: '',
-        },
         emailSuggestion: {
           suggestion: '', type: '',
+        },
+        errors: {
+          name: '', email: '', username: '', password: '',
         },
       },
     };
