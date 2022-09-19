@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
@@ -14,7 +13,7 @@ import {
 import { updatePathWithQueryParams } from './data/utils';
 import ForgotPasswordPage from './forgot-password';
 import ResetPasswordPage from './reset-password';
-import WelcomePage, { ProgressiveProfiling } from './welcome';
+import { ProgressiveProfiling } from './welcome';
 import './index.scss';
 
 registerIcons();
@@ -29,11 +28,7 @@ const MainApp = () => (
       <UnAuthOnlyRoute exact path={REGISTER_PAGE} component={Logistration} />
       <UnAuthOnlyRoute exact path={RESET_PAGE} component={ForgotPasswordPage} />
       <Route exact path={PASSWORD_RESET_CONFIRM} component={ResetPasswordPage} />
-      <Route
-        exact
-        path={WELCOME_PAGE}
-        component={(getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS) ? ProgressiveProfiling : WelcomePage}
-      />
+      <Route exact path={WELCOME_PAGE} component={ProgressiveProfiling} />
       <Route path={PAGE_NOT_FOUND} component={NotFoundPage} />
       <Route path="*">
         <Redirect to={PAGE_NOT_FOUND} />
