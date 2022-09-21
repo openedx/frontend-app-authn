@@ -25,7 +25,7 @@ import {
 } from '../data/constants';
 import {
   getActivationStatus,
-  getAllPossibleQueryParam,
+  getAllPossibleQueryParams,
   getTpaHint,
   getTpaProvider,
   setSurveyCookie,
@@ -55,7 +55,7 @@ class LoginPage extends React.Component {
       },
       isSubmitted: false,
     };
-    this.queryParams = getAllPossibleQueryParam();
+    this.queryParams = getAllPossibleQueryParams();
     this.tpaHint = getTpaHint();
   }
 

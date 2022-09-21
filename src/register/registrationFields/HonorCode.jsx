@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -11,6 +11,12 @@ const HonorCode = (props) => {
   const {
     intl, errorMessage, onChangeHandler, fieldType, value,
   } = props;
+
+  useEffect(() => {
+    if (fieldType === 'tos_and_honor_code' && !value) {
+      onChangeHandler({ target: { name: 'honor_code', value: true } });
+    }
+  }, [fieldType, onChangeHandler, value]);
 
   if (fieldType === 'tos_and_honor_code') {
     return (
