@@ -6,6 +6,7 @@ import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 
 import {
+  ALLOWED_DOMAIN_LOGIN_ERROR,
   FAILED_LOGIN_ATTEMPT,
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
@@ -260,5 +261,31 @@ describe('LoginFailureMessage', () => {
       'Our system detected that your password is vulnerable. '
                + 'Change your password so that your account stays secure.',
     );
+  });
+
+  it('should show message if staff user try to login through password', () => {
+    props = {
+      loginError: {
+        email: 'text@example.com',
+        errorCode: ALLOWED_DOMAIN_LOGIN_ERROR,
+        context: {
+          allowedDomain: 'edx.org',
+          provider: 'Google',
+          tpaHint: 'google-auth2',
+        },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+
+    const errorMessage = "We couldn't sign you in.As edx.org user, You must login with your edx.org Google account.";
+    const url = 'http://localhost:18000/dashboard/?tpa_hint=google-auth2';
+
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(errorMessage);
+    expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual(url);
   });
 });

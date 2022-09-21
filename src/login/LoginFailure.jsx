@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
 import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Alert, Hyperlink } from '@edx/paragon';
@@ -9,6 +10,7 @@ import PropTypes from 'prop-types';
 import ChangePasswordPrompt from './ChangePasswordPrompt';
 import {
   ACCOUNT_LOCKED_OUT,
+  ALLOWED_DOMAIN_LOGIN_ERROR,
   FAILED_LOGIN_ATTEMPT,
   FORBIDDEN_REQUEST,
   INACTIVE_USER,
@@ -63,6 +65,25 @@ const LoginFailureMessage = (props) => {
               email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
               supportLink,
             }}
+          />
+        </p>
+      );
+      break;
+    }
+    case ALLOWED_DOMAIN_LOGIN_ERROR: {
+      const url = `${getConfig().LMS_BASE_URL}/dashboard/?tpa_hint=${context.tpaHint}`;
+      const tpaLink = (
+        <a href={url}>
+          {intl.formatMessage(messages['tpa.account.link'], { provider: context.provider })}
+        </a>
+      );
+      errorList = (
+        <p>
+          <FormattedMessage
+            id="allowed.domain.login.error"
+            description="Display this error message when staff user try to login through password"
+            defaultMessage="As {allowedDomain} user, You must login with your {allowedDomain} {tpaLink}."
+            values={{ allowedDomain: context.allowedDomain, tpaLink }}
           />
         </p>
       );
