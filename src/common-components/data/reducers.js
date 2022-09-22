@@ -6,6 +6,14 @@ export const defaultState = {
   fieldDescriptions: {},
   optionalFields: {},
   thirdPartyAuthApiStatus: null,
+  thirdPartyAuthContext: {
+    currentProvider: null,
+    finishAuthUrl: null,
+    countryCode: null,
+    providers: [],
+    secondaryProviders: [],
+    pipelineUserDetails: null,
+  },
 };
 
 const reducer = (state = defaultState, action) => {

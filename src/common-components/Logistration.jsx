@@ -16,15 +16,21 @@ import { Redirect } from 'react-router-dom';
 
 import BaseComponent from '../base-component';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { getTpaHint, updatePathWithQueryParams } from '../data/utils';
+import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import {
+  tpaProvidersSelector,
+} from './data/selectors';
 import messages from './messages';
 
 const Logistration = (props) => {
-  const { intl, selectedPage } = props;
-  const tpa = getTpaHint();
+  const { intl, selectedPage, tpaProviders } = props;
+  const tpaHint = getTpaHint();
+  const {
+    providers, secondaryProviders,
+  } = tpaProviders;
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
 
@@ -65,6 +71,11 @@ const Logistration = (props) => {
     </div>
   );
 
+  const isValidTpaHint = () => {
+    const { provider } = getTpaProvider(tpaHint, providers, secondaryProviders);
+    return !!provider;
+  };
+
   return (
     <BaseComponent>
       <div>
@@ -74,16 +85,14 @@ const Logistration = (props) => {
               <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
             </Tabs>
           )
-          : (
+          : (!isValidTpaHint() && (
             <>
-              {!tpa && (
-                <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                  <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                  <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                </Tabs>
-              )}
+              <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+              </Tabs>
             </>
-          )}
+          ))}
         { key && (
           <Redirect to={updatePathWithQueryParams(key)} />
         )}
@@ -101,14 +110,29 @@ Logistration.propTypes = {
   intl: intlShape.isRequired,
   selectedPage: PropTypes.string,
   backupRegistrationForm: PropTypes.func.isRequired,
+  tpaProviders: PropTypes.shape({
+    providers: PropTypes.array,
+    secondaryProviders: PropTypes.array,
+  }),
+};
+
+Logistration.defaultProps = {
+  tpaProviders: {
+    providers: [],
+    secondaryProviders: [],
+  },
 };
 
 Logistration.defaultProps = {
   selectedPage: REGISTER_PAGE,
 };
 
+const mapStateToProps = state => ({
+  tpaProviders: tpaProvidersSelector(state),
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   {
     backupRegistrationForm,
   },

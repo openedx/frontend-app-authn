@@ -12,6 +12,9 @@ import PropTypes from 'prop-types';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
 
+/**
+ * This component renders the Single sign-on (SSO) button only for the tpa provider passed
+ * */
 const EnterpriseSSO = (props) => {
   const { intl } = props;
   const tpaProvider = props.provider;

@@ -239,13 +239,10 @@ class LoginPage extends React.Component {
           finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
         />
         <div className="mw-xs mt-3">
-          {thirdPartyAuthContext.currentProvider
-          && (
-            <ThirdPartyAuthAlert
-              currentProvider={thirdPartyAuthContext.currentProvider}
-              platformName={thirdPartyAuthContext.platformName}
-            />
-          )}
+          <ThirdPartyAuthAlert
+            currentProvider={thirdPartyAuthContext.currentProvider}
+            platformName={thirdPartyAuthContext.platformName}
+          />
           {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? windowScrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}

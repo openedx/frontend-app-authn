@@ -123,6 +123,11 @@ const messages = defineMessages({
     description: 'Message that appears on register page if user has successfully authenticated with TPA '
                   + 'but no associated platform account exists',
   },
+  'registration.using.tpa.form.heading': {
+    id: 'registration.using.tpa.form.heading',
+    defaultMessage: 'Finish creating your account',
+    description: 'Heading that appears above form when user is trying to create account using social auth',
+  },
 });
 
 export default messages;
