@@ -170,6 +170,11 @@ const messages = defineMessages({
     defaultMessage: 'contact support',
     description: 'Link text used in account activation error message to go to learner help center',
   },
+  'tpa.account.link': {
+    id: 'tpa.account.link',
+    defaultMessage: '{provider} account',
+    description: 'Link text error message used to go to SSO when staff user try to login through password.',
+  },
   // Email Confirmation Strings
   'account.confirmation.success.message.title': {
     id: 'account.confirmation.success.message.title',
