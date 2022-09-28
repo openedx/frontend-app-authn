@@ -1,220 +1,194 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
+import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Icon, IconButton } from '@edx/paragon';
 import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
-import onClickOutside from 'react-onclickoutside';
 
 import { FormGroup } from '../../common-components';
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR } from '../data/constants';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from '../data/constants';
+import messages from '../messages';
 
-class CountryField extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleFocus = this.handleFocus.bind(this);
-    this.handleOnBlur = this.handleOnBlur.bind(this);
+const CountryField = (props) => {
+  const {
+    intl, countryList, selectedCountry,
+  } = props;
 
-    this.state = {
-      displayValue: '',
-      icon: this.expandMoreButton(),
-      errorMessage: '',
-      showFieldError: true,
-    };
-  }
+  const dropdownRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState(props.errorMessage);
+  const [dropDownItems, setDropDownItems] = useState([]);
+  const [displayValue, setDisplayValue] = useState('');
+  const [trailingIcon, setTrailingIcon] = useState(null);
 
-  shouldComponentUpdate(nextProps) {
-    const selectedCountry = this.props.options.find((o) => o[COUNTRY_CODE_KEY] === nextProps.value);
-    if (this.props.value !== nextProps.value) {
-      if (selectedCountry) {
-        this.setState({
-          displayValue: selectedCountry[COUNTRY_DISPLAY_KEY],
-          showFieldError: false,
-          errorMessage: nextProps.errorMessage,
-        });
-        return false;
-      }
-      // Set persisted country value as display value.
-      this.setState({ displayValue: nextProps.value, showFieldError: true, errorMessage: nextProps.errorMessage });
-      return false;
-      // eslint-disable-next-line no-else-return
-    } else if (nextProps.value && selectedCountry && this.state.displayValue === nextProps.value) {
-      // Handling a case here where user enters a valid country code that needs to be
-      // evaluated and set its display value.
-      this.setState({ displayValue: selectedCountry[COUNTRY_DISPLAY_KEY] });
-      return false;
+  const onBlurHandler = (event, itemClicked = false) => {
+    const { name } = event.target;
+    const relatedName = event.relatedTarget ? event.relatedTarget.name : '';
+    // For a better user experience, do not validate when focus out from 'country' field
+    // and focus on 'countryItem' or 'countryExpand' button.
+    if ((relatedName === 'countryItem' || relatedName === 'countryExpand') && name === 'country') {
+      return;
     }
-    if (this.props.errorCode !== nextProps.errorCode && nextProps.errorCode === 'invalid-country') {
-      this.setState({ showFieldError: true, errorMessage: nextProps.errorMessage });
-      return false;
+    const countryValue = itemClicked ? event.target.value : displayValue;
+    if (props.onBlurHandler) {
+      props.onBlurHandler({ target: { name: 'country', value: countryValue } });
     }
-    if (this.state.errorMessage !== nextProps.errorMessage) {
-      this.setState({ showFieldError: true, errorMessage: nextProps.errorMessage });
-      return false;
-    }
-    return true;
-  }
+    setTrailingIcon(<ExpandMoreButton />);
+    setDropDownItems([]);
+  };
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.errorCode === FORM_SUBMISSION_ERROR && state.showFieldError) {
-      return { errorMessage: props.errorMessage };
-    }
-    return null;
-  }
-
-  getItems(strToFind = '') {
-    let { options } = this.props;
-    if (strToFind.length > 0) {
-      options = options.filter((option) => (option.name.toLowerCase().includes(strToFind.toLowerCase())));
+  const getDropdownItems = (countryToFind = null) => {
+    let updatedCountryList = countryList;
+    if (countryToFind) {
+      updatedCountryList = countryList.filter(
+        (option) => (option.name.toLowerCase().includes(countryToFind.toLowerCase())),
+      );
     }
 
-    return options.map((opt) => {
-      const value = opt[COUNTRY_CODE_KEY];
-      const displayValue = opt[COUNTRY_DISPLAY_KEY];
-
+    return updatedCountryList.map((country) => {
+      const countryName = country[COUNTRY_DISPLAY_KEY];
       return (
-        <button type="button" name="countryItem" className="dropdown-item data-hj-suppress" value={displayValue} key={value} onClick={(e) => { this.handleItemClick(e); }}>
-          {displayValue.length > 30 ? displayValue.substring(0, 30).concat('...') : displayValue}
+        <button
+          type="button"
+          name="countryItem"
+          className="dropdown-item data-hj-suppress"
+          value={countryName}
+          key={country[COUNTRY_CODE_KEY]}
+          onClick={(event) => onBlurHandler(event, true)}
+        >
+          {countryName.length > 30 ? countryName.substring(0, 30).concat('...') : countryName}
         </button>
       );
     });
-  }
+  };
 
-  handleOnChange = (e) => {
-    const filteredItems = this.getItems(e.target.value);
-    this.setState({
-      dropDownItems: filteredItems,
-      displayValue: e.target.value,
-    });
-  }
+  const onFocusHandler = (event) => {
+    const { name, value } = event.target;
+    setDropDownItems(getDropdownItems(name === 'country' ? value : displayValue));
+    setTrailingIcon(<ExpandLessButton />);
+    setErrorMessage('');
+    if (props.onFocusHandler) { props.onFocusHandler(event); }
+  };
 
-  handleClickOutside = () => {
-    if (this.state.dropDownItems?.length > 0) {
-      this.setState(() => ({
-        icon: this.expandMoreButton(),
-        dropDownItems: '',
-      }));
+  const onChangeHandler = (event) => {
+    const filteredItems = getDropdownItems(event.target.value);
+    setDropDownItems(filteredItems);
+    setDisplayValue(event.target.value);
+    if (props.onChangeHandler) { props.onChangeHandler(event, { countryCode: '', displayValue: event.target.value }); }
+  };
+
+  const handleOnClickOutside = () => {
+    setTrailingIcon(<ExpandMoreButton />);
+    setDropDownItems([]);
+  };
+
+  const handleExpandMore = () => {
+    setTrailingIcon(<ExpandLessButton />);
+    setDropDownItems(getDropdownItems());
+  };
+
+  const handleExpandLess = () => {
+    setTrailingIcon(<ExpandMoreButton />);
+    setDropDownItems([]);
+  };
+
+  const ExpandMoreButton = () => (
+    <IconButton
+      name="countryExpand"
+      size="sm"
+      variant="secondary"
+      alt="expand-more"
+      className="expand-more"
+      iconAs={Icon}
+      src={ExpandMore}
+      onBlur={() => {}}
+      onClick={handleExpandMore}
+      onFocus={() => {}}
+    />
+  );
+
+  const ExpandLessButton = () => (
+    <IconButton
+      name="countryExpand"
+      size="sm"
+      variant="secondary"
+      alt="expand-less"
+      className="expand-less"
+      iconAs={Icon}
+      src={ExpandLess}
+      onBlur={() => {}}
+      onClick={handleExpandLess}
+      onFocus={() => {}}
+    />
+  );
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        handleOnClickOutside();
+      }
+    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!trailingIcon) {
+      setTrailingIcon(<ExpandMoreButton />);
     }
-  }
+  }, [trailingIcon]);
 
-  handleExpandLess() {
-    this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
-  }
-
-  handleExpandMore() {
-    this.setState(prevState => ({
-      dropDownItems: this.getItems(prevState.displayValue), icon: this.expandLessButton(), errorMessage: '', showFieldError: false,
-    }));
-  }
-
-  handleFocus(e) {
-    const { name, value } = e.target;
-    this.setState(prevState => ({
-      dropDownItems: this.getItems(name === 'country' ? value : prevState.displayValue),
-      icon: this.expandLessButton(),
-      errorMessage: '',
-      showFieldError: false,
-    }));
-    if (this.props.handleFocus) { this.props.handleFocus(e); }
-  }
-
-  handleOnBlur(e, itemClicked = false) {
-    const { name } = e.target;
-    const countryValue = itemClicked ? e.target.value : this.state.displayValue;
-    // For a better user experience, do not validate when focus out from 'country' field
-    // and focus on 'countryItem' or 'countryExpand' button.
-    if (e.relatedTarget && e.relatedTarget.name === 'countryItem' && (name === 'country' || name === 'countryExpand')) {
-      return;
+  useEffect(() => {
+    if (selectedCountry.displayValue) {
+      setDisplayValue(selectedCountry.displayValue);
     }
-    const normalized = countryValue.toLowerCase();
-    const selectedCountry = this.props.options.find((o) => o[COUNTRY_DISPLAY_KEY].toLowerCase() === normalized);
-    if (!selectedCountry) {
-      this.setState({ errorMessage: this.props.errorMessage, showFieldError: true });
-    }
-    if (this.props.handleBlur) { this.props.handleBlur({ target: { name: 'country', value: countryValue } }); }
-  }
+  }, [selectedCountry]);
 
-  handleItemClick(e) {
-    this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
-    this.handleOnBlur(e, true);
-  }
+  useEffect(() => {
+    setErrorMessage(props.errorMessage);
+  }, [props.errorMessage]);
 
-  expandMoreButton() {
-    return (
-      <IconButton
-        className="expand-more"
-        onFocus={this.handleFocus}
-        onBlur={this.handleOnBlur}
-        name="countryExpand"
-        src={ExpandMore}
-        iconAs={Icon}
-        size="sm"
-        variant="secondary"
-        alt="expand-more"
-        onClick={(e) => { this.handleExpandMore(e); }}
+  return (
+    <div ref={dropdownRef} className="mb-4">
+      <FormGroup
+        as="input"
+        name="country"
+        autoComplete="chrome-off"
+        className="mb-0"
+        floatingLabel={intl.formatMessage(messages['registration.country.label'])}
+        trailingElement={trailingIcon}
+        value={displayValue}
+        errorMessage={errorMessage}
+        handleChange={onChangeHandler}
+        handleBlur={onBlurHandler}
+        handleFocus={onFocusHandler}
       />
-    );
-  }
-
-  expandLessButton() {
-    return (
-      <IconButton
-        className="expand-less"
-        onFocus={this.handleFocus}
-        onBlur={this.handleOnBlur}
-        name="countryExpand"
-        src={ExpandLess}
-        iconAs={Icon}
-        size="sm"
-        variant="secondary"
-        alt="expand-less"
-        onClick={(e) => { this.handleExpandLess(e); }}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <div className="mb-4">
-        <FormGroup
-          as="input"
-          name={this.props.name}
-          autoComplete="chrome-off"
-          className="mb-0"
-          floatingLabel={this.props.floatingLabel}
-          trailingElement={this.state.icon}
-          handleChange={this.handleOnChange}
-          handleBlur={this.handleOnBlur}
-          handleFocus={this.handleFocus}
-          value={this.state.displayValue}
-          errorMessage={this.state.errorMessage}
-        />
-        <div className="dropdown-container">
-          { this.state.dropDownItems?.length > 0 ? this.state.dropDownItems : null }
-        </div>
+      <div className="dropdown-container">
+        { dropDownItems?.length > 0 ? dropDownItems : null }
       </div>
-    );
-  }
-}
-
-CountryField.defaultProps = {
-  options: null,
-  floatingLabel: null,
-  handleFocus: null,
-  handleBlur: null,
-  value: null,
-  errorMessage: null,
-  errorCode: null,
+    </div>
+  );
 };
 
 CountryField.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.object),
-  floatingLabel: PropTypes.string,
-  handleFocus: PropTypes.func,
-  handleBlur: PropTypes.func,
-  value: PropTypes.string,
+  countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
-  errorCode: PropTypes.string,
-  name: PropTypes.string.isRequired,
+  intl: intlShape.isRequired,
+  onBlurHandler: PropTypes.func.isRequired,
+  onChangeHandler: PropTypes.func.isRequired,
+  onFocusHandler: PropTypes.func.isRequired,
+  selectedCountry: PropTypes.shape({
+    displayValue: PropTypes.string,
+    countryCode: PropTypes.string,
+  }),
 };
 
-export default onClickOutside(CountryField);
+CountryField.defaultProps = {
+  errorMessage: null,
+  selectedCountry: {
+    value: '',
+  },
+};
+
+export default injectIntl(CountryField);

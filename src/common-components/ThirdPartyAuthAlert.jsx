@@ -39,11 +39,12 @@ const ThirdPartyAuthAlert = (props) => {
 };
 
 ThirdPartyAuthAlert.defaultProps = {
+  currentProvider: '',
   referrer: LOGIN_PAGE,
 };
 
 ThirdPartyAuthAlert.propTypes = {
-  currentProvider: PropTypes.string.isRequired,
+  currentProvider: PropTypes.string,
   intl: intlShape.isRequired,
   referrer: PropTypes.string,
 };

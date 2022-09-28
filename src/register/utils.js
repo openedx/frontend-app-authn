@@ -1,7 +1,11 @@
 import { distance } from 'fastest-levenshtein';
 
 import {
-  COMMON_EMAIL_PROVIDERS, DEFAULT_SERVICE_PROVIDER_DOMAINS, DEFAULT_TOP_LEVEL_DOMAINS,
+  COMMON_EMAIL_PROVIDERS,
+  COUNTRY_CODE_KEY,
+  COUNTRY_DISPLAY_KEY,
+  DEFAULT_SERVICE_PROVIDER_DOMAINS,
+  DEFAULT_TOP_LEVEL_DOMAINS,
 } from './data/constants';
 
 function getLevenshteinSuggestion(word, knownWords, similarityThreshold = 4) {
@@ -80,4 +84,28 @@ export function validateEmailAddress(value, username, domainName) {
   }
 
   return validation;
+}
+
+export function validateCountryField(value, countryList, errorMessage) {
+  let countryCode = '';
+  let displayValue = value;
+  let error = errorMessage;
+
+  if (value) {
+    const normalizedValue = value.toLowerCase();
+    // Handling a case here where user enters a valid country code that needs to be
+    // evaluated and set its value as a valid value.
+    const selectedCountry = countryList.find(
+      (country) => (
+        country[COUNTRY_DISPLAY_KEY].toLowerCase() === normalizedValue
+        || country[COUNTRY_CODE_KEY].toLowerCase() === normalizedValue
+      ),
+    );
+    if (selectedCountry) {
+      countryCode = selectedCountry[COUNTRY_CODE_KEY];
+      displayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
+      error = '';
+    }
+  }
+  return { error, countryCode, displayValue };
 }

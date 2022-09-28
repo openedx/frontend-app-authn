@@ -11,6 +11,7 @@ import {
 } from './actions';
 
 export const defaultState = {
+  backendCountryCode: '',
   registrationError: {},
   registrationResult: {},
   registrationFormData: {
@@ -27,10 +28,10 @@ export const defaultState = {
   },
   validations: null,
   submitState: DEFAULT_STATE,
-  validationApiRateLimited: false,
-  usernameSuggestions: [],
-  shouldBackupState: false,
   userPipelineDataLoaded: false,
+  usernameSuggestions: [],
+  validationApiRateLimited: false,
+  shouldBackupState: false,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -90,14 +91,10 @@ const reducer = (state = defaultState, action) => {
       };
     case REGISTER_SET_COUNTRY_CODE: {
       const { countryCode } = action.payload;
-      if (state.registrationFormData.country === '') {
+      if (!state.registrationFormData.configurableFormFields.country) {
         return {
           ...state,
-          registrationFormData: {
-            ...state.registrationFormData,
-            country: countryCode,
-            errors: { ...state.registrationFormData.errors, country: '' },
-          },
+          backendCountryCode: countryCode,
         };
       }
       return state;
