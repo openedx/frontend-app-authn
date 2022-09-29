@@ -5,6 +5,7 @@ export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GE
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
+export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
 
 // Backup registration form
 export const backupRegistrationForm = () => ({
@@ -63,4 +64,9 @@ export const clearUsernameSuggestions = () => ({
 export const setCountryFromThirdPartyAuthContext = (countryCode) => ({
   type: REGISTER_SET_COUNTRY_CODE,
   payload: { countryCode },
+});
+
+export const setUserPipelineDataLoaded = (value) => ({
+  type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
+  payload: { value },
 });

@@ -1,4 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect, useMemo, useState,
+} from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
@@ -7,25 +9,36 @@ import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import Skeleton from 'react-loading-skeleton';
 
-import { FormGroup, PasswordField, RedirectLogistration } from '../common-components';
+import {
+  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+} from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
-  extendedProfileSelector, fieldDescriptionSelector, optionalFieldsSelector,
+  extendedProfileSelector, fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
 } from '../common-components/data/selectors';
+import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, VALID_EMAIL_REGEX,
+  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
-import { getAllPossibleQueryParams, setCookie, setSurveyCookie } from '../data/utils';
+import {
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
+} from '../data/utils';
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
 import {
-  backupRegistrationFormBegin, clearUsernameSuggestions, fetchRealtimeValidations, registerNewUser,
+  backupRegistrationFormBegin,
+  clearUsernameSuggestions,
+  fetchRealtimeValidations,
+  registerNewUser,
+  setUserPipelineDataLoaded,
 } from './data/actions';
 import { FORM_SUBMISSION_ERROR } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
+import ThirdPartyAuth from './ThirdPartyAuth';
 import { getSuggestionForInvalidEmail, validateEmailAddress } from './utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -36,23 +49,29 @@ const RegistrationPage = (props) => {
     backedUpFormData,
     backendValidations,
     fieldDescriptions,
+    handleInstitutionLogin,
     intl,
+    institutionLogin,
+    optionalFields,
     registrationErrorCode,
     registrationResult,
     shouldBackupState,
     submitState,
+    thirdPartyAuthApiStatus,
+    thirdPartyAuthContext,
     usernameSuggestions,
     validationApiRateLimited,
     // Actions
     backupFormState,
+    setUserPipelineDetailsLoaded,
     getRegistrationDataFromBackend,
+    userPipelineDataLoaded,
     validateFromBackend,
   } = props;
 
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const flags = useMemo(() => ({
-    showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
-  }), []);
+  const tpaHint = useMemo(() => getTpaHint(), []);
+  const flags = { showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS };
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
@@ -63,10 +82,32 @@ const RegistrationPage = (props) => {
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
 
+  const {
+    providers, currentProvider, secondaryProviders, finishAuthUrl,
+  } = thirdPartyAuthContext;
+  const platformName = getConfig().SITE_NAME;
+
+  /**
+   * Set the userPipelineDetails data in formFields for only first time
+   */
+  useEffect(() => {
+    if (!userPipelineDataLoaded) {
+      const { pipelineUserDetails } = thirdPartyAuthContext;
+      if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
+        setFormFields({ ...pipelineUserDetails });
+        setUserPipelineDetailsLoaded(true);
+      }
+    }
+  }, [thirdPartyAuthContext, userPipelineDataLoaded, setUserPipelineDetailsLoaded]);
+
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
-      getRegistrationDataFromBackend({ ...queryParams, is_register_page: true });
+      const payload = { ...queryParams, is_register_page: true };
+      if (tpaHint) {
+        payload.tpa_hint = tpaHint;
+      }
+      getRegistrationDataFromBackend(payload);
       setFormStartTime(Date.now());
     }
   }, [formStartTime, getRegistrationDataFromBackend, queryParams]);
@@ -300,6 +341,11 @@ const RegistrationPage = (props) => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
 
+    if (currentProvider) {
+      delete payload.password;
+      payload.social_auth_provider = currentProvider;
+    }
+
     const fieldError = focusedField ? (
       validateInput(
         focusedField,
@@ -332,73 +378,90 @@ const RegistrationPage = (props) => {
     props.registerNewUser(payload);
   };
 
-  return (
-    <>
-      <Helmet>
-        <title>{intl.formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
-      </Helmet>
-      <RedirectLogistration
-        success={registrationResult.success}
-        redirectUrl={registrationResult.redirectUrl}
-        finishAuthUrl="" // TODO: Add finish auth url during the TPA auth work
-        optionalFields={props.optionalFields}
-        redirectToWelcomePage={
-          getConfig().ENABLE_PROGRESSIVE_PROFILING && Object.keys(props.optionalFields).length !== 0
-        }
-      />
-      <div className="mw-xs mt-3">
-        <RegistrationFailure
-          errorCode={errorCode.type}
-          failureCount={errorCode.count}
+  const renderForm = () => {
+    if (institutionLogin) {
+      return (
+        <InstitutionLogistration
+          secondaryProviders={secondaryProviders}
+          headingTitle={intl.formatMessage(messages['register.institution.login.page.title'])}
         />
-        <Form id="registration-form" name="registration-form">
-          <FormGroup
-            name="name"
-            value={formFields.name}
-            handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
-            errorMessage={errors.name}
-            helpText={[intl.formatMessage(messages['help.text.name'])]}
-            floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
+      );
+    }
+    return (
+      <>
+        <Helmet>
+          <title>{intl.formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
+        </Helmet>
+        <RedirectLogistration
+          success={registrationResult.success}
+          redirectUrl={registrationResult.redirectUrl}
+          finishAuthUrl={finishAuthUrl}
+          optionalFields={optionalFields}
+          redirectToWelcomePage={
+            getConfig().ENABLE_PROGRESSIVE_PROFILING && Object.keys(optionalFields).length !== 0
+          }
+        />
+        <div className="mw-xs mt-3">
+          <RegistrationFailure
+            errorCode={errorCode.type}
+            failureCount={errorCode.count}
+            context={{ provider: currentProvider }}
           />
-          <EmailField
-            name="email"
-            value={formFields.email}
-            handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
-            handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
-            handleOnClose={handleEmailSuggestionClosed}
-            emailSuggestion={emailSuggestion}
-            errorMessage={errors.email}
-            helpText={[intl.formatMessage(messages['help.text.email'])]}
-            floatingLabel={intl.formatMessage(messages['registration.email.label'])}
+          <ThirdPartyAuthAlert
+            currentProvider={currentProvider}
+            platformName={platformName}
+            referrer={REGISTER_PAGE}
           />
-          <UsernameField
-            name="username"
-            spellCheck="false"
-            value={formFields.username}
-            handleBlur={handleOnBlur}
-            handleChange={handleOnChange}
-            handleFocus={handleOnFocus}
-            handleSuggestionClick={handleSuggestionClick}
-            handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-            usernameSuggestions={usernameSuggestions}
-            errorMessage={errors.username}
-            helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
-            floatingLabel={intl.formatMessage(messages['registration.username.label'])}
-          />
-          <PasswordField
-            name="password"
-            value={formFields.password}
-            handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
-            errorMessage={errors.password}
-            floatingLabel={intl.formatMessage(messages['registration.password.label'])}
-          />
-          {(getConfig().MARKETING_EMAILS_OPT_IN)
+          <Form id="registration-form" name="registration-form">
+            <FormGroup
+              name="name"
+              value={formFields.name}
+              handleChange={handleOnChange}
+              handleBlur={handleOnBlur}
+              handleFocus={handleOnFocus}
+              errorMessage={errors.name}
+              helpText={[intl.formatMessage(messages['help.text.name'])]}
+              floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
+            />
+            <EmailField
+              name="email"
+              value={formFields.email}
+              handleChange={handleOnChange}
+              handleBlur={handleOnBlur}
+              handleFocus={handleOnFocus}
+              handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
+              handleOnClose={handleEmailSuggestionClosed}
+              emailSuggestion={emailSuggestion}
+              errorMessage={errors.email}
+              helpText={[intl.formatMessage(messages['help.text.email'])]}
+              floatingLabel={intl.formatMessage(messages['registration.email.label'])}
+            />
+            <UsernameField
+              name="username"
+              spellCheck="false"
+              value={formFields.username}
+              handleBlur={handleOnBlur}
+              handleChange={handleOnChange}
+              handleFocus={handleOnFocus}
+              handleSuggestionClick={handleSuggestionClick}
+              handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
+              usernameSuggestions={usernameSuggestions}
+              errorMessage={errors.username}
+              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
+              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+            />
+            {!currentProvider && (
+              <PasswordField
+                name="password"
+                value={formFields.password}
+                handleChange={handleOnChange}
+                handleBlur={handleOnBlur}
+                handleFocus={handleOnFocus}
+                errorMessage={errors.password}
+                floatingLabel={intl.formatMessage(messages['registration.password.label'])}
+              />
+            )}
+            {(getConfig().MARKETING_EMAILS_OPT_IN)
           && (
             <Form.Checkbox
               name="marketingEmailsOptIn"
@@ -409,32 +472,55 @@ const RegistrationPage = (props) => {
               {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
             </Form.Checkbox>
           )}
-          <ConfigurableRegistrationForm
-            email={formFields.email}
-            fieldErrors={errors}
-            formFields={configurableFormFields}
-            setFieldErrors={setErrors}
-            setFormFields={setConfigurableFormFields}
-            setFocusedField={setFocusedField}
-            fieldDescriptions={fieldDescriptions}
-          />
-          <StatefulButton
-            id="register-user"
-            name="register-user"
-            type="submit"
-            variant="brand"
-            className="register-stateful-button-width mt-4 mb-4"
-            state={submitState}
-            labels={{
-              default: intl.formatMessage(messages['create.account.for.free.button']),
-              pending: '',
-            }}
-            onClick={handleSubmit}
-            onMouseDown={(e) => e.preventDefault()}
-          />
-        </Form>
-      </div>
-    </>
+            <ConfigurableRegistrationForm
+              email={formFields.email}
+              fieldErrors={errors}
+              formFields={configurableFormFields}
+              setFieldErrors={setErrors}
+              setFormFields={setConfigurableFormFields}
+              setFocusedField={setFocusedField}
+              fieldDescriptions={fieldDescriptions}
+            />
+            <StatefulButton
+              id="register-user"
+              name="register-user"
+              type="submit"
+              variant="brand"
+              className="register-stateful-button-width mt-4 mb-4"
+              state={submitState}
+              labels={{
+                default: intl.formatMessage(messages['create.account.for.free.button']),
+                pending: '',
+              }}
+              onClick={handleSubmit}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <ThirdPartyAuth
+              currentProvider={currentProvider}
+              providers={providers}
+              secondaryProviders={secondaryProviders}
+              handleInstitutionLogin={handleInstitutionLogin}
+              thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+            />
+          </Form>
+        </div>
+      </>
+    );
+  };
+
+  if (tpaHint) {
+    if (thirdPartyAuthApiStatus === PENDING_STATE) {
+      return <Skeleton height={36} />;
+    }
+    const { provider, skipHintedLogin } = getTpaProvider(tpaHint, providers, secondaryProviders);
+    if (skipHintedLogin) {
+      window.location.href = getConfig().LMS_BASE_URL + provider.registerUrl;
+      return null;
+    }
+    return provider ? <EnterpriseSSO provider={provider} intl={intl} /> : renderForm();
+  }
+  return (
+    renderForm()
   );
 };
 
@@ -449,7 +535,10 @@ const mapStateToProps = state => {
     registrationErrorCode: registrationErrorSelector(state),
     registrationResult: registerPageState.registrationResult,
     shouldBackupState: registerPageState.shouldBackupState,
+    userPipelineDataLoaded: registerPageState.userPipelineDataLoaded,
     submitState: registerPageState.submitState,
+    thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
+    thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
     validationApiRateLimited: registerPageState.validationApiRateLimited,
     usernameSuggestions: registerPageState.usernameSuggestions,
   };
@@ -470,6 +559,7 @@ RegistrationPage.propTypes = {
   }),
   extendedProfile: PropTypes.arrayOf(PropTypes.string),
   fieldDescriptions: PropTypes.shape({}),
+  institutionLogin: PropTypes.bool.isRequired,
   intl: intlShape.isRequired,
   optionalFields: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
@@ -479,13 +569,32 @@ RegistrationPage.propTypes = {
   }),
   shouldBackupState: PropTypes.bool,
   submitState: PropTypes.string,
-  validationApiRateLimited: PropTypes.bool,
+  thirdPartyAuthApiStatus: PropTypes.string,
+  thirdPartyAuthContext: PropTypes.shape({
+    currentProvider: PropTypes.string,
+    platformName: PropTypes.string,
+    providers: PropTypes.array,
+    secondaryProviders: PropTypes.array,
+    finishAuthUrl: PropTypes.string,
+    countryCode: PropTypes.string,
+    pipelineUserDetails: PropTypes.shape({
+      email: PropTypes.string,
+      name: PropTypes.string,
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      username: PropTypes.string,
+    }),
+  }),
   usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
+  userPipelineDataLoaded: PropTypes.bool,
+  validationApiRateLimited: PropTypes.bool,
   // Actions
   backupFormState: PropTypes.func.isRequired,
   getRegistrationDataFromBackend: PropTypes.func.isRequired,
+  handleInstitutionLogin: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func.isRequired,
   resetUsernameSuggestions: PropTypes.func.isRequired,
+  setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
   validateFromBackend: PropTypes.func.isRequired,
 };
 
@@ -510,8 +619,18 @@ RegistrationPage.defaultProps = {
   registrationResult: null,
   shouldBackupState: false,
   submitState: DEFAULT_STATE,
-  validationApiRateLimited: false,
+  thirdPartyAuthApiStatus: PENDING_STATE,
+  thirdPartyAuthContext: {
+    currentProvider: null,
+    finishAuthUrl: null,
+    countryCode: null,
+    providers: [],
+    secondaryProviders: [],
+    pipelineUserDetails: null,
+  },
   usernameSuggestions: [],
+  userPipelineDataLoaded: false,
+  validationApiRateLimited: false,
 };
 
 export default connect(
@@ -522,5 +641,6 @@ export default connect(
     resetUsernameSuggestions: clearUsernameSuggestions,
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
+    setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
   },
 )(injectIntl(RegistrationPage));

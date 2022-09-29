@@ -7,7 +7,7 @@ import {
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
-  REGISTER_SET_COUNTRY_CODE,
+  REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
 } from './actions';
 
 export const defaultState = {
@@ -30,6 +30,7 @@ export const defaultState = {
   validationApiRateLimited: false,
   usernameSuggestions: [],
   shouldBackupState: false,
+  userPipelineDataLoaded: false,
 };
 
 const reducer = (state = defaultState, action) => {
@@ -44,6 +45,7 @@ const reducer = (state = defaultState, action) => {
         ...defaultState,
         usernameSuggestions: state.usernameSuggestions,
         registrationFormData: { ...action.payload },
+        userPipelineDataLoaded: state.userPipelineDataLoaded,
       };
     case REGISTER_NEW_USER.BEGIN:
       return {
@@ -99,6 +101,13 @@ const reducer = (state = defaultState, action) => {
         };
       }
       return state;
+    }
+    case REGISTER_SET_USER_PIPELINE_DATA_LOADED: {
+      const { value } = action.payload;
+      return {
+        ...state,
+        userPipelineDataLoaded: value,
+      };
     }
     default:
       return {
