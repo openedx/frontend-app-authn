@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
@@ -8,6 +8,8 @@ import FormFieldRenderer from '../field-renderer';
 import { FIELDS } from './data/constants';
 import messages from './messages';
 import { HonorCode, TermsOfService } from './registrationFields';
+import CountryField from './registrationFields/CountryField';
+import { validateCountryField } from './utils';
 
 /**
  * Fields on registration page that are not the default required fields (name, email, username, password).
@@ -22,6 +24,7 @@ import { HonorCode, TermsOfService } from './registrationFields';
  * */
 const ConfigurableRegistrationForm = (props) => {
   const {
+    countryList,
     email,
     fieldDescriptions,
     fieldErrors,
@@ -37,17 +40,27 @@ const ConfigurableRegistrationForm = (props) => {
 
   const formFieldDescriptions = [];
   const honorCode = [];
-
-  const flags = useMemo(() => ({
+  const flags = {
     showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
-  }), []);
+  };
 
-  const handleOnChange = (event) => {
+  useEffect(() => {
+    if (!formFields.country) {
+      setFormFields({ ...formFields, country: { countryCode: '', displayValue: '' } });
+    }
+  });
+
+  const handleOnChange = (event, countryValue = null) => {
     const { name, type } = event.target;
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    if (type === 'checkbox') {
-      setFieldErrors({ ...fieldErrors, [name]: '' });
+    let value;
+    if (countryValue) {
+      value = { ...countryValue };
+    } else {
+      value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+      if (type === 'checkbox') {
+        setFieldErrors({ ...fieldErrors, [name]: '' });
+      }
     }
     setFormFields({ ...formFields, [name]: value });
   };
@@ -55,7 +68,14 @@ const ConfigurableRegistrationForm = (props) => {
   const handleOnBlur = (event) => {
     const { name, value } = event.target;
     let error = '';
-    if (!value || !value.trim()) {
+    if (name === 'country') {
+      const countryValidation = validateCountryField(
+        value.trim(), countryList, intl.formatMessage(messages['empty.country.field.error']),
+      );
+      const { countryCode, displayValue } = countryValidation;
+      error = countryValidation.error;
+      setFormFields({ ...formFields, country: { countryCode, displayValue } });
+    } else if (!value || !value.trim()) {
       error = fieldDescriptions[name].error_message;
     } else if (name === 'confirm_email' && value !== email) {
       error = intl.formatMessage(messages['email.do.not.match']);
@@ -123,20 +143,21 @@ const ConfigurableRegistrationForm = (props) => {
       }
     });
   }
-  // TODO: Once the Country field has been updated, remove this comment.
-  // if (flags.showConfigurableEdxFields || showCountryField) {
-  //   formFields.push(
-  //     <CountryField
-  //       name="country"
-  //       options={this.countryList}
-  //       value={this.state.country}
-  //       handleBlur={this.handleOnBlur}
-  //       handleFocus={this.handleOnFocus}
-  //       errorMessage={this.state.errors.country}
-  //       errorCode={this.state.errorCode}
-  //     />,
-  //   );
-  // }
+
+  if (flags.showConfigurableEdxFields || showCountryField) {
+    formFieldDescriptions.push(
+      <span key="country">
+        <CountryField
+          countryList={countryList}
+          selectedCountry={formFields.country}
+          errorMessage={fieldErrors.country || ''}
+          onChangeHandler={handleOnChange}
+          onBlurHandler={handleOnBlur}
+          onFocusHandler={handleOnFocus}
+        />
+      </span>,
+    );
+  }
 
   if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
     formFieldDescriptions.push(
@@ -157,10 +178,17 @@ const ConfigurableRegistrationForm = (props) => {
 };
 
 ConfigurableRegistrationForm.propTypes = {
+  countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
   email: PropTypes.string.isRequired,
   fieldDescriptions: PropTypes.shape({}),
-  fieldErrors: PropTypes.shape({}).isRequired,
+  fieldErrors: PropTypes.shape({
+    country: PropTypes.string,
+  }).isRequired,
   formFields: PropTypes.shape({
+    country: PropTypes.shape({
+      displayValue: PropTypes.string,
+      countryCode: PropTypes.string,
+    }),
     honor_code: PropTypes.bool,
   }).isRequired,
   intl: intlShape.isRequired,

@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import {
+  getCountryList, getLocale, injectIntl, intlShape,
+} from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
@@ -33,13 +35,15 @@ import {
   registerNewUser,
   setUserPipelineDataLoaded,
 } from './data/actions';
-import { FORM_SUBMISSION_ERROR } from './data/constants';
+import {
+  COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR,
+} from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
 import ThirdPartyAuth from './ThirdPartyAuth';
-import { getSuggestionForInvalidEmail, validateEmailAddress } from './utils';
+import { getSuggestionForInvalidEmail, validateCountryField, validateEmailAddress } from './utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
@@ -47,6 +51,7 @@ const urlRegex = new RegExp(INVALID_NAME_REGEX);
 const RegistrationPage = (props) => {
   const {
     backedUpFormData,
+    backendCountryCode,
     backendValidations,
     fieldDescriptions,
     handleInstitutionLogin,
@@ -69,6 +74,7 @@ const RegistrationPage = (props) => {
     validateFromBackend,
   } = props;
 
+  const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = { showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS };
@@ -110,7 +116,7 @@ const RegistrationPage = (props) => {
       getRegistrationDataFromBackend(payload);
       setFormStartTime(Date.now());
     }
-  }, [formStartTime, getRegistrationDataFromBackend, queryParams]);
+  }, [formStartTime, getRegistrationDataFromBackend, queryParams, tpaHint]);
 
   /**
    * Backup the registration form in redux when register page is toggled.
@@ -137,6 +143,24 @@ const RegistrationPage = (props) => {
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
     }
   }, [registrationErrorCode]);
+
+  useEffect(() => {
+    if (backendCountryCode !== '') {
+      const selectedCountry = countryList.find(
+        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
+      );
+      if (selectedCountry) {
+        setConfigurableFormFields(prevState => (
+          {
+            ...prevState,
+            country: {
+              countryCode: selectedCountry[COUNTRY_CODE_KEY], displayValue: selectedCountry[COUNTRY_DISPLAY_KEY]
+            },
+          }
+        ));
+      }
+    }
+  }, [backendCountryCode, countryList]);
 
   /**
    * We need to remove the placeholder from the field, adding a space will do that.
@@ -167,6 +191,7 @@ const RegistrationPage = (props) => {
   const validateInput = (fieldName, value, payload, shouldValidateFromBackend, setError = true) => {
     let fieldError = '';
     let confirmEmailError = ''; // This is to handle the use case where the form contains "confirm email" field
+    let countryFieldCode = '';
 
     switch (fieldName) {
       case 'name':
@@ -225,6 +250,16 @@ const RegistrationPage = (props) => {
           validateFromBackend(payload);
         }
         break;
+      case 'country':
+        if (flags.showConfigurableEdxFields || flags.showConfigurableRegistrationFields) {
+          const { countryCode, displayValue, error } = validateCountryField(
+            value.displayValue.trim(), countryList, intl.formatMessage(messages['empty.country.field.error']),
+          );
+          fieldError = error;
+          countryFieldCode = countryCode;
+          setConfigurableFormFields({ ...configurableFormFields, country: { countryCode, displayValue } });
+        }
+        break;
       default:
         if (flags.showConfigurableRegistrationFields) {
           if (!value && fieldDescriptions[fieldName].error_message) {
@@ -242,7 +277,7 @@ const RegistrationPage = (props) => {
         [fieldName]: fieldError,
       });
     }
-    return fieldError;
+    return { fieldError, countryFieldCode };
   };
 
   const isFormValid = (payload, focusedFieldError) => {
@@ -257,9 +292,20 @@ const RegistrationPage = (props) => {
       }
     });
 
+    if (flags.showConfigurableEdxFields) {
+      if (!configurableFormFields.country.displayValue) {
+        fieldErrors.country = intl.formatMessage(messages['empty.country.field.error']);
+      }
+      if (fieldErrors.country) {
+        isValid = false;
+      }
+    }
+
     if (flags.showConfigurableRegistrationFields) {
       Object.keys(fieldDescriptions).forEach(key => {
-        if (!configurableFormFields[key]) {
+        if (key === 'country' && !configurableFormFields.country.displayValue) {
+          fieldErrors[key] = intl.formatMessage(messages['empty.country.field.error']);
+        } else if (!configurableFormFields[key]) {
           fieldErrors[key] = fieldDescriptions[key].error_message;
         }
         if (fieldErrors[key]) {
@@ -346,17 +392,19 @@ const RegistrationPage = (props) => {
       payload.social_auth_provider = currentProvider;
     }
 
-    const fieldError = focusedField ? (
+    const { focusedFieldError, countryFieldCode } = focusedField ? (
       validateInput(
         focusedField,
-        focusedField in fieldDescriptions ? configurableFormFields[focusedField] : formFields[focusedField],
+        (focusedField in fieldDescriptions || focusedField === 'country') ? (
+          configurableFormFields[focusedField]
+        ) : formFields[focusedField],
         payload,
         false,
         false,
       )
     ) : '';
 
-    if (!isFormValid(payload, fieldError)) {
+    if (!isFormValid(payload, focusedFieldError)) {
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       return;
     }
@@ -365,6 +413,8 @@ const RegistrationPage = (props) => {
     Object.keys(configurableFormFields).forEach((fieldName) => {
       if (props.extendedProfile.includes(fieldName)) {
         payload.extendedProfile.push({ fieldName, fieldValue: configurableFormFields[fieldName] });
+      } else if (fieldName === 'country') {
+        payload[fieldName] = focusedField === 'country' ? countryFieldCode : configurableFormFields[fieldName].countryCode;
       } else {
         payload[fieldName] = configurableFormFields[fieldName];
       }
@@ -473,6 +523,7 @@ const RegistrationPage = (props) => {
             </Form.Checkbox>
           )}
             <ConfigurableRegistrationForm
+              countryList={countryList}
               email={formFields.email}
               fieldErrors={errors}
               formFields={configurableFormFields}
@@ -528,6 +579,7 @@ const mapStateToProps = state => {
   const registerPageState = state.register;
   return {
     backedUpFormData: registerPageState.registrationFormData,
+    backendCountryCode: registerPageState.backendCountryCode,
     backendValidations: validationsSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
     extendedProfile: extendedProfileSelector(state),
@@ -551,6 +603,7 @@ RegistrationPage.propTypes = {
     errors: PropTypes.shape({}),
     emailSuggestion: PropTypes.shape({}),
   }),
+  backendCountryCode: PropTypes.string,
   backendValidations: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
@@ -611,6 +664,7 @@ RegistrationPage.defaultProps = {
       suggestion: '', type: '',
     },
   },
+  backendCountryCode: '',
   backendValidations: null,
   extendedProfile: [],
   fieldDescriptions: {},
