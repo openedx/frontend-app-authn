@@ -1,5 +1,5 @@
 import {
-  LOGIN_PERSIST_FORM_DATA,
+  LOGIN_PERSIST_FORM_DATA, LOGIN_REMOVE_PASSWORD_RESET_BANNER,
 } from '../actions';
 import reducer from '../reducers';
 
@@ -34,6 +34,23 @@ describe('login reducer', () => {
           password: 'johndoe',
           emailOrUsername: 'john@gmail.com',
         },
+        resetPassword: false,
+      },
+    );
+  });
+
+  it('should set resetPassword', () => {
+    const state = {
+      resetPassword: true,
+    };
+    const action = {
+      type: LOGIN_REMOVE_PASSWORD_RESET_BANNER,
+    };
+
+    expect(
+      reducer(state, action),
+    ).toEqual(
+      {
         resetPassword: false,
       },
     );
