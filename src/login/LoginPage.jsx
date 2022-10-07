@@ -35,7 +35,7 @@ import {
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 import AccountActivationMessage from './AccountActivationMessage';
 import {
-  loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
 } from './data/actions';
 import { INVALID_FORM } from './data/constants';
 import { loginErrorSelector, loginFormDataSelector, loginRequestSelector } from './data/selectors';
@@ -85,12 +85,21 @@ class LoginPage extends React.Component {
     return true;
   }
 
+  componentWillUnmount() {
+    if (this.props.resetPassword) {
+      this.props.loginRemovePasswordResetBanner();
+    }
+  }
+
   getEnterPriseLoginURL() {
     return getConfig().LMS_BASE_URL + ENTERPRISE_LOGIN_URL;
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    if (this.props.resetPassword) {
+      this.props.loginRemovePasswordResetBanner();
+    }
     this.setState({ isSubmitted: true });
     const { emailOrUsername, password } = this.state;
     const emailValidationError = this.validateEmail(emailOrUsername);
@@ -367,6 +376,7 @@ LoginPage.propTypes = {
   loginRequestFailure: PropTypes.func.isRequired,
   loginRequestReset: PropTypes.func.isRequired,
   setLoginFormData: PropTypes.func.isRequired,
+  loginRemovePasswordResetBanner: PropTypes.func.isRequired,
   loginResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
@@ -417,5 +427,6 @@ export default connect(
     loginRequestFailure,
     loginRequestReset,
     setLoginFormData,
+    loginRemovePasswordResetBanner,
   },
 )(injectIntl(LoginPage));

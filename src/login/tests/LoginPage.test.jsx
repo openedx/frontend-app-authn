@@ -13,7 +13,7 @@ import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import {
-  loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
 } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
@@ -556,5 +556,21 @@ describe('LoginPage', () => {
 
     expect(loginPage.find('LoginPage').state('emailOrUsername')).toEqual('john_doe');
     expect(loginPage.find('LoginPage').state('password')).toEqual('password1');
+  });
+
+  it('should update reset password value when unmount called', () => {
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        resetPassword: true,
+      },
+    });
+
+    store.dispatch = jest.fn(store.dispatch);
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    loginPage.unmount();
+
+    expect(store.dispatch).toHaveBeenCalledWith(loginRemovePasswordResetBanner());
   });
 });

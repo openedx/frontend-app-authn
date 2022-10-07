@@ -2,6 +2,7 @@ import { AsyncActionType } from '../../data/utils';
 
 export const LOGIN_REQUEST = new AsyncActionType('LOGIN', 'REQUEST');
 export const LOGIN_PERSIST_FORM_DATA = 'LOGIN_PERSIST_FORM_DATA';
+export const LOGIN_REMOVE_PASSWORD_RESET_BANNER = 'LOGIN_REMOVE_PASSWORD_RESET_BANNER';
 
 // Login
 export const loginRequest = creds => ({
@@ -30,4 +31,8 @@ export const loginRequestReset = () => ({
 export const setLoginFormData = (formData) => ({
   type: LOGIN_PERSIST_FORM_DATA,
   payload: { formData },
+});
+
+export const loginRemovePasswordResetBanner = () => ({
+  type: LOGIN_REMOVE_PASSWORD_RESET_BANNER,
 });
