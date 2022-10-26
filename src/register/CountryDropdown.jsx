@@ -117,9 +117,14 @@ class CountryDropdown extends React.Component {
     if (this.props.handleFocus) { this.props.handleFocus(e); }
   }
 
-  handleOnBlur(e, itemClicked = false) {
+  handleOnBlur(e, itemClicked = false, country = '') {
     const { name } = e.target;
-    const countryValue = itemClicked ? e.target.value : this.state.displayValue;
+    let countryValue = '';
+    if (country) {
+      countryValue = country;
+    } else {
+      countryValue = itemClicked ? e.target.value : this.state.displayValue;
+    }
     // For a better user experience, do not validate when focus out from 'country' field
     // and focus on 'countryItem' or 'countryExpand' button.
     if (e.relatedTarget && e.relatedTarget.name === 'countryItem' && (name === 'country' || name === 'countryExpand')) {
@@ -134,8 +139,12 @@ class CountryDropdown extends React.Component {
   }
 
   handleItemClick(e) {
+    let countryValue = '';
+    if (!e.target.value) {
+      countryValue = e.target.parentElement.parentElement.value;
+    }
     this.setState({ dropDownItems: '', icon: this.expandMoreButton() });
-    this.handleOnBlur(e, true);
+    this.handleOnBlur(e, true, countryValue);
   }
 
   expandMoreButton() {

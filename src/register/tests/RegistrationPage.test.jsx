@@ -4,7 +4,9 @@ import { Provider } from 'react-redux';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import {
+  configure, getLocale, injectIntl, IntlProvider,
+} from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
@@ -25,6 +27,10 @@ import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/i18n', () => ({
+  ...jest.requireActual('@edx/frontend-platform/i18n'),
+  getLocale: jest.fn(),
+}));
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
@@ -147,6 +153,7 @@ describe('RegistrationPage', () => {
     // ******** test registration form submission ********
 
     it('should submit form for valid input', () => {
+      getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       delete window.location;
@@ -1011,6 +1018,34 @@ describe('RegistrationPage', () => {
       registerPage.find('input#country').simulate('change', { target: { value: 'Pakistan', name: 'country' } });
       registerPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
       expect(registerPage.find('RegistrationPage').state('country')).toEqual('PK');
+    });
+
+    it('should set country in component state on country change with translations', () => {
+      getLocale.mockImplementation(() => ('ar-ae'));
+      registrationFormData = {
+        errors: { ...registrationFormData.errors },
+        country: 'AF',
+      };
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('input#country').simulate('focus');
+      registerPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'أفغانستان ', name: 'countryItem' } });
+      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
+    });
+
+    it('should set country in component state on country change with chrome translations', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+      registrationFormData = {
+        errors: { ...registrationFormData.errors },
+        country: 'AF',
+      };
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registerPage.find('input#country').simulate('focus');
+      registerPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: undefined, name: undefined, parentElement: { parentElement: { value: 'Afghanistan' } } } });
+      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
     });
   });
 
