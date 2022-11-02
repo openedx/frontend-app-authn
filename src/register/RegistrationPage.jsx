@@ -525,7 +525,8 @@ class RegistrationPage extends React.Component {
         value = value.trim(); // eslint-disable-line no-param-reassign
         if (value) {
           const normalizedValue = value.toLowerCase();
-          let selectedCountry = this.countryList.find((o) => o[COUNTRY_DISPLAY_KEY].toLowerCase() === normalizedValue);
+          let selectedCountry = (
+            this.countryList.find((o) => o[COUNTRY_DISPLAY_KEY].toLowerCase().trim() === normalizedValue));
           if (selectedCountry) {
             value = selectedCountry[COUNTRY_CODE_KEY]; // eslint-disable-line no-param-reassign
             errors.country = '';
@@ -533,7 +534,8 @@ class RegistrationPage extends React.Component {
           } else {
             // Handling a case here where user enters a valid country code that needs to be
             // evaluated and set its value as a valid value.
-            selectedCountry = this.countryList.find((o) => o[COUNTRY_CODE_KEY].toLowerCase() === normalizedValue);
+            selectedCountry = (
+              this.countryList.find((o) => o[COUNTRY_CODE_KEY].toLowerCase().trim() === normalizedValue));
             if (selectedCountry) {
               value = selectedCountry[COUNTRY_CODE_KEY]; // eslint-disable-line no-param-reassign
               errors.country = '';
