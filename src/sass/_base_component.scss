@@ -168,6 +168,15 @@ $accent-a-light: #c9f2f5;
   fill: $primary-400;
 }
 
+[dir=rtl]{
+  .medium-screen-svg-light,
+  .medium-screen-svg-primary,
+  .large-screen-svg-light,
+  .large-screen-svg-primary {
+    transform: scaleX(-1);
+  }
+}
+
 .small-yellow-line {
   width: 80px;
   height: 0;
