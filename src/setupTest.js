@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable max-classes-per-file */
 
 import { getConfig } from '@edx/frontend-platform';
 import { configure as configureLogging } from '@edx/frontend-platform/logging';
@@ -20,6 +21,21 @@ export default function initializeMockLogging() {
   return { loggingService };
 }
 
+class ResizeObserver {
+  observe() {
+    // do nothing
+  }
+
+  unobserve() {
+    // do nothing
+  }
+
+  disconnect() {
+    // do nothing
+  }
+}
+
+window.ResizeObserver = ResizeObserver;
 window.scrollTo = (x, y) => {
   document.documentElement.scrollTop = y;
 };
