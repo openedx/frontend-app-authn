@@ -120,6 +120,7 @@ const ForgotPasswordPage = (props) => {
               floatingLabel={intl.formatMessage(messages['forgot.password.page.email.field.label'])}
               name="email"
               value={email}
+              autoComplete="on"
               errorMessage={validationError}
               handleChange={(e) => setEmail(e.target.value)}
               handleBlur={handleBlur}

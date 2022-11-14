@@ -187,7 +187,7 @@ class CountryDropdown extends React.Component {
         <FormGroup
           as="input"
           name={this.props.name}
-          autoComplete="chrome-off"
+          autoComplete="off"
           className="mb-0"
           floatingLabel={this.props.floatingLabel}
           trailingElement={this.state.icon}

@@ -263,6 +263,7 @@ class LoginPage extends React.Component {
             <FormGroup
               name="emailOrUsername"
               value={this.state.emailOrUsername}
+              autoComplete="on"
               handleChange={(e) => this.setState({ emailOrUsername: e.target.value, isSubmitted: false })}
               handleFocus={this.handleOnFocus}
               handleBlur={this.handleOnBlur}
@@ -272,6 +273,7 @@ class LoginPage extends React.Component {
             <PasswordField
               name="password"
               value={this.state.password}
+              autoComplete="off"
               showRequirements={false}
               handleChange={(e) => this.setState({ password: e.target.value, isSubmitted: false })}
               handleFocus={this.handleOnFocus}

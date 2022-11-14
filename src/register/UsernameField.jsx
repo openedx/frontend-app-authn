@@ -23,6 +23,7 @@ const UsernameField = (props) => {
             name="username"
             variant="outline-dark"
             className="username-suggestion data-hj-suppress"
+            autoComplete={props.autoComplete}
             key={`suggestion-${index.toString()}`}
             onClick={(e) => props.handleSuggestionClick(e, username)}
           >
@@ -56,6 +57,7 @@ UsernameField.defaultProps = {
   handleSuggestionClick: () => {},
   handleUsernameSuggestionClose: () => {},
   errorMessage: '',
+  autoComplete: null,
 };
 
 UsernameField.propTypes = {
@@ -66,6 +68,7 @@ UsernameField.propTypes = {
   intl: intlShape.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
+  autoComplete: PropTypes.string,
 };
 
 export default injectIntl(UsernameField);

@@ -770,6 +770,7 @@ class RegistrationPage extends React.Component {
             <FormGroup
               name="name"
               value={this.state.name}
+              autoComplete="on"
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
               handleFocus={this.handleOnFocus}
@@ -780,6 +781,7 @@ class RegistrationPage extends React.Component {
             <FormGroup
               name="email"
               value={this.state.email}
+              autoComplete="on"
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
               errorMessage={this.state.errors.email}
@@ -795,6 +797,7 @@ class RegistrationPage extends React.Component {
               name="username"
               spellCheck="false"
               value={this.state.username}
+              autoComplete="on"
               handleBlur={this.handleOnBlur}
               handleChange={this.handleOnChange}
               handleFocus={this.handleOnFocus}
@@ -810,6 +813,7 @@ class RegistrationPage extends React.Component {
               <PasswordField
                 name="password"
                 value={this.state.password}
+                autoComplete="off"
                 handleBlur={this.handleOnBlur}
                 handleChange={this.handleOnChange}
                 handleFocus={this.handleOnFocus}
@@ -824,6 +828,7 @@ class RegistrationPage extends React.Component {
                 floatingLabel={intl.formatMessage(messages['registration.country.label'])}
                 options={this.countryList}
                 value={this.state.country}
+                autoComplete="on"
                 handleBlur={this.handleOnBlur}
                 handleFocus={this.handleOnFocus}
                 errorMessage={this.state.errors.country}

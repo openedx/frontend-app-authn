@@ -63,6 +63,7 @@ const PasswordField = (props) => {
           type={isPasswordHidden ? 'password' : 'text'}
           name={props.name}
           value={props.value}
+          autoComplete={props.autoComplete}
           aria-invalid={props.errorMessage !== ''}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -89,6 +90,7 @@ PasswordField.defaultProps = {
   handleFocus: null,
   handleChange: () => {},
   showRequirements: true,
+  autoComplete: null,
 };
 
 PasswordField.propTypes = {
@@ -102,6 +104,7 @@ PasswordField.propTypes = {
   name: PropTypes.string.isRequired,
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
+  autoComplete: PropTypes.string,
 };
 
 export default injectIntl(PasswordField);
