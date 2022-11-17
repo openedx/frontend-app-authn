@@ -62,7 +62,6 @@ import { getLevenshteinSuggestion, getSuggestionForInvalidEmail } from './utils'
 class RegistrationPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-    sendPageEvent('login_and_registration', 'register');
     this.handleOnClose = this.handleOnClose.bind(this);
     this.countryList = getCountryList(getLocale());
     this.queryParams = getAllPossibleQueryParam();
@@ -99,6 +98,7 @@ class RegistrationPage extends React.Component {
   }
 
   componentDidMount() {
+    sendPageEvent('login_and_registration', 'register');
     const payload = { ...this.queryParams };
     window.optimizely = window.optimizely || [];
     window.optimizely.push({
