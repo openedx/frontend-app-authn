@@ -45,7 +45,6 @@ import messages from './messages';
 class LoginPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-    sendPageEvent('login_and_registration', 'login');
     this.state = {
       password: this.props.loginFormData.password,
       emailOrUsername: this.props.loginFormData.emailOrUsername,
@@ -60,6 +59,7 @@ class LoginPage extends React.Component {
   }
 
   componentDidMount() {
+    sendPageEvent('login_and_registration', 'login');
     const payload = { ...this.queryParams };
 
     if (this.tpaHint) {
