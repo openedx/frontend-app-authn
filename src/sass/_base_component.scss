@@ -180,20 +180,20 @@ $accent-a-light: #c9f2f5;
 .small-yellow-line {
   width: 80px;
   height: 0;
-  border: 2px solid #F0CC00;
+  border: 2px solid $accent-b;
   transform: rotate(102.02deg);
 }
 
 .medium-yellow-line {
   width: 120px;
   height: 0;
-  border: 3px solid #F0CC00;
+  border: 3px solid $accent-b;
   transform: rotate(102.02deg);
 }
 
 .large-yellow-line {
   width: 240px;
   height: 0;
-  border: 3px solid #F0CC00;
+  border: 3px solid $accent-b;
   transform: rotate(102.02deg);
 }
