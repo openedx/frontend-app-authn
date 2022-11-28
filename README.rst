@@ -1,4 +1,4 @@
-|Build Status| |ci-badge| |Codecov| |license| |semantic-release| |npm_version|
+|Build Status| |ci-badge| |Codecov| |semantic-release|
 
 frontend-app-authn
 ====================
@@ -136,14 +136,8 @@ None
    :target: https://travis-ci.com/edx/frontend-app-authn
 .. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-authn
    :target: https://codecov.io/gh/edx/frontend-app-authn
-.. |license| image:: https://img.shields.io/npm/l/@edx/frontend-app-authn.svg
-   :target: @edx/frontend-app-authn
 .. |ci-badge| image:: https://github.com/openedx/edx-developer-docs/actions/workflows/ci.yml/badge.svg
    :target: https://github.com/openedx/edx-developer-docs/actions/workflows/ci.yml
    :alt: Continuous Integration
-.. |npm_version| image:: https://img.shields.io/npm/v/@edx/frontend-app-authn.svg
-   :target: @edx/frontend-app-authn
-.. |npm_downloads| image:: https://img.shields.io/npm/dt/@edx/frontend-app-authn.svg
-   :target: @edx/frontend-app-authn
 .. |semantic-release| image:: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
    :target: https://github.com/semantic-release/semantic-release
