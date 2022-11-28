@@ -82,31 +82,15 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 .alert-link {
   font-weight: normal;
   text-decoration: underline;
-  color: #0075b4 !important;
+  color: $info-300 !important;
 
   &:hover {
-    color: #065683 !important;
+    color: $info-500 !important;
   }
 }
 
-.authn-header {
-  border-bottom: 1px solid #e7e7e7;
-  height: 3.75rem;
-  position: relative;
-  z-index: 1000;
-}
-
-.authn-header img {
-  height: 1.75rem;
-  margin-left: 2rem;
-  padding: 1rem 0;
-  display: block;
-  position: relative;
-  box-sizing: content-box;
-}
-
 .form-control {
-  background-color: white !important;
+  background-color: $white !important;
   font-size: 0.875rem;
   line-height: 1.5;
   height: 2.75rem;
@@ -312,12 +296,12 @@ select.form-control {
   filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   right: 0.2rem !important;
   .tooltip-inner {
-    background: white;
+    background: $white;
     display: block;
-    color: #707070;
+    color: $gray-500;
   }
   .arrow::before {
-    border-left-color: #fff;
+    border-left-color: $white;
   }
 }
 
@@ -332,18 +316,18 @@ select.form-control {
 
   .tooltip-inner {
     min-width: 464px !important;
-    background: white;
+    background: $white;
     display: block;
-    color: #707070;
+    color: $gray-500;
   }
   .arrow::before {
-    border-top-color: #fff;
+    border-top-color: $white;
   }
 
 }
 #forgotpassword-success-alert {
   .alert-link {
-    color: #454545 !important;
+    color: $gray-700 !important;
   }
 }
 
@@ -364,7 +348,7 @@ select.form-control {
 }
 
 .yellow-border {
-  border: 2px solid #F0CC00;
+  border: 2px solid $accent-b;
 }
 
 .institute-heading {
@@ -381,7 +365,7 @@ select.form-control {
 }
 
 .dropdown-item:active {
-    background-color: #F2F0EF;
+    background-color: $light-300;
 }
 
 .dropdown-container {
@@ -393,7 +377,7 @@ select.form-control {
     line-height: 1.25rem;
     overflow-y: scroll;
     position: absolute;
-    background-color: #fff;
+    background-color: $white;
     width: 464px;
     z-index: 100 !important;
 }
