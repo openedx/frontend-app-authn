@@ -76,7 +76,6 @@
     "@edx/frontend-build": "11.0.2",
     "@edx/reactifex": "1.1.0",
     "babel-plugin-formatjs": "10.3.31",
-    "codecov": "3.8.2",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.7",
     "eslint-plugin-import": "2.26.0",
