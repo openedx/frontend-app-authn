@@ -39,11 +39,11 @@ import {
   COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
+import { getSuggestionForInvalidEmail, validateCountryField, validateEmailAddress } from './data/utils';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
 import ThirdPartyAuth from './ThirdPartyAuth';
-import { getSuggestionForInvalidEmail, validateCountryField, validateEmailAddress } from './utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
@@ -77,7 +77,10 @@ const RegistrationPage = (props) => {
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
-  const flags = { showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS };
+  const flags = {
+    showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
+    showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
+  };
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
@@ -100,7 +103,7 @@ const RegistrationPage = (props) => {
     if (!userPipelineDataLoaded) {
       const { pipelineUserDetails } = thirdPartyAuthContext;
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
-        setFormFields({ ...pipelineUserDetails });
+        setFormFields(prevState => ({ ...prevState, ...pipelineUserDetails }));
         setUserPipelineDetailsLoaded(true);
       }
     }
@@ -154,7 +157,7 @@ const RegistrationPage = (props) => {
           {
             ...prevState,
             country: {
-              countryCode: selectedCountry[COUNTRY_CODE_KEY], displayValue: selectedCountry[COUNTRY_DISPLAY_KEY]
+              countryCode: selectedCountry[COUNTRY_CODE_KEY], displayValue: selectedCountry[COUNTRY_DISPLAY_KEY],
             },
           }
         ));
@@ -237,7 +240,7 @@ const RegistrationPage = (props) => {
       case 'username':
         if (!value || value.length <= 1 || value.length > 30) {
           fieldError = intl.formatMessage(messages['username.validation.message']);
-        } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
+        } else if (!value.match(/^[a-zA-Z\d_-]*$/i)) {
           fieldError = intl.formatMessage(messages['username.format.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
@@ -342,11 +345,18 @@ const RegistrationPage = (props) => {
   const handleUsernameSuggestionClosed = () => props.resetUsernameSuggestions();
 
   const handleOnChange = (event) => {
-    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
 
-    if (!(event.target.name === 'username' && value.length > 30)) {
-      setFormFields({ ...formFields, [event.target.name]: value });
+    if (event.target.name === 'username') {
+      if (value.length > 30) {
+        return;
+      }
+      if (value.startsWith(' ')) {
+        value = value.trim();
+      }
     }
+
+    setFormFields({ ...formFields, [event.target.name]: value });
   };
 
   const handleOnBlur = (event) => {
@@ -511,17 +521,17 @@ const RegistrationPage = (props) => {
                 floatingLabel={intl.formatMessage(messages['registration.password.label'])}
               />
             )}
-            {(getConfig().MARKETING_EMAILS_OPT_IN)
-          && (
-            <Form.Checkbox
-              name="marketingEmailsOptIn"
-              className="opt-checkbox"
-              checked={formFields.marketingEmailsOptIn}
-              onChange={handleOnChange}
-            >
-              {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
-            </Form.Checkbox>
-          )}
+            {getConfig().MARKETING_EMAILS_OPT_IN
+              && (
+                <Form.Checkbox
+                  name="marketingEmailsOptIn"
+                  className="opt-checkbox"
+                  checked={formFields.marketingEmailsOptIn}
+                  onChange={handleOnChange}
+                >
+                  {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
+                </Form.Checkbox>
+              )}
             <ConfigurableRegistrationForm
               countryList={countryList}
               email={formFields.email}

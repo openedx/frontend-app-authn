@@ -10,4 +10,5 @@ module.exports = createConfig('jest', {
     'src/index.jsx',
     'MainApp.jsx',
   ],
+  testEnvironment: 'jsdom',
 });

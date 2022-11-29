@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 
 import FormFieldRenderer from '../field-renderer';
 import { FIELDS } from './data/constants';
+import { validateCountryField } from './data/utils';
 import messages from './messages';
 import { HonorCode, TermsOfService } from './registrationFields';
 import CountryField from './registrationFields/CountryField';
-import { validateCountryField } from './utils';
 
 /**
  * Fields on registration page that are not the default required fields (name, email, username, password).
@@ -20,7 +20,8 @@ import { validateCountryField } from './utils';
  *
  * For edX only:
  *  Country and honor code fields are required by default, and we will continue to show them on
- *  frontend but behind the `SHOW_CONFIGURABLE_EDX_FIELDS` flag.
+ *  frontend even if the API doesn't return it. The `SHOW_CONFIGURABLE_EDX_FIELDS` flag will enable
+ *  it for edX.
  * */
 const ConfigurableRegistrationForm = (props) => {
   const {

@@ -71,10 +71,10 @@ const reducer = (state = defaultState, action) => {
       };
     }
     case REGISTER_FORM_VALIDATIONS.SUCCESS: {
-      const { usernameSuggestions } = action.payload.validations;
+      const { usernameSuggestions, ...validationWithoutUsernameSuggestions } = action.payload.validations;
       return {
         ...state,
-        validations: action.payload.validations,
+        validations: validationWithoutUsernameSuggestions,
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
       };
     }

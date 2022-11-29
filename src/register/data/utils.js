@@ -6,7 +6,7 @@ import {
   COUNTRY_DISPLAY_KEY,
   DEFAULT_SERVICE_PROVIDER_DOMAINS,
   DEFAULT_TOP_LEVEL_DOMAINS,
-} from './data/constants';
+} from './constants';
 
 function getLevenshteinSuggestion(word, knownWords, similarityThreshold = 4) {
   if (!word) {

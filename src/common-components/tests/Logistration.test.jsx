@@ -40,8 +40,6 @@ describe('Logistration', () => {
 
   beforeEach(() => {
     auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
-  });
-  it('should render registration page', () => {
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -50,14 +48,19 @@ describe('Logistration', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
+  });
 
+  it('should render registration page', () => {
     store = mockStore({
       register: {
         registrationResult: { success: false, redirectUrl: '' },
         registrationError: {},
       },
       commonComponents: {
-        thirdPartyAuthApiStatus: null,
+        thirdPartyAuthContext: {
+          providers: [],
+          secondaryProviders: [],
+        },
       },
     });
     const logistration = mount(reduxWrapper(<IntlLogistration />));
@@ -71,7 +74,10 @@ describe('Logistration', () => {
         loginResult: { success: false, redirectUrl: '' },
       },
       commonComponents: {
-        thirdPartyAuthApiStatus: null,
+        thirdPartyAuthContext: {
+          providers: [],
+          secondaryProviders: [],
+        },
       },
     });
 
