@@ -41,9 +41,9 @@ This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see 
 
 5. Once the dev server is up, visit http://localhost:1999 to access the MFE
 
-   * Note: Social Sign-on Buttons (SSO) will not be available until configured locally.
-
    .. image:: ./docs/images/frontend-app-authn-localhost-preview.png
+
+   **Note:** Follow `Enable social auth locally <docs/how_tos/enable_social_auth.rst>`_ for enabling Social Sign-on Buttons (SSO) locally
 
 Environment Variables/Setup Notes
 ---------------------------------
