@@ -1,6 +1,8 @@
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { AppProvider } from '@edx/frontend-platform/react';
+import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
@@ -20,6 +22,9 @@ registerIcons();
 
 const MainApp = () => (
   <AppProvider store={configureStore()}>
+    <Helmet>
+      <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
+    </Helmet>
     <Switch>
       <Route exact path="/">
         <Redirect to={updatePathWithQueryParams(REGISTER_PAGE)} />
