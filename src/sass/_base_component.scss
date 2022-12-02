@@ -1,4 +1,3 @@
-$accent-a-light: #c9f2f5;
 
 .layout {
   display: flex;
@@ -140,7 +139,7 @@ $accent-a-light: #c9f2f5;
      $primary-700 55%,
      $accent-a 55%,
      $accent-a 75%,
-     $accent-a-light 75%,
+     $info-200 75%,
   );
    background-repeat: no-repeat;
  }
