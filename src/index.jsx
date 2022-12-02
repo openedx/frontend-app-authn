@@ -44,6 +44,7 @@ initialize({
         MARKETING_EMAILS_OPT_IN: process.env.MARKETING_EMAILS_OPT_IN || '',
         ENABLE_COPPA_COMPLIANCE: process.env.ENABLE_COPPA_COMPLIANCE || '',
         ENABLE_DYNAMIC_REGISTRATION_FIELDS: process.env.ENABLE_DYNAMIC_REGISTRATION_FIELDS || false,
+        SHOW_CONFIGURABLE_EDX_FIELDS: process.env.SHOW_CONFIGURABLE_EDX_FIELDS || false,
       });
     },
   },

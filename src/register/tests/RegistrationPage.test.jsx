@@ -4,21 +4,17 @@ import { Provider } from 'react-redux';
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import * as analytics from '@edx/frontend-platform/analytics';
-import {
-  configure, getLocale, injectIntl, IntlProvider,
-} from '@edx/frontend-platform/i18n';
+import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
-import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
-import { COMPLETE_STATE, PENDING_STATE, WELCOME_PAGE } from '../../data/constants';
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import {
+  backupRegistrationFormBegin,
   clearUsernameSuggestions,
   fetchRealtimeValidations,
   registerNewUser,
-  resetRegistrationForm,
-  setRegistrationFormData,
 } from '../data/actions';
 import {
   FIELDS, FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED,
@@ -27,10 +23,6 @@ import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics');
-jest.mock('@edx/frontend-platform/i18n', () => ({
-  ...jest.requireActual('@edx/frontend-platform/i18n'),
-  getLocale: jest.fn(),
-}));
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
@@ -41,15 +33,27 @@ const mockStore = configureStore();
 
 describe('RegistrationPage', () => {
   mergeConfig({
-    PRIVACY_POLICY: 'http://privacy-policy.com',
-    TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
+    PRIVACY_POLICY: 'https://privacy-policy.com',
+    TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
     USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
     REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
+    SHOW_CONFIGURABLE_EDX_FIELDS: true,
   });
 
   let props = {};
   let store = {};
-  let registrationFormData = {};
+  const registrationFormData = {
+    configurableFormFields: {},
+    formFields: {
+      name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
+    },
+    emailSuggestion: {
+      suggestion: '', type: '',
+    },
+    errors: {
+      name: '', email: '', username: '', password: '',
+    },
+  };
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
@@ -58,7 +62,6 @@ describe('RegistrationPage', () => {
   );
 
   const thirdPartyAuthContext = {
-    platformName: 'openedX',
     currentProvider: null,
     finishAuthUrl: null,
     providers: [],
@@ -88,24 +91,6 @@ describe('RegistrationPage', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
-    registrationFormData = {
-      country: '',
-      email: '',
-      name: '',
-      password: '',
-      username: '',
-      marketingOptIn: true,
-      errors: {
-        email: '',
-        name: '',
-        username: '',
-        password: '',
-        country: '',
-      },
-      emailFieldBorderClass: '',
-      emailErrorSuggestion: null,
-      emailWarningSuggestion: null,
-    };
     props = {
       registrationResult: jest.fn(),
       handleInstitutionLogin: jest.fn(),
@@ -122,14 +107,16 @@ describe('RegistrationPage', () => {
     registerPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
     registerPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
     registerPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
+
     registerPage.find('input#country').simulate('change', { target: { value: payload.country, name: 'country' } });
+    registerPage.find('input#country').simulate('blur', { target: { value: payload.country, name: 'country' } });
 
     if (!isThirdPartyAuth) {
       registerPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
     }
   };
 
-  describe('TestRegistrationPage', () => {
+  describe('Test Registration Page', () => {
     const emptyFieldValidation = {
       name: 'Enter your full name',
       username: 'Username must be between 2 and 30 characters',
@@ -153,7 +140,6 @@ describe('RegistrationPage', () => {
     // ******** test registration form submission ********
 
     it('should submit form for valid input', () => {
-      getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       delete window.location;
@@ -167,19 +153,14 @@ describe('RegistrationPage', () => {
         country: 'Pakistan',
         honor_code: true,
         totalRegistrationTime: 0,
-        is_authn_mfe: true,
+        marketing_emails_opt_in: true,
         next: '/course/demo-course-url',
-      };
-      const nextProps = {
-        registrationFormData: {
-          country: 'PK',
-        },
+        extended_profile: [],
       };
 
       store.dispatch = jest.fn(store.dispatch);
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       populateRequiredFields(registerPage, payload);
-      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
       registerPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
@@ -195,12 +176,8 @@ describe('RegistrationPage', () => {
         honor_code: true,
         social_auth_provider: ssoProvider.name,
         totalRegistrationTime: 0,
-        is_authn_mfe: true,
-      };
-      const nextProps = {
-        registrationFormData: {
-          country: 'PK',
-        },
+        marketing_emails_opt_in: true,
+        extended_profile: [],
       };
 
       store = mockStore({
@@ -217,7 +194,6 @@ describe('RegistrationPage', () => {
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       populateRequiredFields(registerPage, formPayload, true);
-      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
       registerPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
     });
@@ -243,54 +219,61 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
 
       const alertBanner = 'We couldn\'t create your account.Please check your responses and try again.';
-      registrationPage.find('RegistrationPage').setState({ failureCount: 1 });
-
       expect(registrationPage.find('#validation-errors').first().text()).toEqual(alertBanner);
-      expect(registrationPage.find('RegistrationPage').state('failureCount')).toEqual(1);
     });
 
     it('should update errors for frontend validations', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
       registrationPage.find('input#name').simulate('blur', { target: { value: 'http://test.com', name: 'name' } });
+      expect(
+        registrationPage.find('div[feedback-for="name"]').text(),
+      ).toEqual('Enter a valid name');
 
       registrationPage.find('input#password').simulate('blur', { target: { value: 'pas', name: 'password' } });
-      expect(registrationPage.find('RegistrationPage').state('errors')).toEqual({
-        email: '', name: 'Enter a valid name', username: '', password: 'Password criteria has not been met', country: '',
-      });
+      expect(
+        registrationPage.find('div[feedback-for="password"]').text(),
+      ).toContain('Password criteria has not been met');
 
       registrationPage.find('input#password').simulate('blur', { target: { value: 'invalid-email', name: 'email' } });
-      expect(registrationPage.find('RegistrationPage').state('errors')).toEqual({
-        email: 'Enter a valid email address', name: 'Enter a valid name', username: '', password: 'Password criteria has not been met', country: '',
-      });
+      expect(
+        registrationPage.find('div[feedback-for="email"]').text(),
+      ).toEqual('Enter a valid email address');
     });
 
     it('should validate fields on blur event', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
       registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+      expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
+
       registrationPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
+      expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
+
       registrationPage.find('input#email').simulate('blur', { target: { value: '', name: 'email' } });
+      expect(registrationPage.find('div[feedback-for="email"]').text()).toEqual(emptyFieldValidation.email);
+
       registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
+      expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
+
       registrationPage.find('input#country').simulate('blur', { target: { value: '', name: 'country' } });
-      expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(emptyFieldValidation);
+      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
     });
 
     it('should call validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
-      // enter a valid username so that frontend validations are passed
+      // Enter a valid username so that frontend validations are passed
       registrationPage.find('input#username').simulate('change', { target: { value: 'test', name: 'username' } });
       registrationPage.find('input#username').simulate('blur');
 
       const formPayload = {
         form_field_key: 'username',
-        is_authn_mfe: true,
         email: '',
         name: '',
         username: 'test',
         password: '',
-        country: '',
-        honor_code: true,
       };
       expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations(formPayload));
     });
@@ -307,32 +290,10 @@ describe('RegistrationPage', () => {
         },
       });
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
-      expect(registrationPage.prop('validationDecisions')).toEqual({
+      expect(registrationPage.prop('backendValidations')).toEqual({
         email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`,
         username: 'It looks like this username is already taken',
       });
-    });
-
-    it('should change validations in shouldComponentUpdate', () => {
-      const formData = {
-        errors: {
-          ...registrationFormData.errors,
-          username: 'It looks like this username is already taken',
-        },
-      };
-      store.dispatch = jest.fn(store.dispatch);
-      const nextProps = {
-        thirdPartyAuthContext,
-        registrationErrorCode: 'duplicate-username',
-        validationDecisions: {
-          username: 'It looks like this username is already taken',
-        },
-      };
-
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
-      expect(registrationPage.instance().shouldComponentUpdate(nextProps)).toBe(false);
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData, true));
-      expect(registrationPage.state('errorCode')).toEqual('duplicate-username');
     });
 
     it('should remove space from the start of username', () => {
@@ -345,27 +306,28 @@ describe('RegistrationPage', () => {
     // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {
-      const errors = {
-        email: '',
-        name: '',
-        username: '',
-        password: '',
-        country: '',
-      };
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
       registrationPage.find('input#name').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeFalsy();
+
       expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
       registrationPage.find('input#username').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeFalsy();
+
       expect(registrationPage.find('div[feedback-for="email"]').text()).toEqual(emptyFieldValidation.email);
       registrationPage.find('input#email').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeFalsy();
+
       expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
       registrationPage.find('input#password').simulate('focus');
+      expect(registrationPage.find('div[feedback-for="password"]').exists()).toBeFalsy();
+
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
       registrationPage.find('input#country').simulate('focus');
-      expect(registrationPage.find('RegistrationPage').state('errors')).toEqual(errors);
+      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
 
     it('should clear username suggestions when username field is focused in', () => {
@@ -459,6 +421,19 @@ describe('RegistrationPage', () => {
       expect(button.find('.sr-only').text()).toEqual('pending');
     });
 
+    it('should display opt-in/opt-out checkbox', () => {
+      mergeConfig({
+        MARKETING_EMAILS_OPT_IN: 'true',
+      });
+
+      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registerPage.find('div.opt-checkbox').length).toEqual(1);
+
+      mergeConfig({
+        MARKETING_EMAILS_OPT_IN: '',
+      });
+    });
+
     it('should show single sign on provider button', () => {
       store = mockStore({
         ...initialState,
@@ -550,7 +525,6 @@ describe('RegistrationPage', () => {
       });
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(props);
       expect(registerPage.find('button.username-suggestion').length).toEqual(3);
     });
 
@@ -559,7 +533,7 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
+          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
           registrationFormData: {
             ...registrationFormData,
             username: ' ',
@@ -578,7 +552,7 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
+          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
           registrationFormData: {
             ...registrationFormData,
             username: ' ',
@@ -588,28 +562,27 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(props);
       registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
       registerPage.find('button.suggested-username-close-button').at(0).simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
     it('should redirect to url returned in registration result after successful account creation', () => {
-      const dasboardUrl = 'http://test.com/testing-dashboard/';
+      const dashboardURL = 'https://test.com/testing-dashboard/';
       store = mockStore({
         ...initialState,
         register: {
           ...initialState.register,
           registrationResult: {
             success: true,
-            redirectUrl: dasboardUrl,
+            redirectUrl: dashboardURL,
           },
         },
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(window.location.href).toBe(dasboardUrl);
+      expect(window.location.href).toBe(dashboardURL);
     });
 
     it('should redirect to social auth provider url on SSO button click', () => {
@@ -661,6 +634,27 @@ describe('RegistrationPage', () => {
 
       renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    });
+
+    it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING: true,
+      });
+      const dashboardUrl = 'https://test.com/testing-dashboard/';
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+            redirectUrl: dashboardUrl,
+          },
+        },
+      });
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL };
+      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(window.location.href).toBe(dashboardUrl);
     });
 
     // ******** test hinted third party auth ********
@@ -733,10 +727,18 @@ describe('RegistrationPage', () => {
 
     // ******** miscellaneous tests ********
 
-    it('tests componentDidMount calls the reset form action', () => {
+    it('should backup the registration form state when shouldBackupState is true', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          shouldBackupState: true,
+        },
+      });
+
       store.dispatch = jest.fn(store.dispatch);
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(store.dispatch).toHaveBeenCalledWith(resetRegistrationForm());
+      expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationFormBegin({ ...registrationFormData }));
     });
 
     it('should render cookie banner', () => {
@@ -749,319 +751,102 @@ describe('RegistrationPage', () => {
       expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
-    it('should send track event for save_for_later param', () => {
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat('/register'), search: '?save_for_later=true' };
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.saveforlater.course.enroll.clicked',
-        { category: 'save-for-later' });
-    });
-
-    // ******** shouldComponentUpdate tests ********
-
     it('should populate form with pipeline user details', () => {
       store = mockStore({
         ...initialState,
+        register: {
+          ...initialState.register,
+          backedUpFormData: { ...registrationFormData },
+        },
         commonComponents: {
           ...initialState.commonComponents,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             pipelineUserDetails: {
               email: 'test@example.com',
+              username: 'test',
             },
-            countryCode: 'US',
           },
         },
       });
-      const nextProps = {
-        thirdPartyAuthContext: {
-          pipelineUserDetails: {},
-        },
-        registrationFormData: {
-          ...registrationFormData,
-          country: 'US',
-          email: 'test@example.com',
-        },
-        validationDecisions: null,
-      };
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
-      registrationPage.instance().shouldComponentUpdate(nextProps);
-      expect(registrationPage.state('country')).toEqual('US');
-      expect(registrationPage.state('email')).toEqual('test@example.com');
+      expect(registrationPage.find('input#email').props().value).toEqual('test@example.com');
+      expect(registrationPage.find('input#username').props().value).toEqual('test');
     });
 
     it('should update state from country code present in redux store', () => {
-      const nextProps = {
-        registrationErrorCode: null,
-        thirdPartyAuthContext: {
-          ...thirdPartyAuthContext,
-          countryCode: 'US',
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          backendCountryCode: 'PK',
         },
-        registrationFormData: {
-          ...registrationFormData,
-          country: 'US',
-        },
-        validationDecisions: null,
-      };
+      });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      const shouldUpdate = registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
-      expect(registrationPage.find('RegistrationPage').state('country')).toEqual('US');
-      expect(shouldUpdate).toBe(false);
+      expect(registrationPage.find('input#country').props().value).toEqual('Pakistan');
     });
 
-    it('should update error code state with error returned by registration api', () => {
-      const nextProps = {
-        registrationErrorCode: INTERNAL_SERVER_ERROR,
-        thirdPartyAuthContext,
-        validationDecisions: {},
-      };
+    it('should display error message based on the error code returned by API', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationError: {
+            errorCode: INTERNAL_SERVER_ERROR,
+          },
+        },
+      });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
-
-      expect(registrationPage.find('RegistrationPage').state('errorCode')).toEqual(INTERNAL_SERVER_ERROR);
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      expect(registrationPage.find('div#validation-errors').first().text()).toContain(
+        'An error has occurred. Try refreshing the page, or check your internet connection.',
+      );
     });
 
     it('should update form fields state if updated in redux store', () => {
-      const nextProps = {
-        thirdPartyAuthContext,
-        registrationFormData: {
-          name: 'John Doe',
-          username: 'john_doe',
-          email: 'john.doe@example.com',
-          password: 'password1',
-          emailErrorSuggestion: 'test@gmail.com',
-        },
-      };
-
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
-
-      expect(registrationPage.find('RegistrationPage').state('name')).toEqual('John Doe');
-      expect(registrationPage.find('RegistrationPage').state('username')).toEqual('john_doe');
-      expect(registrationPage.find('RegistrationPage').state('email')).toEqual('john.doe@example.com');
-      expect(registrationPage.find('RegistrationPage').state('emailErrorSuggestion')).toEqual('test@gmail.com');
-      expect(registrationPage.find('RegistrationPage').state('password')).toEqual('password1');
-    });
-
-    it('should display opt-in/opt-out checkbox', () => {
-      mergeConfig({
-        MARKETING_EMAILS_OPT_IN: 'true',
-      });
-
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registerPage.find('div.opt-checkbox').length).toEqual(1);
-
-      mergeConfig({
-        MARKETING_EMAILS_OPT_IN: '',
-      });
-    });
-
-    // ******** persist state tests ********
-
-    it('should clear form field errors in redux store on onFocus', () => {
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#name').simulate('focus');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData({ errors: registrationFormData.errors }));
-    });
-
-    it('should set username in redux store if usernameSuggestion is clicked', () => {
-      const formData = {
-        username: 'testname',
-        errors: {
-          ...registrationFormData.errors,
-        },
-      };
       store = mockStore({
         ...initialState,
         register: {
           ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
           registrationFormData: {
             ...registrationFormData,
-            username: ' ',
+            formFields: {
+              name: 'John Doe',
+              username: 'john_doe',
+              email: 'john.doe@yopmail.com',
+              password: 'password1',
+            },
+            emailSuggestion: {
+              suggestion: 'john.doe@hotmail.com', type: 'warning',
+            },
           },
         },
       });
 
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registerPage.find('button.username-suggestion').at(0).simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
-    });
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
 
-    it('should set email in redux store if emailSuggestion is clicked', () => {
-      const formData = {
-        email: 'test@gmail.com',
-        emailErrorSuggestion: null,
-        emailWarningSuggestion: null,
-        emailFieldBorderClass: '',
-        errors: {
-          ...registrationFormData.errors,
-        },
-      };
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
-      registrationPage.find('RegistrationPage').setState({ emailErrorSuggestion: 'test@gmail.com' });
-      registrationPage.find('.alert-link').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
-    });
-
-    it('should clear username in redux store if usernameSuggestion close button is clicked', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['testname', 't.name', 'test_0'],
-          registrationFormData: {
-            ...registrationFormData,
-            username: ' ',
-          },
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registerPage.find('button.suggested-username-close-button').simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData({ username: '' }));
-    });
-
-    it('should clear emailErrorSuggestion in redux store if close button is clicked', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-        },
-      });
-      store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#email').simulate('blur', { target: { value: 'test@gmail.con', name: 'email' } });
-      registrationPage.find('RegistrationPage').setState({ emailErrorSuggestion: 'test@gmail.com' });
-      registrationPage.find('.alert-close').at(0).simulate('click');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData({ emailErrorSuggestion: null }));
-    });
-
-    it('should set error in redux store if form field is invalid', () => {
-      const formData = {
-        name: '',
-        errors: {
-          ...registrationFormData.errors,
-          name: emptyFieldValidation.name,
-        },
-      };
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#name').simulate('blur', { target: { value: '', name: 'name' } });
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
-    });
-
-    it('should set country code in redux store on country field blur', () => {
-      const formData = {
-        country: 'PK',
-        errors: {
-          country: '',
-          email: '',
-          name: '',
-          password: '',
-          username: '',
-        },
-      };
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('RegistrationPage').setState({ country: 'PK' });
-      registerPage.find('input#country').simulate('blur');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
-    });
-
-    it('should set country value with field error in redux store on country field blur', () => {
-      const formData = {
-        country: 'test',
-        errors: {
-          country: 'Select your country or region of residence',
-          email: '',
-          name: '',
-          password: '',
-          username: '',
-        },
-      };
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('RegistrationPage').setState({ country: 'test' });
-      registerPage.find('input#country').simulate('blur');
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(formData));
-    });
-
-    it('should set country in component state on country change', () => {
-      registrationFormData = {
-        ...registrationFormData,
-        country: 'PK',
-      };
-      const nextProps = {
-        registrationFormData: {
-          country: 'PK',
-        },
-      };
-
-      store.dispatch = jest.fn(store.dispatch);
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#country').simulate('change', { target: { value: 'Pakistan', name: 'country' } });
-      registerPage.find('RegistrationPage').instance().shouldComponentUpdate(nextProps);
-      expect(registerPage.find('RegistrationPage').state('country')).toEqual('PK');
-    });
-
-    it('should set country in component state on country change with translations', () => {
-      getLocale.mockImplementation(() => ('ar-ae'));
-      registrationFormData = {
-        errors: { ...registrationFormData.errors },
-        country: 'AF',
-      };
-      store.dispatch = jest.fn(store.dispatch);
-
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#country').simulate('focus');
-      registerPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'أفغانستان ', name: 'countryItem' } });
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
-    });
-
-    it('should set country in component state on country change with chrome translations', () => {
-      getLocale.mockImplementation(() => ('en-us'));
-      registrationFormData = {
-        errors: { ...registrationFormData.errors },
-        country: 'AF',
-      };
-      store.dispatch = jest.fn(store.dispatch);
-
-      const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registerPage.find('input#country').simulate('focus');
-      registerPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: undefined, name: undefined, parentElement: { parentElement: { value: 'Afghanistan' } } } });
-      expect(store.dispatch).toHaveBeenCalledWith(setRegistrationFormData(registrationFormData));
+      expect(registrationPage.find('input#name').props().value).toEqual('John Doe');
+      expect(registrationPage.find('input#username').props().value).toEqual('john_doe');
+      expect(registrationPage.find('input#email').props().value).toEqual('john.doe@yopmail.com');
+      expect(registrationPage.find('input#password').props().value).toEqual('password1');
+      expect(registrationPage.find('.email-warning-alert-link').first().text()).toEqual('john.doe@hotmail.com');
     });
   });
 
-  describe('TestDynamicFields', () => {
+  describe('Test Configurable Fields', () => {
+    mergeConfig({
+      ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+    });
+
     it('should render fields returned by backend', () => {
-      mergeConfig({
-        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
-      });
       store = mockStore({
         ...initialState,
         commonComponents: {
           ...initialState.commonComponents,
           fieldDescriptions: {
-            country: { name: 'country', error_message: true },
             profession: { name: 'profession', type: 'text', label: 'Profession' },
-            honor_code: { name: FIELDS.HONOR_CODE, error_message: 'You must agree to Honor Code of our site' },
             terms_of_service: {
               name: FIELDS.TERMS_OF_SERVICE,
               error_message: 'You must agree to the Terms and Service agreement of our site',
@@ -1070,9 +855,7 @@ describe('RegistrationPage', () => {
         },
       });
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registerPage.find('#country').exists()).toBeTruthy();
       expect(registerPage.find('#profession').exists()).toBeTruthy();
-      expect(registerPage.find('#honor-code').exists()).toBeTruthy();
       expect(registerPage.find('#tos').exists()).toBeTruthy();
     });
 
@@ -1083,9 +866,7 @@ describe('RegistrationPage', () => {
         commonComponents: {
           ...initialState.commonComponents,
           fieldDescriptions: {
-            country: { name: 'country', error_message: true },
             profession: { name: 'profession', type: 'text', label: 'Profession' },
-            honor_code: { name: 'honor_code', type: 'tos_and_honor_code' },
           },
           extendedProfile: ['profession'],
         },
@@ -1097,9 +878,9 @@ describe('RegistrationPage', () => {
         email: 'john.doe@example.com',
         password: 'password1',
         country: 'Pakistan',
-        totalRegistrationTime: 0,
-        is_authn_mfe: true,
         honor_code: true,
+        totalRegistrationTime: 0,
+        marketing_emails_opt_in: true,
         extended_profile: [{ field_name: 'profession', field_value: 'Engineer' }],
       };
 
@@ -1107,7 +888,6 @@ describe('RegistrationPage', () => {
       const registerPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       populateRequiredFields(registerPage, payload);
-      registerPage.find('RegistrationPage').setState({ values: { country: 'PK' } });
       registerPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
       registerPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
@@ -1151,11 +931,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('#confirm_email-error').last().text()).toEqual('Enter your confirm email');
     });
 
-    it('should show error if email and confirm email fields not match', () => {
-      mergeConfig({
-        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
-      });
-
+    it('should show error if email and confirm email fields do not match', () => {
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -1168,68 +944,10 @@ describe('RegistrationPage', () => {
         },
       });
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('RegistrationPage').setState({ email: 'test1@gmail.com' });
-      registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test@gmail.com', name: 'confirm_email' } });
+      registrationPage.find('input#email').simulate('change', { target: { value: 'test1@gmail.com', name: 'email' } });
+      registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
 
-      expect(registrationPage.find('#confirm_email-error').last().text()).toEqual('The email addresses do not match.');
-    });
-
-    it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
-      mergeConfig({
-        ENABLE_PROGRESSIVE_PROFILING: true,
-        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
-      });
-      const dasboardUrl = 'http://test.com/testing-dashboard/';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-            redirectUrl: dasboardUrl,
-          },
-          commonComponents: {
-            optionalFields: {},
-          },
-        },
-      });
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL };
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(window.location.href).toBe(dasboardUrl);
-    });
-
-    it('should redirect to welcome page when optional fields are configured with feature flags', () => {
-      mergeConfig({
-        ENABLE_PROGRESSIVE_PROFILING: true,
-        ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
-      });
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          optionalFields: {
-            country: { name: 'country', error_message: false },
-          },
-        },
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
-
-        },
-      });
-
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL + WELCOME_PAGE };
-      renderer.create(reduxWrapper(
-        <IntlProvider locale="en">
-          <MemoryRouter>
-            <Provider store={store}><IntlRegistrationPage {...props} /></Provider>
-          </MemoryRouter>
-        </IntlProvider>,
-      ));
-      expect(window.location.href).toBe(getConfig().BASE_URL + WELCOME_PAGE);
+      expect(registrationPage.find('div#confirm_email-error').text()).toEqual('The email addresses do not match.');
     });
   });
 });

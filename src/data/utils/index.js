@@ -2,7 +2,7 @@ export {
   getTpaProvider,
   getTpaHint,
   updatePathWithQueryParams,
-  getAllPossibleQueryParam,
+  getAllPossibleQueryParams,
   getActivationStatus,
   windowScrollTo,
 } from './dataUtils';

@@ -19,22 +19,32 @@ const ThirdPartyAuthAlert = (props) => {
     message = intl.formatMessage(messages['register.third.party.auth.account.not.linked'], { currentProvider, platformName });
   }
 
+  if (!currentProvider) {
+    return null;
+  }
+
   return (
-    <Alert id="tpa-alert" className={referrer === REGISTER_PAGE ? 'alert-success mt-n2' : 'alert-warning mt-n2'}>
+    <>
+      <Alert id="tpa-alert" className={referrer === REGISTER_PAGE ? 'alert-success mt-n2' : 'alert-warning mt-n2'}>
+        {referrer === REGISTER_PAGE ? (
+          <Alert.Heading>{intl.formatMessage(messages['tpa.alert.heading'])}</Alert.Heading>
+        ) : null}
+        <p>{ message }</p>
+      </Alert>
       {referrer === REGISTER_PAGE ? (
-        <Alert.Heading>{intl.formatMessage(messages['tpa.alert.heading'])}</Alert.Heading>
+        <h4 className="mt-4 mb-4">{intl.formatMessage(messages['registration.using.tpa.form.heading'])}</h4>
       ) : null}
-      <p>{ message }</p>
-    </Alert>
+    </>
   );
 };
 
 ThirdPartyAuthAlert.defaultProps = {
+  currentProvider: '',
   referrer: LOGIN_PAGE,
 };
 
 ThirdPartyAuthAlert.propTypes = {
-  currentProvider: PropTypes.string.isRequired,
+  currentProvider: PropTypes.string,
   intl: intlShape.isRequired,
   referrer: PropTypes.string,
 };

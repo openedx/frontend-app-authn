@@ -37,7 +37,6 @@ const FormGroup = (props) => {
         onClick={handleClick}
         onChange={props.handleChange}
         controlClassName={props.borderClass}
-
         trailingElement={props.trailingElement}
         floatingLabel={props.floatingLabel}
       >

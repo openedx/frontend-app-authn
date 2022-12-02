@@ -49,7 +49,7 @@ export const updatePathWithQueryParams = (path) => {
   return `${path}${queryParams}`;
 };
 
-export const getAllPossibleQueryParam = () => {
+export const getAllPossibleQueryParams = () => {
   const urlParams = QueryString.parse(window.location.search);
   const params = {};
   Object.entries(urlParams).forEach(([key, value]) => {
