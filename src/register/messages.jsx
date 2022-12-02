@@ -285,11 +285,6 @@ const messages = defineMessages({
     defaultMessage: 'Suggested:',
     description: 'Suggested usernames label text.',
   },
-  'registration.using.tpa.form.heading': {
-    id: 'registration.using.tpa.form.heading',
-    defaultMessage: 'Finish creating your account',
-    description: 'Heading that appears above form when user is trying to create account using social auth',
-  },
   'did.you.mean.alert.text': {
     id: 'did.you.mean.alert.text',
     defaultMessage: 'Did you mean',
