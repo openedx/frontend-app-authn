@@ -15,9 +15,11 @@ export const defaultState = {
   registrationError: {},
   registrationResult: {},
   registrationFormData: {
-    configurableFormFields: {},
+    configurableFormFields: {
+      marketingEmailsOptIn: true,
+    },
     formFields: {
-      name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
+      name: '', email: '', username: '', password: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',

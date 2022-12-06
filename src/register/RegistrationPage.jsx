@@ -80,6 +80,7 @@ const RegistrationPage = (props) => {
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
     showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
+    showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
@@ -240,7 +241,7 @@ const RegistrationPage = (props) => {
       case 'username':
         if (!value || value.length <= 1 || value.length > 30) {
           fieldError = intl.formatMessage(messages['username.validation.message']);
-        } else if (!value.match(/^[a-zA-Z\d_-]*$/i)) {
+        } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
           fieldError = intl.formatMessage(messages['username.format.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
@@ -402,7 +403,7 @@ const RegistrationPage = (props) => {
       payload.social_auth_provider = currentProvider;
     }
 
-    const { focusedFieldError, countryFieldCode } = focusedField ? (
+    const { fieldError: focusedFieldError, countryFieldCode } = focusedField ? (
       validateInput(
         focusedField,
         (focusedField in fieldDescriptions || focusedField === 'country') ? (
@@ -419,16 +420,18 @@ const RegistrationPage = (props) => {
       return;
     }
 
-    payload.extendedProfile = [];
     Object.keys(configurableFormFields).forEach((fieldName) => {
-      if (props.extendedProfile.includes(fieldName)) {
-        payload.extendedProfile.push({ fieldName, fieldValue: configurableFormFields[fieldName] });
-      } else if (fieldName === 'country') {
+      if (fieldName === 'country') {
         payload[fieldName] = focusedField === 'country' ? countryFieldCode : configurableFormFields[fieldName].countryCode;
       } else {
         payload[fieldName] = configurableFormFields[fieldName];
       }
     });
+
+    // Don't send the marketing email opt-in value if the flag is turned off
+    if (!flags.showMarketingEmailOptInCheckbox) {
+      delete payload.marketingEmailsOptIn;
+    }
 
     payload = snakeCaseObject(payload);
     payload.totalRegistrationTime = totalRegistrationTime;
@@ -521,17 +524,6 @@ const RegistrationPage = (props) => {
                 floatingLabel={intl.formatMessage(messages['registration.password.label'])}
               />
             )}
-            {getConfig().MARKETING_EMAILS_OPT_IN
-              && (
-                <Form.Checkbox
-                  name="marketingEmailsOptIn"
-                  className="opt-checkbox"
-                  checked={formFields.marketingEmailsOptIn}
-                  onChange={handleOnChange}
-                >
-                  {intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME })}
-                </Form.Checkbox>
-              )}
             <ConfigurableRegistrationForm
               countryList={countryList}
               email={formFields.email}
@@ -663,9 +655,11 @@ RegistrationPage.propTypes = {
 
 RegistrationPage.defaultProps = {
   backedUpFormData: {
-    configurableFormFields: {},
+    configurableFormFields: {
+      marketingEmailsOptIn: true,
+    },
     formFields: {
-      name: '', email: '', username: '', password: '', marketingEmailsOptIn: true,
+      name: '', email: '', username: '', password: '',
     },
     errors: {
       name: '', email: '', username: '', password: '',

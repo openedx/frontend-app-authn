@@ -44,6 +44,7 @@ const ConfigurableRegistrationForm = (props) => {
   const flags = {
     showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
+    showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
 
   useEffect(() => {
@@ -160,6 +161,25 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
+  if (flags.showMarketingEmailOptInCheckbox) {
+    formFieldDescriptions.push(
+      <span key="marketing_email_opt_in">
+        <FormFieldRenderer
+          fieldData={{
+            type: 'checkbox',
+            label: intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME }),
+            name: 'marketingEmailsOptIn',
+          }}
+          value={formFields.marketingEmailsOptIn}
+          className="opt-checkbox"
+          onChangeHandler={handleOnChange}
+          handleBlur={handleOnBlur}
+          handleFocus={handleOnFocus}
+        />
+      </span>,
+    );
+  }
+
   if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
     formFieldDescriptions.push(
       <span key="honor_code">
@@ -191,6 +211,7 @@ ConfigurableRegistrationForm.propTypes = {
       countryCode: PropTypes.string,
     }),
     honor_code: PropTypes.bool,
+    marketingEmailsOptIn: PropTypes.bool,
   }).isRequired,
   intl: intlShape.isRequired,
   setFieldErrors: PropTypes.func.isRequired,
