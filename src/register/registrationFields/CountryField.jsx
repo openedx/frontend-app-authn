@@ -20,7 +20,7 @@ const CountryField = (props) => {
   const [displayValue, setDisplayValue] = useState('');
   const [trailingIcon, setTrailingIcon] = useState(null);
 
-  const onBlurHandler = (event, itemClicked = false) => {
+  const onBlurHandler = (event, itemClicked = false, countryClicked = '') => {
     const { name } = event.target;
     const relatedName = event.relatedTarget ? event.relatedTarget.name : '';
     // For a better user experience, do not validate when focus out from 'country' field
@@ -28,7 +28,7 @@ const CountryField = (props) => {
     if ((relatedName === 'countryItem' || relatedName === 'countryExpand') && name === 'country') {
       return;
     }
-    const countryValue = itemClicked ? event.target.value : displayValue;
+    const countryValue = itemClicked ? countryClicked : displayValue;
     if (props.onBlurHandler) {
       props.onBlurHandler({ target: { name: 'country', value: countryValue } });
     }
@@ -53,7 +53,7 @@ const CountryField = (props) => {
           className="dropdown-item data-hj-suppress"
           value={countryName}
           key={country[COUNTRY_CODE_KEY]}
-          onClick={(event) => onBlurHandler(event, true)}
+          onClick={(event) => onBlurHandler(event, true, countryName)}
         >
           {countryName.length > 30 ? countryName.substring(0, 30).concat('...') : countryName}
         </button>
