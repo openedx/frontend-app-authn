@@ -45,6 +45,8 @@ export function* handleResetPassword(action) {
 
     if (resetStatus) {
       yield put(resetPasswordSuccess(resetStatus));
+    } else if (data.token_invalid) {
+      yield put(passwordResetFailure(PASSWORD_RESET.INVALID_TOKEN));
     } else {
       yield put(resetPasswordFailure(PASSWORD_VALIDATION_ERROR, resetErrors));
     }
