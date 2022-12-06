@@ -26,7 +26,7 @@ const reducer = (state = defaultState, action) => {
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
       return {
         ...state,
-        extendedProfile: action.payload.fieldDescriptions.extendedProfile,
+        extendedProfile: action.payload.fieldDescriptions.extended_profile,
         fieldDescriptions: action.payload.fieldDescriptions.fields,
         optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,

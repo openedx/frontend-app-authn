@@ -34,7 +34,7 @@ const EmailField = (props) => {
       );
     }
     return (
-      <span className="small">
+      <span id="email-warning" className="small">
         {intl.formatMessage(messages['did.you.mean.alert.text'])}:{' '}
         <Alert.Link
           href="#"
