@@ -76,6 +76,25 @@ describe('handleResetPassword', () => {
     resetPassword.mockClear();
   });
 
+  it('should call service and dispatch invalid token error', async () => {
+    responseData.reset_status = false;
+    responseData.token_invalid = true;
+
+    const resetPassword = jest.spyOn(api, 'resetPassword')
+      .mockImplementation(() => Promise.resolve(responseData));
+
+    const dispatched = [];
+    await runSaga(
+      { dispatch: (action) => dispatched.push(action) },
+      handleResetPassword,
+      params,
+    );
+
+    expect(resetPassword).toHaveBeenCalledTimes(1);
+    expect(dispatched).toEqual([resetPasswordBegin(), passwordResetFailure(PASSWORD_RESET.INVALID_TOKEN)]);
+    resetPassword.mockClear();
+  });
+
   it('should call service and dispatch ratelimit error', async () => {
     const errorResponse = {
       response: {
