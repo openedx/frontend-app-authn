@@ -20,7 +20,7 @@ const CountryField = (props) => {
   const [displayValue, setDisplayValue] = useState('');
   const [trailingIcon, setTrailingIcon] = useState(null);
 
-  const onBlurHandler = (event, itemClicked = false, countryClicked = '') => {
+  const onBlurHandler = (event, itemClicked = false, countryName = '') => {
     const { name } = event.target;
     const relatedName = event.relatedTarget ? event.relatedTarget.name : '';
     // For a better user experience, do not validate when focus out from 'country' field
@@ -28,7 +28,7 @@ const CountryField = (props) => {
     if ((relatedName === 'countryItem' || relatedName === 'countryExpand') && name === 'country') {
       return;
     }
-    const countryValue = itemClicked ? countryClicked : displayValue;
+    const countryValue = itemClicked ? countryName : displayValue;
     if (props.onBlurHandler) {
       props.onBlurHandler({ target: { name: 'country', value: countryValue } });
     }
