@@ -24,10 +24,10 @@ const BaseComponent = ({ children, showWelcomeBanner }) => {
       <CookiePolicyBanner languageCode={getLocale()} />
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
-        <MediaQuery maxWidth={breakpoints.small.maxWidth}>
+        <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
           {authenticatedUser ? <AuthSmallLayout username={username} /> : <SmallLayout />}
         </MediaQuery>
-        <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth}>
+        <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
           {authenticatedUser ? <AuthMediumLayout username={username} /> : <MediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth} maxWidth={breakpoints.extraExtraLarge.maxWidth}>
