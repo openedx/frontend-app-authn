@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { mount } from 'enzyme';
 
 import FieldRenderer from '../FieldRenderer';
@@ -82,7 +83,7 @@ describe('FieldRendererTests', () => {
   it('should render checkbox field', () => {
     const fieldData = {
       type: 'checkbox',
-      label: 'I agree that edX may send me marketing messages.',
+      label: `I agree that ${getConfig().SITE_NAME} may send me marketing messages.`,
       name: 'marketing-emails-opt-in-field',
     };
 
@@ -91,7 +92,7 @@ describe('FieldRendererTests', () => {
     field.simulate('change', { target: { checked: true, type: 'checkbox' } });
 
     expect(field.prop('type')).toEqual('checkbox');
-    expect(fieldRenderer.find('label').text()).toEqual('I agree that edX may send me marketing messages.');
+    expect(fieldRenderer.find('label').text()).toEqual(fieldData.label);
     expect(value).toEqual(true);
   });
 

@@ -214,11 +214,6 @@ const messages = defineMessages({
     defaultMessage: 'Gender (optional)',
     description: 'Placeholder for the gender options dropdown',
   },
-  'registration.goals.label': {
-    id: 'registration.goals.label',
-    defaultMessage: 'Tell us why you\'re interested in edX (optional)',
-    description: 'Placeholder for the goals options dropdown',
-  },
   'registration.field.gender.options.f': {
     id: 'registration.field.gender.options.f',
     defaultMessage: 'Female',

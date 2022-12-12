@@ -73,7 +73,7 @@ describe('LoginPage', () => {
     id: 'oa2-apple-id',
     name: 'Apple',
     iconClass: null,
-    iconImage: 'https://edx.devstack.lms/logo.png',
+    iconImage: 'https://openedx.devstack.lms/logo.png',
     loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
   };
 
@@ -272,7 +272,7 @@ describe('LoginPage', () => {
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
           currentProvider: 'Apple',
-          platformName: 'edX',
+          platformName: 'openedX',
         },
       },
     });

@@ -51,7 +51,7 @@ describe('ForgotPasswordPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'test-user' }));
     configure({
       loggingService: { logError: jest.fn() },
       config: {

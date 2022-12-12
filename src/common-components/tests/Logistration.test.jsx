@@ -39,7 +39,7 @@ describe('Logistration', () => {
   );
 
   beforeEach(() => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'test-user' }));
   });
   it('should render registration page', () => {
     configure({
