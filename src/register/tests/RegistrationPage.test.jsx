@@ -946,7 +946,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('.email-warning-alert-link').first().text()).toEqual('john.doe@hotmail.com');
     });
 
-    it('should set country in component state on country change with translations', () => {
+    it('should set country in component state when form is translated used i18n', () => {
       getLocale.mockImplementation(() => ('ar-ae'));
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -955,7 +955,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
 
-    it('should set country in component state on country change with chrome translations', () => {
+    it('should set country in component state when form is translated using browser translations', () => {
       getLocale.mockImplementation(() => ('en-us'));
 
       store.dispatch = jest.fn(store.dispatch);
@@ -1092,6 +1092,16 @@ describe('RegistrationPage', () => {
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
+    });
+
+    it('should not remove errors from form fields when country is selected by clicking on expand button', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
+
+      registrationPage.find('button.expand-more').simulate('click');
+      registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'Pakistan', name: 'countryItem' } });
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
     });
   });
 });

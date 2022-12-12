@@ -172,7 +172,7 @@ const RegistrationPage = (props) => {
    */
   useEffect(() => {
     if (usernameSuggestions.length && !formFields.username) {
-      setFormFields({ ...formFields, username: ' ' });
+      setFormFields(prevState => ({ ...prevState, username: ' ' }));
     }
   }, [usernameSuggestions, formFields]);
 
@@ -261,7 +261,7 @@ const RegistrationPage = (props) => {
           );
           fieldError = error;
           countryFieldCode = countryCode;
-          setConfigurableFormFields({ ...configurableFormFields, country: { countryCode, displayValue } });
+          setConfigurableFormFields(prevState => ({ ...prevState, country: { countryCode, displayValue } }));
         }
         break;
       default:
@@ -275,11 +275,11 @@ const RegistrationPage = (props) => {
         break;
     }
     if (setError) {
-      setErrors({
-        ...errors,
+      setErrors(prevErrors => ({
+        ...prevErrors,
         confirm_email: flags.showConfigurableRegistrationFields ? confirmEmailError : '',
         [fieldName]: fieldError,
-      });
+      }));
     }
     return { fieldError, countryFieldCode };
   };
@@ -327,14 +327,14 @@ const RegistrationPage = (props) => {
 
   const handleSuggestionClick = (event, fieldName, suggestion = '') => {
     event.preventDefault();
-    setErrors({ ...errors, [fieldName]: '' });
+    setErrors(prevErrors => ({ ...prevErrors, [fieldName]: '' }));
     switch (fieldName) {
       case 'email':
-        setFormFields({ ...formFields, email: emailSuggestion.suggestion });
+        setFormFields(prevState => ({ ...prevState, email: emailSuggestion.suggestion }));
         setEmailSuggestion({ suggestion: '', type: '' });
         break;
       case 'username':
-        setFormFields({ ...formFields, username: suggestion });
+        setFormFields(prevState => ({ ...prevState, username: suggestion }));
         props.resetUsernameSuggestions();
         break;
       default:
@@ -346,9 +346,10 @@ const RegistrationPage = (props) => {
   const handleUsernameSuggestionClosed = () => props.resetUsernameSuggestions();
 
   const handleOnChange = (event) => {
+    const { name } = event.target;
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
 
-    if (event.target.name === 'username') {
+    if (name === 'username') {
       if (value.length > 30) {
         return;
       }
@@ -357,7 +358,7 @@ const RegistrationPage = (props) => {
       }
     }
 
-    setFormFields({ ...formFields, [event.target.name]: value });
+    setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
 
   const handleOnBlur = (event) => {
@@ -376,7 +377,7 @@ const RegistrationPage = (props) => {
 
   const handleOnFocus = (event) => {
     const { name, value } = event.target;
-    setErrors({ ...errors, [name]: '' });
+    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
@@ -387,7 +388,7 @@ const RegistrationPage = (props) => {
       // remove it before user enters the input. This is to ensure user doesn't
       // have a space prefixed to the username.
       if (value === ' ') {
-        setFormFields({ ...formFields, [name]: '' });
+        setFormFields(prevState => ({ ...prevState, [name]: '' }));
       }
     }
   };
