@@ -104,11 +104,6 @@ const messages = defineMessages({
     defaultMessage: 'First time here?',
     description: 'A question that appears before sign up link',
   },
-  'email.help.message': {
-    id: 'email.help.message',
-    defaultMessage: 'The email address you used to register with edX.',
-    description: 'Message that appears below email field on login page',
-  },
   'enterprise.login.btn.text': {
     id: 'enterprise.login.btn.text',
     defaultMessage: 'Company or school credentials',

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { mergeConfig } from '@edx/frontend-platform';
+import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
@@ -23,7 +23,7 @@ describe('TermsOfServiceTest', () => {
   });
 
   it('should render error msg if Terms of Service checkbox is not checked', () => {
-    const errorMessage = 'You must agree to the edx Terms of Service';
+    const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Terms of Service`;
     const termsOfService = mount(
       <IntlProvider locale="en">
         <IntlTermsOfService errorMessage={errorMessage} onChangeHandler={changeHandler} />

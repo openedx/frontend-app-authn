@@ -142,7 +142,7 @@ describe('RegistrationPage', () => {
       id: 'oa2-apple-id',
       name: 'Apple',
       iconClass: null,
-      iconImage: 'https://edx.devstack.lms/logo.png',
+      iconImage: 'https://openedx.devstack.lms/logo.png',
       loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
     };
 
@@ -337,9 +337,9 @@ describe('RegistrationPage', () => {
 
     it('should remove space from the start of username', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input#username').simulate('change', { target: { value: ' edX', name: 'username' } });
+      registrationPage.find('input#username').simulate('change', { target: { value: ' test-user', name: 'username' } });
 
-      expect(registrationPage.find('input#username').prop('value')).toEqual('edX');
+      expect(registrationPage.find('input#username').prop('value')).toEqual('test-user');
     });
 
     // ******** test field focus in functionality ********

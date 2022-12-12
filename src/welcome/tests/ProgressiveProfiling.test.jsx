@@ -103,12 +103,12 @@ describe('ProgressiveProfilingTests', () => {
     auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
     const formPayload = {
       gender: 'm',
-      extended_profile: [{ field_name: 'company', field_value: 'edx' }],
+      extended_profile: [{ field_name: 'company', field_value: 'test company' }],
     };
     store.dispatch = jest.fn(store.dispatch);
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     progressiveProfilingPage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
-    progressiveProfilingPage.find('input#company').simulate('change', { target: { value: 'edx', name: 'company' } });
+    progressiveProfilingPage.find('input#company').simulate('change', { target: { value: 'test company', name: 'company' } });
 
     progressiveProfilingPage.find('button.btn-brand').simulate('click');
     expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('abc123', formPayload));
