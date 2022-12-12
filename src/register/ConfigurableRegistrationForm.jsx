@@ -49,7 +49,7 @@ const ConfigurableRegistrationForm = (props) => {
 
   useEffect(() => {
     if (!formFields.country) {
-      setFormFields({ ...formFields, country: { countryCode: '', displayValue: '' } });
+      setFormFields(prevState => ({ ...prevState, country: { countryCode: '', displayValue: '' } }));
     }
   });
 
@@ -61,10 +61,10 @@ const ConfigurableRegistrationForm = (props) => {
     } else {
       value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
       if (type === 'checkbox') {
-        setFieldErrors({ ...fieldErrors, [name]: '' });
+        setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
       }
     }
-    setFormFields({ ...formFields, [name]: value });
+    setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
 
   const handleOnBlur = (event) => {
@@ -76,19 +76,19 @@ const ConfigurableRegistrationForm = (props) => {
       );
       const { countryCode, displayValue } = countryValidation;
       error = countryValidation.error;
-      setFormFields({ ...formFields, country: { countryCode, displayValue } });
+      setFormFields(prevState => ({ ...prevState, country: { countryCode, displayValue } }));
     } else if (!value || !value.trim()) {
       error = fieldDescriptions[name].error_message;
     } else if (name === 'confirm_email' && value !== email) {
       error = intl.formatMessage(messages['email.do.not.match']);
     }
     setFocusedField(null);
-    setFieldErrors({ ...fieldErrors, [name]: error });
+    setFieldErrors(prevErrors => ({ ...prevErrors, [name]: error }));
   };
 
   const handleOnFocus = (event) => {
     const { name } = event.target;
-    setFieldErrors({ ...fieldErrors, [name]: '' });
+    setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
