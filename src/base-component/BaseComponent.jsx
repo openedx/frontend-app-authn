@@ -1,6 +1,7 @@
 import React from 'react';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
+import { getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getLocale } from '@edx/frontend-platform/i18n';
 import { breakpoints } from '@edx/paragon';
@@ -21,7 +22,7 @@ const BaseComponent = ({ children, showWelcomeBanner }) => {
 
   return (
     <>
-      <CookiePolicyBanner languageCode={getLocale()} />
+      {getConfig().ENABLE_COOKIE_POLICY_BANNER ? <CookiePolicyBanner languageCode={getLocale()} /> : null}
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
