@@ -118,7 +118,7 @@ const ForgotPasswordPage = (props) => {
             </p>
             <FormGroup
               floatingLabel={intl.formatMessage(messages['forgot.password.page.email.field.label'])}
-              name="email-test"
+              name="email"
               value={email}
               autoComplete="on"
               errorMessage={validationError}
