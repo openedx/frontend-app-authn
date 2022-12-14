@@ -75,7 +75,7 @@ describe('ForgotPasswordPage', () => {
     const validationMessage = 'We were unable to contact you.Enter a valid email address below.';
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    wrapper.find('input#email-test').simulate(
+    wrapper.find('input#email').simulate(
       'change', { target: { value: 'invalid-email', name: 'email' } },
     );
     await act(async () => { await wrapper.find('button.btn-brand').simulate('click'); });
@@ -118,7 +118,7 @@ describe('ForgotPasswordPage', () => {
   it('should not display any error message on change event', () => {
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    const emailInput = forgotPasswordPage.find('input#email-test');
+    const emailInput = forgotPasswordPage.find('input#email');
     emailInput.simulate('change', { target: { value: 'invalid-email', name: 'email' } });
     forgotPasswordPage.update();
 
@@ -139,7 +139,7 @@ describe('ForgotPasswordPage', () => {
 
     store.dispatch = jest.fn(store.dispatch);
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.find('input#email-test').simulate('blur');
+    forgotPasswordPage.find('input#email').simulate('blur');
     expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
   });
 
@@ -168,7 +168,7 @@ describe('ForgotPasswordPage', () => {
 
     store.dispatch = jest.fn(store.dispatch);
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.find('input#email-test').simulate('focus');
+    forgotPasswordPage.find('input#email').simulate('focus');
     expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
   });
 
