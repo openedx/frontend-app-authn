@@ -16,5 +16,3 @@ spec:
   owner: group:vanguards
   type: 'service'
   lifecycle: 'production'
-dependsOn:
-    - 'lms'
