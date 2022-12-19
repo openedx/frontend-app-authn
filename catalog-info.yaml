@@ -4,7 +4,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: 'Authentication Frontend'
+  name: 'frontend-app-authn'
   description: "Micro-frontend for authentication service. It contains views for login, registration and password reset functionality."
   links:
     - url: 'https://github.com/openedx/frontend-app-authn/blob/master/README.rst'
