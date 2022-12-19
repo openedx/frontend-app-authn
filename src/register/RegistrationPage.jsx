@@ -466,15 +466,15 @@ const RegistrationPage = (props) => {
           }
         />
         <div className="mw-xs mt-3">
-          <RegistrationFailure
-            errorCode={errorCode.type}
-            failureCount={errorCode.count}
-            context={{ provider: currentProvider }}
-          />
           <ThirdPartyAuthAlert
             currentProvider={currentProvider}
             platformName={platformName}
             referrer={REGISTER_PAGE}
+          />
+          <RegistrationFailure
+            errorCode={errorCode.type}
+            failureCount={errorCode.count}
+            context={{ provider: currentProvider }}
           />
           <Form id="registration-form" name="registration-form">
             <FormGroup
