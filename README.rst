@@ -124,45 +124,11 @@ Furthermore, there are several edX-specific environment variables that enable in
 For more information see the document: `Micro-frontend applications in Open
 edX <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
 
-How To Contribute
-------------
-Contributions are very welcome, and strongly encouraged! We've
-put together `some documentation that describes our contribution process <https://edx.readthedocs.org/projects/edx-developer-guide/en/latest/process/index.html>`_.
-
-Even though they were written with edx-platform in mind, the guidelines should be followed for Open edX code in general.
-
-PR description template should be automatically applied if you are sending PR from github interface; otherwise you
-can find it it at `PULL_REQUEST_TEMPLATE.md <https://github.com/openedx/frontend-app-authn/blob/master/.github/pull_request_template.md>`_
-
-This project is currently accepting all types of contributions, bug fixes and security fixes.
-
-Open edX Code of Conduct
-------------------------
-All community members are expected to follow the `Open edX Code of Conduct <https://openedx.org/code-of-conduct/>`_.
-
-People
-------
-The assigned maintainers for this component and other project details may be
-found in `Backstage <https://backstage.openedx.org/catalog/default/group/vanguards>`_. Backstage pulls this data from the ``catalog-info.yaml``
-file in this repo.
-
-Reporting Security Issues
--------------------------
-
-Please do not report security issues in public. Please email security@edx.org.
-
 Known Issues
 ------------
 
 None
 
-License
--------
-
-The code in this repository is licensed under the GNU Affero General Public License v3.0, unless
-otherwise noted.
-
-Please see `LICENSE <https://github.com/openedx/frontend-app-authn/blob/master/LICENSE>`_ for details.
 
 ==============================
 
