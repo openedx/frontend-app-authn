@@ -20,8 +20,10 @@ export async function getThirdPartyAuthContext(urlParams) {
   return {
     fieldDescriptions: data.registration_fields || {},
     optionalFields: data.optional_fields || {},
+    // For backward compatibility with the API, once https://github.com/openedx/edx-platform/pull/30198 is merged
+    // and deployed update it to use data.context_data
     thirdPartyAuthContext: camelCaseObject(
-      convertKeyNames(data.context_data, { fullname: 'name' }),
+      convertKeyNames(data.context_data || data, { fullname: 'name' }),
     ),
   };
 }

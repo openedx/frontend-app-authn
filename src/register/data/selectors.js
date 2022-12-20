@@ -4,6 +4,11 @@ export const storeName = 'register';
 
 export const registerSelector = state => ({ ...state[storeName] });
 
+export const registrationRequestSelector = createSelector(
+  registerSelector,
+  register => register.registrationResult,
+);
+
 export const registrationErrorSelector = createSelector(
   registerSelector,
   register => register.registrationError.errorCode,
@@ -30,4 +35,14 @@ export const validationsSelector = createSelector(
 
     return null;
   },
+);
+
+export const usernameSuggestionsSelector = createSelector(
+  registerSelector,
+  register => register.usernameSuggestions,
+);
+
+export const registrationFormDataSelector = createSelector(
+  registerSelector,
+  register => register.registrationFormData,
 );

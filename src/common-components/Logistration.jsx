@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -16,21 +15,14 @@ import { Redirect } from 'react-router-dom';
 
 import BaseComponent from '../base-component';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
+import { getTpaHint, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
-import {
-  tpaProvidersSelector,
-} from './data/selectors';
 import messages from './messages';
 
 const Logistration = (props) => {
-  const { intl, selectedPage, tpaProviders } = props;
-  const tpaHint = getTpaHint();
-  const {
-    providers, secondaryProviders,
-  } = tpaProviders;
+  const { intl, selectedPage } = props;
+  const tpa = getTpaHint();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
 
@@ -54,9 +46,6 @@ const Logistration = (props) => {
 
   const handleOnSelect = (tabKey) => {
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    if (tabKey === LOGIN_PAGE) {
-      props.backupRegistrationForm();
-    }
     setKey(tabKey);
   };
 
@@ -71,11 +60,6 @@ const Logistration = (props) => {
     </div>
   );
 
-  const isValidTpaHint = () => {
-    const { provider } = getTpaProvider(tpaHint, providers, secondaryProviders);
-    return !!provider;
-  };
-
   return (
     <BaseComponent>
       <div>
@@ -85,14 +69,16 @@ const Logistration = (props) => {
               <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
             </Tabs>
           )
-          : (!isValidTpaHint() && (
+          : (
             <>
-              <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-              </Tabs>
+              {!tpa && (
+                <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                  <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                  <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                </Tabs>
+              )}
             </>
-          ))}
+          )}
         { key && (
           <Redirect to={updatePathWithQueryParams(key)} />
         )}
@@ -109,31 +95,10 @@ const Logistration = (props) => {
 Logistration.propTypes = {
   intl: intlShape.isRequired,
   selectedPage: PropTypes.string,
-  backupRegistrationForm: PropTypes.func.isRequired,
-  tpaProviders: PropTypes.shape({
-    providers: PropTypes.array,
-    secondaryProviders: PropTypes.array,
-  }),
-};
-
-Logistration.defaultProps = {
-  tpaProviders: {
-    providers: [],
-    secondaryProviders: [],
-  },
 };
 
 Logistration.defaultProps = {
   selectedPage: REGISTER_PAGE,
 };
 
-const mapStateToProps = state => ({
-  tpaProviders: tpaProvidersSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    backupRegistrationForm,
-  },
-)(injectIntl(Logistration));
+export default injectIntl(Logistration);

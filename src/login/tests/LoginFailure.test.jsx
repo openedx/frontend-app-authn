@@ -64,7 +64,7 @@ describe('LoginFailureMessage', () => {
         errorCode: INACTIVE_USER,
         context: {
           platformName: 'openedX',
-          supportLink: 'http://support.openedx.test',
+          supportLink: 'https://support.edx.org/',
         },
       },
     };
@@ -80,7 +80,7 @@ describe('LoginFailureMessage', () => {
                             + 'check your spam folders or contact openedX support.';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
-    expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('http://support.openedx.test');
+    expect(loginFailureMessage.find('#login-failure-alert').find('a').props().href).toEqual('https://support.edx.org/');
   });
 
   it('test match failed login attempt error', () => {
@@ -269,7 +269,7 @@ describe('LoginFailureMessage', () => {
         email: 'text@example.com',
         errorCode: ALLOWED_DOMAIN_LOGIN_ERROR,
         context: {
-          allowedDomain: 'test.com',
+          allowedDomain: 'edx.org',
           provider: 'Google',
           tpaHint: 'google-auth2',
         },
@@ -282,7 +282,7 @@ describe('LoginFailureMessage', () => {
       </IntlProvider>,
     );
 
-    const errorMessage = "We couldn't sign you in.As test.com user, You must login with your test.com Google account.";
+    const errorMessage = "We couldn't sign you in.As edx.org user, You must login with your edx.org Google account.";
     const url = 'http://localhost:18000/dashboard/?tpa_hint=google-auth2';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(errorMessage);

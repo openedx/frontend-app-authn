@@ -21,33 +21,26 @@ exports[`ThirdPartyAuthAlert should match login page third party auth alert mess
 `;
 
 exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
-Array [
+<div
+  className="fade alert-content alert-success mt-n2 alert show"
+  id="tpa-alert"
+  role="alert"
+>
   <div
-    className="fade alert-content alert-success mt-n2 alert show"
-    id="tpa-alert"
-    role="alert"
+    className="pgn__alert-message-wrapper"
   >
     <div
-      className="pgn__alert-message-wrapper"
+      className="alert-message-content"
     >
       <div
-        className="alert-message-content"
+        className="alert-heading h4"
       >
-        <div
-          className="alert-heading h4"
-        >
-          Almost done!
-        </div>
-        <p>
-          You've successfully signed into Google! We just need a little more information before you start learning with Your Platform Name Here.
-        </p>
+        Almost done!
       </div>
+      <p>
+        You've successfully signed into Google! We just need a little more information before you start learning with Your Platform Name Here.
+      </p>
     </div>
-  </div>,
-  <h4
-    className="mt-4 mb-4"
-  >
-    Finish creating your account
-  </h4>,
-]
+  </div>
+</div>
 `;

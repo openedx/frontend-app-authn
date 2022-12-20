@@ -214,6 +214,11 @@ const messages = defineMessages({
     defaultMessage: 'Gender (optional)',
     description: 'Placeholder for the gender options dropdown',
   },
+  'registration.goals.label': {
+    id: 'registration.goals.label',
+    defaultMessage: 'Tell us why you\'re interested in edX (optional)',
+    description: 'Placeholder for the goals options dropdown',
+  },
   'registration.field.gender.options.f': {
     id: 'registration.field.gender.options.f',
     defaultMessage: 'Female',
@@ -284,6 +289,11 @@ const messages = defineMessages({
     id: 'registration.username.suggestion.label',
     defaultMessage: 'Suggested:',
     description: 'Suggested usernames label text.',
+  },
+  'registration.using.tpa.form.heading': {
+    id: 'registration.using.tpa.form.heading',
+    defaultMessage: 'Finish creating your account',
+    description: 'Heading that appears above form when user is trying to create account using social auth',
   },
   'did.you.mean.alert.text': {
     id: 'did.you.mean.alert.text',

@@ -1,6 +1,5 @@
 // Load component based styles
 @import "_base_component.scss";
-@import "_registration.scss";
 //
 // ----------------------------
 // #COLORS
@@ -45,6 +44,10 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
 .stateful-button-width {
   width: 12rem;
+}
+
+.register-stateful-button-width {
+  min-width: 14.4rem;
 }
 
 .login-button-width {

@@ -8,9 +8,6 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-/**
- * This component renders the Institution login button
- * */
 export const RenderInstitutionButton = props => {
   const { onSubmitHandler, buttonTitle } = props;
 
@@ -27,9 +24,6 @@ export const RenderInstitutionButton = props => {
   );
 };
 
-/**
- * This component renders the page list of available institutions for login
- * */
 const InstitutionLogistration = props => {
   const lmsBaseUrl = getConfig().LMS_BASE_URL;
   const {

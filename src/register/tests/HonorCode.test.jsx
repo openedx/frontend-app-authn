@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
-import HonorCode from '../registrationFields/HonorCode';
+import HonorCode from '../HonorCode';
 
 const IntlHonorCode = injectIntl(HonorCode);
 
@@ -24,16 +24,12 @@ describe('HonorCodeTest', () => {
   });
 
   it('should render error msg if honor code is not checked', () => {
-    const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Honor Code`;
     const honorCode = mount(
       <IntlProvider locale="en">
-        <IntlHonorCode
-          errorMessage={errorMessage}
-          onChangeHandler={changeHandler}
-        />
+        <IntlHonorCode errorMessage="You must agree to the edx Honor Code" onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
-    expect(honorCode.find('.form-text-size').last().text()).toEqual(errorMessage);
+    expect(honorCode.find('.form-text-size').last().text()).toEqual('You must agree to the edx Honor Code');
   });
 
   it('should render Honor code field', () => {

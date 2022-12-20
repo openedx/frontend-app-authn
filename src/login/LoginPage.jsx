@@ -25,7 +25,7 @@ import {
 } from '../data/constants';
 import {
   getActivationStatus,
-  getAllPossibleQueryParams,
+  getAllPossibleQueryParam,
   getTpaHint,
   getTpaProvider,
   setSurveyCookie,
@@ -54,7 +54,7 @@ class LoginPage extends React.Component {
       },
       isSubmitted: false,
     };
-    this.queryParams = getAllPossibleQueryParams();
+    this.queryParams = getAllPossibleQueryParam();
     this.tpaHint = getTpaHint();
   }
 
@@ -248,10 +248,13 @@ class LoginPage extends React.Component {
           finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
         />
         <div className="mw-xs mt-3">
-          <ThirdPartyAuthAlert
-            currentProvider={thirdPartyAuthContext.currentProvider}
-            platformName={thirdPartyAuthContext.platformName}
-          />
+          {thirdPartyAuthContext.currentProvider
+          && (
+            <ThirdPartyAuthAlert
+              currentProvider={thirdPartyAuthContext.currentProvider}
+              platformName={thirdPartyAuthContext.platformName}
+            />
+          )}
           {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? windowScrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}

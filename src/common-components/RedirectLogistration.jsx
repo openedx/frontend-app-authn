@@ -24,9 +24,10 @@ function RedirectLogistration(props) {
       finalRedirectUrl = redirectUrl;
     }
 
-    // Redirect to Progressive Profiling after successful registration
     if (redirectToWelcomePage) {
       setCookie('van-504-returning-user', true);
+      // use this component to redirect WelcomePage after successful registration
+      // return <Redirect to={WELCOME_PAGE} />;
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return (
         <Redirect to={{

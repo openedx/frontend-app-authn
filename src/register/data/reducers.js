@@ -3,52 +3,49 @@ import {
   PENDING_STATE,
 } from '../../data/constants';
 import {
-  BACKUP_REGISTRATION_DATA,
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
-  REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
+  REGISTER_PERSIST_FORM_DATA, REGISTER_SET_COUNTRY_CODE,
+  REGISTRATION_FORM,
 } from './actions';
 
 export const defaultState = {
-  backendCountryCode: '',
   registrationError: {},
   registrationResult: {},
   registrationFormData: {
-    configurableFormFields: {
-      marketingEmailsOptIn: true,
-    },
-    formFields: {
-      name: '', email: '', username: '', password: '',
-    },
-    emailSuggestion: {
-      suggestion: '', type: '',
-    },
+    country: '',
+    email: '',
+    name: '',
+    password: '',
+    username: '',
+    marketingOptIn: true,
     errors: {
-      name: '', email: '', username: '', password: '',
+      email: '',
+      name: '',
+      username: '',
+      password: '',
+      country: '',
     },
+    emailFieldBorderClass: '',
+    emailErrorSuggestion: null,
+    emailWarningSuggestion: null,
   },
   validations: null,
-  submitState: DEFAULT_STATE,
-  userPipelineDataLoaded: false,
+  statusCode: null,
   usernameSuggestions: [],
-  validationApiRateLimited: false,
-  shouldBackupState: false,
+  extendedProfile: [],
+  fieldDescriptions: {},
+  formRenderState: DEFAULT_STATE,
 };
 
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case BACKUP_REGISTRATION_DATA.BASE:
-      return {
-        ...state,
-        shouldBackupState: true,
-      };
-    case BACKUP_REGISTRATION_DATA.BEGIN:
+    case REGISTRATION_FORM.RESET:
       return {
         ...defaultState,
+        registrationFormData: state.registrationFormData,
         usernameSuggestions: state.usernameSuggestions,
-        registrationFormData: { ...action.payload },
-        userPipelineDataLoaded: state.userPipelineDataLoaded,
       };
     case REGISTER_NEW_USER.BEGIN:
       return {
@@ -72,18 +69,22 @@ const reducer = (state = defaultState, action) => {
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
       };
     }
-    case REGISTER_FORM_VALIDATIONS.SUCCESS: {
-      const { usernameSuggestions, ...validationWithoutUsernameSuggestions } = action.payload.validations;
+    case REGISTER_FORM_VALIDATIONS.BEGIN:
       return {
         ...state,
-        validations: validationWithoutUsernameSuggestions,
+      };
+    case REGISTER_FORM_VALIDATIONS.SUCCESS: {
+      const { usernameSuggestions } = action.payload.validations;
+      return {
+        ...state,
+        validations: action.payload.validations,
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
       };
     }
     case REGISTER_FORM_VALIDATIONS.FAILURE:
       return {
         ...state,
-        validationApiRateLimited: true,
+        statusCode: 403,
         validations: null,
       };
     case REGISTER_CLEAR_USERNAME_SUGGESTIONS:
@@ -91,28 +92,33 @@ const reducer = (state = defaultState, action) => {
         ...state,
         usernameSuggestions: [],
       };
+    case REGISTER_PERSIST_FORM_DATA: {
+      const { formData, clearRegistrationError } = action.payload;
+      return {
+        ...state,
+        registrationError: clearRegistrationError ? {} : state.registrationError,
+        registrationFormData: {
+          ...state.registrationFormData,
+          ...formData,
+        },
+      };
+    }
     case REGISTER_SET_COUNTRY_CODE: {
       const { countryCode } = action.payload;
-      if (!state.registrationFormData.configurableFormFields.country) {
+      if (state.registrationFormData.country === '') {
         return {
           ...state,
-          backendCountryCode: countryCode,
+          registrationFormData: {
+            ...state.registrationFormData,
+            country: countryCode,
+            errors: { ...state.registrationFormData.errors, country: '' },
+          },
         };
       }
       return state;
     }
-    case REGISTER_SET_USER_PIPELINE_DATA_LOADED: {
-      const { value } = action.payload;
-      return {
-        ...state,
-        userPipelineDataLoaded: value,
-      };
-    }
     default:
-      return {
-        ...state,
-        shouldBackupState: false,
-      };
+      return state;
   }
 };
 

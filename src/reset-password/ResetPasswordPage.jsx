@@ -94,12 +94,12 @@ const ResetPasswordPage = (props) => {
     // Do not validate when focus out from 'newPassword' and focus on 'passwordValidation' icon
     // for better user experience.
     if (event.relatedTarget
-      && event.relatedTarget.name === 'password'
+      && event.relatedTarget.name === 'passwordValidation'
       && name === 'newPassword'
     ) {
       return;
     }
-    if (name === 'password') {
+    if (name === 'passwordValidation') {
       name = 'newPassword';
       value = newPassword;
     }

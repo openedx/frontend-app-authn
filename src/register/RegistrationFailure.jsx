@@ -18,10 +18,6 @@ const RegistrationFailureMessage = (props) => {
     windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
   }, [errorCode, failureCount]);
 
-  if (!errorCode) {
-    return null;
-  }
-
   let errorMessage;
   switch (errorCode) {
     case INTERNAL_SERVER_ERROR:

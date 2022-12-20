@@ -6,14 +6,6 @@ export const defaultState = {
   fieldDescriptions: {},
   optionalFields: {},
   thirdPartyAuthApiStatus: null,
-  thirdPartyAuthContext: {
-    currentProvider: null,
-    finishAuthUrl: null,
-    countryCode: null,
-    providers: [],
-    secondaryProviders: [],
-    pipelineUserDetails: null,
-  },
 };
 
 const reducer = (state = defaultState, action) => {
@@ -26,7 +18,7 @@ const reducer = (state = defaultState, action) => {
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
       return {
         ...state,
-        extendedProfile: action.payload.fieldDescriptions.extended_profile,
+        extendedProfile: action.payload.fieldDescriptions.extendedProfile,
         fieldDescriptions: action.payload.fieldDescriptions.fields,
         optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,

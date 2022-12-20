@@ -10,7 +10,6 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
-import { backupRegistrationForm } from '../../register/data/actions';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import Logistration from '../Logistration';
 
@@ -40,7 +39,9 @@ describe('Logistration', () => {
   );
 
   beforeEach(() => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'test-user' }));
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'edX' }));
+  });
+  it('should render registration page', () => {
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -49,19 +50,14 @@ describe('Logistration', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
-  });
 
-  it('should render registration page', () => {
     store = mockStore({
       register: {
         registrationResult: { success: false, redirectUrl: '' },
         registrationError: {},
       },
       commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
+        thirdPartyAuthApiStatus: null,
       },
     });
     const logistration = mount(reduxWrapper(<IntlLogistration />));
@@ -75,10 +71,7 @@ describe('Logistration', () => {
         loginResult: { success: false, redirectUrl: '' },
       },
       commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
+        thirdPartyAuthApiStatus: null,
       },
     });
 
@@ -184,28 +177,5 @@ describe('Logistration', () => {
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
     });
-  });
-
-  it('should fire action to backup registration form on tab click', () => {
-    store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-
-    store.dispatch = jest.fn(store.dispatch);
-    const logistration = mount(reduxWrapper(<IntlLogistration />));
-    logistration.find('a[data-rb-event-key="/login"]').simulate('click');
-    expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
 });
