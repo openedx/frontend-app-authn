@@ -71,6 +71,7 @@ const ProgressiveProfiling = (props) => {
   const extendedProfile = props.location.state.optionalFields.extended_profile;
   const handleSubmit = (e) => {
     e.preventDefault();
+    window.history.replaceState(props.location.state, null, '');
     const authenticatedUser = getAuthenticatedUser();
     const payload = { ...values, extendedProfile: [] };
     if (Object.keys(extendedProfile).length > 0) {
@@ -95,6 +96,7 @@ const ProgressiveProfiling = (props) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
+    window.history.replaceState(props.location.state, null, '');
     setOpenDialog(true);
     sendTrackEvent('edx.bi.welcome.page.skip.link.clicked');
   };
