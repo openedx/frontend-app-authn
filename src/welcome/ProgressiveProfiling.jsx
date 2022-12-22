@@ -37,8 +37,6 @@ const ProgressiveProfiling = (props) => {
   const {
     formRenderState, intl, submitState, showError,
   } = props;
-  const optionalFields = props.location.state.optionalFields.fields;
-  const extendedProfile = props.location.state.optionalFields.extended_profile;
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [values, setValues] = useState({});
@@ -69,6 +67,8 @@ const ProgressiveProfiling = (props) => {
     return null;
   }
 
+  const optionalFields = props.location.state.optionalFields.fields;
+  const extendedProfile = props.location.state.optionalFields.extended_profile;
   const handleSubmit = (e) => {
     e.preventDefault();
     const authenticatedUser = getAuthenticatedUser();
@@ -193,8 +193,6 @@ const ProgressiveProfiling = (props) => {
 
 ProgressiveProfiling.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
-  extendedProfile: PropTypes.arrayOf(PropTypes.string),
-  optionalFields: PropTypes.shape({}),
   formRenderState: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
   location: PropTypes.shape({
@@ -207,8 +205,6 @@ ProgressiveProfiling.propTypes = {
 };
 
 ProgressiveProfiling.defaultProps = {
-  extendedProfile: [],
-  optionalFields: {},
   location: { state: {} },
   shouldRedirect: false,
   showError: false,
