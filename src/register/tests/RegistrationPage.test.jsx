@@ -13,7 +13,7 @@ import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
-import { COMPLETE_STATE, PENDING_STATE, WELCOME_PAGE } from '../../data/constants';
+import { AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import {
   backupRegistrationFormBegin,
   clearUsernameSuggestions,
@@ -719,7 +719,7 @@ describe('RegistrationPage', () => {
 
     it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
       mergeConfig({
-        ENABLE_PROGRESSIVE_PROFILING: true,
+        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
       const dashboardUrl = 'https://test.com/testing-dashboard/';
       store = mockStore({
@@ -740,7 +740,7 @@ describe('RegistrationPage', () => {
 
     it('should redirect to progressive profiling page if optional fields are configured', () => {
       mergeConfig({
-        ENABLE_PROGRESSIVE_PROFILING: true,
+        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
 
       store = mockStore({
@@ -764,7 +764,7 @@ describe('RegistrationPage', () => {
         </Router>,
       ));
       progressiveProfilingPage.update();
-      expect(history.location.pathname).toEqual(WELCOME_PAGE);
+      expect(history.location.pathname).toEqual(AUTHN_PROGRESSIVE_PROFILING);
     });
 
     // ******** test hinted third party auth ********

@@ -72,8 +72,8 @@ The authentication micro-frontend also requires the following additional variabl
      - The fully-qualified URL to the password reset support page in the target environment.
      - ``https://support.example.com``
 
-   * - ``WELCOME_PAGE_SUPPORT_LINK``
-     - The fully-qualified URL to the welcome support page in the target environment.
+   * - ``AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK``
+     - The fully-qualified URL to the progressive profiling support page in the target environment.
      - ``https://support.example.com``
 
    * - ``TOS_AND_HONOR_CODE``
@@ -96,7 +96,7 @@ The authentication micro-frontend also requires the following additional variabl
      - Enables support for configurable registration fields on the MFE. This flag must be enabled to show any required registration field besides the default fields (name, email, username, password).
      - ``true`` | ``''`` (empty strings are falsy)
 
-   * - ``ENABLE_PROGRESSIVE_PROFILING``
+   * - ``ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN``
      - Enables support for progressive profiling. If enabled, users are redirected to a second page where data for optional registration fields can be collected.
      - ``true`` | ``''`` (empty strings are falsy)
 

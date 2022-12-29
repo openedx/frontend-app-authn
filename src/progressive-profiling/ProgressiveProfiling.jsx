@@ -31,7 +31,7 @@ import FormFieldRenderer from '../field-renderer';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
-import WelcomePageModal from './WelcomePageModal';
+import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
 const ProgressiveProfiling = (props) => {
   const {
@@ -130,7 +130,7 @@ const ProgressiveProfiling = (props) => {
             { siteName: getConfig().SITE_NAME })}
           </title>
         </Helmet>
-        <WelcomePageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
+        <ProgressiveProfilingPageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
         {props.shouldRedirect ? (
           <RedirectLogistration
             success
@@ -154,7 +154,7 @@ const ProgressiveProfiling = (props) => {
               <Hyperlink
                 isInline
                 variant="muted"
-                destination={getConfig().WELCOME_PAGE_SUPPORT_LINK}
+                destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
                 target="_blank"
                 showLaunchIcon={false}
                 onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}

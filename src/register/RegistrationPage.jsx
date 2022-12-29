@@ -462,7 +462,7 @@ const RegistrationPage = (props) => {
           finishAuthUrl={finishAuthUrl}
           optionalFields={optionalFields}
           redirectToWelcomePage={
-            getConfig().ENABLE_PROGRESSIVE_PROFILING && Object.keys(optionalFields).length !== 0
+            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).length !== 0
           }
         />
         <div className="mw-xs mt-3">
