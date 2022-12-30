@@ -2,7 +2,7 @@
 export const LOGIN_PAGE = '/login';
 export const REGISTER_PAGE = '/register';
 export const RESET_PAGE = '/reset';
-export const WELCOME_PAGE = '/welcome';
+export const AUTHN_PROGRESSIVE_PROFILING = '/welcome';
 export const DEFAULT_REDIRECT_URL = '/dashboard';
 export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
 export const PAGE_NOT_FOUND = '/notfound';

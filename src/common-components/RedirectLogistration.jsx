@@ -4,7 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { WELCOME_PAGE } from '../data/constants';
+import { AUTHN_PROGRESSIVE_PROFILING } from '../data/constants';
 import { setCookie } from '../data/utils';
 
 function RedirectLogistration(props) {
@@ -30,7 +30,7 @@ function RedirectLogistration(props) {
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return (
         <Redirect to={{
-          pathname: WELCOME_PAGE,
+          pathname: AUTHN_PROGRESSIVE_PROFILING,
           state: {
             registrationResult,
             optionalFields,

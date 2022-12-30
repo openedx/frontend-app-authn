@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const WelcomePageModal = (props) => {
+const ProgressiveProfilingPageModal = (props) => {
   const { intl, isOpen, redirectUrl } = props;
   const platformName = getConfig().SITE_NAME;
 
@@ -46,14 +46,14 @@ const WelcomePageModal = (props) => {
   );
 };
 
-WelcomePageModal.propTypes = {
+ProgressiveProfilingPageModal.propTypes = {
   intl: intlShape.isRequired,
   isOpen: PropTypes.bool,
   redirectUrl: PropTypes.string.isRequired,
 };
 
-WelcomePageModal.defaultProps = {
+ProgressiveProfilingPageModal.defaultProps = {
   isOpen: false,
 };
 
-export default injectIntl(WelcomePageModal);
+export default injectIntl(ProgressiveProfilingPageModal);

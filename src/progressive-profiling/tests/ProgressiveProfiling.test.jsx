@@ -33,7 +33,7 @@ auth.hydrateAuthenticatedUser = jest.fn().mockImplementation(() => Promise.resol
 
 describe('ProgressiveProfilingTests', () => {
   mergeConfig({
-    WELCOME_PAGE_SUPPORT_LINK: 'http://localhost:1999/welcome',
+    AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/welcome',
   });
   const registrationResult = { redirectUrl: getConfig().LMS_BASE_URL + DEFAULT_REDIRECT_URL, success: true };
   const fields = {
