@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
@@ -9,9 +9,6 @@ import TermsOfService from '../registrationFields/TermsOfService';
 const IntlTermsOfService = injectIntl(TermsOfService);
 
 describe('TermsOfServiceTest', () => {
-  mergeConfig({
-    TOS_LINK: 'http://tos-and-honor-code.com',
-  });
   let value = false;
 
   const changeHandler = (e) => {

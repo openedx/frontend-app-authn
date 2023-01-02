@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie';
 
 export function setCookie(cookieName, cookieValue, cookieExpiry) {
   const cookies = new Cookies();
-  const options = { domain: getConfig().COOKIE_DOMAIN, path: '/' };
+  const options = { domain: getConfig().SESSION_COOKIE_DOMAIN, path: '/' };
   if (cookieExpiry) {
     options.expires = cookieExpiry;
   }
