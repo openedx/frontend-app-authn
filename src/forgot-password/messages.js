@@ -51,11 +51,6 @@ const messages = defineMessages({
     defaultMessage: 'Enter your email',
     description: 'Error message that appears when user tries to submit empty email field',
   },
-  'forgot.password.invalid.email.message': {
-    id: 'forgot.password.invalid.email.message',
-    defaultMessage: "The email address you've provided isn't formatted correctly.",
-    description: 'message for invalid email',
-  },
   'forgot.password.email.help.text': {
     id: 'forgot.password.email.help.text',
     defaultMessage: 'The email address you used to register with {platformName}',
@@ -128,11 +123,6 @@ const messages = defineMessages({
     id: 'internal.server.error',
     defaultMessage: 'An error has occurred. Try refreshing the page, or check your internet connection.',
     description: 'Error message that appears when server responds with 500 error code',
-  },
-  'rate.limit.error': {
-    id: 'rate.limit.error',
-    defaultMessage: 'An error has occurred because of too many requests. Please try again after some time.',
-    description: 'Error message that appears when server responds with 429 error code',
   },
 });
 export default messages;

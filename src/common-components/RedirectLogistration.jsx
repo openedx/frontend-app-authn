@@ -26,6 +26,7 @@ function RedirectLogistration(props) {
 
     // Redirect to Progressive Profiling after successful registration
     if (redirectToWelcomePage) {
+      // TODO: Do we still need this cookie?
       setCookie('van-504-returning-user', true);
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return (
