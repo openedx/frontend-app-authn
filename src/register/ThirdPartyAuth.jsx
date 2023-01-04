@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
@@ -64,7 +64,7 @@ ThirdPartyAuth.defaultProps = {
 ThirdPartyAuth.propTypes = {
   currentProvider: PropTypes.string,
   handleInstitutionLogin: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   providers: PropTypes.arrayOf(PropTypes.any),
   secondaryProviders: PropTypes.arrayOf(PropTypes.any),
   thirdPartyAuthApiStatus: PropTypes.string,

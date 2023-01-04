@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -193,7 +193,7 @@ LoginFailureMessage.propTypes = {
     errorCode: PropTypes.string,
     redirectUrl: PropTypes.string,
   }),
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(LoginFailureMessage);

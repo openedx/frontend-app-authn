@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 import PropTypes, { string } from 'prop-types';
@@ -65,7 +65,7 @@ UsernameField.propTypes = {
   handleSuggestionClick: PropTypes.func.isRequired,
   handleUsernameSuggestionClose: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,

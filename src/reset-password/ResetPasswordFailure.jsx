@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -51,7 +51,7 @@ ResetPasswordFailure.defaultProps = {
 ResetPasswordFailure.propTypes = {
   errorCode: PropTypes.string,
   errorMsg: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(ResetPasswordFailure);

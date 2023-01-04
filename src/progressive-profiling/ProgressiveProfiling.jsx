@@ -10,7 +10,7 @@ import {
   getAuthenticatedUser,
   hydrateAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { getLoggingService } from '@edx/frontend-platform/logging';
 import {
   Alert,
@@ -197,7 +197,7 @@ const ProgressiveProfiling = (props) => {
 
 ProgressiveProfiling.propTypes = {
   formRenderState: PropTypes.string.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }),

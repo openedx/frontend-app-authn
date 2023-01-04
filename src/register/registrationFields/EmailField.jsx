@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Icon } from '@edx/paragon';
 import { Close, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -73,7 +73,7 @@ EmailField.propTypes = {
     suggestion: PropTypes.string,
     type: PropTypes.string,
   }),
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   value: PropTypes.string.isRequired,
   handleOnClose: PropTypes.func.isRequired,
   handleSuggestionClick: PropTypes.func.isRequired,

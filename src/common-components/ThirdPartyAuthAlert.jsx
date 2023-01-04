@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
@@ -45,7 +45,7 @@ ThirdPartyAuthAlert.defaultProps = {
 
 ThirdPartyAuthAlert.propTypes = {
   currentProvider: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   referrer: PropTypes.string,
 };
 

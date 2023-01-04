@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
+import PropTypes from 'prop-types';
 
 import messages from './messages';
 
@@ -19,7 +20,7 @@ const ResetPasswordSuccess = (props) => {
 };
 
 ResetPasswordSuccess.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(ResetPasswordSuccess);

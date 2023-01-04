@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@edx/paragon';
@@ -80,7 +80,7 @@ ChangePasswordPrompt.defaultProps = {
 };
 
 ChangePasswordPrompt.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   variant: PropTypes.oneOf(['nudge', 'block']),
   redirectUrl: PropTypes.string,
 };

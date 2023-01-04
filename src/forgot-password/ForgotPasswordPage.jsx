@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
   Hyperlink,
@@ -168,7 +168,7 @@ ForgotPasswordPage.propTypes = {
   email: PropTypes.string,
   emailValidationError: PropTypes.string,
   forgotPassword: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   setForgotPasswordFormData: PropTypes.func.isRequired,
   status: PropTypes.string,
   submitState: PropTypes.string,

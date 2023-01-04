@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { ActionRow, Button, ModalDialog } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
@@ -47,7 +47,7 @@ const ProgressiveProfilingPageModal = (props) => {
 };
 
 ProgressiveProfilingPageModal.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   isOpen: PropTypes.bool,
   redirectUrl: PropTypes.string.isRequired,
 };

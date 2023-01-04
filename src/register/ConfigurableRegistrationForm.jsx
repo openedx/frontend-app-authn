@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
 import FormFieldRenderer from '../field-renderer';
@@ -213,7 +213,7 @@ ConfigurableRegistrationForm.propTypes = {
     honor_code: PropTypes.bool,
     marketingEmailsOptIn: PropTypes.bool,
   }).isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   setFieldErrors: PropTypes.func.isRequired,
   setFocusedField: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
