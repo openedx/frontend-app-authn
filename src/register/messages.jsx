@@ -64,11 +64,6 @@ const messages = defineMessages({
     defaultMessage: 'Create an account for free',
     description: 'Label text for registration form submission button',
   },
-  'create.an.account.btn.pending.state': {
-    id: 'create.an.account.btn.pending.state',
-    defaultMessage: 'Loading',
-    description: 'Title of icon that appears when button is in pending state',
-  },
   'registration.other.options.heading': {
     id: 'registration.other.options.heading',
     defaultMessage: 'Or register with:',
@@ -85,11 +80,6 @@ const messages = defineMessages({
     defaultMessage: 'Register with institution/campus credentials',
     description: 'Heading of institution page',
   },
-  'create.an.account': {
-    id: 'create.an.account',
-    defaultMessage: 'Create an account',
-    description: 'Message on button to return to register page',
-  },
   // Validation messages
   'empty.name.field.error': {
     id: 'empty.name.field.error',
@@ -100,11 +90,6 @@ const messages = defineMessages({
     id: 'empty.email.field.error',
     defaultMessage: 'Enter your email',
     description: 'Error message for empty email field',
-  },
-  'email.do.not.match': {
-    id: 'email.do.not.match',
-    defaultMessage: 'The email addresses do not match.',
-    description: 'Email not match to confirm email',
   },
   'empty.username.field.error': {
     id: 'empty.username.field.error',
@@ -121,15 +106,15 @@ const messages = defineMessages({
     defaultMessage: 'Select your country or region of residence',
     description: 'Error message when no country/region is selected',
   },
+  'email.do.not.match': {
+    id: 'email.do.not.match',
+    defaultMessage: 'The email addresses do not match.',
+    description: 'Email not match to confirm email',
+  },
   'email.invalid.format.error': {
     id: 'email.invalid.format.error',
     defaultMessage: 'Enter a valid email address',
     description: 'Validation error for invalid email address',
-  },
-  'email.ratelimit.less.chars.validation.message': {
-    id: 'email.ratelimit.less.chars.validation.message',
-    defaultMessage: 'Email must have 3 characters.',
-    description: 'Validation message that appears when email address is less than 3 characters',
   },
   'username.validation.message': {
     id: 'username.validation.message',
@@ -150,11 +135,6 @@ const messages = defineMessages({
     id: 'username.format.validation.message',
     defaultMessage: 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), underscores (_), and hyphens (-). Usernames cannot contain spaces',
     description: 'Validation message that appears when username format is invalid',
-  },
-  'support.education.research': {
-    id: 'support.education.research',
-    defaultMessage: 'Support education research by providing additional information. (Optional)',
-    description: 'Text for a checkbox to ask user for if they are willing to provide extra information for education research',
   },
   // Error messages
   'registration.request.failure.header': {
@@ -202,82 +182,6 @@ const messages = defineMessages({
     id: 'terms.of.service',
     defaultMessage: 'Terms of Service',
     description: 'Text for the hyperlink that redirects user to the terms of service',
-  },
-  // Optional fields
-  'registration.year.of.birth.label': {
-    id: 'registration.year.of.birth.label',
-    defaultMessage: 'Year of birth (optional)',
-    description: 'Placeholder for the year of birth options dropdown',
-  },
-  'registration.field.gender.options.label': {
-    id: 'registration.field.gender.options.label',
-    defaultMessage: 'Gender (optional)',
-    description: 'Placeholder for the gender options dropdown',
-  },
-  'registration.field.gender.options.f': {
-    id: 'registration.field.gender.options.f',
-    defaultMessage: 'Female',
-    description: 'The label for the female gender option.',
-  },
-  'registration.field.gender.options.m': {
-    id: 'registration.field.gender.options.m',
-    defaultMessage: 'Male',
-    description: 'The label for the male gender option.',
-  },
-  'registration.field.gender.options.o': {
-    id: 'registration.field.gender.options.o',
-    defaultMessage: 'Other/Prefer not to say',
-    description: 'The label for catch-all gender option.',
-  },
-  'registration.field.education.levels.label': {
-    id: 'registration.field.education.levels.label',
-    defaultMessage: 'Highest level of education completed (optional)',
-    description: 'Placeholder for the education levels dropdown.',
-  },
-  'registration.field.education.levels.p': {
-    id: 'registration.field.education.levels.p',
-    defaultMessage: 'Doctorate',
-    description: 'Selected by the user if their highest level of education is a doctorate degree.',
-  },
-  'registration.field.education.levels.m': {
-    id: 'registration.field.education.levels.m',
-    defaultMessage: "Master's or professional degree",
-    description: "Selected by the user if their highest level of education is a master's or professional degree from a college or university.",
-  },
-  'registration.field.education.levels.b': {
-    id: 'registration.field.education.levels.b',
-    defaultMessage: "Bachelor's degree",
-    description: "Selected by the user if their highest level of education is a four year college or university bachelor's degree.",
-  },
-  'registration.field.education.levels.a': {
-    id: 'registration.field.education.levels.a',
-    defaultMessage: "Associate's degree",
-    description: "Selected by the user if their highest level of education is an associate's degree. 1-2 years of college or university.",
-  },
-  'registration.field.education.levels.hs': {
-    id: 'registration.field.education.levels.hs',
-    defaultMessage: 'Secondary/high school',
-    description: 'Selected by the user if their highest level of education is secondary or high school.  9-12 years of education.',
-  },
-  'registration.field.education.levels.jhs': {
-    id: 'registration.field.education.levels.jhs',
-    defaultMessage: 'Junior secondary/junior high/middle school',
-    description: 'Selected by the user if their highest level of education is junior or middle school. 6-8 years of education.',
-  },
-  'registration.field.education.levels.el': {
-    id: 'registration.field.education.levels.el',
-    defaultMessage: 'Elementary/primary school',
-    description: 'Selected by the user if their highest level of education is elementary or primary school.  1-5 years of education.',
-  },
-  'registration.field.education.levels.none': {
-    id: 'registration.field.education.levels.none',
-    defaultMessage: 'No formal education',
-    description: 'Selected by the user to describe their education.',
-  },
-  'registration.field.education.levels.other': {
-    id: 'registration.field.education.levels.other',
-    defaultMessage: 'Other education',
-    description: 'Selected by the user if they have a type of education not described by the other choices.',
   },
   // miscellaneous strings
   'registration.username.suggestion.label': {
