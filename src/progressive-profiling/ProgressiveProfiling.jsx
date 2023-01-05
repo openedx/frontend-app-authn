@@ -46,11 +46,13 @@ const ProgressiveProfiling = (props) => {
 
   useEffect(() => {
     configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
-    ensureAuthenticatedUser(DASHBOARD_URL).then(() => {
-      hydrateAuthenticatedUser().then(() => {
-        setReady(true);
-      });
-    });
+    ensureAuthenticatedUser(DASHBOARD_URL)
+      .then(() => {
+        hydrateAuthenticatedUser().then(() => {
+          setReady(true);
+        });
+      })
+      .catch(() => {});
 
     if (props.location.state && props.location.state.registrationResult) {
       setRegistrationResult(props.location.state.registrationResult);
@@ -194,7 +196,6 @@ const ProgressiveProfiling = (props) => {
 };
 
 ProgressiveProfiling.propTypes = {
-  // eslint-disable-next-line react/no-unused-prop-types
   formRenderState: PropTypes.string.isRequired,
   intl: intlShape.isRequired,
   location: PropTypes.shape({
