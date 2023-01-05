@@ -9,7 +9,7 @@ import { setCookie } from '../data/utils';
 
 function RedirectLogistration(props) {
   const {
-    finishAuthUrl, redirectUrl, redirectToProgressiveProfilingPage, success, optionalFields,
+    finishAuthUrl, redirectUrl, redirectToWelcomePage, success, optionalFields,
   } = props;
   let finalRedirectUrl = '';
 
@@ -25,7 +25,7 @@ function RedirectLogistration(props) {
     }
 
     // Redirect to Progressive Profiling after successful registration
-    if (redirectToProgressiveProfilingPage) {
+    if (redirectToWelcomePage) {
       // TODO: Do we still need this cookie?
       setCookie('van-504-returning-user', true);
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
@@ -50,7 +50,7 @@ RedirectLogistration.defaultProps = {
   finishAuthUrl: null,
   success: false,
   redirectUrl: '',
-  redirectToProgressiveProfilingPage: false,
+  redirectToWelcomePage: false,
   optionalFields: {},
 };
 
@@ -58,7 +58,7 @@ RedirectLogistration.propTypes = {
   finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
   redirectUrl: PropTypes.string,
-  redirectToProgressiveProfilingPage: PropTypes.bool,
+  redirectToWelcomePage: PropTypes.bool,
   optionalFields: PropTypes.shape({}),
 };
 

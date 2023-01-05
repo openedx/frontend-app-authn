@@ -23,21 +23,15 @@ const reducer = (state = defaultState, action) => {
         ...state,
         thirdPartyAuthApiStatus: PENDING_STATE,
       };
-    case THIRD_PARTY_AUTH_CONTEXT.SUCCESS: {
-      const extendedProfile = action.payload.optionalFields.extended_profile;
-      const extendedProfileArray = extendedProfile && JSON.parse(extendedProfile.replaceAll('\'', '"'));
+    case THIRD_PARTY_AUTH_CONTEXT.SUCCESS:
       return {
         ...state,
-        extendedProfile: extendedProfileArray,
+        extendedProfile: action.payload.fieldDescriptions.extended_profile,
         fieldDescriptions: action.payload.fieldDescriptions.fields,
-        optionalFields: {
-          ...action.payload.optionalFields,
-          extended_profile: extendedProfileArray,
-        },
+        optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
       };
-    }
     case THIRD_PARTY_AUTH_CONTEXT.FAILURE:
       return {
         ...state,
