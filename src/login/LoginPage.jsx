@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, Hyperlink, Icon, StatefulButton,
 } from '@edx/paragon';
@@ -369,7 +369,7 @@ LoginPage.defaultProps = {
 
 LoginPage.propTypes = {
   getThirdPartyAuthContext: PropTypes.func.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   loginError: PropTypes.objectOf(PropTypes.any),
   loginRequest: PropTypes.func.isRequired,
   loginRequestFailure: PropTypes.func.isRequired,

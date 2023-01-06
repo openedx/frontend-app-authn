@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
 } from '@edx/paragon';
@@ -100,7 +100,7 @@ PasswordField.propTypes = {
   handleBlur: PropTypes.func,
   handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,

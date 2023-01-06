@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Button, Hyperlink, Icon } from '@edx/paragon';
 import { Institution } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -95,7 +95,7 @@ RenderInstitutionButton.defaultProps = {
 
 InstitutionLogistration.propTypes = {
   ...LogistrationProps,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   headingTitle: PropTypes.string,
 };
 InstitutionLogistration.defaultProps = {

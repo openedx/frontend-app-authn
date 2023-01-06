@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig, getQueryParameters } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
   Icon,
@@ -224,7 +224,7 @@ ResetPasswordPage.defaultProps = {
 };
 
 ResetPasswordPage.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   resetPassword: PropTypes.func.isRequired,
   validateToken: PropTypes.func.isRequired,
   token: PropTypes.string,

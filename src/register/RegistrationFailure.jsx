@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -56,7 +56,7 @@ RegistrationFailureMessage.propTypes = {
   }),
   errorCode: PropTypes.string.isRequired,
   failureCount: PropTypes.number.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(RegistrationFailureMessage);

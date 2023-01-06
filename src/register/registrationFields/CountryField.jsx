@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Icon, IconButton } from '@edx/paragon';
 import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -174,7 +174,7 @@ const CountryField = (props) => {
 CountryField.propTypes = {
   countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   onBlurHandler: PropTypes.func.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   onFocusHandler: PropTypes.func.isRequired,

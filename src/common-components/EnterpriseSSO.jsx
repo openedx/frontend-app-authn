@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Form,
 } from '@edx/paragon';
@@ -100,7 +100,7 @@ EnterpriseSSO.propTypes = {
     loginUrl: PropTypes.string,
     registerUrl: PropTypes.string,
   }),
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(EnterpriseSSO);

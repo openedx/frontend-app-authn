@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { CheckCircle, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -70,7 +70,7 @@ const AccountActivationMessage = (props) => {
 
 AccountActivationMessage.propTypes = {
   messageType: PropTypes.string.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default injectIntl(AccountActivationMessage);

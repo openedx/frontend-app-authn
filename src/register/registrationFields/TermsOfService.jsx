@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
 import { Form, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
@@ -52,7 +52,7 @@ TermsOfService.defaultProps = {
 };
 
 TermsOfService.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
   onChangeHandler: PropTypes.func.isRequired,
   value: PropTypes.bool,

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
-  getCountryList, getLocale, injectIntl, intlShape,
+  getCountryList, getLocale, injectIntl,
 } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
@@ -616,7 +616,7 @@ RegistrationPage.propTypes = {
   extendedProfile: PropTypes.arrayOf(PropTypes.string),
   fieldDescriptions: PropTypes.shape({}),
   institutionLogin: PropTypes.bool.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   optionalFields: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
   registrationResult: PropTypes.shape({

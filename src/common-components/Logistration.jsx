@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
-import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
+import { injectIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon,
   Tab,
@@ -107,7 +107,7 @@ const Logistration = (props) => {
 };
 
 Logistration.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   selectedPage: PropTypes.string,
   backupRegistrationForm: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
