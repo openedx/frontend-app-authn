@@ -461,7 +461,7 @@ const RegistrationPage = (props) => {
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
           optionalFields={optionalFields}
-          redirectToWelcomePage={
+          redirectToProgressiveProfilingPage={
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).length !== 0
           }
         />
