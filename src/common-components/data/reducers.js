@@ -2,7 +2,6 @@ import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { THIRD_PARTY_AUTH_CONTEXT } from './actions';
 
 export const defaultState = {
-  extendedProfile: [],
   fieldDescriptions: {},
   optionalFields: {},
   thirdPartyAuthApiStatus: null,
@@ -24,20 +23,10 @@ const reducer = (state = defaultState, action) => {
         thirdPartyAuthApiStatus: PENDING_STATE,
       };
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS: {
-      const extendedProfile = action.payload.optionalFields.extended_profile;
-      let extendedProfileArray = [];
-      if (extendedProfile && Object.keys(extendedProfile).length !== 0) {
-        extendedProfileArray = extendedProfile;
-      }
-
       return {
         ...state,
-        extendedProfile: extendedProfileArray,
         fieldDescriptions: action.payload.fieldDescriptions.fields,
-        optionalFields: {
-          ...action.payload.optionalFields,
-          extended_profile: extendedProfileArray,
-        },
+        optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
       };

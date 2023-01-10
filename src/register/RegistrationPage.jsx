@@ -19,7 +19,7 @@ import {
 } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import {
-  extendedProfileSelector, fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
+  fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
@@ -595,7 +595,6 @@ const mapStateToProps = state => {
     backendCountryCode: registerPageState.backendCountryCode,
     backendValidations: validationsSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
-    extendedProfile: extendedProfileSelector(state),
     optionalFields: optionalFieldsSelector(state),
     registrationErrorCode: registrationErrorSelector(state),
     registrationResult: registerPageState.registrationResult,
@@ -623,7 +622,6 @@ RegistrationPage.propTypes = {
     username: PropTypes.string,
     password: PropTypes.string,
   }),
-  extendedProfile: PropTypes.arrayOf(PropTypes.string),
   fieldDescriptions: PropTypes.shape({}),
   institutionLogin: PropTypes.bool.isRequired,
   intl: PropTypes.objectOf(PropTypes.object).isRequired,
@@ -681,7 +679,6 @@ RegistrationPage.defaultProps = {
   },
   backendCountryCode: '',
   backendValidations: null,
-  extendedProfile: [],
   fieldDescriptions: {},
   optionalFields: {},
   registrationErrorCode: '',
