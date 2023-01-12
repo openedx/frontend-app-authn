@@ -25,7 +25,11 @@ const reducer = (state = defaultState, action) => {
       };
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS: {
       const extendedProfile = action.payload.optionalFields.extended_profile;
-      const extendedProfileArray = Object.keys(extendedProfile).length !== 0 ? extendedProfile : [];
+      let extendedProfileArray = [];
+      if (extendedProfile && Object.keys(extendedProfile).length !== 0) {
+        extendedProfileArray = extendedProfile;
+      }
+
       return {
         ...state,
         extendedProfile: extendedProfileArray,
