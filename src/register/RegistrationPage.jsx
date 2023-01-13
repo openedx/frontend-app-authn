@@ -189,6 +189,12 @@ const RegistrationPage = (props) => {
         type: 'event',
         eventName: 'authn-register-conversion',
       });
+
+      // Fire GTM event used for integration with impact.com
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'ImpactRegistrationEvent',
+      });
     }
   }, [registrationResult]);
 
