@@ -56,7 +56,7 @@ const HonorCode = (props) => {
       >
         <FormattedMessage
           id="register.page.honor.code"
-          defaultMessage="I agree to the {platformName} {tosAndHonorCode}"
+          defaultMessage="I agree to the {platformName}&nbsp;{tosAndHonorCode}"
           description="Text that appears on registration form stating honor code"
           values={{
             platformName: getConfig().SITE_NAME,
