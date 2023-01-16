@@ -14,7 +14,6 @@ import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
 import { AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
-import initializeMockLogging from '../../setupTest';
 import {
   backupRegistrationFormBegin,
   clearUsernameSuggestions,
@@ -27,8 +26,6 @@ import {
 } from '../data/constants';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
-
-const { loggingService } = initializeMockLogging();
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('@edx/frontend-platform/i18n', () => ({
@@ -98,7 +95,6 @@ describe('RegistrationPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    loggingService.logError.mockReset();
     configure({
       loggingService: { logError: jest.fn() },
       config: {
