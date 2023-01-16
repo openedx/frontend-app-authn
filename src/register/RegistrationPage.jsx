@@ -8,6 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, injectIntl,
 } from '@edx/frontend-platform/i18n';
+import { logError } from '@edx/frontend-platform/logging';
 import { Form, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
@@ -294,6 +295,9 @@ const RegistrationPage = (props) => {
     const fieldErrors = { ...errors };
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
+      if (!['name', 'email', 'username', 'password', 'country'].includes(key)) {
+        logError(`Key ${key} found in the payload`);
+      }
       if (!payload[key]) {
         fieldErrors[key] = intl.formatMessage(messages[`empty.${key}.field.error`]);
       }
