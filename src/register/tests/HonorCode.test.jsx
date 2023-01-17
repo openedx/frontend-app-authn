@@ -37,7 +37,7 @@ describe('HonorCodeTest', () => {
   });
 
   it('should render Honor code field', () => {
-    const expectedMsg = 'I agree to the Your Platform Name Here Honor Codein a new tab';
+    const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Honor Codein a new tab';
     const honorCode = mount(
       <IntlProvider locale="en">
         <IntlHonorCode onChangeHandler={changeHandler} />

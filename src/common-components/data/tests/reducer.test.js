@@ -2,9 +2,8 @@ import { THIRD_PARTY_AUTH_CONTEXT } from '../actions';
 import reducer from '../reducers';
 
 describe('common components reducer', () => {
-  it('should convert empty extended profile object to array', () => {
+  it('test mfe context response', () => {
     const state = {
-      extendedProfile: [],
       fieldDescriptions: {},
       optionalFields: {},
       thirdPartyAuthApiStatus: null,
@@ -19,7 +18,6 @@ describe('common components reducer', () => {
     };
     const fieldDescriptions = {
       fields: [],
-      extended_profile: {},
     };
     const optionalFields = {
       fields: [],
@@ -36,11 +34,10 @@ describe('common components reducer', () => {
     ).toEqual(
       {
         ...state,
-        extendedProfile: [],
         fieldDescriptions: [],
         optionalFields: {
           fields: [],
-          extended_profile: [],
+          extended_profile: {},
         },
         thirdPartyAuthApiStatus: 'complete',
       },

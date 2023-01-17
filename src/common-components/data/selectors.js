@@ -14,11 +14,6 @@ export const fieldDescriptionSelector = createSelector(
   commonComponents => commonComponents.fieldDescriptions,
 );
 
-export const extendedProfileSelector = createSelector(
-  commonComponentsSelector,
-  commonComponents => commonComponents.extendedProfile,
-);
-
 export const optionalFieldsSelector = createSelector(
   commonComponentsSelector,
   commonComponents => commonComponents.optionalFields,
