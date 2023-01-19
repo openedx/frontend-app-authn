@@ -739,6 +739,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should redirect to progressive profiling page if optional fields are configured', () => {
+      getLocale.mockImplementation(() => ('en-us'));
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
@@ -753,7 +754,10 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           optionalFields: {
-            country: { name: 'country', error_message: false },
+            extended_profile: {},
+            fields: {
+              level_of_education: { name: 'level_of_education', error_message: false },
+            },
           },
         },
       });
