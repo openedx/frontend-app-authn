@@ -10,7 +10,7 @@ const RecommendationsList = (props) => {
   const { title, recommendations } = props;
 
   return (
-    <Container size="lg" className="recommendations-container">
+    <Container id="course-recommendations" size="lg" className="recommendations-container">
       <h2 className="text-sm-center mb-4 text-left recommendations-heading">
         {title}
       </h2>

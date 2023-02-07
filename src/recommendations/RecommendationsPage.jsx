@@ -7,31 +7,34 @@ import {
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import { DEFAULT_REDIRECT_URL, EDUCATION_LEVEL_MAPPING } from '../data/constants';
+import { DEFAULT_REDIRECT_URL } from '../data/constants';
+import { EDUCATION_LEVEL_MAPPING, RECOMMENDATIONS_COUNT } from './data/constants';
 import getPersonalizedRecommendations from './data/service';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
 
 const RecommendationsPage = (props) => {
   const { intl, location } = props;
+  const registrationResponse = location.state?.registrationResult;
+  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   const [isLoading, setIsLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-  const registrationResponse = location.state?.registrationResult;
 
   useEffect(() => {
-    getPersonalizedRecommendations(educationLevel).then((response) => {
-      if (response.length > 2) {
-        setRecommendations(response);
-      }
-      setIsLoading(false);
-    })
-      .catch(() => {
+    if (registrationResponse) {
+      getPersonalizedRecommendations(educationLevel).then((response) => {
+        if (response.length) {
+          setRecommendations(response.slice(0, RECOMMENDATIONS_COUNT));
+        }
         setIsLoading(false);
-      });
-  }, [DASHBOARD_URL, educationLevel]);
+      })
+        .catch(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [registrationResponse, DASHBOARD_URL, educationLevel]);
 
   if (!registrationResponse) {
     global.location.assign(DASHBOARD_URL);
@@ -47,7 +50,7 @@ const RecommendationsPage = (props) => {
     }
   };
 
-  if (!isLoading && recommendations.length < 3) {
+  if (!isLoading && recommendations.length < RECOMMENDATIONS_COUNT) {
     handleRedirection();
   }
 
@@ -64,7 +67,7 @@ const RecommendationsPage = (props) => {
           <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
         </Hyperlink>
       </div>
-      {(!isLoading && recommendations.length > 2) ? (
+      {(!isLoading && recommendations.length === RECOMMENDATIONS_COUNT) ? (
         <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 p-1">
           <RecommendationsList
             title={intl.formatMessage(messages['recommendation.page.heading'])}
