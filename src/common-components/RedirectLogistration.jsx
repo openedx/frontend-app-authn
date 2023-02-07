@@ -4,12 +4,17 @@ import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { AUTHN_PROGRESSIVE_PROFILING } from '../data/constants';
+import { AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS } from '../data/constants';
 import { setCookie } from '../data/utils';
 
 function RedirectLogistration(props) {
   const {
-    finishAuthUrl, redirectUrl, redirectToProgressiveProfilingPage, success, optionalFields,
+    finishAuthUrl,
+    redirectUrl,
+    redirectToProgressiveProfilingPage,
+    success,
+    optionalFields,
+    redirectToRecommendationsPage,
   } = props;
   let finalRedirectUrl = '';
 
@@ -41,6 +46,20 @@ function RedirectLogistration(props) {
       );
     }
 
+    // Redirect to Recommendation page
+    if (redirectToRecommendationsPage) {
+      const registrationResult = { redirectUrl: finalRedirectUrl, success };
+      return (
+        <Redirect to={{
+          pathname: RECOMMENDATIONS,
+          state: {
+            registrationResult,
+          },
+        }}
+        />
+      );
+    }
+
     window.location.href = finalRedirectUrl;
   }
   return <></>;
@@ -52,6 +71,7 @@ RedirectLogistration.defaultProps = {
   redirectUrl: '',
   redirectToProgressiveProfilingPage: false,
   optionalFields: {},
+  redirectToRecommendationsPage: false,
 };
 
 RedirectLogistration.propTypes = {
@@ -60,6 +80,7 @@ RedirectLogistration.propTypes = {
   redirectUrl: PropTypes.string,
   redirectToProgressiveProfilingPage: PropTypes.bool,
   optionalFields: PropTypes.shape({}),
+  redirectToRecommendationsPage: PropTypes.bool,
 };
 
 export default RedirectLogistration;
