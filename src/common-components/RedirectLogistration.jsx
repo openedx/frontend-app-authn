@@ -15,6 +15,7 @@ function RedirectLogistration(props) {
     success,
     optionalFields,
     redirectToRecommendationsPage,
+    educationLevel,
   } = props;
   let finalRedirectUrl = '';
 
@@ -54,6 +55,7 @@ function RedirectLogistration(props) {
           pathname: RECOMMENDATIONS,
           state: {
             registrationResult,
+            educationLevel,
           },
         }}
         />
@@ -66,6 +68,7 @@ function RedirectLogistration(props) {
 }
 
 RedirectLogistration.defaultProps = {
+  educationLevel: null,
   finishAuthUrl: null,
   success: false,
   redirectUrl: '',
@@ -75,6 +78,7 @@ RedirectLogistration.defaultProps = {
 };
 
 RedirectLogistration.propTypes = {
+  educationLevel: PropTypes.string,
   finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
   redirectUrl: PropTypes.string,

@@ -42,6 +42,7 @@
     "@fortawesome/free-solid-svg-icons": "6.2.1",
     "@fortawesome/react-fontawesome": "0.2.0",
     "@redux-devtools/extension": "3.2.3",
+    "algoliasearch": "^4.14.3",
     "classnames": "2.3.2",
     "core-js": "3.26.1",
     "extract-react-intl-messages": "4.1.1",

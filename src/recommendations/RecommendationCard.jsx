@@ -27,7 +27,7 @@ const RecommendationCard = (props) => {
           <Card.ImageCap
             src={recommendation.cardImageUrl}
             srcAlt="Card image"
-            logoSrc={showPartnerLogo && recommendation.owners[0].logoImageUrl}
+            logoSrc={showPartnerLogo ? recommendation.owners[0].logoImageUrl : ''}
             logoAlt="Card logo"
           />
           <Card.Header
