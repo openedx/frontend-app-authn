@@ -167,6 +167,7 @@ class LoginPage extends React.Component {
     const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
     const isSocialAuthActive = !!providers.length && !currentProvider;
     const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+    const ThirdPartyAuthPreloader = isSocialAuthActive || (isEnterpriseLoginDisabled && isInstitutionAuthActive);
 
     return (
       <>
@@ -184,7 +185,7 @@ class LoginPage extends React.Component {
           </Hyperlink>
         )}
 
-        {thirdPartyAuthApiStatus === PENDING_STATE ? (
+        {thirdPartyAuthApiStatus === PENDING_STATE && ThirdPartyAuthPreloader ? (
           <Skeleton className="tpa-skeleton mb-3" height={30} count={2} />
         ) : (
           <>

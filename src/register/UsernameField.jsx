@@ -10,7 +10,7 @@ import messages from './messages';
 
 const UsernameField = (props) => {
   const { intl, usernameSuggestions, errorMessage } = props;
-  let className = '';
+  let className = 'suggested-usernames-wrapper';
   let suggestedUsernameDiv = <></>;
   let iconButton = <></>;
   const suggestedUsernames = () => (
