@@ -66,7 +66,15 @@ describe('ForgotPasswordPage', () => {
     };
   });
 
+  it('not should display need other help signing in button', () => {
+    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    expect(wrapper.find('#forgot-password').exists()).toBeFalsy();
+  });
+
   it('should display need other help signing in button', () => {
+    mergeConfig({
+      LOGIN_ISSUE_SUPPORT_LINK: '/support',
+    });
     const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     expect(wrapper.find('#forgot-password').first().text()).toEqual('Need help signing in?');
   });

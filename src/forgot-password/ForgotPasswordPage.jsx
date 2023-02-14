@@ -141,16 +141,18 @@ const ForgotPasswordPage = (props) => {
               onClick={handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            <Hyperlink
-              id="forgot-password"
-              name="forgot-password"
-              className="ml-4 font-weight-500 text-body"
-              destination={getConfig().LOGIN_ISSUE_SUPPORT_LINK}
-              target="_blank"
-              showLaunchIcon={false}
-            >
-              {intl.formatMessage(messages['need.help.sign.in.text'])}
-            </Hyperlink>
+            {(getConfig().LOGIN_ISSUE_SUPPORT_LINK) && (
+              <Hyperlink
+                id="forgot-password"
+                name="forgot-password"
+                className="ml-4 font-weight-500 text-body"
+                destination={getConfig().LOGIN_ISSUE_SUPPORT_LINK}
+                target="_blank"
+                showLaunchIcon={false}
+              >
+                {intl.formatMessage(messages['need.help.sign.in.text'])}
+              </Hyperlink>
+            )}
             <p className="mt-5.5 small text-gray-700">
               {intl.formatMessage(messages['additional.help.text'], { platformName })}
               <span>
