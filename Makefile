@@ -1,4 +1,4 @@
-export TRANSIFEX_RESOURCE=frontend-app-learning
+export TRANSIFEX_RESOURCE = frontend-app-authn
 transifex_langs = "ar,fr,es_419,zh_CN,pt,it,de,uk,ru,hi,fr_CA,it_IT,pt_PT,de_DE"
 
 transifex_utils = ./node_modules/.bin/transifex-utils.js
