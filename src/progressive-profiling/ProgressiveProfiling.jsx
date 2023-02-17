@@ -27,6 +27,7 @@ import { RedirectLogistration } from '../common-components';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE,
 } from '../data/constants';
+import { getAllPossibleQueryParams } from '../data/utils';
 import FormFieldRenderer from '../field-renderer';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
@@ -35,12 +36,15 @@ import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
 const ProgressiveProfiling = (props) => {
   const {
-    formRenderState, intl, submitState, showError,
+    formRenderState, intl, submitState, showError, location,
   } = props;
+  const enablePersonalizedRecommendations = getConfig().ENABLE_PERSONALIZED_RECOMMENDATIONS;
+  const registrationResponse = location.state?.registrationResult;
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [values, setValues] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [showRecommendationsPage, setShowRecommendationsPage] = useState(false);
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
@@ -54,13 +58,23 @@ const ProgressiveProfiling = (props) => {
       })
       .catch(() => {});
 
-    if (props.location.state && props.location.state.registrationResult) {
-      setRegistrationResult(props.location.state.registrationResult);
+    let userEnrollmentAction = false;
+    if (registrationResponse) {
+      setRegistrationResult(registrationResponse);
       sendPageEvent('login_and_registration', 'welcome');
-    }
-  }, [DASHBOARD_URL, props.location.state]);
 
-  if (!props.location.state || !props.location.state.registrationResult || formRenderState === FAILURE_STATE) {
+      const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
+      if ('enrollment_action' in queryParams) {
+        userEnrollmentAction = true;
+      }
+    }
+
+    if (enablePersonalizedRecommendations && !userEnrollmentAction) {
+      setShowRecommendationsPage(true);
+    }
+  }, [DASHBOARD_URL, enablePersonalizedRecommendations, registrationResponse]);
+
+  if (!location.state || !location.state.registrationResult || formRenderState === FAILURE_STATE) {
     global.location.assign(DASHBOARD_URL);
     return null;
   }
@@ -69,11 +83,12 @@ const ProgressiveProfiling = (props) => {
     return null;
   }
 
-  const optionalFields = props.location.state.optionalFields.fields;
-  const extendedProfile = props.location.state.optionalFields.extended_profile;
+  const optionalFields = location.state.optionalFields.fields;
+  const extendedProfile = location.state.optionalFields.extended_profile;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.history.replaceState(props.location.state, null, '');
+    window.history.replaceState(location.state, null, '');
     const authenticatedUser = getAuthenticatedUser();
     const payload = { ...values, extendedProfile: [] };
     if (Object.keys(extendedProfile).length > 0) {
@@ -137,6 +152,7 @@ const ProgressiveProfiling = (props) => {
           <RedirectLogistration
             success
             redirectUrl={registrationResult.redirectUrl}
+            redirectToRecommendationsPage={showRecommendationsPage}
           />
         ) : null}
         <div className="mw-xs pp-page-content">
@@ -171,7 +187,7 @@ const ProgressiveProfiling = (props) => {
                 className="login-button-width"
                 state={submitState}
                 labels={{
-                  default: intl.formatMessage(messages['optional.fields.submit.button']),
+                  default: showRecommendationsPage ? intl.formatMessage(messages['optional.fields.next.button']) : intl.formatMessage(messages['optional.fields.submit.button']),
                   pending: '',
                 }}
                 onClick={handleSubmit}
