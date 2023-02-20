@@ -236,6 +236,162 @@ describe('LoginPage', () => {
     expect(loginPage.text().includes('Or sign in with:')).toBe(false);
   });
 
+  it('should show sign-in header providers (ENABLE ENTERPRISE LOGIN)', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [{
+            ...ssoProvider,
+          }],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(true);
+    expect(loginPage.text().includes('Company or school credentials')).toBe(true);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(false);
+  });
+
+  it('should show sign-in header with providers (DISABLE ENTERPRISE LOGIN)', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: true,
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [{
+            ...ssoProvider,
+          }],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(true);
+    expect(loginPage.text().includes('Company or school credentials')).toBe(false);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(false);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
+  it('should not show sign-in header without Providers and secondary Providers (ENABLE ENTERPRISE LOGIN)', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(false);
+    expect(loginPage.text().includes('Company or school credentials')).toBe(false);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(false);
+  });
+
+  it('should not show sign-in header without Providers and secondary Providers (DISABLE ENTERPRISE LOGIN)', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: true,
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(false);
+    expect(loginPage.text().includes('Company or school credentials')).toBe(false);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(false);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
+  it('should show sign-in header with secondary Providers and without Providers', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: true,
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [{
+            ...secondaryProviders,
+          }],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(true);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(true);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
+  it('should show sign-in header with Providers and secondary Providers', () => {
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: true,
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [{
+            ...ssoProvider,
+          }],
+          secondaryProviders: [{
+            ...secondaryProviders,
+          }],
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.text().includes('Or sign in with:')).toBe(true);
+    expect(loginPage.text().includes('Company or school credentials')).toBe(false);
+    expect(loginPage.text().includes('Institution/campus credentials')).toBe(true);
+
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
   // ******** test alert messages ********
 
   it('should match login error message', () => {
