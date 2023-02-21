@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import RecommendationCard from './RecommendationCard';
 
 const RecommendationsList = (props) => {
-  const { title, recommendations } = props;
+  const { title, recommendations, userId } = props;
 
   return (
     <Container id="course-recommendations" size="lg" className="recommendations-container">
@@ -16,10 +16,12 @@ const RecommendationsList = (props) => {
       </h2>
       <div className="d-flex card-list">
         {
-          recommendations.map((recommendation) => (
+          recommendations.map((recommendation, idx) => (
             <RecommendationCard
               key={recommendation.activeRunKey}
               recommendation={recommendation}
+              position={idx}
+              userId={userId}
             />
           ))
         }
@@ -31,6 +33,7 @@ const RecommendationsList = (props) => {
 RecommendationsList.propTypes = {
   title: PropTypes.string.isRequired,
   recommendations: PropTypes.arrayOf(PropTypes.shape({
+    courseKey: PropTypes.string.isRequired,
     activeRunKey: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     cardImageUrl: PropTypes.string.isRequired,
@@ -41,10 +44,12 @@ RecommendationsList.propTypes = {
     })),
     marketingUrl: PropTypes.string.isRequired,
   })),
+  userId: PropTypes.number,
 };
 
 RecommendationsList.defaultProps = {
   recommendations: [],
+  userId: null,
 };
 
 export default injectIntl(RecommendationsList);

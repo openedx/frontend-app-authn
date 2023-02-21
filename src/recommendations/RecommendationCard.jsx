@@ -4,8 +4,10 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Card, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { trackRecommendationsClicked } from './track';
+
 const RecommendationCard = (props) => {
-  const { recommendation } = props;
+  const { recommendation, position, userId } = props;
   const showPartnerLogo = recommendation.owners.length === 1;
 
   const getOwners = () => {
@@ -20,9 +22,24 @@ const RecommendationCard = (props) => {
     return keys.slice(0, -2);
   };
 
+  const handleCardClick = () => {
+    trackRecommendationsClicked(
+      recommendation.courseKey,
+      false,
+      position + 1,
+      userId,
+      recommendation.marketingUrl,
+    );
+  };
+
   return (
     <div className="mr-4 recommendation-card">
-      <Hyperlink destination={recommendation.marketingUrl} target="_blank" showLaunchIcon={false}>
+      <Hyperlink
+        destination={recommendation.marketingUrl}
+        target="_blank"
+        showLaunchIcon={false}
+        onClick={handleCardClick}
+      >
         <Card isClickable>
           <Card.ImageCap
             src={recommendation.cardImageUrl}
@@ -44,6 +61,7 @@ const RecommendationCard = (props) => {
 
 RecommendationCard.propTypes = {
   recommendation: PropTypes.shape({
+    courseKey: PropTypes.string.isRequired,
     activeRunKey: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     cardImageUrl: PropTypes.string.isRequired,
@@ -54,6 +72,12 @@ RecommendationCard.propTypes = {
     })),
     marketingUrl: PropTypes.string.isRequired,
   }).isRequired,
+  position: PropTypes.number.isRequired,
+  userId: PropTypes.number,
+};
+
+RecommendationCard.defaultProps = {
+  userId: null,
 };
 
 export default injectIntl(RecommendationCard);

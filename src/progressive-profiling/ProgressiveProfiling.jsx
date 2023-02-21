@@ -29,6 +29,8 @@ import {
 } from '../data/constants';
 import { getAllPossibleQueryParams } from '../data/utils';
 import FormFieldRenderer from '../field-renderer';
+import { activateRecommendationsExperiment, isUserInVariation } from '../recommendations/optimizelyExperiment';
+import { trackRecommendationsViewed } from '../recommendations/track';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
@@ -45,7 +47,7 @@ const ProgressiveProfiling = (props) => {
   const [values, setValues] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [showRecommendationsPage, setShowRecommendationsPage] = useState(false);
-
+  const authenticatedUser = getAuthenticatedUser();
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   useEffect(() => {
@@ -58,21 +60,30 @@ const ProgressiveProfiling = (props) => {
       })
       .catch(() => {});
 
-    let userEnrollmentAction = false;
     if (registrationResponse) {
       setRegistrationResult(registrationResponse);
       sendPageEvent('login_and_registration', 'welcome');
+    }
+  }, [DASHBOARD_URL, registrationResponse]);
 
-      const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
-      if ('enrollment_action' in queryParams) {
-        userEnrollmentAction = true;
+  useEffect(() => {
+    let queryParams = {};
+    let timer = null;
+    if (registrationResponse) {
+      queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
+      if (enablePersonalizedRecommendations && !('enrollment_action' in queryParams)) {
+        activateRecommendationsExperiment();
+        timer = setTimeout(() => {
+          const showRecommendations = isUserInVariation();
+          setShowRecommendationsPage(showRecommendations);
+          if (!showRecommendations) {
+            trackRecommendationsViewed([], true, authenticatedUser?.userId);
+          }
+        }, 500);
       }
     }
-
-    if (enablePersonalizedRecommendations && !userEnrollmentAction) {
-      setShowRecommendationsPage(true);
-    }
-  }, [DASHBOARD_URL, enablePersonalizedRecommendations, registrationResponse]);
+    return () => clearTimeout(timer);
+  }, [authenticatedUser, enablePersonalizedRecommendations, registrationResponse]);
 
   if (!location.state || !location.state.registrationResult || formRenderState === FAILURE_STATE) {
     global.location.assign(DASHBOARD_URL);
@@ -89,7 +100,6 @@ const ProgressiveProfiling = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     window.history.replaceState(location.state, null, '');
-    const authenticatedUser = getAuthenticatedUser();
     const payload = { ...values, extendedProfile: [] };
     if (Object.keys(extendedProfile).length > 0) {
       extendedProfile.forEach(fieldName => {
@@ -154,6 +164,7 @@ const ProgressiveProfiling = (props) => {
             redirectUrl={registrationResult.redirectUrl}
             redirectToRecommendationsPage={showRecommendationsPage}
             educationLevel={values?.level_of_education}
+            userId={authenticatedUser?.userId}
           />
         ) : null}
         <div className="mw-xs pp-page-content">
