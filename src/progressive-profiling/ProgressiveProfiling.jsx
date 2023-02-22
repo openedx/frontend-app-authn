@@ -153,6 +153,7 @@ const ProgressiveProfiling = (props) => {
             success
             redirectUrl={registrationResult.redirectUrl}
             redirectToRecommendationsPage={showRecommendationsPage}
+            educationLevel={values?.level_of_education}
           />
         ) : null}
         <div className="mw-xs pp-page-content">

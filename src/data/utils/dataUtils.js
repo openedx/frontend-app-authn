@@ -50,7 +50,7 @@ export const updatePathWithQueryParams = (path) => {
 };
 
 export const getAllPossibleQueryParams = (locationURl = null) => {
-  const urlParams = QueryString.parse(locationURl || window.location.search);
+  const urlParams = locationURl ? QueryString.parseUrl(locationURl).query : QueryString.parse(window.location.search);
   const params = {};
   Object.entries(urlParams).forEach(([key, value]) => {
     if (AUTH_PARAMS.indexOf(key) > -1) {
