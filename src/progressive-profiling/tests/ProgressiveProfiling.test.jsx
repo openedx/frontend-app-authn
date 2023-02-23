@@ -7,11 +7,13 @@ import * as auth from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import * as logging from '@edx/frontend-platform/logging';
 import { mount } from 'enzyme';
+import { createMemoryHistory } from 'history';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter, Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import {
-  COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE,
+  COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE, RECOMMENDATIONS,
 } from '../../data/constants';
 import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
@@ -30,6 +32,8 @@ logging.getLoggingService = jest.fn();
 auth.configure = jest.fn();
 auth.ensureAuthenticatedUser = jest.fn().mockImplementation(() => Promise.resolve(true));
 auth.hydrateAuthenticatedUser = jest.fn().mockImplementation(() => Promise.resolve(true));
+
+const history = createMemoryHistory();
 
 describe('ProgressiveProfilingTests', () => {
   mergeConfig({
@@ -58,12 +62,18 @@ describe('ProgressiveProfilingTests', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
+      <MemoryRouter>
+        <Provider store={store}>{children}</Provider>
+      </MemoryRouter>
     </IntlProvider>
   );
 
   const getProgressiveProfilingPage = async () => {
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage {...props} />));
+    const progressiveProfilingPage = mount(reduxWrapper(
+      <Router history={history}>
+        <IntlProgressiveProfilingPage {...props} />
+      </Router>,
+    ));
     await act(async () => {
       await Promise.resolve(progressiveProfilingPage);
       await new Promise(resolve => setImmediate(resolve));
@@ -155,5 +165,61 @@ describe('ProgressiveProfilingTests', () => {
     };
     await getProgressiveProfilingPage();
     expect(window.location.href).toBe(DASHBOARD_URL);
+  });
+
+  describe('Recommendations test', () => {
+    mergeConfig({
+      ENABLE_PERSONALIZED_RECOMMENDATIONS: true,
+    });
+
+    it('should redirect to recommendations page if recommendations are enabled', async () => {
+      store = mockStore({
+        welcomePage: {
+          ...initialState.welcomePage,
+          success: true,
+        },
+      });
+
+      auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+      const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
+      expect(history.location.pathname).toEqual(RECOMMENDATIONS);
+    });
+
+    it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL,
+        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+      };
+
+      const redirectUrl = `${getConfig().LMS_BASE_URL}${DEFAULT_REDIRECT_URL}?enrollment_action=1`;
+      props = {
+        getFieldData: jest.fn(),
+        location: {
+          state: {
+            registrationResult: {
+              redirectUrl,
+              success: true,
+            },
+            optionalFields,
+          },
+        },
+      };
+
+      store = mockStore({
+        welcomePage: {
+          ...initialState.welcomePage,
+          success: true,
+        },
+      });
+
+      auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+      const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Submit');
+      expect(window.location.href).toEqual(redirectUrl);
+    });
   });
 });
