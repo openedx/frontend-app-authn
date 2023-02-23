@@ -10,6 +10,7 @@ import configureStore from 'redux-mock-store';
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
 import * as getPersonalizedRecommendations from '../data/service';
 import RecommendationsPage from '../RecommendationsPage';
+import mockedResponse from './constants';
 
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
@@ -19,84 +20,6 @@ jest.mock('../data/service');
 describe('RecommendationsPageTests', () => {
   let defaultProps = {};
   let store = {};
-
-  const mockedResponse = [
-    {
-      title: 'How to Learn Online 1',
-      marketingUrl: 'https://test-recommendations.com/course/how-to-learn-online-1',
-      cardImageUrl: 'https://test-recommendations.com/image/how-to-learn-online-1.png',
-      activeRunKey: 'course-v1:test+testX+2018',
-      owners: [
-        {
-          key: 'firstOwnerX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-1.png',
-          name: 'first owner',
-        },
-        {
-          key: 'secondOwnerX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-1.png',
-          name: 'second owner',
-        },
-      ],
-      objectId: 'course-how-to-learn-online-key-1',
-    },
-    {
-      title: 'How to Learn Online 2',
-      marketingUrl: 'https://test-recommendations.com/course/how-to-learn-online-2',
-      cardImageUrl: 'https://test-recommendations.com/image/how-to-learn-online-2.png',
-      activeRunKey: 'course-v1:test+testX+2019',
-      owners: [
-        {
-          key: 'testX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-2.png',
-          name: 'test',
-        },
-      ],
-      objectId: 'course-how-to-learn-online-key-2',
-    },
-    {
-      title: 'How to Learn Online 3',
-      marketingUrl: 'https://test-recommendations.com/course/how-to-learn-online-3',
-      cardImageUrl: 'https://test-recommendations.com/image/how-to-learn-online-3.png',
-      activeRunKey: 'course-v1:test+testX+2020',
-      owners: [
-        {
-          key: 'testX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-3.png',
-          name: 'test',
-        },
-      ],
-      objectId: 'course-how-to-learn-online-key-3',
-    },
-    {
-      title: 'How to Learn Online 4',
-      marketingUrl: 'https://test-recommendations.com/course/how-to-learn-online-4',
-      cardImageUrl: 'https://test-recommendations.com/image/how-to-learn-online-4.png',
-      activeRunKey: 'course-v1:test+testX+2021',
-      owners: [
-        {
-          key: 'testX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-4.png',
-          name: 'test',
-        },
-      ],
-      objectId: 'course-how-to-learn-online-key-4',
-    },
-    {
-      title: 'How to Learn Online 5',
-      marketingUrl: 'https://test-recommendations.com/course/how-to-learn-online-5',
-      cardImageUrl: 'https://test-recommendations.com/image/how-to-learn-online-5.png',
-      activeRunKey: 'course-v1:test+testX+2022',
-      owners: [
-        {
-          key: 'testX',
-          logoImageUrl: 'https://test-recommendations.com/logos/how-to-learn-online-5.png',
-          name: 'test',
-        },
-      ],
-      objectId: 'course-how-to-learn-online-key-5',
-    },
-  ];
 
   const registrationResult = {
     redirectUrl: getConfig().LMS_BASE_URL.concat('/course-about-page-url'),
@@ -141,6 +64,14 @@ describe('RecommendationsPageTests', () => {
 
     expect(getPersonalizedRecommendations.default).toHaveBeenCalledTimes(0);
     expect(window.location.href).toEqual(DASHBOARD_URL);
+  });
+
+  it('should show loading state to user', async () => {
+    getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.resolve(mockedResponse));
+    await act(async () => {
+      const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
+      expect(recommendationsPage.find('.centered-align-spinner').exists()).toBeTruthy();
+    });
   });
 
   it('should call getPersonalizedRecommendations', async () => {
