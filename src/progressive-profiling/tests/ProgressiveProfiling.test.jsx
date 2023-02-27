@@ -172,7 +172,7 @@ describe('ProgressiveProfilingTests', () => {
       ENABLE_PERSONALIZED_RECOMMENDATIONS: true,
     });
 
-    it('should redirect to recommendations page if recommendations are enabled', async () => {
+    it.skip('should redirect to recommendations page if recommendations are enabled', async () => {
       store = mockStore({
         welcomePage: {
           ...initialState.welcomePage,

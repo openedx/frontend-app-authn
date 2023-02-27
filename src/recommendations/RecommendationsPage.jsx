@@ -10,12 +10,15 @@ import PropTypes from 'prop-types';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 import { EDUCATION_LEVEL_MAPPING, RECOMMENDATIONS_COUNT } from './data/constants';
 import getPersonalizedRecommendations from './data/service';
+import { convertCourseRunKeytoCourseKey } from './data/utils';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
+import { trackRecommendationsViewed } from './track';
 
 const RecommendationsPage = (props) => {
   const { intl, location } = props;
   const registrationResponse = location.state?.registrationResult;
+  const userId = location.state?.userId;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -24,17 +27,24 @@ const RecommendationsPage = (props) => {
 
   useEffect(() => {
     if (registrationResponse) {
+      let coursesWithKeys = [];
       getPersonalizedRecommendations(educationLevel).then((response) => {
         if (response.length) {
-          setRecommendations(response.slice(0, RECOMMENDATIONS_COUNT));
+          coursesWithKeys = response.map(course => ({
+            ...course,
+            courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
+          }));
+          setRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
         }
         setIsLoading(false);
+        const courseKeys = coursesWithKeys.map(course => course.courseKey);
+        trackRecommendationsViewed(courseKeys, false, userId);
       })
         .catch(() => {
           setIsLoading(false);
         });
     }
-  }, [registrationResponse, DASHBOARD_URL, educationLevel]);
+  }, [registrationResponse, DASHBOARD_URL, educationLevel, userId]);
 
   if (!registrationResponse) {
     global.location.assign(DASHBOARD_URL);
@@ -72,6 +82,7 @@ const RecommendationsPage = (props) => {
           <RecommendationsList
             title={intl.formatMessage(messages['recommendation.page.heading'])}
             recommendations={recommendations}
+            userId={userId}
           />
           <div className="text-center">
             <StatefulButton

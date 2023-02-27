@@ -16,6 +16,7 @@ function RedirectLogistration(props) {
     optionalFields,
     redirectToRecommendationsPage,
     educationLevel,
+    userId,
   } = props;
   let finalRedirectUrl = '';
 
@@ -56,6 +57,7 @@ function RedirectLogistration(props) {
           state: {
             registrationResult,
             educationLevel,
+            userId,
           },
         }}
         />
@@ -75,6 +77,7 @@ RedirectLogistration.defaultProps = {
   redirectToProgressiveProfilingPage: false,
   optionalFields: {},
   redirectToRecommendationsPage: false,
+  userId: null,
 };
 
 RedirectLogistration.propTypes = {
@@ -85,6 +88,7 @@ RedirectLogistration.propTypes = {
   redirectToProgressiveProfilingPage: PropTypes.bool,
   optionalFields: PropTypes.shape({}),
   redirectToRecommendationsPage: PropTypes.bool,
+  userId: PropTypes.number,
 };
 
 export default RedirectLogistration;

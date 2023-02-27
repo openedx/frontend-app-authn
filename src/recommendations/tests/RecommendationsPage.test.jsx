@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
 import * as getPersonalizedRecommendations from '../data/service';
 import RecommendationsPage from '../RecommendationsPage';
-import mockedResponse from './constants';
+import mockedResponse from './mockedData';
 
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
