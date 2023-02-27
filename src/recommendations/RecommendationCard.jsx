@@ -29,6 +29,7 @@ const RecommendationCard = (props) => {
       position + 1,
       userId,
       recommendation.marketingUrl,
+      recommendation.recommendationType || 'algolia',
     );
   };
 
@@ -71,6 +72,7 @@ RecommendationCard.propTypes = {
       logoImageUrl: PropTypes.string.isRequired,
     })),
     marketingUrl: PropTypes.string.isRequired,
+    recommendationType: PropTypes.string,
   }).isRequired,
   position: PropTypes.number.isRequired,
   userId: PropTypes.number,

@@ -16,11 +16,12 @@ export const createLinkTracker = (tracker, href, openInNewTab = false) => (e) =>
   return setTimeout(() => { global.location.href = href; }, LINK_TIMEOUT);
 };
 
-export const trackRecommendationsClicked = (courseKey, isControl, position, userId, href) => {
+export const trackRecommendationsClicked = (courseKey, isControl, position, userId, href, recommendationType) => {
   createLinkTracker(
     sendTrackEvent(eventNames.recommendedCourseClicked, {
       page: 'authn_recommendations',
       position,
+      recommendation_type: recommendationType,
       course_key: courseKey,
       is_control: isControl,
       user_id: userId,

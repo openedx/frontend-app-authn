@@ -29,14 +29,26 @@ const RecommendationsPage = (props) => {
     if (registrationResponse) {
       let coursesWithKeys = [];
       getPersonalizedRecommendations(educationLevel).then((response) => {
-        if (response.length) {
-          coursesWithKeys = response.map(course => ({
-            ...course,
-            courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
-          }));
+        coursesWithKeys = response.map(course => ({
+          ...course,
+          courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
+        }));
+
+        if (coursesWithKeys.length >= RECOMMENDATIONS_COUNT) {
           setRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
+        } else {
+          const courseRecommendations = coursesWithKeys.concat(getConfig().GENERAL_RECOMMENDATIONS);
+          // Remove duplicate recommendations
+          const uniqueRecommendations = courseRecommendations.filter(
+            (recommendation, index, self) => index === self.findIndex((existingRecommendation) => (
+              existingRecommendation.courseKey === recommendation.courseKey
+            )),
+          );
+          setRecommendations(uniqueRecommendations.slice(0, RECOMMENDATIONS_COUNT));
         }
+
         setIsLoading(false);
+        // We only want to track the recommendations returned by Algolia
         const courseKeys = coursesWithKeys.map(course => course.courseKey);
         trackRecommendationsViewed(courseKeys, false, userId);
       })
