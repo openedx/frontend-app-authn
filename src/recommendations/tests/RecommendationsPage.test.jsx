@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
+import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
 import * as getPersonalizedRecommendations from '../data/service';
 import RecommendationsPage from '../RecommendationsPage';
-import mockedResponse from './mockedData';
+import { mockedGeneralRecommendations, mockedResponse } from './mockedData';
 
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
@@ -98,6 +98,16 @@ describe('RecommendationsPageTests', () => {
 
     expect(recommendationsPage.find('#course-recommendations').exists()).toBeFalsy();
     expect(window.location.href).toEqual(registrationResult.redirectUrl);
+  });
+
+  it('should not redirect if fallback recommendations are enabled', async () => {
+    mergeConfig({
+      GENERAL_RECOMMENDATIONS: mockedGeneralRecommendations,
+    });
+    getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.resolve([]));
+    const recommendationsPage = await getRecommendationsPage();
+
+    expect(recommendationsPage.find('#course-recommendations').exists()).toBeTruthy();
   });
 
   it('should display all owners for a course', async () => {

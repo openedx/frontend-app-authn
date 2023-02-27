@@ -43,6 +43,7 @@ RecommendationsList.propTypes = {
       logoImageUrl: PropTypes.string.isRequired,
     })),
     marketingUrl: PropTypes.string.isRequired,
+    recommendationType: PropTypes.string,
   })),
   userId: PropTypes.number,
 };
