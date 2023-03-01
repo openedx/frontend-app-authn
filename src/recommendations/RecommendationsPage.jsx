@@ -57,7 +57,7 @@ const RecommendationsPage = (props) => {
         });
       // We only want to track the recommendations returned by Algolia
       const courseKeys = coursesWithKeys.map(course => course.courseKey);
-      trackRecommendationsViewed(courseKeys, false, userId);
+      trackRecommendationsViewed(courseKeys.slice(0, RECOMMENDATIONS_COUNT), false, userId);
     }
   }, [registrationResponse, DASHBOARD_URL, educationLevel, userId]);
 
