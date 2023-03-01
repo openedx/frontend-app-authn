@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'recommendation.page.title': {
     id: 'recommendation.page.title',
-    defaultMessage: 'Recommendations| {siteName}',
+    defaultMessage: 'Recommendations | {siteName}',
     description: 'recommendation page title',
   },
   'recommendation.page.heading': {

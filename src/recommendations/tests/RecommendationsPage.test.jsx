@@ -2,6 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import * as analytics from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
@@ -15,9 +16,16 @@ import { mockedGeneralRecommendations, mockedResponse } from './mockedData';
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
 
+jest.mock('@edx/frontend-platform/analytics');
 jest.mock('../data/service');
 
+analytics.sendTrackEvent = jest.fn();
+
 describe('RecommendationsPageTests', () => {
+  mergeConfig({
+    GENERAL_RECOMMENDATIONS: '[]',
+  });
+
   let defaultProps = {};
   let store = {};
 
@@ -47,6 +55,7 @@ describe('RecommendationsPageTests', () => {
       location: {
         state: {
           registrationResult,
+          userId: 111,
         },
       },
     };
@@ -81,6 +90,16 @@ describe('RecommendationsPageTests', () => {
     await getRecommendationsPage();
 
     expect(getPersonalizedRecommendations.default).toHaveBeenCalledTimes(1);
+    expect(analytics.sendTrackEvent).toHaveBeenCalledWith(
+      'edx.bi.user.recommendations.viewed',
+      {
+        page: 'authn_recommendations',
+        course_key_array: [],
+        amplitude_recommendations: false,
+        is_control: false,
+        user_id: 111,
+      },
+    );
   });
 
   it('should display recommendations returned by Algolia', async () => {

@@ -20,7 +20,7 @@ const configuration = {
   TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
   TOS_LINK: process.env.TOS_LINK || null,
   // Miscellaneous
-  GENERAL_RECOMMENDATIONS: process.env.GENERAL_RECOMMENDATIONS || [],
+  GENERAL_RECOMMENDATIONS: process.env.GENERAL_RECOMMENDATIONS || '[]',
   INFO_EMAIL: process.env.INFO_EMAIL || '',
 };
 
