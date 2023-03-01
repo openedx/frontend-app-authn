@@ -1,6 +1,6 @@
 .card-list {
   padding-left: 0.0625rem;
-  padding-bottom: 0.125;
+  padding-bottom: 0.125rem;
   @include media-breakpoint-down(xl) {
     overflow-x: scroll;
     overflow-y: hidden;
