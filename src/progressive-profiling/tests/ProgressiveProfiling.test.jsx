@@ -104,6 +104,24 @@ describe('ProgressiveProfilingTests', () => {
     };
   });
 
+  it('not should display button "Learn more about how we use this information."', async () => {
+    mergeConfig({
+      AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
+    });
+    const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+    expect(progressiveProfilingPage.find('a.pgn__hyperlink').exists()).toBeFalsy();
+  });
+
+  it('should display button "Learn more about how we use this information."', async () => {
+    mergeConfig({
+      AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
+    });
+    const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+    expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
+  });
+
   it('should render fields returned by backend api', async () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
