@@ -520,13 +520,6 @@ select.form-control {
   }
 }
 
-@media screen and (min-width: 960px) {
-  html {
-    margin-right: calc(100% - 100vw);
-    margin-left: 0;
-  }
-}
-
 // Smaller than Extra Small (Mobile Screens)
 @media (max-width: 464px) {
   .btn-social {
