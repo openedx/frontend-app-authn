@@ -91,7 +91,7 @@ In the data sub-directory, the file names describe what each piece of code does.
     /ProfilePhotoUploader.jsx // supporting view
     /data // Note: most files here are named with a plural, as they contain many of the things in question.
       /actions.js
-      /constants.js
+      /mockedData.js
       /reducers.js
       /sagas.js
       /selectors.js

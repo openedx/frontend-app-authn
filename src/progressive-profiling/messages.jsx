@@ -26,6 +26,11 @@ const messages = defineMessages({
     defaultMessage: 'Skip for now',
     description: 'Skip button text',
   },
+  'optional.fields.next.button': {
+    id: 'optional.fields.next.button',
+    defaultMessage: 'Next',
+    description: 'Next button text',
+  },
   // modal dialog box
   'continue.to.platform': {
     id: 'continue.to.platform',
