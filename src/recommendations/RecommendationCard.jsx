@@ -4,6 +4,7 @@ import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Card, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { trackRecommendationCardClickOptimizely } from './optimizelyExperiment';
 import { trackRecommendationsClicked } from './track';
 
 const RecommendationCard = (props) => {
@@ -23,6 +24,7 @@ const RecommendationCard = (props) => {
   };
 
   const handleCardClick = () => {
+    trackRecommendationCardClickOptimizely(userId?.toString());
     trackRecommendationsClicked(
       recommendation.courseKey,
       false,
