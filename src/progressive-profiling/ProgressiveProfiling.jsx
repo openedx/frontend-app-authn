@@ -180,18 +180,20 @@ const ProgressiveProfiling = (props) => {
           ) : null}
           <Form>
             {formFields}
-            <span className="progressive-profiling-support">
-              <Hyperlink
-                isInline
-                variant="muted"
-                destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
-                target="_blank"
-                showLaunchIcon={false}
-                onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
-              >
-                {intl.formatMessage(messages['optional.fields.information.link'])}
-              </Hyperlink>
-            </span>
+            {(getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
+              <span className="progressive-profiling-support">
+                <Hyperlink
+                  isInline
+                  variant="muted"
+                  destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
+                  target="_blank"
+                  showLaunchIcon={false}
+                  onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
+                >
+                  {intl.formatMessage(messages['optional.fields.information.link'])}
+                </Hyperlink>
+              </span>
+            )}
             <div className="d-flex mt-4 mb-3">
               <StatefulButton
                 type="submit"
