@@ -27,6 +27,7 @@ jest.mock('@edx/frontend-platform/logging');
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
+analytics.identifyAuthenticatedUser = jest.fn();
 logging.getLoggingService = jest.fn();
 
 auth.configure = jest.fn();
@@ -125,6 +126,11 @@ describe('ProgressiveProfilingTests', () => {
   it('should render fields returned by backend api', async () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
+  });
+
+  it('should make identify call to segment on progressive profiling page', async () => {
+    await getProgressiveProfilingPage();
+    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalled();
   });
 
   it('should submit user profile details on form submission', async () => {
