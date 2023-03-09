@@ -29,7 +29,9 @@ import {
 } from '../data/constants';
 import { getAllPossibleQueryParams } from '../data/utils';
 import FormFieldRenderer from '../field-renderer';
-import { activateRecommendationsExperiment, isUserInVariation } from '../recommendations/optimizelyExperiment';
+import {
+  activateRecommendationsExperiment,
+} from '../recommendations/optimizelyExperiment';
 import { trackRecommendationsViewed } from '../recommendations/track';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
@@ -67,22 +69,17 @@ const ProgressiveProfiling = (props) => {
   }, [DASHBOARD_URL, registrationResponse]);
 
   useEffect(() => {
-    let queryParams = {};
-    let timer = null;
     if (registrationResponse) {
-      queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
+      const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
       if (enablePersonalizedRecommendations && !('enrollment_action' in queryParams)) {
-        activateRecommendationsExperiment();
-        timer = setTimeout(() => {
-          const showRecommendations = isUserInVariation();
-          setShowRecommendationsPage(showRecommendations);
-          if (!showRecommendations) {
-            trackRecommendationsViewed([], true, authenticatedUser?.userId);
-          }
-        }, 500);
+        const userIdStr = authenticatedUser?.userId.toString();
+        const showRecommendations = activateRecommendationsExperiment(userIdStr);
+        setShowRecommendationsPage(showRecommendations);
+        if (!showRecommendations) {
+          trackRecommendationsViewed([], true, authenticatedUser?.userId);
+        }
       }
     }
-    return () => clearTimeout(timer);
   }, [authenticatedUser, enablePersonalizedRecommendations, registrationResponse]);
 
   if (!location.state || !location.state.registrationResult || formRenderState === FAILURE_STATE) {
