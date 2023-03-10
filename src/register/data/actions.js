@@ -4,6 +4,7 @@ export const BACKUP_REGISTRATION_DATA = new AsyncActionType('REGISTRATION', 'BAC
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
+export const REGISTERATION_CLEAR_BACKEND_ERROR = 'REGISTERATION_CLEAR_BACKEND_ERROR';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
 
@@ -59,6 +60,11 @@ export const registerNewUserFailure = (error) => ({
 
 export const clearUsernameSuggestions = () => ({
   type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+});
+
+export const clearRegistertionBackendError = (fieldName) => ({
+  type: REGISTERATION_CLEAR_BACKEND_ERROR,
+  payload: fieldName,
 });
 
 export const setCountryFromThirdPartyAuthContext = (countryCode) => ({

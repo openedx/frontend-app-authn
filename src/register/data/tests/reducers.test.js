@@ -1,3 +1,5 @@
+import { getConfig } from '@edx/frontend-platform';
+
 import { DEFAULT_STATE } from '../../../data/constants';
 import {
   BACKUP_REGISTRATION_DATA,
@@ -5,6 +7,7 @@ import {
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE,
+  REGISTERATION_CLEAR_BACKEND_ERROR,
 } from '../actions';
 import reducer from '../reducers';
 
@@ -100,6 +103,22 @@ describe('Registration Reducer Tests', () => {
     };
 
     expect(reducer(state, action)).toEqual(state);
+  });
+
+  it('should reset email error field data on focus of email field', () => {
+    const state = {
+      ...defaultState,
+      registrationError: { email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account` },
+    };
+    const action = {
+      type: REGISTERATION_CLEAR_BACKEND_ERROR,
+      payload: 'email',
+    };
+
+    expect(reducer(state, action)).toEqual({
+      ...state,
+      registrationError: {},
+    });
   });
 
   it('should set country code', () => {
