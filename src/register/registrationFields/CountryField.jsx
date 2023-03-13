@@ -54,6 +54,10 @@ const CountryField = (props) => {
           value={countryName}
           key={country[COUNTRY_CODE_KEY]}
           onClick={(event) => onBlurHandler(event, true, countryName)}
+          /* This event will prevent the blur event to be fired,
+           as blur event is having higher priority than click event and restricts the click event.
+          */
+          onMouseDown={(event) => event.preventDefault()}
         >
           {countryName.length > 30 ? countryName.substring(0, 30).concat('...') : countryName}
         </button>
