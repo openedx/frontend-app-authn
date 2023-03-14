@@ -611,6 +611,51 @@ describe('LoginPage', () => {
     });
   });
 
+  it('should render other ways to sign in button', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?tpa_hint=${ssoProvider.id}` };
+    ssoProvider.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('button#other-ways-to-sign-in').text()).toEqual('Show me other ways to sign in or register');
+  });
+
+  it('should render other ways to sign in button when public account creation disabled', () => {
+    mergeConfig({
+      ALLOW_PUBLIC_ACCOUNT_CREATION: false,
+    });
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?tpa_hint=${ssoProvider.id}` };
+    ssoProvider.iconImage = null;
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('button#other-ways-to-sign-in').text()).toEqual('Show me other ways to sign in');
+  });
+
   // ******** miscellaneous tests ********
 
   it('should render cookie banner', () => {
