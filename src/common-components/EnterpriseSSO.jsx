@@ -18,6 +18,7 @@ import messages from './messages';
 const EnterpriseSSO = (props) => {
   const { intl } = props;
   const tpaProvider = props.provider;
+  const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
 
   const handleSubmit = (e, url) => {
     e.preventDefault();
@@ -64,12 +65,15 @@ const EnterpriseSSO = (props) => {
               <div className="mb-4" />
               <Button
                 type="submit"
+                id="other-ways-to-sign-in"
                 variant="outline-primary"
                 state="Complete"
                 className="w-100"
                 onClick={(e) => handleClick(e)}
               >
-                {intl.formatMessage(messages['enterprisetpa.login.button.text'])}
+                {disablePublicAccountCreation
+                  ? intl.formatMessage(messages['enterprisetpa.login.button.text.public.account.creation.disabled'])
+                  : intl.formatMessage(messages['enterprisetpa.login.button.text'])}
               </Button>
             </Form>
           </div>
