@@ -60,6 +60,11 @@ const messages = defineMessages({
     defaultMessage: 'Show me other ways to sign in or register',
     description: 'Button text for login',
   },
+  'enterprisetpa.login.button.text.public.account.creation.disabled': {
+    id: 'enterprisetpa.login.button.text.public.account.creation.disabled',
+    defaultMessage: 'Show me other ways to sign in',
+    description: 'Button text for login when account creation is disabled',
+  },
   // social auth providers
   'sso.sign.in.with': {
     id: 'sso.sign.in.with',
