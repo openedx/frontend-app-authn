@@ -30,6 +30,7 @@ import {
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
 import {
   backupRegistrationFormBegin,
+  clearRegistertionBackendError,
   clearUsernameSuggestions,
   fetchRealtimeValidations,
   registerNewUser,
@@ -58,6 +59,7 @@ const RegistrationPage = (props) => {
     intl,
     institutionLogin,
     optionalFields,
+    registrationError,
     registrationErrorCode,
     registrationResult,
     shouldBackupState,
@@ -72,6 +74,7 @@ const RegistrationPage = (props) => {
     getRegistrationDataFromBackend,
     userPipelineDataLoaded,
     validateFromBackend,
+    clearBackendError,
   } = props;
 
   const countryList = useMemo(() => getCountryList(getLocale()), []);
@@ -357,7 +360,10 @@ const RegistrationPage = (props) => {
   const handleOnChange = (event) => {
     const { name } = event.target;
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-
+    if (registrationError[name]) {
+      clearBackendError(name);
+      setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    }
     if (name === 'username') {
       if (value.length > 30) {
         return;
@@ -387,6 +393,7 @@ const RegistrationPage = (props) => {
   const handleOnFocus = (event) => {
     const { name, value } = event.target;
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    clearBackendError(name);
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
@@ -594,6 +601,7 @@ const mapStateToProps = state => {
     backendCountryCode: registerPageState.backendCountryCode,
     backendValidations: validationsSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
+    registrationError: registerPageState.registrationError,
     optionalFields: optionalFieldsSelector(state),
     registrationErrorCode: registrationErrorSelector(state),
     registrationResult: registerPageState.registrationResult,
@@ -707,5 +715,6 @@ export default connect(
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
+    clearBackendError: clearRegistertionBackendError,
   },
 )(injectIntl(RegistrationPage));

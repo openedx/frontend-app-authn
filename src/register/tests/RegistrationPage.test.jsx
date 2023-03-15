@@ -959,6 +959,25 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
 
+    it('should clear the registation validation error on change event on field focused', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationError: {
+            errorCode: 'duplicate-email',
+            email: [{ userMessage: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account` }],
+          },
+        },
+      });
+
+      store.dispatch = jest.fn(store.dispatch);
+      const clearBackendError = jest.fn();
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} {...clearBackendError} />));
+      registrationPage.find('input#email').simulate('change', { target: { value: 'a@gmail.com', name: 'email' } });
+      expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeFalsy();
+    });
+
     it('should set country in component state when form is translated using browser translations', () => {
       getLocale.mockImplementation(() => ('en-us'));
 
