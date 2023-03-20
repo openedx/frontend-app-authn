@@ -64,13 +64,13 @@ const ProgressiveProfiling = (props) => {
 
     if (registrationResponse) {
       setRegistrationResult(registrationResponse);
-      sendPageEvent('login_and_registration', 'welcome');
     }
   }, [DASHBOARD_URL, registrationResponse]);
 
   useEffect(() => {
     if (registrationResponse && authenticatedUser?.userId) {
       identifyAuthenticatedUser(authenticatedUser.userId);
+      sendPageEvent('login_and_registration', 'welcome');
     }
   }, [authenticatedUser, registrationResponse]);
 
