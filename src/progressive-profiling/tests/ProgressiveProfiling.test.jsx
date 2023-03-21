@@ -129,10 +129,10 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   it('should make identify call to segment on progressive profiling page', async () => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 123, username: 'abc123' }));
     await getProgressiveProfilingPage();
-    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalledWith(3);
-    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalled();
+    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalledWith(123);
+    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalledTimes(1);
   });
 
   it('should submit user profile details on form submission', async () => {
