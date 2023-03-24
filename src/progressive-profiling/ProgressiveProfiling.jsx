@@ -75,14 +75,14 @@ const ProgressiveProfiling = (props) => {
   }, [authenticatedUser, registrationResponse]);
 
   useEffect(() => {
-    if (registrationResponse) {
+    if (registrationResponse && authenticatedUser?.userId) {
       const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
       if (enablePersonalizedRecommendations && !('enrollment_action' in queryParams)) {
-        const userIdStr = authenticatedUser?.userId.toString();
+        const userIdStr = authenticatedUser.userId.toString();
         const showRecommendations = activateRecommendationsExperiment(userIdStr);
         setShowRecommendationsPage(showRecommendations);
         if (!showRecommendations) {
-          trackRecommendationsViewed([], true, authenticatedUser?.userId);
+          trackRecommendationsViewed([], true, authenticatedUser.userId);
         }
       }
     }

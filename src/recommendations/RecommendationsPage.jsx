@@ -24,6 +24,7 @@ const RecommendationsPage = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
+  const [algoliaRecommendations, setAlgoliaRecommendations] = useState([]);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const RecommendationsPage = (props) => {
           ...course,
           courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
         }));
+        setAlgoliaRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
 
         if (coursesWithKeys.length >= RECOMMENDATIONS_COUNT) {
           setRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
@@ -55,11 +57,16 @@ const RecommendationsPage = (props) => {
           setRecommendations(generalRecommendations.slice(0, RECOMMENDATIONS_COUNT));
           setIsLoading(false);
         });
-      // We only want to track the recommendations returned by Algolia
-      const courseKeys = coursesWithKeys.map(course => course.courseKey);
-      trackRecommendationsViewed(courseKeys.slice(0, RECOMMENDATIONS_COUNT), false, userId);
     }
   }, [registrationResponse, DASHBOARD_URL, educationLevel, userId]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      // We only want to track the recommendations returned by Algolia
+      const courseKeys = algoliaRecommendations.map(course => course.courseKey);
+      trackRecommendationsViewed(courseKeys, false, userId);
+    }
+  }, [isLoading, algoliaRecommendations, userId]);
 
   if (!registrationResponse) {
     global.location.assign(DASHBOARD_URL);
