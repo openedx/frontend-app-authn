@@ -8,7 +8,7 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@edx/paragon';
+import { Form, Spinner, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -37,10 +37,15 @@ import {
   setUserPipelineDataLoaded,
 } from './data/actions';
 import {
-  COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FORM_SUBMISSION_ERROR,
+  COUNTRY_CODE_KEY,
+  COUNTRY_DISPLAY_KEY,
+  FIELDS,
+  FORM_SUBMISSION_ERROR,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
-import { getSuggestionForInvalidEmail, validateCountryField, validateEmailAddress } from './data/utils';
+import {
+  getSuggestionForInvalidEmail, isTpaHintedAuthentication, validateCountryField, validateEmailAddress,
+} from './data/utils';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
@@ -90,7 +95,7 @@ const RegistrationPage = (props) => {
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [emailSuggestion, setEmailSuggestion] = useState({ ...backedUpFormData.emailSuggestion });
-
+  const [autoSubmitRegisterForm, setAutoSubmitRegisterForm] = useState(isTpaHintedAuthentication());
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
@@ -101,11 +106,35 @@ const RegistrationPage = (props) => {
   const platformName = getConfig().SITE_NAME;
 
   /**
+   * If auto submitting register form, we will check tos and honor code fields if they exist for feature parity.
+   */
+  const checkTOSandHonorCodeFields = () => {
+    if (Object.keys(fieldDescriptions).includes(FIELDS.HONOR_CODE)) {
+      setConfigurableFormFields(prevState => ({
+        ...prevState,
+        [FIELDS.HONOR_CODE]: true,
+      }));
+    }
+    if (Object.keys(fieldDescriptions).includes(FIELDS.TERMS_OF_SERVICE)) {
+      setConfigurableFormFields(prevState => ({
+        ...prevState,
+        [FIELDS.TERMS_OF_SERVICE]: true,
+      }));
+    }
+  };
+
+  /**
    * Set the userPipelineDetails data in formFields for only first time
    */
   useEffect(() => {
     if (!userPipelineDataLoaded) {
-      const { pipelineUserDetails } = thirdPartyAuthContext;
+      const { autoSubmitRegForm, pipelineUserDetails, errorMessage } = thirdPartyAuthContext;
+      if (errorMessage) {
+        localStorage.removeItem('tpaHintedAuthentication');
+        setAutoSubmitRegisterForm(false);
+      } else if (autoSubmitRegForm) {
+        checkTOSandHonorCodeFields();
+      }
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
         const { name = '', username = '', email = '' } = pipelineUserDetails;
         setFormFields(prevState => ({
@@ -114,7 +143,11 @@ const RegistrationPage = (props) => {
         setUserPipelineDetailsLoaded(true);
       }
     }
-  }, [thirdPartyAuthContext, userPipelineDataLoaded, setUserPipelineDetailsLoaded]);
+  }, [ // eslint-disable-line react-hooks/exhaustive-deps
+    thirdPartyAuthContext,
+    userPipelineDataLoaded,
+    setUserPipelineDetailsLoaded,
+  ]);
 
   useEffect(() => {
     if (!formStartTime) {
@@ -355,6 +388,7 @@ const RegistrationPage = (props) => {
   };
 
   const handleEmailSuggestionClosed = () => setEmailSuggestion({ suggestion: '', type: '' });
+
   const handleUsernameSuggestionClosed = () => props.resetUsernameSuggestions();
 
   const handleOnChange = (event) => {
@@ -409,9 +443,7 @@ const RegistrationPage = (props) => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const registerUser = () => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
 
@@ -458,6 +490,17 @@ const RegistrationPage = (props) => {
     props.registerNewUser(payload);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    registerUser();
+  };
+
+  useEffect(() => {
+    if (autoSubmitRegisterForm && userPipelineDataLoaded) {
+      registerUser();
+    }
+  }, [autoSubmitRegisterForm, userPipelineDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const renderForm = () => {
     if (institutionLogin) {
       return (
@@ -481,99 +524,106 @@ const RegistrationPage = (props) => {
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }
         />
-        <div className="mw-xs mt-3">
-          <ThirdPartyAuthAlert
-            currentProvider={currentProvider}
-            platformName={platformName}
-            referrer={REGISTER_PAGE}
-          />
-          <RegistrationFailure
-            errorCode={errorCode.type}
-            failureCount={errorCode.count}
-            context={{ provider: currentProvider }}
-          />
-          <Form id="registration-form" name="registration-form">
-            <FormGroup
-              name="name"
-              value={formFields.name}
-              handleChange={handleOnChange}
-              handleBlur={handleOnBlur}
-              handleFocus={handleOnFocus}
-              errorMessage={errors.name}
-              helpText={[formatMessage(messages['help.text.name'])]}
-              floatingLabel={formatMessage(messages['registration.fullname.label'])}
+        {autoSubmitRegisterForm && !errorCode.type ? (
+          <div className="mw-xs mt-5 text-center">
+            <Spinner animation="border" variant="primary" id="tpa-spinner" />
+          </div>
+        ) : (
+          <div className="mw-xs mt-3">
+            <ThirdPartyAuthAlert
+              currentProvider={currentProvider}
+              platformName={platformName}
+              referrer={REGISTER_PAGE}
             />
-            <EmailField
-              name="email"
-              value={formFields.email}
-              handleChange={handleOnChange}
-              handleBlur={handleOnBlur}
-              handleFocus={handleOnFocus}
-              handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
-              handleOnClose={handleEmailSuggestionClosed}
-              emailSuggestion={emailSuggestion}
-              errorMessage={errors.email}
-              helpText={[formatMessage(messages['help.text.email'])]}
-              floatingLabel={formatMessage(messages['registration.email.label'])}
+            <RegistrationFailure
+              errorCode={errorCode.type}
+              failureCount={errorCode.count}
+              context={{ provider: currentProvider }}
             />
-            <UsernameField
-              name="username"
-              spellCheck="false"
-              value={formFields.username}
-              handleBlur={handleOnBlur}
-              handleChange={handleOnChange}
-              handleFocus={handleOnFocus}
-              handleSuggestionClick={handleSuggestionClick}
-              handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-              usernameSuggestions={usernameSuggestions}
-              errorMessage={errors.username}
-              helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
-              floatingLabel={formatMessage(messages['registration.username.label'])}
-            />
-            {!currentProvider && (
-              <PasswordField
-                name="password"
-                value={formFields.password}
+            <Form id="registration-form" name="registration-form">
+              <FormGroup
+                name="name"
+                value={formFields.name}
                 handleChange={handleOnChange}
                 handleBlur={handleOnBlur}
                 handleFocus={handleOnFocus}
-                errorMessage={errors.password}
-                floatingLabel={formatMessage(messages['registration.password.label'])}
+                errorMessage={errors.name}
+                helpText={[formatMessage(messages['help.text.name'])]}
+                floatingLabel={formatMessage(messages['registration.fullname.label'])}
               />
-            )}
-            <ConfigurableRegistrationForm
-              countryList={countryList}
-              email={formFields.email}
-              fieldErrors={errors}
-              formFields={configurableFormFields}
-              setFieldErrors={setErrors}
-              setFormFields={setConfigurableFormFields}
-              setFocusedField={setFocusedField}
-              fieldDescriptions={fieldDescriptions}
-            />
-            <StatefulButton
-              id="register-user"
-              name="register-user"
-              type="submit"
-              variant="brand"
-              className="register-stateful-button-width mt-4 mb-4"
-              state={submitState}
-              labels={{
-                default: formatMessage(messages['create.account.for.free.button']),
-                pending: '',
-              }}
-              onClick={handleSubmit}
-              onMouseDown={(e) => e.preventDefault()}
-            />
-            <ThirdPartyAuth
-              currentProvider={currentProvider}
-              providers={providers}
-              secondaryProviders={secondaryProviders}
-              handleInstitutionLogin={handleInstitutionLogin}
-              thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-            />
-          </Form>
-        </div>
+              <EmailField
+                name="email"
+                value={formFields.email}
+                handleChange={handleOnChange}
+                handleBlur={handleOnBlur}
+                handleFocus={handleOnFocus}
+                handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
+                handleOnClose={handleEmailSuggestionClosed}
+                emailSuggestion={emailSuggestion}
+                errorMessage={errors.email}
+                helpText={[formatMessage(messages['help.text.email'])]}
+                floatingLabel={formatMessage(messages['registration.email.label'])}
+              />
+              <UsernameField
+                name="username"
+                spellCheck="false"
+                value={formFields.username}
+                handleBlur={handleOnBlur}
+                handleChange={handleOnChange}
+                handleFocus={handleOnFocus}
+                handleSuggestionClick={handleSuggestionClick}
+                handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
+                usernameSuggestions={usernameSuggestions}
+                errorMessage={errors.username}
+                helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
+                floatingLabel={formatMessage(messages['registration.username.label'])}
+              />
+              {!currentProvider && (
+                <PasswordField
+                  name="password"
+                  value={formFields.password}
+                  handleChange={handleOnChange}
+                  handleBlur={handleOnBlur}
+                  handleFocus={handleOnFocus}
+                  errorMessage={errors.password}
+                  floatingLabel={formatMessage(messages['registration.password.label'])}
+                />
+              )}
+              <ConfigurableRegistrationForm
+                countryList={countryList}
+                email={formFields.email}
+                fieldErrors={errors}
+                formFields={configurableFormFields}
+                setFieldErrors={setErrors}
+                setFormFields={setConfigurableFormFields}
+                setFocusedField={setFocusedField}
+                fieldDescriptions={fieldDescriptions}
+              />
+              <StatefulButton
+                id="register-user"
+                name="register-user"
+                type="submit"
+                variant="brand"
+                className="register-stateful-button-width mt-4 mb-4"
+                state={submitState}
+                labels={{
+                  default: formatMessage(messages['create.account.for.free.button']),
+                  pending: '',
+                }}
+                onClick={handleSubmit}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+              <ThirdPartyAuth
+                currentProvider={currentProvider}
+                providers={providers}
+                secondaryProviders={secondaryProviders}
+                handleInstitutionLogin={handleInstitutionLogin}
+                thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+              />
+            </Form>
+          </div>
+        )}
+
       </>
     );
   };
@@ -642,16 +692,11 @@ RegistrationPage.propTypes = {
   submitState: PropTypes.string,
   thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
-    currentProvider: PropTypes.string,
-    platformName: PropTypes.string,
-    providers: PropTypes.arrayOf(
-      PropTypes.shape({}),
-    ),
-    secondaryProviders: PropTypes.arrayOf(
-      PropTypes.shape({}),
-    ),
-    finishAuthUrl: PropTypes.string,
+    autoSubmitRegForm: PropTypes.bool,
     countryCode: PropTypes.string,
+    currentProvider: PropTypes.string,
+    errorMessage: PropTypes.string,
+    finishAuthUrl: PropTypes.string,
     pipelineUserDetails: PropTypes.shape({
       email: PropTypes.string,
       name: PropTypes.string,
@@ -659,6 +704,13 @@ RegistrationPage.propTypes = {
       lastName: PropTypes.string,
       username: PropTypes.string,
     }),
+    platformName: PropTypes.string,
+    providers: PropTypes.arrayOf(
+      PropTypes.shape({}),
+    ),
+    secondaryProviders: PropTypes.arrayOf(
+      PropTypes.shape({}),
+    ),
   }),
   usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
   userPipelineDataLoaded: PropTypes.bool,
@@ -700,12 +752,14 @@ RegistrationPage.defaultProps = {
   submitState: DEFAULT_STATE,
   thirdPartyAuthApiStatus: PENDING_STATE,
   thirdPartyAuthContext: {
-    currentProvider: null,
-    finishAuthUrl: null,
+    autoSubmitRegForm: false,
     countryCode: null,
+    currentProvider: null,
+    errorMessage: null,
+    finishAuthUrl: null,
+    pipelineUserDetails: null,
     providers: [],
     secondaryProviders: [],
-    pipelineUserDetails: null,
   },
   usernameSuggestions: [],
   userPipelineDataLoaded: false,
