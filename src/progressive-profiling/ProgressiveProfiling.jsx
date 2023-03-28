@@ -83,7 +83,7 @@ const ProgressiveProfiling = (props) => {
         const showRecommendations = variation === RECOMMENDATIONS_EXP_VARIATION;
 
         trackRecommendationsGroup(variation, authenticatedUser.userId);
-        trackRecommendationViewedOptimizely(authenticatedUser.userId);
+        trackRecommendationViewedOptimizely(userIdStr);
         setShowRecommendationsPage(showRecommendations);
         if (!showRecommendations) {
           trackRecommendationsViewed([], true, authenticatedUser.userId);

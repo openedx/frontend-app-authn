@@ -12,7 +12,7 @@ export const eventNames = {
   * Activate the post registration recommendations optimizely experiment
   * and return the true if the user is in variation else false.
   * @param  {String} userId  user id of authenticated user.
-  * @return {boolean} true if the user is in variation else false
+  * @return {string} true if the user is in variation else false
 */
 const activateRecommendationsExperiment = (userId) => optimizelyInstance.activate(RECOMMENDATIONS_EXP_KEY, userId);
 
