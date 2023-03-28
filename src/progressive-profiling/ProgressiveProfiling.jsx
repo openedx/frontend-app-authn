@@ -30,9 +30,9 @@ import {
 import { getAllPossibleQueryParams } from '../data/utils';
 import FormFieldRenderer from '../field-renderer';
 import {
-  activateRecommendationsExperiment,
+  activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION, trackRecommendationViewedOptimizely,
 } from '../recommendations/optimizelyExperiment';
-import { trackRecommendationsViewed } from '../recommendations/track';
+import { trackRecommendationsGroup, trackRecommendationsViewed } from '../recommendations/track';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
@@ -79,7 +79,11 @@ const ProgressiveProfiling = (props) => {
       const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
       if (enablePersonalizedRecommendations && !('enrollment_action' in queryParams)) {
         const userIdStr = authenticatedUser.userId.toString();
-        const showRecommendations = activateRecommendationsExperiment(userIdStr);
+        const variation = activateRecommendationsExperiment(userIdStr);
+        const showRecommendations = variation === RECOMMENDATIONS_EXP_VARIATION;
+
+        trackRecommendationsGroup(variation, authenticatedUser.userId);
+        trackRecommendationViewedOptimizely(authenticatedUser.userId);
         setShowRecommendationsPage(showRecommendations);
         if (!showRecommendations) {
           trackRecommendationsViewed([], true, authenticatedUser.userId);

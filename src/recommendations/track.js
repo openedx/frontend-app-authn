@@ -4,6 +4,7 @@ export const LINK_TIMEOUT = 300;
 
 export const eventNames = {
   recommendedCourseClicked: 'edx.bi.user.recommended.course.click',
+  recommendationsGroup: 'edx.bi.user.recommendations.group',
   recommendationsViewed: 'edx.bi.user.recommendations.viewed',
 };
 
@@ -43,7 +44,18 @@ export const trackRecommendationsViewed = (recommendedCourseKeys, isControl, use
   );
 };
 
+export const trackRecommendationsGroup = (variation, userId) => {
+  sendTrackEvent(
+    eventNames.recommendationsGroup, {
+      variation,
+      page: 'authn_recommendations',
+      user_id: userId,
+    },
+  );
+};
+
 export default {
   trackRecommendationsClicked,
+  trackRecommendationsGroup,
   trackRecommendationsViewed,
 };
