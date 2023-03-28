@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, IconButton } from '@edx/paragon';
 import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -10,11 +10,10 @@ import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from '../data/constants';
 import messages from '../messages';
 
 const CountryField = (props) => {
-  const {
-    intl, countryList, selectedCountry,
-  } = props;
+  const { countryList, selectedCountry } = props;
 
   const dropdownRef = useRef(null);
+  const { formatMessage } = useIntl();
   const [errorMessage, setErrorMessage] = useState(props.errorMessage);
   const [dropDownItems, setDropDownItems] = useState([]);
   const [displayValue, setDisplayValue] = useState('');
@@ -160,7 +159,7 @@ const CountryField = (props) => {
         name="country"
         autoComplete="chrome-off"
         className="mb-0"
-        floatingLabel={intl.formatMessage(messages['registration.country.label'])}
+        floatingLabel={formatMessage(messages['registration.country.label'])}
         trailingElement={trailingIcon}
         value={displayValue}
         errorMessage={errorMessage}
@@ -178,7 +177,6 @@ const CountryField = (props) => {
 CountryField.propTypes = {
   countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   onBlurHandler: PropTypes.func.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   onFocusHandler: PropTypes.func.isRequired,
@@ -195,4 +193,4 @@ CountryField.defaultProps = {
   },
 };
 
-export default injectIntl(CountryField);
+export default CountryField;

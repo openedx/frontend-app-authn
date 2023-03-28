@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Form,
 } from '@edx/paragon';
@@ -16,7 +16,7 @@ import messages from './messages';
  * This component renders the Single sign-on (SSO) button only for the tpa provider passed
  * */
 const EnterpriseSSO = (props) => {
-  const { intl } = props;
+  const { formatMessage } = useIntl();
   const tpaProvider = props.provider;
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
 
@@ -36,7 +36,7 @@ const EnterpriseSSO = (props) => {
         <div className="d-flex flex-column">
           <div className="mw-450">
             <Form className="m-0">
-              <p>{intl.formatMessage(messages['enterprisetpa.title.heading'], { providerName: tpaProvider.name })}</p>
+              <p>{formatMessage(messages['enterprisetpa.title.heading'], { providerName: tpaProvider.name })}</p>
               <Button
                 id={tpaProvider.id}
                 key={tpaProvider.id}
@@ -72,8 +72,8 @@ const EnterpriseSSO = (props) => {
                 onClick={(e) => handleClick(e)}
               >
                 {disablePublicAccountCreation
-                  ? intl.formatMessage(messages['enterprisetpa.login.button.text.public.account.creation.disabled'])
-                  : intl.formatMessage(messages['enterprisetpa.login.button.text'])}
+                  ? formatMessage(messages['enterprisetpa.login.button.text.public.account.creation.disabled'])
+                  : formatMessage(messages['enterprisetpa.login.button.text'])}
               </Button>
             </Form>
           </div>
@@ -104,7 +104,6 @@ EnterpriseSSO.propTypes = {
     loginUrl: PropTypes.string,
     registerUrl: PropTypes.string,
   }),
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
-export default injectIntl(EnterpriseSSO);
+export default EnterpriseSSO;

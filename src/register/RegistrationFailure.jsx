@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -10,8 +10,9 @@ import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from '.
 import messages from './messages';
 
 const RegistrationFailureMessage = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    context, errorCode, failureCount, intl,
+    context, errorCode, failureCount,
   } = props;
 
   useEffect(() => {
@@ -25,22 +26,22 @@ const RegistrationFailureMessage = (props) => {
   let errorMessage;
   switch (errorCode) {
     case INTERNAL_SERVER_ERROR:
-      errorMessage = intl.formatMessage(messages['registration.request.server.error']);
+      errorMessage = formatMessage(messages['registration.request.server.error']);
      break;
     case FORBIDDEN_REQUEST:
-      errorMessage = intl.formatMessage(messages['registration.rate.limit.error']);
+      errorMessage = formatMessage(messages['registration.rate.limit.error']);
       break;
     case TPA_SESSION_EXPIRED:
-      errorMessage = intl.formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
+      errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
       break;
     default:
-      errorMessage = intl.formatMessage(messages['registration.empty.form.submission.error']);
+      errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
       break;
   }
 
   return (
     <Alert id="validation-errors" className="mb-5" variant="danger" icon={Error}>
-      <Alert.Heading>{props.intl.formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
+      <Alert.Heading>{formatMessage(messages['registration.request.failure.header'])}</Alert.Heading>
       <p>{errorMessage}</p>
     </Alert>
   );
@@ -56,7 +57,6 @@ RegistrationFailureMessage.propTypes = {
   }),
   errorCode: PropTypes.string.isRequired,
   failureCount: PropTypes.number.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
-export default injectIntl(RegistrationFailureMessage);
+export default RegistrationFailureMessage;

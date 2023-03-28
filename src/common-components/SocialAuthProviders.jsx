@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
@@ -10,7 +10,8 @@ import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
 
 function SocialAuthProviders(props) {
-  const { intl, referrer, socialAuthProviders } = props;
+  const { formatMessage } = useIntl();
+  const { referrer, socialAuthProviders } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -45,8 +46,8 @@ function SocialAuthProviders(props) {
       <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
       <span className="sr-only">
         {referrer === LOGIN_PAGE
-          ? intl.formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
-          : intl.formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
+          ? formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
+          : formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
       </span>
     </button>
   ));
@@ -60,7 +61,6 @@ SocialAuthProviders.defaultProps = {
 };
 
 SocialAuthProviders.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   referrer: PropTypes.string,
   socialAuthProviders: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
@@ -72,4 +72,4 @@ SocialAuthProviders.propTypes = {
   })),
 };
 
-export default injectIntl(SocialAuthProviders);
+export default SocialAuthProviders;

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
-  getCountryList, getLocale, injectIntl,
+  getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
@@ -56,7 +56,6 @@ const RegistrationPage = (props) => {
     backendValidations,
     fieldDescriptions,
     handleInstitutionLogin,
-    intl,
     institutionLogin,
     optionalFields,
     registrationError,
@@ -77,6 +76,7 @@ const RegistrationPage = (props) => {
     clearBackendError,
   } = props;
 
+  const { formatMessage } = useIntl();
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
@@ -212,24 +212,24 @@ const RegistrationPage = (props) => {
     switch (fieldName) {
       case 'name':
         if (!value.trim()) {
-          fieldError = intl.formatMessage(messages['empty.name.field.error']);
+          fieldError = formatMessage(messages['empty.name.field.error']);
         } else if (value && value.match(urlRegex)) {
-          fieldError = intl.formatMessage(messages['name.validation.message']);
+          fieldError = formatMessage(messages['name.validation.message']);
         } else if (value && !payload.username.trim() && shouldValidateFromBackend) {
           validateFromBackend(payload);
         }
         break;
       case 'email':
         if (!value) {
-          fieldError = intl.formatMessage(messages['empty.email.field.error']);
+          fieldError = formatMessage(messages['empty.email.field.error']);
         } else if (value.length <= 2) {
-          fieldError = intl.formatMessage(messages['email.invalid.format.error']);
+          fieldError = formatMessage(messages['email.invalid.format.error']);
         } else {
           const [username, domainName] = value.split('@');
           // Check if email address is invalid. If we have a suggestion for invalid email
           // provide that along with the error message.
           if (!emailRegex.test(value)) {
-            fieldError = intl.formatMessage(messages['email.invalid.format.error']);
+            fieldError = formatMessage(messages['email.invalid.format.error']);
             setEmailSuggestion({
               suggestion: getSuggestionForInvalidEmail(domainName, username),
               type: 'error',
@@ -237,7 +237,7 @@ const RegistrationPage = (props) => {
           } else {
             const response = validateEmailAddress(value, username, domainName);
             if (response.hasError) {
-              fieldError = intl.formatMessage(messages['email.invalid.format.error']);
+              fieldError = formatMessage(messages['email.invalid.format.error']);
               delete response.hasError;
             } else if (shouldValidateFromBackend) {
               validateFromBackend(payload);
@@ -245,23 +245,23 @@ const RegistrationPage = (props) => {
             setEmailSuggestion({ ...response });
 
             if (configurableFormFields.confirm_email && value !== configurableFormFields.confirm_email) {
-              confirmEmailError = intl.formatMessage(messages['email.do.not.match']);
+              confirmEmailError = formatMessage(messages['email.do.not.match']);
             }
           }
         }
         break;
       case 'username':
         if (!value || value.length <= 1 || value.length > 30) {
-          fieldError = intl.formatMessage(messages['username.validation.message']);
+          fieldError = formatMessage(messages['username.validation.message']);
         } else if (!value.match(/^[a-zA-Z0-9_-]*$/i)) {
-          fieldError = intl.formatMessage(messages['username.format.validation.message']);
+          fieldError = formatMessage(messages['username.format.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
         }
         break;
       case 'password':
         if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
-          fieldError = intl.formatMessage(messages['password.validation.message']);
+          fieldError = formatMessage(messages['password.validation.message']);
         } else if (shouldValidateFromBackend) {
           validateFromBackend(payload);
         }
@@ -269,7 +269,7 @@ const RegistrationPage = (props) => {
       case 'country':
         if (flags.showConfigurableEdxFields || flags.showConfigurableRegistrationFields) {
           const { countryCode, displayValue, error } = validateCountryField(
-            value.displayValue.trim(), countryList, intl.formatMessage(messages['empty.country.field.error']),
+            value.displayValue.trim(), countryList, formatMessage(messages['empty.country.field.error']),
           );
           fieldError = error;
           countryFieldCode = countryCode;
@@ -281,7 +281,7 @@ const RegistrationPage = (props) => {
           if (!value && fieldDescriptions[fieldName].error_message) {
             fieldError = fieldDescriptions[fieldName].error_message;
           } else if (fieldName === 'confirm_email' && formFields.email && value !== formFields.email) {
-            fieldError = intl.formatMessage(messages['email.do.not.match']);
+            fieldError = formatMessage(messages['email.do.not.match']);
           }
         }
         break;
@@ -301,7 +301,7 @@ const RegistrationPage = (props) => {
     let isValid = !focusedFieldError;
     Object.keys(payload).forEach(key => {
       if (!payload[key]) {
-        fieldErrors[key] = intl.formatMessage(messages[`empty.${key}.field.error`]);
+        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
       }
       if (fieldErrors[key]) {
         isValid = false;
@@ -310,7 +310,7 @@ const RegistrationPage = (props) => {
 
     if (flags.showConfigurableEdxFields) {
       if (!configurableFormFields.country.displayValue) {
-        fieldErrors.country = intl.formatMessage(messages['empty.country.field.error']);
+        fieldErrors.country = formatMessage(messages['empty.country.field.error']);
       }
       if (fieldErrors.country) {
         isValid = false;
@@ -320,7 +320,7 @@ const RegistrationPage = (props) => {
     if (flags.showConfigurableRegistrationFields) {
       Object.keys(fieldDescriptions).forEach(key => {
         if (key === 'country' && !configurableFormFields.country.displayValue) {
-          fieldErrors[key] = intl.formatMessage(messages['empty.country.field.error']);
+          fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
         } else if (!configurableFormFields[key]) {
           fieldErrors[key] = fieldDescriptions[key].error_message;
         }
@@ -463,14 +463,14 @@ const RegistrationPage = (props) => {
       return (
         <InstitutionLogistration
           secondaryProviders={secondaryProviders}
-          headingTitle={intl.formatMessage(messages['register.institution.login.page.title'])}
+          headingTitle={formatMessage(messages['register.institution.login.page.title'])}
         />
       );
     }
     return (
       <>
         <Helmet>
-          <title>{intl.formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
+          <title>{formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
         </Helmet>
         <RedirectLogistration
           success={registrationResult.success}
@@ -500,8 +500,8 @@ const RegistrationPage = (props) => {
               handleBlur={handleOnBlur}
               handleFocus={handleOnFocus}
               errorMessage={errors.name}
-              helpText={[intl.formatMessage(messages['help.text.name'])]}
-              floatingLabel={intl.formatMessage(messages['registration.fullname.label'])}
+              helpText={[formatMessage(messages['help.text.name'])]}
+              floatingLabel={formatMessage(messages['registration.fullname.label'])}
             />
             <EmailField
               name="email"
@@ -513,8 +513,8 @@ const RegistrationPage = (props) => {
               handleOnClose={handleEmailSuggestionClosed}
               emailSuggestion={emailSuggestion}
               errorMessage={errors.email}
-              helpText={[intl.formatMessage(messages['help.text.email'])]}
-              floatingLabel={intl.formatMessage(messages['registration.email.label'])}
+              helpText={[formatMessage(messages['help.text.email'])]}
+              floatingLabel={formatMessage(messages['registration.email.label'])}
             />
             <UsernameField
               name="username"
@@ -527,8 +527,8 @@ const RegistrationPage = (props) => {
               handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
               usernameSuggestions={usernameSuggestions}
               errorMessage={errors.username}
-              helpText={[intl.formatMessage(messages['help.text.username.1']), intl.formatMessage(messages['help.text.username.2'])]}
-              floatingLabel={intl.formatMessage(messages['registration.username.label'])}
+              helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
+              floatingLabel={formatMessage(messages['registration.username.label'])}
             />
             {!currentProvider && (
               <PasswordField
@@ -538,7 +538,7 @@ const RegistrationPage = (props) => {
                 handleBlur={handleOnBlur}
                 handleFocus={handleOnFocus}
                 errorMessage={errors.password}
-                floatingLabel={intl.formatMessage(messages['registration.password.label'])}
+                floatingLabel={formatMessage(messages['registration.password.label'])}
               />
             )}
             <ConfigurableRegistrationForm
@@ -559,7 +559,7 @@ const RegistrationPage = (props) => {
               className="register-stateful-button-width mt-4 mb-4"
               state={submitState}
               labels={{
-                default: intl.formatMessage(messages['create.account.for.free.button']),
+                default: formatMessage(messages['create.account.for.free.button']),
                 pending: '',
               }}
               onClick={handleSubmit}
@@ -587,7 +587,7 @@ const RegistrationPage = (props) => {
       window.location.href = getConfig().LMS_BASE_URL + provider.registerUrl;
       return null;
     }
-    return provider ? <EnterpriseSSO provider={provider} intl={intl} /> : renderForm();
+    return provider ? <EnterpriseSSO provider={provider} /> : renderForm();
   }
   return (
     renderForm()
@@ -631,7 +631,6 @@ RegistrationPage.propTypes = {
   }),
   fieldDescriptions: PropTypes.shape({}),
   institutionLogin: PropTypes.bool.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   optionalFields: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
   registrationResult: PropTypes.shape({
@@ -717,4 +716,4 @@ export default connect(
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
     clearBackendError: clearRegistertionBackendError,
   },
-)(injectIntl(RegistrationPage));
+)(RegistrationPage);
