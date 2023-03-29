@@ -6,7 +6,12 @@ Include a description of your changes here, along with a link to any relevant Ji
 
 Please describe in detail how you tested your changes.
 
+#### JIRA
+
+[XXX-XXXX](https://2u-internal.atlassian.net/browse/XXX-XXXX)
+
 #### Screenshots/sandbox (optional):
+
 Include a link to the sandbox for design changes or screenshot for before and after. **Remove this section if its not applicable.**
 
 |Before|After|
