@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon,
   Tab,
@@ -26,11 +26,12 @@ import {
 import messages from './messages';
 
 const Logistration = (props) => {
-  const { intl, selectedPage, tpaProviders } = props;
+  const { selectedPage, tpaProviders } = props;
   const tpaHint = getTpaHint();
   const {
     providers, secondaryProviders,
   } = tpaProviders;
+  const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
@@ -66,8 +67,8 @@ const Logistration = (props) => {
       <Icon src={ChevronLeft} className="left-icon" />
       <span className="ml-2">
         {selectedPage === LOGIN_PAGE
-          ? intl.formatMessage(messages['logistration.sign.in'])
-          : intl.formatMessage(messages['logistration.register'])}
+          ? formatMessage(messages['logistration.sign.in'])
+          : formatMessage(messages['logistration.register'])}
       </span>
     </div>
   );
@@ -91,7 +92,7 @@ const Logistration = (props) => {
               )}
               <div id="main-content" className="main-content">
                 {!institutionLogin && (
-                  <h3 className="mb-4.5">{intl.formatMessage(messages['logistration.sign.in'])}</h3>
+                  <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
                 )}
                 <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
               </div>
@@ -108,8 +109,8 @@ const Logistration = (props) => {
                 : (!isValidTpaHint() && (
                   <>
                     <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                      <Tab title={intl.formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                      <Tab title={intl.formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                      <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                      <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                     </Tabs>
                   </>
                 ))}
@@ -134,7 +135,6 @@ const Logistration = (props) => {
 };
 
 Logistration.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   selectedPage: PropTypes.string,
   backupRegistrationForm: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
@@ -163,4 +163,4 @@ export default connect(
   {
     backupRegistrationForm,
   },
-)(injectIntl(Logistration));
+)(Logistration);

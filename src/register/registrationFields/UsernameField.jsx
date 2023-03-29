@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@edx/paragon';
 import { Close } from '@edx/paragon/icons';
 import PropTypes, { string } from 'prop-types';
@@ -9,15 +9,16 @@ import { FormGroup } from '../../common-components';
 import messages from '../messages';
 
 const UsernameField = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    intl, handleSuggestionClick, handleUsernameSuggestionClose, usernameSuggestions, errorMessage,
+    handleSuggestionClick, handleUsernameSuggestionClose, usernameSuggestions, errorMessage,
   } = props;
   let className = '';
   let suggestedUsernameDiv = <></>;
   let iconButton = <></>;
   const suggestedUsernames = () => (
     <div className={className}>
-      <span className="text-gray username-suggestion-label">{intl.formatMessage(messages['registration.username.suggestion.label'])}</span>
+      <span className="text-gray username-suggestion-label">{formatMessage(messages['registration.username.suggestion.label'])}</span>
       <div className="scroll-suggested-username">
         {usernameSuggestions.map((username, index) => (
           <Button
@@ -65,10 +66,9 @@ UsernameField.propTypes = {
   handleSuggestionClick: PropTypes.func.isRequired,
   handleUsernameSuggestionClose: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
 };
 
-export default injectIntl(UsernameField);
+export default UsernameField;

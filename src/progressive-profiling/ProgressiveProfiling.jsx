@@ -10,7 +10,7 @@ import {
   getAuthenticatedUser,
   hydrateAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { getLoggingService } from '@edx/frontend-platform/logging';
 import {
   Alert,
@@ -40,10 +40,12 @@ import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
 const ProgressiveProfiling = (props) => {
   const {
-    formRenderState, intl, submitState, showError, location,
+    formRenderState, submitState, showError, location,
   } = props;
   const enablePersonalizedRecommendations = getConfig().ENABLE_PERSONALIZED_RECOMMENDATIONS;
   const registrationResponse = location.state?.registrationResult;
+
+  const { formatMessage } = useIntl();
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [values, setValues] = useState({});
@@ -160,7 +162,7 @@ const ProgressiveProfiling = (props) => {
     <>
       <BaseComponent showWelcomeBanner>
         <Helmet>
-          <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
+          <title>{formatMessage(messages['progressive.profiling.page.title'],
             { siteName: getConfig().SITE_NAME })}
           </title>
         </Helmet>
@@ -176,13 +178,13 @@ const ProgressiveProfiling = (props) => {
         ) : null}
         <div className="mw-xs pp-page-content">
           <div>
-            <h2 className="pp-page-heading text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
+            <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
           </div>
           <hr className="border-light-700 mb-4" />
           {showError ? (
             <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
-              <Alert.Heading>{intl.formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
-              <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
+              <Alert.Heading>{formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
+              <p>{formatMessage(messages['welcome.page.error.message'])}</p>
             </Alert>
           ) : null}
           <Form>
@@ -197,7 +199,7 @@ const ProgressiveProfiling = (props) => {
                   showLaunchIcon={false}
                   onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
                 >
-                  {intl.formatMessage(messages['optional.fields.information.link'])}
+                  {formatMessage(messages['optional.fields.information.link'])}
                 </Hyperlink>
               </span>
             )}
@@ -208,7 +210,7 @@ const ProgressiveProfiling = (props) => {
                 className="login-button-width"
                 state={submitState}
                 labels={{
-                  default: showRecommendationsPage ? intl.formatMessage(messages['optional.fields.next.button']) : intl.formatMessage(messages['optional.fields.submit.button']),
+                  default: showRecommendationsPage ? formatMessage(messages['optional.fields.next.button']) : formatMessage(messages['optional.fields.submit.button']),
                   pending: '',
                 }}
                 onClick={handleSubmit}
@@ -219,7 +221,7 @@ const ProgressiveProfiling = (props) => {
                 type="submit"
                 variant="link"
                 labels={{
-                  default: intl.formatMessage(messages['optional.fields.skip.button']),
+                  default: formatMessage(messages['optional.fields.skip.button']),
                 }}
                 onClick={handleSkip}
                 onMouseDown={(e) => e.preventDefault()}
@@ -234,7 +236,6 @@ const ProgressiveProfiling = (props) => {
 
 ProgressiveProfiling.propTypes = {
   formRenderState: PropTypes.string.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }),
@@ -263,4 +264,4 @@ export default connect(
   {
     saveUserProfile,
   },
-)(injectIntl(ProgressiveProfiling));
+)(ProgressiveProfiling);

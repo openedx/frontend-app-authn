@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
@@ -18,8 +18,9 @@ import messages from './messages';
  * This component renders the Single sign-on (SSO) buttons for the providers passed.
  * */
 const ThirdPartyAuth = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    providers, secondaryProviders, currentProvider, handleInstitutionLogin, thirdPartyAuthApiStatus, intl,
+    providers, secondaryProviders, currentProvider, handleInstitutionLogin, thirdPartyAuthApiStatus,
   } = props;
   const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
   const isSocialAuthActive = !!providers.length && !currentProvider;
@@ -29,7 +30,7 @@ const ThirdPartyAuth = (props) => {
     <>
       {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
         <div className="mt-4 mb-3 h4">
-          {intl.formatMessage(messages['registration.other.options.heading'])}
+          {formatMessage(messages['registration.other.options.heading'])}
         </div>
       )}
 
@@ -40,7 +41,7 @@ const ThirdPartyAuth = (props) => {
           {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
             <RenderInstitutionButton
               onSubmitHandler={handleInstitutionLogin}
-              buttonTitle={intl.formatMessage(messages['register.institution.login.button'])}
+              buttonTitle={formatMessage(messages['register.institution.login.button'])}
             />
           )}
           {isSocialAuthActive && (
@@ -64,10 +65,9 @@ ThirdPartyAuth.defaultProps = {
 ThirdPartyAuth.propTypes = {
   currentProvider: PropTypes.string,
   handleInstitutionLogin: PropTypes.func.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   providers: PropTypes.arrayOf(PropTypes.any),
   secondaryProviders: PropTypes.arrayOf(PropTypes.any),
   thirdPartyAuthApiStatus: PropTypes.string,
 };
 
-export default injectIntl(ThirdPartyAuth);
+export default ThirdPartyAuth;

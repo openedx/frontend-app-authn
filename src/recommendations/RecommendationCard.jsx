@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Card, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
@@ -84,4 +83,4 @@ RecommendationCard.defaultProps = {
   userId: null,
 };
 
-export default injectIntl(RecommendationCard);
+export default RecommendationCard;

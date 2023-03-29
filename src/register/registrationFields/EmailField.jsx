@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Icon } from '@edx/paragon';
 import { Close, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -9,8 +9,8 @@ import { FormGroup } from '../../common-components';
 import messages from '../messages';
 
 const EmailField = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    intl,
     emailSuggestion,
     handleSuggestionClick,
     handleOnClose,
@@ -21,7 +21,7 @@ const EmailField = (props) => {
       return (
         <Alert variant="danger" className="email-error-alert mt-1" icon={Error}>
           <span className="alert-text">
-            {intl.formatMessage(messages['did.you.mean.alert.text'])}{' '}
+            {formatMessage(messages['did.you.mean.alert.text'])}{' '}
             <Alert.Link
               href="#"
               name="email"
@@ -35,7 +35,7 @@ const EmailField = (props) => {
     }
     return (
       <span id="email-warning" className="small">
-        {intl.formatMessage(messages['did.you.mean.alert.text'])}:{' '}
+        {formatMessage(messages['did.you.mean.alert.text'])}:{' '}
         <Alert.Link
           href="#"
           name="email"
@@ -73,10 +73,9 @@ EmailField.propTypes = {
     suggestion: PropTypes.string,
     type: PropTypes.string,
   }),
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   value: PropTypes.string.isRequired,
   handleOnClose: PropTypes.func.isRequired,
   handleSuggestionClick: PropTypes.func.isRequired,
 };
 
-export default injectIntl(EmailField);
+export default EmailField;

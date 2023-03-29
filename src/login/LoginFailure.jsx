@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
-import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Hyperlink } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -24,13 +24,13 @@ import {
 import messages from './messages';
 
 const LoginFailureMessage = (props) => {
-  const { intl } = props;
+  const { formatMessage } = useIntl();
   const { context, errorCode } = props.loginError;
   const authService = getAuthService();
   let errorList;
   let resetLink = (
     <Hyperlink destination="reset" isInline>
-      {intl.formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
+      {formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
     </Hyperlink>
   );
 
@@ -38,19 +38,19 @@ const LoginFailureMessage = (props) => {
     case NON_COMPLIANT_PASSWORD_EXCEPTION: {
       errorList = (
         <>
-          <strong>{intl.formatMessage(messages['non.compliant.password.title'])}</strong>
-          <p>{intl.formatMessage(messages['non.compliant.password.message'])}</p>
+          <strong>{formatMessage(messages['non.compliant.password.title'])}</strong>
+          <p>{formatMessage(messages['non.compliant.password.message'])}</p>
         </>
       );
       break;
     }
     case FORBIDDEN_REQUEST:
-      errorList = <p>{intl.formatMessage(messages['login.rate.limit.reached.message'])}</p>;
+      errorList = <p>{formatMessage(messages['login.rate.limit.reached.message'])}</p>;
       break;
     case INACTIVE_USER: {
       const supportLink = (
         <a href={context.supportLink}>
-          {intl.formatMessage(messages['contact.support.link'], { platformName: context.platformName })}
+          {formatMessage(messages['contact.support.link'], { platformName: context.platformName })}
         </a>
       );
       errorList = (
@@ -74,7 +74,7 @@ const LoginFailureMessage = (props) => {
       const url = `${getConfig().LMS_BASE_URL}/dashboard/?tpa_hint=${context.tpaHint}`;
       const tpaLink = (
         <a href={url}>
-          {intl.formatMessage(messages['tpa.account.link'], { provider: context.provider })}
+          {formatMessage(messages['tpa.account.link'], { provider: context.provider })}
         </a>
       );
       errorList = (
@@ -90,12 +90,12 @@ const LoginFailureMessage = (props) => {
       break;
     }
     case INVALID_FORM:
-      errorList = <p>{intl.formatMessage(messages['login.form.invalid.error.message'])}</p>;
+      errorList = <p>{formatMessage(messages['login.form.invalid.error.message'])}</p>;
       break;
     case FAILED_LOGIN_ATTEMPT: {
       resetLink = (
         <Hyperlink destination="reset" isInline>
-          {intl.formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
+          {formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
         </Hyperlink>
       );
       errorList = (
@@ -124,7 +124,7 @@ const LoginFailureMessage = (props) => {
     case ACCOUNT_LOCKED_OUT: {
       errorList = (
         <>
-          <p>{intl.formatMessage(messages['account.locked.out.message.1'])}</p>
+          <p>{formatMessage(messages['account.locked.out.message.1'])}</p>
           <p>
             <FormattedMessage
               id="account.locked.out.message.2"
@@ -139,7 +139,7 @@ const LoginFailureMessage = (props) => {
     }
     case INCORRECT_EMAIL_PASSWORD:
       if (context.failureCount <= 1) {
-        errorList = <p>{intl.formatMessage(messages['login.incorrect.credentials.error'])}</p>;
+        errorList = <p>{formatMessage(messages['login.incorrect.credentials.error'])}</p>;
       } else if (context.failureCount === 2) {
         errorList = (
           <p>
@@ -167,13 +167,13 @@ const LoginFailureMessage = (props) => {
       return <ChangePasswordPrompt />;
     case INTERNAL_SERVER_ERROR:
     default:
-      errorList = <p>{intl.formatMessage(messages['internal.server.error.message'])}</p>;
+      errorList = <p>{formatMessage(messages['internal.server.error.message'])}</p>;
       break;
   }
 
   return (
     <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
-      <Alert.Heading>{intl.formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
+      <Alert.Heading>{formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
       { errorList }
     </Alert>
   );
@@ -193,7 +193,6 @@ LoginFailureMessage.propTypes = {
     errorCode: PropTypes.string,
     redirectUrl: PropTypes.string,
   }),
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
-export default injectIntl(LoginFailureMessage);
+export default LoginFailureMessage;
