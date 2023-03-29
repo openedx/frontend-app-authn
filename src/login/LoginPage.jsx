@@ -283,7 +283,7 @@ class LoginPage extends React.Component {
               id="sign-in"
               type="submit"
               variant="brand"
-              className="login-button-width"
+              className="login-button-width mb-3"
               state={submitState}
               labels={{
                 default: intl.formatMessage(messages['sign.in.button']),
@@ -295,7 +295,7 @@ class LoginPage extends React.Component {
             <Link
               id="forgot-password"
               name="forgot-password"
-              className="btn btn-link font-weight-500 text-body"
+              className="btn btn-link font-weight-500 text-body mb-3"
               to={updatePathWithQueryParams(RESET_PAGE)}
               onClick={this.handleForgotPasswordLinkClickEvent}
             >
