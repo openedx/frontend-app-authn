@@ -102,6 +102,16 @@ const messages = defineMessages({
     defaultMessage: 'Finish creating your account',
     description: 'Heading that appears above form when user is trying to create account using social auth',
   },
+  supportTitle: {
+    id: 'zendesk.supportTitle',
+    description: 'Title for the support button',
+    defaultMessage: 'edX Support',
+  },
+  selectTicketForm: {
+    id: 'zendesk.selectTicketForm',
+    description: 'Select ticket form',
+    defaultMessage: 'Please choose your request type:',
+  },
 });
 
 export default messages;
