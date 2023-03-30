@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
-  Logistration, NotFoundPage, registerIcons, UnAuthOnlyRoute,
+  Logistration, NotFoundPage, registerIcons, UnAuthOnlyRoute, Zendesk,
 } from './common-components';
 import configureStore from './data/configureStore';
 import {
@@ -32,6 +32,7 @@ const MainApp = () => (
     <Helmet>
       <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
     </Helmet>
+    {getConfig().ZENDESK_KEY && <Zendesk />}
     <Switch>
       <Route exact path="/">
         <Redirect to={updatePathWithQueryParams(REGISTER_PAGE)} />

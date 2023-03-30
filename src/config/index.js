@@ -22,6 +22,8 @@ const configuration = {
   // Miscellaneous
   GENERAL_RECOMMENDATIONS: process.env.GENERAL_RECOMMENDATIONS || '[]',
   INFO_EMAIL: process.env.INFO_EMAIL || '',
+  ZENDESK_KEY: process.env.ZENDESK_KEY,
+  ZENDESK_LOGO_URL: process.env.ZENDESK_LOGO_URL,
 };
 
 export default configuration;
