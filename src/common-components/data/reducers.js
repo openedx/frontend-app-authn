@@ -15,7 +15,7 @@ export const defaultState = {
   },
 };
 
-const reducer = (state = defaultState, action) => {
+const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
     case THIRD_PARTY_AUTH_CONTEXT.BEGIN:
       return {

@@ -14,7 +14,7 @@ import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import BaseComponent from '../base-component';
+import { BaseComponent } from '../base-component';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
@@ -107,12 +107,10 @@ const Logistration = (props) => {
                   </Tabs>
                 )
                 : (!isValidTpaHint() && (
-                  <>
-                    <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                      <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                      <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                    </Tabs>
-                  </>
+                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                  </Tabs>
                 ))}
               { key && (
                 <Redirect to={updatePathWithQueryParams(key)} />
@@ -138,8 +136,8 @@ Logistration.propTypes = {
   selectedPage: PropTypes.string,
   backupRegistrationForm: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
-    providers: PropTypes.array,
-    secondaryProviders: PropTypes.array,
+    providers: PropTypes.arrayOf(PropTypes.shape({})),
+    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
   }),
 };
 

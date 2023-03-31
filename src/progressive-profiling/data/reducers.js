@@ -12,7 +12,7 @@ export const defaultState = {
   showError: false,
 };
 
-const reducer = (state = defaultState, action) => {
+const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
     case SAVE_USER_PROFILE.BEGIN:
       return {

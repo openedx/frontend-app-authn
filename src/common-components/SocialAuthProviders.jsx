@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
 
-function SocialAuthProviders(props) {
+const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
   const { referrer, socialAuthProviders } = props;
 
@@ -35,13 +35,11 @@ function SocialAuthProviders(props) {
         </div>
       )
         : (
-          <>
-            <div className="font-container" aria-hidden="true">
-              <FontAwesomeIcon
-                icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
-              />
-            </div>
-          </>
+          <div className="font-container" aria-hidden="true">
+            <FontAwesomeIcon
+              icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
+            />
+          </div>
         )}
       <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
       <span className="sr-only">
@@ -52,8 +50,8 @@ function SocialAuthProviders(props) {
     </button>
   ));
 
-  return <>{socialAuth}</>;
-}
+  return <span>{socialAuth}</span>;
+};
 
 SocialAuthProviders.defaultProps = {
   referrer: LOGIN_PAGE,
