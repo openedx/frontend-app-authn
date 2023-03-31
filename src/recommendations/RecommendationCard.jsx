@@ -39,6 +39,7 @@ const RecommendationCard = (props) => {
       <Hyperlink
         destination={recommendation.marketingUrl}
         target="_blank"
+        className="card-box"
         showLaunchIcon={false}
         onClick={handleCardClick}
       >
