@@ -65,8 +65,26 @@ ThirdPartyAuth.defaultProps = {
 ThirdPartyAuth.propTypes = {
   currentProvider: PropTypes.string,
   handleInstitutionLogin: PropTypes.func.isRequired,
-  providers: PropTypes.arrayOf(PropTypes.any),
-  secondaryProviders: PropTypes.arrayOf(PropTypes.any),
+  providers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      iconClass: PropTypes.string,
+      iconImage: PropTypes.string,
+      loginUrl: PropTypes.string,
+      registerUrl: PropTypes.string,
+    }),
+  ),
+  secondaryProviders: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      iconClass: PropTypes.string,
+      iconImage: PropTypes.string,
+      loginUrl: PropTypes.string,
+      registerUrl: PropTypes.string,
+    }),
+  ),
   thirdPartyAuthApiStatus: PropTypes.string,
 };
 

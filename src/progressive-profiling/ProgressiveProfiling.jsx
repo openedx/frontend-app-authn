@@ -22,13 +22,13 @@ import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import BaseComponent from '../base-component';
+import { BaseComponent } from '../base-component';
 import { RedirectLogistration } from '../common-components';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE,
 } from '../data/constants';
 import { getAllPossibleQueryParams } from '../data/utils';
-import FormFieldRenderer from '../field-renderer';
+import { FormFieldRenderer } from '../field-renderer';
 import {
   activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION, trackRecommendationViewedOptimizely,
 } from '../recommendations/optimizelyExperiment';
@@ -159,85 +159,91 @@ const ProgressiveProfiling = (props) => {
   });
 
   return (
-    <>
-      <BaseComponent showWelcomeBanner>
-        <Helmet>
-          <title>{formatMessage(messages['progressive.profiling.page.title'],
-            { siteName: getConfig().SITE_NAME })}
-          </title>
-        </Helmet>
-        <ProgressiveProfilingPageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
-        {props.shouldRedirect ? (
-          <RedirectLogistration
-            success
-            redirectUrl={registrationResult.redirectUrl}
-            redirectToRecommendationsPage={showRecommendationsPage}
-            educationLevel={values?.level_of_education}
-            userId={authenticatedUser?.userId}
-          />
-        ) : null}
-        <div className="mw-xs pp-page-content">
-          <div>
-            <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
-          </div>
-          <hr className="border-light-700 mb-4" />
-          {showError ? (
-            <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
-              <Alert.Heading>{formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
-              <p>{formatMessage(messages['welcome.page.error.message'])}</p>
-            </Alert>
-          ) : null}
-          <Form>
-            {formFields}
-            {(getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
-              <span className="progressive-profiling-support">
-                <Hyperlink
-                  isInline
-                  variant="muted"
-                  destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
-                  target="_blank"
-                  showLaunchIcon={false}
-                  onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
-                >
-                  {formatMessage(messages['optional.fields.information.link'])}
-                </Hyperlink>
-              </span>
-            )}
-            <div className="d-flex mt-4 mb-3">
-              <StatefulButton
-                type="submit"
-                variant="brand"
-                className="login-button-width"
-                state={submitState}
-                labels={{
-                  default: showRecommendationsPage ? formatMessage(messages['optional.fields.next.button']) : formatMessage(messages['optional.fields.submit.button']),
-                  pending: '',
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-              <StatefulButton
-                className="text-gray-700 font-weight-500"
-                type="submit"
-                variant="link"
-                labels={{
-                  default: formatMessage(messages['optional.fields.skip.button']),
-                }}
-                onClick={handleSkip}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-            </div>
-          </Form>
+    <BaseComponent showWelcomeBanner>
+      <Helmet>
+        <title>{formatMessage(messages['progressive.profiling.page.title'],
+          { siteName: getConfig().SITE_NAME })}
+        </title>
+      </Helmet>
+      <ProgressiveProfilingPageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
+      {props.shouldRedirect ? (
+        <RedirectLogistration
+          success
+          redirectUrl={registrationResult.redirectUrl}
+          redirectToRecommendationsPage={showRecommendationsPage}
+          educationLevel={values?.level_of_education}
+          userId={authenticatedUser?.userId}
+        />
+      ) : null}
+      <div className="mw-xs pp-page-content">
+        <div>
+          <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
         </div>
-      </BaseComponent>
-    </>
+        <hr className="border-light-700 mb-4" />
+        {showError ? (
+          <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
+            <Alert.Heading>{formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
+            <p>{formatMessage(messages['welcome.page.error.message'])}</p>
+          </Alert>
+        ) : null}
+        <Form>
+          {formFields}
+          {(getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
+            <span className="progressive-profiling-support">
+              <Hyperlink
+                isInline
+                variant="muted"
+                destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
+                target="_blank"
+                showLaunchIcon={false}
+                onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
+              >
+                {formatMessage(messages['optional.fields.information.link'])}
+              </Hyperlink>
+            </span>
+          )}
+          <div className="d-flex mt-4 mb-3">
+            <StatefulButton
+              type="submit"
+              variant="brand"
+              className="login-button-width"
+              state={submitState}
+              labels={{
+                default: showRecommendationsPage ? formatMessage(messages['optional.fields.next.button']) : formatMessage(messages['optional.fields.submit.button']),
+                pending: '',
+              }}
+              onClick={handleSubmit}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <StatefulButton
+              className="text-gray-700 font-weight-500"
+              type="submit"
+              variant="link"
+              labels={{
+                default: formatMessage(messages['optional.fields.skip.button']),
+              }}
+              onClick={handleSkip}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </div>
+        </Form>
+      </div>
+    </BaseComponent>
   );
 };
 
 ProgressiveProfiling.propTypes = {
   formRenderState: PropTypes.string.isRequired,
   location: PropTypes.shape({
-    state: PropTypes.object,
+    state: PropTypes.shape({
+      registrationResult: PropTypes.shape({
+        redirectUrl: PropTypes.string,
+      }),
+      optionalFields: PropTypes.shape({
+        extended_profile: PropTypes.arrayOf(PropTypes.string),
+        fields: PropTypes.shape({}),
+      }),
+    }),
   }),
   saveUserProfile: PropTypes.func.isRequired,
   showError: PropTypes.bool,

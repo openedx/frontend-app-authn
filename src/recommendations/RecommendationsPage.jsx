@@ -136,7 +136,13 @@ const RecommendationsPage = (props) => {
 
 RecommendationsPage.propTypes = {
   location: PropTypes.shape({
-    state: PropTypes.object,
+    state: PropTypes.shape({
+      registrationResult: PropTypes.shape({
+        redirectUrl: PropTypes.string,
+      }),
+      userId: PropTypes.number,
+      educationLevel: PropTypes.string,
+    }),
   }),
 
 };

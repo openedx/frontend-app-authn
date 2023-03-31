@@ -19,10 +19,10 @@ import {
   RESET_PAGE,
 } from './data/constants';
 import { updatePathWithQueryParams } from './data/utils';
-import ForgotPasswordPage from './forgot-password';
+import { ForgotPasswordPage } from './forgot-password';
 import { ProgressiveProfiling } from './progressive-profiling';
-import RecommendationsPage from './recommendations';
-import ResetPasswordPage from './reset-password';
+import { RecommendationsPage } from './recommendations';
+import { ResetPasswordPage } from './reset-password';
 import './index.scss';
 
 registerIcons();
