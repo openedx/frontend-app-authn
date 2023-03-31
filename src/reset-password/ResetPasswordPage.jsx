@@ -16,7 +16,7 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { Redirect } from 'react-router-dom';
 
-import BaseComponent from '../base-component';
+import { BaseComponent } from '../base-component';
 import { PasswordField } from '../common-components';
 import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
@@ -159,8 +159,8 @@ const ResetPasswordPage = (props) => {
       <BaseComponent>
         <div>
           <Helmet>
-            <title>{formatMessage(messages['reset.password.page.title'],
-              { siteName: getConfig().SITE_NAME })}
+            <title>
+              {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
             </title>
           </Helmet>
           <Tabs activeKey="" id="controlled-tab" onSelect={(k) => setKey(k)}>

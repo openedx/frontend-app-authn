@@ -14,8 +14,8 @@ const UsernameField = (props) => {
     handleSuggestionClick, handleUsernameSuggestionClose, usernameSuggestions, errorMessage,
   } = props;
   let className = '';
-  let suggestedUsernameDiv = <></>;
-  let iconButton = <></>;
+  let suggestedUsernameDiv = null;
+  let iconButton = null;
   const suggestedUsernames = () => (
     <div className={className}>
       <span className="text-gray username-suggestion-label">{formatMessage(messages['registration.username.suggestion.label'])}</span>

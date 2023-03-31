@@ -175,7 +175,12 @@ const CountryField = (props) => {
 };
 
 CountryField.propTypes = {
-  countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  countryList: PropTypes.arrayOf(
+    PropTypes.shape({
+      code: PropTypes.string,
+      name: PropTypes.string,
+    }),
+  ).isRequired,
   errorMessage: PropTypes.string,
   onBlurHandler: PropTypes.func.isRequired,
   onChangeHandler: PropTypes.func.isRequired,

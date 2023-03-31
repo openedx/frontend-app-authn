@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import { AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS } from '../data/constants';
 import { setCookie } from '../data/utils';
 
-function RedirectLogistration(props) {
+const RedirectLogistration = (props) => {
   const {
     finishAuthUrl,
     redirectUrl,
@@ -66,8 +66,9 @@ function RedirectLogistration(props) {
 
     window.location.href = finalRedirectUrl;
   }
-  return <></>;
-}
+
+  return null;
+};
 
 RedirectLogistration.defaultProps = {
   educationLevel: null,

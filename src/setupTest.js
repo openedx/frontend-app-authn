@@ -8,9 +8,9 @@ import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({ adapter: new Adapter() });
 class MockLoggingService {
-    logInfo = jest.fn();
+  logInfo = jest.fn();
 
-    logError = jest.fn();
+  logError = jest.fn();
 }
 
 export default function initializeMockLogging() {
