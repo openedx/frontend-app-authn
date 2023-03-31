@@ -50,7 +50,8 @@ const SocialAuthProviders = (props) => {
     </button>
   ));
 
-  return <span>{socialAuth}</span>;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{socialAuth}</>;
 };
 
 SocialAuthProviders.defaultProps = {
