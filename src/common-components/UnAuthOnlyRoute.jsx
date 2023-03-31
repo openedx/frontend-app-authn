@@ -30,7 +30,7 @@ const UnAuthOnlyRoute = (props) => {
     return <Route {...props} />;
   }
 
-  return <></>;
+  return null;
 };
 
 export default UnAuthOnlyRoute;

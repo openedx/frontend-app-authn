@@ -188,7 +188,15 @@ LoginFailureMessage.defaultProps = {
 
 LoginFailureMessage.propTypes = {
   loginError: PropTypes.shape({
-    context: PropTypes.object,
+    context: PropTypes.shape({
+      supportLink: PropTypes.string,
+      platformName: PropTypes.string,
+      tpaHint: PropTypes.string,
+      provider: PropTypes.string,
+      allowedDomain: PropTypes.string,
+      remainingAttempts: PropTypes.number,
+      failureCount: PropTypes.number,
+    }),
     email: PropTypes.string,
     errorCode: PropTypes.string,
     redirectUrl: PropTypes.string,

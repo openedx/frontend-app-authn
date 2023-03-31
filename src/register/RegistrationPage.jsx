@@ -268,9 +268,9 @@ const RegistrationPage = (props) => {
         break;
       case 'country':
         if (flags.showConfigurableEdxFields || flags.showConfigurableRegistrationFields) {
-          const { countryCode, displayValue, error } = validateCountryField(
-            value.displayValue.trim(), countryList, formatMessage(messages['empty.country.field.error']),
-          );
+          const {
+            countryCode, displayValue, error,
+          } = validateCountryField(value.displayValue.trim(), countryList, formatMessage(messages['empty.country.field.error']));
           fieldError = error;
           countryFieldCode = countryCode;
           setConfigurableFormFields(prevState => ({ ...prevState, country: { countryCode, displayValue } }));
@@ -601,8 +601,8 @@ const mapStateToProps = state => {
     backendCountryCode: registerPageState.backendCountryCode,
     backendValidations: validationsSelector(state),
     fieldDescriptions: fieldDescriptionSelector(state),
-    registrationError: registerPageState.registrationError,
     optionalFields: optionalFieldsSelector(state),
+    registrationError: registerPageState.registrationError,
     registrationErrorCode: registrationErrorSelector(state),
     registrationResult: registerPageState.registrationResult,
     shouldBackupState: registerPageState.shouldBackupState,
@@ -632,6 +632,7 @@ RegistrationPage.propTypes = {
   fieldDescriptions: PropTypes.shape({}),
   institutionLogin: PropTypes.bool.isRequired,
   optionalFields: PropTypes.shape({}),
+  registrationError: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
@@ -643,8 +644,12 @@ RegistrationPage.propTypes = {
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
-    providers: PropTypes.array,
-    secondaryProviders: PropTypes.array,
+    providers: PropTypes.arrayOf(
+      PropTypes.shape({}),
+    ),
+    secondaryProviders: PropTypes.arrayOf(
+      PropTypes.shape({}),
+    ),
     finishAuthUrl: PropTypes.string,
     countryCode: PropTypes.string,
     pipelineUserDetails: PropTypes.shape({
@@ -660,6 +665,7 @@ RegistrationPage.propTypes = {
   validationApiRateLimited: PropTypes.bool,
   // Actions
   backupFormState: PropTypes.func.isRequired,
+  clearBackendError: PropTypes.func.isRequired,
   getRegistrationDataFromBackend: PropTypes.func.isRequired,
   handleInstitutionLogin: PropTypes.func.isRequired,
   registerNewUser: PropTypes.func.isRequired,
@@ -687,6 +693,7 @@ RegistrationPage.defaultProps = {
   backendValidations: null,
   fieldDescriptions: {},
   optionalFields: {},
+  registrationError: {},
   registrationErrorCode: '',
   registrationResult: null,
   shouldBackupState: false,
@@ -709,11 +716,11 @@ export default connect(
   mapStateToProps,
   {
     backupFormState: backupRegistrationFormBegin,
+    clearBackendError: clearRegistertionBackendError,
     getRegistrationDataFromBackend: getThirdPartyAuthContext,
     resetUsernameSuggestions: clearUsernameSuggestions,
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
-    clearBackendError: clearRegistertionBackendError,
   },
 )(RegistrationPage);

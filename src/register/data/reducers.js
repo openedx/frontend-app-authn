@@ -37,7 +37,7 @@ export const defaultState = {
   shouldBackupState: false,
 };
 
-const reducer = (state = defaultState, action) => {
+const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
     case BACKUP_REGISTRATION_DATA.BASE:
       return {

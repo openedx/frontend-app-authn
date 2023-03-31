@@ -351,9 +351,10 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
-      registrationPage.find('input#email').simulate(
-        'change', { target: { value: 'john@gmail.mistake', name: 'email' } },
-      );
+      registrationPage
+        .find('input#email')
+        .simulate('change', { target: { value: 'john@gmail.mistake', name: 'email' } });
+
       registrationPage.find('input#email').simulate('blur');
 
       expect(registrationPage.find('.alert-danger').text()).toEqual('Did you mean john@gmail.com?');
