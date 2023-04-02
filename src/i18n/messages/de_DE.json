@@ -22,6 +22,8 @@
   "login.third.party.auth.account.not.linked": "Sie haben sich erfolgreich bei {currentProvider} angemeldet, aber Ihr {currentProvider}-Konto hat kein verknüpftes {platformName}-Konto. Um Ihre Konten zu verknüpfen, melden Sie sich jetzt mit Ihrem {platformName}-Passwort an.",
   "register.third.party.auth.account.not.linked": "Sie haben sich erfolgreich bei {currentProvider} angemeldet! Wir brauchen nur ein paar mehr Informationen, bevor Sie anfangen, mit {platformName} zu lernen.",
   "registration.using.tpa.form.heading": "Beenden Sie die Erstellung Ihres Kontos",
+  "zendesk.supportTitle": "edX Support",
+  "zendesk.selectTicketForm": "Please choose your request type:",
   "error.notfound.message": "Die gesuchte Seite ist nicht verfügbar oder es liegt ein Fehler in der URL vor. Bitte überprüfen Sie die URL und versuchen Sie es erneut.",
   "forgot.password.confirmation.message": "Wir haben eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts an {email} gesendet. Wenn Sie nach 1 Minute keine Nachricht zum Zurücksetzen des Passworts erhalten, überprüfen Sie, ob Sie die richtige E-Mail-Adresse eingegeben haben, oder überprüfen Sie Ihren Spam-Ordner. Wenn Sie weitere Hilfe benötigen, {supportLink}.",
   "forgot.password.page.title": "Passwort vergessen | {siteName}",
