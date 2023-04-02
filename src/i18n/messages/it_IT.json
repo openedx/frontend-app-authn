@@ -22,6 +22,8 @@
   "login.third.party.auth.account.not.linked": "Hai correttamente effettuato l'accesso in {currentProvider}, ma il tuo account {currentProvider} non ha un account {platformName} ad esso abbinato. Per collegare i tuoi account accesi utilizzando la password {platformName}. ",
   "register.third.party.auth.account.not.linked": "Hai eseguito correttamente l&#39;accesso a {a03f0f8cfb85cz0}! Abbiamo solo bisogno di un po&#39; più di informazioni prima di iniziare a imparare con {platformName}.",
   "registration.using.tpa.form.heading": "Completa la creazione del tuo account",
+  "zendesk.supportTitle": "edX Support",
+  "zendesk.selectTicketForm": "Please choose your request type:",
   "error.notfound.message": "La pagina che stai cercando non è disponibile o si è verificato un errore nell'URL. Controlla l'URL e riprova. ",
   "forgot.password.confirmation.message": "Abbiamo inviato un&#39;email a {email} con le istruzioni per reimpostare la password. Se non ricevi un messaggio di reimpostazione della password dopo 1 minuto, verifica di aver inserito l&#39;indirizzo e-mail corretto o controlla la cartella spam. Se hai bisogno di ulteriore assistenza, {supportLink}.",
   "forgot.password.page.title": "Dimenticato la password | {siteName}",

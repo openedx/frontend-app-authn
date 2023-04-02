@@ -22,6 +22,8 @@
   "login.third.party.auth.account.not.linked": "لقد نجحت في تسجيل الدخول إلى {currentProvider}، لكن حسابك على {currentProvider} غير موصول بأي حساب على {platformName}. لوصل حساباتك، سجّل الدخول الآن باستخدام كلمة مرورك على {platformName}.",
   "register.third.party.auth.account.not.linked": "لقد سجلت دخولك بنجاح إلى {currentProvider}! نحتاج فقط قليلاً بعدُ من المعلومات قبل أن تبدأ التعلم مع {platformName}.",
   "registration.using.tpa.form.heading": "إتمام إنشاء حسابك",
+  "zendesk.supportTitle": "edX Support",
+  "zendesk.selectTicketForm": "Please choose your request type:",
   "error.notfound.message": "الصفحة التي تبحث عنها غير متوفرة أو هناك خطأ في العنوان. رجاءً تحقق من العنوان و حاول مجددًا.",
   "forgot.password.confirmation.message": "لقد أرسلنا بريدًا إلكترونيًا إلى {email} به إرشادات لإعادة ضبط كلمة المرور الخاصة بك. إن لم تستلم رسالة إعادة ضبط كلمة المرور بعد دقيقة واحدة، فتحقق من إدخال عنوان البريد الإلكتروني الصحيح، أو تفقد مجلد الرسائل غير المرغوب فيها. إن احتجت مزيدًا من المساعدة، {supportLink}.",
   "forgot.password.page.title": "نسيت كلمة المرور | {siteName}",
