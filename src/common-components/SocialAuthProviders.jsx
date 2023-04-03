@@ -13,8 +13,12 @@ const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
   const { referrer, socialAuthProviders } = props;
 
-  function handleSubmit(e) {
+  function handleSubmit(e, skipRegistrationForm) {
     e.preventDefault();
+
+    if (skipRegistrationForm) {
+      localStorage.setItem('tpaHintedAuthentication', 'true');
+    }
 
     const url = e.currentTarget.dataset.providerUrl;
     window.location.href = getConfig().LMS_BASE_URL + url;
@@ -27,7 +31,7 @@ const SocialAuthProviders = (props) => {
       type="button"
       className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
-      onClick={handleSubmit}
+      onClick={(e) => handleSubmit(e, provider.skipRegistrationForm)}
     >
       {provider.iconImage ? (
         <div aria-hidden="true">
@@ -68,6 +72,7 @@ SocialAuthProviders.propTypes = {
     iconImage: PropTypes.string,
     loginUrl: PropTypes.string,
     registerUrl: PropTypes.string,
+    skipRegistrationForm: PropTypes.bool,
   })),
 };
 
