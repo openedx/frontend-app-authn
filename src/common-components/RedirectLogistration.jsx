@@ -21,9 +21,6 @@ const RedirectLogistration = (props) => {
   let finalRedirectUrl = '';
 
   if (success) {
-    // After successful registeration remove the tpaHintedAuthentication flag from local storage if set
-    localStorage.removeItem('tpaHintedAuthentication');
-
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
     // Note: For multiple enterprise use case, we need to make sure that user first visits the

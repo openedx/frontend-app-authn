@@ -1,12 +1,18 @@
 import React, { useEffect } from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import { windowScrollTo } from '../data/utils';
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED } from './data/constants';
+import {
+  FORBIDDEN_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  TPA_AUTHENTICATION_FAILURE,
+  TPA_SESSION_EXPIRED,
+} from './data/constants';
 import messages from './messages';
 
 const RegistrationFailureMessage = (props) => {
@@ -31,6 +37,14 @@ const RegistrationFailureMessage = (props) => {
     case FORBIDDEN_REQUEST:
       errorMessage = formatMessage(messages['registration.rate.limit.error']);
       break;
+    case TPA_AUTHENTICATION_FAILURE:
+      errorMessage = formatMessage(messages['registration.tpa.authentication.failure'],
+        {
+          platform_name: getConfig().SITE_NAME,
+          lineBreak: <br />,
+          errorMessage: context.errorMessage,
+        });
+      break;
     case TPA_SESSION_EXPIRED:
       errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
       break;
@@ -48,12 +62,15 @@ const RegistrationFailureMessage = (props) => {
 };
 
 RegistrationFailureMessage.defaultProps = {
-  context: {},
+  context: {
+    errorMessage: null,
+  },
 };
 
 RegistrationFailureMessage.propTypes = {
   context: PropTypes.shape({
     provider: PropTypes.string,
+    errorMessage: PropTypes.string,
   }),
   errorCode: PropTypes.string.isRequired,
   failureCount: PropTypes.number.isRequired,

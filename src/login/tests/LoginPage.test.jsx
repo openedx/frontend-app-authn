@@ -441,6 +441,23 @@ describe('LoginPage', () => {
     expect(loginPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
   });
 
+  it('should show tpa authentication fails error message', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          currentProvider: null,
+          errorMessage: 'An error occured',
+        },
+      },
+    });
+
+    const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(loginPage.find('#login-failure-alert').find('p').text()).toContain('An error occured');
+  });
+
   it('should match invalid login form error message', () => {
     const errorMessage = 'Please fill in the fields below.';
     store = mockStore({
