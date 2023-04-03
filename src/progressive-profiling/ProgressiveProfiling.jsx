@@ -70,11 +70,11 @@ const ProgressiveProfiling = (props) => {
   }, [DASHBOARD_URL, registrationResponse]);
 
   useEffect(() => {
-    if (registrationResponse && authenticatedUser?.userId) {
+    if (ready && authenticatedUser?.userId) {
       identifyAuthenticatedUser(authenticatedUser.userId);
       sendPageEvent('login_and_registration', 'welcome');
     }
-  }, [authenticatedUser, registrationResponse]);
+  }, [authenticatedUser, ready]);
 
   useEffect(() => {
     if (registrationResponse && authenticatedUser?.userId) {
