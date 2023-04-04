@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import { AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS } from '../data/constants';
 import { setCookie } from '../data/utils';
 
-function RedirectLogistration(props) {
+const RedirectLogistration = (props) => {
   const {
     finishAuthUrl,
     redirectUrl,
@@ -21,6 +21,9 @@ function RedirectLogistration(props) {
   let finalRedirectUrl = '';
 
   if (success) {
+    // After successful registeration remove the tpaHintedAuthentication flag from local storage if set
+    localStorage.removeItem('tpaHintedAuthentication');
+
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
     // Note: For multiple enterprise use case, we need to make sure that user first visits the
@@ -66,8 +69,9 @@ function RedirectLogistration(props) {
 
     window.location.href = finalRedirectUrl;
   }
-  return <></>;
-}
+
+  return null;
+};
 
 RedirectLogistration.defaultProps = {
   educationLevel: null,

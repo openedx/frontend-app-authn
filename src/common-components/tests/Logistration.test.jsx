@@ -244,4 +244,26 @@ describe('Logistration', () => {
     logistration.find('a[data-rb-event-key="/login"]').simulate('click');
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
+
+  it('should remove tpaHintedAuthentication from localStorage on registeration success', () => {
+    localStorage.setItem('tpaHintedAuthentication', 'true');
+    mergeConfig({
+      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
+    });
+    store = mockStore({
+      register: {
+        registrationResult: { success: true, redirectUrl: '' },
+        registrationError: {},
+      },
+      commonComponents: {
+        thirdPartyAuthContext: {
+          providers: [],
+          secondaryProviders: [],
+        },
+      },
+    });
+    mount(reduxWrapper(<IntlLogistration />));
+
+    expect(localStorage.getItem('tpaHintedAuthentication')).toEqual(null);
+  });
 });

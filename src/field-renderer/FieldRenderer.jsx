@@ -142,6 +142,7 @@ FormFieldRenderer.propTypes = {
     type: PropTypes.string,
     label: PropTypes.string,
     name: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   }).isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   handleBlur: PropTypes.func,

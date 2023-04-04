@@ -4,7 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
-import FormFieldRenderer from '../field-renderer';
+import { FormFieldRenderer } from '../field-renderer';
 import { FIELDS } from './data/constants';
 import { validateCountryField } from './data/utils';
 import messages from './messages';
@@ -199,7 +199,7 @@ const ConfigurableRegistrationForm = (props) => {
 };
 
 ConfigurableRegistrationForm.propTypes = {
-  countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  countryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   email: PropTypes.string.isRequired,
   fieldDescriptions: PropTypes.shape({}),
   fieldErrors: PropTypes.shape({

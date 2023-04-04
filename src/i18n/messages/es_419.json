@@ -22,6 +22,8 @@
   "login.third.party.auth.account.not.linked": "Te has registrado correctamente en {currentProvider}, pero tu cuenta de {currentProvider} no tiene una cuenta de {platformName} asociada. Para asociar tus cuentas, inicia sesión ahora usando tu contraseña de {platformName}.",
   "register.third.party.auth.account.not.linked": "¡Has iniciado sesión con éxito en {currentProvider}! Sólo necesitamos un poco más de información antes de que empieces a aprender con {platformName}.",
   "registration.using.tpa.form.heading": "Termina de crear tu cuenta",
+  "zendesk.supportTitle": "edX Support",
+  "zendesk.selectTicketForm": "Please choose your request type:",
   "error.notfound.message": "La página que estas buscando no está disponible o hay un error en la URL. Por favor, verifica la URL y vuelve a intentarlo.",
   "forgot.password.confirmation.message": "Hemos enviado un correo electrónico a {email} con instrucciones para restablecer tu contraseña.\n          Si no recibes un mensaje de restablecimiento de contraseña después de 1 minuto, verifica que has introducido\n          la dirección de correo electrónico correcta, o comprueba tu carpeta de correo no deseado. Si necesitas más ayuda, {supportLink}.",
   "forgot.password.page.title": "Olvidé la contraseña | {siteName}",

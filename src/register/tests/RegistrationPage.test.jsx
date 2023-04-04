@@ -24,6 +24,7 @@ import {
 import {
   FIELDS, FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED,
 } from '../data/constants';
+import * as utils from '../data/utils';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
@@ -128,6 +129,14 @@ describe('RegistrationPage', () => {
     }
   };
 
+  const ssoProvider = {
+    id: 'oa2-apple-id',
+    name: 'Apple',
+    iconClass: null,
+    iconImage: 'https://openedx.devstack.lms/logo.png',
+    loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
+  };
+
   describe('Test Registration Page', () => {
     mergeConfig({
       SHOW_CONFIGURABLE_EDX_FIELDS: true,
@@ -139,14 +148,6 @@ describe('RegistrationPage', () => {
       email: 'Enter your email',
       password: 'Password criteria has not been met',
       country: 'Select your country or region of residence',
-    };
-
-    const ssoProvider = {
-      id: 'oa2-apple-id',
-      name: 'Apple',
-      iconClass: null,
-      iconImage: 'https://openedx.devstack.lms/logo.png',
-      loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
     };
 
     const secondaryProviders = {
@@ -351,9 +352,10 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
-      registrationPage.find('input#email').simulate(
-        'change', { target: { value: 'john@gmail.mistake', name: 'email' } },
-      );
+      registrationPage
+        .find('input#email')
+        .simulate('change', { target: { value: 'john@gmail.mistake', name: 'email' } });
+
       registrationPage.find('input#email').simulate('blur');
 
       expect(registrationPage.find('.alert-danger').text()).toEqual('Did you mean john@gmail.com?');
@@ -994,6 +996,7 @@ describe('RegistrationPage', () => {
   describe('Test Configurable Fields', () => {
     mergeConfig({
       ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+      SHOW_CONFIGURABLE_EDX_FIELDS: true,
     });
 
     it('should render fields returned by backend', () => {
@@ -1125,6 +1128,113 @@ describe('RegistrationPage', () => {
       registrationPage.find('button.expand-more').simulate('click');
       registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'Pakistan', name: 'countryItem' } });
       expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
+    });
+
+    it('should check TOS and honor code fields if they exist when auto submitting register form', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            pipelineUserDetails: {
+              email: 'test@example.com',
+              username: 'test',
+            },
+            autoSubmitRegForm: true,
+          },
+          fieldDescriptions: {
+            terms_of_service: {
+              name: FIELDS.TERMS_OF_SERVICE,
+              error_message: 'You must agree to the Terms and Service agreement of our site',
+            },
+            honor_code: {
+              name: FIELDS.HONOR_CODE,
+              error_message: 'You must agree to the Honor Code agreement of our site',
+            },
+          },
+        },
+      });
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      expect(registrationPage.find('input#tos').props().value).toEqual(true);
+      expect(registrationPage.find('input#honor-code').props().value).toEqual(true);
+    });
+
+    it('should set autoSubmitRegisterForm true if isTpaHintedAuthentication returns true', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      getLocale.mockImplementation(() => ('en-us'));
+      utils.isTpaHintedAuthentication = jest.fn().mockImplementation(() => true);
+
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registrationPage.find('#tpa-spinner').exists()).toBeTruthy();
+    });
+
+    it('should show spinner instead of form while registering if autoSubmitRegForm is true', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      getLocale.mockImplementation(() => ('en-us'));
+
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          backendCountryCode: 'PK',
+          userPipelineDataLoaded: false,
+        },
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            currentProvider: ssoProvider.name,
+            pipelineUserDetails: {
+              name: 'John Doe',
+              username: 'john_doe',
+              email: 'john.doe@example.com',
+            },
+            autoSubmitRegForm: true,
+          },
+        },
+      });
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registrationPage.find('#tpa-spinner').exists()).toBeTruthy();
+      expect(registrationPage.find('#registration-form').exists()).toBeFalsy();
+    });
+
+    it('should set autoSubmitRegisterForm false if third party authentication fails', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      getLocale.mockImplementation(() => ('en-us'));
+
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          backendCountryCode: 'PK',
+          userPipelineDataLoaded: false,
+        },
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            currentProvider: ssoProvider.name,
+            pipelineUserDetails: {},
+            errorMessage: 'An error occured',
+            autoSubmitRegForm: true,
+          },
+        },
+      });
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registrationPage.find('#tpa-spinner').exists()).toBeFalsy();
+      expect(registrationPage.find('#registration-form').exists()).toBeTruthy();
+      expect(localStorage.getItem('tpaHintedAuthentication')).toEqual(null);
     });
   });
 });

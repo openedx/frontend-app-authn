@@ -77,7 +77,7 @@ describe('ProgressiveProfilingTests', () => {
     ));
     await act(async () => {
       await Promise.resolve(progressiveProfilingPage);
-      await new Promise(resolve => setImmediate(resolve));
+      await new Promise(resolve => { setImmediate(resolve); });
       progressiveProfilingPage.update();
     });
 

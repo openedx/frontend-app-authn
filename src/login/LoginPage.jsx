@@ -122,7 +122,7 @@ class LoginPage extends React.Component {
       email_or_username: emailOrUsername, password, ...this.queryParams,
     };
     this.props.loginRequest(payload);
-  }
+  };
 
   handleOnFocus = (e) => {
     const { errors } = this.state;
@@ -130,14 +130,14 @@ class LoginPage extends React.Component {
     this.props.setLoginFormData({
       errors,
     });
-  }
+  };
 
   handleOnBlur = (e) => {
     const payload = {
       [e.target.name]: e.target.value,
     };
     this.props.setLoginFormData(payload);
-  }
+  };
 
   handleForgotPasswordLinkClickEvent = () => {
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
@@ -369,8 +369,10 @@ LoginPage.defaultProps = {
 
 LoginPage.propTypes = {
   getThirdPartyAuthContext: PropTypes.func.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
-  loginError: PropTypes.objectOf(PropTypes.any),
+  intl: PropTypes.shape({
+    formatMessage: PropTypes.func,
+  }).isRequired,
+  loginError: PropTypes.shape({}),
   loginRequest: PropTypes.func.isRequired,
   loginRequestFailure: PropTypes.func.isRequired,
   loginRequestReset: PropTypes.func.isRequired,
@@ -394,8 +396,8 @@ LoginPage.propTypes = {
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
     platformName: PropTypes.string,
-    providers: PropTypes.array,
-    secondaryProviders: PropTypes.array,
+    providers: PropTypes.arrayOf(PropTypes.shape({})),
+    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
     finishAuthUrl: PropTypes.string,
   }),
   institutionLogin: PropTypes.bool.isRequired,

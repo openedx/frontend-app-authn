@@ -1,11 +1,14 @@
+/* eslint-disable import/no-import-module-exports */
+/* eslint-disable react/function-component-definition */
 import React from 'react';
 
 import * as auth from '@edx/frontend-platform/auth';
 import { mount } from 'enzyme';
-import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { UnAuthOnlyRoute } from '..';
 import { LOGIN_PAGE } from '../../data/constants';
+
+import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 jest.mock('@edx/frontend-platform/auth');
 

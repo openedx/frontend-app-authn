@@ -16,7 +16,7 @@ export const defaultState = {
   },
 };
 
-const reducer = (state = defaultState, action) => {
+const reducer = (state = defaultState, action = {}) => {
   switch (action.type) {
     case LOGIN_REQUEST.BEGIN:
       return {
