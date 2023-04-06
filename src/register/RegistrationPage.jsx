@@ -190,21 +190,24 @@ const RegistrationPage = (props) => {
   }, [registrationErrorCode]);
 
   useEffect(() => {
-    if (backendCountryCode !== '') {
-      const selectedCountry = countryList.find(
-        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
-      );
-      if (selectedCountry) {
-        setConfigurableFormFields(prevState => (
-          {
-            ...prevState,
-            country: {
-              countryCode: selectedCountry[COUNTRY_CODE_KEY], displayValue: selectedCountry[COUNTRY_DISPLAY_KEY],
-            },
-          }
-        ));
-      }
+    let countryCode = '';
+    let countryDisplayValue = '';
+
+    const selectedCountry = countryList.find(
+      (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
+    );
+    if (selectedCountry) {
+      countryCode = selectedCountry[COUNTRY_CODE_KEY];
+      countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
     }
+    setConfigurableFormFields(prevState => (
+      {
+        ...prevState,
+        country: {
+          countryCode, displayValue: countryDisplayValue,
+        },
+      }
+    ));
   }, [backendCountryCode, countryList]);
 
   /**
