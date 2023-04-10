@@ -26,7 +26,7 @@ const ThirdPartyAuthAlert = (props) => {
 
   return (
     <>
-      <Alert id="tpa-alert" className={referrer === REGISTER_PAGE ? 'alert-success mt-n2' : 'alert-warning mt-n2'}>
+      <Alert id="tpa-alert" className={referrer === REGISTER_PAGE ? 'alert-success mt-n2 mb-5' : 'alert-warning mt-n2 mb-5'}>
         {referrer === REGISTER_PAGE ? (
           <Alert.Heading>{formatMessage(messages['tpa.alert.heading'])}</Alert.Heading>
         ) : null}
