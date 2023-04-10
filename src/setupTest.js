@@ -8,9 +8,9 @@ import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({ adapter: new Adapter() });
 class MockLoggingService {
-    logInfo = jest.fn();
+  logInfo = jest.fn();
 
-    logError = jest.fn();
+  logError = jest.fn();
 }
 
 export default function initializeMockLogging() {
@@ -39,3 +39,27 @@ window.ResizeObserver = ResizeObserver;
 window.scrollTo = (x, y) => {
   document.documentElement.scrollTop = y;
 };
+
+const location = new URL('https://authn.edx.org');
+location.assign = jest.fn();
+location.replace = jest.fn();
+location.reload = jest.fn();
+delete window.location;
+window.location = location;
+
+const localStorageMock = jest.fn(() => {
+  let store = {};
+  return {
+    getItem: (key) => (store[key] || null),
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    },
+    removeItem: (key) => {
+      delete store[key];
+    },
+  };
+})();
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });

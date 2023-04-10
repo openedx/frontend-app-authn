@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Hyperlink, Image, Spinner, StatefulButton,
 } from '@edx/paragon';
@@ -17,13 +17,15 @@ import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
 
 const RecommendationsPage = (props) => {
-  const { intl, location } = props;
+  const { location } = props;
   const registrationResponse = location.state?.registrationResult;
   const userId = location.state?.userId;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
+  const { formatMessage } = useIntl();
   const [isLoading, setIsLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
+  const [algoliaRecommendations, setAlgoliaRecommendations] = useState([]);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
 
   useEffect(() => {
@@ -35,6 +37,7 @@ const RecommendationsPage = (props) => {
           ...course,
           courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
         }));
+        setAlgoliaRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
 
         if (coursesWithKeys.length >= RECOMMENDATIONS_COUNT) {
           setRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
@@ -55,11 +58,16 @@ const RecommendationsPage = (props) => {
           setRecommendations(generalRecommendations.slice(0, RECOMMENDATIONS_COUNT));
           setIsLoading(false);
         });
-      // We only want to track the recommendations returned by Algolia
-      const courseKeys = coursesWithKeys.map(course => course.courseKey);
-      trackRecommendationsViewed(courseKeys.slice(0, RECOMMENDATIONS_COUNT), false, userId);
     }
   }, [registrationResponse, DASHBOARD_URL, educationLevel, userId]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      // We only want to track the recommendations returned by Algolia
+      const courseKeys = algoliaRecommendations.map(course => course.courseKey);
+      trackRecommendationsViewed(courseKeys, false, userId);
+    }
+  }, [isLoading, algoliaRecommendations, userId]);
 
   if (!registrationResponse) {
     global.location.assign(DASHBOARD_URL);
@@ -87,7 +95,7 @@ const RecommendationsPage = (props) => {
   return (
     <>
       <Helmet>
-        <title>{intl.formatMessage(messages['recommendation.page.title'],
+        <title>{formatMessage(messages['recommendation.page.title'],
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
@@ -101,7 +109,7 @@ const RecommendationsPage = (props) => {
         {(!isLoading && recommendations.length === RECOMMENDATIONS_COUNT) ? (
           <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 p-1">
             <RecommendationsList
-              title={intl.formatMessage(messages['recommendation.page.heading'])}
+              title={formatMessage(messages['recommendation.page.heading'])}
               recommendations={recommendations}
               userId={userId}
             />
@@ -111,7 +119,7 @@ const RecommendationsPage = (props) => {
                 type="submit"
                 variant="brand"
                 labels={{
-                  default: intl.formatMessage(messages['recommendation.skip.button']),
+                  default: formatMessage(messages['recommendation.skip.button']),
                 }}
                 onClick={handleSkip}
               />
@@ -127,9 +135,14 @@ const RecommendationsPage = (props) => {
 };
 
 RecommendationsPage.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   location: PropTypes.shape({
-    state: PropTypes.object,
+    state: PropTypes.shape({
+      registrationResult: PropTypes.shape({
+        redirectUrl: PropTypes.string,
+      }),
+      userId: PropTypes.number,
+      educationLevel: PropTypes.string,
+    }),
   }),
 
 };
@@ -138,4 +151,4 @@ RecommendationsPage.defaultProps = {
   location: { state: {} },
 };
 
-export default injectIntl(RecommendationsPage);
+export default RecommendationsPage;

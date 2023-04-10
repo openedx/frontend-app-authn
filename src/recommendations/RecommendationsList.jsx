@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Container } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
@@ -53,4 +52,4 @@ RecommendationsList.defaultProps = {
   userId: null,
 };
 
-export default injectIntl(RecommendationsList);
+export default RecommendationsList;

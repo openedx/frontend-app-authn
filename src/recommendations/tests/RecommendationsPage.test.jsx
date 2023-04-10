@@ -10,6 +10,7 @@ import configureStore from 'redux-mock-store';
 
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
 import * as getPersonalizedRecommendations from '../data/service';
+import { trackRecommendationCardClickOptimizely } from '../optimizelyExperiment';
 import RecommendationsPage from '../RecommendationsPage';
 import { mockedGeneralRecommendations, mockedResponse } from './mockedData';
 
@@ -18,6 +19,9 @@ const mockStore = configureStore();
 
 jest.mock('@edx/frontend-platform/analytics');
 jest.mock('../data/service');
+jest.mock('../optimizelyExperiment', () => ({
+  trackRecommendationCardClickOptimizely: jest.fn(),
+}));
 
 analytics.sendTrackEvent = jest.fn();
 
@@ -29,7 +33,7 @@ describe('RecommendationsPageTests', () => {
   let defaultProps = {};
   let store = {};
 
-  const registrationResult = {
+  let registrationResult = {
     redirectUrl: getConfig().LMS_BASE_URL.concat('/course-about-page-url'),
     success: true,
   };
@@ -74,6 +78,32 @@ describe('RecommendationsPageTests', () => {
     expect(getPersonalizedRecommendations.default).toHaveBeenCalledTimes(0);
     expect(window.location.href).toEqual(DASHBOARD_URL);
   });
+  it('redirects to dashboard if user click on skip button', async () => {
+    const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+    registrationResult = {
+      ...registrationResult,
+      redirectUrl: getConfig().LMS_BASE_URL.concat('/dashboard'),
+    };
+    const props = {
+      location: {
+        state: {
+          registrationResult,
+          userId: 111,
+        },
+      },
+    };
+    getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.resolve(mockedResponse));
+    const recommendationsPage = await getRecommendationsPage(props);
+    recommendationsPage.find('button').simulate('click');
+    expect(window.location.href).toEqual(DASHBOARD_URL);
+  });
+
+  it('should call trackRecommendationCardClickOptimizely when card is clicked', async () => {
+    getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.resolve(mockedResponse));
+    const recommendationsPage = await getRecommendationsPage();
+    recommendationsPage.find('.card-box').first().simulate('click');
+    expect(trackRecommendationCardClickOptimizely).toHaveBeenCalledTimes(1);
+  });
 
   it('should show loading state to user', async () => {
     getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.resolve(mockedResponse));
@@ -107,6 +137,13 @@ describe('RecommendationsPageTests', () => {
     const recommendationsPage = await getRecommendationsPage();
 
     expect(recommendationsPage.find('#course-recommendations').exists()).toBeTruthy();
+  });
+
+  it('should not display recommendations if error comes in while fetching the recommendations', async () => {
+    getPersonalizedRecommendations.default = jest.fn().mockImplementation(() => Promise.reject(mockedResponse));
+    const recommendationsPage = await getRecommendationsPage();
+
+    expect(recommendationsPage.find('#recommendation-card').exists()).toBeFalsy();
   });
 
   it('should redirect if recommended courses count is less than RECOMMENDATIONS_COUNT', async () => {

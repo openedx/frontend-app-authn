@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
 import { Card, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { trackRecommendationCardClickOptimizely } from './optimizelyExperiment';
 import { trackRecommendationsClicked } from './track';
 
 const RecommendationCard = (props) => {
@@ -23,6 +23,7 @@ const RecommendationCard = (props) => {
   };
 
   const handleCardClick = () => {
+    trackRecommendationCardClickOptimizely(userId?.toString());
     trackRecommendationsClicked(
       recommendation.courseKey,
       false,
@@ -38,6 +39,7 @@ const RecommendationCard = (props) => {
       <Hyperlink
         destination={recommendation.marketingUrl}
         target="_blank"
+        className="card-box"
         showLaunchIcon={false}
         onClick={handleCardClick}
       >
@@ -82,4 +84,4 @@ RecommendationCard.defaultProps = {
   userId: null,
 };
 
-export default injectIntl(RecommendationCard);
+export default RecommendationCard;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import { CheckCircle, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -13,9 +13,10 @@ import { PASSWORD_RESET } from '../reset-password/data/constants';
 import messages from './messages';
 
 const ForgotPasswordAlert = (props) => {
-  const { email, emailError, intl } = props;
+  const { formatMessage } = useIntl();
+  const { email, emailError } = props;
   let message = '';
-  let heading = intl.formatMessage(messages['forgot.password.error.alert.title']);
+  let heading = formatMessage(messages['forgot.password.error.alert.title']);
   let { status } = props;
 
   if (emailError) {
@@ -24,7 +25,7 @@ const ForgotPasswordAlert = (props) => {
 
   switch (status) {
     case COMPLETE_STATE:
-      heading = intl.formatMessage(messages['confirmation.message.title']);
+      heading = formatMessage(messages['confirmation.message.title']);
       message = (
         <FormattedMessage
           id="forgot.password.confirmation.message"
@@ -36,7 +37,7 @@ const ForgotPasswordAlert = (props) => {
             email: <span className="data-hj-suppress">{email}</span>,
             supportLink: (
               <Alert.Link href={getConfig().PASSWORD_RESET_SUPPORT_LINK} target="_blank">
-                {intl.formatMessage(messages['confirmation.support.link'])}
+                {formatMessage(messages['confirmation.support.link'])}
               </Alert.Link>
             ),
           }}
@@ -44,26 +45,26 @@ const ForgotPasswordAlert = (props) => {
       );
      break;
     case INTERNAL_SERVER_ERROR:
-      message = intl.formatMessage(messages['internal.server.error']);
+      message = formatMessage(messages['internal.server.error']);
       break;
     case FORBIDDEN_STATE:
-      heading = intl.formatMessage(messages['forgot.password.error.message.title']);
-      message = intl.formatMessage(messages['forgot.password.request.in.progress.message']);
+      heading = formatMessage(messages['forgot.password.error.message.title']);
+      message = formatMessage(messages['forgot.password.request.in.progress.message']);
       break;
     case FORM_SUBMISSION_ERROR:
-      message = intl.formatMessage(messages['extend.field.errors'], { emailError });
+      message = formatMessage(messages['extend.field.errors'], { emailError });
       break;
     case PASSWORD_RESET.INVALID_TOKEN:
-      heading = intl.formatMessage(messages['invalid.token.heading']);
-      message = intl.formatMessage(messages['invalid.token.error.message']);
+      heading = formatMessage(messages['invalid.token.heading']);
+      message = formatMessage(messages['invalid.token.error.message']);
       break;
     case PASSWORD_RESET.FORBIDDEN_REQUEST:
-      heading = intl.formatMessage(messages['token.validation.rate.limit.error.heading']);
-      message = intl.formatMessage(messages['token.validation.rate.limit.error']);
+      heading = formatMessage(messages['token.validation.rate.limit.error.heading']);
+      message = formatMessage(messages['token.validation.rate.limit.error']);
       break;
     case PASSWORD_RESET.INTERNAL_SERVER_ERROR:
-      heading = intl.formatMessage(messages['token.validation.internal.sever.error.heading']);
-      message = intl.formatMessage(messages['token.validation.internal.sever.error']);
+      heading = formatMessage(messages['token.validation.internal.sever.error.heading']);
+      message = formatMessage(messages['token.validation.internal.sever.error']);
       break;
     default:
       break;
@@ -93,8 +94,7 @@ ForgotPasswordAlert.defaultProps = {
 ForgotPasswordAlert.propTypes = {
   status: PropTypes.string.isRequired,
   email: PropTypes.string,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   emailError: PropTypes.string,
 };
 
-export default injectIntl(ForgotPasswordAlert);
+export default ForgotPasswordAlert;

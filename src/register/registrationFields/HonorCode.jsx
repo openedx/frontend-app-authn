@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Form, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from '../messages';
 
 const HonorCode = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    intl, errorMessage, onChangeHandler, fieldType, value,
+    errorMessage, onChangeHandler, fieldType, value,
   } = props;
 
   useEffect(() => {
@@ -30,12 +31,12 @@ const HonorCode = (props) => {
             platformName: getConfig().SITE_NAME,
             tosAndHonorCode: (
               <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
-                {intl.formatMessage(messages['terms.of.service.and.honor.code'])}
+                {formatMessage(messages['terms.of.service.and.honor.code'])}
               </Hyperlink>
             ),
             privacyPolicy: (
               <Hyperlink variant="muted" destination={getConfig().PRIVACY_POLICY || '#'} target="_blank">
-                {intl.formatMessage(messages['privacy.policy'])}
+                {formatMessage(messages['privacy.policy'])}
               </Hyperlink>
             ),
           }}
@@ -62,7 +63,7 @@ const HonorCode = (props) => {
             platformName: getConfig().SITE_NAME,
             tosAndHonorCode: (
               <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
-                {intl.formatMessage(messages['honor.code'])}
+                {formatMessage(messages['honor.code'])}
               </Hyperlink>
             ),
           }}
@@ -85,11 +86,10 @@ HonorCode.defaultProps = {
 };
 
 HonorCode.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
   onChangeHandler: PropTypes.func,
   fieldType: PropTypes.string,
   value: PropTypes.bool,
 };
 
-export default injectIntl(HonorCode);
+export default HonorCode;

@@ -1,15 +1,16 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Form, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from '../messages';
 
 const TermsOfService = (props) => {
+  const { formatMessage } = useIntl();
   const {
-    intl, errorMessage, onChangeHandler, value,
+    errorMessage, onChangeHandler, value,
   } = props;
 
   return (
@@ -31,7 +32,7 @@ const TermsOfService = (props) => {
             platformName: getConfig().SITE_NAME,
             termsOfService: (
               <Hyperlink variant="muted" destination={getConfig().TOS_LINK || '#'} target="_blank">
-                {intl.formatMessage(messages['terms.of.service'])}
+                {formatMessage(messages['terms.of.service'])}
               </Hyperlink>
             ),
           }}
@@ -52,10 +53,9 @@ TermsOfService.defaultProps = {
 };
 
 TermsOfService.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   errorMessage: PropTypes.string,
   onChangeHandler: PropTypes.func.isRequired,
   value: PropTypes.bool,
 };
 
-export default injectIntl(TermsOfService);
+export default TermsOfService;

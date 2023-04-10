@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
 } from '@edx/paragon';
@@ -13,7 +13,7 @@ import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import messages from './messages';
 
 const PasswordField = (props) => {
-  const { formatMessage } = props.intl;
+  const { formatMessage } = useIntl();
   const [isPasswordHidden, setHiddenTrue, setHiddenFalse] = useToggle(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -100,11 +100,10 @@ PasswordField.propTypes = {
   handleBlur: PropTypes.func,
   handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
 };
 
-export default injectIntl(PasswordField);
+export default PasswordField;

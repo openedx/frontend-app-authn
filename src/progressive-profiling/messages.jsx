@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'progressive.profiling.page.title': {
     id: 'progressive.profiling.page.title',
-    defaultMessage: 'Optional Fields | {siteName}',
+    defaultMessage: 'Welcome | {siteName}',
     description: 'progressive profiling page title',
   },
   'progressive.profiling.page.heading': {

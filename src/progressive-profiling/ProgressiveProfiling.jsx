@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   AxiosJwtAuthService,
   configure as configureAuth,
@@ -10,7 +10,7 @@ import {
   getAuthenticatedUser,
   hydrateAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { getLoggingService } from '@edx/frontend-platform/logging';
 import {
   Alert,
@@ -22,15 +22,17 @@ import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import BaseComponent from '../base-component';
+import { BaseComponent } from '../base-component';
 import { RedirectLogistration } from '../common-components';
 import {
   DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE,
 } from '../data/constants';
 import { getAllPossibleQueryParams } from '../data/utils';
-import FormFieldRenderer from '../field-renderer';
-import { activateRecommendationsExperiment, isUserInVariation } from '../recommendations/optimizelyExperiment';
-import { trackRecommendationsViewed } from '../recommendations/track';
+import { FormFieldRenderer } from '../field-renderer';
+import {
+  activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION, trackRecommendationViewedOptimizely,
+} from '../recommendations/optimizelyExperiment';
+import { trackRecommendationsGroup, trackRecommendationsViewed } from '../recommendations/track';
 import { saveUserProfile } from './data/actions';
 import { welcomePageSelector } from './data/selectors';
 import messages from './messages';
@@ -38,10 +40,12 @@ import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
 const ProgressiveProfiling = (props) => {
   const {
-    formRenderState, intl, submitState, showError, location,
+    formRenderState, submitState, showError, location,
   } = props;
   const enablePersonalizedRecommendations = getConfig().ENABLE_PERSONALIZED_RECOMMENDATIONS;
   const registrationResponse = location.state?.registrationResult;
+
+  const { formatMessage } = useIntl();
   const [ready, setReady] = useState(false);
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [values, setValues] = useState({});
@@ -62,27 +66,32 @@ const ProgressiveProfiling = (props) => {
 
     if (registrationResponse) {
       setRegistrationResult(registrationResponse);
-      sendPageEvent('login_and_registration', 'welcome');
     }
   }, [DASHBOARD_URL, registrationResponse]);
 
   useEffect(() => {
-    let queryParams = {};
-    let timer = null;
-    if (registrationResponse) {
-      queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
+    if (registrationResponse && authenticatedUser?.userId) {
+      identifyAuthenticatedUser(authenticatedUser.userId);
+      sendPageEvent('login_and_registration', 'welcome');
+    }
+  }, [authenticatedUser, registrationResponse]);
+
+  useEffect(() => {
+    if (registrationResponse && authenticatedUser?.userId) {
+      const queryParams = getAllPossibleQueryParams(registrationResponse.redirectUrl);
       if (enablePersonalizedRecommendations && !('enrollment_action' in queryParams)) {
-        activateRecommendationsExperiment();
-        timer = setTimeout(() => {
-          const showRecommendations = isUserInVariation();
-          setShowRecommendationsPage(showRecommendations);
-          if (!showRecommendations) {
-            trackRecommendationsViewed([], true, authenticatedUser?.userId);
-          }
-        }, 500);
+        const userIdStr = authenticatedUser.userId.toString();
+        const variation = activateRecommendationsExperiment(userIdStr);
+        const showRecommendations = variation === RECOMMENDATIONS_EXP_VARIATION;
+
+        trackRecommendationsGroup(variation, authenticatedUser.userId);
+        trackRecommendationViewedOptimizely(userIdStr);
+        setShowRecommendationsPage(showRecommendations);
+        if (!showRecommendations) {
+          trackRecommendationsViewed([], true, authenticatedUser.userId);
+        }
       }
     }
-    return () => clearTimeout(timer);
   }, [authenticatedUser, enablePersonalizedRecommendations, registrationResponse]);
 
   if (!location.state || !location.state.registrationResult || formRenderState === FAILURE_STATE) {
@@ -150,36 +159,36 @@ const ProgressiveProfiling = (props) => {
   });
 
   return (
-    <>
-      <BaseComponent showWelcomeBanner>
-        <Helmet>
-          <title>{intl.formatMessage(messages['progressive.profiling.page.title'],
-            { siteName: getConfig().SITE_NAME })}
-          </title>
-        </Helmet>
-        <ProgressiveProfilingPageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
-        {props.shouldRedirect ? (
-          <RedirectLogistration
-            success
-            redirectUrl={registrationResult.redirectUrl}
-            redirectToRecommendationsPage={showRecommendationsPage}
-            educationLevel={values?.level_of_education}
-            userId={authenticatedUser?.userId}
-          />
+    <BaseComponent showWelcomeBanner>
+      <Helmet>
+        <title>{formatMessage(messages['progressive.profiling.page.title'],
+          { siteName: getConfig().SITE_NAME })}
+        </title>
+      </Helmet>
+      <ProgressiveProfilingPageModal isOpen={openDialog} redirectUrl={registrationResult.redirectUrl} />
+      {props.shouldRedirect ? (
+        <RedirectLogistration
+          success
+          redirectUrl={registrationResult.redirectUrl}
+          redirectToRecommendationsPage={showRecommendationsPage}
+          educationLevel={values?.level_of_education}
+          userId={authenticatedUser?.userId}
+        />
+      ) : null}
+      <div className="mw-xs m-4 pp-page-content">
+        <div>
+          <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
+        </div>
+        <hr className="border-light-700 mb-4" />
+        {showError ? (
+          <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
+            <Alert.Heading>{formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
+            <p>{formatMessage(messages['welcome.page.error.message'])}</p>
+          </Alert>
         ) : null}
-        <div className="mw-xs pp-page-content">
-          <div>
-            <h2 className="pp-page-heading text-primary">{intl.formatMessage(messages['progressive.profiling.page.heading'])}</h2>
-          </div>
-          <hr className="border-light-700 mb-4" />
-          {showError ? (
-            <Alert id="pp-page-errors" className="mb-3" variant="danger" icon={Error}>
-              <Alert.Heading>{intl.formatMessage(messages['welcome.page.error.heading'])}</Alert.Heading>
-              <p>{intl.formatMessage(messages['welcome.page.error.message'])}</p>
-            </Alert>
-          ) : null}
-          <Form>
-            {formFields}
+        <Form>
+          {formFields}
+          {(getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
             <span className="progressive-profiling-support">
               <Hyperlink
                 isInline
@@ -189,45 +198,52 @@ const ProgressiveProfiling = (props) => {
                 showLaunchIcon={false}
                 onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
               >
-                {intl.formatMessage(messages['optional.fields.information.link'])}
+                {formatMessage(messages['optional.fields.information.link'])}
               </Hyperlink>
             </span>
-            <div className="d-flex mt-4 mb-3">
-              <StatefulButton
-                type="submit"
-                variant="brand"
-                className="login-button-width"
-                state={submitState}
-                labels={{
-                  default: showRecommendationsPage ? intl.formatMessage(messages['optional.fields.next.button']) : intl.formatMessage(messages['optional.fields.submit.button']),
-                  pending: '',
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-              <StatefulButton
-                className="text-gray-700 font-weight-500"
-                type="submit"
-                variant="link"
-                labels={{
-                  default: intl.formatMessage(messages['optional.fields.skip.button']),
-                }}
-                onClick={handleSkip}
-                onMouseDown={(e) => e.preventDefault()}
-              />
-            </div>
-          </Form>
-        </div>
-      </BaseComponent>
-    </>
+          )}
+          <div className="d-flex mt-4 mb-3">
+            <StatefulButton
+              type="submit"
+              variant="brand"
+              className="login-button-width"
+              state={submitState}
+              labels={{
+                default: showRecommendationsPage ? formatMessage(messages['optional.fields.next.button']) : formatMessage(messages['optional.fields.submit.button']),
+                pending: '',
+              }}
+              onClick={handleSubmit}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+            <StatefulButton
+              className="text-gray-700 font-weight-500"
+              type="submit"
+              variant="link"
+              labels={{
+                default: formatMessage(messages['optional.fields.skip.button']),
+              }}
+              onClick={handleSkip}
+              onMouseDown={(e) => e.preventDefault()}
+            />
+          </div>
+        </Form>
+      </div>
+    </BaseComponent>
   );
 };
 
 ProgressiveProfiling.propTypes = {
   formRenderState: PropTypes.string.isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   location: PropTypes.shape({
-    state: PropTypes.object,
+    state: PropTypes.shape({
+      registrationResult: PropTypes.shape({
+        redirectUrl: PropTypes.string,
+      }),
+      optionalFields: PropTypes.shape({
+        extended_profile: PropTypes.arrayOf(PropTypes.string),
+        fields: PropTypes.shape({}),
+      }),
+    }),
   }),
   saveUserProfile: PropTypes.func.isRequired,
   showError: PropTypes.bool,
@@ -254,4 +270,4 @@ export default connect(
   {
     saveUserProfile,
   },
-)(injectIntl(ProgressiveProfiling));
+)(ProgressiveProfiling);

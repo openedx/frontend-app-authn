@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@edx/paragon';
@@ -14,7 +14,7 @@ import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
 import messages from './messages';
 
-const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
+const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
   const isMobileView = useMobileResponsive();
   const [redirectToResetPasswordPage, setRedirectToResetPasswordPage] = useState(false);
   const handlers = {
@@ -28,6 +28,7 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
   };
   // eslint-disable-next-line no-unused-vars
   const [isOpen, open, close] = useToggle(true, handlers);
+  const { formatMessage } = useIntl();
 
   if (redirectToResetPasswordPage) {
     return <Redirect to={updatePathWithQueryParams(RESET_PAGE)} />;
@@ -42,11 +43,11 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
     >
       <ModalDialog.Header>
         <ModalDialog.Title>
-          {intl.formatMessage(messages[`password.security.${variant}.title`])}
+          {formatMessage(messages[`password.security.${variant}.title`])}
         </ModalDialog.Title>
       </ModalDialog.Header>
       <ModalDialog.Body>
-        {intl.formatMessage(messages[`password.security.${variant}.body`])}
+        {formatMessage(messages[`password.security.${variant}.body`])}
       </ModalDialog.Body>
       <ModalDialog.Footer>
         <ActionRow className={classNames(
@@ -55,7 +56,7 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
         >
           {variant === 'nudge' ? (
             <ModalDialog.CloseButton id="password-security-close" variant="tertiary">
-              {intl.formatMessage(messages['password.security.close.button'])}
+              {formatMessage(messages['password.security.close.button'])}
             </ModalDialog.CloseButton>
           ) : null}
           <Link
@@ -66,7 +67,7 @@ const ChangePasswordPrompt = ({ intl, variant, redirectUrl }) => {
             )}
             to={updatePathWithQueryParams(RESET_PAGE)}
           >
-            {intl.formatMessage(messages['password.security.redirect.to.reset.password.button'])}
+            {formatMessage(messages['password.security.redirect.to.reset.password.button'])}
           </Link>
         </ActionRow>
       </ModalDialog.Footer>
@@ -80,9 +81,8 @@ ChangePasswordPrompt.defaultProps = {
 };
 
 ChangePasswordPrompt.propTypes = {
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   variant: PropTypes.oneOf(['nudge', 'block']),
   redirectUrl: PropTypes.string,
 };
 
-export default injectIntl(ChangePasswordPrompt);
+export default ChangePasswordPrompt;

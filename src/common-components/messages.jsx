@@ -29,6 +29,11 @@ const messages = defineMessages({
     defaultMessage: 'Show me other ways to sign in or register',
     description: 'Button text for login',
   },
+  'enterprisetpa.login.button.text.public.account.creation.disabled': {
+    id: 'enterprisetpa.login.button.text.public.account.creation.disabled',
+    defaultMessage: 'Show me other ways to sign in',
+    description: 'Button text for login when account creation is disabled',
+  },
   // social auth providers
   'sso.sign.in.with': {
     id: 'sso.sign.in.with',
@@ -96,6 +101,16 @@ const messages = defineMessages({
     id: 'registration.using.tpa.form.heading',
     defaultMessage: 'Finish creating your account',
     description: 'Heading that appears above form when user is trying to create account using social auth',
+  },
+  supportTitle: {
+    id: 'zendesk.supportTitle',
+    description: 'Title for the support button',
+    defaultMessage: 'edX Support',
+  },
+  selectTicketForm: {
+    id: 'zendesk.selectTicketForm',
+    description: 'Select ticket form',
+    defaultMessage: 'Please choose your request type:',
   },
 });
 

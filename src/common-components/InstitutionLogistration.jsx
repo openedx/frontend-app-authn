@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Hyperlink, Icon } from '@edx/paragon';
 import { Institution } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -32,8 +32,8 @@ export const RenderInstitutionButton = props => {
  * */
 const InstitutionLogistration = props => {
   const lmsBaseUrl = getConfig().LMS_BASE_URL;
+  const { formatMessage } = useIntl();
   const {
-    intl,
     secondaryProviders,
     headingTitle,
   } = props;
@@ -46,7 +46,7 @@ const InstitutionLogistration = props => {
             {headingTitle}
           </h4>
           <p className="mb-2">
-            {intl.formatMessage(messages['institution.login.page.sub.heading'])}
+            {formatMessage(messages['institution.login.page.sub.heading'])}
           </p>
         </div>
       </div>
@@ -95,7 +95,6 @@ RenderInstitutionButton.defaultProps = {
 
 InstitutionLogistration.propTypes = {
   ...LogistrationProps,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   headingTitle: PropTypes.string,
 };
 InstitutionLogistration.defaultProps = {
@@ -103,4 +102,4 @@ InstitutionLogistration.defaultProps = {
   headingTitle: '',
 };
 
-export default injectIntl(InstitutionLogistration);
+export default InstitutionLogistration;

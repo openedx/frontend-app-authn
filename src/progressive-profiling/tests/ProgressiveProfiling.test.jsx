@@ -27,6 +27,7 @@ jest.mock('@edx/frontend-platform/logging');
 
 analytics.sendTrackEvent = jest.fn();
 analytics.sendPageEvent = jest.fn();
+analytics.identifyAuthenticatedUser = jest.fn();
 logging.getLoggingService = jest.fn();
 
 auth.configure = jest.fn();
@@ -76,7 +77,7 @@ describe('ProgressiveProfilingTests', () => {
     ));
     await act(async () => {
       await Promise.resolve(progressiveProfilingPage);
-      await new Promise(resolve => setImmediate(resolve));
+      await new Promise(resolve => { setImmediate(resolve); });
       progressiveProfilingPage.update();
     });
 
@@ -104,9 +105,34 @@ describe('ProgressiveProfilingTests', () => {
     };
   });
 
+  it('not should display button "Learn more about how we use this information."', async () => {
+    mergeConfig({
+      AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
+    });
+    const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+    expect(progressiveProfilingPage.find('a.pgn__hyperlink').exists()).toBeFalsy();
+  });
+
+  it('should display button "Learn more about how we use this information."', async () => {
+    mergeConfig({
+      AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
+    });
+    const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+    expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
+  });
+
   it('should render fields returned by backend api', async () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
+  });
+
+  it('should make identify call to segment on progressive profiling page', async () => {
+    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+    await getProgressiveProfilingPage();
+    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalled();
   });
 
   it('should submit user profile details on form submission', async () => {

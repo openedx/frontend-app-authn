@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
-import FormFieldRenderer from '../field-renderer';
+import { FormFieldRenderer } from '../field-renderer';
 import { FIELDS } from './data/constants';
 import { validateCountryField } from './data/utils';
 import messages from './messages';
@@ -24,13 +24,13 @@ import CountryField from './registrationFields/CountryField';
  *  it for edX.
  * */
 const ConfigurableRegistrationForm = (props) => {
+  const { formatMessage } = useIntl();
   const {
     countryList,
     email,
     fieldDescriptions,
     fieldErrors,
     formFields,
-    intl,
     setFieldErrors,
     setFocusedField,
     setFormFields,
@@ -72,7 +72,7 @@ const ConfigurableRegistrationForm = (props) => {
     let error = '';
     if (name === 'country') {
       const countryValidation = validateCountryField(
-        value.trim(), countryList, intl.formatMessage(messages['empty.country.field.error']),
+        value.trim(), countryList, formatMessage(messages['empty.country.field.error']),
       );
       const { countryCode, displayValue } = countryValidation;
       error = countryValidation.error;
@@ -80,7 +80,7 @@ const ConfigurableRegistrationForm = (props) => {
     } else if (!value || !value.trim()) {
       error = fieldDescriptions[name].error_message;
     } else if (name === 'confirm_email' && value !== email) {
-      error = intl.formatMessage(messages['email.do.not.match']);
+      error = formatMessage(messages['email.do.not.match']);
     }
     setFocusedField(null);
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: error }));
@@ -167,7 +167,7 @@ const ConfigurableRegistrationForm = (props) => {
         <FormFieldRenderer
           fieldData={{
             type: 'checkbox',
-            label: intl.formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME }),
+            label: formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME }),
             name: 'marketingEmailsOptIn',
           }}
           value={formFields.marketingEmailsOptIn}
@@ -199,7 +199,7 @@ const ConfigurableRegistrationForm = (props) => {
 };
 
 ConfigurableRegistrationForm.propTypes = {
-  countryList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  countryList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   email: PropTypes.string.isRequired,
   fieldDescriptions: PropTypes.shape({}),
   fieldErrors: PropTypes.shape({
@@ -213,7 +213,6 @@ ConfigurableRegistrationForm.propTypes = {
     honor_code: PropTypes.bool,
     marketingEmailsOptIn: PropTypes.bool,
   }).isRequired,
-  intl: PropTypes.objectOf(PropTypes.object).isRequired,
   setFieldErrors: PropTypes.func.isRequired,
   setFocusedField: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
@@ -223,4 +222,4 @@ ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
 };
 
-export default injectIntl(ConfigurableRegistrationForm);
+export default ConfigurableRegistrationForm;

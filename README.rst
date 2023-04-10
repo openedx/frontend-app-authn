@@ -104,6 +104,18 @@ The authentication micro-frontend also requires the following additional variabl
      - Disables the enterprise login from Authn MFE.
      - ``true`` | ``''`` (empty strings are falsy)
 
+   * - ``MFE_CONFIG_API_URL``
+     - Link of the API to get runtime mfe configuration variables from the site configuration or django settings.
+     - ``/api/v1/mfe_config`` | ``''`` (empty strings are falsy)  
+
+   * - ``APP_ID``
+     - Name of MFE, this will be used by the API to get runtime configurations for the specific micro frontend. For a frontend repo `frontend-app-appName`, use `appName` as APP_ID.
+     - ``authn`` | ``''``
+
+   * - ``ENABLE_COOKIE_POLICY_BANNER``
+     - Enables support for displaying the cookies acceptance banner.
+     - ``true`` | ``''`` (empty strings are falsy)     
+
 edX-specific Environment Variables
 **********************************
 
@@ -120,6 +132,10 @@ Furthermore, there are several edX-specific environment variables that enable in
    * - ``MARKETING_EMAILS_OPT_IN``
      - Enables support for opting in marketing emails that helps us getting user consent for sending marketing emails.
      - ``true`` | ``''`` (empty strings are falsy)
+
+   * - ``SHOW_CONFIGURABLE_EDX_FIELDS``
+     - For edX, country and honor code fields are required by default. This flag enables edX specific required fields.
+     - ``true`` | ``''`` (empty strings are falsy)    
 
 For more information see the document: `Micro-frontend applications in Open
 edX <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
