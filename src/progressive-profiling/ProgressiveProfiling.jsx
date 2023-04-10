@@ -175,7 +175,7 @@ const ProgressiveProfiling = (props) => {
           userId={authenticatedUser?.userId}
         />
       ) : null}
-      <div className="mw-xs pp-page-content">
+      <div className="mw-xs m-4 pp-page-content">
         <div>
           <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
         </div>
