@@ -227,13 +227,6 @@ const RegistrationPage = (props) => {
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
       setCookie('authn-returning-user');
 
-      // Fire optimizely events
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: 'authn-register-conversion',
-      });
-
       // Fire GTM event used for integration with impact.com
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
