@@ -20,12 +20,14 @@ import {
   NON_COMPLIANT_PASSWORD_EXCEPTION,
   NUDGE_PASSWORD_CHANGE,
   REQUIRE_PASSWORD_CHANGE,
+  TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import messages from './messages';
 
 const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
   const { context, errorCode } = props.loginError;
+
   const authService = getAuthService();
   let errorList;
   let resetLink = (
@@ -165,6 +167,16 @@ const LoginFailureMessage = (props) => {
       );
     case REQUIRE_PASSWORD_CHANGE:
       return <ChangePasswordPrompt />;
+    case TPA_AUTHENTICATION_FAILURE:
+      errorList = (
+        <p>{formatMessage(messages['login.tpa.authentication.failure'], {
+          platform_name: getConfig().SITE_NAME,
+          lineBreak: <br />,
+          errorMessage: context.errorMessage,
+        })}
+        </p>
+      );
+      break;
     case INTERNAL_SERVER_ERROR:
     default:
       errorList = <p>{formatMessage(messages['internal.server.error.message'])}</p>;
@@ -183,6 +195,7 @@ LoginFailureMessage.defaultProps = {
   loginError: {
     redirectUrl: null,
     errorCode: null,
+    errorMessage: null,
   },
 };
 
@@ -196,6 +209,7 @@ LoginFailureMessage.propTypes = {
       allowedDomain: PropTypes.string,
       remainingAttempts: PropTypes.number,
       failureCount: PropTypes.number,
+      errorMessage: PropTypes.string,
     }),
     email: PropTypes.string,
     errorCode: PropTypes.string,

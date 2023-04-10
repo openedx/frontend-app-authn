@@ -37,7 +37,7 @@ import AccountActivationMessage from './AccountActivationMessage';
 import {
   loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
 } from './data/actions';
-import { INVALID_FORM } from './data/constants';
+import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import { loginErrorSelector, loginFormDataSelector, loginRequestSelector } from './data/selectors';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
@@ -223,7 +223,13 @@ class LoginPage extends React.Component {
         />
       );
     }
-
+    const tpaAuthenticationError = {};
+    if (thirdPartyAuthContext.errorMessage) {
+      tpaAuthenticationError.context = {
+        errorMessage: thirdPartyAuthContext.errorMessage,
+      };
+      tpaAuthenticationError.errorCode = TPA_AUTHENTICATION_FAILURE;
+    }
     if (this.props.loginResult.success) {
       setSurveyCookie('login');
 
@@ -253,6 +259,7 @@ class LoginPage extends React.Component {
             platformName={thirdPartyAuthContext.platformName}
           />
           {this.props.loginError ? <LoginFailureMessage loginError={this.props.loginError} /> : null}
+          {thirdPartyAuthContext.errorMessage ? <LoginFailureMessage loginError={tpaAuthenticationError} /> : null}
           {submitState === DEFAULT_STATE && this.state.isSubmitted ? windowScrollTo({ left: 0, top: 0, behavior: 'smooth' }) : null}
           {activationMsgType && <AccountActivationMessage messageType={activationMsgType} />}
           {this.props.resetPassword && !this.props.loginError ? <ResetPasswordSuccess /> : null}
@@ -361,6 +368,7 @@ LoginPage.defaultProps = {
   thirdPartyAuthApiStatus: 'pending',
   thirdPartyAuthContext: {
     currentProvider: null,
+    errorMessage: null,
     finishAuthUrl: null,
     providers: [],
     secondaryProviders: [],
@@ -395,6 +403,7 @@ LoginPage.propTypes = {
   thirdPartyAuthApiStatus: PropTypes.string,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
+    errorMessage: PropTypes.string,
     platformName: PropTypes.string,
     providers: PropTypes.arrayOf(PropTypes.shape({})),
     secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),

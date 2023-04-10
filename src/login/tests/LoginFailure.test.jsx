@@ -16,6 +16,7 @@ import {
   NON_COMPLIANT_PASSWORD_EXCEPTION,
   NUDGE_PASSWORD_CHANGE,
   REQUIRE_PASSWORD_CHANGE,
+  TPA_AUTHENTICATION_FAILURE,
 } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
 
@@ -217,6 +218,28 @@ describe('LoginFailureMessage', () => {
 
     const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your internet connection.';
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toEqual(expectedMessage);
+  });
+
+  it('should match tpa authentication failed error message', () => {
+    props = {
+      loginError: {
+        errorCode: TPA_AUTHENTICATION_FAILURE,
+        context: {
+          errorMessage: 'An error occured',
+        },
+      },
+    };
+
+    const loginFailureMessage = mount(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+
+    const expectedMessageSubstring = 'We are sorry, you are not authorized to access';
+
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain(expectedMessageSubstring);
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain('An error occured');
   });
 
   it('should show modal that nudges users to change password', () => {

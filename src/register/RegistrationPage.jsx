@@ -22,6 +22,7 @@ import {
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
+  COMPLETE_STATE,
   DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
@@ -41,10 +42,11 @@ import {
   COUNTRY_DISPLAY_KEY,
   FIELDS,
   FORM_SUBMISSION_ERROR,
+  TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
 import {
-  getSuggestionForInvalidEmail, isTpaHintedAuthentication, validateCountryField, validateEmailAddress,
+  getSuggestionForInvalidEmail, validateCountryField, validateEmailAddress,
 } from './data/utils';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
@@ -95,7 +97,7 @@ const RegistrationPage = (props) => {
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [emailSuggestion, setEmailSuggestion] = useState({ ...backedUpFormData.emailSuggestion });
-  const [autoSubmitRegisterForm, setAutoSubmitRegisterForm] = useState(isTpaHintedAuthentication());
+  const [autoSubmitRegisterForm, setAutoSubmitRegisterForm] = useState(false);
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
@@ -127,13 +129,13 @@ const RegistrationPage = (props) => {
    * Set the userPipelineDetails data in formFields for only first time
    */
   useEffect(() => {
-    if (!userPipelineDataLoaded) {
+    if (!userPipelineDataLoaded && thirdPartyAuthApiStatus === COMPLETE_STATE) {
       const { autoSubmitRegForm, pipelineUserDetails, errorMessage } = thirdPartyAuthContext;
       if (errorMessage) {
-        localStorage.removeItem('tpaHintedAuthentication');
-        setAutoSubmitRegisterForm(false);
+        setErrorCode(prevState => ({ type: TPA_AUTHENTICATION_FAILURE, count: prevState.count + 1 }));
       } else if (autoSubmitRegForm) {
         checkTOSandHonorCodeFields();
+        setAutoSubmitRegisterForm(true);
       }
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
         const { name = '', username = '', email = '' } = pipelineUserDetails;
@@ -538,7 +540,7 @@ const RegistrationPage = (props) => {
             <RegistrationFailure
               errorCode={errorCode.type}
               failureCount={errorCode.count}
-              context={{ provider: currentProvider }}
+              context={{ provider: currentProvider, errorMessage: thirdPartyAuthContext.errorMessage }}
             />
             <Form id="registration-form" name="registration-form">
               <FormGroup
