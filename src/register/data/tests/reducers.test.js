@@ -1,12 +1,13 @@
 import { getConfig } from '@edx/frontend-platform';
 
-import { DEFAULT_STATE } from '../../../data/constants';
+import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, PENDING_STATE } from '../../../data/constants';
 import {
   BACKUP_REGISTRATION_DATA,
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE,
+  REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTERATION_CLEAR_BACKEND_ERROR,
 } from '../actions';
 import reducer from '../reducers';
@@ -63,6 +64,42 @@ describe('Registration Reducer Tests', () => {
       },
     );
   });
+  it('should set redirect url dashboard on registration success action', () => {
+    const payload = {
+      redirectUrl: `${getConfig().BASE_URL}${DEFAULT_REDIRECT_URL}`,
+      success: true,
+    };
+    const action = {
+      type: REGISTER_NEW_USER.SUCCESS,
+      payload,
+    };
+
+    expect(reducer(defaultState, action)).toEqual(
+      {
+        ...defaultState,
+        registrationResult: payload,
+      },
+    );
+  });
+
+  it('should set the registration call and set the registration error object empty', () => {
+    const action = {
+      type: REGISTER_NEW_USER.BEGIN,
+    };
+
+    expect(reducer({
+      ...defaultState,
+      registrationError: {
+        email: 'This email already exist.',
+      },
+    }, action)).toEqual(
+      {
+        ...defaultState,
+        submitState: PENDING_STATE,
+        registrationError: {},
+      },
+    );
+  });
 
   it('should show username suggestions returned by registration error', () => {
     const payload = { usernameSuggestions: ['test12'] };
@@ -79,7 +116,68 @@ describe('Registration Reducer Tests', () => {
       },
     );
   });
+  it('should set the register user when SSO pipline data is loaded', () => {
+    const payload = { value: true };
+    const action = {
+      type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
+      payload,
+    };
 
+    expect(reducer(defaultState, action)).toEqual(
+      {
+        ...defaultState,
+        userPipelineDataLoaded: true,
+      },
+    );
+  });
+
+  it('should set country code on blur', () => {
+    const action = {
+      type: REGISTER_SET_COUNTRY_CODE,
+      payload: { countryCode: 'PK' },
+    };
+
+    expect(reducer({
+      ...defaultState,
+      registrationFormData: {
+        ...defaultState.registrationFormData,
+        configurableFormFields: {
+          ...defaultState.registrationFormData.configurableFormFields,
+          country: {
+            name: 'Pakistan',
+            code: 'PK',
+          },
+        },
+      },
+    }, action)).toEqual(
+      {
+        ...defaultState,
+        registrationFormData: {
+          ...defaultState.registrationFormData,
+          configurableFormFields: {
+            ...defaultState.registrationFormData.configurableFormFields,
+            country: {
+              name: 'Pakistan',
+              code: 'PK',
+            },
+          },
+        },
+      },
+    );
+  });
+  it(' registration api failure when api rate limit hits', () => {
+    const action = {
+      type: REGISTER_FORM_VALIDATIONS.FAILURE,
+    };
+
+    expect(reducer(defaultState, action)).toEqual(
+      {
+        ...defaultState,
+        validationApiRateLimited: true,
+        validations: null,
+      },
+    );
+  });
   it('should clear username suggestions', () => {
     const state = {
       ...defaultState,
@@ -90,6 +188,21 @@ describe('Registration Reducer Tests', () => {
     };
 
     expect(reducer(state, action)).toEqual({ ...defaultState });
+  });
+
+  it('should take back data during form reset', () => {
+    const state = {
+      ...defaultState,
+      shouldBackupState: true,
+    };
+    const action = {
+      type: BACKUP_REGISTRATION_DATA.BASE,
+    };
+
+    expect(reducer(state, action)).toEqual({
+      ...defaultState,
+      shouldBackupState: true,
+    });
   });
 
   it('should not reset username suggestions and fields data during form reset', () => {
