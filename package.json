@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
-    "@edx/frontend-build": "12.7.0",
+    "@edx/frontend-build": "12.8.6",
     "@edx/reactifex": "1.1.0",
     "babel-plugin-formatjs": "10.4.0",
     "enzyme": "3.11.0",
