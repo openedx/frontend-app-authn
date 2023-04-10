@@ -51,6 +51,9 @@ describe('Logistration', () => {
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
 
+    mergeConfig({
+      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
+    });
     store = mockStore({
       register: {
         registrationResult: { success: false, redirectUrl: '' },
@@ -81,9 +84,42 @@ describe('Logistration', () => {
     expect(logistration.find('#main-content').find('LoginPage').exists()).toBeTruthy();
   });
 
+  it('should render only login page when public account creation is disabled', () => {
+    mergeConfig({
+      ALLOW_PUBLIC_ACCOUNT_CREATION: false,
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
+    store = mockStore({
+      login: {
+        loginResult: { success: false, redirectUrl: '' },
+      },
+      commonComponents: {
+        thirdPartyAuthContext: {
+          currentProvider: null,
+          finishAuthUrl: null,
+          providers: [],
+          secondaryProviders: [secondaryProviders],
+        },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+      },
+    });
+
+    const props = { selectedPage: LOGIN_PAGE };
+    const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
+
+    // verifying sign in heading for institution login false
+    expect(logistration.find('#main-content').find('h3').text()).toEqual('Sign in');
+
+    // verifying tabs heading for institution login true
+    logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
+    expect(logistration.find('#controlled-tab').exists()).toBeTruthy();
+  });
+
   it('should display institution login option when secondary providers are present', () => {
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: 'true',
+      ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
     });
 
     store = mockStore({
