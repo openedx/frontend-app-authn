@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { getConfig, getQueryParameters } from '@edx/frontend-platform';
+import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
@@ -21,7 +21,7 @@ import { PasswordField } from '../common-components';
 import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
-import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 import { resetPassword, validateToken } from './data/actions';
 import {
   FORM_SUBMISSION_ERROR, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
@@ -129,7 +129,7 @@ const ResetPasswordPage = (props) => {
         new_password1: newPassword,
         new_password2: confirmPassword,
       };
-      const params = getQueryParameters();
+      const params = getAllPossibleQueryParams();
       props.resetPassword(formPayload, props.token, params);
     } else {
       setErrorCode(FORM_SUBMISSION_ERROR);

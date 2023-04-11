@@ -35,4 +35,4 @@ export const INVALID_NAME_REGEX = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{
 
 // Query string parameters that can be passed to LMS to manage
 // things like auto-enrollment upon login and registration.
-export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'save_for_later', 'register_for_free'];
+export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'save_for_later', 'register_for_free', 'track', 'is_account_recovery'];
