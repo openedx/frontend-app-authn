@@ -22,9 +22,8 @@ import {
   setUserPipelineDataLoaded,
 } from '../data/actions';
 import {
-  FIELDS, FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_SESSION_EXPIRED,
+  FIELDS, FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../data/constants';
-import * as utils from '../data/utils';
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
@@ -482,6 +481,21 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
     });
 
+    it('should match tpa authentication failed error message', () => {
+      const expectedMessageSubstring = 'We are sorry, you are not authorized to access';
+      props = {
+        context: {
+          provider: 'Google',
+        },
+        errorCode: TPA_AUTHENTICATION_FAILURE,
+        failureCount: 0,
+      };
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
+      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
+      expect(registrationPage.find('div.alert').first().text()).toContain(expectedMessageSubstring);
+    });
+
     // ******** test form buttons and fields ********
 
     it('should match default button state', () => {
@@ -876,6 +890,7 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             pipelineUserDetails: {
@@ -1134,8 +1149,15 @@ describe('RegistrationPage', () => {
       getLocale.mockImplementation(() => ('en-us'));
       store = mockStore({
         ...initialState,
+        register: { // setting register to display form for testing TOS and honor code value.
+          ...initialState.register,
+          registrationError: {
+            errorCode: 'register-error',
+          },
+        },
         commonComponents: {
           ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             pipelineUserDetails: {
@@ -1164,17 +1186,6 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('input#honor-code').props().value).toEqual(true);
     });
 
-    it('should set autoSubmitRegisterForm true if isTpaHintedAuthentication returns true', () => {
-      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
-      getLocale.mockImplementation(() => ('en-us'));
-      utils.isTpaHintedAuthentication = jest.fn().mockImplementation(() => true);
-
-      store.dispatch = jest.fn(store.dispatch);
-
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('#tpa-spinner').exists()).toBeTruthy();
-    });
-
     it('should show spinner instead of form while registering if autoSubmitRegForm is true', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
@@ -1188,6 +1199,7 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             currentProvider: ssoProvider.name,
@@ -1220,6 +1232,7 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             currentProvider: ssoProvider.name,
@@ -1234,7 +1247,36 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find('#tpa-spinner').exists()).toBeFalsy();
       expect(registrationPage.find('#registration-form').exists()).toBeTruthy();
-      expect(localStorage.getItem('tpaHintedAuthentication')).toEqual(null);
+    });
+
+    it('should display errorMessage if third party authentication fails', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      getLocale.mockImplementation(() => ('en-us'));
+
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          backendCountryCode: 'PK',
+          userPipelineDataLoaded: false,
+        },
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            currentProvider: null,
+            pipelineUserDetails: {},
+            errorMessage: 'An error occured',
+          },
+        },
+      });
+
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
+      expect(registrationPage.find('div.alert').first().text()).toContain('An error occured');
     });
   });
 });

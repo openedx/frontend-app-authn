@@ -111,5 +111,3 @@ export function validateCountryField(value, countryList, errorMessage) {
   }
   return { error, countryCode, displayValue };
 }
-
-export const isTpaHintedAuthentication = () => localStorage.getItem('tpaHintedAuthentication') === 'true';

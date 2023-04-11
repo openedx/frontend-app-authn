@@ -20,6 +20,7 @@ import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/u
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import { clearThirdPartyAuthContextErrorMessage } from './data/actions';
 import {
   tpaProvidersSelector,
 } from './data/selectors';
@@ -56,6 +57,7 @@ const Logistration = (props) => {
 
   const handleOnSelect = (tabKey) => {
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
+    props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
       props.backupRegistrationForm();
     }
@@ -135,6 +137,7 @@ const Logistration = (props) => {
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
   backupRegistrationForm: PropTypes.func.isRequired,
+  clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
     providers: PropTypes.arrayOf(PropTypes.shape({})),
     secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
@@ -160,5 +163,6 @@ export default connect(
   mapStateToProps,
   {
     backupRegistrationForm,
+    clearThirdPartyAuthContextErrorMessage,
   },
 )(Logistration);

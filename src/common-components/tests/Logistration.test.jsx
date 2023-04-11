@@ -11,6 +11,7 @@ import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
 import { backupRegistrationForm } from '../../register/data/actions';
+import { clearThirdPartyAuthContextErrorMessage } from '../data/actions';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import Logistration from '../Logistration';
 
@@ -245,14 +246,13 @@ describe('Logistration', () => {
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
 
-  it('should remove tpaHintedAuthentication from localStorage on registeration success', () => {
-    localStorage.setItem('tpaHintedAuthentication', 'true');
-    mergeConfig({
-      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
-    });
+  it('should clear tpa context errorMessage tab click', () => {
     store = mockStore({
+      login: {
+        loginResult: { success: false, redirectUrl: '' },
+      },
       register: {
-        registrationResult: { success: true, redirectUrl: '' },
+        registrationResult: { success: false, redirectUrl: '' },
         registrationError: {},
       },
       commonComponents: {
@@ -262,8 +262,10 @@ describe('Logistration', () => {
         },
       },
     });
-    mount(reduxWrapper(<IntlLogistration />));
 
-    expect(localStorage.getItem('tpaHintedAuthentication')).toEqual(null);
+    store.dispatch = jest.fn(store.dispatch);
+    const logistration = mount(reduxWrapper(<IntlLogistration />));
+    logistration.find('a[data-rb-event-key="/login"]').simulate('click');
+    expect(store.dispatch).toHaveBeenCalledWith(clearThirdPartyAuthContextErrorMessage());
   });
 });

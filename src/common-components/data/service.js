@@ -1,4 +1,4 @@
-import { camelCaseObject, convertKeyNames, getConfig } from '@edx/frontend-platform';
+import { getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -18,10 +18,8 @@ export async function getThirdPartyAuthContext(urlParams) {
       throw (e);
     });
   return {
-    fieldDescriptions: data.registration_fields || {},
-    optionalFields: data.optional_fields || {},
-    thirdPartyAuthContext: camelCaseObject(
-      convertKeyNames(data.context_data, { fullname: 'name' }),
-    ),
+    fieldDescriptions: data.registrationFields || data.registration_fields,
+    optionalFields: data.optionalFields || data.optional_fields,
+    thirdPartyAuthContext: data.contextData || data.context_data,
   };
 }
