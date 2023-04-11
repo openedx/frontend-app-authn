@@ -2,7 +2,6 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
-import * as auth from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
@@ -69,11 +68,13 @@ describe('ResetPasswordPage', () => {
       },
     });
 
-    auth.getHttpClient = jest.fn(() => ({
-      post: async () => ({
-        data: {},
-        catch: () => {},
-      }),
+    jest.mock('@edx/frontend-platform/auth', () => ({
+      getHttpClient: jest.fn(() => ({
+        post: async () => ({
+          data: {},
+          catch: () => {},
+        }),
+      })),
     }));
 
     store.dispatch = jest.fn(store.dispatch);

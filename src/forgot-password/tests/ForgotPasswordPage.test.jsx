@@ -3,8 +3,6 @@ import { Provider } from 'react-redux';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { mergeConfig } from '@edx/frontend-platform';
-import * as analytics from '@edx/frontend-platform/analytics';
-import * as auth from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
@@ -17,10 +15,11 @@ import { PASSWORD_RESET } from '../../reset-password/data/constants';
 import { setForgotPasswordFormData } from '../data/actions';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
-jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
 jest.mock('@edx/frontend-platform/auth');
-
-analytics.sendPageEvent = jest.fn();
 
 const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
@@ -51,7 +50,12 @@ describe('ForgotPasswordPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'test-user' }));
+    jest.mock('@edx/frontend-platform/auth', () => ({
+      getAuthenticatedUser: jest.fn(() => ({
+        userId: 3,
+        username: 'test-user',
+      })),
+    }));
     configure({
       loggingService: { logError: jest.fn() },
       config: {

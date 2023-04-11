@@ -2,10 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import * as analytics from '@edx/frontend-platform/analytics';
-import * as auth from '@edx/frontend-platform/auth';
+import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import * as logging from '@edx/frontend-platform/logging';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
 import { act } from 'react-dom/test-utils';
@@ -21,18 +20,20 @@ import ProgressiveProfiling from '../ProgressiveProfiling';
 const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
 const mockStore = configureStore();
 
-jest.mock('@edx/frontend-platform/analytics');
-jest.mock('@edx/frontend-platform/auth');
-jest.mock('@edx/frontend-platform/logging');
-
-analytics.sendTrackEvent = jest.fn();
-analytics.sendPageEvent = jest.fn();
-analytics.identifyAuthenticatedUser = jest.fn();
-logging.getLoggingService = jest.fn();
-
-auth.configure = jest.fn();
-auth.ensureAuthenticatedUser = jest.fn().mockImplementation(() => Promise.resolve(true));
-auth.hydrateAuthenticatedUser = jest.fn().mockImplementation(() => Promise.resolve(true));
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+  identifyAuthenticatedUser: jest.fn(),
+}));
+jest.mock('@edx/frontend-platform/auth', () => ({
+  configure: jest.fn(),
+  ensureAuthenticatedUser: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  hydrateAuthenticatedUser: jest.fn().mockImplementation(() => Promise.resolve(true)),
+  getAuthenticatedUser: jest.fn(),
+}));
+jest.mock('@edx/frontend-platform/logging', () => ({
+  getLoggingService: jest.fn(),
+}));
 
 const history = createMemoryHistory();
 
@@ -129,14 +130,14 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   it('should make identify call to segment on progressive profiling page', async () => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
     await getProgressiveProfilingPage();
-    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalledWith(3);
-    expect(analytics.identifyAuthenticatedUser).toHaveBeenCalled();
+    expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+    expect(identifyAuthenticatedUser).toHaveBeenCalled();
   });
 
   it('should submit user profile details on form submission', async () => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
     const formPayload = {
       gender: 'm',
       extended_profile: [{ field_name: 'company', field_value: 'test company' }],
@@ -155,14 +156,14 @@ describe('ProgressiveProfilingTests', () => {
 
     progressiveProfilingPage.find('button.btn-link').simulate('click');
     expect(progressiveProfilingPage.find('.pgn__modal-content-container').exists()).toBeTruthy();
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked');
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked');
   });
 
   it('should send analytic event for support link click', async () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
 
     progressiveProfilingPage.find('.progressive-profiling-support a[target="_blank"]').simulate('click');
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
   });
 
   it('should show error message when patch request fails', async () => {
@@ -206,7 +207,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
       const progressiveProfilingPage = await getProgressiveProfilingPage();
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
@@ -241,7 +242,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'abc123' }));
+      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
       const progressiveProfilingPage = await getProgressiveProfilingPage();
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Submit');

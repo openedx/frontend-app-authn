@@ -48,7 +48,6 @@ module.exports = createConfig('eslint', {
       },
     ],
     'function-paren-newline': 'off',
-    'no-import-assign': 'off',
     'react/no-unstable-nested-components': 'off',
   },
 });
