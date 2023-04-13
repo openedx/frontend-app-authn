@@ -6,11 +6,11 @@ import { Alert } from '@edx/paragon';
 import { CheckCircle, Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
+import messages from './messages';
 import {
   COMPLETE_STATE, FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR,
 } from '../data/constants';
 import { PASSWORD_RESET } from '../reset-password/data/constants';
-import messages from './messages';
 
 const ForgotPasswordAlert = (props) => {
   const { formatMessage } = useIntl();

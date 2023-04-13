@@ -13,6 +13,14 @@ import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 
+import AccountActivationMessage from './AccountActivationMessage';
+import {
+  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+} from './data/actions';
+import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
+import { loginErrorSelector, loginFormDataSelector, loginRequestSelector } from './data/selectors';
+import LoginFailureMessage from './LoginFailure';
+import messages from './messages';
 import {
   FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration,
   RenderInstitutionButton, SocialAuthProviders, ThirdPartyAuthAlert,
@@ -33,14 +41,6 @@ import {
   windowScrollTo,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
-import AccountActivationMessage from './AccountActivationMessage';
-import {
-  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
-} from './data/actions';
-import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
-import { loginErrorSelector, loginFormDataSelector, loginRequestSelector } from './data/selectors';
-import LoginFailureMessage from './LoginFailure';
-import messages from './messages';
 
 class LoginPage extends React.Component {
   constructor(props, context) {

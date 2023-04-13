@@ -9,8 +9,8 @@ import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
-import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
+import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 
 /**
  * This component renders the Single sign-on (SSO) button only for the tpa provider passed

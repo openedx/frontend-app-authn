@@ -8,13 +8,13 @@ import {
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { DEFAULT_REDIRECT_URL } from '../data/constants';
 import { EDUCATION_LEVEL_MAPPING, RECOMMENDATIONS_COUNT } from './data/constants';
 import getPersonalizedRecommendations from './data/service';
 import { convertCourseRunKeytoCourseKey } from './data/utils';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
+import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = (props) => {
   const { location } = props;

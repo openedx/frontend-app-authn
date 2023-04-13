@@ -9,8 +9,8 @@ import {
 } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import messages from './messages';
+import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 
 const PasswordField = (props) => {
   const { formatMessage } = useIntl();

@@ -8,11 +8,11 @@ import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import configureStore from 'redux-mock-store';
 
+import { mockedGeneralRecommendations, mockedResponse } from './mockedData';
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
 import getPersonalizedRecommendations from '../data/service';
 import { trackRecommendationCardClickOptimizely } from '../optimizelyExperiment';
 import RecommendationsPage from '../RecommendationsPage';
-import { mockedGeneralRecommendations, mockedResponse } from './mockedData';
 
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
