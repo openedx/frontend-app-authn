@@ -9,10 +9,10 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 
+import messages from './messages';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
-import messages from './messages';
 
 const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
   const isMobileView = useMobileResponsive();

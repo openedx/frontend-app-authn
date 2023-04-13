@@ -14,17 +14,17 @@ import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
+import { clearThirdPartyAuthContextErrorMessage } from './data/actions';
+import {
+  tpaProvidersSelector,
+} from './data/selectors';
+import messages from './messages';
 import { BaseComponent } from '../base-component';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
-import { clearThirdPartyAuthContextErrorMessage } from './data/actions';
-import {
-  tpaProvidersSelector,
-} from './data/selectors';
-import messages from './messages';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;

@@ -1,5 +1,5 @@
-import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { THIRD_PARTY_AUTH_CONTEXT, THIRD_PARTY_AUTH_CONTEXT_CLEAR_ERROR_MSG } from './actions';
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 
 export const defaultState = {
   fieldDescriptions: {},

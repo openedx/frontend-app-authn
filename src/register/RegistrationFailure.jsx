@@ -6,7 +6,6 @@ import { Alert } from '@edx/paragon';
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import { windowScrollTo } from '../data/utils';
 import {
   FORBIDDEN_REQUEST,
   INTERNAL_SERVER_ERROR,
@@ -14,6 +13,7 @@ import {
   TPA_SESSION_EXPIRED,
 } from './data/constants';
 import messages from './messages';
+import { windowScrollTo } from '../data/utils';
 
 const RegistrationFailureMessage = (props) => {
   const { formatMessage } = useIntl();

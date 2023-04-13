@@ -13,21 +13,6 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
 
-import {
-  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
-} from '../common-components';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import {
-  fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
-} from '../common-components/data/selectors';
-import EnterpriseSSO from '../common-components/EnterpriseSSO';
-import {
-  COMPLETE_STATE,
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
-} from '../data/constants';
-import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
-} from '../data/utils';
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
 import {
   backupRegistrationFormBegin,
@@ -52,6 +37,21 @@ import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
 import ThirdPartyAuth from './ThirdPartyAuth';
+import {
+  FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+} from '../common-components';
+import { getThirdPartyAuthContext } from '../common-components/data/actions';
+import {
+  fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
+} from '../common-components/data/selectors';
+import EnterpriseSSO from '../common-components/EnterpriseSSO';
+import {
+  COMPLETE_STATE,
+  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+} from '../data/constants';
+import {
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
+} from '../data/utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);

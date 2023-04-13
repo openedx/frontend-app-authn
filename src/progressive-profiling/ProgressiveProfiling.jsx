@@ -22,6 +22,10 @@ import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
+import { saveUserProfile } from './data/actions';
+import { welcomePageSelector } from './data/selectors';
+import messages from './messages';
+import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 import { BaseComponent } from '../base-component';
 import { RedirectLogistration } from '../common-components';
 import {
@@ -33,10 +37,6 @@ import {
   activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION, trackRecommendationViewedOptimizely,
 } from '../recommendations/optimizelyExperiment';
 import { trackRecommendationsGroup, trackRecommendationsViewed } from '../recommendations/track';
-import { saveUserProfile } from './data/actions';
-import { welcomePageSelector } from './data/selectors';
-import messages from './messages';
-import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
 const ProgressiveProfiling = (props) => {
   const {

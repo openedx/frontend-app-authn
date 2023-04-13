@@ -4,12 +4,12 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
-import { FormFieldRenderer } from '../field-renderer';
 import { FIELDS } from './data/constants';
 import { validateCountryField } from './data/utils';
 import messages from './messages';
 import { HonorCode, TermsOfService } from './registrationFields';
 import CountryField from './registrationFields/CountryField';
+import { FormFieldRenderer } from '../field-renderer';
 
 /**
  * Fields on registration page that are not the default required fields (name, email, username, password).

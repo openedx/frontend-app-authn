@@ -1,8 +1,4 @@
 import {
-  DEFAULT_STATE,
-  PENDING_STATE,
-} from '../../data/constants';
-import {
   BACKUP_REGISTRATION_DATA,
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
@@ -10,6 +6,10 @@ import {
   REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTERATION_CLEAR_BACKEND_ERROR,
 } from './actions';
+import {
+  DEFAULT_STATE,
+  PENDING_STATE,
+} from '../../data/constants';
 
 export const defaultState = {
   backendCountryCode: '',

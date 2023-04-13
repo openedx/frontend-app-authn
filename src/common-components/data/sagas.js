@@ -1,7 +1,6 @@
 import { logError } from '@edx/frontend-platform/logging';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
-import { setCountryFromThirdPartyAuthContext } from '../../register/data/actions';
 import {
   getThirdPartyAuthContextBegin,
   getThirdPartyAuthContextFailure,
@@ -11,6 +10,7 @@ import {
 import {
   getThirdPartyAuthContext,
 } from './service';
+import { setCountryFromThirdPartyAuthContext } from '../../register/data/actions';
 
 export function* fetchThirdPartyAuthContext(action) {
   try {

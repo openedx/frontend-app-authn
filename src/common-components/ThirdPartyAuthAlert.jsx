@@ -5,8 +5,8 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import messages from './messages';
+import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 
 const ThirdPartyAuthAlert = (props) => {
   const { formatMessage } = useIntl();
