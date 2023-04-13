@@ -10,11 +10,7 @@ on:
 jobs:
   autoupdate:
     name: autoupdate
-    if: |
-      github.event_name == 'pull_request' &&
-      github.event.action == 'labeled' &&
-      github.event.label.name == 'autoupdate'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
