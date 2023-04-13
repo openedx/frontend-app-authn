@@ -1140,7 +1140,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('button.btn-brand').simulate('click');
       expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
 
-      registrationPage.find('button.expand-more').simulate('click');
+      registrationPage.find('button[name="countryExpand"]').simulate('click');
       registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'Pakistan', name: 'countryItem' } });
       expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
     });

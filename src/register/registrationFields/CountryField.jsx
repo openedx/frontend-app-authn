@@ -6,7 +6,9 @@ import { ExpandLess, ExpandMore } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import { FormGroup } from '../../common-components';
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from '../data/constants';
+import {
+  COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, EXPAND_LESS_ICON, EXPAND_MORE_ICON,
+} from '../data/constants';
 import messages from '../messages';
 
 const CountryField = (props) => {
@@ -17,7 +19,7 @@ const CountryField = (props) => {
   const [errorMessage, setErrorMessage] = useState(props.errorMessage);
   const [dropDownItems, setDropDownItems] = useState([]);
   const [displayValue, setDisplayValue] = useState('');
-  const [trailingIcon, setTrailingIcon] = useState(null);
+  const [trailingIcon, setTrailingIcon] = useState(EXPAND_MORE_ICON);
 
   const onBlurHandler = (event, itemClicked = false, countryName = '') => {
     const { name } = event.target;
@@ -31,7 +33,7 @@ const CountryField = (props) => {
     if (props.onBlurHandler) {
       props.onBlurHandler({ target: { name: 'country', value: countryValue } });
     }
-    setTrailingIcon(<ExpandMoreButton />);
+    setTrailingIcon(EXPAND_MORE_ICON);
     setDropDownItems([]);
   };
 
@@ -67,7 +69,7 @@ const CountryField = (props) => {
   const onFocusHandler = (event) => {
     const { name, value } = event.target;
     setDropDownItems(getDropdownItems(name === 'country' ? value : displayValue));
-    setTrailingIcon(<ExpandLessButton />);
+    setTrailingIcon(EXPAND_LESS_ICON);
     setErrorMessage('');
     if (props.onFocusHandler) { props.onFocusHandler(event); }
   };
@@ -80,49 +82,19 @@ const CountryField = (props) => {
   };
 
   const handleOnClickOutside = () => {
-    setTrailingIcon(<ExpandMoreButton />);
+    setTrailingIcon(EXPAND_MORE_ICON);
     setDropDownItems([]);
   };
 
-  const handleExpandMore = () => {
-    setTrailingIcon(<ExpandLessButton />);
-    setDropDownItems(getDropdownItems());
+  const handleTrailingIconClick = () => {
+    if (trailingIcon === EXPAND_MORE_ICON) {
+      setDropDownItems(getDropdownItems());
+      setTrailingIcon(EXPAND_LESS_ICON);
+    } else {
+      setDropDownItems([]);
+      setTrailingIcon(EXPAND_MORE_ICON);
+    }
   };
-
-  const handleExpandLess = () => {
-    setTrailingIcon(<ExpandMoreButton />);
-    setDropDownItems([]);
-  };
-
-  const ExpandMoreButton = () => (
-    <IconButton
-      name="countryExpand"
-      size="sm"
-      variant="secondary"
-      alt="expand-more"
-      className="expand-more"
-      iconAs={Icon}
-      src={ExpandMore}
-      onBlur={() => {}}
-      onClick={handleExpandMore}
-      onFocus={() => {}}
-    />
-  );
-
-  const ExpandLessButton = () => (
-    <IconButton
-      name="countryExpand"
-      size="sm"
-      variant="secondary"
-      alt="expand-less"
-      className="expand-less"
-      iconAs={Icon}
-      src={ExpandLess}
-      onBlur={() => {}}
-      onClick={handleExpandLess}
-      onFocus={() => {}}
-    />
-  );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -135,12 +107,6 @@ const CountryField = (props) => {
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, []);
-
-  useEffect(() => {
-    if (!trailingIcon) {
-      setTrailingIcon(<ExpandMoreButton />);
-    }
-  }, [trailingIcon]);
 
   useEffect(() => {
     if (selectedCountry.displayValue) {
@@ -160,7 +126,19 @@ const CountryField = (props) => {
         autoComplete="chrome-off"
         className="mb-0"
         floatingLabel={formatMessage(messages['registration.country.label'])}
-        trailingElement={trailingIcon}
+        trailingElement={(
+          <IconButton
+            name="countryExpand"
+            size="sm"
+            variant="secondary"
+            alt="expand-dropdown"
+            iconAs={Icon}
+            src={trailingIcon === EXPAND_MORE_ICON ? ExpandMore : ExpandLess}
+            onBlur={() => {}}
+            onClick={handleTrailingIconClick}
+            onFocus={() => {}}
+          />
+        )}
         value={displayValue}
         errorMessage={errorMessage}
         handleChange={onChangeHandler}
