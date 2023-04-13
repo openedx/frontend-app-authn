@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import * as analytics from '@edx/frontend-platform/analytics';
+import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
@@ -27,14 +27,14 @@ import {
 import RegistrationFailureMessage from '../RegistrationFailure';
 import RegistrationPage from '../RegistrationPage';
 
-jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
 jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
-
-analytics.sendTrackEvent = jest.fn();
-analytics.sendPageEvent = jest.fn();
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
@@ -878,7 +878,7 @@ describe('RegistrationPage', () => {
 
     it('should send page event when register page is rendered', () => {
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
+      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
     it('should populate form with pipeline user details', () => {

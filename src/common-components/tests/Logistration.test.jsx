@@ -2,8 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import * as analytics from '@edx/frontend-platform/analytics';
-import * as auth from '@edx/frontend-platform/auth';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
@@ -15,9 +14,11 @@ import { clearThirdPartyAuthContextErrorMessage } from '../data/actions';
 import { RenderInstitutionButton } from '../InstitutionLogistration';
 import Logistration from '../Logistration';
 
-jest.mock('@edx/frontend-platform/analytics');
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
 jest.mock('@edx/frontend-platform/auth');
-analytics.sendPageEvent = jest.fn();
 
 const mockStore = configureStore();
 const IntlLogistration = injectIntl(Logistration);
@@ -41,7 +42,13 @@ describe('Logistration', () => {
   );
 
   beforeEach(() => {
-    auth.getAuthenticatedUser = jest.fn(() => ({ userId: 3, username: 'test-user' }));
+    jest.mock('@edx/frontend-platform/auth', () => ({
+      getAuthenticatedUser: jest.fn(() => ({
+        userId: 3,
+        username: 'test-user',
+      })),
+    }));
+
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -182,8 +189,8 @@ describe('Logistration', () => {
     const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
     logistration.find(RenderInstitutionButton).simulate('click', { institutionLogin: true });
 
-    expect(analytics.sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',

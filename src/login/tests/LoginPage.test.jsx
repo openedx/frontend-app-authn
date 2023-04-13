@@ -3,8 +3,7 @@ import { Provider } from 'react-redux';
 
 import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import * as analytics from '@edx/frontend-platform/analytics';
-import * as auth from '@edx/frontend-platform/auth';
+import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
@@ -19,12 +18,13 @@ import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
 import LoginPage from '../LoginPage';
 
-jest.mock('@edx/frontend-platform/analytics');
-jest.mock('@edx/frontend-platform/auth');
-
-analytics.sendTrackEvent = jest.fn();
-analytics.sendPageEvent = jest.fn();
-auth.getAuthService = jest.fn();
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthService: jest.fn(),
+}));
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 const IntlLoginPage = injectIntl(LoginPage);
@@ -682,7 +682,7 @@ describe('LoginPage', () => {
 
   it('should send page event when login page is rendered', () => {
     mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(analytics.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
   });
 
   it('tests that form is only scrollable on form submission', () => {
