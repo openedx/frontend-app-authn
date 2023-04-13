@@ -232,13 +232,6 @@ class LoginPage extends React.Component {
     }
     if (this.props.loginResult.success) {
       setSurveyCookie('login');
-
-      // Fire optimizely events
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: 'authn-login-coversion',
-      });
     }
 
     return (
