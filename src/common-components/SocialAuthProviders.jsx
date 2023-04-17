@@ -2,7 +2,8 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { Icon } from '@edx/paragon';
+import { Login } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
@@ -36,9 +37,11 @@ const SocialAuthProviders = (props) => {
       )
         : (
           <div className="font-container" aria-hidden="true">
-            <FontAwesomeIcon
-              icon={SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? ['fab', provider.iconClass] : faSignInAlt}
-            />
+            {SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? (
+              <FontAwesomeIcon icon={['fab', provider.iconClass]} />)
+              : (
+                <Icon className="h-75" src={Login} />
+              )}
           </div>
         )}
       <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>

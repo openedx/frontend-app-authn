@@ -4,8 +4,9 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Button, Form,
+  Icon,
 } from '@edx/paragon';
-import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { Login } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 
@@ -54,9 +55,11 @@ const EnterpriseSSO = (props) => {
                   : (
                     <>
                       <div className="font-container" aria-hidden="true">
-                        <FontAwesomeIcon
-                          icon={SUPPORTED_ICON_CLASSES.includes(tpaProvider.iconClass) ? ['fab', tpaProvider.iconClass] : faSignInAlt}
-                        />
+                        {SUPPORTED_ICON_CLASSES.includes(tpaProvider.iconClass) ? (
+                          <FontAwesomeIcon icon={['fab', tpaProvider.iconClass]} />)
+                          : (
+                            <Icon className="h-75" src={Login} />
+                          )}
                       </div>
                       <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
                     </>
