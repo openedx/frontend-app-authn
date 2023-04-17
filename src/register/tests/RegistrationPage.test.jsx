@@ -346,6 +346,15 @@ describe('RegistrationPage', () => {
 
       expect(registrationPage.find('#email-warning').text()).toEqual('Did you mean: john@hotmail.com?');
     });
+    it('should click on email suggestions for common service provider domain typos', () => {
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      registrationPage.find('input#email').simulate('change', { target: { value: 'john@yopmail.com', name: 'email' } });
+      registrationPage.find('input#email').simulate('blur');
+      registrationPage.find('.email-warning-alert-link').first().simulate('click');
+      expect(registrationPage.find('input#email').props().value).toEqual('john@hotmail.com');
+    });
 
     it('should give error for common top level domain mistakes', () => {
       store.dispatch = jest.fn(store.dispatch);
@@ -384,7 +393,32 @@ describe('RegistrationPage', () => {
 
       expect(registrationPage.find('input#username').prop('value')).toEqual('test-user');
     });
+    it('should remove extra character if username is more than 30 character long', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#username').simulate('change', { target: { value: 'why_this_is_not_valid_username_', name: 'username' } });
 
+      expect(registrationPage.find('input#username').prop('value')).toEqual('');
+    });
+
+    it('should give error with suggestion for common top level domain mistakes', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#email').simulate('change', { target: { value: 'ahtesham@hotmail', name: 'email' } });
+      registrationPage.find('input#email').simulate('blur');
+
+      const receievedMessage = 'Did you mean ahtesham@hotmail.com?';
+      expect(registrationPage.find('.alert-text').text()).toEqual(receievedMessage);
+    });
+
+    it('should call backend validation api for password validation', () => {
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#password').simulate('change', { target: { value: 'aziz194@', name: 'password' } });
+      registrationPage.find('input#password').simulate('blur');
+
+      expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({
+        form_field_key: 'password', email: '', name: '', username: '', password: 'aziz194@',
+      }));
+    });
     // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {
@@ -642,6 +676,25 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
       expect(registrationPage.find('button.username-suggestion').length).toEqual(3);
+    });
+
+    it('should click on username suggestions when full name is populated', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
+          registrationFormData: {
+            ...registrationFormData,
+            username: ' ',
+          },
+        },
+      });
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
+      registrationPage.find('.username-suggestion').first().simulate('click');
+      expect(registrationPage.find('input#username').props().value).toEqual('test_1');
     });
 
     it('should clear username suggestions when close icon is clicked', () => {
@@ -1110,7 +1163,6 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#email').simulate('change', { target: { value: 'test1@gmail.com', name: 'email' } });
       registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
-
       expect(registrationPage.find('div#confirm_email-error').text()).toEqual('The email addresses do not match.');
     });
 
