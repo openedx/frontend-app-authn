@@ -13,7 +13,9 @@ import { Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
-import { AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
+import {
+  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
+} from '../../data/constants';
 import {
   backupRegistrationFormBegin,
   clearUsernameSuggestions,
@@ -131,7 +133,7 @@ describe('RegistrationPage', () => {
   const ssoProvider = {
     id: 'oa2-apple-id',
     name: 'Apple',
-    iconClass: null,
+    iconClass: 'apple',
     iconImage: 'https://openedx.devstack.lms/logo.png',
     loginUrl: '/auth/login/apple-id/?auth_entry=login&next=/dashboard',
   };
@@ -856,12 +858,33 @@ describe('RegistrationPage', () => {
       });
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat('/login'), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+      window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
       expect(registrationPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
+    });
+
+    it('should render icon if icon classes are missing in providers', () => {
+      ssoProvider.iconClass = null;
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            providers: [ssoProvider],
+          },
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
+        },
+      });
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      expect(registrationPage.find(`button#${ssoProvider.id}`).find('div').find('span').hasClass('pgn__icon')).toEqual(true);
     });
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
@@ -879,7 +902,7 @@ describe('RegistrationPage', () => {
       });
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat('/register'), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
       secondaryProviders.iconImage = null;
 
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
@@ -901,7 +924,7 @@ describe('RegistrationPage', () => {
       });
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat('/login'), search: '?next=/dashboard&tpa_hint=invalid' };
+      window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
       ssoProvider.iconImage = null;
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
