@@ -48,6 +48,5 @@ module.exports = createConfig('eslint', {
       },
     ],
     'function-paren-newline': 'off',
-    'import/no-cycle': 'off',
   },
 });
