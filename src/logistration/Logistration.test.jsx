@@ -8,11 +8,11 @@ import { mount } from 'enzyme';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { COMPLETE_STATE, LOGIN_PAGE } from '../../data/constants';
-import { backupRegistrationForm } from '../../register/data/actions';
-import { clearThirdPartyAuthContextErrorMessage } from '../data/actions';
-import { RenderInstitutionButton } from '../InstitutionLogistration';
-import Logistration from '../Logistration';
+import Logistration from './Logistration';
+import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
+import { RenderInstitutionButton } from '../common-components/InstitutionLogistration';
+import { COMPLETE_STATE, LOGIN_PAGE } from '../data/constants';
+import { backupRegistrationForm } from '../register/data/actions';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
