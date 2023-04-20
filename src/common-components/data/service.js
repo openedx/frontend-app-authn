@@ -18,9 +18,9 @@ export async function getThirdPartyAuthContext(urlParams) {
       throw (e);
     });
   return {
-    fieldDescriptions: data.registration_fields || {},
-    optionalFields: data.optional_fields || {},
-    thirdPartyAuthContext: camelCaseObject(
+    fieldDescriptions: data.registrationFields || data.registration_fields || {},
+    optionalFields: data.optionalFields || data.optional_fields || {},
+    thirdPartyAuthContext: data.contextData || camelCaseObject(
       convertKeyNames(data.context_data, { fullname: 'name' }),
     ),
   };

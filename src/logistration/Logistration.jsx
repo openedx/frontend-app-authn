@@ -14,12 +14,12 @@ import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { clearThirdPartyAuthContextErrorMessage } from './data/actions';
+import { BaseComponent } from '../base-component';
+import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   tpaProvidersSelector,
-} from './data/selectors';
-import messages from './messages';
-import { BaseComponent } from '../base-component';
+} from '../common-components/data/selectors';
+import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
 import { LoginPage } from '../login';
