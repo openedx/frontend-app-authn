@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
-  Logistration, NotFoundPage, registerIcons, UnAuthOnlyRoute, Zendesk,
+  NotFoundPage, registerIcons, UnAuthOnlyRoute, Zendesk,
 } from './common-components';
 import configureStore from './data/configureStore';
 import {
@@ -20,6 +20,7 @@ import {
 } from './data/constants';
 import { updatePathWithQueryParams } from './data/utils';
 import { ForgotPasswordPage } from './forgot-password';
+import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RecommendationsPage } from './recommendations';
 import { ResetPasswordPage } from './reset-password';

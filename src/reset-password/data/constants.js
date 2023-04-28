@@ -6,6 +6,7 @@ export const TOKEN_STATE = {
 // password reset error codes
 export const FORM_SUBMISSION_ERROR = 'form-submission-error';
 export const PASSWORD_RESET_ERROR = 'password-reset-error';
+export const SUCCESS = 'success';
 export const PASSWORD_VALIDATION_ERROR = 'password-validation-failure';
 
 export const PASSWORD_RESET = {
