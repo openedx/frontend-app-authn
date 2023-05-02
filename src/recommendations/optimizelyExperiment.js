@@ -12,9 +12,9 @@ export const eventNames = {
   * Activate the post registration recommendations optimizely experiment
   * and return the true if the user is in variation else false.
   * @param  {String} userId  user id of authenticated user.
-  * @return {string} true if the user is in variation else false
+  * @return {string} variation the user belong in
 */
-const activateRecommendationsExperiment = (userId) => optimizelyInstance.activate(RECOMMENDATIONS_EXP_KEY, userId);
+const activateRecommendationsExperiment = (userId) => optimizelyInstance?.activate(RECOMMENDATIONS_EXP_KEY, userId);
 
 /**
   * Fire an optimizely track event for post registration recommended course card clicked.
@@ -22,7 +22,7 @@ const activateRecommendationsExperiment = (userId) => optimizelyInstance.activat
   * @param  {Object} userAttributes Dictionary of user attributes (optional).
 */
 const trackRecommendationCardClickOptimizely = (userId, userAttributes = {}) => {
-  optimizelyInstance.track(eventNames.recommendedCourseClicked, userId, userAttributes);
+  optimizelyInstance?.track(eventNames.recommendedCourseClicked, userId, userAttributes);
 };
 
 /**
@@ -31,7 +31,7 @@ const trackRecommendationCardClickOptimizely = (userId, userAttributes = {}) => 
   * @param  {Object} userAttributes Dictionary of user attributes (optional).
 */
 const trackRecommendationViewedOptimizely = (userId, userAttributes = {}) => {
-  optimizelyInstance.track(eventNames.recommendationsViewed, userId, userAttributes);
+  optimizelyInstance?.track(eventNames.recommendationsViewed, userId, userAttributes);
 };
 
 export {

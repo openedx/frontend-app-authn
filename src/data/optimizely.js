@@ -4,8 +4,14 @@ import {
 
 const OPTIMIZELY_SDK_KEY = process.env.OPTIMIZELY_FULL_STACK_SDK_KEY;
 
-const optimizely = createInstance({
-  sdkKey: OPTIMIZELY_SDK_KEY,
-});
+const getOptimizelyInstance = () => {
+  if (OPTIMIZELY_SDK_KEY) {
+    return createInstance({
+      sdkKey: OPTIMIZELY_SDK_KEY,
+    });
+  }
 
-export default optimizely;
+  return null;
+};
+
+export default getOptimizelyInstance();
