@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
@@ -945,11 +944,6 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationFormBegin({ ...registrationFormData }));
-    });
-
-    it('should render cookie banner', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find(<CookiePolicyBanner />)).toBeTruthy();
     });
 
     it('should send page event when register page is rendered', () => {

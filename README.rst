@@ -112,9 +112,6 @@ The authentication micro-frontend also requires the following additional variabl
      - Name of MFE, this will be used by the API to get runtime configurations for the specific micro frontend. For a frontend repo `frontend-app-appName`, use `appName` as APP_ID.
      - ``authn`` | ``''``
 
-   * - ``ENABLE_COOKIE_POLICY_BANNER``
-     - Enables support for displaying the cookies acceptance banner.
-     - ``true`` | ``''`` (empty strings are falsy)     
 
 edX-specific Environment Variables
 **********************************
