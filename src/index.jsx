@@ -8,10 +8,9 @@ import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
 } from '@edx/frontend-platform';
 import { ErrorPage } from '@edx/frontend-platform/react';
-import { messages as paragonMessages } from '@edx/paragon';
 
 import configuration from './config';
-import appMessages from './i18n';
+import messages from './i18n';
 import MainApp from './MainApp';
 
 subscribe(APP_READY, () => {
@@ -31,8 +30,5 @@ initialize({
       mergeConfig(configuration);
     },
   },
-  messages: [
-    appMessages,
-    paragonMessages,
-  ],
+  messages,
 });
