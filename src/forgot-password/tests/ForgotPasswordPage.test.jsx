@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { mergeConfig } from '@edx/frontend-platform';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
@@ -193,11 +192,6 @@ describe('ForgotPasswordPage', () => {
     const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     forgotPasswordPage.update();
     expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
-  });
-
-  it('check cookie rendered', () => {
-    const forgotPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(forgotPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
   it('should display success message after email is sent', () => {

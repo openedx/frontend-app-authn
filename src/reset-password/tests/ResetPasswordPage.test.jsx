@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import CookiePolicyBanner from '@edx/frontend-component-cookie-policy-banner';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 import { createMemoryHistory } from 'history';
@@ -216,11 +215,6 @@ describe('ResetPasswordPage', () => {
       </Router>,
     ));
     expect(history.location.pathname).toEqual('/login');
-  });
-
-  it('check cookie rendered', () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find(<CookiePolicyBanner />)).toBeTruthy();
   });
 
   it('show spinner during token validation', () => {

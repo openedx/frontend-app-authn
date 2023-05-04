@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
-    "@edx/frontend-component-cookie-policy-banner": "2.2.2",
     "@edx/frontend-platform": "4.2.0",
     "@edx/paragon": "20.33.0",
     "@fortawesome/fontawesome-svg-core": "6.4.0",
