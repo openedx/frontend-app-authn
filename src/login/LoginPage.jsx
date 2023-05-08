@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
+import AccountActivationMessage from './AccountActivationMessage';
 import {
   backupLoginFormBegin,
   dismissPasswordResetBanner,
@@ -76,6 +77,13 @@ const LoginPage = (props) => {
       setErrorCode(prevState => ({ type: loginErrorCode, count: prevState.count + 1 }));
     }
   }, [loginErrorCode]);
+
+  useEffect(() => {
+    if (loginResult.success) {
+      // TODO: Do we still need this cookie?
+      setSurveyCookie('login');
+    }
+  }, [loginResult]);
 
   const validateFormFields = (payload) => {
     const { emailOrUsername, password } = payload;

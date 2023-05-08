@@ -167,7 +167,6 @@ const LoginFailureMessage = (props) => {
       break;
     case NUDGE_PASSWORD_CHANGE:
       // Need to clear the CSRF token here to fetch a new one because token is already rotated after successful login.
-      const authService = getAuthService();
       if (authService) {
         authService.getCsrfTokenService().clearCsrfTokenCache();
       }
@@ -206,7 +205,6 @@ const LoginFailureMessage = (props) => {
 
 LoginFailureMessage.defaultProps = {
   context: {},
-  errorCode: null,
 };
 
 LoginFailureMessage.propTypes = {
