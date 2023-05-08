@@ -54,13 +54,13 @@ const ConfigurableRegistrationForm = (props) => {
   });
 
   const handleOnChange = (event, countryValue = null) => {
-    const { name, type } = event.target;
+    const { name } = event.target;
     let value;
     if (countryValue) {
       value = { ...countryValue };
     } else {
       value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-      if (type === 'checkbox') {
+      if (event.target.type === 'checkbox') {
         setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
       }
     }
