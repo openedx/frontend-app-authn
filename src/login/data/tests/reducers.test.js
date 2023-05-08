@@ -1,57 +1,20 @@
-import {
-  LOGIN_PERSIST_FORM_DATA, LOGIN_REMOVE_PASSWORD_RESET_BANNER,
-} from '../actions';
+import { DISMISS_PASSWORD_RESET_BANNER } from '../actions';
 import reducer from '../reducers';
 
 describe('login reducer', () => {
-  it('should set loginFormData', () => {
+  it('should update state to dismiss reset password banner', () => {
     const state = {
-      loginFormData: {
-        password: '',
-        emailOrUsername: '',
-        errors: {
-          emailOrUsername: '',
-          password: '',
-        },
-      },
-      resetPassword: false,
-    };
-    const formData = {
-      password: 'johndoe',
-      emailOrUsername: 'john@gmail.com',
+      showResetPasswordSuccessBanner: true,
     };
     const action = {
-      type: LOGIN_PERSIST_FORM_DATA,
-      payload: { formData },
+      type: DISMISS_PASSWORD_RESET_BANNER,
     };
 
     expect(
       reducer(state, action),
     ).toEqual(
       {
-        loginFormData: {
-          ...state.loginFormData,
-          password: 'johndoe',
-          emailOrUsername: 'john@gmail.com',
-        },
-        resetPassword: false,
-      },
-    );
-  });
-
-  it('should set resetPassword', () => {
-    const state = {
-      resetPassword: true,
-    };
-    const action = {
-      type: LOGIN_REMOVE_PASSWORD_RESET_BANNER,
-    };
-
-    expect(
-      reducer(state, action),
-    ).toEqual(
-      {
-        resetPassword: false,
+        showResetPasswordSuccessBanner: false,
       },
     );
   });
