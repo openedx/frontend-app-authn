@@ -14,6 +14,16 @@ export const backupLoginFormBegin = (data) => ({
   payload: { ...data },
 });
 
+// Backup login form data
+export const backupLoginForm = () => ({
+  type: BACKUP_LOGIN_DATA.BASE,
+});
+
+export const backupLoginFormBegin = (data) => ({
+  type: BACKUP_LOGIN_DATA.BEGIN,
+  payload: { ...data },
+});
+
 // Login
 export const loginRequest = creds => ({
   type: LOGIN_REQUEST.BASE,

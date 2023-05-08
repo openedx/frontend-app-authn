@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
-import AccountActivationMessage from './AccountActivationMessage';
 import {
   backupLoginFormBegin,
   dismissPasswordResetBanner,
@@ -122,7 +121,6 @@ const LoginPage = (props) => {
     const { name } = event.target;
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
-
   const trackForgotPasswordLinkClick = () => {
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
