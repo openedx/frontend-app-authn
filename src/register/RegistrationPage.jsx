@@ -36,7 +36,6 @@ import {
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
-import ThirdPartyAuth from './ThirdPartyAuth';
 import {
   FormGroup, InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
 } from '../common-components';
@@ -45,6 +44,7 @@ import {
   fieldDescriptionSelector, optionalFieldsSelector, thirdPartyAuthContextSelector,
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
+import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
   COMPLETE_STATE,
   DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
