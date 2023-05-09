@@ -1,3 +1,5 @@
+import { messages as paragonMessages } from '@edx/paragon';
+
 import arMessages from './messages/ar.json';
 import deMessages from './messages/de.json';
 import dedeCAMessages from './messages/de_DE.json';
@@ -14,7 +16,7 @@ import ukMessages from './messages/uk.json';
 import zhcnMessages from './messages/zh_CN.json';
 // no need to import en messages-- they are in the defaultMessage field
 
-const messages = {
+const appMessages = {
   ar: arMessages,
   'es-419': es419Messages,
   fr: frMessages,
@@ -31,4 +33,7 @@ const messages = {
   'pt-pt': ptptCAMessages,
 };
 
-export default messages;
+export default [
+  paragonMessages,
+  appMessages,
+];
