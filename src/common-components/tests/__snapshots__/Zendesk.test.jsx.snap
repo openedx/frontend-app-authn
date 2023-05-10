@@ -20,6 +20,17 @@ exports[`Zendesk Help should match login page third party auth alert message sna
         },
       },
       "chat": Object {
+        "departments": Object {
+          "enabled": Array [
+            "account settings",
+            "billing and payments",
+            "certificates",
+            "deadlines",
+            "errors and technical issues",
+            "other",
+            "proctoring",
+          ],
+        },
         "suppress": false,
       },
       "contactForm": Object {

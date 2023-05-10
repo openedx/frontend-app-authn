@@ -16,6 +16,9 @@ const ZendeskHelp = () => {
       },
       chat: {
         suppress: false,
+        departments: {
+          enabled: ['account settings', 'billing and payments', 'certificates', 'deadlines', 'errors and technical issues', 'other', 'proctoring'],
+        },
       },
       contactForm: {
         ticketForms: [
