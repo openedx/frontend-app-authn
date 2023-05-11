@@ -78,13 +78,6 @@ const LoginPage = (props) => {
     }
   }, [loginErrorCode]);
 
-  useEffect(() => {
-    if (loginResult.success) {
-      // TODO: Do we still need this cookie?
-      setSurveyCookie('login');
-    }
-  }, [loginResult]);
-
   const validateFormFields = (payload) => {
     const { emailOrUsername, password } = payload;
     const fieldErrors = { ...errors };
@@ -130,7 +123,7 @@ const LoginPage = (props) => {
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
-  const handleForgotPasswordLinkClick = () => {
+  const trackForgotPasswordLinkClick = () => {
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
 
@@ -192,7 +185,7 @@ const LoginPage = (props) => {
             name="forgot-password"
             className="btn btn-link font-weight-500 text-body"
             to={updatePathWithQueryParams(RESET_PAGE)}
-            onClick={handleForgotPasswordLinkClick}
+            onClick={trackForgotPasswordLinkClick}
           >
             {formatMessage(messages['forgot.password'])}
           </Link>
