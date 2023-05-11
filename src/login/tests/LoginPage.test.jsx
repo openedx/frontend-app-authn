@@ -13,7 +13,7 @@ import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
 import {
-  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
+  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure,
 } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';
