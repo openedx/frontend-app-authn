@@ -173,6 +173,3 @@ export const DEFAULT_TOP_LEVEL_DOMAINS = [
 
 export const COUNTRY_CODE_KEY = 'code';
 export const COUNTRY_DISPLAY_KEY = 'name';
-
-export const EXPAND_MORE_ICON = 'expand-more';
-export const EXPAND_LESS_ICON = 'expand-less';
