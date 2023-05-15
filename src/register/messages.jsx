@@ -64,11 +64,6 @@ const messages = defineMessages({
     defaultMessage: 'Create an account for free',
     description: 'Label text for registration form submission button',
   },
-  'registration.other.options.heading': {
-    id: 'registration.other.options.heading',
-    defaultMessage: 'Or register with:',
-    description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
-  },
   // Institution login
   'register.institution.login.button': {
     id: 'register.institution.login.button',
