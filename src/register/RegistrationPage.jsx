@@ -28,11 +28,13 @@ import {
 import { getBackendValidations, isFormValid, prepareRegistrationPayload } from './data/utils';
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
+import RegistrationFailure from './RegistrationFailure';
 import {
   InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
+import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
   COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
