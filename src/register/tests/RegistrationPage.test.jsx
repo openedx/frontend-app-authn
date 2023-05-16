@@ -858,7 +858,6 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
-      ssoProvider.iconImage = null;
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
@@ -881,6 +880,7 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+      ssoProvider.iconImage = null;
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('div').find('span').hasClass('pgn__icon')).toEqual(true);
@@ -902,7 +902,6 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
-      secondaryProviders.iconImage = null;
 
       mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
@@ -924,7 +923,6 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
-      ssoProvider.iconImage = null;
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);

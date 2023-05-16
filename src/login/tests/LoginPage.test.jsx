@@ -569,7 +569,6 @@ describe('LoginPage', () => {
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
-    ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
@@ -617,7 +616,6 @@ describe('LoginPage', () => {
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
-    ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(`${ssoProvider.name}`);
@@ -642,7 +640,6 @@ describe('LoginPage', () => {
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
-    ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find('button#other-ways-to-sign-in').text()).toEqual('Show me other ways to sign in or register');
@@ -666,7 +663,6 @@ describe('LoginPage', () => {
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
-    ssoProvider.iconImage = null;
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
     expect(loginPage.find('button#other-ways-to-sign-in').text()).toEqual('Show me other ways to sign in');
