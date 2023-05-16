@@ -148,7 +148,7 @@ const ResetPasswordPage = (props) => {
     const { token } = props.match.params;
     if (token) {
       props.validateToken(token);
-      return <Spinner animation="border" variant="primary" className="centered-align-spinner" />;
+      return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
     return <Redirect to={updatePathWithQueryParams(RESET_PAGE)} />;
@@ -198,7 +198,7 @@ const ResetPasswordPage = (props) => {
                   name="submit-new-password"
                   type="submit"
                   variant="brand"
-                  className="stateful-button-width"
+                  className="reset-password--button"
                   state={props.status}
                   labels={{
                     default: formatMessage(messages['reset.password']),

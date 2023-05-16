@@ -127,7 +127,7 @@ const RecommendationsPage = (props) => {
           </div>
         )
           : (
-            <Spinner animation="border" variant="primary" className="centered-align-spinner" />
+            <Spinner animation="border" variant="primary" className="spinner--position-centered" />
           )}
       </div>
     </>

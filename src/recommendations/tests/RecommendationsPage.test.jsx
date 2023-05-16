@@ -112,7 +112,7 @@ describe('RecommendationsPageTests', () => {
     getPersonalizedRecommendations.mockImplementation(() => Promise.resolve(mockedResponse));
     await act(async () => {
       const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
-      expect(recommendationsPage.find('.centered-align-spinner').exists()).toBeTruthy();
+      expect(recommendationsPage.find('.spinner--position-centered').exists()).toBeTruthy();
     });
   });
 
