@@ -128,7 +128,7 @@ const LoginPage = (props) => {
 
     if (emailOrUsername === '') {
       fieldErrors.emailOrUsername = formatMessage(messages['email.validation.message']);
-    } else if (emailOrUsername < 3) {
+    } else if (emailOrUsername.length < 3) {
       fieldErrors.emailOrUsername = formatMessage(messages['username.or.email.format.validation.less.chars.message']);
     }
     if (password === '') {
@@ -229,6 +229,7 @@ const LoginPage = (props) => {
             name="password"
             value={formFields.password}
             autoComplete="off"
+            showScreenReaderText={false}
             showRequirements={false}
             handleChange={handleOnChange}
             handleFocus={handleOnFocus}

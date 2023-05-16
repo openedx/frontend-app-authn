@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
 import {
-  ENTERPRISE_LOGIN_URL, PENDING_STATE, REGISTER_PAGE,
+  ENTERPRISE_LOGIN_URL, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 
 import {
@@ -66,12 +66,15 @@ const ThirdPartyAuth = (props) => {
           {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
             <RenderInstitutionButton
               onSubmitHandler={handleInstitutionLogin}
-              buttonTitle={formatMessage(messages['register.institution.login.button'])}
+              buttonTitle={formatMessage(messages['institution.login.button'])}
             />
           )}
           {isSocialAuthActive && (
             <div className="row m-0">
-              <SocialAuthProviders socialAuthProviders={providers} referrer={REGISTER_PAGE} />
+              <SocialAuthProviders
+                socialAuthProviders={providers}
+                referrer={isLoginPage ? LOGIN_PAGE : REGISTER_PAGE}
+              />
             </div>
           )}
         </>

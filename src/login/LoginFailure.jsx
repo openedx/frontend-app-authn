@@ -39,7 +39,7 @@ const LoginFailureMessage = (props) => {
   if (!errorCode) {
     return null;
   }
-  
+
   let resetLink = (
     <Hyperlink destination="reset" isInline>
       {formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}

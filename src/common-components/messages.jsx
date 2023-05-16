@@ -117,8 +117,8 @@ const messages = defineMessages({
     defaultMessage: 'Or register with:',
     description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
   },
-  'register.institution.login.button': {
-    id: 'register.institution.login.button',
+  'institution.login.button': {
+    id: 'institution.login.button',
     defaultMessage: 'Institution/campus credentials',
     description: 'shows institutions list',
   },
