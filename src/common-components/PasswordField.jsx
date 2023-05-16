@@ -76,7 +76,7 @@ const PasswordField = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" className="form-text-size" hasIcon={false} feedback-for={props.name} type="invalid">
           {props.errorMessage}
-          <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>
+          {props.showScreenReaderText && <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>}
         </Form.Control.Feedback>
       )}
     </Form.Group>
@@ -90,6 +90,7 @@ PasswordField.defaultProps = {
   handleFocus: null,
   handleChange: () => {},
   showRequirements: true,
+  showScreenReaderText: true,
   autoComplete: null,
 };
 
@@ -104,6 +105,7 @@ PasswordField.propTypes = {
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
+  showScreenReaderText: PropTypes.bool,
 };
 
 export default PasswordField;

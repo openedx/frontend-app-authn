@@ -39,9 +39,8 @@ describe('LoginFailureMessage', () => {
 
   it('should match non compliant password error message', () => {
     props = {
-      loginError: {
-        errorCode: NON_COMPLIANT_PASSWORD_EXCEPTION,
-      },
+      errorCode: NON_COMPLIANT_PASSWORD_EXCEPTION,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -60,14 +59,13 @@ describe('LoginFailureMessage', () => {
 
   it('should match inactive user error message', () => {
     props = {
-      loginError: {
+      context: {
         email: 'text@example.com',
-        errorCode: INACTIVE_USER,
-        context: {
-          platformName: 'openedX',
-          supportLink: 'http://support.openedx.test',
-        },
+        platformName: 'openedX',
+        supportLink: 'http://support.openedx.test',
       },
+      errorCode: INACTIVE_USER,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -86,15 +84,14 @@ describe('LoginFailureMessage', () => {
 
   it('test match failed login attempt error', () => {
     props = {
-      loginError: {
+      context: {
         email: 'text@example.com',
-        errorCode: FAILED_LOGIN_ATTEMPT,
-        context: {
-          remainingAttempts: 3,
-          allowedFailureAttempts: 6,
-          resetLink: '/reset',
-        },
+        remainingAttempts: 3,
+        allowedFailureAttempts: 6,
+        resetLink: '/reset',
       },
+      errorCode: FAILED_LOGIN_ATTEMPT,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -110,14 +107,13 @@ describe('LoginFailureMessage', () => {
 
   it('test match failed login error first attempt', () => {
     props = {
-      loginError: {
+      context: {
         email: 'text@example.com',
-        errorCode: INCORRECT_EMAIL_PASSWORD,
-        context: {
-          failureCount: 1,
-          resetLink: '/reset',
-        },
+        failureCount: 1,
+        resetLink: '/reset',
       },
+      errorCode: INCORRECT_EMAIL_PASSWORD,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -132,14 +128,13 @@ describe('LoginFailureMessage', () => {
 
   it('test match failed login error second attempt', () => {
     props = {
-      loginError: {
+      context: {
         email: 'text@example.com',
-        errorCode: INCORRECT_EMAIL_PASSWORD,
-        context: {
-          failureCount: 2,
-          resetLink: '/reset',
-        },
+        failureCount: 2,
+        resetLink: '/reset',
       },
+      errorCode: INCORRECT_EMAIL_PASSWORD,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -154,9 +149,8 @@ describe('LoginFailureMessage', () => {
 
   it('should match rate limit error message', () => {
     props = {
-      loginError: {
-        errorCode: FORBIDDEN_REQUEST,
-      },
+      errorCode: FORBIDDEN_REQUEST,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -171,9 +165,8 @@ describe('LoginFailureMessage', () => {
 
   it('should match internal server error message', () => {
     props = {
-      loginError: {
-        errorCode: INTERNAL_SERVER_ERROR,
-      },
+      errorCode: INTERNAL_SERVER_ERROR,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -188,9 +181,8 @@ describe('LoginFailureMessage', () => {
 
   it('should match invalid form error message', () => {
     props = {
-      loginError: {
-        errorCode: INVALID_FORM,
-      },
+      errorCode: INVALID_FORM,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -205,9 +197,8 @@ describe('LoginFailureMessage', () => {
 
   it('should match internal server of error message', () => {
     props = {
-      loginError: {
-        errorCode: 'invalid-error-code',
-      },
+      errorCode: 'invalid-error-code',
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -222,12 +213,11 @@ describe('LoginFailureMessage', () => {
 
   it('should match tpa authentication failed error message', () => {
     props = {
-      loginError: {
-        errorCode: TPA_AUTHENTICATION_FAILURE,
-        context: {
-          errorMessage: 'An error occured',
-        },
+      context: {
+        errorMessage: 'An error occurred during TPA workflow.',
       },
+      errorCode: TPA_AUTHENTICATION_FAILURE,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -239,14 +229,13 @@ describe('LoginFailureMessage', () => {
     const expectedMessageSubstring = 'We are sorry, you are not authorized to access';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain(expectedMessageSubstring);
-    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain('An error occured');
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain('An error occurred during TPA workflow.');
   });
 
   it('should show modal that nudges users to change password', () => {
     props = {
-      loginError: {
-        errorCode: NUDGE_PASSWORD_CHANGE,
-      },
+      errorCode: NUDGE_PASSWORD_CHANGE,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -266,9 +255,8 @@ describe('LoginFailureMessage', () => {
 
   it('should show modal that requires users to change password', () => {
     props = {
-      loginError: {
-        errorCode: REQUIRE_PASSWORD_CHANGE,
-      },
+      errorCode: REQUIRE_PASSWORD_CHANGE,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(
@@ -288,15 +276,14 @@ describe('LoginFailureMessage', () => {
 
   it('should show message if staff user try to login through password', () => {
     props = {
-      loginError: {
+      context: {
         email: 'text@example.com',
-        errorCode: ALLOWED_DOMAIN_LOGIN_ERROR,
-        context: {
-          allowedDomain: 'test.com',
-          provider: 'Google',
-          tpaHint: 'google-auth2',
-        },
+        allowedDomain: 'test.com',
+        provider: 'Google',
+        tpaHint: 'google-auth2',
       },
+      errorCode: ALLOWED_DOMAIN_LOGIN_ERROR,
+      failureCount: 0,
     };
 
     const loginFailureMessage = mount(

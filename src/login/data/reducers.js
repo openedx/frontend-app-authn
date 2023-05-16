@@ -46,7 +46,7 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         loginResult: action.payload,
       };
-    case LOGIN_REQUEST.FAILURE:
+    case LOGIN_REQUEST.FAILURE: {
       const { email, loginError, redirectUrl } = action.payload;
       return {
         ...state,
@@ -54,6 +54,7 @@ const reducer = (state = defaultState, action = {}) => {
         loginErrorContext: { ...loginError.context, email, redirectUrl },
         submitState: DEFAULT_STATE,
       };
+    }
     case RESET_PASSWORD.SUCCESS:
       return {
         ...state,

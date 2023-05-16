@@ -65,11 +65,6 @@ const messages = defineMessages({
     description: 'Label text for registration form submission button',
   },
   // Institution login
-  'register.institution.login.button': {
-    id: 'register.institution.login.button',
-    defaultMessage: 'Institution/campus credentials',
-    description: 'shows institutions list',
-  },
   'register.institution.login.page.title': {
     id: 'register.institution.login.page.title',
     defaultMessage: 'Register with institution/campus credentials',

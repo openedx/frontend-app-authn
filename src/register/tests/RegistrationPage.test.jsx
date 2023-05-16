@@ -420,6 +420,7 @@ describe('RegistrationPage', () => {
         form_field_key: 'password', email: '', name: '', username: '', password: 'aziz194@',
       }));
     });
+
     // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {
