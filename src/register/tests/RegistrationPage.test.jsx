@@ -353,7 +353,7 @@ describe('RegistrationPage', () => {
 
       registrationPage.find('input#email').simulate('change', { target: { value: 'john@yopmail.com', name: 'email' } });
       registrationPage.find('input#email').simulate('blur');
-      registrationPage.find('.email-warning-alert-link').first().simulate('click');
+      registrationPage.find('.email-suggestion-alert-warning').first().simulate('click');
       expect(registrationPage.find('input#email').props().value).toEqual('john@hotmail.com');
     });
 
@@ -407,7 +407,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#email').simulate('blur');
 
       const receievedMessage = 'Did you mean ahtesham@hotmail.com?';
-      expect(registrationPage.find('.alert-text').text()).toEqual(receievedMessage);
+      expect(registrationPage.find('.email-suggestion__text').text()).toEqual(receievedMessage);
     });
 
     it('should call backend validation api for password validation', () => {
@@ -559,7 +559,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('div.opt-checkbox').length).toEqual(1);
+      expect(registrationPage.find('div.form-field--checkbox').length).toEqual(1);
 
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
@@ -657,7 +657,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button.username-suggestion').length).toEqual(3);
+      expect(registrationPage.find('button.username-suggestions--chip').length).toEqual(3);
     });
 
     it('should show username suggestions when full name is populated', () => {
@@ -676,7 +676,7 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
-      expect(registrationPage.find('button.username-suggestion').length).toEqual(3);
+      expect(registrationPage.find('button.username-suggestions--chip').length).toEqual(3);
     });
 
     it('should click on username suggestions when full name is populated', () => {
@@ -694,7 +694,7 @@ describe('RegistrationPage', () => {
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registrationPage.find('.username-suggestion').first().simulate('click');
+      registrationPage.find('.username-suggestions--chip').first().simulate('click');
       expect(registrationPage.find('input#username').props().value).toEqual('test_1');
     });
 
@@ -714,7 +714,7 @@ describe('RegistrationPage', () => {
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registrationPage.find('button.suggested-username-close-button').at(0).simulate('click');
+      registrationPage.find('button.username-suggestions__close__button').at(0).simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
@@ -1032,7 +1032,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('input#username').props().value).toEqual('john_doe');
       expect(registrationPage.find('input#email').props().value).toEqual('john.doe@yopmail.com');
       expect(registrationPage.find('input#password').props().value).toEqual('password1');
-      expect(registrationPage.find('.email-warning-alert-link').first().text()).toEqual('john.doe@hotmail.com');
+      expect(registrationPage.find('.email-suggestion-alert-warning').first().text()).toEqual('john.doe@hotmail.com');
     });
 
     it('should set country in component state when form is translated used i18n', () => {
