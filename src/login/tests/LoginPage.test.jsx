@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
@@ -784,7 +784,6 @@ describe('LoginPage', () => {
 
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   });
-
 
   it('should backup the login form state when shouldBackupState is true', () => {
     store = mockStore({

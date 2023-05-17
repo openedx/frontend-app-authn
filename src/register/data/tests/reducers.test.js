@@ -65,6 +65,7 @@ describe('Registration Reducer Tests', () => {
       },
     );
   });
+
   it('should set redirect url dashboard on registration success action', () => {
     const payload = {
       redirectUrl: `${getConfig().BASE_URL}${DEFAULT_REDIRECT_URL}`,
