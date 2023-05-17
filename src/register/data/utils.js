@@ -97,7 +97,8 @@ export function validateCountryField(value, countryList, errorMessage) {
     // evaluated and set its value as a valid value.
     const selectedCountry = countryList.find(
       (country) => (
-        // When translations are applied, extra space added in country value, so we should trim that.
+        // When translations apply extra space added in country value so we should
+        // trim that.
         country[COUNTRY_DISPLAY_KEY].toLowerCase().trim() === normalizedValue
         || country[COUNTRY_CODE_KEY].toLowerCase().trim() === normalizedValue
       ),

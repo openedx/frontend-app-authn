@@ -121,8 +121,8 @@ describe('RegistrationPage', () => {
     registrationPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
     registrationPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
 
-    registrationPage.find('input[name="country"]').simulate('change', { target: { value: payload.country, name: 'country' } });
-    registrationPage.find('input[name="country"]').simulate('blur', { target: { value: payload.country, name: 'country' } });
+    registrationPage.find('input#country').simulate('change', { target: { value: payload.country, name: 'country' } });
+    registrationPage.find('input#country').simulate('blur', { target: { value: payload.country, name: 'country' } });
 
     if (!isThirdPartyAuth) {
       registrationPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
@@ -307,7 +307,7 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#password').simulate('blur', { target: { value: '', name: 'password' } });
       expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
 
-      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
+      registrationPage.find('input#country').simulate('blur', { target: { value: '', name: 'country' } });
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
     });
 
@@ -332,7 +332,7 @@ describe('RegistrationPage', () => {
 
     it('should run validations for focused field on form submission', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input[name="country"]').simulate('focus');
+      registrationPage.find('input#country').simulate('focus');
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
@@ -443,7 +443,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="password"]').exists()).toBeFalsy();
 
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(emptyFieldValidation.country);
-      registrationPage.find('input[name="country"]').simulate('focus');
+      registrationPage.find('input#country').simulate('focus');
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
 
@@ -988,7 +988,7 @@ describe('RegistrationPage', () => {
       });
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('input[name="country"]').props().value).toEqual('Pakistan');
+      expect(registrationPage.find('input#country').props().value).toEqual('Pakistan');
     });
 
     it('should display error message based on the error code returned by API', () => {
@@ -1041,7 +1041,7 @@ describe('RegistrationPage', () => {
       getLocale.mockImplementation(() => ('ar-ae'));
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      registrationPage.find('input[name="country"]').simulate('click');
+      registrationPage.find('input#country').simulate('focus');
       registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'أفغانستان ', name: 'countryItem' } });
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
@@ -1063,6 +1063,18 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} {...clearBackendError} />));
       registrationPage.find('input#email').simulate('change', { target: { value: 'a@gmail.com', name: 'email' } });
       expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeFalsy();
+    });
+
+    it('should set country in component state when form is translated using browser translations', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+
+      store.dispatch = jest.fn(store.dispatch);
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input#country').simulate('focus');
+      registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: undefined, name: undefined, parentElement: { parentElement: { value: 'Afghanistan' } } } });
+      expect(registrationPage.find('input#country').props().value).toEqual('Afghanistan');
+      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
   });
 
@@ -1092,7 +1104,6 @@ describe('RegistrationPage', () => {
     });
 
     it('should submit form with fields returned by backend in payload', () => {
-      getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       store = mockStore({
         ...initialState,
@@ -1191,6 +1202,16 @@ describe('RegistrationPage', () => {
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
+    });
+
+    it('should not remove errors from form fields when country is selected by clicking on expand button', () => {
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
+
+      registrationPage.find('button[name="countryExpand"]').simulate('click');
+      registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'Pakistan', name: 'countryItem' } });
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
     });
 
     it('should check TOS and honor code fields if they exist when auto submitting register form', () => {
