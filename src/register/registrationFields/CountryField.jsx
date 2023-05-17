@@ -15,6 +15,14 @@ const CountryField = (props) => {
     if (props.onBlurHandler) { props.onBlurHandler({ target: { name: 'country', value } }); }
   };
 
+  const onBlurHandler = (event) => {
+    // Do not run validations when drop-down arrow is clicked
+    if (event.relatedTarget && event.relatedTarget.className.includes('pgn__form-autosuggest__icon-button')) {
+      return;
+    }
+    if (props.onBlurHandler) { props.onBlurHandler(event); }
+  };
+
   const onFocusHandler = (event) => {
     if (props.onFocusHandler) { props.onFocusHandler(event); }
   };
@@ -40,7 +48,7 @@ const CountryField = (props) => {
         value={selectedCountry.displayValue || ''}
         onSelected={(value) => handleSelected(value)}
         onFocus={(e) => onFocusHandler(e)}
-        onBlur={(e) => handleSelected(e.target.value)}
+        onBlur={(e) => onBlurHandler(e)}
         onChange={(value) => onChangeHandler(value)}
       >
         {getCountryList()}
