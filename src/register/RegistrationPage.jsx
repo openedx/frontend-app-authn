@@ -190,25 +190,27 @@ const RegistrationPage = (props) => {
   }, [registrationErrorCode]);
 
   useEffect(() => {
-    let countryCode = '';
-    let countryDisplayValue = '';
+    if (backendCountryCode && backendCountryCode !== configurableFormFields?.country?.countryCode) {
+      let countryCode = '';
+      let countryDisplayValue = '';
 
-    const selectedCountry = countryList.find(
-      (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
-    );
-    if (selectedCountry) {
-      countryCode = selectedCountry[COUNTRY_CODE_KEY];
-      countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
-    }
-    setConfigurableFormFields(prevState => (
-      {
-        ...prevState,
-        country: {
-          countryCode, displayValue: countryDisplayValue,
-        },
+      const selectedCountry = countryList.find(
+        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
+      );
+      if (selectedCountry) {
+        countryCode = selectedCountry[COUNTRY_CODE_KEY];
+        countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
       }
-    ));
-  }, [backendCountryCode, countryList]);
+      setConfigurableFormFields(prevState => (
+        {
+          ...prevState,
+          country: {
+            countryCode, displayValue: countryDisplayValue,
+          },
+        }
+      ));
+    }
+  }, [backendCountryCode, configurableFormFields.country, countryList]);
 
   /**
    * We need to remove the placeholder from the field, adding a space will do that.
