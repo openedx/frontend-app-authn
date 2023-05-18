@@ -162,7 +162,7 @@ describe('ProgressiveProfilingTests', () => {
   it('should send analytic event for support link click', async () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
 
-    progressiveProfilingPage.find('.progressive-profiling-support a[target="_blank"]').simulate('click');
+    progressiveProfilingPage.find('.pp-page__support-link a[target="_blank"]').simulate('click');
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
   });
 

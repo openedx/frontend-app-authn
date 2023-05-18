@@ -1,4 +1,4 @@
-.card-list {
+.recommendations-container__card-list {
   padding-left: 0.0625rem;
   padding-bottom: 0.125rem;
   @include media-breakpoint-down(xl) {
@@ -6,7 +6,7 @@
     overflow-y: hidden;
   }
 }
-.recommendations-heading {
+.recommendations-container__heading {
   overflow-wrap: break-word;
 }
 
@@ -59,7 +59,7 @@
     position: absolute;
     padding-bottom: 1rem !important;
   }
-  .footer-text{
+  .pgn__card__footer-text{
     font-weight: 400;
     font-size: 	0.75rem;
     line-height: 1.25rem;

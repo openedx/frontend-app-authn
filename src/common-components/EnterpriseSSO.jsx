@@ -48,13 +48,13 @@ const EnterpriseSSO = (props) => {
               >
                 {tpaProvider.iconImage ? (
                   <div aria-hidden="true">
-                    <img className="icon-image" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
+                    <img className="btn-tpa__image-icon" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
                     <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
                   </div>
                 )
                   : (
                     <>
-                      <div className="font-container" aria-hidden="true">
+                      <div className="btn-tpa__font-container" aria-hidden="true">
                         {SUPPORTED_ICON_CLASSES.includes(tpaProvider.iconClass) ? (
                           <FontAwesomeIcon icon={['fab', tpaProvider.iconClass]} />)
                           : (
