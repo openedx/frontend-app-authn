@@ -2,6 +2,7 @@
 @import "_base_component.scss";
 @import "_registration.scss";
 @import "_recommendations_page.scss";
+@import "_reset_password.scss";
 //
 // ----------------------------
 // #COLORS
@@ -26,7 +27,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   min-width: 6rem;
 }
 
-.centered-align-spinner {
+.spinner--position-centered {
   left: 0;
   right: 0;
   bottom: 0;
@@ -42,10 +43,6 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
 .welcome-page-content {
   min-width: 464px !important;
-}
-
-.stateful-button-width {
-  width: 12rem;
 }
 
 .login-button-width {
