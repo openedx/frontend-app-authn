@@ -1326,5 +1326,16 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div.alert-heading').length).toEqual(1);
       expect(registrationPage.find('div.alert').first().text()).toContain('An error occured');
     });
+
+    it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      registrationPage.find('input[name="country"]').simulate('blur', {
+        target: { value: '', name: 'country' },
+        relatedTarget: { type: 'button', className: 'btn-icon pgn__form-autosuggest__icon-button' },
+      });
+      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
+    });
   });
 });
