@@ -32,11 +32,11 @@ const SocialAuthProviders = (props) => {
     >
       {provider.iconImage ? (
         <div aria-hidden="true">
-          <img className="icon-image" src={provider.iconImage} alt={`icon ${provider.name}`} />
+          <img className="btn-tpa__image-icon" src={provider.iconImage} alt={`icon ${provider.name}`} />
         </div>
       )
         : (
-          <div className="font-container" aria-hidden="true">
+          <div className="btn-tpa__font-container" aria-hidden="true">
             {SUPPORTED_ICON_CLASSES.includes(provider.iconClass) ? (
               <FontAwesomeIcon icon={['fab', provider.iconClass]} />)
               : (

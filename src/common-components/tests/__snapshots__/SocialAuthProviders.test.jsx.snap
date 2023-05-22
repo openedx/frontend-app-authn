@@ -10,7 +10,7 @@ exports[`SocialAuthProviders should match social auth provider with default icon
 >
   <div
     aria-hidden="true"
-    className="font-container"
+    className="btn-tpa__font-container"
   >
     <span
       className="pgn__icon h-75"
@@ -57,7 +57,7 @@ exports[`SocialAuthProviders should match social auth provider with iconClass sn
 >
   <div
     aria-hidden="true"
-    className="font-container"
+    className="btn-tpa__font-container"
   >
     <svg
       aria-hidden="true"
@@ -106,7 +106,7 @@ Array [
     >
       <img
         alt="icon Apple"
-        className="icon-image"
+        className="btn-tpa__image-icon"
         src="https://edx.devstack.lms/logo.png"
       />
     </div>
@@ -135,7 +135,7 @@ Array [
     >
       <img
         alt="icon Facebook"
-        className="icon-image"
+        className="btn-tpa__image-icon"
         src="https://edx.devstack.lms/facebook-logo.png"
       />
     </div>

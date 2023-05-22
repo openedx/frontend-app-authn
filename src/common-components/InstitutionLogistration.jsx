@@ -42,7 +42,7 @@ const InstitutionLogistration = props => {
     <>
       <div className="d-flex justify-content-left mb-4 mt-2">
         <div className="flex-column">
-          <h4 className="mb-2 font-weight-bold institute-heading">
+          <h4 className="mb-2 font-weight-bold institutions__heading">
             {headingTitle}
           </h4>
           <p className="mb-2">
@@ -57,7 +57,7 @@ const InstitutionLogistration = props => {
               <tr key={provider} className="pgn__data-table-row">
                 <td>
                   <Hyperlink
-                    className="btn nav-item p-0 mb-1 secondary-provider-link"
+                    className="btn nav-item p-0 mb-1 institutions--provider-link"
                     destination={lmsBaseUrl + provider.loginUrl}
                   >
                     {provider.name}

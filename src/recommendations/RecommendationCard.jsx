@@ -55,7 +55,7 @@ const RecommendationCard = (props) => {
             subtitle={getOwners()}
           />
           <Card.Section />
-          <Card.Footer textElement={<small className="footer-text">Course</small>} />
+          <Card.Footer textElement={<small className="pgn__card__footer-text">Course</small>} />
         </Card>
       </Hyperlink>
     </div>

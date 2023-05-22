@@ -10,10 +10,10 @@ const RecommendationsList = (props) => {
 
   return (
     <Container id="course-recommendations" size="lg" className="recommendations-container">
-      <h2 className="text-sm-center mb-4 text-left recommendations-heading">
+      <h2 className="text-sm-center mb-4 text-left recommendations-container__heading">
         {title}
       </h2>
-      <div className="d-flex card-list">
+      <div className="d-flex recommendations-container__card-list">
         {
           recommendations.map((recommendation, idx) => (
             <RecommendationCard

@@ -177,7 +177,7 @@ const ProgressiveProfiling = (props) => {
       ) : null}
       <div className="mw-xs m-4 pp-page-content">
         <div>
-          <h2 className="pp-page-heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
+          <h2 className="pp-page__heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
         </div>
         <hr className="border-light-700 mb-4" />
         {showError ? (
@@ -189,7 +189,7 @@ const ProgressiveProfiling = (props) => {
         <Form>
           {formFields}
           {(getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
-            <span className="progressive-profiling-support">
+            <span className="pp-page__support-link">
               <Hyperlink
                 isInline
                 variant="muted"
@@ -206,7 +206,7 @@ const ProgressiveProfiling = (props) => {
             <StatefulButton
               type="submit"
               variant="brand"
-              className="login-button-width"
+              className="pp-page__button-width"
               state={submitState}
               labels={{
                 default: showRecommendationsPage ? formatMessage(messages['optional.fields.next.button']) : formatMessage(messages['optional.fields.submit.button']),
