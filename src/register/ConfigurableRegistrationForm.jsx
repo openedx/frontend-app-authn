@@ -171,7 +171,7 @@ const ConfigurableRegistrationForm = (props) => {
             name: 'marketingEmailsOptIn',
           }}
           value={formFields.marketingEmailsOptIn}
-          className="opt-checkbox"
+          className="form-field--checkbox"
           onChangeHandler={handleOnChange}
           handleBlur={handleOnBlur}
           handleFocus={handleOnFocus}

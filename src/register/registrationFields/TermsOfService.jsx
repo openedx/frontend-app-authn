@@ -16,7 +16,7 @@ const TermsOfService = (props) => {
   return (
     <div id="terms-of-service" className="micro text-muted">
       <Form.Checkbox
-        className="opt-checkbox mt-1"
+        className="form-field--checkbox mt-1"
         id="tos"
         checked={value}
         name="terms_of_service"

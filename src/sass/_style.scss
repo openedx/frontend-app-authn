@@ -5,6 +5,7 @@
 @import "_reset_password.scss";
 @import "_progressive_profiling_page.scss";
 @import "_login_page.scss";
+@import "_forgot_password.scss";
 //
 // ----------------------------
 // #COLORS
@@ -322,27 +323,6 @@ select.form-control {
   }
 
 }
-#forgotpassword-success-alert {
-  .alert-link {
-    color: $gray-700 !important;
-  }
-}
-
-.username-suggestion {
-  padding: 1px 0.5rem;
-  margin: 0.25rem;
-  border-radius: 0.375rem;
-  line-height: 24px;
-  font-size: 12px;
-  font-weight: normal;
-  color: $primary-700;
-}
-
-.username-suggestion-label {
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-  margin-right: 0.25rem;
-}
 
 .yellow-border {
   border: 2px solid $accent-b;
@@ -361,58 +341,6 @@ select.form-control {
   text-decoration: none;
 }
 
-.dropdown-item:active {
-    background-color: $light-300;
-}
-
-.dropdown-container {
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15), 0px 2px 8px rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    max-height: 200px;
-    font-size: 1rem;
-    font-weight: normal;
-    line-height: 1.25rem;
-    overflow-y: scroll;
-    position: absolute;
-    background-color: $white;
-    width: 464px;
-    z-index: 100 !important;
-}
-
-.email-error-alert {
-  padding: 0.5rem 1rem;
-
-  .alert-close {
-    float: right;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
-  .alert-text {
-    font-size: 0.75rem;
-    line-height: 1.25rem;
-  }
-
-  .alert-link {
-    color: $primary !important;
-
-    &:hover {
-      text-decoration: underline;
-      color: $info-700 !important;
-    }
-  }
-}
-
-.email-warning-alert-link {
-  color: $info-500 !important;
-
-  &:hover {
-    text-decoration: underline;
-    color: $info-700 !important;
-  }
-}
 
 #forgot-password {
   &:hover {
@@ -485,14 +413,6 @@ select.form-control {
   }
 }
 
-@media (max-width: 464px) {
-  .dropdown-container {
-    width: auto;
-    left: 0;
-    right: 0;
-    position: relative;
-  }
-}
 
 .alert {
   p:last-child {
@@ -532,35 +452,6 @@ select.form-control {
   font-size: 0.875rem;
   line-height: 1.5rem;
   color: $primary-700
-}
-
-.opt-checkbox {
-  .pgn__form-label {
-    font-size: 0.75rem;
-    line-height: 1.25rem;
-  }
-  margin-left: 3px;
-}
-.suggested-username {
-  position: relative;
-  margin-top: -8.7%;
-  margin-left: 15px;
-}
-.suggested-username-close-button {
-  right: 1rem;
-  position: absolute;
-}
-.suggested-username-with-error {
-  position: relative;
-  margin-top: -13.7%;
-  margin-bottom: 11%;
-  margin-left: 15px;
-}
-.scroll-suggested-username {
-  width: 21rem;
-  white-space: nowrap;
-  overflow-x: auto;
-  display: inline-flex;
 }
 
 .pgn__form-control-decorator-trailing {
