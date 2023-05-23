@@ -21,6 +21,7 @@ const LargeLayout = ({ intl }) => (
             { 'ml-6': getConfig().SITE_NAME !== 'edX' },
           )}
         >
+          <h1>Funix-</h1>
           {intl.formatMessage(messages['start.learning'])}
           <div className="text-accent-a">
             {intl.formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
