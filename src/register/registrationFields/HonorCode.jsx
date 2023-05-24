@@ -48,7 +48,7 @@ const HonorCode = (props) => {
   return (
     <div id="honor-code" className="micro text-muted">
       <Form.Checkbox
-        className="form-field--checkbox mt-1"
+        className="opt-checkbox mt-1"
         id="honor-code"
         checked={value}
         name="honor_code"

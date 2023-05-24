@@ -19,8 +19,8 @@ const EmailField = (props) => {
   const renderEmailFeedback = () => {
     if (emailSuggestion.type === 'error') {
       return (
-        <Alert variant="danger" className="email-suggestion-alert-error mt-1" icon={Error}>
-          <span className="email-suggestion__text">
+        <Alert variant="danger" className="email-error-alert mt-1" icon={Error}>
+          <span className="alert-text">
             {formatMessage(messages['did.you.mean.alert.text'])}{' '}
             <Alert.Link
               href="#"
@@ -28,7 +28,7 @@ const EmailField = (props) => {
               onClick={handleSuggestionClick}
             >
               {emailSuggestion.suggestion}
-            </Alert.Link>?<Icon src={Close} className="email-suggestion__close" onClick={handleOnClose} tabIndex="0" />
+            </Alert.Link>?<Icon src={Close} className="alert-close" onClick={handleOnClose} tabIndex="0" />
           </span>
         </Alert>
       );
@@ -39,7 +39,7 @@ const EmailField = (props) => {
         <Alert.Link
           href="#"
           name="email"
-          className="email-suggestion-alert-warning"
+          className="email-warning-alert-link"
           onClick={handleSuggestionClick}
         >
           {emailSuggestion.suggestion}
