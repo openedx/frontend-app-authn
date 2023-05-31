@@ -4,6 +4,7 @@ import React from 'react';
 
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { mount } from 'enzyme';
+import { act } from 'react-dom/test-utils';
 
 import { UnAuthOnlyRoute } from '..';
 import { LOGIN_PAGE } from '../../data/constants';
@@ -42,7 +43,7 @@ describe('UnAuthOnlyRoute', () => {
     jest.clearAllMocks();
   });
 
-  it('should have called with forceRefresh true', () => {
+  it('should have called with forceRefresh true', async () => {
     const user = {
       username: 'gonzo',
       other: 'data',
@@ -51,16 +52,20 @@ describe('UnAuthOnlyRoute', () => {
     getAuthenticatedUser.mockReturnValue(user);
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
 
-    mount(routerWrapper());
+    await act(async () => {
+      await mount(routerWrapper());
+    });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
   });
 
-  it('should have called with forceRefresh false', () => {
+  it('should have called with forceRefresh false', async () => {
     getAuthenticatedUser.mockReturnValue(null);
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(null));
 
-    mount(routerWrapper());
+    await act(async () => {
+      await mount(routerWrapper());
+    });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
   });

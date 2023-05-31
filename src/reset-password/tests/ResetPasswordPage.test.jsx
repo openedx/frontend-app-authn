@@ -166,11 +166,14 @@ describe('ResetPasswordPage', () => {
     resetPasswordPage.find('input#newPassword').simulate('blur', { target: { value: 'aziz156', name: 'newPassword' } });
     expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual(expectedText);
   });
-  it('should not call validation when typing and click on show icon button', () => {
+  it('should not call validation when typing and click on show icon button', async () => {
     const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: 'aziz156@', name: 'newPassword' } });
-    resetPasswordPage.find('button[aria-label="Show password"]').at(0).simulate('click');
-    resetPasswordPage.find('button[aria-label="Hide password"]').at(0).simulate('blur');
+    await act(async () => {
+      await resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: 'aziz156@', name: 'newPassword' } });
+      await resetPasswordPage.find('button[aria-label="Show password"]').at(0).simulate('click');
+      await resetPasswordPage.find('button[aria-label="Hide password"]').at(0).simulate('blur');
+    });
+
     expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
   });
   it('should call validation click on show icon button and then focus out', () => {

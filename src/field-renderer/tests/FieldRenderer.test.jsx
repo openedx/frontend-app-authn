@@ -25,7 +25,7 @@ describe('FieldRendererTests', () => {
       type: 'select',
       label: 'Year of Birth',
       name: 'yob-field',
-      options: [['1997', 1997], ['1998', 1998]],
+      options: [['1997', '1997'], ['1998', '1998']],
     };
 
     const fieldRenderer = mount(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
