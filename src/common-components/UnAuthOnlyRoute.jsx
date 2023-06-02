@@ -23,10 +23,12 @@ const UnAuthOnlyRoute = (props) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
+      if (true) { // check for query param
+        window.parent.postMessage('authenticated', 'https://discover.edx.org/social-reg');
+      }
       global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
       return null;
     }
-
     return <Route {...props} />;
   }
 
