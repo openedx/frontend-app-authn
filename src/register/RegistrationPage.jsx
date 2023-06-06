@@ -50,7 +50,7 @@ import {
   DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie, setSurveyCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie,
 } from '../data/utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -224,10 +224,8 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
-      // TODO: Do we still need this cookie?
-      setSurveyCookie('register');
+      // This was added to fire social media conversion pixels through Google tag manager.
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
-      setCookie('authn-returning-user');
 
       // Fire GTM event used for integration with impact.com
       window.dataLayer = window.dataLayer || [];
