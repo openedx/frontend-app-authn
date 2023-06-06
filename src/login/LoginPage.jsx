@@ -231,7 +231,9 @@ class LoginPage extends React.Component {
       tpaAuthenticationError.errorCode = TPA_AUTHENTICATION_FAILURE;
     }
     if (this.props.loginResult.success) {
+      window.parent.postMessage({ loggedin: true, redirectUrl: this.props.loginResult.redirectUrl }, 'https://discover.edx.org/social-reg');
       setSurveyCookie('login');
+      return null;
     }
 
     return (
@@ -241,11 +243,11 @@ class LoginPage extends React.Component {
             { siteName: getConfig().SITE_NAME })}
           </title>
         </Helmet>
-        <RedirectLogistration
-          success={this.props.loginResult.success}
-          redirectUrl={this.props.loginResult.redirectUrl}
-          finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}
-        />
+        {/*<RedirectLogistration*/}
+        {/*  success={this.props.loginResult.success}*/}
+        {/*  redirectUrl={this.props.loginResult.redirectUrl}*/}
+        {/*  finishAuthUrl={thirdPartyAuthContext.finishAuthUrl}*/}
+        {/*/>*/}
         <div className="mw-xs mt-3">
           <ThirdPartyAuthAlert
             currentProvider={thirdPartyAuthContext.currentProvider}
@@ -292,16 +294,16 @@ class LoginPage extends React.Component {
               onClick={this.handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            <Link
-              id="forgot-password"
-              name="forgot-password"
-              className="btn btn-link font-weight-500 text-body"
-              to={updatePathWithQueryParams(RESET_PAGE)}
-              onClick={this.handleForgotPasswordLinkClickEvent}
-            >
-              {intl.formatMessage(messages['forgot.password'])}
-            </Link>
-            {this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}
+            {/*<Link*/}
+            {/*  id="forgot-password"*/}
+            {/*  name="forgot-password"*/}
+            {/*  className="btn btn-link font-weight-500 text-body"*/}
+            {/*  to={updatePathWithQueryParams(RESET_PAGE)}*/}
+            {/*  onClick={this.handleForgotPasswordLinkClickEvent}*/}
+            {/*>*/}
+            {/*  {intl.formatMessage(messages['forgot.password'])}*/}
+            {/*</Link>*/}
+            {/*{this.renderThirdPartyAuth(providers, secondaryProviders, currentProvider, thirdPartyAuthApiStatus, intl)}*/}
           </Form>
         </div>
       </>

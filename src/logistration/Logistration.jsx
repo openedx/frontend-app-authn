@@ -81,56 +81,56 @@ const Logistration = (props) => {
   };
 
   return (
-    <BaseComponent>
-      <div>
-        {disablePublicAccountCreation
-          ? (
-            <>
-              <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />
-              {institutionLogin && (
-                <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                  <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
-                </Tabs>
+    // <BaseComponent>
+    <div className="d-flex justify-content-center">
+      {disablePublicAccountCreation
+        ? (
+          <>
+            <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />
+            {institutionLogin && (
+              <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+                <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+              </Tabs>
+            )}
+            <div id="main-content" className="main-content">
+              {!institutionLogin && (
+                <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
               )}
-              <div id="main-content" className="main-content">
-                {!institutionLogin && (
-                  <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
-                )}
-                <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-              </div>
-            </>
-          )
-          : (
-            <div>
-              {institutionLogin
-                ? (
-                  <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                    <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
-                  </Tabs>
-                )
-                : (!isValidTpaHint() && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                  </Tabs>
-                ))}
-              { key && (
-                <Redirect to={updatePathWithQueryParams(key)} />
-              )}
-              <div id="main-content" className="main-content">
-                {selectedPage === LOGIN_PAGE
-                  ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-                  : (
-                    <RegistrationPage
-                      institutionLogin={institutionLogin}
-                      handleInstitutionLogin={handleInstitutionLogin}
-                    />
-                  )}
-              </div>
+              <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
             </div>
-          )}
-      </div>
-    </BaseComponent>
+          </>
+        )
+        : (
+          <div>
+            {institutionLogin
+              ? (
+                <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+                  <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+                </Tabs>
+              )
+              : (!isValidTpaHint() && (
+                <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                  <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                  <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                </Tabs>
+              ))}
+            { key && (
+              <Redirect to={updatePathWithQueryParams(key)} />
+            )}
+            <div id="main-content" className="main-content">
+              {selectedPage === LOGIN_PAGE
+                ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                : (
+                  <RegistrationPage
+                    institutionLogin={institutionLogin}
+                    handleInstitutionLogin={handleInstitutionLogin}
+                  />
+                )}
+            </div>
+          </div>
+        )}
+    </div>
+    // </BaseComponent>
   );
 };
 

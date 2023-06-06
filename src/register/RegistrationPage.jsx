@@ -510,20 +510,24 @@ const RegistrationPage = (props) => {
         />
       );
     }
+    if (registrationResult.success) {
+      window.parent.postMessage({ loggedin: true, redirectUrl: registrationResult.redirectUrl }, 'https://discover.edx.org/social-reg');
+      return null;
+    }
     return (
       <>
         <Helmet>
           <title>{formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
         </Helmet>
-        <RedirectLogistration
-          success={registrationResult.success}
-          redirectUrl={registrationResult.redirectUrl}
-          finishAuthUrl={finishAuthUrl}
-          optionalFields={optionalFields}
-          redirectToProgressiveProfilingPage={
-            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
-          }
-        />
+        {/*<RedirectLogistration*/}
+        {/*  success={registrationResult.success}*/}
+        {/*  redirectUrl={registrationResult.redirectUrl}*/}
+        {/*  finishAuthUrl={finishAuthUrl}*/}
+        {/*  optionalFields={optionalFields}*/}
+        {/*  redirectToProgressiveProfilingPage={*/}
+        {/*    getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')*/}
+        {/*  }*/}
+        {/*/>*/}
         {autoSubmitRegisterForm && !errorCode.type ? (
           <div className="mw-xs mt-5 text-center">
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
@@ -613,13 +617,13 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              <ThirdPartyAuth
-                currentProvider={currentProvider}
-                providers={providers}
-                secondaryProviders={secondaryProviders}
-                handleInstitutionLogin={handleInstitutionLogin}
-                thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-              />
+              {/*<ThirdPartyAuth*/}
+              {/*  currentProvider={currentProvider}*/}
+              {/*  providers={providers}*/}
+              {/*  secondaryProviders={secondaryProviders}*/}
+              {/*  handleInstitutionLogin={handleInstitutionLogin}*/}
+              {/*  thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}*/}
+              {/*/>*/}
             </Form>
           </div>
         )}
