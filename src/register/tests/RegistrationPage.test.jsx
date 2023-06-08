@@ -46,7 +46,6 @@ describe('RegistrationPage', () => {
   mergeConfig({
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
-    USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
     REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
   });
 
@@ -624,7 +623,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('input#password').length).toEqual(0);
     });
 
-    it('should set registration survey cookie', () => {
+    it('should check registration conversion cookie', () => {
       store = mockStore({
         ...initialState,
         register: {
@@ -636,7 +635,6 @@ describe('RegistrationPage', () => {
       });
 
       renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=register`);
       expect(document.cookie).toMatch(`${getConfig().REGISTER_CONVERSION_COOKIE_NAME}=true`);
     });
 

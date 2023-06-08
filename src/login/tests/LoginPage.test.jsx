@@ -30,9 +30,6 @@ const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
 
 describe('LoginPage', () => {
-  mergeConfig({
-    USER_SURVEY_COOKIE_NAME: process.env.USER_SURVEY_COOKIE_NAME,
-  });
   let props = {};
   let store = {};
   let loginFormData = {};
@@ -683,21 +680,6 @@ describe('LoginPage', () => {
 
     expect(loginPage.find(<IntlLoginFailureMessage />)).toBeTruthy();
     expect(loginPage.find('LoginPage').state('isSubmitted')).toEqual(true);
-  });
-
-  it('should set login survey cookie', () => {
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        loginResult: {
-          success: true,
-        },
-      },
-    });
-
-    renderer.create(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(document.cookie).toMatch(`${getConfig().USER_SURVEY_COOKIE_NAME}=login`);
   });
 
   it('should reset login form errors', () => {

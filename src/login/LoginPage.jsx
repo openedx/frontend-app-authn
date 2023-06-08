@@ -36,7 +36,6 @@ import {
   getAllPossibleQueryParams,
   getTpaHint,
   getTpaProvider,
-  setSurveyCookie,
   updatePathWithQueryParams,
   windowScrollTo,
 } from '../data/utils';
@@ -229,9 +228,6 @@ class LoginPage extends React.Component {
         errorMessage: thirdPartyAuthContext.errorMessage,
       };
       tpaAuthenticationError.errorCode = TPA_AUTHENTICATION_FAILURE;
-    }
-    if (this.props.loginResult.success) {
-      setSurveyCookie('login');
     }
 
     return (
