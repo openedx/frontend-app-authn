@@ -9,6 +9,7 @@ import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
 import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -86,6 +87,7 @@ const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const { variant } = queryParams;
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
@@ -527,7 +529,12 @@ const RegistrationPage = (props) => {
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
           </div>
         ) : (
-          <div className="mw-xs mt-3">
+          <div
+            className={classNames(
+              'mw-xs mt-3',
+              { 'form--centerd': variant },
+            )}
+          >
             <ThirdPartyAuthAlert
               currentProvider={currentProvider}
               platformName={platformName}
@@ -611,13 +618,15 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              <ThirdPartyAuth
-                currentProvider={currentProvider}
-                providers={providers}
-                secondaryProviders={secondaryProviders}
-                handleInstitutionLogin={handleInstitutionLogin}
-                thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-              />
+              {!variant && (
+                <ThirdPartyAuth
+                  currentProvider={currentProvider}
+                  providers={providers}
+                  secondaryProviders={secondaryProviders}
+                  handleInstitutionLogin={handleInstitutionLogin}
+                  thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+                />
+              )}
             </Form>
           </div>
         )}
