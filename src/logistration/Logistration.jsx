@@ -11,7 +11,6 @@ import {
   Tabs,
 } from '@edx/paragon';
 import { ChevronLeft } from '@edx/paragon/icons';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
@@ -40,7 +39,6 @@ const Logistration = (props) => {
   const [key, setKey] = useState('');
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const { variant } = getAllPossibleQueryParams();
-
   useEffect(() => {
     const authService = getAuthService();
     if (authService) {
@@ -121,10 +119,7 @@ const Logistration = (props) => {
             )}
             <div
               id="main-content"
-              className={classNames(
-                'main-content',
-                { 'main-content-background': variant },
-              )}
+              className="main-content"
             >
               {selectedPage === LOGIN_PAGE
                 ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
@@ -140,18 +135,13 @@ const Logistration = (props) => {
     </div>
   );
   return (
-    <>
-      {!variant && (
-        <BaseComponent>
-          { renderForm() }
-        </BaseComponent>
-      )}
-      {variant && (
-        <>
-          { renderForm() }
-        </>
-      )}
-    </>
+    variant ? (
+      renderForm()
+    ) : (
+      <BaseComponent>
+        {renderForm()}
+      </BaseComponent>
+    )
   );
 };
 

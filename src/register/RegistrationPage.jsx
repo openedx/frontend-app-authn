@@ -47,8 +47,8 @@ import {
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  COMPLETE_STATE,
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  COMPLETE_STATE, DEFAULT_STATE,
+  EMBEDDED, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie,
@@ -500,7 +500,6 @@ const RegistrationPage = (props) => {
       registerUser();
     }
   }, [autoSubmitRegisterForm, userPipelineDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const renderForm = () => {
     if (institutionLogin) {
       return (
@@ -520,6 +519,7 @@ const RegistrationPage = (props) => {
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
           optionalFields={optionalFields}
+          variant={variant}
           redirectToProgressiveProfilingPage={
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }

@@ -838,6 +838,37 @@ describe('RegistrationPage', () => {
       progressiveProfilingPage.update();
       expect(history.location.pathname).toEqual(AUTHN_PROGRESSIVE_PROFILING);
     });
+    it('should call the postMessage api when varient is passed', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?variant=embedded' };
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
+      });
+      window.parent.postMessage = jest.fn();
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+          },
+        },
+        commonComponents: {
+          optionalFields: {
+            extended_profile: {},
+            fields: {
+              level_of_education: { name: 'level_of_education', error_message: false },
+            },
+          },
+        },
+      });
+      const progressiveProfilingPage = mount(reduxWrapper(
+        <IntlRegistrationPage {...props} />,
+      ));
+      progressiveProfilingPage.update();
+      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
+    });
 
     // ******** test hinted third party auth ********
 

@@ -17,6 +17,7 @@ const RedirectLogistration = (props) => {
     redirectToRecommendationsPage,
     educationLevel,
     userId,
+    variant,
   } = props;
   let finalRedirectUrl = '';
 
@@ -36,6 +37,10 @@ const RedirectLogistration = (props) => {
       // TODO: Do we still need this cookie?
       setCookie('van-504-returning-user', true);
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
+      if (variant) {
+        window.parent.postMessage({ message: 'redirection', redirectUrl: `${window.location.origin}${AUTHN_PROGRESSIVE_PROFILING}` }, '*');
+        return null;
+      }
       return (
         <Redirect to={{
           pathname: AUTHN_PROGRESSIVE_PROFILING,
@@ -79,6 +84,7 @@ RedirectLogistration.defaultProps = {
   optionalFields: {},
   redirectToRecommendationsPage: false,
   userId: null,
+  variant: null,
 };
 
 RedirectLogistration.propTypes = {
@@ -90,6 +96,7 @@ RedirectLogistration.propTypes = {
   optionalFields: PropTypes.shape({}),
   redirectToRecommendationsPage: PropTypes.bool,
   userId: PropTypes.number,
+  variant: PropTypes.string,
 };
 
 export default RedirectLogistration;
