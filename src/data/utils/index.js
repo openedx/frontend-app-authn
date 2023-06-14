@@ -1,9 +1,10 @@
 export {
   getTpaProvider,
   getTpaHint,
-  updatePathWithQueryParams,
   getAllPossibleQueryParams,
   getActivationStatus,
+  isRegistrationEmbedded,
+  updatePathWithQueryParams,
   windowScrollTo,
 } from './dataUtils';
 export { default as AsyncActionType } from './reduxUtils';

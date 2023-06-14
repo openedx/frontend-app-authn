@@ -12,7 +12,7 @@ import { MemoryRouter, Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import {
-  COMPLETE_STATE, DEFAULT_REDIRECT_URL, FAILURE_STATE, RECOMMENDATIONS,
+  COMPLETE_STATE, DEFAULT_REDIRECT_URL, EMBEDDED, FAILURE_STATE, RECOMMENDATIONS,
 } from '../../data/constants';
 import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
@@ -33,6 +33,11 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 }));
 jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
+}));
+jest.mock('../../recommendations/optimizelyExperiment.js', () => ({
+  activateRecommendationsExperiment: jest.fn().mockImplementation(() => 'welcome_page_recommendations_enabled'),
+  trackRecommendationViewedOptimizely: jest.fn(),
+  RECOMMENDATIONS_EXP_VARIATION: 'welcome_page_recommendations_enabled',
 }));
 
 const history = createMemoryHistory();
@@ -57,8 +62,10 @@ describe('ProgressiveProfilingTests', () => {
   let store = {};
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const initialState = {
-    welcomePage: {
-      formRenderState: COMPLETE_STATE,
+    welcomePage: {},
+    commonComponents: {
+      thirdPartyAuthApiStatus: null,
+      optionalFields: {},
     },
   };
 
@@ -96,7 +103,6 @@ describe('ProgressiveProfilingTests', () => {
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     props = {
-      getFieldData: jest.fn(),
       location: {
         state: {
           registrationResult,
@@ -106,7 +112,7 @@ describe('ProgressiveProfilingTests', () => {
     };
   });
 
-  it('not should display button "Learn more about how we use this information."', async () => {
+  it('should not display button "Learn more about how we use this information."', async () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
@@ -122,11 +128,6 @@ describe('ProgressiveProfilingTests', () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
 
     expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
-  });
-
-  it('should render fields returned by backend api', async () => {
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
   });
 
   it('should make identify call to segment on progressive profiling page', async () => {
@@ -168,6 +169,7 @@ describe('ProgressiveProfilingTests', () => {
 
   it('should show error message when patch request fails', async () => {
     store = mockStore({
+      ...initialState,
       welcomePage: {
         ...initialState.welcomePage,
         showError: true,
@@ -178,29 +180,14 @@ describe('ProgressiveProfilingTests', () => {
     expect(progressiveProfilingPage.find('#pp-page-errors').exists()).toBeTruthy();
   });
 
-  it('should redirect to dashboard if no form fields are configured', async () => {
-    store = mockStore({
-      welcomePage: {
-        formRenderState: FAILURE_STATE,
-      },
-    });
-
-    delete window.location;
-    window.location = {
-      href: getConfig().BASE_URL,
-      assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-    };
-    await getProgressiveProfilingPage();
-    expect(window.location.href).toBe(DASHBOARD_URL);
-  });
-
   describe('Recommendations test', () => {
     mergeConfig({
       ENABLE_PERSONALIZED_RECOMMENDATIONS: true,
     });
 
-    it.skip('should redirect to recommendations page if recommendations are enabled', async () => {
+    it('should redirect to recommendations page if recommendations are enabled', async () => {
       store = mockStore({
+        ...initialState,
         welcomePage: {
           ...initialState.welcomePage,
           success: true,
@@ -215,15 +202,8 @@ describe('ProgressiveProfilingTests', () => {
     });
 
     it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
-      delete window.location;
-      window.location = {
-        href: getConfig().BASE_URL,
-        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-      };
-
       const redirectUrl = `${getConfig().LMS_BASE_URL}${DEFAULT_REDIRECT_URL}?enrollment_action=1`;
       props = {
-        getFieldData: jest.fn(),
         location: {
           state: {
             registrationResult: {
@@ -236,6 +216,7 @@ describe('ProgressiveProfilingTests', () => {
       };
 
       store = mockStore({
+        ...initialState,
         welcomePage: {
           ...initialState.welcomePage,
           success: true,
@@ -247,6 +228,44 @@ describe('ProgressiveProfilingTests', () => {
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Submit');
       expect(window.location.href).toEqual(redirectUrl);
+    });
+  });
+
+  describe('Embedded Form Workflow Test', () => {
+    delete window.location;
+    window.location = {
+      assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+      href: getConfig().BASE_URL,
+      search: `?variant=${EMBEDDED}`,
+    };
+
+    it('should render fields returned by backend API', async () => {
+      props = {};
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
+          optionalFields,
+        },
+      });
+
+      const progressiveProfilingPage = await getProgressiveProfilingPage();
+      expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
+    });
+
+    it('should redirect to dashboard if API call to get form field fails', async () => {
+      props = {};
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: FAILURE_STATE,
+        },
+      });
+
+      await getProgressiveProfilingPage();
+      expect(window.location.href).toBe(DASHBOARD_URL);
     });
   });
 });

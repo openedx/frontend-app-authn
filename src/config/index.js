@@ -15,6 +15,7 @@ const configuration = {
   LOGIN_ISSUE_SUPPORT_LINK: process.env.LOGIN_ISSUE_SUPPORT_LINK || null,
   PASSWORD_RESET_SUPPORT_LINK: process.env.PASSWORD_RESET_SUPPORT_LINK || null,
   PRIVACY_POLICY: process.env.PRIVACY_POLICY || null,
+  SEARCH_CATALOG_URL: process.env.SEARCH_CATALOG_URL || null,
   TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
   TOS_LINK: process.env.TOS_LINK || null,
   // Miscellaneous

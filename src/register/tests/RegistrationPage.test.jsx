@@ -822,7 +822,7 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           optionalFields: {
-            extended_profile: {},
+            extended_profile: [],
             fields: {
               level_of_education: { name: 'level_of_education', error_message: false },
             },

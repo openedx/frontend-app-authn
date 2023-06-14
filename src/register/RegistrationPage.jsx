@@ -51,9 +51,8 @@ import {
   INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isRegistrationEmbedded, setCookie,
 } from '../data/utils';
-import { isRegistrationEmbedded } from '../data/utils/dataUtils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
