@@ -862,6 +862,41 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
     });
 
+    it('should call the postMessage API when embedded variant is rendered', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
+      });
+
+      window.parent.postMessage = jest.fn();
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?variant=embedded' };
+
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+          },
+        },
+        commonComponents: {
+          optionalFields: {
+            extended_profile: {},
+            fields: {
+              level_of_education: { name: 'level_of_education', error_message: false },
+            },
+          },
+        },
+      });
+      const progressiveProfilingPage = mount(reduxWrapper(
+        <IntlRegistrationPage {...props} />,
+      ));
+      progressiveProfilingPage.update();
+      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
+    });
+
     it('should render icon if icon classes are missing in providers', () => {
       ssoProvider.iconClass = null;
       store = mockStore({
