@@ -232,6 +232,10 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   describe('Embedded Form Workflow Test', () => {
+    mergeConfig({
+      SEARCH_CATALOG_URL: 'http://localhost/search',
+    });
+
     delete window.location;
     window.location = {
       assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
