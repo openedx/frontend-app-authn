@@ -22,9 +22,8 @@ import {
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
-  getTpaHint, getTpaProvider, updatePathWithQueryParams,
+  getTpaHint, getTpaProvider, isRegistrationEmbedded, updatePathWithQueryParams,
 } from '../data/utils';
-import { isRegistrationEmbedded } from '../data/utils/dataUtils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';

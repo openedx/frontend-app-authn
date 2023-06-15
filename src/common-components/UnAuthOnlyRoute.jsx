@@ -8,7 +8,7 @@ import { Route } from 'react-router-dom';
 import {
   DEFAULT_REDIRECT_URL, REGISTER_PAGE,
 } from '../data/constants';
-import { isRegistrationEmbedded } from '../data/utils/dataUtils';
+import { isRegistrationEmbedded } from '../data/utils';
 
 /**
  * This wrapper redirects the requester to our default redirect url if they are

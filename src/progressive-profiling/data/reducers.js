@@ -6,7 +6,6 @@ import {
 export const defaultState = {
   extendedProfile: [],
   fieldDescriptions: {},
-  formRenderState: DEFAULT_STATE,
   success: false,
   submitState: DEFAULT_STATE,
   showError: false,
