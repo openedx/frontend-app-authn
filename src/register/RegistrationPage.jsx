@@ -48,11 +48,12 @@ import {
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
   COMPLETE_STATE, DEFAULT_STATE,
-  EMBEDDED, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie,
 } from '../data/utils';
+import { isRegistrationEmbedded } from '../data/utils/dataUtils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 const urlRegex = new RegExp(INVALID_NAME_REGEX);
@@ -87,7 +88,7 @@ const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const isRegistrationEmbedded = queryParams?.variant === EMBEDDED;
+  const registrationEmbedded = isRegistrationEmbedded();
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
@@ -520,7 +521,7 @@ const RegistrationPage = (props) => {
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
           optionalFields={optionalFields}
-          isRegistrationEmbedded={isRegistrationEmbedded}
+          registrationEmbedded={registrationEmbedded}
           redirectToProgressiveProfilingPage={
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }
@@ -533,7 +534,7 @@ const RegistrationPage = (props) => {
           <div
             className={classNames(
               'mw-xs mt-3',
-              { 'w-100 m-auto': isRegistrationEmbedded },
+              { 'w-100 m-auto': registrationEmbedded },
             )}
           >
             <ThirdPartyAuthAlert
@@ -619,7 +620,7 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              {!isRegistrationEmbedded && (
+              {!registrationEmbedded && (
                 <ThirdPartyAuth
                   currentProvider={currentProvider}
                   providers={providers}

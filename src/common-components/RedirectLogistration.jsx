@@ -19,7 +19,7 @@ const RedirectLogistration = (props) => {
     redirectToRecommendationsPage,
     educationLevel,
     userId,
-    isRegistrationEmbedded,
+    registrationEmbedded,
   } = props;
   let finalRedirectUrl = '';
 
@@ -39,7 +39,7 @@ const RedirectLogistration = (props) => {
       // TODO: Do we still need this cookie?
       setCookie('van-504-returning-user', true);
 
-      if (isRegistrationEmbedded) {
+      if (registrationEmbedded) {
         window.parent.postMessage({ action: REDIRECT, redirectUrl: `${window.location.origin}${AUTHN_PROGRESSIVE_PROFILING}` }, DISCOVER_URL);
         return null;
       }
@@ -87,7 +87,7 @@ RedirectLogistration.defaultProps = {
   optionalFields: {},
   redirectToRecommendationsPage: false,
   userId: null,
-  isRegistrationEmbedded: false,
+  registrationEmbedded: false,
 };
 
 RedirectLogistration.propTypes = {
@@ -99,7 +99,7 @@ RedirectLogistration.propTypes = {
   optionalFields: PropTypes.shape({}),
   redirectToRecommendationsPage: PropTypes.bool,
   userId: PropTypes.number,
-  isRegistrationEmbedded: PropTypes.bool,
+  registrationEmbedded: PropTypes.bool,
 };
 
 export default RedirectLogistration;
