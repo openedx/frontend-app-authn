@@ -30,7 +30,11 @@ import { RedirectLogistration } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { optionalFieldsSelector } from '../common-components/data/selectors';
 import {
-  DEFAULT_REDIRECT_URL, DEFAULT_STATE, FAILURE_STATE, PENDING_STATE,
+  COMPLETE_STATE,
+  DEFAULT_REDIRECT_URL,
+  DEFAULT_STATE,
+  FAILURE_STATE,
+  PENDING_STATE,
 } from '../data/constants';
 import { getAllPossibleQueryParams, isRegistrationEmbedded } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
@@ -91,14 +95,14 @@ const ProgressiveProfiling = (props) => {
   }, [registrationEmbedded, getFieldDataFromBackend]);
 
   useEffect(() => {
-    if (Object.keys(welcomePageContext).length !== 0) {
+    if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
       setFormFieldData({
         fields: welcomePageContext.fields,
         extendedProfile: welcomePageContext.extended_profile,
       });
       setRegistrationResult({ redirectUrl: getConfig().SEARCH_CATALOG_URL });
     }
-  }, [welcomePageContext]);
+  }, [registrationEmbedded, welcomePageContext]);
 
   useEffect(() => {
     if (canViewWelcomePage && authenticatedUser?.userId) {
@@ -128,6 +132,7 @@ const ProgressiveProfiling = (props) => {
   if (
     !(location.state?.registrationResult || registrationEmbedded)
     || welcomePageContextApiStatus === FAILURE_STATE
+    || (welcomePageContextApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
     global.location.assign(DASHBOARD_URL);
     return null;
