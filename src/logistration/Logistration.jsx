@@ -20,10 +20,11 @@ import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
-import { EMBEDDED, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, updatePathWithQueryParams,
+  getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
+import { isRegistrationEmbedded } from '../data/utils/dataUtils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
@@ -38,7 +39,7 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
-  const isRegistrationEmbedded = getAllPossibleQueryParams()?.variant === EMBEDDED && selectedPage === REGISTER_PAGE;
+  const registrationEmbedded = isRegistrationEmbedded() && selectedPage === REGISTER_PAGE;
 
   useEffect(() => {
     const authService = getAuthService();
@@ -109,7 +110,7 @@ const Logistration = (props) => {
                   <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
                 </Tabs>
               )
-              : (!isRegistrationEmbedded && !isValidTpaHint() && (
+              : (!registrationEmbedded && !isValidTpaHint() && (
                 <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
                   <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                   <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
@@ -133,7 +134,7 @@ const Logistration = (props) => {
     </div>
   );
   return (
-    isRegistrationEmbedded ? (
+    registrationEmbedded ? (
       renderLogistrationTabs()
     ) : (
       <BaseComponent>

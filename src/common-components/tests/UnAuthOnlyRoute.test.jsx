@@ -2,12 +2,13 @@
 /* eslint-disable react/function-component-definition */
 import React from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 
 import { UnAuthOnlyRoute } from '..';
-import { LOGIN_PAGE } from '../../data/constants';
+import { REGISTER_PAGE } from '../../data/constants';
 
 import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
 
@@ -26,7 +27,7 @@ const TestApp = () => (
   <Router>
     <div>
       <Switch>
-        <UnAuthOnlyRoute path={LOGIN_PAGE} render={() => (<span>Login Page</span>)} />
+        <UnAuthOnlyRoute path={REGISTER_PAGE} render={() => (<span>Register Page</span>)} />
       </Switch>
     </div>
   </Router>
@@ -34,7 +35,7 @@ const TestApp = () => (
 
 describe('UnAuthOnlyRoute', () => {
   const routerWrapper = () => (
-    <MemoryRouter initialEntries={[LOGIN_PAGE]}>
+    <MemoryRouter initialEntries={[REGISTER_PAGE]}>
       <TestApp />
     </MemoryRouter>
   );
@@ -68,5 +69,45 @@ describe('UnAuthOnlyRoute', () => {
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
+  });
+
+  it('should not route to register page for authenticated users with non-embedded/normal experience', async () => {
+    const user = {
+      username: 'gonzo',
+      other: 'data',
+    };
+
+    getAuthenticatedUser.mockReturnValue(user);
+    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
+
+    let registerPage = null;
+
+    await act(async () => {
+      registerPage = await mount(routerWrapper());
+    });
+
+    expect(registerPage.find('span').exists()).toBeFalsy();
+  });
+
+  it('should route to register page for authenticated users with embedded experience', async () => {
+    const user = {
+      username: 'gonzo',
+      other: 'data',
+    };
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded' };
+
+    getAuthenticatedUser.mockReturnValue(user);
+    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
+
+    let registerPage = null;
+
+    await act(async () => {
+      registerPage = await mount(routerWrapper());
+    });
+
+    expect(registerPage.find('span').exists()).toBeTruthy();
+    expect(registerPage.find('span').text()).toBe('Register Page');
   });
 });
