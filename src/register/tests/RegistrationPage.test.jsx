@@ -250,6 +250,18 @@ describe('RegistrationPage', () => {
 
     // ******** test registration form validations ********
 
+    it('should not run validations on blur event when embedded variant is rendered', () => {
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded' };
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeFalsy();
+
+      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
+      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
+    });
+
     it('should show error messages for required fields on empty form submission', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('button.btn-brand').simulate('click');
