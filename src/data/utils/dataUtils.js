@@ -79,5 +79,5 @@ export const windowScrollTo = (options) => {
 
 export const isRegistrationEmbedded = () => {
   const queryParams = getAllPossibleQueryParams();
-  return queryParams?.variant === EMBEDDED;
+  return queryParams?.variant === EMBEDDED && 'host' in queryParams;
 };

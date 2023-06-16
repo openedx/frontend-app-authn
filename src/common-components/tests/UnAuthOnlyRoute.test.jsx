@@ -96,7 +96,7 @@ describe('UnAuthOnlyRoute', () => {
     };
 
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded' };
+    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded&host=http://localhost/host-websit' };
 
     getAuthenticatedUser.mockReturnValue(user);
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));

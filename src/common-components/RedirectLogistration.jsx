@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 import {
-  AUTHN_PROGRESSIVE_PROFILING, DISCOVER_URL, RECOMMENDATIONS, REDIRECT,
+  AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
 } from '../data/constants';
 import { setCookie } from '../data/utils';
 
@@ -20,6 +20,7 @@ const RedirectLogistration = (props) => {
     educationLevel,
     userId,
     registrationEmbedded,
+    host,
   } = props;
   let finalRedirectUrl = '';
 
@@ -40,7 +41,7 @@ const RedirectLogistration = (props) => {
       setCookie('van-504-returning-user', true);
 
       if (registrationEmbedded) {
-        window.parent.postMessage({ action: REDIRECT, redirectUrl: `${window.location.origin}${AUTHN_PROGRESSIVE_PROFILING}` }, DISCOVER_URL);
+        window.parent.postMessage({ action: REDIRECT, redirectUrl: getConfig().POST_REGISTRATION_REDIRECT_URL }, host);
         return null;
       }
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
@@ -88,6 +89,7 @@ RedirectLogistration.defaultProps = {
   redirectToRecommendationsPage: false,
   userId: null,
   registrationEmbedded: false,
+  host: '',
 };
 
 RedirectLogistration.propTypes = {
@@ -100,6 +102,7 @@ RedirectLogistration.propTypes = {
   redirectToRecommendationsPage: PropTypes.bool,
   userId: PropTypes.number,
   registrationEmbedded: PropTypes.bool,
+  host: PropTypes.string,
 };
 
 export default RedirectLogistration;
