@@ -411,6 +411,9 @@ const RegistrationPage = (props) => {
   };
 
   const handleOnBlur = (event) => {
+    if (registrationEmbedded) {
+      return;
+    }
     const { name, value } = event.target;
     const payload = {
       name: formFields.name,
@@ -599,6 +602,7 @@ const RegistrationPage = (props) => {
                 countryList={countryList}
                 email={formFields.email}
                 fieldErrors={errors}
+                registrationEmbedded={registrationEmbedded}
                 formFields={configurableFormFields}
                 setFieldErrors={setErrors}
                 setFormFields={setConfigurableFormFields}
