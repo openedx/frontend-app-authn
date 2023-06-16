@@ -88,6 +88,7 @@ const RegistrationPage = (props) => {
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const registrationEmbedded = isRegistrationEmbedded();
+  const { host } = queryParams;
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
@@ -519,6 +520,7 @@ const RegistrationPage = (props) => {
           <title>{formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
         </Helmet>
         <RedirectLogistration
+          host={host}
           success={registrationResult.success}
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}

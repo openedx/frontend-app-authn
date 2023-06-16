@@ -296,7 +296,7 @@ describe('ProgressiveProfilingTests', () => {
       window.location = {
         assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
         href: getConfig().BASE_URL,
-        search: `?variant=${EMBEDDED}`,
+        search: `?variant=${EMBEDDED}&host=http://localhost/host-website`,
       };
       props = {};
       store = mockStore({

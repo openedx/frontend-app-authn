@@ -11,7 +11,9 @@ import configureStore from 'redux-mock-store';
 import Logistration from './Logistration';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import { RenderInstitutionButton } from '../common-components/InstitutionLogistration';
-import { COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import {
+  COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
+} from '../data/constants';
 import { backupRegistrationForm } from '../register/data/actions';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -61,7 +63,7 @@ describe('Logistration', () => {
 
   it('should not render logistration tabs for embedded registration form', () => {
     delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded' };
+    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded&host=http://localhost/host-website' };
 
     store = mockStore({
       register: {
