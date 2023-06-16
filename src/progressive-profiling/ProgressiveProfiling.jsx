@@ -142,6 +142,8 @@ const ProgressiveProfiling = (props) => {
     return null;
   }
 
+  const queryParams = getAllPossibleQueryParams();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     window.history.replaceState(location.state, null, '');
@@ -162,6 +164,7 @@ const ProgressiveProfiling = (props) => {
         isGenderSelected: !!values.gender,
         isYearOfBirthSelected: !!values.year_of_birth,
         isLevelOfEducationSelected: !!values.level_of_education,
+        host: queryParams?.host || '',
       },
     );
   };
@@ -170,7 +173,12 @@ const ProgressiveProfiling = (props) => {
     e.preventDefault();
     window.history.replaceState(props.location.state, null, '');
     setShowModal(true);
-    sendTrackEvent('edx.bi.welcome.page.skip.link.clicked');
+    sendTrackEvent(
+      'edx.bi.welcome.page.skip.link.clicked',
+      {
+        host: queryParams?.host || '',
+      },
+    );
   };
 
   const onChangeHandler = (e) => {
