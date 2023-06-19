@@ -41,7 +41,10 @@ const RedirectLogistration = (props) => {
       setCookie('van-504-returning-user', true);
 
       if (registrationEmbedded) {
-        window.parent.postMessage({ action: REDIRECT, redirectUrl: getConfig().POST_REGISTRATION_REDIRECT_URL }, host);
+        window.parent.postMessage({
+          action: REDIRECT,
+          redirectUrl: getConfig().POST_REGISTRATION_REDIRECT_URL,
+        }, host);
         return null;
       }
       const registrationResult = { redirectUrl: finalRedirectUrl, success };

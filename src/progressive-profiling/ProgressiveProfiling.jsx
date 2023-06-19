@@ -36,7 +36,7 @@ import {
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
-import { getAllPossibleQueryParams, isRegistrationEmbedded } from '../data/utils';
+import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
 import {
   activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION, trackRecommendationViewedOptimizely,
@@ -53,7 +53,7 @@ const ProgressiveProfiling = (props) => {
     welcomePageContext,
     welcomePageContextApiStatus,
   } = props;
-  const registrationEmbedded = isRegistrationEmbedded();
+  const registrationEmbedded = isHostAvailableInQueryParams();
 
   const authenticatedUser = getAuthenticatedUser();
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);

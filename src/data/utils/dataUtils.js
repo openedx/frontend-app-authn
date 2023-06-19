@@ -1,7 +1,7 @@
 // Utility functions
 import * as QueryString from 'query-string';
 
-import { AUTH_PARAMS, EMBEDDED } from '../constants';
+import { AUTH_PARAMS } from '../constants';
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
   let tpaProvider = null;
@@ -77,7 +77,7 @@ export const windowScrollTo = (options) => {
   return window.scrollTo(options.top, options.left);
 };
 
-export const isRegistrationEmbedded = () => {
+export const isHostAvailableInQueryParams = () => {
   const queryParams = getAllPossibleQueryParams();
-  return queryParams?.variant === EMBEDDED && 'host' in queryParams;
+  return 'host' in queryParams;
 };

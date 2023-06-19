@@ -51,7 +51,7 @@ import {
   INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isRegistrationEmbedded, setCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -87,7 +87,7 @@ const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const registrationEmbedded = isRegistrationEmbedded();
+  const registrationEmbedded = isHostAvailableInQueryParams();
   const { host } = queryParams;
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
@@ -538,7 +538,7 @@ const RegistrationPage = (props) => {
           <div
             className={classNames(
               'mw-xs mt-3',
-              { 'w-100 m-auto': registrationEmbedded },
+              { 'w-100 m-auto pt-4': registrationEmbedded },
             )}
           >
             <ThirdPartyAuthAlert
@@ -694,7 +694,7 @@ RegistrationPage.propTypes = {
     password: PropTypes.string,
   }),
   fieldDescriptions: PropTypes.shape({}),
-  institutionLogin: PropTypes.bool.isRequired,
+  institutionLogin: PropTypes.bool,
   optionalFields: PropTypes.shape({}),
   registrationError: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
@@ -733,7 +733,7 @@ RegistrationPage.propTypes = {
   backupFormState: PropTypes.func.isRequired,
   clearBackendError: PropTypes.func.isRequired,
   getRegistrationDataFromBackend: PropTypes.func.isRequired,
-  handleInstitutionLogin: PropTypes.func.isRequired,
+  handleInstitutionLogin: PropTypes.func,
   registerNewUser: PropTypes.func.isRequired,
   resetUsernameSuggestions: PropTypes.func.isRequired,
   setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
@@ -758,6 +758,8 @@ RegistrationPage.defaultProps = {
   backendCountryCode: '',
   backendValidations: null,
   fieldDescriptions: {},
+  handleInstitutionLogin: null,
+  institutionLogin: false,
   optionalFields: {},
   registrationError: {},
   registrationErrorCode: '',
