@@ -22,7 +22,7 @@ import {
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
-  getTpaHint, getTpaProvider, isRegistrationEmbedded, updatePathWithQueryParams,
+  getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
@@ -38,7 +38,6 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
-  const registrationEmbedded = isRegistrationEmbedded() && selectedPage === REGISTER_PAGE;
 
   useEffect(() => {
     const authService = getAuthService();
@@ -82,64 +81,58 @@ const Logistration = (props) => {
     const { provider } = getTpaProvider(tpaHint, providers, secondaryProviders);
     return !!provider;
   };
-  const renderLogistrationTabs = () => (
-    <div>
-      {disablePublicAccountCreation
-        ? (
-          <>
-            <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />
-            {institutionLogin && (
-              <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
-              </Tabs>
-            )}
-            <div id="main-content" className="main-content">
-              {!institutionLogin && (
-                <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
-              )}
-              <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-            </div>
-          </>
-        )
-        : (
-          <div>
-            {institutionLogin
-              ? (
-                <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                  <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
-                </Tabs>
-              )
-              : (!registrationEmbedded && !isValidTpaHint() && (
-                <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                  <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                  <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                </Tabs>
-              ))}
-            { key && (
-              <Redirect to={updatePathWithQueryParams(key)} />
-            )}
-            <div id="main-content" className="main-content">
-              {selectedPage === LOGIN_PAGE
-                ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
-                : (
-                  <RegistrationPage
-                    institutionLogin={institutionLogin}
-                    handleInstitutionLogin={handleInstitutionLogin}
-                  />
-                )}
-            </div>
-          </div>
-        )}
-    </div>
-  );
+
   return (
-    registrationEmbedded ? (
-      renderLogistrationTabs()
-    ) : (
-      <BaseComponent>
-        {renderLogistrationTabs()}
-      </BaseComponent>
-    )
+    <BaseComponent>
+      <div>
+        {disablePublicAccountCreation
+          ? (
+            <>
+              <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />
+              {institutionLogin && (
+                <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+                  <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+                </Tabs>
+              )}
+              <div id="main-content" className="main-content">
+                {!institutionLogin && (
+                  <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
+                )}
+                <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+              </div>
+            </>
+          )
+          : (
+            <div>
+              {institutionLogin
+                ? (
+                  <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
+                    <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+                  </Tabs>
+                )
+                : (!isValidTpaHint() && (
+                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                  </Tabs>
+                ))}
+              { key && (
+                <Redirect to={updatePathWithQueryParams(key)} />
+              )}
+              <div id="main-content" className="main-content">
+                {selectedPage === LOGIN_PAGE
+                  ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                  : (
+                    <RegistrationPage
+                      institutionLogin={institutionLogin}
+                      handleInstitutionLogin={handleInstitutionLogin}
+                    />
+                  )}
+              </div>
+            </div>
+          )}
+      </div>
+    </BaseComponent>
   );
 };
 

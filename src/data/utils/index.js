@@ -3,7 +3,7 @@ export {
   getTpaHint,
   getAllPossibleQueryParams,
   getActivationStatus,
-  isRegistrationEmbedded,
+  isHostAvailableInQueryParams,
   updatePathWithQueryParams,
   windowScrollTo,
 } from './dataUtils';

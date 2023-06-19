@@ -6,9 +6,8 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 
 import {
-  DEFAULT_REDIRECT_URL, REGISTER_PAGE,
+  DEFAULT_REDIRECT_URL,
 } from '../data/constants';
-import { isRegistrationEmbedded } from '../data/utils';
 
 /**
  * This wrapper redirects the requester to our default redirect url if they are
@@ -17,20 +16,13 @@ import { isRegistrationEmbedded } from '../data/utils';
 const UnAuthOnlyRoute = (props) => {
   const [authUser, setAuthUser] = useState({});
   const [isReady, setIsReady] = useState(false);
-  const registrationEmbedded = isRegistrationEmbedded() && props.path === REGISTER_PAGE;
 
   useEffect(() => {
-    if (registrationEmbedded) { return; }
     fetchAuthenticatedUser({ forceRefresh: !!getAuthenticatedUser() }).then((authenticatedUser) => {
       setAuthUser(authenticatedUser);
       setIsReady(true);
     });
-  }, [registrationEmbedded]);
-
-  // Show registration page for embedded experience even if the user is authenticated
-  if (registrationEmbedded) {
-    return <Route {...props} />;
-  }
+  }, []);
 
   if (isReady) {
     if (authUser && authUser.username) {

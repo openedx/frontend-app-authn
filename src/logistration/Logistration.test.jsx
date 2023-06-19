@@ -12,7 +12,7 @@ import Logistration from './Logistration';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import { RenderInstitutionButton } from '../common-components/InstitutionLogistration';
 import {
-  COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
+  COMPLETE_STATE, LOGIN_PAGE,
 } from '../data/constants';
 import { backupRegistrationForm } from '../register/data/actions';
 
@@ -61,26 +61,6 @@ describe('Logistration', () => {
     });
   });
 
-  it('should not render logistration tabs for embedded registration form', () => {
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded&host=http://localhost/host-website' };
-
-    store = mockStore({
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-    const logistration = mount(reduxWrapper(<IntlLogistration />));
-
-    expect(logistration.find('#controlled-tab').exists()).toBeFalsy();
-  });
   it('should render registration page', () => {
     mergeConfig({
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
