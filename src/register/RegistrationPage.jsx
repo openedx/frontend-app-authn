@@ -412,10 +412,19 @@ const RegistrationPage = (props) => {
   };
 
   const handleOnBlur = (event) => {
+    const { name, value } = event.target;
     if (registrationEmbedded) {
+      if (name === 'name') {
+        validateInput(
+          name,
+          value,
+          { name: formFields.name, username: formFields.username, form_field_key: name },
+          !validationApiRateLimited,
+          false,
+        );
+      }
       return;
     }
-    const { name, value } = event.target;
     const payload = {
       name: formFields.name,
       email: formFields.email,
