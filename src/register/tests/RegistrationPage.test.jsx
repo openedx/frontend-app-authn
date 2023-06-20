@@ -252,7 +252,7 @@ describe('RegistrationPage', () => {
 
     it('should not run validations on blur event when embedded variant is rendered', () => {
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?variant=embedded&host=http://localhost/host-website' };
+      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
@@ -883,7 +883,7 @@ describe('RegistrationPage', () => {
       window.parent.postMessage = jest.fn();
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?variant=embedded&host=http://localhost/host-website' };
+      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
 
       store = mockStore({
         ...initialState,
