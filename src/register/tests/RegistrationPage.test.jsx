@@ -31,6 +31,7 @@ import RegistrationPage from '../RegistrationPage';
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
+  identifyAuthenticatedUser: jest.fn(),
 }));
 jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
