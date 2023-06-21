@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   AxiosJwtAuthService,
   configure as configureAuth,
@@ -105,11 +105,10 @@ const ProgressiveProfiling = (props) => {
   }, [registrationEmbedded, welcomePageContext]);
 
   useEffect(() => {
-    if (canViewWelcomePage && authenticatedUser?.userId) {
-      identifyAuthenticatedUser(authenticatedUser.userId);
+    if (canViewWelcomePage) {
       sendPageEvent('login_and_registration', 'welcome');
     }
-  }, [authenticatedUser, canViewWelcomePage]);
+  }, [canViewWelcomePage]);
 
   useEffect(() => {
     if (registrationResult.redirectUrl && authenticatedUser?.userId) {

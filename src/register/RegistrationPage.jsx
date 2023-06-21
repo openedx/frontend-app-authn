@@ -4,7 +4,7 @@ import React, {
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
@@ -235,8 +235,30 @@ const RegistrationPage = (props) => {
       window.dataLayer.push({
         event: 'ImpactRegistrationEvent',
       });
+
+      // preparing identify call traits
+      const traits = { ...formFields };
+      delete traits.password;
+      traits.country = configurableFormFields?.country?.countryCode;
+      traits.is_marketable = configurableFormFields.marketingEmailsOptIn;
+      traits.email_subscribe = configurableFormFields.marketingEmailsOptIn ? 'subscribed' : 'unsubscribed';
+      identifyAuthenticatedUser(registrationResult.userId, traits);
+
+      // preparing register event properties
+      const properties = {
+        category: 'conversion',
+        email: formFields.email,
+        label: queryParams?.course_id || null,
+        provider: currentProvider?.name || null,
+        host: queryParams?.host || '',
+        marketing_emails_opt_in: configurableFormFields.marketingEmailsOptIn,
+      };
+      sendTrackEvent(
+        'edx.bi.user.account.registered.client',
+        properties,
+      );
     }
-  }, [registrationResult]);
+  }, [registrationResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const validateInput = (fieldName, value, payload, shouldValidateFromBackend, setError = true) => {
     let fieldError = '';
@@ -312,7 +334,7 @@ const RegistrationPage = (props) => {
         break;
       default:
         if (flags.showConfigurableRegistrationFields) {
-          if (!value && fieldDescriptions[fieldName].error_message) {
+          if (!value && fieldDescriptions[fieldName]?.error_message) {
             fieldError = fieldDescriptions[fieldName].error_message;
           } else if (fieldName === 'confirm_email' && formFields.email && value !== formFields.email) {
             fieldError = formatMessage(messages['email.do.not.match']);
@@ -468,7 +490,7 @@ const RegistrationPage = (props) => {
     const { fieldError: focusedFieldError, countryFieldCode } = focusedField ? (
       validateInput(
         focusedField,
-        (focusedField in fieldDescriptions || focusedField === 'country') ? (
+        (focusedField in fieldDescriptions || ['country', 'marketingEmailsOptIn'].includes(focusedField)) ? (
           configurableFormFields[focusedField]
         ) : formFields[focusedField],
         payload,
@@ -710,6 +732,7 @@ RegistrationPage.propTypes = {
   registrationResult: PropTypes.shape({
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
+    userId: PropTypes.number,
   }),
   shouldBackupState: PropTypes.bool,
   submitState: PropTypes.string,
