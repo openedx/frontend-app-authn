@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
@@ -27,6 +27,7 @@ const mockStore = configureStore();
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
+  identifyAuthenticatedUser: jest.fn(),
 }));
 jest.mock('@edx/frontend-platform/auth', () => ({
   configure: jest.fn(),
@@ -131,6 +132,13 @@ describe('ProgressiveProfilingTests', () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
 
     expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
+  });
+
+  it('should make identify call to segment on progressive profiling page', async () => {
+    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
+    await getProgressiveProfilingPage();
+    expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+    expect(identifyAuthenticatedUser).toHaveBeenCalled();
   });
 
   it('should submit user profile details on form submission', async () => {
