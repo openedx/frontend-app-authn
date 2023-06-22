@@ -19,12 +19,11 @@ export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
 
-    const { redirectUrl, success, userId } = yield call(registerRequest, action.payload.registrationInfo);
+    const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
 
     yield put(registerNewUserSuccess(
       redirectUrl,
       success,
-      userId,
     ));
   } catch (e) {
     const statusCodes = [400, 403, 409];

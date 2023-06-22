@@ -21,7 +21,6 @@ export async function registerRequest(registrationInformation) {
   return {
     redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
     success: data.success || false,
-    userId: data?.user_id,
   };
 }
 
