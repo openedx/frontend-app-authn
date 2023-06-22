@@ -312,7 +312,7 @@ const RegistrationPage = (props) => {
         break;
       default:
         if (flags.showConfigurableRegistrationFields) {
-          if (!value && fieldDescriptions[fieldName].error_message) {
+          if (!value && fieldDescriptions[fieldName]?.error_message) {
             fieldError = fieldDescriptions[fieldName].error_message;
           } else if (fieldName === 'confirm_email' && formFields.email && value !== formFields.email) {
             fieldError = formatMessage(messages['email.do.not.match']);
@@ -468,7 +468,7 @@ const RegistrationPage = (props) => {
     const { fieldError: focusedFieldError, countryFieldCode } = focusedField ? (
       validateInput(
         focusedField,
-        (focusedField in fieldDescriptions || focusedField === 'country') ? (
+        (focusedField in fieldDescriptions || ['country', 'marketingEmailsOptIn'].includes(focusedField)) ? (
           configurableFormFields[focusedField]
         ) : formFields[focusedField],
         payload,
