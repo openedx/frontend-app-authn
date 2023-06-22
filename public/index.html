@@ -9,6 +9,18 @@
               crossorigin="anonymous"
               referrerpolicy="no-referrer">
       </script>
+      <script>
+        setTimeout(function() {
+          const currentPath = window.location.pathname;
+          if (currentPath === '/register-embedded') {
+            const privacyBannerElement = document.querySelector('.cc-grower');
+            if (privacyBannerElement) {
+              // Hide the privacy banner element for embedded authn experience
+              privacyBannerElement.classList.add('d-none');
+            }
+          }
+        }, 1500);
+      </script>
   </head>
   <body>
     <div id="root"></div>
