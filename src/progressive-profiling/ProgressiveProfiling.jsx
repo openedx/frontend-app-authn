@@ -25,7 +25,7 @@ import { Helmet } from 'react-helmet';
 import { saveUserProfile } from './data/actions';
 import messages from './messages';
 import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
-import { BaseComponent } from '../base-component';
+import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { optionalFieldsSelector } from '../common-components/data/selectors';
@@ -203,7 +203,7 @@ const ProgressiveProfiling = (props) => {
   });
 
   return (
-    <BaseComponent showWelcomeBanner>
+    <BaseContainer showWelcomeBanner>
       <Helmet>
         <title>{formatMessage(messages['progressive.profiling.page.title'],
           { siteName: getConfig().SITE_NAME })}
@@ -272,7 +272,7 @@ const ProgressiveProfiling = (props) => {
           </div>
         </Form>
       </div>
-    </BaseComponent>
+    </BaseContainer>
   );
 };
 

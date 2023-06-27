@@ -3,9 +3,9 @@ import React from 'react';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
-import LargeLayout from '../LargeLayout';
-import MediumLayout from '../MediumLayout';
-import SmallLayout from '../SmallLayout';
+import LargeLayout from '../components/default-layout/LargeLayout';
+import MediumLayout from '../components/default-layout/MediumLayout';
+import SmallLayout from '../components/default-layout/SmallLayout';
 
 describe('ScreenLayout', () => {
   it('should display the form, pass as a child in SmallScreenLayout', () => {
