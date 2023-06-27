@@ -6,14 +6,14 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
 
-import AuthLargeLayout from './AuthLargeLayout';
-import AuthMediumLayout from './AuthMediumLayout';
-import AuthSmallLayout from './AuthSmallLayout';
-import LargeLayout from './LargeLayout';
-import MediumLayout from './MediumLayout';
-import SmallLayout from './SmallLayout';
+import LargeLayout from './components/default-layout/LargeLayout';
+import MediumLayout from './components/default-layout/MediumLayout';
+import SmallLayout from './components/default-layout/SmallLayout';
+import AuthLargeLayout from './components/welcome-page-layout/AuthLargeLayout';
+import AuthMediumLayout from './components/welcome-page-layout/AuthMediumLayout';
+import AuthSmallLayout from './components/welcome-page-layout/AuthSmallLayout';
 
-const BaseComponent = ({ children, showWelcomeBanner }) => {
+const BaseContainer = ({ children, showWelcomeBanner }) => {
   const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;
   const username = authenticatedUser ? authenticatedUser.username : null;
 
@@ -39,13 +39,13 @@ const BaseComponent = ({ children, showWelcomeBanner }) => {
   );
 };
 
-BaseComponent.defaultProps = {
+BaseContainer.defaultProps = {
   showWelcomeBanner: false,
 };
 
-BaseComponent.propTypes = {
+BaseContainer.propTypes = {
   children: PropTypes.node.isRequired,
   showWelcomeBanner: PropTypes.bool,
 };
 
-export default BaseComponent;
+export default BaseContainer;

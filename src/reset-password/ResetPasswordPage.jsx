@@ -24,7 +24,7 @@ import { resetPasswordResultSelector } from './data/selectors';
 import { validatePassword } from './data/service';
 import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
-import { BaseComponent } from '../base-component';
+import BaseContainer from '../base-container';
 import { PasswordField } from '../common-components';
 import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
@@ -156,7 +156,7 @@ const ResetPasswordPage = (props) => {
     return <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />;
   } else {
     return (
-      <BaseComponent>
+      <BaseContainer>
         <div>
           <Helmet>
             <title>
@@ -211,7 +211,7 @@ const ResetPasswordPage = (props) => {
             </div>
           </div>
         </div>
-      </BaseComponent>
+      </BaseContainer>
     );
   }
   return null;
