@@ -19,6 +19,11 @@ const configuration = {
   SEARCH_CATALOG_URL: process.env.SEARCH_CATALOG_URL || null,
   TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
   TOS_LINK: process.env.TOS_LINK || null,
+  // Base container images
+  BANNER_IMAGE_LARGE: process.env.BANNER_IMAGE_LARGE || '',
+  BANNER_IMAGE_MEDIUM: process.env.BANNER_IMAGE_MEDIUM || '',
+  BANNER_IMAGE_SMALL: process.env.BANNER_IMAGE_SMALL || '',
+  BANNER_IMAGE_EXTRA_SMALL: process.env.BANNER_IMAGE_EXTRA_SMALL || '',
   // Miscellaneous
   GENERAL_RECOMMENDATIONS: process.env.GENERAL_RECOMMENDATIONS || '[]',
   INFO_EMAIL: process.env.INFO_EMAIL || '',
