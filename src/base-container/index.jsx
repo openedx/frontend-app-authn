@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { breakpoints } from '@edx/paragon';
@@ -16,8 +16,23 @@ import DEFAULT_LAYOUT from './data/constants';
 const BaseContainer = ({ children, showWelcomeBanner }) => {
   const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;
   const username = authenticatedUser ? authenticatedUser.username : null;
-  // eslint-disable-next-line no-unused-vars
+
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
+
+  useEffect(() => {
+    const initRebrandExperiment = () => {
+      if (window.experiments?.rebrandExperiment) {
+        setBaseContainerVersion(window.experiments?.rebrandExperiment?.variation);
+      } else {
+        window.experiments = window.experiments || {};
+        window.experiments.rebrandExperiment = {};
+        window.experiments.rebrandExperiment.handleLoaded = () => {
+          setBaseContainerVersion(window.experiments?.rebrandExperiment?.variation);
+        };
+      }
+    };
+    initRebrandExperiment();
+  }, []);
 
   if (baseContainerVersion === DEFAULT_LAYOUT) {
     return (

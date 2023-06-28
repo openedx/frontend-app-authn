@@ -227,6 +227,13 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
+      // Optimizely registration conversion event
+      window.optimizely = window.optimizely || [];
+      window.optimizely.push({
+        type: 'event',
+        eventName: 'authn-registration-conversion',
+      });
+
       // This was added to fire social media conversion pixels through Google tag manager.
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
 
