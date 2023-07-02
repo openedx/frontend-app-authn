@@ -1,9 +1,11 @@
 {
   "start.learning": "Empieza a aprender",
   "with.site.name": "con {siteName}",
+  "your.career.turning.point": "Your career turning point",
+  "is.here": "is here.",
+  "welcome.to.platform": "¡Bienvenido a {siteName}, {username}!",
   "complete.your.profile.1": "Completado",
   "complete.your.profile.2": "tu perfil ",
-  "welcome.to.platform": "¡Bienvenido a {siteName}, {username}!",
   "institution.login.page.sub.heading": "Selecciona tu institución de la lista siguiente",
   "logistration.sign.in": "Iniciar sesión",
   "logistration.register": "Registrarse",
