@@ -4,7 +4,9 @@ import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS } from '../data/constants';
+import {
+  AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
+} from '../data/constants';
 import { setCookie } from '../data/utils';
 
 const RedirectLogistration = (props) => {
@@ -17,6 +19,8 @@ const RedirectLogistration = (props) => {
     redirectToRecommendationsPage,
     educationLevel,
     userId,
+    registrationEmbedded,
+    host,
   } = props;
   let finalRedirectUrl = '';
 
@@ -35,6 +39,14 @@ const RedirectLogistration = (props) => {
     if (redirectToProgressiveProfilingPage) {
       // TODO: Do we still need this cookie?
       setCookie('van-504-returning-user', true);
+
+      if (registrationEmbedded) {
+        window.parent.postMessage({
+          action: REDIRECT,
+          redirectUrl: getConfig().POST_REGISTRATION_REDIRECT_URL,
+        }, host);
+        return null;
+      }
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return (
         <Redirect to={{
@@ -79,6 +91,8 @@ RedirectLogistration.defaultProps = {
   optionalFields: {},
   redirectToRecommendationsPage: false,
   userId: null,
+  registrationEmbedded: false,
+  host: '',
 };
 
 RedirectLogistration.propTypes = {
@@ -90,6 +104,8 @@ RedirectLogistration.propTypes = {
   optionalFields: PropTypes.shape({}),
   redirectToRecommendationsPage: PropTypes.bool,
   userId: PropTypes.number,
+  registrationEmbedded: PropTypes.bool,
+  host: PropTypes.string,
 };
 
 export default RedirectLogistration;

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const AuthLargeLayout = ({ username }) => {
+const LargeLayout = ({ username }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -42,8 +42,8 @@ const AuthLargeLayout = ({ username }) => {
   );
 };
 
-AuthLargeLayout.propTypes = {
+LargeLayout.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default AuthLargeLayout;
+export default LargeLayout;

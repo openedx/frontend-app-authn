@@ -76,3 +76,8 @@ export const windowScrollTo = (options) => {
 
   return window.scrollTo(options.top, options.left);
 };
+
+export const isHostAvailableInQueryParams = () => {
+  const queryParams = getAllPossibleQueryParams();
+  return 'host' in queryParams;
+};
