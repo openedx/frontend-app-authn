@@ -250,6 +250,18 @@ describe('RegistrationPage', () => {
 
     // ******** test registration form validations ********
 
+    it('should not run validations on blur event when embedded variant is rendered', () => {
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+
+      registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeFalsy();
+
+      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
+      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
+    });
+
     it('should show error messages for required fields on empty form submission', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('button.btn-brand').simulate('click');
@@ -822,7 +834,7 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           optionalFields: {
-            extended_profile: {},
+            extended_profile: [],
             fields: {
               level_of_education: { name: 'level_of_education', error_message: false },
             },
@@ -860,6 +872,41 @@ describe('RegistrationPage', () => {
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
       expect(registrationPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
+    });
+
+    it('should call the postMessage API when embedded variant is rendered', () => {
+      getLocale.mockImplementation(() => ('en-us'));
+      mergeConfig({
+        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
+      });
+
+      window.parent.postMessage = jest.fn();
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
+
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+          },
+        },
+        commonComponents: {
+          optionalFields: {
+            extended_profile: {},
+            fields: {
+              level_of_education: { name: 'level_of_education', error_message: false },
+            },
+          },
+        },
+      });
+      const progressiveProfilingPage = mount(reduxWrapper(
+        <IntlRegistrationPage {...props} />,
+      ));
+      progressiveProfilingPage.update();
+      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
     });
 
     it('should render icon if icon classes are missing in providers', () => {

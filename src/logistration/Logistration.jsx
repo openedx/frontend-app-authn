@@ -14,14 +14,16 @@ import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { BaseComponent } from '../base-component';
+import BaseContainer from '../base-container';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { getTpaHint, getTpaProvider, updatePathWithQueryParams } from '../data/utils';
+import {
+  getTpaHint, getTpaProvider, updatePathWithQueryParams,
+} from '../data/utils';
 import { LoginPage } from '../login';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
@@ -81,7 +83,7 @@ const Logistration = (props) => {
   };
 
   return (
-    <BaseComponent>
+    <BaseContainer>
       <div>
         {disablePublicAccountCreation
           ? (
@@ -130,7 +132,7 @@ const Logistration = (props) => {
             </div>
           )}
       </div>
-    </BaseComponent>
+    </BaseContainer>
   );
 };
 

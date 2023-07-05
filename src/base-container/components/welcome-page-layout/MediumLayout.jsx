@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const AuthMediumLayout = ({ username }) => {
+const MediumLayout = ({ username }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -45,8 +45,8 @@ const AuthMediumLayout = ({ username }) => {
   );
 };
 
-AuthMediumLayout.propTypes = {
+MediumLayout.propTypes = {
   username: PropTypes.string.isRequired,
 };
 
-export default AuthMediumLayout;
+export default MediumLayout;

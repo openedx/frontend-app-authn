@@ -9,6 +9,7 @@ import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
 import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
@@ -46,11 +47,11 @@ import {
 } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import {
-  COMPLETE_STATE,
-  DEFAULT_STATE, INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
+  COMPLETE_STATE, DEFAULT_STATE,
+  INVALID_NAME_REGEX, LETTER_REGEX, NUMBER_REGEX, PENDING_STATE, REGISTER_PAGE, VALID_EMAIL_REGEX,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, setCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
 
 const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
@@ -86,6 +87,8 @@ const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const registrationEmbedded = isHostAvailableInQueryParams();
+  const { host } = queryParams;
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
@@ -224,6 +227,13 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
+      // Optimizely registration conversion event
+      window.optimizely = window.optimizely || [];
+      window.optimizely.push({
+        type: 'event',
+        eventName: 'authn-registration-conversion',
+      });
+
       // This was added to fire social media conversion pixels through Google tag manager.
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
 
@@ -309,7 +319,7 @@ const RegistrationPage = (props) => {
         break;
       default:
         if (flags.showConfigurableRegistrationFields) {
-          if (!value && fieldDescriptions[fieldName].error_message) {
+          if (!value && fieldDescriptions[fieldName]?.error_message) {
             fieldError = fieldDescriptions[fieldName].error_message;
           } else if (fieldName === 'confirm_email' && formFields.email && value !== formFields.email) {
             fieldError = formatMessage(messages['email.do.not.match']);
@@ -410,6 +420,18 @@ const RegistrationPage = (props) => {
 
   const handleOnBlur = (event) => {
     const { name, value } = event.target;
+    if (registrationEmbedded) {
+      if (name === 'name') {
+        validateInput(
+          name,
+          value,
+          { name: formFields.name, username: formFields.username, form_field_key: name },
+          !validationApiRateLimited,
+          false,
+        );
+      }
+      return;
+    }
     const payload = {
       name: formFields.name,
       email: formFields.email,
@@ -453,7 +475,7 @@ const RegistrationPage = (props) => {
     const { fieldError: focusedFieldError, countryFieldCode } = focusedField ? (
       validateInput(
         focusedField,
-        (focusedField in fieldDescriptions || focusedField === 'country') ? (
+        (focusedField in fieldDescriptions || ['country', 'marketingEmailsOptIn'].includes(focusedField)) ? (
           configurableFormFields[focusedField]
         ) : formFields[focusedField],
         payload,
@@ -514,10 +536,12 @@ const RegistrationPage = (props) => {
           <title>{formatMessage(messages['register.page.title'], { siteName: getConfig().SITE_NAME })}</title>
         </Helmet>
         <RedirectLogistration
+          host={host}
           success={registrationResult.success}
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
           optionalFields={optionalFields}
+          registrationEmbedded={registrationEmbedded}
           redirectToProgressiveProfilingPage={
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
           }
@@ -527,7 +551,12 @@ const RegistrationPage = (props) => {
             <Spinner animation="border" variant="primary" id="tpa-spinner" />
           </div>
         ) : (
-          <div className="mw-xs mt-3">
+          <div
+            className={classNames(
+              'mw-xs mt-3',
+              { 'w-100 m-auto pt-4': registrationEmbedded },
+            )}
+          >
             <ThirdPartyAuthAlert
               currentProvider={currentProvider}
               platformName={platformName}
@@ -591,6 +620,7 @@ const RegistrationPage = (props) => {
                 countryList={countryList}
                 email={formFields.email}
                 fieldErrors={errors}
+                registrationEmbedded={registrationEmbedded}
                 formFields={configurableFormFields}
                 setFieldErrors={setErrors}
                 setFormFields={setConfigurableFormFields}
@@ -611,13 +641,15 @@ const RegistrationPage = (props) => {
                 onClick={handleSubmit}
                 onMouseDown={(e) => e.preventDefault()}
               />
-              <ThirdPartyAuth
-                currentProvider={currentProvider}
-                providers={providers}
-                secondaryProviders={secondaryProviders}
-                handleInstitutionLogin={handleInstitutionLogin}
-                thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-              />
+              {!registrationEmbedded && (
+                <ThirdPartyAuth
+                  currentProvider={currentProvider}
+                  providers={providers}
+                  secondaryProviders={secondaryProviders}
+                  handleInstitutionLogin={handleInstitutionLogin}
+                  thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+                />
+              )}
             </Form>
           </div>
         )}
@@ -678,7 +710,7 @@ RegistrationPage.propTypes = {
     password: PropTypes.string,
   }),
   fieldDescriptions: PropTypes.shape({}),
-  institutionLogin: PropTypes.bool.isRequired,
+  institutionLogin: PropTypes.bool,
   optionalFields: PropTypes.shape({}),
   registrationError: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
@@ -717,7 +749,7 @@ RegistrationPage.propTypes = {
   backupFormState: PropTypes.func.isRequired,
   clearBackendError: PropTypes.func.isRequired,
   getRegistrationDataFromBackend: PropTypes.func.isRequired,
-  handleInstitutionLogin: PropTypes.func.isRequired,
+  handleInstitutionLogin: PropTypes.func,
   registerNewUser: PropTypes.func.isRequired,
   resetUsernameSuggestions: PropTypes.func.isRequired,
   setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
@@ -742,6 +774,8 @@ RegistrationPage.defaultProps = {
   backendCountryCode: '',
   backendValidations: null,
   fieldDescriptions: {},
+  handleInstitutionLogin: null,
+  institutionLogin: false,
   optionalFields: {},
   registrationError: {},
   registrationErrorCode: '',

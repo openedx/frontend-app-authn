@@ -34,6 +34,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFocusedField,
     setFormFields,
+    registrationEmbedded,
   } = props;
 
   let showTermsOfServiceAndHonorCode = false;
@@ -81,6 +82,9 @@ const ConfigurableRegistrationForm = (props) => {
       error = fieldDescriptions[name].error_message;
     } else if (name === 'confirm_email' && value !== email) {
       error = formatMessage(messages['email.do.not.match']);
+    }
+    if (registrationEmbedded) {
+      return;
     }
     setFocusedField(null);
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: error }));
@@ -216,10 +220,12 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFocusedField: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
+  registrationEmbedded: PropTypes.bool,
 };
 
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
+  registrationEmbedded: false,
 };
 
 export default ConfigurableRegistrationForm;
