@@ -1,3 +1,4 @@
+const IMAGE_LAYOUT = 'image-layout';
 const DEFAULT_LAYOUT = 'default-layout';
 
-export default DEFAULT_LAYOUT;
+export { DEFAULT_LAYOUT, IMAGE_LAYOUT };
