@@ -2,51 +2,42 @@ import React from 'react';
 
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
+import { Context as ResponsiveContext } from 'react-responsive';
 
-import LargeLayout from '../components/default-layout/LargeLayout';
-import MediumLayout from '../components/default-layout/MediumLayout';
-import SmallLayout from '../components/default-layout/SmallLayout';
+import BaseContainer from '../index';
 
-describe('ScreenLayout', () => {
-  it('should display the form, pass as a child in SmallScreenLayout', () => {
-    const smallScreen = mount(
+const LargeScreen = {
+  wrappingComponent: ResponsiveContext.Provider,
+  wrappingComponentProps: { value: { width: 1200 } },
+};
+
+describe('Base component tests', () => {
+  it('should should default layout', () => {
+    const baseContainer = mount(
       <IntlProvider locale="en">
-        <div>
-          <SmallLayout />
-          <form>
-            <input type="text" />
-          </form>
-        </div>
+        <BaseContainer />
       </IntlProvider>,
+      LargeScreen,
     );
-    expect(smallScreen.find('form').exists()).toEqual(true);
+
+    expect(baseContainer.find('.banner__image').exists()).toBeFalsy();
+    expect(baseContainer.find('.large-screen-svg-primary').exists()).toBeTruthy();
   });
 
-  it('should display the form, pass as a child in MediumScreenLayout', () => {
-    const mediumScreen = mount(
-      <IntlProvider locale="en">
-        <div>
-          <MediumLayout />
-          <form>
-            <input type="text" />
-          </form>
-        </div>
-      </IntlProvider>,
-    );
-    expect(mediumScreen.find('form').exists()).toEqual(true);
-  });
+  it('[experiment] should show image layout for treatment group', () => {
+    window.experiments = {
+      rebrandExperiment: {
+        variation: 'image-layout',
+      },
+    };
 
-  it('should display the form, pass as a child in LargeScreenLayout', () => {
-    const largeScreen = mount(
+    const baseContainer = mount(
       <IntlProvider locale="en">
-        <div>
-          <LargeLayout />
-          <form>
-            <input type="text" />
-          </form>
-        </div>
+        <BaseContainer />
       </IntlProvider>,
+      LargeScreen,
     );
-    expect(largeScreen.find('form').exists()).toEqual(true);
+
+    expect(baseContainer.find('.banner__image').exists()).toBeTruthy();
   });
 });
