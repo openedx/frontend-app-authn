@@ -67,7 +67,7 @@
 
 .username-suggestions {
   position: relative;
-  margin-top: -8.7%;
+  margin-top: -2.5rem;
   margin-left: 15px;
 }
 
@@ -84,8 +84,26 @@
 }
 
 .username-scroll-suggested--form-field {
-  width: 21rem;
+  width: 20rem;
   white-space: nowrap;
   overflow-x: auto;
   display: inline-flex;
+}
+
+@media (max-width: 372px) {
+  .username-scroll-suggested--form-field {
+    width: 11rem !important;
+  }
+  .username-suggestions__close__button {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, "sm")) {
+  .username-scroll-suggested--form-field {
+    width: 15rem;
+  }
+  .username-suggestions__close__button {
+    right: 0.5rem;
+  }
 }
