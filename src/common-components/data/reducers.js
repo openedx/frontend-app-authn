@@ -3,7 +3,10 @@ import { COMPLETE_STATE, FAILURE_STATE, PENDING_STATE } from '../../data/constan
 
 export const defaultState = {
   fieldDescriptions: {},
-  optionalFields: {},
+  optionalFields: {
+    fields: {},
+    extended_profile: [],
+  },
   thirdPartyAuthApiStatus: null,
   thirdPartyAuthContext: {
     currentProvider: null,
@@ -13,6 +16,7 @@ export const defaultState = {
     secondaryProviders: [],
     pipelineUserDetails: null,
     errorMessage: null,
+    welcomePageRedirectUrl: null,
   },
 };
 

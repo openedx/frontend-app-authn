@@ -70,6 +70,9 @@ describe('ProgressiveProfilingTests', () => {
     commonComponents: {
       thirdPartyAuthApiStatus: null,
       optionalFields: {},
+      thirdPartyAuthContext: {
+        welcomePageRedirectUrl: null,
+      },
     },
   };
 
@@ -156,21 +159,6 @@ describe('ProgressiveProfilingTests', () => {
     expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('abc123', formPayload));
   });
 
-  it('should set host property value to host where iframe is embedded for on ramp experience', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-    const expectedEventProperties = {
-      isGenderSelected: false,
-      isYearOfBirthSelected: false,
-      isLevelOfEducationSelected: false,
-      host: 'http://example.com',
-    };
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://example.com' };
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    progressiveProfilingPage.find('button.btn-brand').simulate('click');
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
-  });
-
   it('should set host property value empty for non-embedded experience', async () => {
     getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
     const expectedEventProperties = {
@@ -184,17 +172,6 @@ describe('ProgressiveProfilingTests', () => {
     const progressiveProfilingPage = await getProgressiveProfilingPage();
     progressiveProfilingPage.find('button.btn-brand').simulate('click');
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
-  });
-
-  it('should set host property value embedded host for on ramp experience for skip link event', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-    const host = 'http://example.com';
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: `?host=${host}` };
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-
-    progressiveProfilingPage.find('button.btn-link').simulate('click');
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
   });
 
   it('should open modal on pressing skip for now button', async () => {
@@ -283,21 +260,9 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       SEARCH_CATALOG_URL: 'http://localhost/search',
     });
+    const host = 'http://example.com';
 
-    delete window.location;
-    window.location = {
-      assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-      href: getConfig().BASE_URL,
-      search: `?variant=${EMBEDDED}`,
-    };
-
-    it('should render fields returned by backend API', async () => {
-      delete window.location;
-      window.location = {
-        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-        href: getConfig().BASE_URL,
-        search: `?variant=${EMBEDDED}&host=http://localhost/host-website`,
-      };
+    beforeEach(() => {
       props = {};
       store = mockStore({
         ...initialState,
@@ -307,6 +272,44 @@ describe('ProgressiveProfilingTests', () => {
           optionalFields,
         },
       });
+    });
+
+    it('should set host property value embedded host for on ramp experience for skip link event', async () => {
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: `?host=${host}&variant=${EMBEDDED}`,
+      };
+      const progressiveProfilingPage = await getProgressiveProfilingPage();
+
+      progressiveProfilingPage.find('button.btn-link').simulate('click');
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
+    });
+
+    it('should set host property value to host where iframe is embedded for on ramp experience', async () => {
+      const expectedEventProperties = {
+        isGenderSelected: false,
+        isYearOfBirthSelected: false,
+        isLevelOfEducationSelected: false,
+        host: 'http://example.com',
+      };
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: `?host=${host}`,
+      };
+      const progressiveProfilingPage = await getProgressiveProfilingPage();
+      progressiveProfilingPage.find('button.btn-brand').simulate('click');
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
+    });
+
+    it('should render fields returned by backend API', async () => {
+      delete window.location;
+      window.location = {
+        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+        href: getConfig().BASE_URL,
+        search: `?variant=${EMBEDDED}&host=${host}`,
+      };
 
       const progressiveProfilingPage = await getProgressiveProfilingPage();
       expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
@@ -319,7 +322,6 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL,
         search: `?variant=${EMBEDDED}`,
       };
-      props = {};
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -338,7 +340,7 @@ describe('ProgressiveProfilingTests', () => {
       window.location = {
         assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
         href: getConfig().BASE_URL,
-        search: `?variant=${EMBEDDED}&host=http://localhost/host-website&next=${redirectUrl}`,
+        search: `?variant=${EMBEDDED}&host=${host}&next=${redirectUrl}`,
       };
       props = {};
       store = mockStore({
@@ -347,6 +349,13 @@ describe('ProgressiveProfilingTests', () => {
           ...initialState.commonComponents,
           thirdPartyAuthApiStatus: COMPLETE_STATE,
           optionalFields,
+          thirdPartyAuthContext: {
+            welcomePageRedirectUrl: redirectUrl,
+          },
+        },
+        welcomePage: {
+          ...initialState.welcomePage,
+          success: true,
         },
       });
 

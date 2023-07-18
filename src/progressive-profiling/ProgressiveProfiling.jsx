@@ -23,12 +23,12 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import { saveUserProfile } from './data/actions';
+import { welcomePageContextSelector } from './data/selectors';
 import messages from './messages';
 import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
 import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import { optionalFieldsSelector } from '../common-components/data/selectors';
 import {
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
@@ -55,6 +55,7 @@ const ProgressiveProfiling = (props) => {
   } = props;
   const registrationEmbedded = isHostAvailableInQueryParams();
 
+  const queryParams = getAllPossibleQueryParams();
   const authenticatedUser = getAuthenticatedUser();
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const enablePersonalizedRecommendations = getConfig().ENABLE_PERSONALIZED_RECOMMENDATIONS;
@@ -90,9 +91,9 @@ const ProgressiveProfiling = (props) => {
 
   useEffect(() => {
     if (registrationEmbedded) {
-      getFieldDataFromBackend({ is_welcome_page: true });
+      getFieldDataFromBackend({ is_welcome_page: true, next: queryParams?.next });
     }
-  }, [registrationEmbedded, getFieldDataFromBackend]);
+  }, [registrationEmbedded, getFieldDataFromBackend, queryParams?.next]);
 
   useEffect(() => {
     if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
@@ -100,7 +101,8 @@ const ProgressiveProfiling = (props) => {
         fields: welcomePageContext.fields,
         extendedProfile: welcomePageContext.extended_profile,
       });
-      setRegistrationResult({ redirectUrl: getConfig().SEARCH_CATALOG_URL });
+      const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : getConfig().SEARCH_CATALOG_URL;
+      setRegistrationResult({ redirectUrl: nextUrl });
     }
   }, [registrationEmbedded, welcomePageContext]);
 
@@ -141,8 +143,6 @@ const ProgressiveProfiling = (props) => {
   if (!canViewWelcomePage) {
     return null;
   }
-
-  const queryParams = getAllPossibleQueryParams();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -210,10 +210,10 @@ const ProgressiveProfiling = (props) => {
         </title>
       </Helmet>
       <ProgressiveProfilingPageModal isOpen={showModal} redirectUrl={registrationResult.redirectUrl} />
-      {queryParams?.next && (
+      {(props.shouldRedirect && welcomePageContext.nextUrl) && (
         <RedirectLogistration
           success
-          redirectUrl={queryParams.next}
+          redirectUrl={registrationResult.redirectUrl}
         />
       )}
       {props.shouldRedirect && (
@@ -300,6 +300,7 @@ ProgressiveProfiling.propTypes = {
   welcomePageContext: PropTypes.shape({
     extended_profile: PropTypes.arrayOf(PropTypes.string),
     fields: PropTypes.shape({}),
+    nextUrl: PropTypes.string,
   }),
   welcomePageContextApiStatus: PropTypes.string,
   // Actions
@@ -323,7 +324,7 @@ const mapStateToProps = state => {
     shouldRedirect: welcomePageStore.success,
     showError: welcomePageStore.showError,
     submitState: welcomePageStore.submitState,
-    welcomePageContext: optionalFieldsSelector(state),
+    welcomePageContext: welcomePageContextSelector(state),
     welcomePageContextApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
   };
 };
