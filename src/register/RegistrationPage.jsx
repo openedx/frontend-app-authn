@@ -88,7 +88,7 @@ const RegistrationPage = (props) => {
   const countryList = useMemo(() => getCountryList(getLocale()), []);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const registrationEmbedded = isHostAvailableInQueryParams();
-  const { host } = queryParams;
+  const { cta, host } = queryParams;
   const tpaHint = useMemo(() => getTpaHint(), []);
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
@@ -109,6 +109,7 @@ const RegistrationPage = (props) => {
     providers, currentProvider, secondaryProviders, finishAuthUrl,
   } = thirdPartyAuthContext;
   const platformName = getConfig().SITE_NAME;
+  const buttonLabel = cta ? formatMessage(messages['create.account.cta.button'], { label: cta }) : formatMessage(messages['create.account.for.free.button']);
 
   /**
    * If auto submitting register form, we will check tos and honor code fields if they exist for feature parity.
@@ -635,7 +636,7 @@ const RegistrationPage = (props) => {
                 className="register-button mt-4 mb-4"
                 state={submitState}
                 labels={{
-                  default: formatMessage(messages['create.account.for.free.button']),
+                  default: buttonLabel,
                   pending: '',
                 }}
                 onClick={handleSubmit}
