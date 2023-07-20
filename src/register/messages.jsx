@@ -69,6 +69,11 @@ const messages = defineMessages({
     defaultMessage: 'Or register with:',
     description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
   },
+  'create.account.cta.button': {
+    id: 'create.account.cta.button',
+    defaultMessage: '{label}',
+    description: 'Label text for registration form submission button for those users who are landing through redirections',
+  },
   // Institution login
   'register.institution.login.button': {
     id: 'register.institution.login.button',
