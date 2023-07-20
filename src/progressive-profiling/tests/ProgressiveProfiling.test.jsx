@@ -331,28 +331,5 @@ describe('ProgressiveProfilingTests', () => {
       await getProgressiveProfilingPage();
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
-
-    it('should redirect to provided redirect url', async () => {
-      const redirectUrl = 'https://redirect-test.com';
-      delete window.location;
-      window.location = {
-        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-        href: getConfig().BASE_URL,
-        search: `?variant=${EMBEDDED}&host=http://localhost/host-website&next=${redirectUrl}`,
-      };
-      props = {};
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          optionalFields,
-        },
-      });
-
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
-      progressiveProfilingPage.find('button.btn-brand').simulate('click');
-      expect(window.location.href).toBe(redirectUrl);
-    });
   });
 });

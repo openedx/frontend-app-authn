@@ -619,14 +619,6 @@ describe('RegistrationPage', () => {
       });
     });
 
-    it('should show button label based on cta query params value', () => {
-      const buttonLabel = 'Register';
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL, search: `?cta=${buttonLabel}` };
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual(buttonLabel);
-    });
-
     it('should display no password field when current provider is present', () => {
       store = mockStore({
         ...initialState,

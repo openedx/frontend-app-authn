@@ -210,13 +210,7 @@ const ProgressiveProfiling = (props) => {
         </title>
       </Helmet>
       <ProgressiveProfilingPageModal isOpen={showModal} redirectUrl={registrationResult.redirectUrl} />
-      {queryParams?.next && (
-        <RedirectLogistration
-          success
-          redirectUrl={queryParams.next}
-        />
-      )}
-      {props.shouldRedirect && (
+      {props.shouldRedirect ? (
         <RedirectLogistration
           success
           redirectUrl={registrationResult.redirectUrl}
@@ -224,7 +218,7 @@ const ProgressiveProfiling = (props) => {
           educationLevel={values?.level_of_education}
           userId={authenticatedUser?.userId}
         />
-      )}
+      ) : null}
       <div className="mw-xs m-4 pp-page-content">
         <div>
           <h2 className="pp-page__heading text-primary">{formatMessage(messages['progressive.profiling.page.heading'])}</h2>
