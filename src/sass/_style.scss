@@ -512,10 +512,6 @@ select.form-control {
     right: 0;
     position: relative;
   }
-
-  .content {
-    width: 100%;
-  }
 }
 
 .alert {
@@ -593,21 +589,11 @@ select.form-control {
   margin-bottom: 11%;
   margin-left: 15px;
 }
-
-.suggested-usernames-wrapper {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
 .scroll-suggested-username {
+  width: 21rem;
   white-space: nowrap;
   overflow-x: auto;
   display: inline-flex;
-
-  @include media-breakpoint-up(sm) {
-    margin-right: 0.5rem;
-  }
 }
 
 .pgn__form-control-decorator-trailing {
