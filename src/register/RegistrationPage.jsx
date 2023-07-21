@@ -235,8 +235,11 @@ const RegistrationPage = (props) => {
         eventName: 'authn-registration-conversion',
       });
 
-      // This was added to fire social media conversion pixels through Google tag manager.
+      // We probably don't need this cookie because this fires the same event as
+      // above for optimizely using GTM.
       setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
+      // This is used by the "User Retention Rate Event" on GTM
+      setCookie('authn-returning-user');
 
       // Fire GTM event used for integration with impact.com
       window.dataLayer = window.dataLayer || [];
