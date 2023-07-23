@@ -126,6 +126,7 @@
   "help.text.email": "用于帐户激活和重要更新",
   "create.account.for.free.button": "免费创建一个帐户",
   "registration.other.options.heading": "或注册：",
+  "create.account.cta.button": "{label}",
   "register.institution.login.button": "机构/院系验证",
   "register.institution.login.page.title": "使用机构/院系账户注册",
   "empty.name.field.error": "输入您的全名",

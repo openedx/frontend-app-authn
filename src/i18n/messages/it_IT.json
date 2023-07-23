@@ -126,6 +126,7 @@
   "help.text.email": "Per l&#39;attivazione dell&#39;account e aggiornamenti importanti",
   "create.account.for.free.button": "Crea un account gratis",
   "registration.other.options.heading": "Oppure registrati con:",
+  "create.account.cta.button": "{label}",
   "register.institution.login.button": "Credenziali dell&#39;istituto/campus",
   "register.institution.login.page.title": "Registrati con le credenziali dell'istituzione/campus",
   "empty.name.field.error": "Inserisci il tuo nome e cognome",
