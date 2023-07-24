@@ -55,9 +55,9 @@ describe('HonorCodeTest', () => {
         <IntlHonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
-    const expectedMsg = 'By creating an account, you agree to the Terms of Service and Honor Codein a new tab and you '
+    const expectedMsg = 'By creating an account, you agree to the Terms of Service and Honor Code and you '
                         + 'acknowledge that Your Platform Name Here and each Member process your personal data in '
-                        + 'accordance with the Privacy Policyin a new tab.';
+                        + 'accordance with the Privacy Policy.';
     const field = HonorCodeProps.find('#honor-code');
     expect(field.text()).toEqual(expectedMsg);
   });
