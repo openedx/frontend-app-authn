@@ -558,7 +558,7 @@ const RegistrationPage = (props) => {
           <div
             className={classNames(
               'mw-xs mt-3',
-              { 'w-100 m-auto pt-4': registrationEmbedded },
+              { 'w-100 m-auto pt-4 main-content': registrationEmbedded },
             )}
           >
             <ThirdPartyAuthAlert
