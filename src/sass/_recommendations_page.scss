@@ -24,9 +24,29 @@
   @include media-breakpoint-up(xxl) {
     max-width: $max-width-lg + $grid-gutter-width !important;
   }
+  .dropdown {
+    background-color: #FBFAF9 !important;
+
+    .dropdown-toggle {
+      background-color: #FBFAF9 !important;
+      border: none;
+      color: #000000;
+      font-weight: 700;
+      font-size: 22px;
+    }
+    .dropdown-toggle:hover {
+      background-color: #FBFAF9 !important;
+      border: none;
+      color: #000000;
+    }
+    .dropdown-toggle::after {
+      margin-left: 1.3em;
+    }
+  }
 }
 
 .recommendation-card {
+  cursor: pointer;
   .pgn__hyperlink {
     display: block;
   }
@@ -64,4 +84,8 @@
     font-size: 	0.75rem;
     line-height: 1.25rem;
   }
+}
+.footer-icon{
+   height: 16px;
+   width: 16px; 
 }
