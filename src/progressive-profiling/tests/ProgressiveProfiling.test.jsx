@@ -18,6 +18,7 @@ import {
   FAILURE_STATE,
   RECOMMENDATIONS,
 } from '../../data/constants';
+import { activateRecommendationsExperiment } from '../../recommendations/optimizelyExperiment';
 import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
 
@@ -39,7 +40,7 @@ jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
 }));
 jest.mock('../../recommendations/optimizelyExperiment.js', () => ({
-  activateRecommendationsExperiment: jest.fn().mockImplementation(() => 'welcome_page_recommendations_enabled'),
+  activateRecommendationsExperiment: jest.fn(),
   trackRecommendationViewedOptimizely: jest.fn(),
   RECOMMENDATIONS_EXP_VARIATION: 'welcome_page_recommendations_enabled',
 }));
@@ -207,7 +208,7 @@ describe('ProgressiveProfilingTests', () => {
 
   describe('Recommendations test', () => {
     mergeConfig({
-      ENABLE_PERSONALIZED_RECOMMENDATIONS: true,
+      ENABLE_POPULAR_AND_TRENDING_RECOMMENDATIONS: true,
     });
 
     it('should redirect to recommendations page if recommendations are enabled', async () => {
@@ -218,12 +219,41 @@ describe('ProgressiveProfilingTests', () => {
           success: true,
         },
       });
+      activateRecommendationsExperiment.mockImplementation(() => 'welcome_page_recommendations_enabled');
 
       getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
       const progressiveProfilingPage = await getProgressiveProfilingPage();
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
       expect(history.location.pathname).toEqual(RECOMMENDATIONS);
+    });
+
+    it('should fire segments recommendations viewed and variation group events', async () => {
+      const viewedEventProperties = {
+        page: 'authn_recommendations',
+        course_key_array: [],
+        amplitude_recommendations: false,
+        is_control: true,
+        user_id: 3,
+      };
+      const groupEventProperties = {
+        page: 'authn_recommendations',
+        variation: 'control',
+        user_id: 3,
+      };
+      activateRecommendationsExperiment.mockImplementation(() => 'control');
+      store = mockStore({
+        ...initialState,
+        welcomePage: {
+          ...initialState.welcomePage,
+          success: true,
+        },
+      });
+
+      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
+      await getProgressiveProfilingPage();
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.recommendations.group', groupEventProperties);
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.recommendations.viewed', viewedEventProperties);
     });
 
     it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
