@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Hyperlink, Image, Spinner, StatefulButton,
+  Hyperlink, Image, StatefulButton,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { EDUCATION_LEVEL_MAPPING, RECOMMENDATIONS_COUNT } from './data/constants';
-import getPersonalizedRecommendations from './data/service';
-import { convertCourseRunKeytoCourseKey } from './data/utils';
+import { RECOMMENDATIONS_COUNT, RECOMMENDATIONS_OPTION_LIST } from './data/constants';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
-import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = (props) => {
@@ -23,51 +20,12 @@ const RecommendationsPage = (props) => {
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   const { formatMessage } = useIntl();
-  const [isLoading, setIsLoading] = useState(true);
-  const [recommendations, setRecommendations] = useState([]);
-  const [algoliaRecommendations, setAlgoliaRecommendations] = useState([]);
-  const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
+  const [selectedRecommendationsType, setSelectedRecommendationsType] = useState(RECOMMENDATIONS_OPTION_LIST[1]);
+  const [recommendations] = useState([]);
 
-  useEffect(() => {
-    if (registrationResponse) {
-      const generalRecommendations = JSON.parse(getConfig().GENERAL_RECOMMENDATIONS);
-      let coursesWithKeys = [];
-      getPersonalizedRecommendations(educationLevel).then((response) => {
-        coursesWithKeys = response.map(course => ({
-          ...course,
-          courseKey: convertCourseRunKeytoCourseKey(course.activeRunKey),
-        }));
-        setAlgoliaRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
-
-        if (coursesWithKeys.length >= RECOMMENDATIONS_COUNT) {
-          setRecommendations(coursesWithKeys.slice(0, RECOMMENDATIONS_COUNT));
-        } else {
-          const courseRecommendations = coursesWithKeys.concat(generalRecommendations);
-          // Remove duplicate recommendations
-          const uniqueRecommendations = courseRecommendations.filter(
-            (recommendation, index, self) => index === self.findIndex((existingRecommendation) => (
-              existingRecommendation.courseKey === recommendation.courseKey
-            )),
-          );
-          setRecommendations(uniqueRecommendations.slice(0, RECOMMENDATIONS_COUNT));
-        }
-
-        setIsLoading(false);
-      })
-        .catch(() => {
-          setRecommendations(generalRecommendations.slice(0, RECOMMENDATIONS_COUNT));
-          setIsLoading(false);
-        });
-    }
-  }, [registrationResponse, DASHBOARD_URL, educationLevel, userId]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      // We only want to track the recommendations returned by Algolia
-      const courseKeys = algoliaRecommendations.map(course => course.courseKey);
-      trackRecommendationsViewed(courseKeys, false, userId);
-    }
-  }, [isLoading, algoliaRecommendations, userId]);
+  const handleRecommendationType = (option) => {
+    setSelectedRecommendationsType(option);
+  };
 
   if (!registrationResponse) {
     global.location.assign(DASHBOARD_URL);
@@ -83,7 +41,7 @@ const RecommendationsPage = (props) => {
     }
   };
 
-  if (!isLoading && recommendations.length < RECOMMENDATIONS_COUNT) {
+  if (recommendations.length < RECOMMENDATIONS_COUNT) {
     handleRedirection();
   }
 
@@ -106,12 +64,14 @@ const RecommendationsPage = (props) => {
             <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
           </Hyperlink>
         </div>
-        {(!isLoading && recommendations.length === RECOMMENDATIONS_COUNT) ? (
+        {(recommendations) && (
           <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 p-1">
             <RecommendationsList
               title={formatMessage(messages['recommendation.page.heading'])}
               recommendations={recommendations}
               userId={userId}
+              setSelectedRecommendationsType={handleRecommendationType}
+              selectedRecommendationsType={selectedRecommendationsType}
             />
             <div className="text-center">
               <StatefulButton
@@ -125,10 +85,7 @@ const RecommendationsPage = (props) => {
               />
             </div>
           </div>
-        )
-          : (
-            <Spinner animation="border" variant="primary" className="spinner--position-centered" />
-          )}
+        )}
       </div>
     </>
   );
