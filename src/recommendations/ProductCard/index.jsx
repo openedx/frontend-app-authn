@@ -9,8 +9,7 @@ import { createCodeFriendlyProduct, getVariant, useProductType } from '../data/u
 import {
   cardBadgesMessages,
 } from '../messages';
-import { trackRecommendationCardClickOptimizely } from '../optimizelyExperiment';
-import { trackRecommendationsClicked } from '../track';
+import { trackRecommendationClick } from '../track';
 
 const ProductCard = ({
   product,
@@ -64,20 +63,16 @@ const ProductCard = ({
     ],
   );
   const handleCardClick = () => {
-    trackRecommendationCardClickOptimizely(userId?.toString());
-    trackRecommendationsClicked(
-      product.courseKey,
-      false,
+    trackRecommendationClick(
+      product,
       position + 1,
+      false,
       userId,
-      product.marketingUrl,
-      product.recommendationType || 'algolia',
     );
   };
 
   return (
     <BaseCard
-      url={product.url}
       customHeaderImage={headerImage}
       schoolLogo={isMultipleOwner ? '' : schoolLogo}
       title={product.title}

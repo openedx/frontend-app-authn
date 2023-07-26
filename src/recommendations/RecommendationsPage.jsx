@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -8,8 +8,10 @@ import {
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
+import { POPULAR, TRENDING } from './data/constants';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
+import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = ({ location }) => {
@@ -21,6 +23,10 @@ const RecommendationsPage = ({ location }) => {
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const POPULAR_PRODUCTS = JSON.parse(getConfig().POPULAR_PRODUCTS);
   const TRENDING_PRODUCTS = JSON.parse(getConfig().TRENDING_PRODUCTS);
+
+  useEffect(() => {
+    trackRecommendationsViewed(POPULAR_PRODUCTS, POPULAR, false, userId);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRedirection = () => {
     window.history.replaceState(location.state, null, '');
@@ -45,6 +51,11 @@ const RecommendationsPage = ({ location }) => {
     handleRedirection();
   }
 
+  const handleOnSelect = (tabKey) => {
+    const recommendations = tabKey === POPULAR ? POPULAR_PRODUCTS : TRENDING_PRODUCTS;
+    trackRecommendationsViewed(recommendations, tabKey, false, userId);
+  };
+
   return (
     <>
       <Helmet>
@@ -66,16 +77,17 @@ const RecommendationsPage = ({ location }) => {
             </h2>
             <Tabs
               variant="tabs"
-              defaultActiveKey="popular"
+              defaultActiveKey={POPULAR}
               id="recommendations-selection"
+              onSelect={handleOnSelect}
             >
-              <Tab tabClassName="mb-3" eventKey="popular" title={formatMessage(messages['recommendation.option.popular'])}>
+              <Tab tabClassName="mb-3" eventKey={POPULAR} title={formatMessage(messages['recommendation.option.popular'])}>
                 <RecommendationsList
                   recommendations={POPULAR_PRODUCTS}
                   userId={userId}
                 />
               </Tab>
-              <Tab tabClassName="mb-3" eventKey="trending" title={formatMessage(messages['recommendation.option.trending'])}>
+              <Tab tabClassName="mb-3" eventKey={TRENDING} title={formatMessage(messages['recommendation.option.trending'])}>
                 <RecommendationsList
                   recommendations={TRENDING_PRODUCTS}
                   userId={userId}
