@@ -1,7 +1,7 @@
 import optimizelyInstance from '../data/optimizely';
 
-const RECOMMENDATIONS_EXP_KEY = 'welcome_page_recommendations_exp';
-const RECOMMENDATIONS_EXP_VARIATION = 'welcome_page_recommendations_enabled';
+const RECOMMENDATIONS_EXP_KEY = 'popular_and_trending_recommendations_exp';
+const RECOMMENDATIONS_EXP_VARIATION = 'popular_and_trending_recommendations';
 
 export const eventNames = {
   recommendedCourseClicked: 'welcome_page_recommendation_card_click',
