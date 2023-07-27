@@ -37,7 +37,7 @@ const RecommendationsPage = ({ location }) => {
   };
 
   if (!registrationResponse) {
-    global.location.assign(DASHBOARD_URL);
+    window.location.href = DASHBOARD_URL;
     return null;
   }
 
@@ -75,7 +75,7 @@ const RecommendationsPage = ({ location }) => {
                   userId={userId}
                 />
               </Tab>
-              <Tab eventKey="trending" title={formatMessage(messages['recommendation.option.trending'])}>
+              <Tab tabClassName="mb-3" eventKey="trending" title={formatMessage(messages['recommendation.option.trending'])}>
                 <RecommendationsList
                   recommendations={TRENDING_PRODUCTS}
                   userId={userId}

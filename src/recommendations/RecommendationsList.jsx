@@ -11,12 +11,13 @@ const RecommendationsList = (props) => {
     <div className="d-flex recommendations-container__card-list">
       {
         recommendations.map((recommendation, idx) => (
-          <ProductCard
-            key={recommendation.activeRunKey}
-            product={recommendation}
-            position={idx}
-            userId={userId}
-          />
+          <span key={recommendation.uuid}>
+            <ProductCard
+              product={recommendation}
+              position={idx}
+              userId={userId}
+            />
+          </span>
         ))
       }
     </div>
@@ -25,7 +26,7 @@ const RecommendationsList = (props) => {
 
 RecommendationsList.propTypes = {
   recommendations: PropTypes.arrayOf(PropTypes.shape({
-    activeRunKey: PropTypes.string.isRequired,
+    uuid: PropTypes.string,
   })),
   userId: PropTypes.number,
 };

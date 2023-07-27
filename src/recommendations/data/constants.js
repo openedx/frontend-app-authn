@@ -9,8 +9,3 @@ export const EDUCATION_LEVEL_MAPPING = {
   hs: 'Introductory',
   jhs: 'Introductory',
 };
-
-export const EXTERNAL_PRODUCT_SOURCES = {
-  EMERITUS: 'emeritus',
-  SHORELIGHT: 'shorelight',
-};

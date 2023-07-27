@@ -5,11 +5,9 @@ import PropTypes from 'prop-types';
 
 import BaseCard from './BaseCard';
 import Footer from './Footer';
-import { EXTERNAL_PRODUCT_SOURCES } from '../data/constants';
 import { createCodeFriendlyProduct, getVariant, useProductType } from '../data/utils';
 import {
   cardBadgesMessages,
-  cardFooterMessages,
 } from '../messages';
 import { trackRecommendationCardClickOptimizely } from '../optimizelyExperiment';
 import { trackRecommendationsClicked } from '../track';
@@ -26,15 +24,6 @@ const ProductCard = ({
   const variant = getVariant(productType);
 
   const headerImage = product?.cardImageUrl || product?.image?.src;
-
-  const footerMessagesObj = {
-    [EXTERNAL_PRODUCT_SOURCES.EMERITUS]: formatMessage(
-      cardFooterMessages['recommendation.2u-product-card.footer-text.emeritus'],
-    ),
-    [EXTERNAL_PRODUCT_SOURCES.SHORELIGHT]: formatMessage(
-      cardFooterMessages['recommendation.2u-product-card.footer-text.shorelight'],
-    ),
-  };
 
   const schoolName = product?.organizationShortCodeOverride
     || product?.owners?.[0]?.name
@@ -71,7 +60,7 @@ const ProductCard = ({
 
   const productTypeCopy = formatMessage(
     cardBadgesMessages[
-      `recommendation.2u-product-card.pill-text.${createCodeFriendlyProduct(productType)}`
+      `recommendation.product-card.pill-text.${createCodeFriendlyProduct(productType)}`
     ],
   );
   const handleCardClick = () => {
@@ -100,7 +89,6 @@ const ProductCard = ({
       variant={variant}
       footer={(
         <Footer
-          footerMessage={footerMessagesObj?.[product.productSource?.slug]}
           quickFacts={product.degree?.quickFacts}
           externalUrl={product.additionalMetadata?.externalUrl
             || product.degree?.additionalMetadata?.externalUrl}

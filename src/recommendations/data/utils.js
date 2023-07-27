@@ -20,24 +20,10 @@ const courseTypeToProductTypeMap = {
   'credit-verified-audit': 'Course',
   'spoc-verified-audit': 'Course',
   professional: 'Professional Certificate',
-  'bootcamp-2u': 'Boot Camp',
-  'executive-education-2u': 'Executive Education',
-  'executive-education': 'Executive Education',
-  masters: "Master's",
-  'masters-verified-audit': "Master's",
 };
 
 const programTypeToProductTypeMap = {
-  xseries: 'XSeries',
-  micromasters: 'MicroMasters',
-  microbachelors: 'MicroBachelors',
   'professional certificate': 'Professional Certificate',
-  "bachelor's": "Bachelor's",
-  bachelors: "Bachelor's",
-  "master's": "Master's",
-  masters: "Master's",
-  doctorate: 'Doctorate',
-  license: 'License',
   certificate: 'Certificate',
 };
 
@@ -60,8 +46,6 @@ export const getVariant = (productType) => (
 );
 
 export const createCodeFriendlyProduct = (type) => type?.replace(/\s+/g, '-').replace(/'/g, '').toLowerCase();
-
-export const isEdxProgram = ({ cardType, is2UDegreeProgram }) => cardType === 'program' && !is2UDegreeProgram;
 
 export const truncateText = (input) => (input?.length > 50 ? `${input.substring(0, 50)}...` : input);
 
