@@ -32,14 +32,14 @@ This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see 
 
 2. Start up LMS, if it's not already started.
 
-4. Within this project (frontend-app-authn), install requirements and start the development server:
+3. Within this project (frontend-app-authn), install requirements and start the development server:
 
    .. code-block::
 
       npm install
       npm start # The server will run on port 1999
 
-5. Once the dev server is up, visit http://localhost:1999 to access the MFE
+4. Once the dev server is up, visit http://localhost:1999 to access the MFE
 
    .. image:: ./docs/images/frontend-app-authn-localhost-preview.png
 
