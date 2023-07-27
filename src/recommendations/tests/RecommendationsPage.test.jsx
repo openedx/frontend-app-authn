@@ -25,6 +25,8 @@ jest.mock('../data/service', () => ({
 describe('RecommendationsPageTests', () => {
   mergeConfig({
     GENERAL_RECOMMENDATIONS: '[]',
+    POPULAR_PRODUCTS: '[]',
+    TRENDING_PRODUCTS: '[]',
   });
 
   let defaultProps = {};

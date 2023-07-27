@@ -18,13 +18,15 @@ const RecommendationsPage = (props) => {
   const registrationResponse = location.state?.registrationResult;
   const userId = location.state?.userId;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-
+  const POPULAR_PRODUCTS = JSON.parse(getConfig().POPULAR_PRODUCTS);
+  const TRENDING_PRODUCTS = JSON.parse(getConfig().TRENDING_PRODUCTS);
   const { formatMessage } = useIntl();
   const [selectedRecommendationsType, setSelectedRecommendationsType] = useState(RECOMMENDATIONS_OPTION_LIST[1]);
-  const [recommendations] = useState([]);
+  const [recommendations, setRecommendations] = useState(POPULAR_PRODUCTS);
 
   const handleRecommendationType = (option) => {
     setSelectedRecommendationsType(option);
+    setRecommendations(option.value === 'popular' ? POPULAR_PRODUCTS : TRENDING_PRODUCTS);
   };
 
   if (!registrationResponse) {
