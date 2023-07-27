@@ -1,6 +1,11 @@
+.nav-tabs {
+  border-bottom: 2px solid transparent;
+}
+
 .recommendations-container__card-list {
   padding-left: 0.0625rem;
   padding-bottom: 0.125rem;
+
   @include media-breakpoint-down(xl) {
     overflow-x: scroll;
     overflow-y: hidden;
@@ -13,6 +18,7 @@
 .recommendations-container {
   padding: 0 1rem;
   margin: 0 0 1.875rem 0;
+
   @include media-breakpoint-up(lg) {
     max-width: $max-width-sm + 5 * $grid-gutter-width !important;
   }
@@ -23,25 +29,6 @@
 
   @include media-breakpoint-up(xxl) {
     max-width: $max-width-lg + $grid-gutter-width !important;
-  }
-  .dropdown {
-    background-color: #FBFAF9 !important;
-
-    .dropdown-toggle {
-      background-color: #FBFAF9 !important;
-      border: none;
-      color: #000000;
-      font-weight: 700;
-      font-size: 22px;
-    }
-    .dropdown-toggle:hover {
-      background-color: #FBFAF9 !important;
-      border: none;
-      color: #000000;
-    }
-    .dropdown-toggle::after {
-      margin-left: 1.3em;
-    }
   }
 }
 

@@ -25,7 +25,7 @@ const ProductCardFooter = ({
 
   if (isSubscriptionView) {
     return (
-      <p className="d-inline-block x-small">
+      <div className="d-inline-block x-small">
         {intl.formatMessage(
           cardFooterMessages[
             'recommendation.2u-product-card.footer-text.number-of-courses'
@@ -40,7 +40,7 @@ const ProductCardFooter = ({
             ],
           )}
         </p>
-      </p>
+      </div>
     );
   }
 
