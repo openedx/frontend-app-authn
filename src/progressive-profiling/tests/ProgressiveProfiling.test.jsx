@@ -231,8 +231,8 @@ describe('ProgressiveProfilingTests', () => {
     it('should fire segments recommendations viewed and variation group events', async () => {
       const viewedEventProperties = {
         page: 'authn_recommendations',
-        course_key_array: [],
-        amplitude_recommendations: false,
+        products: [],
+        recommendation_type: '',
         is_control: true,
         user_id: 3,
       };

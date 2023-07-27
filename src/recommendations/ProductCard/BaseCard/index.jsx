@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import { truncateText } from '../../data/utils';
 
 const BaseCard = ({
-  url,
   customHeaderImage,
   schoolLogo,
   title,
@@ -20,7 +19,6 @@ const BaseCard = ({
 }) => (
   <div className="mr-4 recommendation-card" key={`container-${uuid}`}>
     <Hyperlink
-      destination={url}
       target="_blank"
       className="card-box"
       showLaunchIcon={false}
@@ -29,7 +27,6 @@ const BaseCard = ({
       <Card
         className={`base-card ${variant}`}
         variant={variant}
-        onClick={handleOnClick}
         isLoading={isLoading}
       >
         <Card.ImageCap
@@ -67,7 +64,6 @@ BaseCard.propTypes = {
   productTypeCopy: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
   variant: PropTypes.string.isRequired,
-  url: PropTypes.string.isRequired,
   customHeaderImage: PropTypes.string.isRequired,
   schoolLogo: PropTypes.string.isRequired,
   isLoading: PropTypes.bool,

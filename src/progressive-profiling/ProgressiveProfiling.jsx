@@ -124,11 +124,11 @@ const ProgressiveProfiling = (props) => {
         trackRecommendationsGroup(variation, authenticatedUser.userId);
         setShowRecommendationsPage(showRecommendations);
         if (!showRecommendations) {
-          trackRecommendationsViewed([], true, authenticatedUser.userId);
+          trackRecommendationsViewed([], '', true, authenticatedUser.userId);
         }
       }
     }
-  }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult, queryParams]);
+  }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult, queryParams?.next]);
 
   if (
     !(location.state?.registrationResult || registrationEmbedded)

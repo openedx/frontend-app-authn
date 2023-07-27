@@ -9,3 +9,6 @@ export const EDUCATION_LEVEL_MAPPING = {
   hs: 'Introductory',
   jhs: 'Introductory',
 };
+
+export const POPULAR = 'popular';
+export const TRENDING = 'trending';
