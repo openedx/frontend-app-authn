@@ -40,7 +40,6 @@ const mockedCoursesData = [
     status: 'active',
     hidden: false,
     inProspectus: true,
-    is2UDegreeProgram: false,
     degree: null,
     locationRestriction: null,
     subscriptionEligible: null,
@@ -73,7 +72,6 @@ const mockedCoursesData = [
     status: 'active',
     hidden: false,
     inProspectus: true,
-    is2UDegreeProgram: false,
     degree: {
       quickFacts: [
         {
