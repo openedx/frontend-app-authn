@@ -71,9 +71,9 @@ const mockedProductData = [
     status: 'active',
     hidden: false,
     degree: null,
-    locationRestriction: null,
     cardType: 'program',
     cardIndex: 1,
+    locationRestriction: { restrictionType: 'blocklist', countries: ['PK'] },
   },
 ];
 

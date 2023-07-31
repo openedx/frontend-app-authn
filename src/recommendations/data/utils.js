@@ -49,4 +49,17 @@ export const createCodeFriendlyProduct = (type) => type?.replace(/\s+/g, '-').re
 
 export const truncateText = (input) => (input?.length > 50 ? `${input.substring(0, 50)}...` : input);
 
+export const filterLocationRestriction = (products, countryCode) => products.filter((product) => {
+  if (product.locationRestriction) {
+    if (product.locationRestriction.restrictionType === 'allowlist') {
+      return product.locationRestriction.countries.includes(countryCode);
+    }
+    if (product.locationRestriction.restrictionType === 'blocklist') {
+      return !product.locationRestriction.countries.includes(countryCode);
+    }
+  }
+  return true;
+},
+);
+
 export default convertCourseRunKeytoCourseKey;

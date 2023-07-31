@@ -44,7 +44,11 @@ describe('RecommendationsPageTests', () => {
   );
 
   beforeEach(() => {
-    store = mockStore({});
+    store = mockStore({
+      register: {
+        backendCountryCode: 'PK',
+      },
+    });
     defaultProps = {
       location: {
         state: {
