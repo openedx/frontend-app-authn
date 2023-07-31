@@ -10,8 +10,8 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import { POPULAR, TRENDING } from './data/constants';
+import useProducts from './data/hooks/useProducts';
 import messages from './messages';
-import useProducts from './ProductCard/hooks/useProducts';
 import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';

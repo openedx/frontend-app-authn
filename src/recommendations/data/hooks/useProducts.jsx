@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 
-import { filterLocationRestriction } from '../../data/utils';
+import { filterLocationRestriction } from '../utils';
 
 export default function useProducts(countryCode) {
   const [isLoading, setLoading] = useState(true);
