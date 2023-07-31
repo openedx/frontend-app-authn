@@ -21,7 +21,7 @@ const RecommendationsPage = ({ location, countryCode }) => {
   const registrationResponse = location.state?.registrationResult;
   const userId = location.state?.userId;
 
-  const { popularProducts, trendingProducts } = useProducts(countryCode);
+  const { popularProducts, trendingProducts, isLoading } = useProducts(countryCode);
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const RecommendationsPage = ({ location, countryCode }) => {
     return null;
   }
 
-  if (!popularProducts.length || !trendingProducts.length) {
+  if (!isLoading && (!popularProducts.length || !trendingProducts.length)) {
     handleRedirection();
   }
 

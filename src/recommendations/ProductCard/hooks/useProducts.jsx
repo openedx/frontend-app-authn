@@ -5,6 +5,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { filterLocationRestriction } from '../../data/utils';
 
 export default function useProducts(countryCode) {
+  const [isLoading, setLoading] = useState(true);
   const [popularProducts, setPopularProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
 
@@ -14,7 +15,8 @@ export default function useProducts(countryCode) {
 
     setPopularProducts(popular);
     setTrendingProducts(trending);
+    setLoading(false);
   }, [countryCode]);
 
-  return { popularProducts, trendingProducts };
+  return { popularProducts, trendingProducts, isLoading };
 }
