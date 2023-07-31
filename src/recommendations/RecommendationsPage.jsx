@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -10,22 +11,21 @@ import { Helmet } from 'react-helmet';
 
 import { POPULAR, TRENDING } from './data/constants';
 import messages from './messages';
+import useProducts from './ProductCard/hooks/useProducts';
 import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
-const RecommendationsPage = ({ location }) => {
+const RecommendationsPage = ({ location, countryCode }) => {
   const { formatMessage } = useIntl();
-
   const registrationResponse = location.state?.registrationResult;
   const userId = location.state?.userId;
 
+  const { popularProducts, trendingProducts } = useProducts(countryCode);
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-  const POPULAR_PRODUCTS = JSON.parse(getConfig().POPULAR_PRODUCTS);
-  const TRENDING_PRODUCTS = JSON.parse(getConfig().TRENDING_PRODUCTS);
 
   useEffect(() => {
-    trackRecommendationsViewed(POPULAR_PRODUCTS, POPULAR, false, userId);
+    trackRecommendationsViewed(popularProducts, POPULAR, false, userId);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRedirection = () => {
@@ -47,12 +47,12 @@ const RecommendationsPage = ({ location }) => {
     return null;
   }
 
-  if (!POPULAR_PRODUCTS.length || !TRENDING_PRODUCTS.length) {
+  if (!popularProducts.length || !trendingProducts.length) {
     handleRedirection();
   }
 
   const handleOnSelect = (tabKey) => {
-    const recommendations = tabKey === POPULAR ? POPULAR_PRODUCTS : TRENDING_PRODUCTS;
+    const recommendations = tabKey === POPULAR ? popularProducts : trendingProducts;
     trackRecommendationsViewed(recommendations, tabKey, false, userId);
   };
 
@@ -83,13 +83,13 @@ const RecommendationsPage = ({ location }) => {
             >
               <Tab tabClassName="mb-3" eventKey={POPULAR} title={formatMessage(messages['recommendation.option.popular'])}>
                 <RecommendationsList
-                  recommendations={POPULAR_PRODUCTS}
+                  recommendations={popularProducts}
                   userId={userId}
                 />
               </Tab>
               <Tab tabClassName="mb-3" eventKey={TRENDING} title={formatMessage(messages['recommendation.option.trending'])}>
                 <RecommendationsList
-                  recommendations={TRENDING_PRODUCTS}
+                  recommendations={trendingProducts}
                   userId={userId}
                 />
               </Tab>
@@ -121,11 +121,18 @@ RecommendationsPage.propTypes = {
       userId: PropTypes.number,
     }),
   }),
-
+  countryCode: PropTypes.string.isRequired,
 };
 
 RecommendationsPage.defaultProps = {
   location: { state: {} },
 };
 
-export default RecommendationsPage;
+const mapStateToProps = state => ({
+  countryCode: state.register.backendCountryCode,
+});
+
+export default connect(
+  mapStateToProps,
+  null,
+)(RecommendationsPage);
