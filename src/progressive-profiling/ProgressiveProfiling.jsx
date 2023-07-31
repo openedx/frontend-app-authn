@@ -128,7 +128,7 @@ const ProgressiveProfiling = (props) => {
         }
       }
     }
-  }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult, queryParams?.next]);
+  }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult.redirectUrl, queryParams?.next]);
 
   if (
     !(location.state?.registrationResult || registrationEmbedded)
