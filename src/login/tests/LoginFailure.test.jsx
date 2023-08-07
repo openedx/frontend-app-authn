@@ -225,7 +225,7 @@ describe('LoginFailureMessage', () => {
       loginError: {
         errorCode: TPA_AUTHENTICATION_FAILURE,
         context: {
-          errorMessage: 'An error occured',
+          errorMessage: 'An error occurred',
         },
       },
     };
@@ -239,7 +239,7 @@ describe('LoginFailureMessage', () => {
     const expectedMessageSubstring = 'We are sorry, you are not authorized to access';
 
     expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain(expectedMessageSubstring);
-    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain('An error occured');
+    expect(loginFailureMessage.find('#login-failure-alert').first().text()).toContain('An error occurred');
   });
 
   it('should show modal that nudges users to change password', () => {

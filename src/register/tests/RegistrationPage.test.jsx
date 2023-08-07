@@ -437,8 +437,8 @@ describe('RegistrationPage', () => {
       registrationPage.find('input#email').simulate('change', { target: { value: 'ahtesham@hotmail', name: 'email' } });
       registrationPage.find('input#email').simulate('blur');
 
-      const receievedMessage = 'Did you mean ahtesham@hotmail.com?';
-      expect(registrationPage.find('.email-suggestion__text').text()).toEqual(receievedMessage);
+      const receivedMessage = 'Did you mean ahtesham@hotmail.com?';
+      expect(registrationPage.find('.email-suggestion__text').text()).toEqual(receivedMessage);
     });
 
     it('should call backend validation api for password validation', () => {
@@ -1117,7 +1117,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
     });
 
-    it('should clear the registation validation error on change event on field focused', () => {
+    it('should clear the registration validation error on change event on field focused', () => {
       store = mockStore({
         ...initialState,
         register: {
@@ -1358,7 +1358,7 @@ describe('RegistrationPage', () => {
             ...initialState.commonComponents.thirdPartyAuthContext,
             currentProvider: ssoProvider.name,
             pipelineUserDetails: {},
-            errorMessage: 'An error occured',
+            errorMessage: 'An error occurred',
             autoSubmitRegForm: true,
           },
         },
@@ -1388,7 +1388,7 @@ describe('RegistrationPage', () => {
             ...initialState.commonComponents.thirdPartyAuthContext,
             currentProvider: null,
             pipelineUserDetails: {},
-            errorMessage: 'An error occured',
+            errorMessage: 'An error occurred',
           },
         },
       });
@@ -1397,7 +1397,7 @@ describe('RegistrationPage', () => {
 
       const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toContain('An error occured');
+      expect(registrationPage.find('div.alert').first().text()).toContain('An error occurred');
     });
 
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
