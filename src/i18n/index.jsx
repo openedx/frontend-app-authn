@@ -4,6 +4,7 @@ import arMessages from './messages/ar.json';
 import deMessages from './messages/de.json';
 import deDEMessages from './messages/de_DE.json';
 import es419Messages from './messages/es_419.json';
+import faIRMessages from './messages/fa_IR.json';
 import frMessages from './messages/fr.json';
 import frCAMessages from './messages/fr_CA.json';
 import hiMessages from './messages/hi.json';
@@ -21,6 +22,7 @@ const appMessages = {
   de: deMessages,
   'de-de': deDEMessages,
   'es-419': es419Messages,
+  'fa-ir': faIRMessages,
   fr: frMessages,
   'fr-ca': frCAMessages,
   hi: hiMessages,
