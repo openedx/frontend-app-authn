@@ -130,7 +130,7 @@ const RegistrationPage = (props) => {
    */
   useEffect(() => {
     if (!userPipelineDataLoaded && thirdPartyAuthApiStatus === COMPLETE_STATE) {
-      const { autoSubmitRegForm, pipelineUserDetails, errorMessage } = thirdPartyAuthContext;
+      const { autoSubmitRegForm, errorMessage, pipeline_user_details: pipelineUserDetails } = thirdPartyAuthContext;
       if (errorMessage) {
         setErrorCode(prevState => ({ type: TPA_AUTHENTICATION_FAILURE, count: prevState.count + 1 }));
       } else if (autoSubmitRegForm) {
@@ -138,7 +138,13 @@ const RegistrationPage = (props) => {
         setAutoSubmitRegisterForm(true);
       }
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
-        const { name = '', username = '', email = '' } = pipelineUserDetails;
+        const { username = '', email = '' } = pipelineUserDetails;
+        // Previously, the transformation of the object parameter name from
+        // "fullname" to "name" was performed in the file
+        // '/common-components/data/service.js'. However, this file has
+        // been removed, but the frontend continues to receive the "fullname"
+        // parameter from the backend.
+        const name = pipelineUserDetails.fullname || pipelineUserDetails.name || '';
         setFormFields(prevState => ({
           ...prevState, name, username, email,
         }));
@@ -702,9 +708,10 @@ RegistrationPage.propTypes = {
     currentProvider: PropTypes.string,
     errorMessage: PropTypes.string,
     finishAuthUrl: PropTypes.string,
-    pipelineUserDetails: PropTypes.shape({
+    pipeline_user_details: PropTypes.shape({
       email: PropTypes.string,
       name: PropTypes.string,
+      fullname: PropTypes.string,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
       username: PropTypes.string,
