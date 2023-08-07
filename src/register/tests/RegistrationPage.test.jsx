@@ -1014,7 +1014,35 @@ describe('RegistrationPage', () => {
           thirdPartyAuthApiStatus: COMPLETE_STATE,
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
-            pipelineUserDetails: {
+            pipeline_user_details: {
+              email: 'test@example.com',
+              username: 'test',
+              name: 'full name test',
+            },
+          },
+        },
+      });
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      expect(registrationPage.find('input#email').props().value).toEqual('test@example.com');
+      expect(registrationPage.find('input#username').props().value).toEqual('test');
+      expect(registrationPage.find('input#name').props().value).toEqual('full name test');
+      expect(store.dispatch).toHaveBeenCalledWith(setUserPipelineDataLoaded(true));
+    });
+
+    it("should fill the form with data about the user of the pipeline when the parameter 'name' is absent", () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          backedUpFormData: { ...registrationFormData },
+        },
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: COMPLETE_STATE,
+          thirdPartyAuthContext: {
+            ...initialState.commonComponents.thirdPartyAuthContext,
+            pipeline_user_details: {
               email: 'test@example.com',
               username: 'test',
             },
@@ -1025,7 +1053,7 @@ describe('RegistrationPage', () => {
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
       expect(registrationPage.find('input#email').props().value).toEqual('test@example.com');
-      expect(registrationPage.find('input#username').props().value).toEqual('test');
+      expect(registrationPage.find('input#name').props().value).toEqual('');
       expect(store.dispatch).toHaveBeenCalledWith(setUserPipelineDataLoaded(true));
     });
 
