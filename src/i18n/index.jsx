@@ -18,19 +18,19 @@ import zhCNMessages from './messages/zh_CN.json';
 
 const appMessages = {
   ar: arMessages,
+  de: deMessages,
+  'de-de': deDEMessages,
   'es-419': es419Messages,
   fr: frMessages,
-  'zh-cn': zhCNMessages,
-  pt: ptMessages,
-  it: itMessages,
-  de: deMessages,
-  hi: hiMessages,
   'fr-ca': frCAMessages,
+  hi: hiMessages,
+  it: itMessages,
+  'it-it': itITMessages,
+  pt: ptMessages,
+  'pt-pt': ptPTMessages,
   ru: ruMessages,
   uk: ukMessages,
-  'de-de': deDEMessages,
-  'it-it': itITMessages,
-  'pt-pt': ptPTMessages,
+  'zh-cn': zhCNMessages,
 };
 
 export default [
