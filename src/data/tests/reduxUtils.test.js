@@ -1,4 +1,4 @@
-import AsyncActionType from './reduxUtils';
+import AsyncActionType from '../utils/reduxUtils';
 
 describe('AsyncActionType', () => {
   it('should return well formatted action strings', () => {

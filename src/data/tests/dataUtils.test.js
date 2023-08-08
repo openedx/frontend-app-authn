@@ -1,5 +1,5 @@
-import { updatePathWithQueryParams } from './dataUtils';
 import { LOGIN_PAGE } from '../constants';
+import { updatePathWithQueryParams } from '../utils/dataUtils';
 
 describe('updatePathWithQueryParams', () => {
   it('should append query params into the path', () => {

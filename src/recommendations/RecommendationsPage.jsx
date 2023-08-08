@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -9,19 +8,23 @@ import {
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { POPULAR, TRENDING } from './data/constants';
-import useProducts from './data/hooks/useProducts';
+import { EDUCATION_LEVEL_MAPPING, POPULAR, TRENDING } from './data/constants';
+import useRecommendations from './data/hooks/useRecommendations';
 import messages from './messages';
 import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
-const RecommendationsPage = ({ location, countryCode }) => {
+const RecommendationsPage = ({ location }) => {
   const { formatMessage } = useIntl();
   const registrationResponse = location.state?.registrationResult;
+  const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
-  const { popularProducts, trendingProducts, isLoading } = useProducts(countryCode);
+  const {
+    popularProducts, trendingProducts, isLoading,
+  } = useRecommendations(educationLevel);
+
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
   useEffect(() => {
@@ -119,20 +122,13 @@ RecommendationsPage.propTypes = {
         redirectUrl: PropTypes.string,
       }),
       userId: PropTypes.number,
+      educationLevel: PropTypes.string,
     }),
   }),
-  countryCode: PropTypes.string.isRequired,
 };
 
 RecommendationsPage.defaultProps = {
   location: { state: {} },
 };
 
-const mapStateToProps = state => ({
-  countryCode: state.register.backendCountryCode,
-});
-
-export default connect(
-  mapStateToProps,
-  null,
-)(RecommendationsPage);
+export default RecommendationsPage;

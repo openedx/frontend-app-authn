@@ -15,10 +15,6 @@ const mockStore = configureStore();
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
 }));
-jest.mock('../data/service', () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
 
 describe('RecommendationsPageTests', () => {
   mergeConfig({
