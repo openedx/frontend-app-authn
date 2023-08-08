@@ -7,6 +7,9 @@ import {
   DEFAULT_SERVICE_PROVIDER_DOMAINS,
   DEFAULT_TOP_LEVEL_DOMAINS,
 } from './constants';
+import {
+  INVALID_NAME_REGEX, VALID_EMAIL_REGEX,
+} from '../../data/constants';
 
 function getLevenshteinSuggestion(word, knownWords, similarityThreshold = 4) {
   if (!word) {
@@ -110,3 +113,6 @@ export function validateCountryField(value, countryList, errorMessage) {
   }
   return { error, countryCode, displayValue };
 }
+
+export const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
+export const urlRegex = new RegExp(INVALID_NAME_REGEX);

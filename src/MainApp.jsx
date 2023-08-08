@@ -24,7 +24,7 @@ import { ForgotPasswordPage } from './forgot-password';
 import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RecommendationsPage } from './recommendations';
-import { RegistrationPage } from './register';
+import { EmbeddableRegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
 
 import './index.scss';
@@ -41,7 +41,7 @@ const MainApp = () => (
       <Route path="/" element={<Navigate replace to={updatePathWithQueryParams(REGISTER_PAGE)} />} />
       <Route
         path={REGISTER_EMBEDDED_PAGE}
-        element={<EmbeddedRegistrationRoute><RegistrationPage /></EmbeddedRegistrationRoute>}
+        element={<EmbeddedRegistrationRoute><EmbeddableRegistrationPage /></EmbeddedRegistrationRoute>}
       />
       <Route
         path={LOGIN_PAGE}
