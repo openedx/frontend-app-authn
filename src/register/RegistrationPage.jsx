@@ -131,10 +131,20 @@ class RegistrationPage extends React.Component {
 
       // Exemption for country field's value as we need to set updated value from the store.
       if (focusedField === 'country') { focusedField = ''; }
-      const { [focusedField]: _, ...registrationData } = { ...nextProps.registrationFormData, ...nextState };
-      this.setState({
-        ...registrationData,
-      });
+
+      // For username field's value as we need to wait for usernameSuggestions.
+      // Otherwise, an infinite state update loop error appears.
+      if (focusedField === 'username') {
+        this.setState({
+          ...nextProps.registrationFormData,
+          ...nextState,
+        });
+      } else {
+        const { [focusedField]: _, ...registrationData } = { ...nextProps.registrationFormData, ...nextState };
+        this.setState({
+          ...registrationData,
+        });
+      }
     }
 
     if (this.props.usernameSuggestions.length > 0 && this.state.username === '') {
