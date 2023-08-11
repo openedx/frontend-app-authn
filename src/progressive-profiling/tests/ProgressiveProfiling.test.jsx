@@ -6,9 +6,8 @@ import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platfor
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter, Router } from 'react-router-dom';
+import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import {
@@ -44,8 +43,22 @@ jest.mock('../../recommendations/optimizelyExperiment.js', () => ({
   trackRecommendationViewedOptimizely: jest.fn(),
   RECOMMENDATIONS_EXP_VARIATION: 'welcome_page_recommendations_enabled',
 }));
+jest.mock('react-router-dom', () => {
+  const mockNavigation = jest.fn();
 
-const history = createMemoryHistory();
+  // eslint-disable-next-line react/prop-types
+  const Navigate = ({ to }) => {
+    mockNavigation(to);
+    return <div />;
+  };
+
+  return {
+    ...jest.requireActual('react-router-dom'),
+    Navigate,
+    mockNavigate: mockNavigation,
+    useLocation: jest.fn(),
+  };
+});
 
 describe('ProgressiveProfilingTests', () => {
   mergeConfig({
@@ -63,7 +76,6 @@ describe('ProgressiveProfilingTests', () => {
   };
   const extendedProfile = ['company'];
   const optionalFields = { fields, extended_profile: extendedProfile };
-  let props = {};
   let store = {};
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const initialState = {
@@ -86,11 +98,7 @@ describe('ProgressiveProfilingTests', () => {
   );
 
   const getProgressiveProfilingPage = async () => {
-    const progressiveProfilingPage = mount(reduxWrapper(
-      <Router history={history}>
-        <IntlProgressiveProfilingPage {...props} />
-      </Router>,
-    ));
+    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
     await act(async () => {
       await Promise.resolve(progressiveProfilingPage);
       await new Promise(resolve => { setImmediate(resolve); });
@@ -110,14 +118,12 @@ describe('ProgressiveProfilingTests', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
-    props = {
-      location: {
-        state: {
-          registrationResult,
-          optionalFields,
-        },
+    useLocation.mockReturnValue({
+      state: {
+        registrationResult,
+        optionalFields,
       },
-    };
+    });
   });
 
   it('should not display button "Learn more about how we use this information."', async () => {
@@ -225,7 +231,7 @@ describe('ProgressiveProfilingTests', () => {
       const progressiveProfilingPage = await getProgressiveProfilingPage();
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
-      expect(history.location.pathname).toEqual(RECOMMENDATIONS);
+      expect(mockNavigate).toHaveBeenCalledWith(RECOMMENDATIONS);
     });
 
     it('should fire segments recommendations viewed and variation group events', async () => {
@@ -258,17 +264,15 @@ describe('ProgressiveProfilingTests', () => {
 
     it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
       const redirectUrl = `${getConfig().LMS_BASE_URL}${DEFAULT_REDIRECT_URL}?enrollment_action=1`;
-      props = {
-        location: {
-          state: {
-            registrationResult: {
-              redirectUrl,
-              success: true,
-            },
-            optionalFields,
+      useLocation.mockReturnValue({
+        state: {
+          registrationResult: {
+            redirectUrl,
+            success: true,
           },
+          optionalFields,
         },
-      };
+      });
 
       store = mockStore({
         ...initialState,
@@ -293,7 +297,9 @@ describe('ProgressiveProfilingTests', () => {
     const host = 'http://example.com';
 
     beforeEach(() => {
-      props = {};
+      useLocation.mockReturnValue({
+        state: {},
+      });
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -372,7 +378,6 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL,
         search: `?variant=${EMBEDDED}&host=${host}&next=${redirectUrl}`,
       };
-      props = {};
       store = mockStore({
         ...initialState,
         commonComponents: {

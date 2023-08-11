@@ -9,7 +9,9 @@ import { act } from 'react-dom/test-utils';
 import { REGISTER_EMBEDDED_PAGE } from '../../data/constants';
 import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
 
-import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
+import {
+  MemoryRouter, Route, BrowserRouter as Router, Routes,
+} from 'react-router-dom';
 
 const RRD = require('react-router-dom');
 // Just render plain div with its children
@@ -20,9 +22,12 @@ module.exports = RRD;
 const TestApp = () => (
   <Router>
     <div>
-      <Switch>
-        <EmbeddedRegistrationRoute path={REGISTER_EMBEDDED_PAGE} render={() => (<span>Embedded Register Page</span>)} />
-      </Switch>
+      <Routes>
+        <Route
+          path={REGISTER_EMBEDDED_PAGE}
+          element={<EmbeddedRegistrationRoute><span>Embedded Register Page</span></EmbeddedRegistrationRoute>}
+        />
+      </Routes>
     </div>
   </Router>
 );

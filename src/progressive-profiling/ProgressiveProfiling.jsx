@@ -21,6 +21,7 @@ import {
 import { Error } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
 
 import { saveUserProfile } from './data/actions';
 import { welcomePageContextSelector } from './data/selectors';
@@ -47,12 +48,12 @@ const ProgressiveProfiling = (props) => {
   const { formatMessage } = useIntl();
   const {
     getFieldDataFromBackend,
-    location,
     submitState,
     showError,
     welcomePageContext,
     welcomePageContextApiStatus,
   } = props;
+  const location = useLocation();
   const registrationEmbedded = isHostAvailableInQueryParams();
 
   const queryParams = getAllPossibleQueryParams();
@@ -170,7 +171,7 @@ const ProgressiveProfiling = (props) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
-    window.history.replaceState(props.location.state, null, '');
+    window.history.replaceState(location.state, null, '');
     setShowModal(true);
     sendTrackEvent(
       'edx.bi.welcome.page.skip.link.clicked',
@@ -282,17 +283,6 @@ const ProgressiveProfiling = (props) => {
 };
 
 ProgressiveProfiling.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      registrationResult: PropTypes.shape({
-        redirectUrl: PropTypes.string,
-      }),
-      optionalFields: PropTypes.shape({
-        extended_profile: PropTypes.arrayOf(PropTypes.string),
-        fields: PropTypes.shape({}),
-      }),
-    }),
-  }),
   showError: PropTypes.bool,
   shouldRedirect: PropTypes.bool,
   submitState: PropTypes.string,
@@ -308,7 +298,6 @@ ProgressiveProfiling.propTypes = {
 };
 
 ProgressiveProfiling.defaultProps = {
-  location: { state: {} },
   shouldRedirect: false,
   showError: false,
   submitState: DEFAULT_STATE,

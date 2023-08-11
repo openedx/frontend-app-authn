@@ -15,7 +15,7 @@ import {
 import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { forgotPassword, setForgotPasswordFormData } from './data/actions';
 import { forgotPasswordResultSelector } from './data/selectors';
@@ -38,7 +38,7 @@ const ForgotPasswordPage = (props) => {
   const [bannerEmail, setBannerEmail] = useState('');
   const [formErrors, setFormErrors] = useState('');
   const [validationError, setValidationError] = useState(emailValidationError);
-  const [key, setKey] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'reset');
@@ -102,12 +102,9 @@ const ForgotPasswordPage = (props) => {
         </title>
       </Helmet>
       <div>
-        <Tabs activeKey="" id="controlled-tab" onSelect={(k) => setKey(k)}>
+        <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
           <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
         </Tabs>
-        { key && (
-          <Redirect to={updatePathWithQueryParams(key)} />
-        )}
         <div id="main-content" className="main-content">
           <Form id="forget-password-form" name="forget-password-form" className="mw-xs">
             <ForgotPasswordAlert email={bannerEmail} emailError={formErrors} status={status} />

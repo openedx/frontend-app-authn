@@ -3,15 +3,19 @@ import React from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter, Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { RESET_PAGE } from '../../data/constants';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
 const IntlChangePasswordPrompt = injectIntl(ChangePasswordPrompt);
-const history = createMemoryHistory();
+const mockedNavigator = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom')),
+  useNavigate: () => mockedNavigator,
+}));
 
 describe('ChangePasswordPromptTests', () => {
   let props = {};
@@ -55,9 +59,7 @@ describe('ChangePasswordPromptTests', () => {
     const changePasswordPrompt = mount(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <Router history={history}>
-            <IntlChangePasswordPrompt {...props} />
-          </Router>
+          <IntlChangePasswordPrompt {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );
@@ -67,6 +69,6 @@ describe('ChangePasswordPromptTests', () => {
     });
 
     changePasswordPrompt.update();
-    expect(history.location.pathname).toEqual(RESET_PAGE);
+    expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
   });
 });
