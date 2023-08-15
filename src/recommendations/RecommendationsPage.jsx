@@ -8,6 +8,7 @@ import {
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
 
 import { POPULAR, TRENDING } from './data/constants';
 import useProducts from './data/hooks/useProducts';
@@ -16,8 +17,9 @@ import RecommendationsList from './RecommendationsList';
 import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
-const RecommendationsPage = ({ location, countryCode }) => {
+const RecommendationsPage = ({ countryCode }) => {
   const { formatMessage } = useIntl();
+  const location = useLocation();
   const registrationResponse = location.state?.registrationResult;
   const userId = location.state?.userId;
 
@@ -113,19 +115,7 @@ const RecommendationsPage = ({ location, countryCode }) => {
 };
 
 RecommendationsPage.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      registrationResult: PropTypes.shape({
-        redirectUrl: PropTypes.string,
-      }),
-      userId: PropTypes.number,
-    }),
-  }),
   countryCode: PropTypes.string.isRequired,
-};
-
-RecommendationsPage.defaultProps = {
-  location: { state: {} },
 };
 
 const mapStateToProps = state => ({

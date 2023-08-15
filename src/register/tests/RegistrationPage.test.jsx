@@ -7,8 +7,7 @@ import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
@@ -40,7 +39,22 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
 const mockStore = configureStore();
-const history = createMemoryHistory();
+
+jest.mock('react-router-dom', () => {
+  const mockNavigation = jest.fn();
+
+  // eslint-disable-next-line react/prop-types
+  const Navigate = ({ to }) => {
+    mockNavigation(to);
+    return <div />;
+  };
+
+  return {
+    ...jest.requireActual('react-router-dom'),
+    Navigate,
+    mockNavigate: mockNavigation,
+  };
+});
 
 describe('RegistrationPage', () => {
   mergeConfig({
@@ -70,6 +84,12 @@ describe('RegistrationPage', () => {
     <IntlProvider locale="en">
       <Provider store={store}>{children}</Provider>
     </IntlProvider>
+  );
+
+  const routerWrapper = children => (
+    <Router>
+      {children}
+    </Router>
   );
 
   const thirdPartyAuthContext = {
@@ -174,7 +194,7 @@ describe('RegistrationPage', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       populateRequiredFields(registrationPage, payload);
       registrationPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
@@ -204,7 +224,7 @@ describe('RegistrationPage', () => {
         },
       });
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       populateRequiredFields(registrationPage, formPayload, true);
       registrationPage.find('button.btn-brand').simulate('click');
@@ -230,7 +250,7 @@ describe('RegistrationPage', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       populateRequiredFields(registrationPage, payload);
       registrationPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
@@ -243,7 +263,7 @@ describe('RegistrationPage', () => {
     it('should not dispatch registerNewUser on empty form Submission', () => {
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('button.btn-brand').simulate('click');
       expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser({}));
     });
@@ -263,7 +283,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should show error messages for required fields on empty form submission', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
@@ -277,7 +297,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       registrationPage.find('input#name').simulate('blur', { target: { value: 'http://test.com', name: 'name' } });
       expect(
@@ -294,7 +314,7 @@ describe('RegistrationPage', () => {
         registrationPage.find('div[feedback-for="username"]').text(),
       ).toContain(
         'Usernames can only contain letters (A-Z, a-z), numerals (0-9),'
-                  + ' underscores (_), and hyphens (-). Usernames cannot contain spaces',
+                    + ' underscores (_), and hyphens (-). Usernames cannot contain spaces',
       );
 
       registrationPage.find('input#email').simulate('blur', { target: { value: 'ab', name: 'email' } });
@@ -304,7 +324,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should validate fields on blur event', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
       expect(registrationPage.find('div[feedback-for="username"]').text()).toEqual(emptyFieldValidation.username);
@@ -324,7 +344,7 @@ describe('RegistrationPage', () => {
 
     it('should call validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       // Enter a valid name so that frontend validations are passed
       registrationPage.find('input#name').simulate('change', { target: { value: 'John Doe', name: 'name' } });
@@ -342,7 +362,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should run validations for focused field on form submission', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input[name="country"]').simulate('focus');
       registrationPage.find('button.btn-brand').simulate('click');
 
@@ -351,7 +371,7 @@ describe('RegistrationPage', () => {
 
     it('should give email suggestions for common service provider domain typos', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       registrationPage.find('input#email').simulate('change', { target: { value: 'john@yopmail.com', name: 'email' } });
       registrationPage.find('input#email').simulate('blur');
@@ -360,7 +380,7 @@ describe('RegistrationPage', () => {
     });
     it('should click on email suggestions for common service provider domain typos', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       registrationPage.find('input#email').simulate('change', { target: { value: 'john@yopmail.com', name: 'email' } });
       registrationPage.find('input#email').simulate('blur');
@@ -370,7 +390,7 @@ describe('RegistrationPage', () => {
 
     it('should give error for common top level domain mistakes', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       registrationPage
         .find('input#email')
@@ -392,7 +412,7 @@ describe('RegistrationPage', () => {
           },
         },
       });
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />))).find('RegistrationPage');
       expect(registrationPage.prop('backendValidations')).toEqual({
         email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`,
         username: 'It looks like this username is already taken',
@@ -400,20 +420,20 @@ describe('RegistrationPage', () => {
     });
 
     it('should remove space from the start of username', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#username').simulate('change', { target: { value: ' test-user', name: 'username' } });
 
       expect(registrationPage.find('input#username').prop('value')).toEqual('test-user');
     });
     it('should remove extra character if username is more than 30 character long', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#username').simulate('change', { target: { value: 'why_this_is_not_valid_username_', name: 'username' } });
 
       expect(registrationPage.find('input#username').prop('value')).toEqual('');
     });
 
     it('should give error with suggestion for common top level domain mistakes', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#email').simulate('change', { target: { value: 'ahtesham@hotmail', name: 'email' } });
       registrationPage.find('input#email').simulate('blur');
 
@@ -423,7 +443,7 @@ describe('RegistrationPage', () => {
 
     it('should call backend validation api for password validation', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#password').simulate('change', { target: { value: 'aziz194@', name: 'password' } });
       registrationPage.find('input#password').simulate('blur');
 
@@ -434,7 +454,7 @@ describe('RegistrationPage', () => {
     // ******** test field focus in functionality ********
 
     it('should clear field related error messages on input field Focus', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('div[feedback-for="name"]').text()).toEqual(emptyFieldValidation.name);
@@ -461,7 +481,7 @@ describe('RegistrationPage', () => {
     it('should clear username suggestions when username field is focused in', () => {
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#username').simulate('focus');
 
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
@@ -484,7 +504,7 @@ describe('RegistrationPage', () => {
       const expectedMessage = `${'You\'ve successfully signed into Apple! We just need a little more information before '
                               + 'you start learning with '}${ getConfig().SITE_NAME }.`;
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
     });
 
@@ -545,7 +565,7 @@ describe('RegistrationPage', () => {
     // ******** test form buttons and fields ********
 
     it('should match default button state', () => {
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual('Create an account for free');
     });
 
@@ -558,7 +578,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       const button = registrationPage.find('button[type="submit"] span').first();
 
       expect(button.find('.sr-only').text()).toEqual('pending');
@@ -569,7 +589,7 @@ describe('RegistrationPage', () => {
         MARKETING_EMAILS_OPT_IN: 'true',
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('div.form-field--checkbox').length).toEqual(1);
 
       mergeConfig({
@@ -589,7 +609,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
     });
 
@@ -611,7 +631,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      const root = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const root = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(root.text().includes('Institution/campus credentials')).toBe(true);
 
       mergeConfig({
@@ -639,7 +659,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('input#password').length).toEqual(0);
     });
 
@@ -654,7 +674,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(document.cookie).toMatch(`${getConfig().REGISTER_CONVERSION_COOKIE_NAME}=true`);
     });
 
@@ -674,7 +694,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('button.username-suggestions--chip').length).toEqual(3);
     });
 
@@ -691,7 +711,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
 
       expect(registrationPage.find('button.username-suggestions--chip').length).toEqual(3);
@@ -710,7 +730,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
       registrationPage.find('.username-suggestions--chip').first().simulate('click');
       expect(registrationPage.find('input#username').props().value).toEqual('test_1');
@@ -730,7 +750,7 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
       registrationPage.find('button.username-suggestions__close__button').at(0).simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
@@ -750,7 +770,7 @@ describe('RegistrationPage', () => {
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(dashboardURL);
     });
 
@@ -773,7 +793,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      const loginPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const loginPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       loginPage.find('button#oa2-apple-id').simulate('click');
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
@@ -801,7 +821,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     });
 
@@ -822,7 +842,7 @@ describe('RegistrationPage', () => {
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      renderer.create(reduxWrapper(<IntlRegistrationPage {...props} />));
+      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(dashboardUrl);
     });
 
@@ -851,12 +871,12 @@ describe('RegistrationPage', () => {
       });
 
       const progressiveProfilingPage = mount(reduxWrapper(
-        <Router history={history}>
+        <Router>
           <IntlRegistrationPage {...props} />
         </Router>,
       ));
       progressiveProfilingPage.update();
-      expect(history.location.pathname).toEqual(AUTHN_PROGRESSIVE_PROFILING);
+      expect(mockNavigate).toHaveBeenCalledWith(AUTHN_PROGRESSIVE_PROFILING);
     });
 
     // ******** test hinted third party auth ********
@@ -877,7 +897,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
       expect(registrationPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
     });
@@ -935,7 +955,7 @@ describe('RegistrationPage', () => {
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('div').find('span').hasClass('pgn__icon')).toEqual(true);
     });
 
@@ -956,7 +976,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
 
-      mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
     });
 
@@ -977,7 +997,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);
     });
 
@@ -993,12 +1013,12 @@ describe('RegistrationPage', () => {
       });
 
       store.dispatch = jest.fn(store.dispatch);
-      mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationFormBegin({ ...registrationFormData }));
     });
 
     it('should send page event when register page is rendered', () => {
-      mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
@@ -1023,7 +1043,7 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />))).find('RegistrationPage');
       expect(registrationPage.find('input#email').props().value).toEqual('test@example.com');
       expect(registrationPage.find('input#username').props().value).toEqual('test');
       expect(store.dispatch).toHaveBeenCalledWith(setUserPipelineDataLoaded(true));
@@ -1038,7 +1058,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('input[name="country"]').props().value).toEqual('Pakistan');
     });
 
@@ -1053,7 +1073,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />))).find('RegistrationPage');
       expect(registrationPage.find('div#validation-errors').first().text()).toContain(
         'An error has occurred. Try refreshing the page, or check your internet connection.',
       );
@@ -1079,7 +1099,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />)).find('RegistrationPage');
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />))).find('RegistrationPage');
 
       expect(registrationPage.find('input#name').props().value).toEqual('John Doe');
       expect(registrationPage.find('input#username').props().value).toEqual('john_doe');
@@ -1091,7 +1111,7 @@ describe('RegistrationPage', () => {
     it('should set country in component state when form is translated used i18n', () => {
       getLocale.mockImplementation(() => ('ar-ae'));
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input[name="country"]').simulate('click');
       registrationPage.find('button.dropdown-item').at(0).simulate('click', { target: { value: 'أفغانستان ', name: 'countryItem' } });
       expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
@@ -1111,7 +1131,9 @@ describe('RegistrationPage', () => {
 
       store.dispatch = jest.fn(store.dispatch);
       const clearBackendError = jest.fn();
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} {...clearBackendError} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(
+        <IntlRegistrationPage {...props} {...clearBackendError} />,
+      )));
       registrationPage.find('input#email').simulate('change', { target: { value: 'a@gmail.com', name: 'email' } });
       expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeFalsy();
     });
@@ -1137,7 +1159,7 @@ describe('RegistrationPage', () => {
           },
         },
       });
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('#profession').exists()).toBeTruthy();
       expect(registrationPage.find('#tos').exists()).toBeTruthy();
     });
@@ -1168,7 +1190,7 @@ describe('RegistrationPage', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       populateRequiredFields(registrationPage, payload);
       registrationPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
@@ -1197,7 +1219,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('button.btn-brand').simulate('click');
 
       expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
@@ -1217,7 +1239,7 @@ describe('RegistrationPage', () => {
           },
         },
       });
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#email').simulate('change', { target: { value: 'test1@gmail.com', name: 'email' } });
       registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
       expect(registrationPage.find('div#confirm_email-error').text()).toEqual('The email addresses do not match.');
@@ -1237,7 +1259,7 @@ describe('RegistrationPage', () => {
         },
       });
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input#profession').simulate('focus', { target: { value: '', name: 'profession' } });
       registrationPage.find('button.btn-brand').simulate('click');
 
@@ -1279,7 +1301,7 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
       expect(registrationPage.find('input#tos').props().value).toEqual(true);
       expect(registrationPage.find('input#honor-code').props().value).toEqual(true);
@@ -1313,7 +1335,7 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('#tpa-spinner').exists()).toBeTruthy();
       expect(registrationPage.find('#registration-form').exists()).toBeFalsy();
     });
@@ -1343,7 +1365,7 @@ describe('RegistrationPage', () => {
       });
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('#tpa-spinner').exists()).toBeFalsy();
       expect(registrationPage.find('#registration-form').exists()).toBeTruthy();
     });
@@ -1373,7 +1395,7 @@ describe('RegistrationPage', () => {
 
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(registrationPage.find('div.alert-heading').length).toEqual(1);
       expect(registrationPage.find('div.alert').first().text()).toContain('An error occured');
     });
@@ -1381,7 +1403,7 @@ describe('RegistrationPage', () => {
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
       getLocale.mockImplementation(() => ('en-us'));
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       registrationPage.find('input[name="country"]').simulate('blur', {
         target: { value: '', name: 'country' },
         relatedTarget: { type: 'button', className: 'btn-icon pgn__form-autosuggest__icon-button' },
