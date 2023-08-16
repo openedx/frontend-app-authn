@@ -12,3 +12,8 @@ export const EDUCATION_LEVEL_MAPPING = {
 
 export const POPULAR = 'popular';
 export const TRENDING = 'trending';
+
+export const LEVEL_FACET = 'level';
+export const PRODUCT_FACET = 'product';
+export const PRODUCT_TYPE_COURSE = 'course';
+export const MAX_RECOMMENDATIONS = 4;

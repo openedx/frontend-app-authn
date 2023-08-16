@@ -4,7 +4,12 @@ import { getConfig } from '@edx/frontend-platform';
 
 import { filterLocationRestriction } from '../utils';
 
-export default function useProducts(countryCode) {
+/**
+ * This hooks returns Static recommendations (Trending and Popular products) after applying location restrictions.
+ * @param countryCode
+ * @returns {{isLoading: boolean, trendingProducts: *[], popularProducts: *[]}}
+ * */
+const useStaticRecommendations = (countryCode) => {
   const [isLoading, setLoading] = useState(true);
   const [popularProducts, setPopularProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -19,4 +24,6 @@ export default function useProducts(countryCode) {
   }, [countryCode]);
 
   return { popularProducts, trendingProducts, isLoading };
-}
+};
+
+export default useStaticRecommendations;
