@@ -8,15 +8,6 @@ export const eventNames = {
   recommendationsViewed: 'edx.bi.user.recommendations.viewed',
 };
 
-export const createLinkTracker = (tracker, href, openInNewTab = false) => (e) => {
-  e.preventDefault();
-  tracker();
-  if (openInNewTab) {
-    return setTimeout(() => { global.open(href, '_blank'); }, LINK_TIMEOUT);
-  }
-  return setTimeout(() => { global.location.href = href; }, LINK_TIMEOUT);
-};
-
 const generateProductKey = (product) => {
   const productKey = product.cardType === 'program' ? `${product.title} [${product.uuid}]` : product.activeRunKey;
   return productKey;
@@ -33,7 +24,8 @@ export const trackRecommendationClick = (product, position, isControl, userId) =
     is_control: isControl,
     user_id: userId,
   });
-  return setTimeout(() => { global.open(product.url, '_blank'); }, LINK_TIMEOUT);
+  const productUrl = product.url || product?.activeCourseRun?.marketingUrl;
+  return setTimeout(() => { global.open(productUrl, '_blank'); }, LINK_TIMEOUT);
 };
 
 export const trackRecommendationsViewed = (recommendedProducts, type, isControl, userId) => {
