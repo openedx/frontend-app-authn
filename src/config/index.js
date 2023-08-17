@@ -32,6 +32,8 @@ const configuration = {
   INFO_EMAIL: process.env.INFO_EMAIL || '',
   ZENDESK_KEY: process.env.ZENDESK_KEY,
   ZENDESK_LOGO_URL: process.env.ZENDESK_LOGO_URL,
+  ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID || '',
+  ALGOLIA_SEARCH_API_KEY: process.env.ALGOLIA_SEARCH_API_KEY || '',
 };
 
 export default configuration;
