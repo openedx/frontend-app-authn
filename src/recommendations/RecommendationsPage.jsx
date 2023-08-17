@@ -3,16 +3,22 @@ import React, { useEffect } from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Container, Hyperlink, Image, StatefulButton, Tab, Tabs,
+  breakpoints,
+  Container,
+  Hyperlink,
+  Image, Skeleton,
+  StatefulButton,
+  useMediaQuery,
 } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
-import { EDUCATION_LEVEL_MAPPING, POPULAR, TRENDING } from './data/constants';
+import { EDUCATION_LEVEL_MAPPING, POPULAR } from './data/constants';
 import useRecommendations from './data/hooks/useRecommendations';
 import messages from './messages';
-import RecommendationsList from './RecommendationsList';
+import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
+import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
 import { trackRecommendationsViewed } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
@@ -23,8 +29,10 @@ const RecommendationsPage = ({}) => {
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
+  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
+
   const {
-    popularProducts, trendingProducts, isLoading,
+    algoliaRecommendations, popularProducts, trendingProducts, isLoading,
   } = useRecommendations(educationLevel);
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
@@ -56,11 +64,6 @@ const RecommendationsPage = ({}) => {
     handleRedirection();
   }
 
-  const handleOnSelect = (tabKey) => {
-    const recommendations = tabKey === POPULAR ? popularProducts : trendingProducts;
-    trackRecommendationsViewed(recommendations, tabKey, false, userId);
-  };
-
   return (
     <>
       <Helmet>
@@ -68,50 +71,52 @@ const RecommendationsPage = ({}) => {
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
-      <div className="d-flex flex-column vh-100 bg-light-200">
+      <div className="d-flex flex-column bg-light-200">
         <div className="mb-2">
           <div className="col-md-12 small-screen-top-stripe medium-screen-top-stripe extra-large-screen-top-stripe" />
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
             <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
           </Hyperlink>
         </div>
-        <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 p-1">
-          <Container id="course-recommendations" size="lg" className="recommendations-container">
-            <h2 className="text-sm-center mb-4 text-left recommendations-container__heading">
-              {formatMessage(messages['recommendation.page.heading'])}
-            </h2>
-            <Tabs
-              variant="tabs"
-              defaultActiveKey={POPULAR}
-              id="recommendations-selection"
-              onSelect={handleOnSelect}
-            >
-              <Tab tabClassName="mb-3" eventKey={POPULAR} title={formatMessage(messages['recommendation.option.popular'])}>
-                <RecommendationsList
-                  recommendations={popularProducts}
-                  userId={userId}
-                />
-              </Tab>
-              <Tab tabClassName="mb-3" eventKey={TRENDING} title={formatMessage(messages['recommendation.option.trending'])}>
-                <RecommendationsList
-                  recommendations={trendingProducts}
-                  userId={userId}
-                />
-              </Tab>
-            </Tabs>
-          </Container>
-          <div className="text-center">
-            <StatefulButton
-              className="font-weight-500"
-              type="submit"
-              variant="brand"
-              labels={{
-                default: formatMessage(messages['recommendation.skip.button']),
-              }}
-              onClick={handleSkip}
+        <Container
+          id="course-recommendations"
+          size="lg"
+          className="pr-4 pl-4 mt-3 mt-md-4 mb-4.5 mb-sm-5 mb-md-6 mw-lg"
+        >
+          {isExtraSmall ? (
+            <RecommendationsSmallLayout
+              userId={userId}
+              isLoading={isLoading}
+              personalizedRecommendations={algoliaRecommendations}
+              trendingProducts={trendingProducts}
+              popularProducts={popularProducts}
             />
+          ) : (
+            <RecommendationsLargeLayout
+              userId={userId}
+              isLoading={isLoading}
+              personalizedRecommendations={algoliaRecommendations}
+              trendingProducts={trendingProducts}
+              popularProducts={popularProducts}
+            />
+          )}
+          <div className="mt-3 mt-sm-4.5 text-center">
+            {isLoading && (
+              <Skeleton className="skip-btn__skeleton" />
+            )}
+            {!isLoading && (
+              <StatefulButton
+                className="font-weight-500"
+                type="submit"
+                variant="outline-brand"
+                labels={{
+                  default: formatMessage(messages['recommendation.skip.button']),
+                }}
+                onClick={handleSkip}
+              />
+            )}
           </div>
-        </div>
+        </Container>
       </div>
     </>
   );

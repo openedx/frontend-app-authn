@@ -15,9 +15,9 @@ const BaseCard = ({
   productTypeCopy,
   footer,
   handleOnClick,
-  isLoading = false,
+  isLoading,
 }) => (
-  <div className="mr-4 recommendation-card" key={`container-${uuid}`}>
+  <div className="recommendation-card" key={`container-${uuid}`}>
     <Hyperlink
       target="_blank"
       className="card-box"
