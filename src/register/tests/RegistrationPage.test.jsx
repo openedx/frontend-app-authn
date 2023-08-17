@@ -660,7 +660,7 @@ describe('RegistrationPage', () => {
 
       const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
       registrationPage.find('input#name').simulate('change', { target: { value: 'test name', name: 'name' } });
-      registrationPage.find('button.suggested-username-close-button').at(0).simulate('click');
+      registrationPage.find('button.username-suggestions__close__button').at(0).simulate('click');
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
