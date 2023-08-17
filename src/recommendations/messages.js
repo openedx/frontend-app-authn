@@ -18,13 +18,18 @@ const messages = defineMessages({
   },
   'recommendation.option.trending': {
     id: 'recommendation.option.trending',
-    defaultMessage: 'Trending',
+    defaultMessage: 'Trending Now',
     description: 'Title for trending products',
   },
   'recommendation.option.popular': {
     id: 'recommendation.option.popular',
     defaultMessage: 'Most Popular',
     description: 'Title for popular products',
+  },
+  'recommendation.option.recommended.for.you': {
+    id: 'recommendation.option.recommended.for.you',
+    defaultMessage: 'Recommended for you',
+    description: 'Title for personalized products',
   },
 });
 
