@@ -38,10 +38,6 @@ import {
 } from '../data/constants';
 import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
-import {
-  activateRecommendationsExperiment, RECOMMENDATIONS_EXP_VARIATION,
-} from '../recommendations/optimizelyExperiment';
-import { trackRecommendationsGroup, trackRecommendationsViewed } from '../recommendations/track';
 
 const ProgressiveProfiling = (props) => {
   const { formatMessage } = useIntl();
@@ -58,7 +54,7 @@ const ProgressiveProfiling = (props) => {
   const queryParams = getAllPossibleQueryParams();
   const authenticatedUser = getAuthenticatedUser();
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-  const enablePopularAndTrendingRecommendations = getConfig().ENABLE_POPULAR_AND_TRENDING_RECOMMENDATIONS;
+  const enablePostRegistrationRecommendations = getConfig().ENABLE_POST_REGISTRATION_RECOMMENDATIONS;
 
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [formFieldData, setFormFieldData] = useState({ fields: {}, extendedProfile: [] });
@@ -114,21 +110,13 @@ const ProgressiveProfiling = (props) => {
   }, [authenticatedUser, canViewWelcomePage]);
 
   useEffect(() => {
-    if (registrationResult.redirectUrl && authenticatedUser?.userId) {
+    if (enablePostRegistrationRecommendations && registrationResult.redirectUrl && authenticatedUser?.userId) {
       const redirectQueryParams = getAllPossibleQueryParams(registrationResult.redirectUrl);
-      if (enablePopularAndTrendingRecommendations && !('enrollment_action' in redirectQueryParams) && !queryParams?.next) {
-        const userIdStr = authenticatedUser.userId.toString();
-        const variation = activateRecommendationsExperiment(userIdStr);
-        const showRecommendations = variation === RECOMMENDATIONS_EXP_VARIATION;
-
-        trackRecommendationsGroup(variation, authenticatedUser.userId);
-        setShowRecommendationsPage(showRecommendations);
-        if (!showRecommendations) {
-          trackRecommendationsViewed([], '', true, authenticatedUser.userId);
-        }
+      if (!('enrollment_action' in redirectQueryParams || queryParams?.next)) {
+        setShowRecommendationsPage(true);
       }
     }
-  }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult.redirectUrl, queryParams?.next]);
+  }, [authenticatedUser, enablePostRegistrationRecommendations, registrationResult.redirectUrl, queryParams?.next]);
 
   if (
     !(location.state?.registrationResult || registrationEmbedded)

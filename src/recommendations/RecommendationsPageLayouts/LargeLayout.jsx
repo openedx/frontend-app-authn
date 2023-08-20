@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Skeleton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { PERSONALIZED, POPULAR, TRENDING } from '../data/constants';
 import loadingCoursesPlaceholders from '../data/loadingCoursesPlaceholders';
 import messages from '../messages';
 import RecommendationsList from '../RecommendationsList';
+import { trackRecommendationsViewed } from '../track';
 
 const RecommendationsLargeLayout = (props) => {
   const {
@@ -17,6 +19,14 @@ const RecommendationsLargeLayout = (props) => {
     popularProducts,
   } = props;
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    if (!isLoading) {
+      trackRecommendationsViewed(personalizedRecommendations, PERSONALIZED, userId);
+      trackRecommendationsViewed(popularProducts, POPULAR, userId);
+      trackRecommendationsViewed(trendingProducts, TRENDING, userId);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isLoading) {
     return (

@@ -67,7 +67,6 @@ const ProductCard = ({
     trackRecommendationClick(
       product,
       position + 1,
-      false,
       userId,
     );
   };

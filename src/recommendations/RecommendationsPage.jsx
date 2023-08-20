@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -13,12 +13,12 @@ import {
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import { EDUCATION_LEVEL_MAPPING, POPULAR } from './data/constants';
+import { EDUCATION_LEVEL_MAPPING } from './data/constants';
 import useRecommendations from './data/hooks/useRecommendations';
 import messages from './messages';
 import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
-import { trackRecommendationsViewed } from './track';
+import { trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = ({ location }) => {
@@ -35,11 +35,7 @@ const RecommendationsPage = ({ location }) => {
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
-  useEffect(() => {
-    trackRecommendationsViewed(popularProducts, POPULAR, false, userId);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleRedirection = () => {
+  const handleSkipRecommendationPage = () => {
     window.history.replaceState(location.state, null, '');
     if (registrationResponse) {
       window.location.href = registrationResponse.redirectUrl;
@@ -50,7 +46,8 @@ const RecommendationsPage = ({ location }) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
-    handleRedirection();
+    trackSkipButtonClicked(userId);
+    handleSkipRecommendationPage();
   };
 
   if (!registrationResponse) {
@@ -59,7 +56,7 @@ const RecommendationsPage = ({ location }) => {
   }
 
   if (!isLoading && (!popularProducts.length || !trendingProducts.length)) {
-    handleRedirection();
+    handleSkipRecommendationPage();
   }
 
   return (

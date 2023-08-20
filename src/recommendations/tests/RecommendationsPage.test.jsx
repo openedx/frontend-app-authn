@@ -2,15 +2,18 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { useMediaQuery } from '@edx/paragon';
 import { mount } from 'enzyme';
 import configureStore from 'redux-mock-store';
 
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
+import { PERSONALIZED, POPULAR } from '../data/constants';
 import useRecommendations from '../data/hooks/useRecommendations';
 import mockedRecommendedProducts from '../data/tests/mockedData';
 import RecommendationsPage from '../RecommendationsPage';
+import { eventNames, getProductMapping } from '../track';
 
 const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
@@ -148,5 +151,61 @@ describe('RecommendationsPageTests', () => {
     const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
 
     expect(recommendationsPage.find('.recommendations-container__card-list').length).toEqual(2);
+  });
+
+  it('[Large Screen] should fire recommendations viewed event for all recommendations', () => {
+    useRecommendations.mockReturnValue({
+      algoliaRecommendations: mockedRecommendedProducts,
+      popularProducts: mockedRecommendedProducts,
+      trendingProducts: [],
+      isLoading: false,
+    });
+
+    useMediaQuery.mockReturnValue(false);
+    mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
+
+    expect(sendTrackEvent).toBeCalled();
+    expect(sendTrackEvent).toHaveBeenCalledWith(
+      eventNames.recommendationsViewed,
+      {
+        page: 'authn_recommendations',
+        recommendation_type: PERSONALIZED,
+        products: getProductMapping(mockedRecommendedProducts),
+        user_id: 111,
+      },
+    );
+
+    expect(sendTrackEvent).toHaveBeenCalledWith(
+      eventNames.recommendationsViewed,
+      {
+        page: 'authn_recommendations',
+        recommendation_type: POPULAR,
+        products: getProductMapping(mockedRecommendedProducts),
+        user_id: 111,
+      },
+    );
+  });
+
+  it('[Small Screen] should fire recommendations viewed event on mount for personalized recommendations only', () => {
+    useRecommendations.mockReturnValue({
+      algoliaRecommendations: mockedRecommendedProducts,
+      popularProducts: mockedRecommendedProducts,
+      trendingProducts: [],
+      isLoading: false,
+    });
+
+    useMediaQuery.mockReturnValue(true);
+    mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
+
+    expect(sendTrackEvent).toBeCalled();
+    expect(sendTrackEvent).toHaveBeenCalledWith(
+      eventNames.recommendationsViewed,
+      {
+        page: 'authn_recommendations',
+        recommendation_type: PERSONALIZED,
+        products: getProductMapping(mockedRecommendedProducts),
+        user_id: 111,
+      },
+    );
   });
 });
