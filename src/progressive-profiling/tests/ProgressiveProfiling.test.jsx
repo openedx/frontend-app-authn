@@ -225,7 +225,11 @@ describe('ProgressiveProfilingTests', () => {
       const progressiveProfilingPage = await getProgressiveProfilingPage();
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
+<<<<<<< HEAD
       expect(mockNavigate).toHaveBeenCalledWith(RECOMMENDATIONS);
+=======
+      expect(history.location.pathname).toEqual(RECOMMENDATIONS);
+>>>>>>> b2b0d8c (feat: add events for recommendations (#1039))
     });
 
     it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
