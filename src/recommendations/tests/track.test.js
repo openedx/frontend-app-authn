@@ -1,7 +1,7 @@
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 
 import {
-  eventNames, trackRecommendationClick, trackRecommendationsGroup, trackRecommendationsViewed,
+  eventNames, trackRecommendationClick, trackRecommendationsViewed, trackSkipButtonClicked,
 } from '../track';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -12,7 +12,7 @@ describe('SegmentEventTrackingTest', () => {
   global.open = jest.fn();
   const userId = 1;
 
-  it('test click event is fired properly and correct link is open for program product type', async () => {
+  it('test click event is fired properly and correct link opens for program product type', async () => {
     jest.useFakeTimers();
     const program = {
       cardType: 'program',
@@ -25,16 +25,14 @@ describe('SegmentEventTrackingTest', () => {
       url: 'test_url',
     };
     const position = 0;
-    const isControl = false;
 
-    trackRecommendationClick(program, position, isControl, userId);
+    trackRecommendationClick(program, position, userId);
     jest.advanceTimersByTime(300);
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
       eventNames.recommendedProductClicked,
       {
-        is_control: isControl,
         page: 'authn_recommendations',
         position,
         product_key: `${program.title} [${program.uuid}]`,
@@ -49,7 +47,7 @@ describe('SegmentEventTrackingTest', () => {
     expect(global.open).toHaveBeenCalledWith(program.url, '_blank');
   });
 
-  it('test click event is fired properly and correct link is open for course product type', async () => {
+  it('test click event is fired properly and correct link opens for course product type', async () => {
     jest.useFakeTimers();
     const course = {
       cardType: 'course',
@@ -63,16 +61,14 @@ describe('SegmentEventTrackingTest', () => {
       },
     };
     const position = 0;
-    const isControl = false;
 
-    trackRecommendationClick(course, position, isControl, userId);
+    trackRecommendationClick(course, position, userId);
     jest.advanceTimersByTime(300);
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
       eventNames.recommendedProductClicked,
       {
-        is_control: isControl,
         page: 'authn_recommendations',
         position,
         product_key: course.activeRunKey,
@@ -88,34 +84,46 @@ describe('SegmentEventTrackingTest', () => {
   });
 
   it('test viewed events are fired properly', () => {
-    const productList = [];
+    const productList = [
+      {
+        title: 'Test Program',
+        uuid: '1234-5678-9101-1213',
+        cardType: 'program',
+        productSource: {
+          name: 'org name',
+        },
+      },
+    ];
     const recommendationsType = 'static';
-    const isControl = false;
+    const expectedProductList = [
+      {
+        product_key: 'Test Program [1234-5678-9101-1213]',
+        product_line: 'program',
+        product_source: 'org name',
+      },
+    ];
 
-    trackRecommendationsViewed(productList, recommendationsType, isControl, userId);
+    trackRecommendationsViewed(productList, recommendationsType, userId);
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
       eventNames.recommendationsViewed,
       {
         page: 'authn_recommendations',
-        products: productList,
-        is_control: isControl,
+        products: expectedProductList,
         recommendation_type: recommendationsType,
         user_id: userId,
       },
     );
   });
 
-  it('test group events are fired properly', () => {
-    const variation = 'variation';
+  it('test skip button event is fired with correct properties', () => {
+    trackSkipButtonClicked(userId);
 
-    trackRecommendationsGroup(variation, userId);
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
-      eventNames.recommendationsGroup,
+      eventNames.skipButtonClicked,
       {
         page: 'authn_recommendations',
-        variation,
         user_id: userId,
       },
     );

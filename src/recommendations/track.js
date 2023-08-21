@@ -4,16 +4,21 @@ export const LINK_TIMEOUT = 300;
 
 export const eventNames = {
   recommendedProductClicked: 'edx.bi.user.recommended.product.clicked',
-  recommendationsGroup: 'edx.bi.user.recommendations.group',
   recommendationsViewed: 'edx.bi.user.recommendations.viewed',
+  skipButtonClicked: 'edx.bi.user.recommendations.skip.btn.clicked',
 };
 
-const generateProductKey = (product) => {
-  const productKey = product.cardType === 'program' ? `${product.title} [${product.uuid}]` : product.activeRunKey;
-  return productKey;
-};
+const generateProductKey = (product) => (
+  product.cardType === 'program' ? `${product.title} [${product.uuid}]` : product.activeRunKey
+);
 
-export const trackRecommendationClick = (product, position, isControl, userId) => {
+export const getProductMapping = (recommendedProducts) => recommendedProducts.map((product) => ({
+  product_key: generateProductKey(product),
+  product_line: product.cardType,
+  product_source: product.productSource.name,
+}));
+
+export const trackRecommendationClick = (product, position, userId) => {
   sendTrackEvent(eventNames.recommendedProductClicked, {
     page: 'authn_recommendations',
     position,
@@ -21,34 +26,31 @@ export const trackRecommendationClick = (product, position, isControl, userId) =
     product_key: generateProductKey(product),
     product_line: product.cardType,
     product_source: product.productSource.name,
-    is_control: isControl,
     user_id: userId,
   });
+
   const productUrl = product.url || product?.activeCourseRun?.marketingUrl;
   return setTimeout(() => { global.open(productUrl, '_blank'); }, LINK_TIMEOUT);
 };
 
-export const trackRecommendationsViewed = (recommendedProducts, type, isControl, userId) => {
-  const viewedProductsList = recommendedProducts.map((product) => ({
-    product_key: generateProductKey(product),
-    product_line: product.cardType,
-    product_source: product.productSource.name,
-  }));
-  sendTrackEvent(
-    eventNames.recommendationsViewed, {
-      page: 'authn_recommendations',
-      recommendation_type: type,
-      products: viewedProductsList,
-      is_control: isControl,
-      user_id: userId,
-    },
-  );
+export const trackRecommendationsViewed = (recommendedProducts, type, userId) => {
+  const viewedProductsList = getProductMapping(recommendedProducts);
+
+  if (viewedProductsList && viewedProductsList.length) {
+    sendTrackEvent(
+      eventNames.recommendationsViewed, {
+        page: 'authn_recommendations',
+        recommendation_type: type,
+        products: viewedProductsList,
+        user_id: userId,
+      },
+    );
+  }
 };
 
-export const trackRecommendationsGroup = (variation, userId) => {
+export const trackSkipButtonClicked = (userId) => {
   sendTrackEvent(
-    eventNames.recommendationsGroup, {
-      variation,
+    eventNames.skipButtonClicked, {
       page: 'authn_recommendations',
       user_id: userId,
     },
@@ -57,6 +59,6 @@ export const trackRecommendationsGroup = (variation, userId) => {
 
 export default {
   trackRecommendationClick,
-  trackRecommendationsGroup,
   trackRecommendationsViewed,
+  trackSkipButtonClicked,
 };
