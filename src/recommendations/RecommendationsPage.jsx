@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -10,19 +10,18 @@ import {
   StatefulButton,
   useMediaQuery,
 } from '@edx/paragon';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
-import { EDUCATION_LEVEL_MAPPING, POPULAR } from './data/constants';
+import { EDUCATION_LEVEL_MAPPING } from './data/constants';
 import useRecommendations from './data/hooks/useRecommendations';
 import messages from './messages';
 import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
-import { trackRecommendationsViewed } from './track';
+import { trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
-const RecommendationsPage = ({}) => {
+const RecommendationsPage = () => {
   const { formatMessage } = useIntl();
   const location = useLocation();
   const registrationResponse = location.state?.registrationResult;
@@ -37,11 +36,7 @@ const RecommendationsPage = ({}) => {
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
 
-  useEffect(() => {
-    trackRecommendationsViewed(popularProducts, POPULAR, false, userId);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleRedirection = () => {
+  const handleSkipRecommendationPage = () => {
     window.history.replaceState(location.state, null, '');
     if (registrationResponse) {
       window.location.href = registrationResponse.redirectUrl;
@@ -52,7 +47,8 @@ const RecommendationsPage = ({}) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
-    handleRedirection();
+    trackSkipButtonClicked(userId);
+    handleSkipRecommendationPage();
   };
 
   if (!registrationResponse) {
@@ -61,7 +57,7 @@ const RecommendationsPage = ({}) => {
   }
 
   if (!isLoading && (!popularProducts.length || !trendingProducts.length)) {
-    handleRedirection();
+    handleSkipRecommendationPage();
   }
 
   return (
@@ -71,7 +67,7 @@ const RecommendationsPage = ({}) => {
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
-      <div className="d-flex flex-column bg-light-200">
+      <div className="d-flex flex-column bg-light-200 min-vh-100">
         <div className="mb-2">
           <div className="col-md-12 small-screen-top-stripe medium-screen-top-stripe extra-large-screen-top-stripe" />
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
@@ -122,20 +118,6 @@ const RecommendationsPage = ({}) => {
   );
 };
 
-RecommendationsPage.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      registrationResult: PropTypes.shape({
-        redirectUrl: PropTypes.string,
-      }),
-      userId: PropTypes.number,
-      educationLevel: PropTypes.string,
-    }),
-  }),
-};
-
-RecommendationsPage.defaultProps = {
-  location: { state: {} },
-};
+RecommendationsPage.propTypes = {};
 
 export default RecommendationsPage;

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Collapsible, Skeleton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
+import { PERSONALIZED, POPULAR, TRENDING } from '../data/constants';
 import loadingCoursesPlaceholders from '../data/loadingCoursesPlaceholders';
 import messages from '../messages';
 import RecommendationsList from '../RecommendationsList';
+import { trackRecommendationsViewed } from '../track';
 
 const RecommendationsSmallLayout = (props) => {
   const {
@@ -17,6 +19,32 @@ const RecommendationsSmallLayout = (props) => {
     popularProducts,
   } = props;
   const { formatMessage } = useIntl();
+
+  const [hasViewedPopularRecommendations, setHasViewedPopularRecommendations] = useState(false);
+  const [hasViewedTrendingRecommendations, setHasViewedTrendingRecommendations] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && personalizedRecommendations.length > 0) {
+      trackRecommendationsViewed(personalizedRecommendations, PERSONALIZED, userId);
+    } else if (!isLoading && personalizedRecommendations.length === 0) {
+      trackRecommendationsViewed(popularProducts, POPULAR, userId);
+      setHasViewedPopularRecommendations(true);
+    }
+  }, [isLoading, personalizedRecommendations, popularProducts, userId]);
+
+  const handlePopularRecommendationsViewed = () => {
+    if (!hasViewedPopularRecommendations) {
+      setHasViewedPopularRecommendations(true);
+      trackRecommendationsViewed(popularProducts, POPULAR, userId);
+    }
+  };
+
+  const handleTrendingRecommendationsViewed = () => {
+    if (!hasViewedTrendingRecommendations) {
+      setHasViewedTrendingRecommendations(true);
+      trackRecommendationsViewed(trendingProducts, TRENDING, userId);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -52,6 +80,8 @@ const RecommendationsSmallLayout = (props) => {
       <Collapsible
         styling="basic"
         title={formatMessage(messages['recommendation.option.popular'])}
+        onOpen={handlePopularRecommendationsViewed}
+        defaultOpen={!isLoading && personalizedRecommendations.length === 0}
       >
         <RecommendationsList
           recommendations={popularProducts}
@@ -61,6 +91,7 @@ const RecommendationsSmallLayout = (props) => {
       <Collapsible
         styling="basic"
         title={formatMessage(messages['recommendation.option.trending'])}
+        onOpen={handleTrendingRecommendationsViewed}
       >
         <RecommendationsList
           recommendations={trendingProducts}

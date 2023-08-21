@@ -10,6 +10,7 @@ export const EDUCATION_LEVEL_MAPPING = {
   jhs: 'Introductory',
 };
 
+export const PERSONALIZED = 'personalized';
 export const POPULAR = 'popular';
 export const TRENDING = 'trending';
 

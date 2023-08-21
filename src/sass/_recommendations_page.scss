@@ -9,6 +9,7 @@ $card-gap: 24px;
 
   .recommendation-card {
     flex: 0 1 100%;
+    cursor: pointer;
 
     @include media-breakpoint-up(sm) {
       flex: 0 1 calc(50% - #{$card-gap - 12});

@@ -28,7 +28,7 @@ const messages = defineMessages({
   },
   'recommendation.option.recommended.for.you': {
     id: 'recommendation.option.recommended.for.you',
-    defaultMessage: 'Recommended for you',
+    defaultMessage: 'Recommended For You',
     description: 'Title for personalized products',
   },
 });

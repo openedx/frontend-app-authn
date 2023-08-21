@@ -35,7 +35,7 @@ const mockedRecommendedProducts = [
     },
     owners: [],
     title: 'test_title',
-    uuid: 'test_uuid',
+    uuid: 'test_uuid2',
     objectID: 'course-test_uuid',
     productSource: {
       slug: 'test_source',
@@ -56,7 +56,7 @@ const mockedRecommendedProducts = [
     },
     owners: [],
     title: 'test_title',
-    uuid: 'test_uuid',
+    uuid: 'test_uuid3',
     objectID: 'course-test_uuid',
     productSource: {
       slug: 'test_source',
@@ -77,7 +77,7 @@ const mockedRecommendedProducts = [
     },
     owners: [],
     title: 'test_title',
-    uuid: 'test_uuid',
+    uuid: 'test_uuid4',
     objectID: 'course-test_uuid',
     productSource: {
       slug: 'test_source',
