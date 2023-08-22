@@ -171,10 +171,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('[Large Screen] should fire recommendations viewed event for all recommendations', () => {
-<<<<<<< HEAD
     mockUseLocation();
-=======
->>>>>>> b2b0d8c (feat: add events for recommendations (#1039))
     useRecommendations.mockReturnValue({
       algoliaRecommendations: mockedRecommendedProducts,
       popularProducts: mockedRecommendedProducts,
@@ -183,11 +180,7 @@ describe('RecommendationsPageTests', () => {
     });
 
     useMediaQuery.mockReturnValue(false);
-<<<<<<< HEAD
     mount(reduxWrapper(<IntlRecommendationsPage />));
-=======
-    mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
->>>>>>> b2b0d8c (feat: add events for recommendations (#1039))
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
@@ -220,11 +213,7 @@ describe('RecommendationsPageTests', () => {
     });
 
     useMediaQuery.mockReturnValue(true);
-<<<<<<< HEAD
     mount(reduxWrapper(<IntlRecommendationsPage />));
-=======
-    mount(reduxWrapper(<IntlRecommendationsPage {...defaultProps} />));
->>>>>>> b2b0d8c (feat: add events for recommendations (#1039))
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(
