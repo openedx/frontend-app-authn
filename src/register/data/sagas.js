@@ -19,9 +19,10 @@ export function* handleNewUserRegistration(action) {
   try {
     yield put(registerNewUserBegin());
 
-    const { redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
+    const { authenticatedUser, redirectUrl, success } = yield call(registerRequest, action.payload.registrationInfo);
 
     yield put(registerNewUserSuccess(
+      camelCaseObject(authenticatedUser),
       redirectUrl,
       success,
     ));

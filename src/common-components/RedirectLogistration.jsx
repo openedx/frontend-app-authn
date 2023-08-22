@@ -9,6 +9,7 @@ import { setCookie } from '../data/utils';
 
 const RedirectLogistration = (props) => {
   const {
+    authenticatedUser,
     finishAuthUrl,
     redirectUrl,
     redirectToProgressiveProfilingPage,
@@ -52,6 +53,7 @@ const RedirectLogistration = (props) => {
           state={{
             registrationResult,
             optionalFields,
+            authenticatedUser,
           }}
           replace
         />
@@ -81,6 +83,7 @@ const RedirectLogistration = (props) => {
 };
 
 RedirectLogistration.defaultProps = {
+  authenticatedUser: {},
   educationLevel: null,
   finishAuthUrl: null,
   success: false,
@@ -94,6 +97,7 @@ RedirectLogistration.defaultProps = {
 };
 
 RedirectLogistration.propTypes = {
+  authenticatedUser: PropTypes.shape({}),
   educationLevel: PropTypes.string,
   finishAuthUrl: PropTypes.string,
   success: PropTypes.bool,
