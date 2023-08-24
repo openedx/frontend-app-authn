@@ -1,108 +1,84 @@
 import React, {
   useEffect, useMemo, useState,
 } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
-import {
-  getCountryList, getLocale, useIntl,
-} from '@edx/frontend-platform/i18n';
+import { getConfig } from '@edx/frontend-platform';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@edx/paragon';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
-import {
-  clearRegistertionBackendError,
-  clearUsernameSuggestions,
-  fetchRealtimeValidations,
-  registerNewUser,
-} from '../data/actions';
-import {
-  COUNTRY_CODE_KEY,
-  COUNTRY_DISPLAY_KEY,
-  FORM_SUBMISSION_ERROR,
-} from '../data/constants';
-import { registrationErrorSelector, validationsSelector } from './data/selectors';
-import messages from '../messages';
 import RegistrationFailure from './RegistrationFailure';
-import { EmailField, UsernameField } from '../RegistrationFields';
-import {
-  FormGroup, PasswordField,
-} from '../../common-components';
-import { getThirdPartyAuthContext } from '../../common-components/data/actions';
-import {
-  fieldDescriptionSelector,
-} from '../../common-components/data/selectors';
-import {
-  DEFAULT_STATE, REDIRECT,
-} from '../../data/constants';
-import {
-  getAllPossibleQueryParams, setCookie,
-} from '../../data/utils';
+import { PasswordField } from '../../common-components';
+import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../../common-components/data/actions';
+import { REDIRECT } from '../../data/constants';
+import { getAllPossibleQueryParams, setCookie } from '../../data/utils';
+import { clearRegistrationBackendError, registerNewUser } from '../data/actions';
+import { FORM_SUBMISSION_ERROR } from '../data/constants';
+import { getBackendValidations, isFormValid, prepareRegistrationPayload } from '../data/utils';
+import messages from '../messages';
+import { EmailField, NameField, UsernameField } from '../RegistrationFields';
 
-const EmbeddableRegistrationPage = (props) => {
-  const {
-    backendCountryCode,
-    backendValidations,
-    fieldDescriptions,
-    registrationError,
-    registrationErrorCode,
-    registrationResult,
-    submitState,
-    usernameSuggestions,
-    validationApiRateLimited,
-    // Actions
-    getRegistrationDataFromBackend,
-    validateFromBackend,
-    clearBackendError,
-  } = props;
-
+/**
+ * Main Registration Page component
+ */
+const EmbeddableRegistrationPage = () => {
   const { formatMessage } = useIntl();
-  const countryList = useMemo(() => getCountryList(getLocale()), []);
-  const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const { cta, host } = queryParams;
+  const dispatch = useDispatch();
+
   const flags = {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
     showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
     showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
 
-  const [formFields, setFormFields] = useState({
-    email: '',
-    name: '',
-    password: '',
-    username: '',
-  });
-  const [configurableFormFields, setConfigurableFormFields] = useState({
-    marketingEmailsOptIn: true,
-  });
-  const [errors, setErrors] = useState({
-    email: '',
-    name: '',
-    password: '',
-    username: '',
-  });
-  const [emailSuggestion, setEmailSuggestion] = useState({ suggestion: '', type: '' });
+  const {
+    registrationFormData: backedUpFormData,
+    registrationError,
+    registrationError: {
+      errorCode: registrationErrorCode,
+    } = {},
+    registrationResult,
+    submitState,
+    validations,
+  } = useSelector(state => state.register);
+
+  const { fieldDescriptions } = useSelector(state => state.commonComponents);
+
+  const backendValidations = useMemo(
+    () => getBackendValidations(registrationError, validations), [registrationError, validations],
+  );
+  const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+
+  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
+  const [configurableFormFields, setConfigurableFormFields] = useState(
+    { ...backedUpFormData.configurableFormFields },
+  );
+  const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
-  const [, setFocusedField] = useState(null);
+  // temporary error state for embedded experience because we don't want to show errors on blur
+  const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
 
-  const buttonLabel = cta ? formatMessage(messages['create.account.cta.button'], { label: cta }) : formatMessage(messages['create.account.for.free.button']);
+  const { cta, host } = queryParams;
+  const buttonLabel = cta
+    ? formatMessage(messages['create.account.cta.button'], { label: cta })
+    : formatMessage(messages['create.account.for.free.button']);
 
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
       const payload = { ...queryParams, is_register_page: true };
-      getRegistrationDataFromBackend(payload);
+      dispatch(getRegistrationDataFromBackend(payload));
       setFormStartTime(Date.now());
     }
-  }, [formStartTime, getRegistrationDataFromBackend, queryParams]);
+  }, [dispatch, formStartTime, queryParams]);
 
   useEffect(() => {
     if (backendValidations) {
-      setErrors(prevErrors => ({ ...prevErrors, ...backendValidations }));
+      setTemporaryErrors(prevErrors => ({ ...prevErrors, ...backendValidations }));
     }
   }, [backendValidations]);
 
@@ -113,40 +89,9 @@ const EmbeddableRegistrationPage = (props) => {
   }, [registrationErrorCode]);
 
   useEffect(() => {
-    if (backendCountryCode && backendCountryCode !== configurableFormFields?.country?.countryCode) {
-      let countryCode = '';
-      let countryDisplayValue = '';
-
-      const selectedCountry = countryList.find(
-        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
-      );
-      if (selectedCountry) {
-        countryCode = selectedCountry[COUNTRY_CODE_KEY];
-        countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
-      }
-      setConfigurableFormFields(prevState => (
-        {
-          ...prevState,
-          country: {
-            countryCode, displayValue: countryDisplayValue,
-          },
-        }
-      ));
-    }
-  }, [backendCountryCode, countryList]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  /**
-     * We need to remove the placeholder from the field, adding a space will do that.
-     * This is needed because we are placing the username suggestions on top of the field.
-     */
-  useEffect(() => {
-    if (usernameSuggestions.length && !formFields.username) {
-      setFormFields(prevState => ({ ...prevState, username: ' ' }));
-    }
-  }, [usernameSuggestions, formFields]);
-
-  useEffect(() => {
     if (registrationResult.success) {
+      sendTrackEvent('edx.bi.user.account.registered.client', {});
+
       // Optimizely registration conversion event
       window.optimizely = window.optimizely || [];
       window.optimizely.push({
@@ -171,154 +116,66 @@ const EmbeddableRegistrationPage = (props) => {
         redirectUrl: encodeURIComponent(getConfig().POST_REGISTRATION_REDIRECT_URL),
       }, host);
     }
-  }, [registrationResult, host]);
-
-  const validateInput = (fieldName, value, payload, shouldValidateFromBackend) => {
-    switch (fieldName) {
-        case 'name':
-          if (value && !payload.username.trim() && shouldValidateFromBackend) {
-            validateFromBackend(payload);
-          }
-          break;
-        default:
-          break;
-    }
-  };
-
-  const isFormValid = (payload) => {
-    const fieldErrors = { ...errors };
-    let isValid = true;
-    Object.keys(payload).forEach(key => {
-      if (!payload[key]) {
-        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
-      }
-      if (fieldErrors[key]) {
-        isValid = false;
-      }
-    });
-
-    if (flags.showConfigurableEdxFields) {
-      if (!configurableFormFields.country.displayValue) {
-        fieldErrors.country = formatMessage(messages['empty.country.field.error']);
-      }
-      if (fieldErrors.country) {
-        isValid = false;
-      }
-    }
-
-    if (flags.showConfigurableRegistrationFields) {
-      Object.keys(fieldDescriptions).forEach(key => {
-        if (key === 'country' && !configurableFormFields.country.displayValue) {
-          fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
-        } else if (!configurableFormFields[key]) {
-          fieldErrors[key] = fieldDescriptions[key].error_message;
-        }
-        if (fieldErrors[key]) {
-          isValid = false;
-        }
-      });
-    }
-    setErrors({ ...fieldErrors });
-    return isValid;
-  };
-
-  const handleSuggestionClick = (event, fieldName, suggestion = '') => {
-    event.preventDefault();
-    setErrors(prevErrors => ({ ...prevErrors, [fieldName]: '' }));
-    switch (fieldName) {
-        case 'username':
-          setFormFields(prevState => ({ ...prevState, username: suggestion }));
-          props.resetUsernameSuggestions();
-          break;
-        default:
-          break;
-    }
-  };
-
-  const handleEmailSuggestionClosed = () => setEmailSuggestion({ suggestion: '', type: '' });
-
-  const handleUsernameSuggestionClosed = () => props.resetUsernameSuggestions();
+  }, [host, registrationResult]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;
-    let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     if (registrationError[name]) {
-      clearBackendError(name);
+      dispatch(clearRegistrationBackendError(name));
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     }
-    if (name === 'username') {
-      if (value.length > 30) {
-        return;
-      }
-      if (value.startsWith(' ')) {
-        value = value.trim();
-      }
-    }
-
     setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handleOnBlur = (event) => {
-    const { name, value } = event.target;
-
-    if (name === 'name') {
-      validateInput(
-        name,
-        value,
-        { name: formFields.name, username: formFields.username, form_field_key: name },
-        !validationApiRateLimited,
-      );
+  const handleErrorChange = (fieldName, error) => {
+    setTemporaryErrors(prevErrors => ({
+      ...prevErrors,
+      [fieldName]: error,
+    }));
+    if (error === '' && errors[fieldName] !== '') {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [fieldName]: error,
+      }));
     }
   };
 
-  const handleOnFocus = (event) => {
-    const { name, value } = event.target;
-    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-    clearBackendError(name);
-    // Since we are removing the form errors from the focused field, we will
-    // need to rerun the validation for focused field on form submission.
-    setFocusedField(name);
-
-    if (name === 'username') {
-      props.resetUsernameSuggestions();
-      // If we added a space character to username field to display the suggestion
-      // remove it before user enters the input. This is to ensure user doesn't
-      // have a space prefixed to the username.
-      if (value === ' ') {
-        setFormFields(prevState => ({ ...prevState, [name]: '' }));
-      }
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const registerUser = () => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
 
-    if (!isFormValid(payload)) {
+    // Validating form data before submitting
+    const { isValid, fieldErrors } = isFormValid(
+      payload,
+      temporaryErrors,
+      configurableFormFields,
+      fieldDescriptions,
+      formatMessage,
+    );
+    setErrors({ ...fieldErrors });
+
+    // returning if not valid
+    if (!isValid) {
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       return;
     }
 
-    Object.keys(configurableFormFields).forEach((fieldName) => {
-      if (fieldName === 'country') {
-        payload[fieldName] = configurableFormFields[fieldName].countryCode;
-      } else {
-        payload[fieldName] = configurableFormFields[fieldName];
-      }
-    });
+    // Preparing payload for submission
+    payload = prepareRegistrationPayload(
+      payload,
+      configurableFormFields,
+      flags.showMarketingEmailOptInCheckbox,
+      totalRegistrationTime,
+      queryParams);
 
-    // Don't send the marketing email opt-in value if the flag is turned off
-    if (!flags.showMarketingEmailOptInCheckbox) {
-      delete payload.marketingEmailsOptIn;
-    }
+    // making register call
+    dispatch(registerNewUser(payload));
+  };
 
-    payload = snakeCaseObject(payload);
-    payload.totalRegistrationTime = totalRegistrationTime;
-
-    // add query params to the payload
-    payload = { ...payload, ...queryParams };
-    props.registerNewUser(payload);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    registerUser();
   };
 
   return (
@@ -334,12 +191,12 @@ const EmbeddableRegistrationPage = (props) => {
           failureCount={errorCode.count}
         />
         <Form id="registration-form" name="registration-form">
-          <FormGroup
+          <NameField
             name="name"
             value={formFields.name}
+            shouldFetchUsernameSuggestions={!formFields.username.trim()}
             handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
+            handleErrorChange={handleErrorChange}
             errorMessage={errors.name}
             helpText={[formatMessage(messages['help.text.name'])]}
             floatingLabel={formatMessage(messages['registration.fullname.label'])}
@@ -347,11 +204,9 @@ const EmbeddableRegistrationPage = (props) => {
           <EmailField
             name="email"
             value={formFields.email}
+            confirmEmailValue={configurableFormFields?.confirm_email}
+            handleErrorChange={handleErrorChange}
             handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
-            handleOnClose={handleEmailSuggestionClosed}
-            emailSuggestion={emailSuggestion}
             errorMessage={errors.email}
             helpText={[formatMessage(messages['help.text.email'])]}
             floatingLabel={formatMessage(messages['registration.email.label'])}
@@ -360,12 +215,8 @@ const EmbeddableRegistrationPage = (props) => {
             name="username"
             spellCheck="false"
             value={formFields.username}
-            handleBlur={handleOnBlur}
             handleChange={handleOnChange}
-            handleFocus={handleOnFocus}
-            handleSuggestionClick={handleSuggestionClick}
-            handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-            usernameSuggestions={usernameSuggestions}
+            handleErrorChange={handleErrorChange}
             errorMessage={errors.username}
             helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
             floatingLabel={formatMessage(messages['registration.username.label'])}
@@ -374,20 +225,17 @@ const EmbeddableRegistrationPage = (props) => {
             name="password"
             value={formFields.password}
             handleChange={handleOnChange}
-            handleBlur={handleOnBlur}
-            handleFocus={handleOnFocus}
+            handleErrorChange={handleErrorChange}
             errorMessage={errors.password}
             floatingLabel={formatMessage(messages['registration.password.label'])}
           />
           <ConfigurableRegistrationForm
-            countryList={countryList}
             email={formFields.email}
             fieldErrors={errors}
-            registrationEmbedded
             formFields={configurableFormFields}
-            setFieldErrors={setErrors}
+            setFieldErrors={setTemporaryErrors}
             setFormFields={setConfigurableFormFields}
-            setFocusedField={setFocusedField}
+            autoSubmitRegisterForm={false}
             fieldDescriptions={fieldDescriptions}
           />
           <StatefulButton
@@ -406,71 +254,8 @@ const EmbeddableRegistrationPage = (props) => {
           />
         </Form>
       </div>
-
     </>
   );
 };
 
-const mapStateToProps = state => {
-  const registerPageState = state.register;
-  return {
-    backendCountryCode: registerPageState.backendCountryCode,
-    backendValidations: validationsSelector(state),
-    fieldDescriptions: fieldDescriptionSelector(state),
-    registrationError: registerPageState.registrationError,
-    registrationErrorCode: registrationErrorSelector(state),
-    registrationResult: registerPageState.registrationResult,
-    submitState: registerPageState.submitState,
-    validationApiRateLimited: registerPageState.validationApiRateLimited,
-    usernameSuggestions: registerPageState.usernameSuggestions,
-  };
-};
-
-EmbeddableRegistrationPage.propTypes = {
-  backendCountryCode: PropTypes.string,
-  backendValidations: PropTypes.shape({
-    name: PropTypes.string,
-    email: PropTypes.string,
-    username: PropTypes.string,
-    password: PropTypes.string,
-  }),
-  fieldDescriptions: PropTypes.shape({}),
-  registrationError: PropTypes.shape({}),
-  registrationErrorCode: PropTypes.string,
-  registrationResult: PropTypes.shape({
-    redirectUrl: PropTypes.string,
-    success: PropTypes.bool,
-  }),
-  submitState: PropTypes.string,
-  usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
-  validationApiRateLimited: PropTypes.bool,
-  // Actions
-  clearBackendError: PropTypes.func.isRequired,
-  getRegistrationDataFromBackend: PropTypes.func.isRequired,
-  registerNewUser: PropTypes.func.isRequired,
-  resetUsernameSuggestions: PropTypes.func.isRequired,
-  validateFromBackend: PropTypes.func.isRequired,
-};
-
-EmbeddableRegistrationPage.defaultProps = {
-  backendCountryCode: '',
-  backendValidations: null,
-  fieldDescriptions: {},
-  registrationError: {},
-  registrationErrorCode: '',
-  registrationResult: null,
-  submitState: DEFAULT_STATE,
-  usernameSuggestions: [],
-  validationApiRateLimited: false,
-};
-
-export default connect(
-  mapStateToProps,
-  {
-    clearBackendError: clearRegistertionBackendError,
-    getRegistrationDataFromBackend: getThirdPartyAuthContext,
-    resetUsernameSuggestions: clearUsernameSuggestions,
-    validateFromBackend: fetchRealtimeValidations,
-    registerNewUser,
-  },
-)(EmbeddableRegistrationPage);
+export default EmbeddableRegistrationPage;
