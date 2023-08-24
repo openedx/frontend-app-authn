@@ -25,6 +25,9 @@ import {
   FORM_SUBMISSION_ERROR,
 } from './data/constants';
 import { registrationErrorSelector, validationsSelector } from './data/selectors';
+import {
+  emailRegex, getSuggestionForInvalidEmail, urlRegex, validateCountryField, validateEmailAddress,
+} from './data/utils';
 import messages from './messages';
 import RegistrationFailure from './RegistrationFailure';
 import { EmailField, UsernameField } from './registrationFields';
@@ -36,7 +39,7 @@ import {
   fieldDescriptionSelector,
 } from '../common-components/data/selectors';
 import {
-  DEFAULT_STATE, REDIRECT,
+  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, REDIRECT, USERNAME_REGEX,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, setCookie,
@@ -173,16 +176,76 @@ const EmbeddableRegistrationPage = (props) => {
     }
   }, [registrationResult, host]);
 
-  const validateInput = (fieldName, value, payload, shouldValidateFromBackend) => {
+  const validateInput = (fieldName, value, payload, shouldValidateFromBackend, shouldSetErrors = true) => {
+    let fieldError = '';
+
     switch (fieldName) {
-        case 'name':
-          if (value && !payload.username.trim() && shouldValidateFromBackend) {
-            validateFromBackend(payload);
+      case 'name':
+        if (value && value.match(urlRegex)) {
+          fieldError = formatMessage(messages['name.validation.message']);
+        } else if (value && !payload.username.trim() && shouldValidateFromBackend) {
+          validateFromBackend(payload);
+        }
+        break;
+      case 'email':
+        if (value.length <= 2) {
+          fieldError = formatMessage(messages['email.invalid.format.error']);
+        } else {
+          const [username, domainName] = value.split('@');
+          // Check if email address is invalid. If we have a suggestion for invalid email
+          // provide that along with the error message.
+          if (!emailRegex.test(value)) {
+            fieldError = formatMessage(messages['email.invalid.format.error']);
+            setEmailSuggestion({
+              suggestion: getSuggestionForInvalidEmail(domainName, username),
+              type: 'error',
+            });
+          } else {
+            const response = validateEmailAddress(value, username, domainName);
+            if (response.hasError) {
+              fieldError = formatMessage(messages['email.invalid.format.error']);
+              delete response.hasError;
+            }
+            setEmailSuggestion({ ...response });
           }
-          break;
-        default:
-          break;
+        }
+        break;
+      case 'username':
+        if (!value.match(USERNAME_REGEX)) {
+          fieldError = formatMessage(messages['username.format.validation.message']);
+        }
+        break;
+      case 'password':
+        if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+          fieldError = formatMessage(messages['password.validation.message']);
+        }
+        break;
+      case 'country':
+        if (flags.showConfigurableEdxFields || flags.showConfigurableRegistrationFields) {
+          const {
+            countryCode, displayValue, error,
+          } = validateCountryField(value.trim(), countryList, formatMessage(messages['empty.country.field.error']));
+          fieldError = error;
+          setConfigurableFormFields(prevState => ({ ...prevState, country: { countryCode, displayValue } }));
+        }
+        break;
+      default:
+        if (flags.showConfigurableRegistrationFields) {
+          if (!value && fieldDescriptions[fieldName]?.error_message) {
+            fieldError = fieldDescriptions[fieldName].error_message;
+          } else if (fieldName === 'confirm_email' && formFields.email && value !== formFields.email) {
+            fieldError = formatMessage(messages['email.do.not.match']);
+          }
+        }
+        break;
     }
+    if (shouldSetErrors && fieldError) {
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        [fieldName]: fieldError,
+      }));
+    }
+    return fieldError;
   };
 
   const isFormValid = (payload) => {
@@ -226,6 +289,10 @@ const EmbeddableRegistrationPage = (props) => {
     event.preventDefault();
     setErrors(prevErrors => ({ ...prevErrors, [fieldName]: '' }));
     switch (fieldName) {
+        case 'email':
+          setFormFields(prevState => ({ ...prevState, email: emailSuggestion.suggestion }));
+          setEmailSuggestion({ suggestion: '', type: '' });
+        break;
         case 'username':
           setFormFields(prevState => ({ ...prevState, username: suggestion }));
           props.resetUsernameSuggestions();
@@ -267,7 +334,11 @@ const EmbeddableRegistrationPage = (props) => {
         value,
         { name: formFields.name, username: formFields.username, form_field_key: name },
         !validationApiRateLimited,
+        false,
       );
+    }
+    if (name === 'email') {
+      validateInput(name, value, null, !validationApiRateLimited, false);
     }
   };
 
@@ -294,7 +365,6 @@ const EmbeddableRegistrationPage = (props) => {
     e.preventDefault();
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
-
     if (!isFormValid(payload)) {
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       return;
@@ -307,12 +377,20 @@ const EmbeddableRegistrationPage = (props) => {
         payload[fieldName] = configurableFormFields[fieldName];
       }
     });
-
     // Don't send the marketing email opt-in value if the flag is turned off
     if (!flags.showMarketingEmailOptInCheckbox) {
       delete payload.marketingEmailsOptIn;
     }
-
+    let isValid = true;
+    Object.entries(payload).forEach(([key, value]) => {
+      if (validateInput(key, value, payload, false, true) !== '') {
+        isValid = false;
+      }
+    });
+    if (!isValid) {
+      setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
+      return;
+    }
     payload = snakeCaseObject(payload);
     payload.totalRegistrationTime = totalRegistrationTime;
 
@@ -350,6 +428,7 @@ const EmbeddableRegistrationPage = (props) => {
             handleChange={handleOnChange}
             handleBlur={handleOnBlur}
             handleFocus={handleOnFocus}
+            handleSuggestionClick={(e) => handleSuggestionClick(e, 'email')}
             handleOnClose={handleEmailSuggestionClosed}
             emailSuggestion={emailSuggestion}
             errorMessage={errors.email}

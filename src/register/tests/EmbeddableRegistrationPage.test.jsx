@@ -234,6 +234,97 @@ describe('RegistrationPage', () => {
 
       expect(registrationPage.find('input#username').prop('value')).toEqual('test-user');
     });
+    it('should run username and email frontend validations', () => {
+      const payload = {
+        name: 'John Doe',
+        username: 'test@2u.com',
+        email: 'test@yopmail.test',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        totalRegistrationTime: 0,
+        marketing_emails_opt_in: true,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
+      populateRequiredFields(registrationPage, payload);
+      registrationPage.find('input[name="email"]').simulate('focus');
+      registrationPage.find('input[name="email"]').simulate('blur', { target: { value: 'test@yopmail.test', name: 'email' } });
+      expect(registrationPage.find('.email-suggestion__text').exists()).toBeTruthy();
+
+      registrationPage.find('input[name="email"]').simulate('focus');
+      registrationPage.find('input[name="email"]').simulate('blur', { target: { value: 'asasasasas', name: 'email' } });
+
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeTruthy();
+      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeTruthy();
+    });
+    it('should run email frontend validations when random string is input', () => {
+      const payload = {
+        name: 'John Doe',
+        username: 'testh@2u.com',
+        email: 'as',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        totalRegistrationTime: 0,
+        marketing_emails_opt_in: true,
+      };
+
+      const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
+      populateRequiredFields(registrationPage, payload);
+
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeTruthy();
+    });
+    it('should run frontend validations for name field', () => {
+      const payload = {
+        name: 'https://localhost.com',
+        username: 'test@2u.com',
+        email: 'as',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        totalRegistrationTime: 0,
+        marketing_emails_opt_in: true,
+      };
+
+      const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
+      populateRequiredFields(registrationPage, payload);
+
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="name"]').exists()).toBeTruthy();
+    });
+
+    it('should run frontend validations for password field', () => {
+      const payload = {
+        name: 'https://localhost.com',
+        username: 'test@2u.com',
+        email: 'as',
+        password: 'as',
+        country: 'Pakistan',
+        honor_code: true,
+        totalRegistrationTime: 0,
+        marketing_emails_opt_in: true,
+      };
+
+      const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
+      populateRequiredFields(registrationPage, payload);
+
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="password"]').exists()).toBeTruthy();
+    });
+
+    it('should click on email suggestion in case suggestion is avialable', () => {
+      const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
+      registrationPage.find('input[name="email"]').simulate('focus');
+      registrationPage.find('input[name="email"]').simulate('blur', { target: { value: 'test@gmail.co', name: 'email' } });
+
+      registrationPage.find('a.email-suggestion-alert-warning').simulate('click');
+      expect(registrationPage.find('input#email').prop('value')).toEqual('test@gmail.com');
+    });
+
     it('should remove extra character if username is more than 30 character long', () => {
       const registrationPage = mount(reduxWrapper(<IntlEmbedableRegistrationForm {...props} />));
       registrationPage.find('input#username').simulate('change', { target: { value: 'why_this_is_not_valid_username_', name: 'username' } });
