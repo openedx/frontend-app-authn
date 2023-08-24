@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
-import { FIELDS } from './data/constants';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY, FIELDS } from './data/constants';
 import { validateCountryField } from './data/utils';
 import messages from './messages';
 import { HonorCode, TermsOfService } from './registrationFields';
@@ -36,6 +37,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFormFields,
     registrationEmbedded,
   } = props;
+  const backendCountryCode = useSelector(state => state.register.backendCountryCode);
 
   let showTermsOfServiceAndHonorCode = false;
   let showCountryField = false;
@@ -53,6 +55,29 @@ const ConfigurableRegistrationForm = (props) => {
       setFormFields(prevState => ({ ...prevState, country: { countryCode: '', displayValue: '' } }));
     }
   });
+
+  useEffect(() => {
+    if (backendCountryCode && backendCountryCode !== formFields?.country?.countryCode) {
+      let countryCode = '';
+      let countryDisplayValue = '';
+
+      const selectedCountry = countryList.find(
+        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
+      );
+      if (selectedCountry) {
+        countryCode = selectedCountry[COUNTRY_CODE_KEY];
+        countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
+      }
+      setFormFields(prevState => (
+        {
+          ...prevState,
+          country: {
+            countryCode, displayValue: countryDisplayValue,
+          },
+        }
+      ));
+    }
+  }, [backendCountryCode, countryList]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleOnChange = (event, countryValue = null) => {
     const { name } = event.target;
@@ -218,7 +243,7 @@ ConfigurableRegistrationForm.propTypes = {
     marketingEmailsOptIn: PropTypes.bool,
   }).isRequired,
   setFieldErrors: PropTypes.func.isRequired,
-  setFocusedField: PropTypes.func.isRequired,
+  setFocusedField: PropTypes.func,
   setFormFields: PropTypes.func.isRequired,
   registrationEmbedded: PropTypes.bool,
 };
@@ -226,6 +251,7 @@ ConfigurableRegistrationForm.propTypes = {
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   registrationEmbedded: false,
+  setFocusedField: () => {},
 };
 
 export default ConfigurableRegistrationForm;

@@ -23,8 +23,6 @@ import {
   setUserPipelineDataLoaded,
 } from './data/actions';
 import {
-  COUNTRY_CODE_KEY,
-  COUNTRY_DISPLAY_KEY,
   FIELDS,
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
@@ -55,7 +53,6 @@ import {
 const RegistrationPage = (props) => {
   const {
     backedUpFormData,
-    backendCountryCode,
     backendValidations,
     fieldDescriptions,
     handleInstitutionLogin,
@@ -68,7 +65,6 @@ const RegistrationPage = (props) => {
     submitState,
     thirdPartyAuthApiStatus,
     thirdPartyAuthContext,
-    usernameSuggestions,
     validationApiRateLimited,
     // Actions
     backupFormState,
@@ -184,39 +180,6 @@ const RegistrationPage = (props) => {
       setErrorCode(prevState => ({ type: registrationErrorCode, count: prevState.count + 1 }));
     }
   }, [registrationErrorCode]);
-
-  useEffect(() => {
-    if (backendCountryCode && backendCountryCode !== configurableFormFields?.country?.countryCode) {
-      let countryCode = '';
-      let countryDisplayValue = '';
-
-      const selectedCountry = countryList.find(
-        (country) => (country[COUNTRY_CODE_KEY].toLowerCase() === backendCountryCode.toLowerCase()),
-      );
-      if (selectedCountry) {
-        countryCode = selectedCountry[COUNTRY_CODE_KEY];
-        countryDisplayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
-      }
-      setConfigurableFormFields(prevState => (
-        {
-          ...prevState,
-          country: {
-            countryCode, displayValue: countryDisplayValue,
-          },
-        }
-      ));
-    }
-  }, [backendCountryCode, countryList]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  /**
-   * We need to remove the placeholder from the field, adding a space will do that.
-   * This is needed because we are placing the username suggestions on top of the field.
-   */
-  useEffect(() => {
-    if (usernameSuggestions.length && !formFields.username) {
-      setFormFields(prevState => ({ ...prevState, username: ' ' }));
-    }
-  }, [usernameSuggestions, formFields]);
 
   useEffect(() => {
     if (registrationResult.success) {
@@ -393,22 +356,13 @@ const RegistrationPage = (props) => {
 
   const handleEmailSuggestionClosed = () => setEmailSuggestion({ suggestion: '', type: '' });
 
-  const handleUsernameSuggestionClosed = () => props.resetUsernameSuggestions();
-
   const handleOnChange = (event) => {
+    console.log('test handleOnChange', event.target);
     const { name } = event.target;
-    let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     if (registrationError[name]) {
       clearBackendError(name);
       setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-    }
-    if (name === 'username') {
-      if (value.length > 30) {
-        return;
-      }
-      if (value.startsWith(' ')) {
-        value = value.trim();
-      }
     }
 
     setFormFields(prevState => ({ ...prevState, [name]: value }));
@@ -430,22 +384,12 @@ const RegistrationPage = (props) => {
   };
 
   const handleOnFocus = (event) => {
-    const { name, value } = event.target;
+    const { name } = event.target;
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     clearBackendError(name);
     // Since we are removing the form errors from the focused field, we will
     // need to rerun the validation for focused field on form submission.
     setFocusedField(name);
-
-    if (name === 'username') {
-      props.resetUsernameSuggestions();
-      // If we added a space character to username field to display the suggestion
-      // remove it before user enters the input. This is to ensure user doesn't
-      // have a space prefixed to the username.
-      if (value === ' ') {
-        setFormFields(prevState => ({ ...prevState, [name]: '' }));
-      }
-    }
   };
 
   const registerUser = () => {
@@ -579,8 +523,6 @@ const RegistrationPage = (props) => {
                 handleChange={handleOnChange}
                 handleFocus={handleOnFocus}
                 handleSuggestionClick={handleSuggestionClick}
-                handleUsernameSuggestionClose={handleUsernameSuggestionClosed}
-                usernameSuggestions={usernameSuggestions}
                 errorMessage={errors.username}
                 helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
                 floatingLabel={formatMessage(messages['registration.username.label'])}
@@ -679,7 +621,6 @@ RegistrationPage.propTypes = {
     errors: PropTypes.shape({}),
     emailSuggestion: PropTypes.shape({}),
   }),
-  backendCountryCode: PropTypes.string,
   backendValidations: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
@@ -719,7 +660,6 @@ RegistrationPage.propTypes = {
       PropTypes.shape({}),
     ),
   }),
-  usernameSuggestions: PropTypes.arrayOf(PropTypes.string),
   userPipelineDataLoaded: PropTypes.bool,
   validationApiRateLimited: PropTypes.bool,
   // Actions
@@ -728,7 +668,6 @@ RegistrationPage.propTypes = {
   getRegistrationDataFromBackend: PropTypes.func.isRequired,
   handleInstitutionLogin: PropTypes.func,
   registerNewUser: PropTypes.func.isRequired,
-  resetUsernameSuggestions: PropTypes.func.isRequired,
   setUserPipelineDetailsLoaded: PropTypes.func.isRequired,
   validateFromBackend: PropTypes.func.isRequired,
 };
@@ -748,7 +687,6 @@ RegistrationPage.defaultProps = {
       suggestion: '', type: '',
     },
   },
-  backendCountryCode: '',
   backendValidations: null,
   fieldDescriptions: {},
   handleInstitutionLogin: null,
@@ -770,7 +708,6 @@ RegistrationPage.defaultProps = {
     providers: [],
     secondaryProviders: [],
   },
-  usernameSuggestions: [],
   userPipelineDataLoaded: false,
   validationApiRateLimited: false,
 };
@@ -781,7 +718,6 @@ export default connect(
     backupFormState: backupRegistrationFormBegin,
     clearBackendError: clearRegistertionBackendError,
     getRegistrationDataFromBackend: getThirdPartyAuthContext,
-    resetUsernameSuggestions: clearUsernameSuggestions,
     validateFromBackend: fetchRealtimeValidations,
     registerNewUser,
     setUserPipelineDetailsLoaded: setUserPipelineDataLoaded,
