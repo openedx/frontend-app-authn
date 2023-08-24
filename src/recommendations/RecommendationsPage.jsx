@@ -67,7 +67,7 @@ const RecommendationsPage = () => {
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
-      <div className="d-flex flex-column bg-light-200">
+      <div className="d-flex flex-column bg-light-200 min-vh-100">
         <div className="mb-2">
           <div className="col-md-12 small-screen-top-stripe medium-screen-top-stripe extra-large-screen-top-stripe" />
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
