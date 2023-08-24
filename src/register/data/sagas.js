@@ -38,6 +38,7 @@ export function* handleNewUserRegistration(action) {
 }
 
 export function* fetchRealtimeValidations(action) {
+  console.log('test saga fetchRealtimeValidations');
   try {
     yield put(fetchRealtimeValidationsBegin());
     const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);

@@ -5,14 +5,14 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
-import messages from './messages';
+import messages from '../messages';
 import {
   RenderInstitutionButton,
   SocialAuthProviders,
-} from '../common-components';
+} from '../../common-components';
 import {
   PENDING_STATE, REGISTER_PAGE,
-} from '../data/constants';
+} from '../../data/constants';
 
 /**
  * This component renders the Single sign-on (SSO) buttons for the providers passed.

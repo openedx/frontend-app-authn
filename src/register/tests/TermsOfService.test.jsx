@@ -4,7 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
-import TermsOfService from '../registrationFields/TermsOfService';
+import TermsOfService from '../RegistrationFields/TermsOfService';
 
 const IntlTermsOfService = injectIntl(TermsOfService);
 

@@ -21,7 +21,7 @@ import {
 import {
   FIELDS,
 } from '../data/constants';
-import EmbeddableRegistrationPage from '../EmbeddableRegistrationPage';
+import EmbeddableRegistrationPage from '../EmbeddableRegistrationPage/EmbeddableRegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),

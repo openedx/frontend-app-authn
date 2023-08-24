@@ -19,10 +19,13 @@ export const backupRegistrationFormBegin = (data) => ({
 });
 
 // Validate fields from the backend
-export const fetchRealtimeValidations = (formPayload) => ({
-  type: REGISTER_FORM_VALIDATIONS.BASE,
-  payload: { formPayload },
-});
+export const fetchRealtimeValidations = (formPayload) => {
+  console.log('test fetchRealtimeValidations');
+  return {
+    type: REGISTER_FORM_VALIDATIONS.BASE,
+    payload: { formPayload },
+  };
+};
 
 export const fetchRealtimeValidationsBegin = () => ({
   type: REGISTER_FORM_VALIDATIONS.BEGIN,

@@ -23,8 +23,9 @@ import ForgotPasswordAlert from './ForgotPasswordAlert';
 import messages from './messages';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
-import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
+import { DEFAULT_STATE, LOGIN_PAGE } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { VALID_EMAIL_REGEX } from '../register/RegistrationFields/EmailField/constants';
 
 const ForgotPasswordPage = (props) => {
   const platformName = getConfig().SITE_NAME;

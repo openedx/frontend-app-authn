@@ -8,42 +8,40 @@ import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
-import { Form, StatefulButton } from '@edx/paragon';
+import { Form, FormGroup, StatefulButton } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 
-import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
+import { PasswordField } from '../../common-components';
+import { getThirdPartyAuthContext } from '../../common-components/data/actions';
+import { fieldDescriptionSelector } from '../../common-components/data/selectors';
+import {
+  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, REDIRECT,
+} from '../../data/constants';
+import { getAllPossibleQueryParams, setCookie } from '../../data/utils';
+import ConfigurableRegistrationForm from '../components/ConfigurableRegistrationForm';
+import RegistrationFailure from '../components/RegistrationFailure';
 import {
   clearRegistertionBackendError,
   clearUsernameSuggestions,
   fetchRealtimeValidations,
   registerNewUser,
-} from './data/actions';
+} from '../data/actions';
 import {
-  COUNTRY_CODE_KEY,
-  COUNTRY_DISPLAY_KEY,
   FORM_SUBMISSION_ERROR,
-} from './data/constants';
-import { registrationErrorSelector, validationsSelector } from './data/selectors';
-import {
-  emailRegex, getSuggestionForInvalidEmail, urlRegex, validateCountryField, validateEmailAddress,
-} from './data/utils';
-import messages from './messages';
-import RegistrationFailure from './RegistrationFailure';
-import { EmailField, UsernameField } from './registrationFields';
-import {
-  FormGroup, PasswordField,
-} from '../common-components';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import {
-  fieldDescriptionSelector,
-} from '../common-components/data/selectors';
-import {
-  DEFAULT_STATE, LETTER_REGEX, NUMBER_REGEX, REDIRECT, USERNAME_REGEX,
 } from '../data/constants';
+import { registrationErrorSelector, validationsSelector } from '../data/selectors';
+import messages from '../messages';
+import { EmailField, UsernameField } from '../RegistrationFields';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from '../RegistrationFields/CountryField/constants';
+import validateCountryField from '../RegistrationFields/CountryField/validator';
 import {
-  getAllPossibleQueryParams, setCookie,
-} from '../data/utils';
+  emailRegex,
+  getSuggestionForInvalidEmail,
+  validateEmailAddress,
+} from '../RegistrationFields/EmailField/validator';
+import { urlRegex } from '../RegistrationFields/NameField/constants';
+import { VALID_USERNAME_REGEX } from '../RegistrationFields/UsernameField/constants';
 
 const EmbeddableRegistrationPage = (props) => {
   const {
@@ -211,7 +209,7 @@ const EmbeddableRegistrationPage = (props) => {
         }
         break;
       case 'username':
-        if (!value.match(USERNAME_REGEX)) {
+        if (!value.match(VALID_USERNAME_REGEX)) {
           fieldError = formatMessage(messages['username.format.validation.message']);
         }
         break;
