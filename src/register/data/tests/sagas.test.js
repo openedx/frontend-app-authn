@@ -129,7 +129,12 @@ describe('handleNewUserRegistration', () => {
   });
 
   it('should call service and dispatch success action', async () => {
-    const data = { redirectUrl: '/dashboard', success: true };
+    const authenticatedUser = { username: 'test', user_id: 123 };
+    const data = {
+      redirectUrl: '/dashboard',
+      success: true,
+      authenticatedUser,
+    };
     const registerRequest = jest.spyOn(api, 'registerRequest')
       .mockImplementation(() => Promise.resolve(data));
 
@@ -143,7 +148,7 @@ describe('handleNewUserRegistration', () => {
     expect(registerRequest).toHaveBeenCalledTimes(1);
     expect(dispatched).toEqual([
       actions.registerNewUserBegin(),
-      actions.registerNewUserSuccess(data.redirectUrl, data.success),
+      actions.registerNewUserSuccess(camelCaseObject(authenticatedUser), data.redirectUrl, data.success),
     ]);
     registerRequest.mockClear();
   });

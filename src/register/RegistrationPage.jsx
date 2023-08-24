@@ -541,6 +541,7 @@ const RegistrationPage = (props) => {
         </Helmet>
         <RedirectLogistration
           host={host}
+          authenticatedUser={registrationResult.authenticatedUser}
           success={registrationResult.success}
           redirectUrl={registrationResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
@@ -719,6 +720,7 @@ RegistrationPage.propTypes = {
   registrationError: PropTypes.shape({}),
   registrationErrorCode: PropTypes.string,
   registrationResult: PropTypes.shape({
+    authenticatedUser: PropTypes.shape({}),
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),

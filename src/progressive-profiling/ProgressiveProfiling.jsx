@@ -6,9 +6,7 @@ import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/f
 import {
   AxiosJwtAuthService,
   configure as configureAuth,
-  ensureAuthenticatedUser,
   getAuthenticatedUser,
-  hydrateAuthenticatedUser,
 } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { getLoggingService } from '@edx/frontend-platform/logging';
@@ -57,27 +55,22 @@ const ProgressiveProfiling = (props) => {
   const registrationEmbedded = isHostAvailableInQueryParams();
 
   const queryParams = getAllPossibleQueryParams();
-  const authenticatedUser = getAuthenticatedUser();
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+  const authenticatedUser = getAuthenticatedUser() || location.state?.authenticatedUser;
   const enablePopularAndTrendingRecommendations = getConfig().ENABLE_POPULAR_AND_TRENDING_RECOMMENDATIONS;
 
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [formFieldData, setFormFieldData] = useState({ fields: {}, extendedProfile: [] });
-  const [canViewWelcomePage, setCanViewWelcomePage] = useState(false);
   const [values, setValues] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showRecommendationsPage, setShowRecommendationsPage] = useState(false);
 
   useEffect(() => {
-    configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
-    ensureAuthenticatedUser(DASHBOARD_URL)
-      .then(() => {
-        hydrateAuthenticatedUser().then(() => {
-          setCanViewWelcomePage(true);
-        });
-      })
-      .catch(() => {});
-  }, [DASHBOARD_URL]);
+    if (registrationEmbedded) {
+      getFieldDataFromBackend({ is_welcome_page: true, next: queryParams?.next });
+    } else {
+      configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
+    }
+  }, [registrationEmbedded, getFieldDataFromBackend, queryParams?.next]);
 
   useEffect(() => {
     const registrationResponse = location.state?.registrationResult;
@@ -91,12 +84,6 @@ const ProgressiveProfiling = (props) => {
   }, [location.state]);
 
   useEffect(() => {
-    if (registrationEmbedded) {
-      getFieldDataFromBackend({ is_welcome_page: true, next: queryParams?.next });
-    }
-  }, [registrationEmbedded, getFieldDataFromBackend, queryParams?.next]);
-
-  useEffect(() => {
     if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
       setFormFieldData({
         fields: welcomePageContext.fields,
@@ -108,11 +95,11 @@ const ProgressiveProfiling = (props) => {
   }, [registrationEmbedded, welcomePageContext]);
 
   useEffect(() => {
-    if (canViewWelcomePage && authenticatedUser?.userId) {
+    if (authenticatedUser?.userId) {
       identifyAuthenticatedUser(authenticatedUser.userId);
       sendPageEvent('login_and_registration', 'welcome');
     }
-  }, [authenticatedUser, canViewWelcomePage]);
+  }, [authenticatedUser]);
 
   useEffect(() => {
     if (registrationResult.redirectUrl && authenticatedUser?.userId) {
@@ -132,15 +119,13 @@ const ProgressiveProfiling = (props) => {
   }, [authenticatedUser, enablePopularAndTrendingRecommendations, registrationResult.redirectUrl, queryParams?.next]);
 
   if (
-    !(location.state?.registrationResult || registrationEmbedded)
+    !authenticatedUser
+    || !(location.state?.registrationResult || registrationEmbedded)
     || welcomePageContextApiStatus === FAILURE_STATE
     || (welcomePageContextApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
+    const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
     global.location.assign(DASHBOARD_URL);
-    return null;
-  }
-
-  if (!canViewWelcomePage) {
     return null;
   }
 
@@ -203,7 +188,7 @@ const ProgressiveProfiling = (props) => {
   });
 
   return (
-    <BaseContainer showWelcomeBanner>
+    <BaseContainer showWelcomeBanner username={authenticatedUser?.username}>
       <Helmet>
         <title>{formatMessage(messages['progressive.profiling.page.title'],
           { siteName: getConfig().SITE_NAME })}
@@ -283,6 +268,10 @@ const ProgressiveProfiling = (props) => {
 };
 
 ProgressiveProfiling.propTypes = {
+  authenticatedUser: PropTypes.shape({
+    username: PropTypes.string,
+    userId: PropTypes.number,
+  }),
   showError: PropTypes.bool,
   shouldRedirect: PropTypes.bool,
   submitState: PropTypes.string,
@@ -298,6 +287,7 @@ ProgressiveProfiling.propTypes = {
 };
 
 ProgressiveProfiling.defaultProps = {
+  authenticatedUser: {},
   shouldRedirect: false,
   showError: false,
   submitState: DEFAULT_STATE,

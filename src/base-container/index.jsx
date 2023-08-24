@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { breakpoints } from '@edx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,10 +12,7 @@ import {
 import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
 import { DEFAULT_LAYOUT, IMAGE_LAYOUT } from './data/constants';
 
-const BaseContainer = ({ children, showWelcomeBanner }) => {
-  const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;
-  const username = authenticatedUser ? authenticatedUser.username : null;
-
+const BaseContainer = ({ children, showWelcomeBanner, username }) => {
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
 
   useEffect(() => {
@@ -38,18 +34,18 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
     return (
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <ImageExtraSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <ImageExtraSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.small.minWidth} maxWidth={breakpoints.small.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <ImageSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <ImageSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {authenticatedUser ? <AuthMediumLayout username={username} /> : <ImageMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout username={username} /> : <ImageMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {authenticatedUser ? <AuthLargeLayout username={username} /> : <ImageLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout username={username} /> : <ImageLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
+        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
         </div>
       </div>
@@ -61,15 +57,15 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <DefaultSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <DefaultSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {authenticatedUser ? <AuthMediumLayout username={username} /> : <DefaultMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout username={username} /> : <DefaultMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {authenticatedUser ? <AuthLargeLayout username={username} /> : <DefaultLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout username={username} /> : <DefaultLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
+        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
         </div>
       </div>
@@ -79,11 +75,13 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
 
 BaseContainer.defaultProps = {
   showWelcomeBanner: false,
+  username: null,
 };
 
 BaseContainer.propTypes = {
   children: PropTypes.node.isRequired,
   showWelcomeBanner: PropTypes.bool,
+  username: PropTypes.string,
 };
 
 export default BaseContainer;
