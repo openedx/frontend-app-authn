@@ -12,7 +12,7 @@ import {
 } from '@edx/paragon';
 import { ChevronLeft } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
@@ -36,6 +36,7 @@ const Logistration = (props) => {
   } = tpaProviders;
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
+  const [key, setKey] = useState('');
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
 
@@ -69,7 +70,7 @@ const Logistration = (props) => {
     if (tabKey === LOGIN_PAGE) {
       props.backupRegistrationForm();
     }
-    navigate(updatePathWithQueryParams(tabKey));
+    setKey(tabKey);
   };
 
   const tabTitle = (
@@ -121,6 +122,9 @@ const Logistration = (props) => {
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
                 ))}
+              { key && (
+                <Navigate to={updatePathWithQueryParams(key)} replace />
+              )}
               <div id="main-content" className="main-content">
                 {selectedPage === LOGIN_PAGE
                   ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
