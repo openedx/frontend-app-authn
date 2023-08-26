@@ -35,7 +35,7 @@ describe('TermsOfServiceTest', () => {
         <IntlTermsOfService onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
-    const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Terms of Service in a new tab';
+    const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Terms of Servicein a new tab';
     expect(termsOfService.find('#terms-of-service').find('label').text()).toEqual(expectedMsg);
     expect(value).toEqual(false);
   });
