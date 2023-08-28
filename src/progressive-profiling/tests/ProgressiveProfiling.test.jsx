@@ -34,11 +34,6 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
 }));
-jest.mock('../../recommendations/optimizelyExperiment.js', () => ({
-  activateRecommendationsExperiment: jest.fn(),
-  trackRecommendationViewedOptimizely: jest.fn(),
-  RECOMMENDATIONS_EXP_VARIATION: 'welcome_page_recommendations_enabled',
-}));
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
 
@@ -231,7 +226,6 @@ describe('ProgressiveProfilingTests', () => {
           success: true,
         },
       });
-      activateRecommendationsExperiment.mockImplementation(() => 'welcome_page_recommendations_enabled');
       const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
 
       expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
