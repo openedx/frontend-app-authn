@@ -4,7 +4,7 @@ import React, {
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   getCountryList, getLocale, useIntl,
 } from '@edx/frontend-platform/i18n';
@@ -228,6 +228,8 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
+      sendTrackEvent('edx.bi.user.account.registered.client', {});
+
       // Optimizely registration conversion event
       window.optimizely = window.optimizely || [];
       window.optimizely.push({
