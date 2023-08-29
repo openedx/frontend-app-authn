@@ -55,6 +55,9 @@ describe('LoginPage', () => {
         secondaryProviders: [],
       },
     },
+    register: {
+      validationApiRateLimited: false,
+    },
   };
 
   const secondaryProviders = {

@@ -9,6 +9,7 @@ export const defaultState = {
   },
   thirdPartyAuthApiStatus: null,
   thirdPartyAuthContext: {
+    autoSubmitRegForm: false,
     currentProvider: null,
     finishAuthUrl: null,
     countryCode: null,

@@ -39,8 +39,15 @@ describe('ResetPasswordPage', () => {
     </IntlProvider>
   );
 
+  const initialState = {
+    register: {
+      validationApiRateLimited: false,
+    },
+    resetPassword: {},
+  };
+
   beforeEach(() => {
-    store = mockStore();
+    store = mockStore(initialState);
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -70,6 +77,7 @@ describe('ResetPasswordPage', () => {
     const password = 'test-password-1';
 
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -103,6 +111,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show error messages for required fields on empty form submission', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -123,6 +132,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show error message when new and confirm password do not match', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -139,6 +149,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show reset password rate limit error', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: PASSWORD_RESET.FORBIDDEN_REQUEST,
       },
@@ -152,6 +163,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show reset password internal server error', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
       },

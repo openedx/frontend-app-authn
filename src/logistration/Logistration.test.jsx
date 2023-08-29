@@ -43,7 +43,40 @@ describe('Logistration', () => {
     </IntlProvider>
   );
 
+  const initialState = {
+    register: {
+      registrationFormData: {
+        configurableFormFields: {
+          marketingEmailsOptIn: true,
+        },
+        formFields: {
+          name: '', email: '', username: '', password: '',
+        },
+        emailSuggestion: {
+          suggestion: '', type: '',
+        },
+        errors: {
+          name: '', email: '', username: '', password: '',
+        },
+      },
+      registrationResult: { success: false, redirectUrl: '' },
+      registrationError: {},
+      usernameSuggestions: [],
+      validationApiRateLimited: false,
+    },
+    commonComponents: {
+      thirdPartyAuthContext: {
+        providers: [],
+        secondaryProviders: [],
+      },
+    },
+    login: {
+      loginResult: { success: false, redirectUrl: '' },
+    },
+  };
+
   beforeEach(() => {
+    store = mockStore(initialState);
     jest.mock('@edx/frontend-platform/auth', () => ({
       getAuthenticatedUser: jest.fn(() => ({
         userId: 3,
@@ -65,36 +98,13 @@ describe('Logistration', () => {
     mergeConfig({
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
-    store = mockStore({
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
+
     const logistration = mount(reduxWrapper(<IntlLogistration />));
 
     expect(logistration.find('#main-content').find('RegistrationPage').exists()).toBeTruthy();
   });
 
   it('should render login page', () => {
-    store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-
     const props = { selectedPage: LOGIN_PAGE };
     const logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
 
@@ -108,9 +118,7 @@ describe('Logistration', () => {
     });
 
     store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
+      ...initialState,
       commonComponents: {
         thirdPartyAuthContext: {
           currentProvider: null,
@@ -140,9 +148,7 @@ describe('Logistration', () => {
     });
 
     store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
+      ...initialState,
       commonComponents: {
         thirdPartyAuthContext: {
           currentProvider: null,
@@ -173,9 +179,7 @@ describe('Logistration', () => {
     });
 
     store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
+      ...initialState,
       commonComponents: {
         thirdPartyAuthContext: {
           currentProvider: null,
@@ -205,10 +209,7 @@ describe('Logistration', () => {
     });
 
     store = mockStore({
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
+      ...initialState,
       commonComponents: {
         thirdPartyAuthContext: {
           currentProvider: null,
@@ -233,22 +234,6 @@ describe('Logistration', () => {
   });
 
   it('should fire action to backup registration form on tab click', () => {
-    store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-
     store.dispatch = jest.fn(store.dispatch);
     const logistration = mount(reduxWrapper(<IntlLogistration />));
     logistration.find('a[data-rb-event-key="/login"]').simulate('click');
@@ -256,22 +241,6 @@ describe('Logistration', () => {
   });
 
   it('should clear tpa context errorMessage tab click', () => {
-    store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-
     store.dispatch = jest.fn(store.dispatch);
     const logistration = mount(reduxWrapper(<IntlLogistration />));
     logistration.find('a[data-rb-event-key="/login"]').simulate('click');

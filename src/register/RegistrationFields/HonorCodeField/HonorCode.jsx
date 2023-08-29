@@ -5,7 +5,7 @@ import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Form, Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import messages from '../messages';
+import messages from '../../messages';
 
 const HonorCode = (props) => {
   const { formatMessage } = useIntl();

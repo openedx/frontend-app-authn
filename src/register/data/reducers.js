@@ -11,6 +11,8 @@ import {
   PENDING_STATE,
 } from '../../data/constants';
 
+export const storeName = 'register';
+
 export const defaultState = {
   backendCountryCode: '',
   registrationError: {},
