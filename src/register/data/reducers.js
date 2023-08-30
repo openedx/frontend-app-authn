@@ -4,7 +4,7 @@ import {
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
-  REGISTERATION_CLEAR_BACKEND_ERROR,
+  REGISTRATION_CLEAR_BACKEND_ERROR,
 } from './actions';
 import {
   DEFAULT_STATE,
@@ -73,7 +73,7 @@ const reducer = (state = defaultState, action = {}) => {
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
       };
     }
-    case REGISTERATION_CLEAR_BACKEND_ERROR: {
+    case REGISTRATION_CLEAR_BACKEND_ERROR: {
       const registrationErrorTemp = state.registrationError;
       delete registrationErrorTemp[action.payload];
       return {

@@ -17,7 +17,7 @@ import Skeleton from 'react-loading-skeleton';
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
 import {
   backupRegistrationFormBegin,
-  clearRegistertionBackendError,
+  clearRegistrationBackendError,
   clearUsernameSuggestions,
   fetchRealtimeValidations,
   registerNewUser,
@@ -810,7 +810,7 @@ export default connect(
   mapStateToProps,
   {
     backupFormState: backupRegistrationFormBegin,
-    clearBackendError: clearRegistertionBackendError,
+    clearBackendError: clearRegistrationBackendError,
     getRegistrationDataFromBackend: getThirdPartyAuthContext,
     resetUsernameSuggestions: clearUsernameSuggestions,
     validateFromBackend: fetchRealtimeValidations,
