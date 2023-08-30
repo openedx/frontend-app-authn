@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
@@ -1020,6 +1020,24 @@ describe('RegistrationPage', () => {
     it('should send page event when register page is rendered', () => {
       mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
+    });
+
+    it('should send track event when user has successfully registered', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          registrationResult: {
+            success: true,
+            redirectUrl: 'https://test.com/testing-dashboard/',
+          },
+        },
+      });
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL };
+      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
     });
 
     it('should populate form with pipeline user details', () => {
