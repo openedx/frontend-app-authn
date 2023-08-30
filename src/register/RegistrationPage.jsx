@@ -172,26 +172,11 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
+      // This event is used by GTM
       sendTrackEvent('edx.bi.user.account.registered.client', {});
 
-      // Optimizely registration conversion event
-      window.optimizely = window.optimizely || [];
-      window.optimizely.push({
-        type: 'event',
-        eventName: 'authn-registration-conversion',
-      });
-
-      // We probably don't need this cookie because this fires the same event as
-      // above for optimizely using GTM.
-      setCookie(getConfig().REGISTER_CONVERSION_COOKIE_NAME, true);
       // This is used by the "User Retention Rate Event" on GTM
-      setCookie('authn-returning-user');
-
-      // Fire GTM event used for integration with impact.com
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'ImpactRegistrationEvent',
-      });
+      setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
     }
   }, [registrationResult]);
 
