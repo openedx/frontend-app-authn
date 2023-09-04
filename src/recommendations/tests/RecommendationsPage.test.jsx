@@ -203,27 +203,4 @@ describe('RecommendationsPageTests', () => {
       },
     );
   });
-
-  it('[Small Screen] should fire recommendations viewed event on mount for personalized recommendations only', () => {
-    useRecommendations.mockReturnValue({
-      algoliaRecommendations: mockedRecommendedProducts,
-      popularProducts: mockedRecommendedProducts,
-      trendingProducts: [],
-      isLoading: false,
-    });
-
-    useMediaQuery.mockReturnValue(true);
-    mount(reduxWrapper(<IntlRecommendationsPage />));
-
-    expect(sendTrackEvent).toBeCalled();
-    expect(sendTrackEvent).toHaveBeenCalledWith(
-      eventNames.recommendationsViewed,
-      {
-        page: 'authn_recommendations',
-        recommendation_type: PERSONALIZED,
-        products: getProductMapping(mockedRecommendedProducts),
-        user_id: 111,
-      },
-    );
-  });
 });

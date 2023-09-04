@@ -24,10 +24,13 @@ const RecommendationsSmallLayout = (props) => {
   const [hasViewedTrendingRecommendations, setHasViewedTrendingRecommendations] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && personalizedRecommendations.length > 0) {
       trackRecommendationsViewed(personalizedRecommendations, PERSONALIZED, userId);
+    } else if (!isLoading && personalizedRecommendations.length === 0) {
+      trackRecommendationsViewed(popularProducts, POPULAR, userId);
+      setHasViewedPopularRecommendations(true);
     }
-  }, [isLoading, personalizedRecommendations, userId]);
+  }, [isLoading, personalizedRecommendations, popularProducts, userId]);
 
   const handlePopularRecommendationsViewed = () => {
     if (!hasViewedPopularRecommendations) {
@@ -78,6 +81,7 @@ const RecommendationsSmallLayout = (props) => {
         styling="basic"
         title={formatMessage(messages['recommendation.option.popular'])}
         onOpen={handlePopularRecommendationsViewed}
+        defaultOpen={!isLoading && personalizedRecommendations.length === 0}
       >
         <RecommendationsList
           recommendations={popularProducts}
