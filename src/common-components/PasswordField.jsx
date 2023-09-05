@@ -24,18 +24,33 @@ const PasswordField = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleBlur = (e) => {
-    if (e.target?.name === 'password' && e.relatedTarget?.name === 'passwordIcon') {
-      return; // Do not validations on password icon click
+    const { name, value } = e.target;
+    if (name === props.name && e.relatedTarget?.name === 'passwordIcon') {
+      return; // Do not run validations on password icon click
     }
 
-    if (props.handleBlur) { props.handleBlur(e); }
+    let passwordValue = value;
+    if (name === 'passwordIcon') {
+      // To validate actual password value when onBlur is triggered by focusing out the password icon
+      passwordValue = props.value;
+    }
+
+    if (props.handleBlur) {
+      props.handleBlur({
+        target: {
+          name: props.name,
+          value: passwordValue,
+        },
+      });
+    }
+
     setShowTooltip(props.showRequirements && false);
     if (props.handleErrorChange) { // If rendering from register page
-      const fieldError = validatePasswordField(e.target.value, formatMessage);
+      const fieldError = validatePasswordField(passwordValue, formatMessage);
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
-        dispatch(fetchRealtimeValidations({ password: e.target.value }));
+        dispatch(fetchRealtimeValidations({ password: passwordValue }));
       }
     }
   };

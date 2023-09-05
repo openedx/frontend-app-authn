@@ -147,7 +147,7 @@ describe('PasswordField', () => {
     expect(props.handleBlur).toHaveBeenCalledTimes(1);
   });
 
-  it('should run validations when blur event when rendered from register page', () => {
+  it('should run validations on blur event when rendered from register page', () => {
     props = {
       ...props,
       handleErrorChange: jest.fn(),
@@ -224,5 +224,31 @@ describe('PasswordField', () => {
     });
 
     expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ password: 'password123' }));
+  });
+
+  it('should use password value from prop when password icon is focused out (blur due to icon)', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    props = {
+      ...props,
+      value: 'testPassword',
+      handleErrorChange: jest.fn(),
+      handleBlur: jest.fn(),
+    };
+    const passwordField = mount(reduxWrapper(<IntlPasswordField {...props} />));
+
+    passwordField.find('button[aria-label="Show password"]').simulate('blur', {
+      target: {
+        name: 'passwordIcon',
+        value: undefined,
+      },
+    });
+
+    expect(props.handleBlur).toHaveBeenCalledTimes(1);
+    expect(props.handleBlur).toHaveBeenCalledWith({
+      target: {
+        name: 'password',
+        value: 'testPassword',
+      },
+    });
   });
 });
