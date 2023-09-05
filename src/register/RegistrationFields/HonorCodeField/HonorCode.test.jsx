@@ -4,7 +4,7 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { mount } from 'enzyme';
 
-import HonorCode from '../registrationFields/HonorCode';
+import { HonorCode } from '../index';
 
 const IntlHonorCode = injectIntl(HonorCode);
 
