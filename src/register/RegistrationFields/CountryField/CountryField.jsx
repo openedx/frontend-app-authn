@@ -5,8 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@edx/paragon';
 import PropTypes from 'prop-types';
 
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './constants';
-import validateCountryField from './validator';
+import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 import { clearRegistrationBackendError } from '../../data/actions';
 import messages from '../../messages';
 

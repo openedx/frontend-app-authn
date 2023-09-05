@@ -1,6 +1,6 @@
-import VALID_USERNAME_REGEX from './constants';
 import messages from '../../messages';
 
+export const VALID_USERNAME_REGEX = /^[a-zA-Z0-9_-]*$/i;
 export const usernameRegex = new RegExp(VALID_USERNAME_REGEX, 'i');
 
 const validateUsername = (value, formatMessage) => {

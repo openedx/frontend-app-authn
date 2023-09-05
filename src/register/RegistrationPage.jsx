@@ -93,7 +93,6 @@ const RegistrationPage = (props) => {
   );
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
-  const { cta, host } = queryParams;
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
@@ -103,6 +102,7 @@ const RegistrationPage = (props) => {
   // temporary error state for embedded experience because we don't want to show errors on blur
   const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
 
+  const { cta, host } = queryParams;
   const buttonLabel = cta
     ? formatMessage(messages['create.account.cta.button'], { label: cta })
     : formatMessage(messages['create.account.for.free.button']);

@@ -17,21 +17,21 @@ describe('Email Validators Utils', () => {
     });
   });
   describe('getSuggestionForInvalidEmail Tests', () => {
-    it('test getLevenshteinSuggestion returns empty string for invalid domain', () => {
+    it('test getSuggestionForInvalidEmail returns empty string for invalid domain', () => {
       const output = getSuggestionForInvalidEmail('', 'username');
       expect(output).toEqual('');
     });
 
-    it('test getLevenshteinSuggestion returns valid suggestion when domain is nearly matched', () => {
+    it('test getSuggestionForInvalidEmail returns valid suggestion when domain is nearly matched', () => {
       const output = getSuggestionForInvalidEmail('gmail', 'username');
       expect(output).toEqual('username@gmail.com');
     });
 
-    it('test getLevenshteinSuggestion returns valid suggestion for default domains', () => {
+    it('test getSuggestionForInvalidEmail returns valid suggestion for default domains', () => {
       const output = getSuggestionForInvalidEmail('aol', 'username');
       expect(output).toEqual('username@aol.com');
     });
-    it('test getLevenshteinSuggestion returns empty for totally different domain', () => {
+    it('test getSuggestionForInvalidEmail returns empty for totally different domain', () => {
       const output = getSuggestionForInvalidEmail('invalid-domain', 'username');
       expect(output).toEqual('');
     });

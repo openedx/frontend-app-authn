@@ -7,7 +7,7 @@ import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './constants';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 import { CountryField } from '../index';
 
 const IntlCountryField = injectIntl(CountryField);

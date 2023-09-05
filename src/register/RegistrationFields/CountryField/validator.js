@@ -1,4 +1,5 @@
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './constants';
+export const COUNTRY_CODE_KEY = 'code';
+export const COUNTRY_DISPLAY_KEY = 'name';
 
 const validateCountryField = (value, countryList, errorMessage) => {
   let countryCode = '';
