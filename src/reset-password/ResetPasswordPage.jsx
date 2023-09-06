@@ -91,20 +91,7 @@ const ResetPasswordPage = (props) => {
   };
 
   const handleOnBlur = (event) => {
-    let { name, value } = event.target;
-
-    // Do not validate when focus out from 'newPassword' and focus on 'passwordValidation' icon
-    // for better user experience.
-    if (event.relatedTarget
-      && event.relatedTarget.name === 'password'
-      && name === 'newPassword'
-    ) {
-      return;
-    }
-    if (name === 'password') {
-      name = 'newPassword';
-      value = newPassword;
-    }
+    const { name, value } = event.target;
     validateInput(name, value);
   };
 

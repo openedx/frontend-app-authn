@@ -39,8 +39,15 @@ describe('ResetPasswordPage', () => {
     </IntlProvider>
   );
 
+  const initialState = {
+    register: {
+      validationApiRateLimited: false,
+    },
+    resetPassword: {},
+  };
+
   beforeEach(() => {
-    store = mockStore();
+    store = mockStore(initialState);
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -70,6 +77,7 @@ describe('ResetPasswordPage', () => {
     const password = 'test-password-1';
 
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -103,6 +111,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show error messages for required fields on empty form submission', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -123,6 +132,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show error message when new and confirm password do not match', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: TOKEN_STATE.VALID,
       },
@@ -139,6 +149,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show reset password rate limit error', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: PASSWORD_RESET.FORBIDDEN_REQUEST,
       },
@@ -152,6 +163,7 @@ describe('ResetPasswordPage', () => {
 
   it('should show reset password internal server error', () => {
     store = mockStore({
+      ...initialState,
       resetPassword: {
         status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
       },
@@ -172,23 +184,7 @@ describe('ResetPasswordPage', () => {
     resetPasswordPage.find('input#newPassword').simulate('blur', { target: { value: 'aziz156', name: 'newPassword' } });
     expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual(expectedText);
   });
-  it('should not call validation when typing and click on show icon button', async () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    await act(async () => {
-      await resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: 'aziz156@', name: 'newPassword' } });
-      await resetPasswordPage.find('button[aria-label="Show password"]').at(0).simulate('click');
-      await resetPasswordPage.find('button[aria-label="Hide password"]').at(0).simulate('blur');
-    });
 
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
-  });
-  it('should call validation click on show icon button and then focus out', () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('input#newPassword').simulate('focus', { target: { value: 'aziz156@', name: 'newPassword' } });
-    resetPasswordPage.find('input#newPassword').simulate('blur', { relatedTarget: { name: 'password' } });
-    resetPasswordPage.find('button[aria-label="Show password"]').at(0).simulate('click');
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
-  });
   it('show spinner when api call is pending', () => {
     store.dispatch = jest.fn(store.dispatch);
     props = {

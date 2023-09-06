@@ -1,4 +1,4 @@
-export const convertCourseRunKeytoCourseKey = (courseRunKey) => {
+export const convertCourseRunKeyToCourseKey = (courseRunKey) => {
   if (!courseRunKey) {
     return '';
   }
@@ -62,4 +62,4 @@ export const filterLocationRestriction = (products, countryCode) => products.fil
 },
 );
 
-export default convertCourseRunKeytoCourseKey;
+export default convertCourseRunKeyToCourseKey;

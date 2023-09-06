@@ -1,9 +1,9 @@
 import mockedProductData from '../../tests/mockedData';
-import { convertCourseRunKeytoCourseKey, filterLocationRestriction, useProductType } from '../utils';
+import { convertCourseRunKeyToCourseKey, filterLocationRestriction, useProductType } from '../utils';
 
 describe('UtilsTests', () => {
   it('should return the courseKey after parsing the activeCourseRun key', async () => {
-    const courseKey = convertCourseRunKeytoCourseKey('course-v1:Demox+Test101+2023');
+    const courseKey = convertCourseRunKeyToCourseKey('course-v1:Demox+Test101+2023');
     expect(courseKey).toEqual('Demox+Test101');
   });
   it('should filter courses on the basis of country code', async () => {

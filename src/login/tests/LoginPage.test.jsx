@@ -55,6 +55,9 @@ describe('LoginPage', () => {
         secondaryProviders: [],
       },
     },
+    register: {
+      validationApiRateLimited: false,
+    },
   };
 
   const secondaryProviders = {
@@ -445,13 +448,13 @@ describe('LoginPage', () => {
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
           currentProvider: null,
-          errorMessage: 'An error occured',
+          errorMessage: 'An error occurred',
         },
       },
     });
 
     const loginPage = mount(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(loginPage.find('#login-failure-alert').find('p').text()).toContain('An error occured');
+    expect(loginPage.find('#login-failure-alert').find('p').text()).toContain('An error occurred');
   });
 
   it('should match invalid login form error message', () => {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
@@ -11,31 +12,92 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
+import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
+import { validatePasswordField } from '../register/data/utils';
 
 const PasswordField = (props) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
+
+  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
   const [isPasswordHidden, setHiddenTrue, setHiddenFalse] = useToggle(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
   const handleBlur = (e) => {
-    if (props.handleBlur) { props.handleBlur(e); }
+    const { name, value } = e.target;
+    if (name === props.name && e.relatedTarget?.name === 'passwordIcon') {
+      return; // Do not run validations on password icon click
+    }
+
+    let passwordValue = value;
+    if (name === 'passwordIcon') {
+      // To validate actual password value when onBlur is triggered by focusing out the password icon
+      passwordValue = props.value;
+    }
+
+    if (props.handleBlur) {
+      props.handleBlur({
+        target: {
+          name: props.name,
+          value: passwordValue,
+        },
+      });
+    }
+
     setShowTooltip(props.showRequirements && false);
+    if (props.handleErrorChange) { // If rendering from register page
+      const fieldError = validatePasswordField(passwordValue, formatMessage);
+      if (fieldError) {
+        props.handleErrorChange('password', fieldError);
+      } else if (!validationApiRateLimited) {
+        dispatch(fetchRealtimeValidations({ password: passwordValue }));
+      }
+    }
   };
 
   const handleFocus = (e) => {
+    if (e.target?.name === 'passwordIcon') {
+      return; // Do not clear error on password icon focus
+    }
+
     if (props.handleFocus) {
       props.handleFocus(e);
+    }
+    if (props.handleErrorChange) {
+      props.handleErrorChange('password', '');
+      dispatch(clearRegistrationBackendError('password'));
     }
     setTimeout(() => setShowTooltip(props.showRequirements && true), 150);
   };
 
   const HideButton = (
-    <IconButton onFocus={handleFocus} onBlur={handleBlur} name="password" src={VisibilityOff} iconAs={Icon} onClick={setHiddenTrue} size="sm" variant="secondary" alt={formatMessage(messages['hide.password'])} />
+    <IconButton
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      name="passwordIcon"
+      src={VisibilityOff}
+      iconAs={Icon}
+      onClick={setHiddenTrue}
+      size="sm"
+      variant="secondary"
+      alt={formatMessage(messages['hide.password'])}
+    />
   );
 
   const ShowButton = (
-    <IconButton onFocus={handleFocus} onBlur={handleBlur} name="password" src={Visibility} iconAs={Icon} onClick={setHiddenFalse} size="sm" variant="secondary" alt={formatMessage(messages['show.password'])} />
+    <IconButton
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      name="passwordIcon"
+      src={Visibility}
+      iconAs={Icon}
+      onClick={setHiddenFalse}
+      size="sm"
+      variant="secondary"
+      alt={formatMessage(messages['show.password'])}
+    />
   );
+
   const placement = window.innerWidth < 768 ? 'top' : 'left';
   const tooltip = (
     <Tooltip id={`password-requirement-${placement}`}>
@@ -89,6 +151,7 @@ PasswordField.defaultProps = {
   handleBlur: null,
   handleFocus: null,
   handleChange: () => {},
+  handleErrorChange: null,
   showRequirements: true,
   autoComplete: null,
 };
@@ -100,6 +163,7 @@ PasswordField.propTypes = {
   handleBlur: PropTypes.func,
   handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
+  handleErrorChange: PropTypes.func,
   name: PropTypes.string.isRequired,
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
