@@ -296,7 +296,7 @@ const RegistrationPage = (props) => {
           optionalFields={optionalFields}
           registrationEmbedded={registrationEmbedded}
           redirectToProgressiveProfilingPage={
-            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && Object.keys(optionalFields).includes('fields')
+            getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && !!Object.keys(optionalFields.fields).length
           }
         />
         {autoSubmitRegForm && !errorCode.type ? (

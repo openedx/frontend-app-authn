@@ -627,7 +627,9 @@ describe('RegistrationPage', () => {
         },
         commonComponents: {
           ...initialState.commonComponents,
-          optionalFields: {},
+          optionalFields: {
+            fields: {},
+          },
         },
       });
       delete window.location;
