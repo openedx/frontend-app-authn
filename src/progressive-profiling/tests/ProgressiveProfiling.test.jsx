@@ -214,6 +214,7 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   describe('Recommendations test', () => {
+    window.OnetrustActiveGroups = 'C0003';
     mergeConfig({
       ENABLE_POST_REGISTRATION_RECOMMENDATIONS: true,
     });

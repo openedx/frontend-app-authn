@@ -35,6 +35,7 @@ import {
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
+import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
 import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
 
@@ -52,7 +53,10 @@ const ProgressiveProfiling = (props) => {
 
   const queryParams = getAllPossibleQueryParams();
   const authenticatedUser = getAuthenticatedUser() || location.state?.authenticatedUser;
-  const enablePostRegistrationRecommendations = getConfig().ENABLE_POST_REGISTRATION_RECOMMENDATIONS;
+  const functionalCookiesConsent = isOneTrustFunctionalCookieEnabled();
+  const enablePostRegistrationRecommendations = (
+    getConfig().ENABLE_POST_REGISTRATION_RECOMMENDATIONS && functionalCookiesConsent
+  );
 
   const [registrationResult, setRegistrationResult] = useState({ redirectUrl: '' });
   const [formFieldData, setFormFieldData] = useState({ fields: {}, extendedProfile: [] });
@@ -98,13 +102,27 @@ const ProgressiveProfiling = (props) => {
   }, [authenticatedUser]);
 
   useEffect(() => {
-    if (enablePostRegistrationRecommendations && registrationResult.redirectUrl && authenticatedUser?.userId) {
+    if (!enablePostRegistrationRecommendations) {
+      sendTrackEvent(
+        'edx.bi.user.recommendations.not.enabled',
+        { functionalCookiesConsent, page: 'authn_recommendations' },
+      );
+      return;
+    }
+
+    if (registrationResult.redirectUrl && authenticatedUser?.userId) {
       const redirectQueryParams = getAllPossibleQueryParams(registrationResult.redirectUrl);
       if (!('enrollment_action' in redirectQueryParams || queryParams?.next)) {
         setShowRecommendationsPage(true);
       }
     }
-  }, [authenticatedUser, enablePostRegistrationRecommendations, registrationResult.redirectUrl, queryParams?.next]);
+  }, [
+    authenticatedUser,
+    enablePostRegistrationRecommendations,
+    functionalCookiesConsent,
+    registrationResult.redirectUrl,
+    queryParams?.next,
+  ]);
 
   if (
     !authenticatedUser

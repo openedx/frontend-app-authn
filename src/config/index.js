@@ -26,8 +26,6 @@ const configuration = {
   BANNER_IMAGE_EXTRA_SMALL: process.env.BANNER_IMAGE_EXTRA_SMALL || '',
   // Recommendation constants
   GENERAL_RECOMMENDATIONS: process.env.GENERAL_RECOMMENDATIONS || '[]',
-  POPULAR_PRODUCTS: process.env.POPULAR_PRODUCTS || '[]',
-  TRENDING_PRODUCTS: process.env.TRENDING_PRODUCTS || '[]',
   // Miscellaneous
   INFO_EMAIL: process.env.INFO_EMAIL || '',
   ZENDESK_KEY: process.env.ZENDESK_KEY,

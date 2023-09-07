@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { useMediaQuery } from '@edx/paragon';
@@ -10,8 +10,8 @@ import { useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
-import { PERSONALIZED, POPULAR } from '../data/constants';
-import useRecommendations from '../data/hooks/useRecommendations';
+import { PERSONALIZED } from '../data/constants';
+import useAlgoliaRecommendations from '../data/hooks/useAlgoliaRecommendations';
 import mockedRecommendedProducts from '../data/tests/mockedData';
 import RecommendationsPage from '../RecommendationsPage';
 import { eventNames, getProductMapping } from '../track';
@@ -33,15 +33,9 @@ jest.mock('@edx/paragon', () => ({
   useMediaQuery: jest.fn(),
 }));
 
-jest.mock('../data/hooks/useRecommendations', () => jest.fn());
+jest.mock('../data/hooks/useAlgoliaRecommendations', () => jest.fn());
 
 describe('RecommendationsPageTests', () => {
-  mergeConfig({
-    GENERAL_RECOMMENDATIONS: '[]',
-    POPULAR_PRODUCTS: '[]',
-    TRENDING_PRODUCTS: '[]',
-  });
-
   let store = {};
 
   const dashboardUrl = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
@@ -75,13 +69,11 @@ describe('RecommendationsPageTests', () => {
     useLocation.mockReturnValue({
       state: {},
     });
-  });
 
-  useRecommendations.mockReturnValue({
-    algoliaRecommendations: mockedRecommendedProducts,
-    popularProducts: mockedRecommendedProducts,
-    trendingProducts: mockedRecommendedProducts,
-    isLoading: false,
+    useAlgoliaRecommendations.mockReturnValue({
+      recommendations: mockedRecommendedProducts,
+      isLoading: false,
+    });
   });
 
   it('should redirect to dashboard if user is not coming from registration workflow', () => {
@@ -89,17 +81,13 @@ describe('RecommendationsPageTests', () => {
     expect(window.location.href).toEqual(dashboardUrl);
   });
 
-  it('should redirect if either popular or trending recommendations are not configured', () => {
-    mockUseLocation();
-    useRecommendations.mockReturnValueOnce({
-      algoliaRecommendations: mockedRecommendedProducts,
-      popularProducts: [],
-      trendingProducts: mockedRecommendedProducts,
+  it('should redirect user if no personalized recommendations are available', () => {
+    useAlgoliaRecommendations.mockReturnValue({
+      recommendations: [],
       isLoading: false,
     });
     mount(reduxWrapper(<IntlRecommendationsPage />));
-
-    expect(window.location.href).toEqual(redirectUrl);
+    expect(window.location.href).toEqual(dashboardUrl);
   });
 
   it('should redirect user if they click "Skip for now" button', () => {
@@ -110,12 +98,12 @@ describe('RecommendationsPageTests', () => {
     expect(window.location.href).toEqual(redirectUrl);
   });
 
-  it('should display recommendations small layout (collapsibles) for small screen', () => {
+  it('should display recommendations small layout for small screen', () => {
     mockUseLocation();
     useMediaQuery.mockReturnValue(true);
     const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage />));
 
-    expect(recommendationsPage.find('.pgn_collapsible').exists()).toBeTruthy();
+    expect(recommendationsPage.find('#recommendations-small-layout').exists()).toBeTruthy();
     expect(recommendationsPage.find('.react-loading-skeleton').exists()).toBeFalsy();
   });
 
@@ -131,10 +119,8 @@ describe('RecommendationsPageTests', () => {
   it('should display skeletons if recommendations are loading for large screen', () => {
     mockUseLocation();
     useMediaQuery.mockReturnValue(false);
-    useRecommendations.mockReturnValueOnce({
-      algoliaRecommendations: [],
-      popularProducts: [],
-      trendingProducts: [],
+    useAlgoliaRecommendations.mockReturnValueOnce({
+      recommendations: [],
       isLoading: true,
     });
     const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage />));
@@ -145,10 +131,8 @@ describe('RecommendationsPageTests', () => {
   it('should display skeletons if recommendations are loading for small screen', () => {
     mockUseLocation();
     useMediaQuery.mockReturnValue(true);
-    useRecommendations.mockReturnValueOnce({
-      algoliaRecommendations: [],
-      popularProducts: [],
-      trendingProducts: [],
+    useAlgoliaRecommendations.mockReturnValueOnce({
+      recommendations: [],
       isLoading: true,
     });
     const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage />));
@@ -156,26 +140,10 @@ describe('RecommendationsPageTests', () => {
     expect(recommendationsPage.find('.react-loading-skeleton').exists()).toBeTruthy();
   });
 
-  it('should display only trending and popular recs if there are no algolia recommendations', () => {
+  it('should fire recommendations viewed event', () => {
     mockUseLocation();
-    useMediaQuery.mockReturnValue(false);
-    useRecommendations.mockReturnValueOnce({
-      algoliaRecommendations: [],
-      popularProducts: mockedRecommendedProducts,
-      trendingProducts: mockedRecommendedProducts,
-      isLoading: false,
-    });
-    const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage />));
-
-    expect(recommendationsPage.find('.recommendations-container__card-list').length).toEqual(2);
-  });
-
-  it('[Large Screen] should fire recommendations viewed event for all recommendations', () => {
-    mockUseLocation();
-    useRecommendations.mockReturnValue({
-      algoliaRecommendations: mockedRecommendedProducts,
-      popularProducts: mockedRecommendedProducts,
-      trendingProducts: [],
+    useAlgoliaRecommendations.mockReturnValue({
+      recommendations: mockedRecommendedProducts,
       isLoading: false,
     });
 
@@ -188,16 +156,6 @@ describe('RecommendationsPageTests', () => {
       {
         page: 'authn_recommendations',
         recommendation_type: PERSONALIZED,
-        products: getProductMapping(mockedRecommendedProducts),
-        user_id: 111,
-      },
-    );
-
-    expect(sendTrackEvent).toHaveBeenCalledWith(
-      eventNames.recommendationsViewed,
-      {
-        page: 'authn_recommendations',
-        recommendation_type: POPULAR,
         products: getProductMapping(mockedRecommendedProducts),
         user_id: 111,
       },

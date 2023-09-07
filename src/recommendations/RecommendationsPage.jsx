@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -13,28 +14,35 @@ import {
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
-import { EDUCATION_LEVEL_MAPPING } from './data/constants';
-import useRecommendations from './data/hooks/useRecommendations';
+import { EDUCATION_LEVEL_MAPPING, PERSONALIZED } from './data/constants';
+import useAlgoliaRecommendations from './data/hooks/useAlgoliaRecommendations';
 import messages from './messages';
 import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
-import { trackSkipButtonClicked } from './track';
+import { trackRecommendationsViewed, trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = () => {
   const { formatMessage } = useIntl();
+  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
   const location = useLocation();
+
   const registrationResponse = location.state?.registrationResult;
+  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
-  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
-
+  const userCountry = useSelector((state) => state.register.backendCountryCode);
   const {
-    algoliaRecommendations, popularProducts, trendingProducts, isLoading,
-  } = useRecommendations(educationLevel);
+    recommendations: algoliaRecommendations,
+    isLoading,
+  } = useAlgoliaRecommendations(userCountry, educationLevel);
 
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+  useEffect(() => {
+    if (!isLoading && algoliaRecommendations.length > 0) {
+      trackRecommendationsViewed(algoliaRecommendations, PERSONALIZED, userId);
+    }
+  }, [isLoading, algoliaRecommendations, userId]);
 
   const handleSkipRecommendationPage = () => {
     window.history.replaceState(location.state, null, '');
@@ -56,7 +64,7 @@ const RecommendationsPage = () => {
     return null;
   }
 
-  if (!isLoading && (!popularProducts.length || !trendingProducts.length)) {
+  if (!isLoading && !algoliaRecommendations.length) {
     handleSkipRecommendationPage();
   }
 
@@ -74,45 +82,43 @@ const RecommendationsPage = () => {
             <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
           </Hyperlink>
         </div>
-        <Container
-          id="course-recommendations"
-          size="lg"
-          className="pr-4 pl-4 mt-3 mt-md-4 mb-4.5 mb-sm-5 mb-md-6 mw-lg"
-        >
-          {isExtraSmall ? (
-            <RecommendationsSmallLayout
-              userId={userId}
-              isLoading={isLoading}
-              personalizedRecommendations={algoliaRecommendations}
-              trendingProducts={trendingProducts}
-              popularProducts={popularProducts}
-            />
-          ) : (
-            <RecommendationsLargeLayout
-              userId={userId}
-              isLoading={isLoading}
-              personalizedRecommendations={algoliaRecommendations}
-              trendingProducts={trendingProducts}
-              popularProducts={popularProducts}
-            />
-          )}
-          <div className="mt-3 mt-sm-4.5 text-center">
-            {isLoading && (
-              <Skeleton className="skip-btn__skeleton" />
-            )}
-            {!isLoading && (
-              <StatefulButton
-                className="font-weight-500"
-                type="submit"
-                variant="outline-brand"
-                labels={{
-                  default: formatMessage(messages['recommendation.skip.button']),
-                }}
-                onClick={handleSkip}
+        <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+          <Container
+            id="course-recommendations"
+            size="lg"
+            className="pr-4 pl-4 mt-4.5 mb-4.5 mb-md-5"
+          >
+            {isExtraSmall ? (
+              <RecommendationsSmallLayout
+                userId={userId}
+                isLoading={isLoading}
+                personalizedRecommendations={algoliaRecommendations}
+              />
+            ) : (
+              <RecommendationsLargeLayout
+                userId={userId}
+                isLoading={isLoading}
+                personalizedRecommendations={algoliaRecommendations}
               />
             )}
-          </div>
-        </Container>
+            <div className="mt-3 mt-sm-4.5 text-center">
+              {isLoading && (
+                <Skeleton height={40} width={140} />
+              )}
+              {!isLoading && algoliaRecommendations.length && (
+                <StatefulButton
+                  className="font-weight-500"
+                  type="submit"
+                  variant="outline-brand"
+                  labels={{
+                    default: formatMessage(messages['recommendation.skip.button']),
+                  }}
+                  onClick={handleSkip}
+                />
+              )}
+            </div>
+          </Container>
+        </div>
       </div>
     </>
   );
