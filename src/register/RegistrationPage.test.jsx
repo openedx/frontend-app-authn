@@ -503,14 +503,6 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('.institutions__heading').text()).toEqual('Register with institution/campus credentials');
     });
 
-    it('should show button label based on cta query params value', () => {
-      const buttonLabel = 'Register';
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL, search: `?cta=${buttonLabel}` };
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-      expect(registrationPage.find('button[type="submit"] span').first().text()).toEqual(buttonLabel);
-    });
-
     it('should not display password field when current provider is present', () => {
       store = mockStore({
         ...initialState,
@@ -890,96 +882,6 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('input#email').props().value).toEqual('john.doe@yopmail.com');
       expect(registrationPage.find('input#password').props().value).toEqual('password1');
       expect(registrationPage.find('.email-suggestion-alert-warning').first().text()).toEqual('john.doe@hotmail.com');
-    });
-
-    // ********* Embedded experience tests *********/
-
-    it('should call the postMessage API when embedded variant is rendered', () => {
-      getLocale.mockImplementation(() => ('en-us'));
-      mergeConfig({
-        ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
-      });
-
-      window.parent.postMessage = jest.fn();
-
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
-
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          optionalFields: {
-            extended_profile: {},
-            fields: {
-              level_of_education: { name: 'level_of_education', error_message: false },
-            },
-          },
-        },
-      });
-      const progressiveProfilingPage = mount(reduxWrapper(
-        <IntlRegistrationPage {...props} />,
-      ));
-      progressiveProfilingPage.update();
-      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
-    });
-
-    it('should not display validations error on blur event when embedded variant is rendered', () => {
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationPage {...props} />));
-
-      registrationPage.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
-      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeFalsy();
-
-      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
-      expect(registrationPage.find('div[feedback-for="country"]').exists()).toBeFalsy();
-    });
-
-    it('should set errors in temporary state when validations are returned by registration api', () => {
-      delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
-
-      const usernameError = 'It looks like this username is already taken';
-      const emailError = 'This email is already associated with an existing or previous account';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            username: [{ userMessage: usernameError }],
-            email: [{ userMessage: emailError }],
-          },
-        },
-      });
-      const registrationPage = mount(routerWrapper(reduxWrapper(
-        <IntlRegistrationPage {...props} />),
-      )).find('RegistrationPage');
-
-      expect(registrationPage.find('div[feedback-for="username"]').exists()).toBeFalsy();
-      expect(registrationPage.find('div[feedback-for="email"]').exists()).toBeFalsy();
-    });
-
-    it('should clear error on focus for embedded experience also', () => {
-      delete window.location;
-      window.location = {
-        href: getConfig().BASE_URL.concat(REGISTER_PAGE),
-        search: '?host=http://localhost/host-website',
-      };
-
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      registrationPage.find('button.btn-brand').simulate('click');
-
-      expect(registrationPage.find('div[feedback-for="password"]').text()).toContain(emptyFieldValidation.password);
-
-      registrationPage.find('input#password').simulate('focus');
-      expect(registrationPage.find('div[feedback-for="password"]').exists()).toBeFalsy();
     });
 
     it('should show spinner instead of form while registering if autoSubmitRegForm is true', () => {
