@@ -9,8 +9,8 @@ import { mount } from 'enzyme';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
 import { FIELDS } from '../../data/constants';
+import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
