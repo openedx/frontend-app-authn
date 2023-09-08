@@ -1,3 +1,5 @@
+import { PERSONALIZED } from './constants';
+
 const { camelCaseObject } = require('@edx/frontend-platform');
 
 const processCourseSearchResult = (searchResultCourse) => {
@@ -9,6 +11,7 @@ const processCourseSearchResult = (searchResultCourse) => {
       type: camelCasedResult.activeRunType,
       marketingUrl: camelCasedResult.marketingUrl,
     },
+    activeRunKey: camelCasedResult.activeRunKey,
     allowedIn: camelCasedResult.allowedIn,
     blockedIn: camelCasedResult.blockedIn,
     cardType: 'course',
@@ -21,8 +24,9 @@ const processCourseSearchResult = (searchResultCourse) => {
     uuid: camelCasedResult.uuid,
     objectID: `course-${camelCasedResult.uuid}`,
     productSource: {
-      slug: camelCasedResult.productSource,
+      name: camelCasedResult.productSource,
     },
+    recommendationType: PERSONALIZED,
   };
 };
 

@@ -5,6 +5,8 @@ const mockedRecommendedProducts = [
       type: 'test_course_run_type',
       marketingUrl: 'test_marketingUrl',
     },
+    activeRunKey: 'course-v1:TEST_COURSE_RUN',
+    recommendationType: 'personalized',
     allowedIn: [],
     blockedIn: [],
     cardType: 'course',
@@ -17,7 +19,7 @@ const mockedRecommendedProducts = [
     uuid: 'test_uuid',
     objectID: 'course-test_uuid',
     productSource: {
-      slug: 'test_source',
+      name: 'test_source',
     },
   },
   {
@@ -26,6 +28,8 @@ const mockedRecommendedProducts = [
       type: 'test_course_run_type',
       marketingUrl: 'test_marketingUrl',
     },
+    activeRunKey: 'course-v1:TEST_COURSE_RUN',
+    recommendationType: 'personalized',
     allowedIn: [],
     blockedIn: [],
     cardType: 'course',
@@ -38,7 +42,7 @@ const mockedRecommendedProducts = [
     uuid: 'test_uuid2',
     objectID: 'course-test_uuid',
     productSource: {
-      slug: 'test_source',
+      name: 'test_source',
     },
   },
   {
@@ -47,6 +51,8 @@ const mockedRecommendedProducts = [
       type: 'test_course_run_type',
       marketingUrl: 'test_marketingUrl',
     },
+    activeRunKey: 'course-v1:TEST_COURSE_RUN',
+    recommendationType: 'personalized',
     allowedIn: [],
     blockedIn: [],
     cardType: 'course',
@@ -59,7 +65,7 @@ const mockedRecommendedProducts = [
     uuid: 'test_uuid3',
     objectID: 'course-test_uuid',
     productSource: {
-      slug: 'test_source',
+      name: 'test_source',
     },
   },
   {
@@ -68,6 +74,8 @@ const mockedRecommendedProducts = [
       type: 'test_course_run_type',
       marketingUrl: 'test_marketingUrl',
     },
+    activeRunKey: 'course-v1:TEST_COURSE_RUN',
+    recommendationType: 'personalized',
     allowedIn: [],
     blockedIn: [],
     cardType: 'course',
@@ -80,7 +88,7 @@ const mockedRecommendedProducts = [
     uuid: 'test_uuid4',
     objectID: 'course-test_uuid',
     productSource: {
-      slug: 'test_source',
+      name: 'test_source',
     },
   },
 ];
