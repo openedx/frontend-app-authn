@@ -19,7 +19,7 @@ import useAlgoliaRecommendations from './data/hooks/useAlgoliaRecommendations';
 import messages from './messages';
 import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
-import { trackRecommendationsViewed, trackSkipButtonClicked } from './track';
+import { LINK_TIMEOUT, trackRecommendationsViewed, trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
 const RecommendationsPage = () => {
@@ -56,7 +56,7 @@ const RecommendationsPage = () => {
   const handleSkip = (e) => {
     e.preventDefault();
     trackSkipButtonClicked(userId);
-    handleSkipRecommendationPage();
+    setTimeout(() => { handleSkipRecommendationPage(); }, LINK_TIMEOUT);
   };
 
   if (!registrationResponse) {
