@@ -1,78 +1,31 @@
-.nav-tabs {
-  border-bottom: 2px solid transparent;
-}
+$card-gap: 24px;
 
 .recommendations-container__card-list {
-  padding-left: 0.0625rem;
-  padding-bottom: 0.125rem;
+  gap: $card-gap $card-gap;
 
-  @include media-breakpoint-down(xl) {
-    overflow-x: scroll;
-    overflow-y: hidden;
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 0 !important;
+  }
+
+  .recommendation-card {
+    flex: 0 1 100%;
+    cursor: pointer;
+
+    @include media-breakpoint-up(sm) {
+      flex: 0 1 calc(50% - #{$card-gap - 12});
+    }
+
+    @include media-breakpoint-up(md) {
+      flex: 0 1 calc(33.333% - #{$card-gap - 8});
+    }
+
+    @include media-breakpoint-up(lg) {
+      flex: 0 1 calc(25% - #{$card-gap - 6});
+    }
   }
 }
+
 .recommendations-container__heading {
   overflow-wrap: break-word;
 }
 
-.recommendations-container {
-  padding: 0 1rem;
-  margin: 0 0 1.875rem 0;
-
-  @include media-breakpoint-up(lg) {
-    max-width: $max-width-sm + 5 * $grid-gutter-width !important;
-  }
-
-  @include media-breakpoint-up(xl) {
-    max-width: $max-width-md + $grid-gutter-width !important;
-  }
-
-  @include media-breakpoint-up(xxl) {
-    max-width: $max-width-lg + $grid-gutter-width !important;
-  }
-}
-
-.recommendation-card {
-  cursor: pointer;
-  .pgn__hyperlink {
-    display: block;
-  }
-
-  .pgn__card {
-    width: 281px;
-    height: 332px;
-    margin: 0 !important;
-  }
-
-  .pgn__card-image-cap {
-    height: 6.5rem;
-    object-position: top;
-  }
-
-  .pgn__card-header-title-md {
-    font-weight: 700;
-    font-size: 1.125rem;
-    line-height: 1.5rem;
-  }
-
-  .pgn__card-header-subtitle-md{
-    font-weight: 400;
-    font-size:0.875rem;
-    line-height: 1.5rem;
-    color: $gray-700;
-  }
-  .pgn__card-footer {
-    bottom: 0;
-    position: absolute;
-    padding-bottom: 1rem !important;
-  }
-  .pgn__card__footer-text{
-    font-weight: 400;
-    font-size: 	0.75rem;
-    line-height: 1.25rem;
-  }
-}
-.footer-icon{
-   height: 16px;
-   width: 16px; 
-}
