@@ -92,9 +92,10 @@ describe('RecommendationsPageTests', () => {
 
   it('should redirect user if they click "Skip for now" button', () => {
     mockUseLocation();
+    jest.useFakeTimers();
     const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsPage />));
     recommendationsPage.find('.pgn__stateful-btn-state-default').first().simulate('click');
-
+    jest.advanceTimersByTime(300);
     expect(window.location.href).toEqual(redirectUrl);
   });
 
