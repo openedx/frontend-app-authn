@@ -15,6 +15,7 @@ const ProductCard = ({
   product,
   userId,
   position,
+  isLoading,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -66,7 +67,6 @@ const ProductCard = ({
     trackRecommendationClick(
       product,
       position + 1,
-      false,
       userId,
     );
   };
@@ -82,6 +82,7 @@ const ProductCard = ({
       productTypeCopy={productTypeCopy}
       productType={productType}
       variant={variant}
+      isLoading={isLoading}
       footer={(
         <Footer
           quickFacts={product.degree?.quickFacts}
@@ -105,8 +106,10 @@ ProductCard.propTypes = {
   ]).isRequired,
   userId: PropTypes.number.isRequired,
   position: PropTypes.number.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 ProductCard.defaultProps = {
+  isLoading: false,
 };
 export default ProductCard;
