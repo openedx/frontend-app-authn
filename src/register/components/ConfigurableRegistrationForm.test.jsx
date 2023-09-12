@@ -44,7 +44,6 @@ describe('ConfigurableRegistrationForm', () => {
   mergeConfig({
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
-    REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
   });
 
   let props = {};
