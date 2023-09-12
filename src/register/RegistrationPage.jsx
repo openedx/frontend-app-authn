@@ -617,6 +617,7 @@ class RegistrationPage extends React.Component {
     const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
     const isSocialAuthActive = !!providers.length && !currentProvider;
     const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+    const isThirdPartyAuthActive = isSocialAuthActive || (isEnterpriseLoginDisabled && isInstitutionAuthActive);
 
     return (
       <>
@@ -626,7 +627,7 @@ class RegistrationPage extends React.Component {
           </div>
         )}
 
-        {thirdPartyAuthApiStatus === PENDING_STATE ? (
+        {thirdPartyAuthApiStatus === PENDING_STATE && isThirdPartyAuthActive ? (
           <Skeleton className="tpa-skeleton" height={36} count={2} />
         ) : (
           <>
