@@ -59,7 +59,7 @@ describe('RegistrationPage', () => {
   mergeConfig({
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
-    REGISTER_CONVERSION_COOKIE_NAME: process.env.REGISTER_CONVERSION_COOKIE_NAME,
+    USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
   });
 
   let props = {};
@@ -527,7 +527,7 @@ describe('RegistrationPage', () => {
       expect(registrationPage.find('input#password').length).toEqual(0);
     });
 
-    it('should check registration conversion cookie', () => {
+    it('should check user retention cookie', () => {
       store = mockStore({
         ...initialState,
         register: {
@@ -539,7 +539,7 @@ describe('RegistrationPage', () => {
       });
 
       renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(document.cookie).toMatch(`${getConfig().REGISTER_CONVERSION_COOKIE_NAME}=true`);
+      expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
     });
 
     it('should redirect to url returned in registration result after successful account creation', () => {
