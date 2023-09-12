@@ -1,7 +1,7 @@
 const configuration = {
   // Cookies related configs
   SESSION_COOKIE_DOMAIN: process.env.SESSION_COOKIE_DOMAIN,
-  USER_RETENTION_COOKIE_NAME: process.env.USER_RETENTION_COOKIE_NAME || 'authn-returning-user',
+  USER_RETENTION_COOKIE_NAME: process.env.USER_RETENTION_COOKIE_NAME || '',
   // Features
   DISABLE_ENTERPRISE_LOGIN: process.env.DISABLE_ENTERPRISE_LOGIN || '',
   ENABLE_DYNAMIC_REGISTRATION_FIELDS: process.env.ENABLE_DYNAMIC_REGISTRATION_FIELDS || false,
