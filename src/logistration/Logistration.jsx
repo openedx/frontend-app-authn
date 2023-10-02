@@ -39,6 +39,7 @@ const Logistration = (props) => {
   const [key, setKey] = useState('');
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
 
   useEffect(() => {
     const authService = getAuthService();
@@ -116,7 +117,7 @@ const Logistration = (props) => {
                     <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
                   </Tabs>
                 )
-                : (!isValidTpaHint() && (
+                : (!isValidTpaHint() && !hideRegistrationLink && (
                   <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
@@ -126,6 +127,11 @@ const Logistration = (props) => {
                 <Navigate to={updatePathWithQueryParams(key)} replace />
               )}
               <div id="main-content" className="main-content">
+                {!institutionLogin && !isValidTpaHint() && hideRegistrationLink && (
+                  <h3 className="mb-4.5">
+                    {formatMessage(messages[selectedPage === LOGIN_PAGE ? 'logistration.sign.in' : 'logistration.register'])}
+                  </h3>
+                )}
                 {selectedPage === LOGIN_PAGE
                   ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
                   : (
