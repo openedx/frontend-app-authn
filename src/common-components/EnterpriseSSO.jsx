@@ -19,7 +19,8 @@ import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 const EnterpriseSSO = (props) => {
   const { formatMessage } = useIntl();
   const tpaProvider = props.provider;
-  const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  const hideRegistrationLink = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false
+    || getConfig().SHOW_REGISTRATION_LINKS === false;
 
   const handleSubmit = (e, url) => {
     e.preventDefault();
@@ -74,7 +75,7 @@ const EnterpriseSSO = (props) => {
                 className="w-100"
                 onClick={(e) => handleClick(e)}
               >
-                {disablePublicAccountCreation
+                {hideRegistrationLink
                   ? formatMessage(messages['enterprisetpa.login.button.text.public.account.creation.disabled'])
                   : formatMessage(messages['enterprisetpa.login.button.text'])}
               </Button>
