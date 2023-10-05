@@ -19,7 +19,7 @@ const messages = defineMessages({
   },
   'sign.in.button': {
     id: 'sign.in.button',
-    defaultMessage: 'Sign in',
+    defaultMessage: 'Get In Now',
     description: 'Sign in button label that appears on login page',
   },
   'forgot.password': {
