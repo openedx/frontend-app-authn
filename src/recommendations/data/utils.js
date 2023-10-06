@@ -47,7 +47,9 @@ export const getVariant = (productType) => (
 
 export const createCodeFriendlyProduct = (type) => type?.replace(/\s+/g, '-').replace(/'/g, '').toLowerCase();
 
-export const truncateText = (input) => (input?.length > 50 ? `${input.substring(0, 50)}...` : input);
+export const truncateText = (input, textLength) => (
+  input?.length > textLength ? `${input.substring(0, textLength)}...` : input
+);
 
 export const filterLocationRestriction = (products, countryCode) => products.filter((product) => {
   if (product.locationRestriction) {
