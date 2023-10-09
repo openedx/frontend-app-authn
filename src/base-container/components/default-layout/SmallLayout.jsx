@@ -25,9 +25,11 @@ const SmallLayout = () => {
               { 'ml-4.5': getConfig().SITE_NAME !== 'edX' },
             )}
           >
-            <span className="mr-1">{formatMessage(messages['start.learning'])}</span>
-            <span className="text-accent-a d-inline-block">
-              {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+            <span>
+              {formatMessage(messages['start.learning'])}
+              <span className="text-accent-a d-inline-block">{' '}
+                {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+              </span>
             </span>
           </h1>
         </div>
