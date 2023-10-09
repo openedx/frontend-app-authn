@@ -29,7 +29,9 @@ const MediumLayout = () => {
               >
                 <span>
                   {formatMessage(messages['start.learning'])}{' '}
-                  {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+                  <span className="text-accent-a d-inline-block">
+                    {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+                  </span>
                 </span>
               </h1>
             </div>
