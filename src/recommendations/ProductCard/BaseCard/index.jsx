@@ -39,8 +39,8 @@ const BaseCard = ({
         />
         <Card.Header
           className="mt-2"
-          title={truncateText(title)}
-          subtitle={truncateText(subtitle)}
+          title={truncateText(title, 50)}
+          subtitle={truncateText(subtitle, 30)}
         />
         <Card.Section className="d-flex">
           <div className="product-badge">
