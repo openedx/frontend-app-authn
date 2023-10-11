@@ -129,14 +129,14 @@ describe('LoginPage', () => {
     expect(store.dispatch).toHaveBeenCalledWith(loginRequestFailure({ errorCode: 'invalid-form' }));
   });
 
-  it('should match state for invalid email (less than 3 characters), on form submission', () => {
-    const errorState = { emailOrUsername: 'Username or email must have at least 3 characters.', password: '' };
+  it('should match state for invalid email (less than 2 characters), on form submission', () => {
+    const errorState = { emailOrUsername: 'Username or email must have at least 2 characters.', password: '' };
     store.dispatch = jest.fn(store.dispatch);
 
     const loginPage = (mount(reduxWrapper(<IntlLoginPage {...props} />))).find('LoginPage');
 
     loginPage.find('input#password').simulate('change', { target: { value: 'test', name: 'password' } });
-    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: 'te', name: 'email' } });
+    loginPage.find('input#emailOrUsername').simulate('change', { target: { value: 't', name: 'email' } });
     loginPage.find('button.btn-brand').simulate('click');
 
     expect(loginPage.state('errors')).toEqual(errorState);
