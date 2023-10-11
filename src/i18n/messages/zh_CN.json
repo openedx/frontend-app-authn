@@ -64,7 +64,7 @@
   "non.compliant.password.message": "您当前的密码不符合新的安全要求。我们刚刚向与此帐户关联的电子邮件地址发送了密码重置邮件。感谢您帮助我们保护您的数据安全。",
   "account.locked.out.message.1": "为了保护您的帐户，它已被暂时锁定。请在 30 分钟后重试。",
   "enterprise.login.btn.text": "单位或学校证书",
-  "username.or.email.format.validation.less.chars.message": "用户名或电子邮件必须至少包含 3 个字符。",
+  "username.or.email.format.validation.less.chars.message": "用户名或电子邮件必须至少包含 2 个字符。",
   "email.validation.message": "输入您的用户名或电子邮件",
   "password.validation.message": "未满足密码条件",
   "account.activation.success.message.title": "成功！您已激活您的帐户。",
