@@ -71,8 +71,8 @@ const messages = defineMessages({
   },
   'username.or.email.format.validation.less.chars.message': {
     id: 'username.or.email.format.validation.less.chars.message',
-    defaultMessage: 'Username or email must have at least 3 characters.',
-    description: 'Validation message that appears when username or email address is less than 3 characters',
+    defaultMessage: 'Username or email must have at least 2 characters.',
+    description: 'Validation message that appears when username or email address is less than 2 characters',
   },
   'email.validation.message': {
     id: 'email.validation.message',

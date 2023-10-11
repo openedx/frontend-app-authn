@@ -71,7 +71,7 @@
   "non.compliant.password.message": "گذرواژه فعلی شما الزامات امنیتی جدید را برآورده نمی‌کند. ما فقط یک پیام بازتنظیم گذرواژه به نشانی رایانامه مرتبط با این حساب کاربری ارسال کردیم. از اینکه به ما کمک می‌کنید تا داده‌های شما را ایمن نگه دارید متشکریم.",
   "account.locked.out.message.1": "حساب کاربری شما، به دلیل حفاظت، به‌طور موقت قفل شده است. 30 دقیقه دیگر دوباره امتحان کنید.",
   "enterprise.login.btn.text": "اعتبار دانشکده یا شرکت",
-  "username.or.email.format.validation.less.chars.message": "نام کاربری یا نشانی رایانامه حداقل باید 3 نویسه داشته باشد",
+  "username.or.email.format.validation.less.chars.message": "نام کاربری یا نشانی رایانامه حداقل باید 2 نویسه داشته باشد",
   "email.validation.message": "نام کاربری یا رایانامه خود را وارد کنید",
   "password.validation.message": "معیارهای گذرواژه رعایت نشده است",
   "account.activation.success.message.title": "موفق شدید! شما حساب کاربری خود را فعال کردید.",
