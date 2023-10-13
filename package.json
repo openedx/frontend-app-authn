@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "fedx-scripts webpack",
-    "i18n_extract": "BABEL_ENV=i18n fedx-scripts babel src --quiet > /dev/null",
+    "i18n_extract": "fedx-scripts formatjs extract",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "start": "fedx-scripts webpack-dev-server --progress",
@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
-    "@edx/frontend-build": "12.9.8",
+    "@edx/frontend-build": "13.0.1",
     "@edx/reactifex": "1.1.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "babel-plugin-formatjs": "10.5.3",
