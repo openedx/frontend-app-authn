@@ -119,6 +119,10 @@ The authentication micro-frontend also requires the following additional variabl
      - Enables the image layout feature within the authn. When set to True, this feature allows the inclusion of images in the base container layout. For more details on configuring this feature, please refer to the `Modifying base container <docs/how_tos/modifying_base_container.rst>`_.
      - ``true`` | ``''`` (empty strings are falsy)
 
+   * - ``TPA_UNLINKED_ACCOUNT_PROVISION_URL``
+     - URL to redirect to when the identity provided by third-party authentication is not yet linked to a platform account. This allows for redirecting to a custom sign-up flow handled by an external service to create the linked account. An empty string (the default) disables this feature.
+     - ``http://example.com/signup`` | ``''``
+
 
 edX-specific Environment Variables
 ==================================
