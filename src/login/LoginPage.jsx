@@ -233,9 +233,7 @@ class LoginPage extends React.Component {
     return (
       <>
         <Helmet>
-          <title>{intl.formatMessage(messages['login.page.title'],
-            { siteName: getConfig().SITE_NAME })}
-          </title>
+          <title>Get in Page</title>
         </Helmet>
         <RedirectLogistration
           success={this.props.loginResult.success}
