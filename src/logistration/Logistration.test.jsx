@@ -98,6 +98,14 @@ describe('Logistration', () => {
     });
   });
 
+  it('should do nothing when user clicks on the same tab (login/register) again', () => {
+    const { container } = render(reduxWrapper(<IntlLogistration />));
+    // While staying on the registration form, clicking the register tab again
+    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
+
+    expect(sendTrackEvent).not.toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
+  });
+
   it('should render registration page', () => {
     mergeConfig({
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
@@ -264,9 +272,11 @@ describe('Logistration', () => {
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
+
   it('should fire action to backup login form on tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const props = { selectedPage: LOGIN_PAGE };
+    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
   });

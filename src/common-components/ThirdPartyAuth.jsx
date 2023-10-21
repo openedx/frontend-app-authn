@@ -6,6 +6,7 @@ import {
   Hyperlink, Icon,
 } from '@openedx/paragon';
 import { Institution } from '@openedx/paragon/icons';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
@@ -18,7 +19,6 @@ import {
   RenderInstitutionButton,
   SocialAuthProviders,
 } from './index';
-import classNames from "classnames";
 
 /**
  * This component renders the Single sign-on (SSO) buttons for the providers passed.
@@ -50,9 +50,9 @@ const ThirdPartyAuth = (props) => {
       {(isLoginPage && !isEnterpriseLoginDisabled && isSocialAuthActive) && (
         <Hyperlink
           className={classNames(
-            "btn btn-link btn-sm text-body p-0",
-            { "mb-0": thirdPartyAuthApiStatus === PENDING_STATE },
-            { "mb-4": thirdPartyAuthApiStatus !== PENDING_STATE },
+            'btn btn-link btn-sm text-body p-0',
+            { 'mb-0': thirdPartyAuthApiStatus === PENDING_STATE },
+            { 'mb-4': thirdPartyAuthApiStatus !== PENDING_STATE },
           )}
           destination={enterpriseLoginURL}
         >
@@ -61,7 +61,7 @@ const ThirdPartyAuth = (props) => {
         </Hyperlink>
       )}
 
-      {thirdPartyAuthApiStatus === PENDING_STATE || true ? (
+      {thirdPartyAuthApiStatus === PENDING_STATE ? (
         <div className="mt-4">
           <Skeleton className="tpa-skeleton" height={36} count={2} />
         </div>
