@@ -64,7 +64,10 @@ const Logistration = (props) => {
     setInstitutionLogin(!institutionLogin);
   };
 
-  const handleOnSelect = (tabKey) => {
+  const handleOnSelect = (tabKey, currentTab) => {
+    if (tabKey === currentTab) {
+      return;
+    }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
     props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
@@ -117,7 +120,7 @@ const Logistration = (props) => {
                   </Tabs>
                 )
                 : (!isValidTpaHint() && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
