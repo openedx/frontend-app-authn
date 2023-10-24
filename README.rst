@@ -1,12 +1,18 @@
+##################
+frontend-app-authn
+##################
+
 |Build Status| |ci-badge| |Codecov| |semantic-release|
 
-frontend-app-authn
-====================
+********
+Purpose
+********
 
 Please tag **@openedx/vanguards** on any PRs or issues.  Thanks!
 
-Introduction
-------------
+***************
+Getting Started
+***************
 
 This is a micro-frontend application responsible for the login, registration and password reset functionality.
 
@@ -22,9 +28,9 @@ This is a micro-frontend application responsible for the login, registration and
 
 - Progressive profiling page
 
-
+============
 Installation
-------------
+============
 
 This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see the `Getting Started <https://github.com/openedx/devstack#getting-started>`_ section for setup instructions.
 
@@ -45,8 +51,9 @@ This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see 
 
    **Note:** Follow `Enable social auth locally <docs/how_tos/enable_social_auth.rst>`_ for enabling Social Sign-on Buttons (SSO) locally
 
+=================================
 Environment Variables/Setup Notes
----------------------------------
+=================================
 
 This MFE is configured via environment variables supplied at build time.  All micro-frontends have a shared set of required environment variables, as documented in the Open edX Developer Guide under `Required Environment Variables <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
 
@@ -114,7 +121,7 @@ The authentication micro-frontend also requires the following additional variabl
 
 
 edX-specific Environment Variables
-**********************************
+==================================
 
 Furthermore, there are several edX-specific environment variables that enable integrations with closed-source services private to the edX organization, and might be unsupported in Open edX.
 
@@ -138,7 +145,8 @@ For more information see the document: `Micro-frontend applications in Open
 edX <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
 
 How To Contribute
-------------
+=================
+
 Contributions are very welcome, and strongly encouraged! We've
 put together `some documentation that describes our contribution process <https://edx.readthedocs.org/projects/edx-developer-guide/en/latest/process/index.html>`_.
 
@@ -149,33 +157,57 @@ can find it it at `PULL_REQUEST_TEMPLATE.md <https://github.com/openedx/frontend
 
 This project is currently accepting all types of contributions, bug fixes and security fixes.
 
-Open edX Code of Conduct
-------------------------
+Getting Help
+===========
+
+If you're having trouble, we have discussion forums at
+https://discuss.openedx.org where you can connect with others in the community.
+
+Our real-time conversations are on Slack. You can request a `Slack
+invitation`_, then join our `community Slack workspace`_.  Because this is a
+frontend repository, the best place to discuss it would be in the `#wg-frontend
+channel`_.
+
+For anything non-trivial, the best path is to open an issue in this repository
+with as many details about the issue you are facing as you can provide.
+
+https://github.com/openedx/frontend-app-authn/issues
+
+For more information about these options, see the `Getting Help`_ page.
+
+.. _Slack invitation: https://openedx.org/slack
+.. _community Slack workspace: https://openedx.slack.com/
+.. _#wg-frontend channel: https://openedx.slack.com/archives/C04BM6YC7A6
+.. _Getting Help: https://openedx.org/community/connect
+
+The Open edX Code of Conduct
+============================
 All community members are expected to follow the `Open edX Code of Conduct <https://openedx.org/code-of-conduct/>`_.
 
 People
-------
+======
 The assigned maintainers for this component and other project details may be
 found in `Backstage <https://backstage.openedx.org/catalog/default/group/vanguards>`_. Backstage pulls this data from the ``catalog-info.yaml``
 file in this repo.
 
 Reporting Security Issues
--------------------------
+=========================
 
 Please do not report security issues in public. Please email security@edx.org.
 
 Known Issues
-------------
+============
 
 None
 
 License
--------
+=======
 
 The code in this repository is licensed under the GNU Affero General Public License v3.0, unless
 otherwise noted.
 
 Please see `LICENSE <https://github.com/openedx/frontend-app-authn/blob/master/LICENSE>`_ for details.
+
 
 ==============================
 
