@@ -51,7 +51,6 @@ This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see 
 
    **Note:** Follow `Enable social auth locally <docs/how_tos/enable_social_auth.rst>`_ for enabling Social Sign-on Buttons (SSO) locally
 
-=================================
 Environment Variables/Setup Notes
 =================================
 
@@ -158,7 +157,7 @@ can find it it at `PULL_REQUEST_TEMPLATE.md <https://github.com/openedx/frontend
 This project is currently accepting all types of contributions, bug fixes and security fixes.
 
 Getting Help
-===========
+============
 
 If you're having trouble, we have discussion forums at
 https://discuss.openedx.org where you can connect with others in the community.
