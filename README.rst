@@ -28,7 +28,6 @@ This is a micro-frontend application responsible for the login, registration and
 
 - Progressive profiling page
 
-============
 Installation
 ============
 
