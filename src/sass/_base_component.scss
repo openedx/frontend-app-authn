@@ -38,6 +38,11 @@
   max-width: 320px;
 }
 
+.main-heading {
+  position: relative;
+  z-index: 2;
+}
+
 .complete-your-profile {
   font-weight: 700;
   line-height: 1;
