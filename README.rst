@@ -8,12 +8,6 @@ frontend-app-authn
 Purpose
 ********
 
-Please tag **@openedx/vanguards** on any PRs or issues.  Thanks!
-
-***************
-Getting Started
-***************
-
 This is a micro-frontend application responsible for the login, registration and password reset functionality.
 
 **What is the domain of this MFE?**
@@ -27,6 +21,10 @@ This is a micro-frontend application responsible for the login, registration and
 - Reset password page
 
 - Progressive profiling page
+
+***************
+Getting Started
+***************
 
 Installation
 ============
