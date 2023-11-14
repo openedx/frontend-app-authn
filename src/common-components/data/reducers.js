@@ -2,9 +2,7 @@ import { THIRD_PARTY_AUTH_CONTEXT, THIRD_PARTY_AUTH_CONTEXT_CLEAR_ERROR_MSG } fr
 import { COMPLETE_STATE, FAILURE_STATE, PENDING_STATE } from '../../data/constants';
 
 export const defaultState = {
-  fieldDescriptions: {
-    fields: {},
-  },
+  fieldDescriptions: {},
   optionalFields: {
     fields: {},
     extended_profile: [],
@@ -33,7 +31,7 @@ const reducer = (state = defaultState, action = {}) => {
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS: {
       return {
         ...state,
-        fieldDescriptions: action.payload.fieldDescriptions.fields,
+        fieldDescriptions: action.payload.fieldDescriptions?.fields,
         optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
