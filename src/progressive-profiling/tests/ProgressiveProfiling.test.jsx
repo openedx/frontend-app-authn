@@ -14,6 +14,7 @@ import {
   COMPLETE_STATE, DEFAULT_REDIRECT_URL,
   EMBEDDED,
   FAILURE_STATE,
+  PENDING_STATE,
   RECOMMENDATIONS,
 } from '../../data/constants';
 import { saveUserProfile } from '../data/actions';
@@ -290,6 +291,28 @@ describe('ProgressiveProfilingTests', () => {
 
       progressiveProfilingPage.find('button.btn-link').simulate('click');
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
+    });
+
+    it('should show spinner while fetching the optional fields', () => {
+      delete window.location;
+      window.location = {
+        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: `?host=${host}&variant=${EMBEDDED}`,
+      };
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: PENDING_STATE,
+          optionalFields,
+        },
+      });
+
+      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+      expect(progressiveProfilingPage.find('#tpa-spinner').exists()).toBeTruthy();
     });
 
     it('should set host property value to host where iframe is embedded for on ramp experience', () => {
