@@ -29,9 +29,11 @@ import messages from './messages';
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
   const tpaHint = getTpaHint();
+  console.log('tpaHint', tpaHint);
   const {
     providers, secondaryProviders,
   } = tpaProviders;
+  console.log('providers', providers, secondaryProviders)
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
@@ -114,7 +116,7 @@ const Logistration = (props) => {
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
                 ))}
-              { key && (
+              {key && (
                 <Redirect to={updatePathWithQueryParams(key)} />
               )}
               <div id="main-content" className="main-content">
@@ -156,7 +158,7 @@ Logistration.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  tpaProviders: tpaProvidersSelector(state),
+  tpaProviders: { providers: [], secondaryProviders: [] },
 });
 
 export default connect(

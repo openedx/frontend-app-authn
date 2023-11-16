@@ -36,7 +36,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .main-content {
-  @extend .pt-4;
+  @extend .pt-4 !optional;
   min-width: 464px !important;
 }
 
@@ -80,15 +80,15 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 .alert-link {
   font-weight: normal;
   text-decoration: underline;
-  color: $info-300 !important;
+  color: var(--pgn-color-info-300) !important;
 
   &:hover {
-    color: $info-500 !important;
+    color: var(--pgn-color-info-500) !important;
   }
 }
 
 .form-control {
-  background-color: $white !important;
+  background-color: var(--pgn-color-white) !important;
   font-size: 0.875rem;
   line-height: 1.5;
   height: 2.75rem;
@@ -103,7 +103,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   margin-bottom: 1rem;
   font-size: 14px;
 
-  background-color: $white;
+  background-color: var(--pgn-color-white);
   border: 1px solid $font-blue;
   width: 224px;
   height: 36px;
@@ -133,7 +133,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
 .font-container {
   background-color: $font-blue;
-  color: $white;
+  color: var(--pgn-color-white);
   font-size: 11px;
 
   margin-left: -6px;
@@ -143,7 +143,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .btn-oa2-facebook {
-  color: $white;
+  color: var(--pgn-color-white);
   border-color: $facebook-blue;
   background-color: $facebook-blue;
 
@@ -151,12 +151,12 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   &:focus {
     background-color: $facebook-focus-blue;
     border: 1px solid $facebook-focus-blue;
-    color: $white;
+    color: var(--pgn-color-white);
   }
 }
 
 .btn-oa2-google-oauth2 {
-  color: $white;
+  color: var(--pgn-color-white);
   border-color: $google-blue;
   background-color: $google-blue;
 
@@ -171,12 +171,12 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   &:focus {
     background-color: $google-focus-blue;
     border: 1px solid $google-focus-blue;
-    color: $white;
+    color: var(--pgn-color-white);
   }
 }
 
 .btn-oa2-apple-id {
-  color: $white;
+  color: var(--pgn-color-white);
   border-color: $apple-black;
   background-color: $apple-black;
   font-size: 16px;
@@ -190,12 +190,12 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   &:focus {
     background-color: $apple-focus-black;
     border: 1px solid $apple-focus-black;
-    color: $white;
+    color: var(--pgn-color-white);
   }
 }
 
 .btn-oa2-azuread-oauth2 {
-  color: $white;
+  color: var(--pgn-color-white);
   border-color: $microsoft-black;
   background-color: $microsoft-black;
 
@@ -203,7 +203,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   &:focus {
     background-color: $microsoft-focus-black;
     border: 1px solid $microsoft-focus-black;
-    color: $white;
+    color: var(--pgn-color-white);
   }
 }
 
@@ -214,8 +214,8 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .institute-icon {
-  @extend .mr-1;
-  @extend .text-gray;
+  @extend .mr-1 !optional;
+  @extend .text-gray !optional;
 
   display: inline-block;
   margin-bottom: 0.25rem;
@@ -232,7 +232,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .invalid-feedback {
-  color: $red;
+  color: var(--pgn-color-red);
 }
 
 .full-vertical-height {
@@ -253,7 +253,7 @@ select.form-control {
 }
 
 #honor-code a span {
-  @extend .sr-only;
+  @extend .sr-only !optional;
 }
 
 .font-weight-500 {
@@ -290,21 +290,21 @@ select.form-control {
 
 #password-requirement-left {
   opacity: 1;
-  @extend .x-small;
+  @extend .x-small !optional;
   filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   right: 0.2rem !important;
   .tooltip-inner {
-    background: $white;
+    background: var(--pgn-color-white);
     display: block;
-    color: $gray-500;
+    color: var(--pgn-color-gray-500);
   }
   .arrow::before {
-    border-left-color: $white;
+    border-left-color: var(--pgn-color-white);
   }
 }
 
 #password-requirement-top {
-  @extend .x-small;
+  @extend .x-small !optional;
   filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   opacity: 1;
   width: 90%;
@@ -314,18 +314,18 @@ select.form-control {
 
   .tooltip-inner {
     min-width: 464px !important;
-    background: $white;
+    background: var(--pgn-color-white);
     display: block;
-    color: $gray-500;
+    color: var(--pgn-color-gray-500);
   }
   .arrow::before {
-    border-top-color: $white;
+    border-top-color: var(--pgn-color-white);
   }
 
 }
 #forgotpassword-success-alert {
   .alert-link {
-    color: $gray-700 !important;
+    color: var(--pgn-color-gray-700) !important;
   }
 }
 
@@ -336,7 +336,7 @@ select.form-control {
   line-height: 24px;
   font-size: 12px;
   font-weight: normal;
-  color: $primary-700;
+  color: var(--pgn-color-primary-700);
 }
 
 .username-suggestion-label {
@@ -346,24 +346,24 @@ select.form-control {
 }
 
 .yellow-border {
-  border: 2px solid $accent-b;
+  border: 2px solid var(--pgn-color-accent-b);
 }
 
-.institute-heading {
-  color: $primary-700;
+.institutions__heading {
+  color: var(--pgn-color-primary-700);
 }
 
 .logistration-button {
-  color: $gray-700;
+  color: var(--pgn-color-gray-700);
 }
 
 .logistration-button:hover{
-  color: $gray-700;
+  color: var(--pgn-color-gray-700);
   text-decoration: none;
 }
 
 .dropdown-item:active {
-    background-color: $light-300;
+    background-color: var(--pgn-color-light-300);
 }
 
 .dropdown-container {
@@ -375,7 +375,7 @@ select.form-control {
     line-height: 1.25rem;
     overflow-y: scroll;
     position: absolute;
-    background-color: $white;
+    background-color: var(--pgn-color-white);
     width: 464px;
     z-index: 100 !important;
 }
@@ -397,21 +397,21 @@ select.form-control {
   }
 
   .alert-link {
-    color: $primary !important;
+    color: var(--pgn-color-primary-base) !important;
 
     &:hover {
       text-decoration: underline;
-      color: $info-700 !important;
+      color: var(--pgn-color-info-700) !important;
     }
   }
 }
 
 .email-warning-alert-link {
-  color: $info-500 !important;
+  color: var(--pgn-color-info-500) !important;
 
   &:hover {
     text-decoration: underline;
-    color: $info-700 !important;
+    color: var(--pgn-color-info-700) !important;
   }
 }
 
@@ -425,7 +425,7 @@ select.form-control {
   width: 2.3rem;
 }
 .has-floating-label {
-  color: $gray-500;
+  color: var(--pgn-color-gray-500);
 }
 
 .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
@@ -439,7 +439,7 @@ select.form-control {
 
 .form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
     font-size: 16px;
-    color: $primary-700;
+    color: var(--pgn-color-primary-700);
 }
 
 .form-field .form-control:not([value='']):not(:focus) ~
@@ -555,14 +555,14 @@ select.form-control {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: $light-200;
+  background-color: var(--pgn-color-light-200);
 }
 
 .secondary-provider-link {
   font-weight: normal;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  color: $primary-700
+  color: var(--pgn-color-primary-700)
 }
 
 .opt-checkbox {

@@ -1,7 +1,8 @@
 .card-list {
   padding-left: 0.0625rem;
   padding-bottom: 0.125rem;
-  @include media-breakpoint-down(xl) {
+
+  @media (--pgn-size-breakpoint-max-width-xl) {
     overflow-x: scroll;
     overflow-y: hidden;
   }
@@ -13,16 +14,17 @@
 .recommendations-container {
   padding: 0 1rem;
   margin: 0 0 1.875rem 0;
-  @include media-breakpoint-up(lg) {
-    max-width: $max-width-sm + 5 * $grid-gutter-width !important;
+
+  @media (--pgn-size-breakpoint-min-width-lg) {
+    max-width: calc(var(--pgn-size-container-max-width-sm) + 5 * var(--pgn-spacing-grid-gutter-width))  !important;
   }
 
-  @include media-breakpoint-up(xl) {
-    max-width: $max-width-md + $grid-gutter-width !important;
+  @media (--pgn-size-breakpoint-min-width-xl) {
+    max-width: var(--pgn-size-container-max-width-md) + var(--pgn-spacing-grid-gutter-width)  !important;
   }
 
-  @include media-breakpoint-up(xxl) {
-    max-width: $max-width-lg + $grid-gutter-width !important;
+  @media (--pgn-size-breakpoint-min-width-xxl) {
+    max-width: var(--pgn-size-container-max-width-lg) + var(--pgn-spacing-grid-gutter-width)  !important;
   }
 }
 
@@ -52,7 +54,7 @@
     font-weight: 400;
     font-size:0.875rem;
     line-height: 1.5rem;
-    color: $gray-700;
+    color: var(--pgn-color-gray-700);
   }
   .pgn__card-footer {
     bottom: 0;
