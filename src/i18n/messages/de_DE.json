@@ -69,7 +69,7 @@
   "non.compliant.password.message": "Ihr aktuelles Passwort entspricht nicht den neuen Sicherheitsanforderungen. Wir haben gerade eine Nachricht zum Zurücksetzen des Passworts an die mit diesem Konto verknüpfte E-Mail-Adresse gesendet. Vielen Dank, dass Sie uns helfen, Ihre Daten zu schützen.",
   "account.locked.out.message.1": "Um Ihr Konto zu schützen, wurde es vorübergehend gesperrt. Versuchen Sie es in 30 Minuten erneut.",
   "enterprise.login.btn.text": "Arbeits- oder Schulzeugnisse",
-  "username.or.email.format.validation.less.chars.message": "Benutzername oder E-Mail müssen mindestens 3 Zeichen lang sein.",
+  "username.or.email.format.validation.less.chars.message": "Benutzername oder E-Mail müssen mindestens 2 Zeichen lang sein.",
   "email.validation.message": "Geben Sie Ihren Benutzernamen oder Ihre E-Mail-Adresse ein",
   "password.validation.message": "Die Passwortkriterien wurden nicht erfüllt",
   "account.activation.success.message.title": "Super! Sie haben Ihr Konto aktiviert.",

@@ -148,7 +148,7 @@ class LoginPage extends React.Component {
 
     if (email === '') {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['email.validation.message']);
-    } else if (email.length < 3) {
+    } else if (email.length < 2) {
       errors.emailOrUsername = this.props.intl.formatMessage(messages['username.or.email.format.validation.less.chars.message']);
     } else {
       errors.emailOrUsername = '';
