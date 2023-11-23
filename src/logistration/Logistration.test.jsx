@@ -12,7 +12,7 @@ import Logistration from './Logistration';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import { RenderInstitutionButton } from '../common-components/InstitutionLogistration';
 import {
-  COMPLETE_STATE, LOGIN_PAGE,
+  COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
 } from '../data/constants';
 import { backupRegistrationForm } from '../register/data/actions';
 
@@ -111,10 +111,31 @@ describe('Logistration', () => {
     expect(logistration.find('#main-content').find('LoginPage').exists()).toBeTruthy();
   });
 
+  it('should render login/register headings when show registration links is disabled', () => {
+    mergeConfig({
+      SHOW_REGISTRATION_LINKS: false,
+    });
+
+    let props = { selectedPage: LOGIN_PAGE };
+    let logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
+
+    // verifying sign in heading
+    expect(logistration.find('#main-content').find('h3').text()).toEqual('Sign in');
+
+    // register page is still accessible when SHOW_REGISTRATION_LINKS is false
+    // but it needs to be accessed directly
+    props = { selectedPage: REGISTER_PAGE };
+    logistration = mount(reduxWrapper(<IntlLogistration {...props} />));
+
+    // verifying register heading
+    expect(logistration.find('#main-content').find('h3').text()).toEqual('Register');
+  });
+
   it('should render only login page when public account creation is disabled', () => {
     mergeConfig({
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
       DISABLE_ENTERPRISE_LOGIN: 'true',
+      SHOW_REGISTRATION_LINKS: 'true',
     });
 
     store = mockStore({

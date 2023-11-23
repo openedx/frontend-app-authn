@@ -10,7 +10,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
+import { registerNewUser } from '../data/actions';
 import { FIELDS } from '../data/constants';
+import RegistrationPage from '../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -22,6 +24,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
 }));
 
 const IntlConfigurableRegistrationForm = injectIntl(ConfigurableRegistrationForm);
+const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -113,6 +116,8 @@ describe('ConfigurableRegistrationForm', () => {
       setFormFields: jest.fn(),
       registrationEmbedded: false,
       autoSubmitRegistrationForm: false,
+      handleInstitutionLogin: jest.fn(),
+      institutionLogin: false,
     };
     window.location = { search: '' };
     getLocale.mockImplementationOnce(() => ('en-us'));
@@ -121,6 +126,19 @@ describe('ConfigurableRegistrationForm', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
+  const populateRequiredFields = (registrationPage, payload, isThirdPartyAuth = false) => {
+    registrationPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
+    registrationPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
+    registrationPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
+
+    registrationPage.find('input[name="country"]').simulate('change', { target: { value: payload.country, name: 'country' } });
+    registrationPage.find('input[name="country"]').simulate('blur', { target: { value: payload.country, name: 'country' } });
+
+    if (!isThirdPartyAuth) {
+      registrationPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
+    }
+  };
 
   describe('Test Configurable Fields', () => {
     mergeConfig({
@@ -181,6 +199,129 @@ describe('ConfigurableRegistrationForm', () => {
       expect(props.setFormFields.mock.calls[1][0]()).toEqual({
         [FIELDS.TERMS_OF_SERVICE]: true,
       });
+    });
+
+    it('should render fields returned by backend', () => {
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: { name: 'profession', type: 'text', label: 'Profession' },
+            terms_of_service: {
+              name: FIELDS.TERMS_OF_SERVICE,
+              error_message: 'You must agree to the Terms and Service agreement of our site',
+            },
+          },
+        },
+      });
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      expect(registrationPage.find('#profession').exists()).toBeTruthy();
+      expect(registrationPage.find('#tos').exists()).toBeTruthy();
+    });
+
+    it('should submit form with fields returned by backend in payload', () => {
+      mergeConfig({
+        SHOW_CONFIGURABLE_EDX_FIELDS: true,
+      });
+      getLocale.mockImplementation(() => ('en-us'));
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: { name: 'profession', type: 'text', label: 'Profession' },
+          },
+          extendedProfile: ['profession'],
+        },
+      });
+
+      const payload = {
+        name: 'John Doe',
+        username: 'john_doe',
+        email: 'john.doe@example.com',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        profession: 'Engineer',
+        totalRegistrationTime: 0,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+
+      populateRequiredFields(registrationPage, payload);
+      registrationPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+    });
+
+    it('should show error messages for required fields on empty form submission', () => {
+      const professionError = 'Enter your profession';
+      const countryError = 'Select your country or region of residence';
+      const confirmEmailError = 'Enter your email';
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: {
+              name: 'profession', type: 'text', label: 'Profession', error_message: professionError,
+            },
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email', error_message: confirmEmailError,
+            },
+            country: { name: 'country' },
+          },
+        },
+      });
+
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      registrationPage.find('button.btn-brand').simulate('click');
+
+      expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
+      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(countryError);
+      expect(registrationPage.find('#confirm_email-error').last().text()).toEqual(confirmEmailError);
+    });
+    it('should show error if email and confirm email fields do not match', () => {
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email',
+            },
+          },
+        },
+      });
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      registrationPage.find('input#email').simulate('change', { target: { value: 'test1@gmail.com', name: 'email' } });
+      registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
+      expect(registrationPage.find('div#confirm_email-error').text()).toEqual('The email addresses do not match.');
+    });
+
+    it('should run validations for configurable focused field on form submission', () => {
+      const professionError = 'Enter your profession';
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: {
+              name: 'profession', type: 'text', label: 'Profession', error_message: professionError,
+            },
+          },
+        },
+      });
+
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      registrationPage.find('input#profession').simulate('focus', { target: { value: '', name: 'profession' } });
+      registrationPage.find('button.btn-brand').simulate('click');
+
+      expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
     });
   });
 });
