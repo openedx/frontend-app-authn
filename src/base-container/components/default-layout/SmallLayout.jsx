@@ -24,9 +24,11 @@ const SmallLayout = () => {
               'text-white mt-3.5 mb-3.5',
             )}
           >
-            <span className="mr-1">{formatMessage(messages['start.learning'])}</span>
-            <span className="text-accent-a d-inline-block">
-              {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+            <span>
+              {formatMessage(messages['start.learning'])}{' '}
+              <span className="text-accent-a d-inline-block">
+                {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+              </span>
             </span>
           </h1>
         </div>
