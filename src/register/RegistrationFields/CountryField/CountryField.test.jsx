@@ -91,6 +91,16 @@ describe('CountryField', () => {
       );
     });
 
+    it('should run country field validation when country name is invalid', () => {
+      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      countryField.find('input[name="country"]').simulate('blur', { target: { value: 'Pak', name: 'country' } });
+      expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
+      expect(props.handleErrorChange).toHaveBeenCalledWith(
+        'country',
+        'Country must match with an option available in the dropdown.',
+      );
+    });
+
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
       const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
       countryField.find('input[name="country"]').simulate('blur', {

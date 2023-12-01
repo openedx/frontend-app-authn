@@ -285,6 +285,26 @@ describe('ConfigurableRegistrationForm', () => {
       expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(countryError);
       expect(registrationPage.find('#confirm_email-error').last().text()).toEqual(confirmEmailError);
     });
+
+    it('should show country field validation when country name is invalid', () => {
+      const invalidCountryError = 'Country must match with an option available in the dropdown.';
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            country: { name: 'country' },
+          },
+        },
+      });
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: 'Pak', name: 'country' } });
+
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(invalidCountryError);
+    });
+
     it('should show error if email and confirm email fields do not match', () => {
       store = mockStore({
         ...initialState,

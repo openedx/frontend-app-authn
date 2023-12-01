@@ -1,10 +1,10 @@
 export const COUNTRY_CODE_KEY = 'code';
 export const COUNTRY_DISPLAY_KEY = 'name';
 
-const validateCountryField = (value, countryList, errorMessage) => {
+const validateCountryField = (value, countryList, emptyErrorMessage, invalidCountryErrorMessage) => {
   let countryCode = '';
   let displayValue = value;
-  let error = errorMessage;
+  let error = '';
 
   if (value) {
     const normalizedValue = value.toLowerCase();
@@ -20,8 +20,11 @@ const validateCountryField = (value, countryList, errorMessage) => {
     if (selectedCountry) {
       countryCode = selectedCountry[COUNTRY_CODE_KEY];
       displayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
-      error = '';
+    } else {
+      error = invalidCountryErrorMessage;
     }
+  } else {
+    error = emptyErrorMessage;
   }
   return { error, countryCode, displayValue };
 };

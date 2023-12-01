@@ -48,6 +48,9 @@ export const isFormValid = (
     if (!configurableFormFields?.country?.displayValue) {
       fieldErrors.country = formatMessage(messages['empty.country.field.error']);
       isValid = false;
+    } else if (!configurableFormFields?.country?.countryCode) {
+      fieldErrors.country = formatMessage(messages['invalid.country.field.error']);
+      isValid = false;
     }
   }
   Object.keys(fieldDescriptions).forEach(key => {

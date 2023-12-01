@@ -111,6 +111,11 @@ const messages = defineMessages({
     defaultMessage: 'Select your country or region of residence',
     description: 'Error message when no country/region is selected',
   },
+  'invalid.country.field.error': {
+    id: 'invalid.country.field.error',
+    defaultMessage: 'Country must match with an option available in the dropdown.',
+    description: 'Error message when country is invalid',
+  },
   'email.do.not.match': {
     id: 'email.do.not.match',
     defaultMessage: 'The email addresses do not match.',

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@edx/paragon';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
@@ -60,7 +61,7 @@ const CountryField = (props) => {
     const { value } = event.target;
 
     const { countryCode, displayValue, error } = validateCountryField(
-      value.trim(), countryList, formatMessage(messages['empty.country.field.error']),
+      value.trim(), countryList, formatMessage(messages['empty.country.field.error']), formatMessage(messages['invalid.country.field.error']),
     );
 
     onChangeHandler({ target: { name: 'country' } }, { countryCode, displayValue });
@@ -94,6 +95,7 @@ const CountryField = (props) => {
         aria-label="form autosuggest"
         name="country"
         value={selectedCountry.displayValue || ''}
+        className={classNames({ 'form-field-error': props.errorMessage })}
         onSelected={(value) => handleSelected(value)}
         onFocus={(e) => handleOnFocus(e)}
         onBlur={(e) => handleOnBlur(e)}
