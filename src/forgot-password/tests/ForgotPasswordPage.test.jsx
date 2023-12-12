@@ -3,8 +3,9 @@ import { Provider } from 'react-redux';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -72,31 +73,39 @@ describe('ForgotPasswordPage', () => {
       status: null,
     };
   });
+  const findByTextContent = (container, text) => Array.from(container.querySelectorAll('*')).find(
+    element => element.textContent === text,
+  );
 
   it('not should display need other help signing in button', () => {
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(wrapper.find('#forgot-password').exists()).toBeFalsy();
+    const { queryByTestId } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const forgotPasswordButton = queryByTestId('forgot-password');
+    expect(forgotPasswordButton).toBeNull();
   });
 
   it('should display need other help signing in button', () => {
     mergeConfig({
       LOGIN_ISSUE_SUPPORT_LINK: '/support',
     });
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(wrapper.find('#forgot-password').first().text()).toEqual('Need help signing in?');
+    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const forgotPasswordButton = screen.findByText('Need help signing in?');
+    expect(forgotPasswordButton).toBeDefined();
   });
 
   it('should display email validation error message', async () => {
     const validationMessage = 'We were unable to contact you.Enter a valid email address below.';
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    wrapper.find('input#email').simulate(
-      'change', { target: { value: 'invalid-email', name: 'email' } },
-    );
-    await act(async () => { await wrapper.find('button.btn-brand').simulate('click'); });
-    wrapper.update();
+    const emailInput = screen.getByLabelText('Email');
 
-    expect(wrapper.find('.alert-danger').text()).toEqual(validationMessage);
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+
+    const submitButton = screen.getByText('Submit');
+    fireEvent.click(submitButton);
+
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const validationErrors = alertElements[0].textContent;
+    expect(validationErrors).toBe(validationMessage);
   });
 
   it('should show alert on server error', () => {
@@ -105,19 +114,25 @@ describe('ForgotPasswordPage', () => {
     });
     const expectedMessage = 'We were unable to contact you.'
                             + 'An error has occurred. Try refreshing the page, or check your internet connection.';
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    expect(wrapper.find('#validation-errors').first().text()).toEqual(expectedMessage);
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const validationErrors = alertElements[0].textContent;
+    expect(validationErrors).toBe(expectedMessage);
   });
 
   it('should display empty email validation message', async () => {
     const validationMessage = 'We were unable to contact you.Enter your email below.';
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    await act(async () => { await forgotPasswordPage.find('button.btn-brand').simulate('click'); });
+    const submitButton = screen.getByText('Submit');
+    fireEvent.click(submitButton);
 
-    forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('.alert-danger').text()).toEqual(validationMessage);
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const validationErrors = alertElements[0].textContent;
+
+    expect(validationErrors).toBe(validationMessage);
   });
 
   it('should display request in progress error message', () => {
@@ -126,18 +141,22 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: { status: 'forbidden' },
     });
 
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(forgotPasswordPage.find('.alert-danger').text()).toEqual(rateLimitMessage);
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const validationErrors = alertElements[0].textContent;
+    expect(validationErrors).toBe(rateLimitMessage);
   });
 
   it('should not display any error message on change event', () => {
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    const emailInput = forgotPasswordPage.find('input#email');
-    emailInput.simulate('change', { target: { value: 'invalid-email', name: 'email' } });
-    forgotPasswordPage.update();
+    const emailInput = screen.getByLabelText('Email');
 
-    expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+
+    const errorElement = screen.queryByTestId('email-invalid-feedback');
+    expect(errorElement).toBeNull();
   });
 
   it('should set error in redux store on onBlur', () => {
@@ -153,8 +172,11 @@ describe('ForgotPasswordPage', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.find('input#email').simulate('blur');
+    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const emailInput = screen.getByLabelText('Email');
+
+    fireEvent.blur(emailInput);
+
     expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
   });
 
@@ -165,9 +187,9 @@ describe('ForgotPasswordPage', () => {
       emailValidationError: validationMessage,
       email: '',
     };
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('.pgn__form-text-invalid').text()).toEqual(validationMessage);
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const validationElement = container.querySelector('.pgn__form-text-invalid');
+    expect(validationElement.textContent).toEqual(validationMessage);
   });
 
   it('should clear error in redux store on onFocus', () => {
@@ -182,8 +204,12 @@ describe('ForgotPasswordPage', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.find('input#email').simulate('focus');
+
+    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const emailInput = screen.getByLabelText('Email');
+
+    fireEvent.focus(emailInput);
+
     expect(store.dispatch).toHaveBeenCalledWith(setForgotPasswordFormData(forgotPasswordFormData));
   });
 
@@ -193,9 +219,9 @@ describe('ForgotPasswordPage', () => {
       emailValidationError: '',
       email: '',
     };
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    forgotPasswordPage.update();
-    expect(forgotPasswordPage.find('#email-invalid-feedback').exists()).toEqual(false);
+    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const errorElement = screen.queryByTestId('email-invalid-feedback');
+    expect(errorElement).toBeNull();
   });
 
   it('should display success message after email is sent', () => {
@@ -205,12 +231,16 @@ describe('ForgotPasswordPage', () => {
         status: 'complete',
       },
     });
+
     const successMessage = 'Check your emailWe sent an email to  with instructions to reset your password. If you do not '
                            + 'receive a password reset message after 1 minute, verify that you entered the correct email address,'
                            + ' or check your spam folder. If you need further assistance, contact technical support.';
 
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(wrapper.find('.alert-success').text()).toEqual(successMessage);
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const successElement = findByTextContent(container, successMessage);
+
+    expect(successElement).toBeDefined();
+    expect(successElement.textContent).toEqual(successMessage);
   });
 
   it('should display invalid password reset link error', () => {
@@ -224,16 +254,20 @@ describe('ForgotPasswordPage', () => {
                             + 'This password reset link is invalid. It may have been used already. '
                             + 'Enter your email below to receive a new link.';
 
-    const wrapper = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
-    expect(wrapper.find('.alert-danger').text()).toEqual(successMessage);
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const successElement = findByTextContent(container, successMessage);
+
+    expect(successElement).toBeDefined();
+    expect(successElement.textContent).toEqual(successMessage);
   });
 
   it('should redirect onto login page', async () => {
-    const forgotPasswordPage = mount(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
-    await act(async () => { await forgotPasswordPage.find('nav').find('a').first().simulate('click'); });
+    const navElement = container.querySelector('nav');
+    const anchorElement = navElement.querySelector('a');
+    fireEvent.click(anchorElement);
 
-    forgotPasswordPage.update();
     expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 });
