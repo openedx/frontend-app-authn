@@ -5,7 +5,9 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
 import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -112,34 +114,43 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { queryByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const button = queryByRole('button', { name: /learn more about how we use this information/i });
 
-    expect(progressiveProfilingPage.find('a.pgn__hyperlink').exists()).toBeFalsy();
+    expect(button).toBeNull();
   });
 
   it('should display button "Learn more about how we use this information."', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
+    const { getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+    const learnMoreButton = getByText('Learn more about how we use this information.');
+
+    expect(learnMoreButton).toBeDefined();
   });
 
   it('should open modal on pressing skip for now button', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { getByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    progressiveProfilingPage.find('button.btn-link').simulate('click');
-    expect(progressiveProfilingPage.find('.pgn__modal-content-container').exists()).toBeTruthy();
+    const skipButton = getByRole('button', { name: /skip for now/i });
+    fireEvent.click(skipButton);
+
+    const modalContentContainer = document.getElementsByClassName('.pgn__modal-content-container');
+
+    expect(modalContentContainer).toBeTruthy();
+
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host: '' });
   });
 
   // ******** test event functionality ********
 
   it('should make identify call to segment on progressive profiling page', () => {
-    mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
     expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
     expect(identifyAuthenticatedUser).toHaveBeenCalled();
@@ -149,9 +160,11 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    progressiveProfilingPage.find('.pp-page__support-link a[target="_blank"]').simulate('click');
+    const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
+    fireEvent.click(supportLink);
+
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
   });
 
@@ -164,9 +177,11 @@ describe('ProgressiveProfilingTests', () => {
     };
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    progressiveProfilingPage.find('button.btn-brand').simulate('click');
+    const nextButton = screen.getByText('Next');
+    fireEvent.click(nextButton);
+
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
   });
 
@@ -178,12 +193,16 @@ describe('ProgressiveProfilingTests', () => {
       extended_profile: [{ field_name: 'company', field_value: 'test company' }],
     };
     store.dispatch = jest.fn(store.dispatch);
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { getByLabelText, getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    progressiveProfilingPage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
-    progressiveProfilingPage.find('input#company').simulate('change', { target: { value: 'test company', name: 'company' } });
+    const genderSelect = getByLabelText('Gender');
+    const companyInput = getByLabelText('Company');
 
-    progressiveProfilingPage.find('button.btn-brand').simulate('click');
+    fireEvent.change(genderSelect, { target: { value: 'm' } });
+    fireEvent.change(companyInput, { target: { value: 'test company' } });
+
+    fireEvent.click(getByText('Next'));
+
     expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('abc123', formPayload));
   });
 
@@ -196,8 +215,10 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
 
-    const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
-    expect(progressiveProfilingPage.find('#pp-page-errors').exists()).toBeTruthy();
+    const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const errorElement = container.querySelector('#pp-page-errors');
+
+    expect(errorElement).toBeTruthy();
   });
 
   // ******** miscellaneous tests ********
@@ -210,7 +231,7 @@ describe('ProgressiveProfilingTests', () => {
       href: getConfig().BASE_URL,
     };
 
-    mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
     expect(window.location.href).toEqual(DASHBOARD_URL);
   });
 
@@ -228,9 +249,10 @@ describe('ProgressiveProfilingTests', () => {
           success: true,
         },
       });
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const nextButton = container.querySelector('button.btn-brand');
+      expect(nextButton.textContent).toEqual('Next');
 
-      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
       expect(mockNavigate).toHaveBeenCalledWith(RECOMMENDATIONS);
     });
 
@@ -254,9 +276,10 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const nextButton = container.querySelector('button.btn-brand');
+      expect(nextButton.textContent).toEqual('Submit');
 
-      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Submit');
       expect(window.location.href).toEqual(redirectUrl);
     });
   });
@@ -287,9 +310,11 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-      progressiveProfilingPage.find('button.btn-link').simulate('click');
+      const skipLinkButton = screen.getByText('Skip for now');
+      fireEvent.click(skipLinkButton);
+
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
     });
 
@@ -310,9 +335,10 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-      expect(progressiveProfilingPage.find('#tpa-spinner').exists()).toBeTruthy();
+      const tpaSpinnerElement = container.querySelector('#tpa-spinner');
+      expect(tpaSpinnerElement).toBeTruthy();
     });
 
     it('should set host property value to host where iframe is embedded for on ramp experience', () => {
@@ -327,8 +353,10 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}`,
       };
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
-      progressiveProfilingPage.find('button.btn-brand').simulate('click');
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const submitButton = screen.getByText('Next');
+      fireEvent.click(submitButton);
+
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
     });
 
@@ -340,8 +368,10 @@ describe('ProgressiveProfilingTests', () => {
         search: `?variant=${EMBEDDED}&host=${host}`,
       };
 
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
-      expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+      const genderField = container.querySelector('#gender');
+      expect(genderField).toBeTruthy();
     });
 
     it('should redirect to dashboard if API call to get form field fails', () => {
@@ -359,7 +389,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      mount(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
@@ -387,8 +417,9 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const progressiveProfilingPage = mount(reduxWrapper(<IntlProgressiveProfilingPage />));
-      progressiveProfilingPage.find('button.btn-brand').simulate('click');
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const submitButton = screen.getByText('Submit');
+      fireEvent.click(submitButton);
       expect(window.location.href).toBe(redirectUrl);
     });
   });

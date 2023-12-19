@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 
 import mockedProductData from './mockedData';
@@ -25,8 +25,10 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const recommendationsList = mount(reduxWrapper(<IntlRecommendationList {...props} />));
-    expect(recommendationsList.find('.recommendation-card').length).toEqual(mockedProductData.length);
+    const { container } = render(reduxWrapper(<IntlRecommendationList {...props} />));
+
+    const recommendationCards = container.querySelectorAll('.recommendation-card');
+    expect(recommendationCards.length).toEqual(mockedProductData.length);
   });
 
   it('should render the recommendations card with footer content', () => {
@@ -35,8 +37,12 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const recommendationsList = mount(reduxWrapper(<IntlRecommendationList {...props} />));
-    expect(recommendationsList.find('.x-small').at(0).text()).toEqual('1 Course');
-    expect(recommendationsList.find('.x-small').at(1).text()).toEqual('2 Courses');
+    const { getByText } = render(reduxWrapper(<IntlRecommendationList {...props} />));
+
+    const firstFooterContent = getByText('1 Course');
+    const secondFooterContent = getByText('2 Courses');
+
+    expect(firstFooterContent).toBeTruthy();
+    expect(secondFooterContent).toBeTruthy();
   });
 });

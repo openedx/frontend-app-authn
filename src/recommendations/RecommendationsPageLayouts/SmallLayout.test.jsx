@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import SmallLayout from './SmallLayout';
 import mockedRecommendedProducts from '../data/tests/mockedData';
@@ -36,8 +36,11 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should render recommendations when recommendations are not loading', () => {
-    const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsSmallLayoutPage {...props} />));
-    expect(recommendationsPage.find('.react-loading-skeleton').exists()).toBeFalsy();
+    const { container } = render(reduxWrapper(<IntlRecommendationsSmallLayoutPage {...props} />));
+
+    const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
+
+    expect(reactLoadingSkeleton).toBeNull();
   });
 
   it('should render loading state when recommendations are loading', () => {
@@ -45,7 +48,10 @@ describe('RecommendationsPageTests', () => {
       ...props,
       isLoading: true,
     };
-    const recommendationsPage = mount(reduxWrapper(<IntlRecommendationsSmallLayoutPage {...props} />));
-    expect(recommendationsPage.find('.react-loading-skeleton').exists()).toBeTruthy();
+    const { container } = render(reduxWrapper(<IntlRecommendationsSmallLayoutPage {...props} />));
+
+    const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
+
+    expect(reactLoadingSkeleton).toBeTruthy();
   });
 });
