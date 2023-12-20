@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import { UnAuthOnlyRoute } from '..';
@@ -55,7 +55,7 @@ describe('UnAuthOnlyRoute', () => {
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
 
     await act(async () => {
-      await mount(routerWrapper());
+      await render(routerWrapper());
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
@@ -66,7 +66,7 @@ describe('UnAuthOnlyRoute', () => {
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(null));
 
     await act(async () => {
-      await mount(routerWrapper());
+      await render(routerWrapper());
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
