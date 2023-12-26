@@ -2,8 +2,9 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -93,18 +94,18 @@ describe('ResetPasswordPage', () => {
     }));
 
     store.dispatch = jest.fn(store.dispatch);
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: password, name: 'newPassword' } });
-    resetPasswordPage.find('input#confirmPassword').simulate('change', { target: { value: password, name: 'confirmPassword' } });
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const newPasswordInput = screen.getByLabelText('New password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
 
-    await act(async () => {
-      await resetPasswordPage.find('button.btn-brand').simulate('click');
-    });
+    fireEvent.change(newPasswordInput, { target: { value: password } });
+    fireEvent.change(confirmPasswordInput, { target: { value: password } });
 
+    const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i, id: 'submit-new-password' });
+    fireEvent.click(resetPasswordButton);
     expect(store.dispatch).toHaveBeenCalledWith(
       resetPassword({ new_password1: password, new_password2: password }, props.token, {}),
     );
-    resetPasswordPage.unmount();
   });
 
   // ******** test reset password field validations ********
@@ -116,18 +117,21 @@ describe('ResetPasswordPage', () => {
         status: TOKEN_STATE.VALID,
       },
     });
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage.find('button.btn-brand').simulate('click');
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i, id: 'submit-new-password' });
+    fireEvent.click(resetPasswordButton);
 
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
-      'We couldn\'t reset your password.Please check your responses and try again.',
-    );
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toContain('Password criteria has not been met');
-    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toContain('Confirm your password');
-    resetPasswordPage.find('input#newPassword').simulate('focus');
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').exists()).toBe(false);
-    resetPasswordPage.find('input#confirmPassword').simulate('focus');
-    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').exists()).toBe(false);
+    expect(screen.queryByText(/We couldn't reset your password./i)).toBeTruthy();
+    expect(screen.queryByText('Password criteria has not been met')).toBeTruthy();
+    expect(screen.queryByText('Confirm your password')).toBeTruthy();
+
+    const newPasswordInput = screen.getByLabelText('New password');
+    fireEvent.focus(newPasswordInput);
+    expect(screen.queryByText('Password criteria has not been met')).toBeNull();
+
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+    fireEvent.focus(confirmPasswordInput);
+    expect(screen.queryByText('Confirm your password')).toBeNull();
   });
 
   it('should show error message when new and confirm password do not match', () => {
@@ -137,17 +141,18 @@ describe('ResetPasswordPage', () => {
         status: TOKEN_STATE.VALID,
       },
     });
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    resetPasswordPage
-      .find('input#confirmPassword')
-      .simulate('change', { target: { value: 'password-mismatch', name: 'confirmPassword' } });
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+    fireEvent.change(confirmPasswordInput, { target: { value: 'password-mismatch' } });
 
-    expect(resetPasswordPage.find('div[feedback-for="confirmPassword"]').text()).toContain('Passwords do not match');
+    const passwordsDoNotMatchError = screen.queryByText('Passwords do not match');
+    expect(passwordsDoNotMatchError).toBeTruthy();
   });
 
   // ******** alert message tests ********
 
   it('should show reset password rate limit error', () => {
+    const validationMessage = 'Too many requests.An error has occurred because of too many requests. Please try again after some time.';
     store = mockStore({
       ...initialState,
       resetPassword: {
@@ -155,13 +160,15 @@ describe('ResetPasswordPage', () => {
       },
     });
 
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
-      'Too many requests.An error has occurred because of too many requests. Please try again after some time.',
-    );
+    const { container } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const rateLimitError = alertElements[0].textContent;
+    expect(rateLimitError).toBe(validationMessage);
   });
 
   it('should show reset password internal server error', () => {
+    const validationMessage = 'We couldn\'t reset your password.An error has occurred. Try refreshing the page, or check your internet connection.';
     store = mockStore({
       ...initialState,
       resetPassword: {
@@ -169,20 +176,25 @@ describe('ResetPasswordPage', () => {
       },
     });
 
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find('#validation-errors').first().text()).toEqual(
-      'We couldn\'t reset your password.An error has occurred. Try refreshing the page, or check your internet connection.',
-    );
+    const { container } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const alertElements = container.querySelectorAll('.alert-danger');
+    const internalServerError = alertElements[0].textContent;
+    expect(internalServerError).toBe(validationMessage);
   });
 
   // ******** miscellaneous tests ********
 
   it('should call validation on password field when blur event fires', () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const resetPasswordPage = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
     const expectedText = 'Password criteria has not been metPassword must contain at least 8 characters, at least one letter, and at least one number';
-    resetPasswordPage.find('input#newPassword').simulate('change', { target: { value: 'aziz156', name: 'newPassword' } });
-    resetPasswordPage.find('input#newPassword').simulate('blur', { target: { value: 'aziz156', name: 'newPassword' } });
-    expect(resetPasswordPage.find('div[feedback-for="newPassword"]').text()).toEqual(expectedText);
+    const newPasswordInput = resetPasswordPage.container.querySelector('input#newPassword');
+    newPasswordInput.value = 'test-password';
+    fireEvent.change(newPasswordInput);
+
+    fireEvent.blur(newPasswordInput);
+
+    const feedbackDiv = resetPasswordPage.container.querySelector('div[feedback-for="newPassword"]');
+    expect(feedbackDiv.textContent).toEqual(expectedText);
   });
 
   it('show spinner when api call is pending', () => {
@@ -191,7 +203,9 @@ describe('ResetPasswordPage', () => {
       status:
       TOKEN_STATE.PENDING,
     };
-    mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+
     expect(store.dispatch).toHaveBeenCalledWith(validateToken(token));
   });
   it('should redirect the user to Reset password email screen ', async () => {
@@ -199,30 +213,33 @@ describe('ResetPasswordPage', () => {
       status:
       PASSWORD_RESET_ERROR,
     };
-    mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
   });
   it('should redirect the user to root url of the application ', async () => {
     props = {
       status: SUCCESS,
     };
-    mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
     expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 
-  it('show spinner during token validation', () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(resetPasswordPage.find('div.spinner-header')).toBeTruthy();
+  it('shows spinner during token validation', () => {
+    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const spinnerElement = document.getElementsByClassName('div.spinner-header');
+
+    expect(spinnerElement).toBeTruthy();
   });
 
   // ******** redirection tests ********
 
   it('by clicking on sign in tab should redirect onto login page', async () => {
-    const resetPasswordPage = mount(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const { getByText } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
 
-    await act(async () => { await resetPasswordPage.find('nav').find('a').first().simulate('click'); });
+    const signInTab = getByText('Sign in');
 
-    resetPasswordPage.update();
+    fireEvent.click(signInTab);
+
     expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 });
