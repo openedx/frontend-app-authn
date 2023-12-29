@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert } from '@openedx/paragon';
 
 import messages from './messages';
 

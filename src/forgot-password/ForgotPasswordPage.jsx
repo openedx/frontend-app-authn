@@ -11,8 +11,8 @@ import {
   StatefulButton,
   Tab,
   Tabs,
-} from '@edx/paragon';
-import { ChevronLeft } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';

@@ -10,7 +10,7 @@ import {
   Image, Skeleton,
   StatefulButton,
   useMediaQuery,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 

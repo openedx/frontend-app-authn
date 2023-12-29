@@ -34,7 +34,7 @@
   "dependencies": {
     "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
     "@edx/frontend-platform": "^5.5.4",
-    "@edx/paragon": "20.46.2",
+    "@openedx/paragon": "21.11.3",
     "@fortawesome/fontawesome-svg-core": "6.4.2",
     "@fortawesome/free-brands-svg-icons": "6.4.2",
     "@fortawesome/free-solid-svg-icons": "6.4.2",
@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
-    "@edx/frontend-build": "13.0.8",
+    "@openedx/frontend-build": "13.0.19",
     "@edx/reactifex": "1.1.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
     "babel-plugin-formatjs": "10.5.10",
