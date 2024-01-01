@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -82,8 +82,13 @@ describe('CountryField', () => {
     };
 
     it('should run country field validation when onBlur is fired', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
-      countryField.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
+
+      fireEvent.blur(countryInput, {
+        target: { value: '', name: 'country' },
+      });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'country',
@@ -92,8 +97,13 @@ describe('CountryField', () => {
     });
 
     it('should run country field validation when country name is invalid', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
-      countryField.find('input[name="country"]').simulate('blur', { target: { value: 'Pak', name: 'country' } });
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
+
+      fireEvent.blur(countryInput, {
+        target: { value: 'Pak', name: 'country' },
+      });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'country',
@@ -102,34 +112,36 @@ describe('CountryField', () => {
     });
 
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
-      countryField.find('input[name="country"]').simulate('blur', {
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
+      const dropdownArrowIcon = container.querySelector('.btn-icon.pgn__form-autosuggest__icon-button');
+
+      fireEvent.blur(countryInput, {
         target: { value: '', name: 'country' },
-        relatedTarget: { type: 'button', className: 'btn-icon pgn__form-autosuggest__icon-button' },
+        relatedTarget: dropdownArrowIcon,
       });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(0);
     });
 
     it('should update errors for frontend validations', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
 
-      countryField.find('input[name="country"]').simulate('blur', { target: { value: '', name: 'country' } });
+      fireEvent.blur(countryInput, { target: { value: '', name: 'country' } });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
-      expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'country',
-        emptyFieldValidation.country,
-      );
+      expect(props.handleErrorChange).toHaveBeenCalledWith('country', emptyFieldValidation.country);
     });
 
     it('should clear error on focus', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
 
-      countryField.find('input[name="country"]').simulate('focus', { target: { value: '', name: 'country' } });
+      fireEvent.focus(countryInput);
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
-      expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'country',
-        '',
-      );
+      expect(props.handleErrorChange).toHaveBeenCalledWith('country', '');
     });
 
     it('should update state from country code present in redux store', () => {
@@ -141,7 +153,9 @@ describe('CountryField', () => {
         },
       });
 
-      mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+
+      container.querySelector('input[name="country"]');
       expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
       expect(props.onChangeHandler).toHaveBeenCalledWith(
         { target: { name: 'country' } },
@@ -150,10 +164,13 @@ describe('CountryField', () => {
     });
 
     it('should set option on dropdown menu item click', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
 
-      countryField.find('.pgn__form-autosuggest__icon-button').first().simulate('click');
-      countryField.find('.dropdown-item').first().simulate('click');
+      const dropdownButton = container.querySelector('.pgn__form-autosuggest__icon-button');
+      fireEvent.click(dropdownButton);
+
+      const dropdownItem = container.querySelector('.dropdown-item');
+      fireEvent.click(dropdownItem);
 
       expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
       expect(props.onChangeHandler).toHaveBeenCalledWith(
@@ -163,11 +180,12 @@ describe('CountryField', () => {
     });
 
     it('should set value on change', () => {
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
-
-      countryField.find('input[name="country"]').simulate(
-        'change', { target: { value: 'pak', name: 'country' } },
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlCountryField {...props} />)),
       );
+
+      const countryInput = container.querySelector('input[name="country"]');
+      fireEvent.change(countryInput, { target: { value: 'pak', name: 'country' } });
 
       expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
       expect(props.onChangeHandler).toHaveBeenCalledWith(
@@ -182,9 +200,11 @@ describe('CountryField', () => {
         errorMessage: 'country error message',
       };
 
-      const countryField = mount(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
 
-      expect(countryField.find('div[feedback-for="country"]').text()).toEqual('country error message');
+      const feedbackElement = container.querySelector('div[feedback-for="country"]');
+      expect(feedbackElement).toBeTruthy();
+      expect(feedbackElement.textContent).toEqual('country error message');
     });
   });
 });

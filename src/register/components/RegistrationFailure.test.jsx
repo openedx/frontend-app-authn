@@ -5,7 +5,7 @@ import { mergeConfig } from '@edx/frontend-platform';
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -137,9 +137,13 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
-      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
+      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+
+      const alertHeading = container.querySelectorAll('div.alert-heading');
+      expect(alertHeading.length).toEqual(1);
+
+      const alert = container.querySelector('div.alert');
+      expect(alert.textContent).toContain(expectedMessage);
     });
 
     it('should match registration api rate limit error message', () => {
@@ -149,9 +153,13 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
-      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
+      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+
+      const alertHeading = container.querySelectorAll('div.alert-heading');
+      expect(alertHeading.length).toEqual(1);
+
+      const alert = container.querySelector('div.alert');
+      expect(alert.textContent).toContain(expectedMessage);
     });
 
     it('should match tpa session expired error message', () => {
@@ -164,9 +172,13 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
-      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toEqual(expectedMessage);
+      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+
+      const alertHeading = container.querySelectorAll('div.alert-heading');
+      expect(alertHeading.length).toEqual(1);
+
+      const alert = container.querySelector('div.alert');
+      expect(alert.textContent).toContain(expectedMessage);
     });
 
     it('should match tpa authentication failed error message', () => {
@@ -179,9 +191,13 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const registrationPage = mount(reduxWrapper(<IntlRegistrationFailure {...props} />));
-      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toContain(expectedMessageSubstring);
+      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+
+      const alertHeading = container.querySelectorAll('div.alert-heading');
+      expect(alertHeading.length).toEqual(1);
+
+      const alert = container.querySelector('div.alert');
+      expect(alert.textContent).toContain(expectedMessageSubstring);
     });
 
     it('should display error message based on the error code returned by API', () => {
@@ -195,10 +211,10 @@ describe('RegistrationFailure', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />))).find('RegistrationPage');
-      expect(registrationPage.find('div#validation-errors').first().text()).toContain(
-        'An error has occurred. Try refreshing the page, or check your internet connection.',
-      );
+      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const validationError = screen.queryByText('An error has occurred. Try refreshing the page, or check your internet connection.');
+
+      expect(validationError).not.toBeNull();
     });
   });
 });

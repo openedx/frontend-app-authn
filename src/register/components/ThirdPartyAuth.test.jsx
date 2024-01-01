@@ -5,9 +5,8 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import renderer from 'react-test-renderer';
 import configureStore from 'redux-mock-store';
 
 import {
@@ -157,8 +156,13 @@ describe('ThirdPartyAuth', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('input#password').length).toEqual(0);
+      const { queryByLabelText } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />, { store })),
+      );
+
+      const passwordField = queryByLabelText('Password');
+
+      expect(passwordField).toBeNull();
     });
 
     it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
@@ -177,9 +181,15 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find(`button#${ssoProvider.id}`).find('span').text()).toEqual(ssoProvider.name);
-      expect(registrationPage.find(`button#${ssoProvider.id}`).hasClass(`btn-tpa btn-${ssoProvider.id}`)).toEqual(true);
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
+      const tpaButton = container.querySelector(`button#${ssoProvider.id}`);
+
+      expect(tpaButton).toBeTruthy();
+      expect(tpaButton.textContent).toEqual(ssoProvider.name);
+      expect(tpaButton.classList.contains('btn-tpa')).toBe(true);
+      expect(tpaButton.classList.contains(`btn-${ssoProvider.id}`)).toBe(true);
     });
 
     it('should display skeleton if tpa_hint is true and thirdPartyAuthContext is pending', () => {
@@ -197,8 +207,10 @@ describe('ThirdPartyAuth', () => {
         search: `?next=/dashboard&tpa_hint=${ssoProvider.id}`,
       };
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('.react-loading-skeleton').exists()).toBeTruthy();
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const skeletonElement = container.querySelector('.react-loading-skeleton');
+
+      expect(skeletonElement).toBeTruthy();
     });
 
     it('should render icon if icon classes are missing in providers', () => {
@@ -219,8 +231,10 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find(`button#${ssoProvider.id}`).find('div').find('span').hasClass('pgn__icon')).toEqual(true);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const iconElement = container.querySelector(`button#${ssoProvider.id} div span.pgn__icon`);
+
+      expect(iconElement).toBeTruthy();
     });
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
@@ -240,7 +254,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
 
-      mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
     });
 
@@ -261,8 +275,10 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find(`button#${ssoProvider.id}`).find('span#provider-name').text()).toEqual(expectedMessage);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const providerButton = container.querySelector(`button#${ssoProvider.id} span#provider-name`);
+
+      expect(providerButton.textContent).toEqual(expectedMessage);
     });
 
     it('should show single sign on provider button', () => {
@@ -277,8 +293,13 @@ describe('ThirdPartyAuth', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />, { store })),
+      );
+
+      const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
+
+      expect(buttonsWithId.length).toEqual(1);
     });
 
     it('should show single sign on provider button', () => {
@@ -293,8 +314,13 @@ describe('ThirdPartyAuth', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find(`button#${ssoProvider.id}`).length).toEqual(1);
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
+
+      const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
+
+      expect(buttonsWithId.length).toEqual(1);
     });
 
     it('should display InstitutionLogistration if insitutionLogin prop is true', () => {
@@ -303,8 +329,9 @@ describe('ThirdPartyAuth', () => {
         institutionLogin: true,
       };
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('.institutions__heading').text()).toEqual('Register with institution/campus credentials');
+      const { getByText } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const headingElement = getByText('Register with institution/campus credentials');
+      expect(headingElement).toBeTruthy();
     });
 
     it('should redirect to social auth provider url on SSO button click', () => {
@@ -326,9 +353,13 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      const loginPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
 
-      loginPage.find('button#oa2-apple-id').simulate('click');
+      const ssoButton = container.querySelector('button#oa2-apple-id');
+      fireEvent.click(ssoButton);
+
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
     });
 
@@ -354,7 +385,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      renderer.create(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     });
 
@@ -375,9 +406,11 @@ describe('ThirdPartyAuth', () => {
       const expectedMessage = `${'You\'ve successfully signed into Apple! We just need a little more information before '
                               + 'you start learning with '}${ getConfig().SITE_NAME }.`;
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('#tpa-alert').find('p').text()).toEqual(expectedMessage);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const tpaAlert = container.querySelector('#tpa-alert p');
+      expect(tpaAlert.textContent).toEqual(expectedMessage);
     });
+
     it('should display errorMessage if third party authentication fails', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
@@ -403,9 +436,15 @@ describe('ThirdPartyAuth', () => {
 
       store.dispatch = jest.fn(store.dispatch);
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('div.alert-heading').length).toEqual(1);
-      expect(registrationPage.find('div.alert').first().text()).toContain('An error occurred');
+      const { container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
+
+      const alertHeading = container.querySelector('div.alert-heading');
+      expect(alertHeading).toBeTruthy();
+
+      const alert = container.querySelector('div.alert');
+      expect(alert.textContent).toContain('An error occurred');
     });
   });
 });

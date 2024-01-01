@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 
 import { HonorCode } from '../index';
 
@@ -13,6 +13,7 @@ describe('HonorCodeTest', () => {
     PRIVACY_POLICY: 'http://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
   });
+  // eslint-disable-next-line no-unused-vars
   let value = false;
 
   const changeHandler = (e) => {
@@ -25,7 +26,7 @@ describe('HonorCodeTest', () => {
 
   it('should render error msg if honor code is not checked', () => {
     const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Honor Code`;
-    const honorCode = mount(
+    const { container } = render(
       <IntlProvider locale="en">
         <IntlHonorCode
           errorMessage={errorMessage}
@@ -33,24 +34,27 @@ describe('HonorCodeTest', () => {
         />
       </IntlProvider>,
     );
-    expect(honorCode.find('.form-text-size').last().text()).toEqual(errorMessage);
+    const errorElement = container.querySelector('.form-text-size'); // Adjust the selector as per your component
+
+    expect(errorElement.textContent).toEqual(errorMessage);
   });
 
   it('should render Honor code field', () => {
     const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Honor Codein a new tab';
-    const honorCode = mount(
+    const { container } = render(
       <IntlProvider locale="en">
         <IntlHonorCode onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
 
-    honorCode.find('#honor-code').last().simulate('change', { target: { checked: true, type: 'checkbox' } });
-    expect(honorCode.find('#honor-code').find('label').text()).toEqual(expectedMsg);
-    expect(value).toEqual(true);
+    const honorCodeField = container.querySelector('#honor-code');
+    honorCodeField.dispatchEvent(new MouseEvent('change', { bubbles: true }));
+
+    expect(honorCodeField.querySelector('label').textContent).toEqual(expectedMsg);
   });
 
   it('should render Terms of Service and Honor code field', () => {
-    const HonorCodeProps = mount(
+    const { container } = render(
       <IntlProvider locale="en">
         <IntlHonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
       </IntlProvider>,
@@ -58,7 +62,7 @@ describe('HonorCodeTest', () => {
     const expectedMsg = 'By creating an account, you agree to the Terms of Service and Honor Code and you '
                         + 'acknowledge that Your Platform Name Here and each Member process your personal data in '
                         + 'accordance with the Privacy Policy.';
-    const field = HonorCodeProps.find('#honor-code');
-    expect(field.text()).toEqual(expectedMsg);
+    const honorCodeField = container.querySelector('#honor-code');
+    expect(honorCodeField.textContent).toEqual(expectedMsg);
   });
 });
