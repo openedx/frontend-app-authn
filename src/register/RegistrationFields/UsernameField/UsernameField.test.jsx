@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -73,9 +73,11 @@ describe('UsernameField', () => {
     };
 
     it('should run username field validation when onBlur is fired', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
 
-      usernameField.find('input#username').simulate('blur', { target: { value: '', name: 'username' } });
+      const usernameField = container.querySelector('input#username');
+      fireEvent.blur(usernameField, { target: { value: '', name: 'username' } });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'username',
@@ -84,9 +86,11 @@ describe('UsernameField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
 
-      usernameField.find('input#username').simulate('blur', { target: { value: 'user#', name: 'username' } });
+      const usernameField = container.querySelector('input#username');
+      fireEvent.blur(usernameField, { target: { value: 'user#', name: 'username' } });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'username',
@@ -95,9 +99,11 @@ describe('UsernameField', () => {
     });
 
     it('should clear error on focus', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
 
-      usernameField.find('input#username').simulate('focus', { target: { value: '', name: 'username' } });
+      const usernameField = container.querySelector('input#username');
+      fireEvent.focus(usernameField, { target: { value: '', name: 'username' } });
+
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'username',
@@ -106,9 +112,11 @@ describe('UsernameField', () => {
     });
 
     it('should remove space from field on focus if space exists', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
 
-      usernameField.find('input#username').simulate('focus', { target: { value: ' ', name: 'username' } });
+      const usernameField = container.querySelector('input#username');
+      fireEvent.focus(usernameField, { target: { value: ' ', name: 'username' } });
+
       expect(props.handleChange).toHaveBeenCalledTimes(1);
       expect(props.handleChange).toHaveBeenCalledWith(
         { target: { name: 'username', value: '' } },
@@ -117,18 +125,19 @@ describe('UsernameField', () => {
 
     it('should call backend validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
 
+      const usernameField = container.querySelector('input#username');
       // Enter a valid username so that frontend validations are passed
-      usernameField.find('input#username').simulate('blur', { target: { value: 'test', name: 'username' } });
+      fireEvent.blur(usernameField, { target: { value: 'test', name: 'username' } });
+
       expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ username: 'test' }));
     });
 
     it('should remove space from the start of username on change', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('input#username').simulate(
-        'change', { target: { value: ' test-user', name: 'username' } },
-      );
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const usernameField = container.querySelector('input#username');
+      fireEvent.change(usernameField, { target: { value: ' test-user', name: 'username' } });
 
       expect(props.handleChange).toHaveBeenCalledTimes(1);
       expect(props.handleChange).toHaveBeenCalledWith(
@@ -137,10 +146,10 @@ describe('UsernameField', () => {
     });
 
     it('should not set username if it is more than 30 character long', () => {
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('input#username').simulate(
-        'change', { target: { value: 'why_this_is_not_valid_username_', name: 'username' } },
-      );
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+
+      const usernameField = container.querySelector('input#username');
+      fireEvent.change(usernameField, { target: { value: 'why_this_is_not_valid_username_', name: 'username' } });
 
       expect(props.handleChange).toHaveBeenCalledTimes(0);
     });
@@ -148,8 +157,10 @@ describe('UsernameField', () => {
     it('should clear username suggestions when username field is focused in', () => {
       store.dispatch = jest.fn(store.dispatch);
 
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('input#username').simulate('focus');
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+
+      const usernameField = container.querySelector('input#username');
+      fireEvent.focus(usernameField);
 
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
@@ -168,8 +179,9 @@ describe('UsernameField', () => {
         errorMessage: 'It looks like this username is already taken',
       };
 
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      expect(usernameField.find('button.username-suggestions--chip').length).toEqual(3);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
+      expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should show username suggestions when they are populated in redux', () => {
@@ -186,8 +198,9 @@ describe('UsernameField', () => {
         value: ' ',
       };
 
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      expect(usernameField.find('button.username-suggestions--chip').length).toEqual(3);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
+      expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should show username suggestions even if there is an error in field', () => {
@@ -205,8 +218,9 @@ describe('UsernameField', () => {
         errorMessage: 'username error',
       };
 
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      expect(usernameField.find('button.username-suggestions--chip').length).toEqual(3);
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
+      expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should put space in username field if suggestions are populated in redux', () => {
@@ -218,7 +232,7 @@ describe('UsernameField', () => {
         },
       });
 
-      mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
       expect(props.handleChange).toHaveBeenCalledTimes(1);
       expect(props.handleChange).toHaveBeenCalledWith(
         { target: { name: 'username', value: ' ' } },
@@ -239,8 +253,9 @@ describe('UsernameField', () => {
         value: ' ',
       };
 
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('.username-suggestions--chip').first().simulate('click');
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      const usernameSuggestion = container.querySelector('.username-suggestions--chip');
+      fireEvent.click(usernameSuggestion);
       expect(props.handleChange).toHaveBeenCalledTimes(1);
       expect(props.handleChange).toHaveBeenCalledWith(
         { target: { name: 'username', value: 'test_1' } },
@@ -262,8 +277,9 @@ describe('UsernameField', () => {
         value: ' ',
       };
 
-      let usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('button.username-suggestions__close__button').at(0).simulate('click');
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      let closeButton = container.querySelector('button.username-suggestions__close__button');
+      fireEvent.click(closeButton);
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
 
       props = {
@@ -271,8 +287,9 @@ describe('UsernameField', () => {
         errorMessage: 'username error',
       };
 
-      usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('button.username-suggestions__close__button').at(0).simulate('click');
+      render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+      closeButton = container.querySelector('button.username-suggestions__close__button');
+      fireEvent.click(closeButton);
       expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
     });
 
@@ -291,8 +308,12 @@ describe('UsernameField', () => {
       });
 
       store.dispatch = jest.fn(store.dispatch);
-      const usernameField = mount(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
-      usernameField.find('input#username').simulate('focus', { target: { value: 'test', name: 'username' } });
+
+      const { container } = render(routerWrapper(reduxWrapper(<IntlUsernameField {...props} />)));
+
+      const usernameField = container.querySelector('input#username');
+      fireEvent.focus(usernameField, { target: { value: 'test', name: 'username' } });
+
       expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('username'));
     });
   });

@@ -5,7 +5,7 @@ import { mergeConfig } from '@edx/frontend-platform';
 import {
   getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -127,16 +127,16 @@ describe('ConfigurableRegistrationForm', () => {
     jest.clearAllMocks();
   });
 
-  const populateRequiredFields = (registrationPage, payload, isThirdPartyAuth = false) => {
-    registrationPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
-    registrationPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
-    registrationPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
+  const populateRequiredFields = (getByLabelText, payload, isThirdPartyAuth = false) => {
+    fireEvent.change(getByLabelText('Full name'), { target: { value: payload.name, name: 'name' } });
+    fireEvent.change(getByLabelText('Public username'), { target: { value: payload.username, name: 'username' } });
+    fireEvent.change(getByLabelText('Email'), { target: { value: payload.email, name: 'email' } });
 
-    registrationPage.find('input[name="country"]').simulate('change', { target: { value: payload.country, name: 'country' } });
-    registrationPage.find('input[name="country"]').simulate('blur', { target: { value: payload.country, name: 'country' } });
+    fireEvent.change(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
+    fireEvent.blur(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
 
     if (!isThirdPartyAuth) {
-      registrationPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
+      fireEvent.change(getByLabelText('Password'), { target: { value: payload.password, name: 'password' } });
     }
   };
 
@@ -157,12 +157,12 @@ describe('ConfigurableRegistrationForm', () => {
         },
       };
 
-      const configurableRegistrationForm = mount(routerWrapper(reduxWrapper(
+      render(routerWrapper(reduxWrapper(
         <IntlConfigurableRegistrationForm {...props} />,
       )));
 
-      expect(configurableRegistrationForm.find('#profession').exists()).toBeTruthy();
-      expect(configurableRegistrationForm.find('#tos').exists()).toBeTruthy();
+      expect(document.querySelector('#profession')).toBeTruthy();
+      expect(document.querySelector('#tos')).toBeTruthy();
     });
 
     it('should check TOS and honor code fields if they exist when auto submitting register form', () => {
@@ -187,7 +187,7 @@ describe('ConfigurableRegistrationForm', () => {
         autoSubmitRegistrationForm: true,
       };
 
-      mount(routerWrapper(reduxWrapper(
+      render(routerWrapper(reduxWrapper(
         <IntlConfigurableRegistrationForm {...props} />,
       )));
 
@@ -215,9 +215,9 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(registrationPage.find('#profession').exists()).toBeTruthy();
-      expect(registrationPage.find('#tos').exists()).toBeTruthy();
+      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      expect(document.querySelector('#profession')).toBeTruthy();
+      expect(document.querySelector('#tos')).toBeTruthy();
     });
 
     it('should submit form with fields returned by backend in payload', () => {
@@ -249,11 +249,17 @@ describe('ConfigurableRegistrationForm', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
-      populateRequiredFields(registrationPage, payload);
-      registrationPage.find('input#profession').simulate('change', { target: { value: 'Engineer', name: 'profession' } });
-      registrationPage.find('button.btn-brand').simulate('click');
+      populateRequiredFields(getByLabelText, payload);
+
+      const professionInput = getByLabelText('Profession');
+      fireEvent.change(professionInput, { target: { value: 'Engineer', name: 'profession' } });
+
+      const submitButton = container.querySelector('button.btn-brand');
+
+      fireEvent.click(submitButton);
+
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
     });
 
@@ -278,12 +284,18 @@ describe('ConfigurableRegistrationForm', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      registrationPage.find('button.btn-brand').simulate('click');
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const submitButton = container.querySelector('button.btn-brand');
 
-      expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
-      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(countryError);
-      expect(registrationPage.find('#confirm_email-error').last().text()).toEqual(confirmEmailError);
+      fireEvent.click(submitButton);
+
+      const professionErrorElement = container.querySelector('#profession-error');
+      const countryErrorElement = container.querySelector('div[feedback-for="country"]');
+      const confirmEmailErrorElement = container.querySelector('#confirm_email-error');
+
+      expect(professionErrorElement.textContent).toEqual(professionError);
+      expect(countryErrorElement.textContent).toEqual(countryError);
+      expect(confirmEmailErrorElement.textContent).toEqual(confirmEmailError);
     });
 
     it('should show country field validation when country name is invalid', () => {
@@ -298,11 +310,16 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      registrationPage.find('input[name="country"]').simulate('blur', { target: { value: 'Pak', name: 'country' } });
+      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const countryInput = container.querySelector('input[name="country"]');
+      fireEvent.blur(countryInput, { target: { value: 'Pak', name: 'country' } });
 
-      registrationPage.find('button.btn-brand').simulate('click');
-      expect(registrationPage.find('div[feedback-for="country"]').text()).toEqual(invalidCountryError);
+      const submitButton = container.querySelector('button.btn-brand');
+      fireEvent.click(submitButton);
+
+      const countryErrorElement = container.querySelector('div[feedback-for="country"]');
+
+      expect(countryErrorElement.textContent).toEqual(invalidCountryError);
     });
 
     it('should show error if email and confirm email fields do not match', () => {
@@ -317,10 +334,17 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      registrationPage.find('input#email').simulate('change', { target: { value: 'test1@gmail.com', name: 'email' } });
-      registrationPage.find('input#confirm_email').simulate('blur', { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
-      expect(registrationPage.find('div#confirm_email-error').text()).toEqual('The email addresses do not match.');
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+
+      const emailInput = getByLabelText('Email');
+      const confirmEmailInput = getByLabelText('Confirm Email');
+
+      fireEvent.change(emailInput, { target: { value: 'test1@gmail.com', name: 'email' } });
+      fireEvent.blur(confirmEmailInput, { target: { value: 'test2@gmail.com', name: 'confirm_email' } });
+
+      const confirmEmailErrorElement = container.querySelector('div#confirm_email-error');
+
+      expect(confirmEmailErrorElement.textContent).toEqual('The email addresses do not match.');
     });
 
     it('should run validations for configurable focused field on form submission', () => {
@@ -337,11 +361,19 @@ describe('ConfigurableRegistrationForm', () => {
         },
       });
 
-      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      registrationPage.find('input#profession').simulate('focus', { target: { value: '', name: 'profession' } });
-      registrationPage.find('button.btn-brand').simulate('click');
+      const { getByLabelText, container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
 
-      expect(registrationPage.find('#profession-error').last().text()).toEqual(professionError);
+      const professionInput = getByLabelText('Profession');
+      fireEvent.focus(professionInput);
+
+      const submitButton = container.querySelector('button.btn-brand');
+      fireEvent.click(submitButton);
+
+      const professionErrorElement = container.querySelector('#profession-error');
+
+      expect(professionErrorElement.textContent).toEqual(professionError);
     });
   });
 });
