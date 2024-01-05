@@ -2,7 +2,9 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -39,7 +41,7 @@ describe('ChangePasswordPromptTests', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    const changePasswordPrompt = mount(
+    render(
       <IntlProvider locale="en">
         <MemoryRouter>
           <IntlChangePasswordPrompt {...props} />
@@ -47,7 +49,7 @@ describe('ChangePasswordPromptTests', () => {
       </IntlProvider>,
     );
 
-    changePasswordPrompt.find('button#password-security-close').simulate('click');
+    fireEvent.click(screen.getByText('Close'));
     expect(window.location.href).toBe(dashboardUrl);
   });
 
@@ -56,7 +58,7 @@ describe('ChangePasswordPromptTests', () => {
       variant: 'block',
     };
 
-    const changePasswordPrompt = mount(
+    render(
       <IntlProvider locale="en">
         <MemoryRouter>
           <IntlChangePasswordPrompt {...props} />
@@ -65,10 +67,12 @@ describe('ChangePasswordPromptTests', () => {
     );
 
     await act(async () => {
-      await changePasswordPrompt.find('div.pgn__modal-backdrop').first().simulate('click');
+      await fireEvent.click(screen.getByText(
+        '',
+        { selector: '.pgn__modal-backdrop' },
+      ));
     });
 
-    changePasswordPrompt.update();
     expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
   });
 });
