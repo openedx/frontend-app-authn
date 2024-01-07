@@ -137,6 +137,7 @@
   "empty.username.field.error": "نام کاربری باید بین 2 تا 30 نویسه داشته باشد",
   "empty.password.field.error": "معیارهای گذرواژه رعایت نشده است",
   "empty.country.field.error": "کشور یا منطقه محل سکونت خود را برگزینید",
+  "invalid.country.field.error": "Country must match with an option available in the dropdown.",
   "email.do.not.match": "نشانی‌های رایانامه همخوانی ندارند.",
   "email.invalid.format.error": "نشانی رایانامه معتبر وارد کنید",
   "username.validation.message": "نام کاربری باید بین 2 تا 30 نویسه داشته باشد",
