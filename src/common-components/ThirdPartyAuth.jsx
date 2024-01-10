@@ -9,6 +9,7 @@ import { Institution } from '@edx/paragon/icons';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
+import messages from './messages';
 import {
   ENTERPRISE_LOGIN_URL, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
@@ -16,15 +17,7 @@ import {
 import {
   RenderInstitutionButton,
   SocialAuthProviders,
-<<<<<<<< HEAD:src/register/components/ThirdPartyAuth.jsx
-} from '../../common-components';
-import {
-  PENDING_STATE, REGISTER_PAGE,
-} from '../../data/constants';
-import messages from '../messages';
-========
 } from './index';
->>>>>>>> 58db302 (refactor: refactor social auth, tpahint and institution login (#895)):src/common-components/ThirdPartyAuth.jsx
 
 /**
  * This component renders the Single sign-on (SSO) buttons for the providers passed.

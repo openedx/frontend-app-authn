@@ -14,7 +14,6 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
-import ThirdPartyAuth from './components/ThirdPartyAuth';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
@@ -28,9 +27,9 @@ import {
 import { getBackendValidations, isFormValid, prepareRegistrationPayload } from './data/utils';
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
-import RegistrationFailure from './RegistrationFailure';
 import {
-  InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+  InstitutionLogistration,
+  PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';

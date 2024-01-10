@@ -64,6 +64,11 @@ const messages = defineMessages({
     defaultMessage: 'Create an account for free',
     description: 'Label text for registration form submission button',
   },
+  'create.account.cta.button': {
+    id: 'create.account.cta.button',
+    defaultMessage: '{label}',
+    description: 'Label text for registration form submission button for those users who are landing through redirections',
+  },
   // Institution login
   'register.institution.login.page.title': {
     id: 'register.institution.login.page.title',

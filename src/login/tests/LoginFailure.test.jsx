@@ -7,6 +7,7 @@ import {
 import { MemoryRouter } from 'react-router-dom';
 
 import {
+  ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
   FAILED_LOGIN_ATTEMPT,
   FORBIDDEN_REQUEST,
@@ -143,6 +144,25 @@ describe('LoginFailureMessage', () => {
     ).textContent).toBe(expectedMessage);
   });
 
+  it('test match user account locked out', () => {
+    props = {
+      errorCode: ACCOUNT_LOCKED_OUT,
+      failureCount: 0,
+    };
+
+    render(
+      <IntlProvider locale="en">
+        <IntlLoginFailureMessage {...props} />
+      </IntlProvider>,
+    );
+
+    const expectedMessage = 'We couldn\'t sign you in.To protect your account, it\'s been temporarily locked. Try again in 30 minutes.To be on the safe side, you can reset your password before trying again.';
+    expect(screen.getByText(
+      '',
+      { selector: '#login-failure-alert' },
+    ).textContent).toBe(expectedMessage);
+  });
+
   it('test match failed login error second attempt', () => {
     props = {
       context: {
@@ -248,14 +268,9 @@ describe('LoginFailureMessage', () => {
 
   it('should match tpa authentication failed error message', () => {
     props = {
-      loginError: {
-        errorCode: TPA_AUTHENTICATION_FAILURE,
-        context: {
-          errorMessage: 'An error occurred',
-        },
-      },
       errorCode: TPA_AUTHENTICATION_FAILURE,
       failureCount: 0,
+      context: { errorMessage: 'An error occurred' },
     };
 
     render(

@@ -9,11 +9,11 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import RegistrationFailureMessage from './RegistrationFailure';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
-} from '../data/constants';
-import RegistrationPage from '../RegistrationPage';
+} from '../../data/constants';
+import RegistrationPage from '../../RegistrationPage';
+import RegistrationFailureMessage from '../RegistrationFailure';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),

@@ -9,7 +9,6 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import Logistration from './Logistration';
-import { RenderInstitutionButton } from '../common-components';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
@@ -261,27 +260,10 @@ describe('Logistration', () => {
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
-
   it('should fire action to backup login form on tab click', () => {
-    store = mockStore({
-      login: {
-        loginResult: { success: false, redirectUrl: '' },
-      },
-      register: {
-        registrationResult: { success: false, redirectUrl: '' },
-        registrationError: {},
-      },
-      commonComponents: {
-        thirdPartyAuthContext: {
-          providers: [],
-          secondaryProviders: [],
-        },
-      },
-    });
-
     store.dispatch = jest.fn(store.dispatch);
-    const logistration = mount(reduxWrapper(<IntlLogistration />));
-    logistration.find('a[data-rb-event-key="/register"]').simulate('click');
+    const { container } = render(reduxWrapper(<IntlLogistration />));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
   });
 
