@@ -156,6 +156,7 @@ const ProgressiveProfiling = (props) => {
         isGenderSelected: !!values.gender,
         isYearOfBirthSelected: !!values.year_of_birth,
         isLevelOfEducationSelected: !!values.level_of_education,
+        isWorkExperienceSelected: !!values.work_experience,
         host: queryParams?.host || '',
       },
     );

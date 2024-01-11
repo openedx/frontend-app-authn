@@ -173,6 +173,7 @@ describe('ProgressiveProfilingTests', () => {
       isGenderSelected: false,
       isYearOfBirthSelected: false,
       isLevelOfEducationSelected: false,
+      isWorkExperienceSelected: false,
       host: '',
     };
     delete window.location;
@@ -346,6 +347,7 @@ describe('ProgressiveProfilingTests', () => {
         isGenderSelected: false,
         isYearOfBirthSelected: false,
         isLevelOfEducationSelected: false,
+        isWorkExperienceSelected: false,
         host: 'http://example.com',
       };
       delete window.location;
