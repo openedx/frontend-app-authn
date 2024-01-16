@@ -519,6 +519,38 @@ describe('RegistrationPage', () => {
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
     });
 
+    it('should send track event when user changed the country field', () => {
+      store = mockStore({
+        ...initialState,
+        register: {
+          ...initialState.register,
+          IPBasedCountryCode: 'AL',
+          registrationFormData: {
+            ...registrationFormData,
+            configurableFormFields: {
+              marketingEmailsOptIn: true,
+              country: {
+                countryCode: 'PK',
+                displayValue: 'Pakistan',
+              },
+            },
+          },
+          registrationResult: {
+            success: true,
+            redirectUrl: 'https://test.com/testing-dashboard/',
+          },
+        },
+      });
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL };
+      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.auto-populatedcountry.changed', {
+        originalCountry: 'AL',
+        selectedCountry: 'PK',
+      });
+    });
+
     it('should populate form with pipeline user details', () => {
       store = mockStore({
         ...initialState,
