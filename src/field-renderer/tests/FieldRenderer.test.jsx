@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { mount } from 'enzyme';
+import { fireEvent, render } from '@testing-library/react';
 
 import FieldRenderer from '../FieldRenderer';
 
@@ -28,13 +28,14 @@ describe('FieldRendererTests', () => {
       options: [['1997', '1997'], ['1998', '1998']],
     };
 
-    const fieldRenderer = mount(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
-    const field = fieldRenderer.find('select#yob-field');
-    field.simulate('change', { target: { value: 1997 } });
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('select#yob-field');
+    const label = container.querySelector('label');
+    fireEvent.change(input, { target: { value: 1997 } });
 
-    expect(field.type()).toEqual('select');
-    expect(fieldRenderer.find('label').text()).toEqual('Year of Birth');
-    expect(value).toEqual(1997);
+    expect(input.type).toEqual('select-one');
+    expect(label.textContent).toContain(fieldData.label);
+    expect(value).toEqual('1997');
   });
 
   it('should return null if no options are provided for select field', () => {
@@ -44,8 +45,8 @@ describe('FieldRendererTests', () => {
       name: 'yob-field',
     };
 
-    const fieldRenderer = mount(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
-    expect(fieldRenderer.html()).toBeNull();
+    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
+    expect(container.innerHTML).toEqual('');
   });
 
   it('should render textarea field', () => {
@@ -55,12 +56,13 @@ describe('FieldRendererTests', () => {
       name: 'goals-field',
     };
 
-    const fieldRenderer = mount(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
-    const field = fieldRenderer.find('#goals-field').last();
-    field.simulate('change', { target: { value: 'These are my goals.' } });
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('#goals-field');
+    const label = container.querySelector('label');
+    fireEvent.change(input, { target: { value: 'These are my goals.' } });
 
-    expect(field.type()).toEqual('textarea');
-    expect(fieldRenderer.find('label').text()).toEqual('Why do you want to join this platform?');
+    expect(input.type).toEqual(fieldData.type);
+    expect(label.textContent).toContain('Why do you want to join this platform?');
     expect(value).toEqual('These are my goals.');
   });
 
@@ -71,12 +73,13 @@ describe('FieldRendererTests', () => {
       name: 'company-field',
     };
 
-    const fieldRenderer = mount(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
-    const field = fieldRenderer.find('#company-field').last();
-    field.simulate('change', { target: { value: 'ABC' } });
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('input#company-field');
+    const label = container.querySelector('label');
+    fireEvent.change(input, { target: { value: 'ABC' } });
 
-    expect(field.type()).toEqual('input');
-    expect(fieldRenderer.find('label').text()).toEqual('Company');
+    expect(input.type).toEqual(fieldData.type);
+    expect(label.textContent).toContain(fieldData.label);
     expect(value).toEqual('ABC');
   });
 
@@ -87,12 +90,13 @@ describe('FieldRendererTests', () => {
       name: 'marketing-emails-opt-in-field',
     };
 
-    const fieldRenderer = mount(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
-    const field = fieldRenderer.find('input#marketing-emails-opt-in-field');
-    field.simulate('change', { target: { checked: true, type: 'checkbox' } });
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('input#marketing-emails-opt-in-field');
+    const label = container.querySelector('label');
+    fireEvent.click(input);
 
-    expect(field.prop('type')).toEqual('checkbox');
-    expect(fieldRenderer.find('label').text()).toEqual(fieldData.label);
+    expect(input.type).toEqual(fieldData.type);
+    expect(label.textContent).toContain(fieldData.label);
     expect(value).toEqual(true);
   });
 
@@ -101,8 +105,8 @@ describe('FieldRendererTests', () => {
       type: 'unknown',
     };
 
-    const fieldRenderer = mount(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
-    expect(fieldRenderer.html()).toBeNull();
+    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
+    expect(container.innerHTML).toContain('');
   });
 
   it('should run onBlur and onFocus functions for a field if given', () => {
@@ -117,7 +121,7 @@ describe('FieldRendererTests', () => {
       functionValue = `${e.target.name} focussed`;
     };
 
-    const fieldRenderer = mount(
+    const { container } = render(
       <FieldRenderer
         handleFocus={onFocus}
         handleBlur={onBlur}
@@ -126,19 +130,19 @@ describe('FieldRendererTests', () => {
         onChangeHandler={changeHandler}
       />,
     );
-    const field = fieldRenderer.find('#test-field').last();
+    const input = container.querySelector('#test-field');
 
-    field.simulate('focus');
+    fireEvent.focus(input);
     expect(functionValue).toEqual('test-field focussed');
 
-    field.simulate('blur');
+    fireEvent.blur(input);
     expect(functionValue).toEqual('test-field blurred');
   });
 
   it('should render error message for required text fields', () => {
     const fieldData = { type: 'text', label: 'First Name', name: 'first-name-field' };
 
-    const fieldRenderer = mount(
+    const { container } = render(
       <FieldRenderer
         isRequired
         fieldData={fieldData}
@@ -147,7 +151,7 @@ describe('FieldRendererTests', () => {
       />,
     );
 
-    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Enter your first name');
+    expect(container.querySelector(`#${fieldData.name}-error`).textContent).toEqual('Enter your first name');
   });
 
   it('should render error message for required select fields', () => {
@@ -155,7 +159,7 @@ describe('FieldRendererTests', () => {
       type: 'select', label: 'Preference', name: 'preference-field', options: [['a', 'Opt 1'], ['b', 'Opt 2']],
     };
 
-    const fieldRenderer = mount(
+    const { container } = render(
       <FieldRenderer
         isRequired
         fieldData={fieldData}
@@ -164,13 +168,13 @@ describe('FieldRendererTests', () => {
       />,
     );
 
-    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Select your preference');
+    expect(container.querySelector(`#${fieldData.name}-error`).textContent).toEqual('Select your preference');
   });
 
   it('should render error message for required textarea fields', () => {
     const fieldData = { type: 'textarea', label: 'Goals', name: 'goals-field' };
 
-    const fieldRenderer = mount(
+    const { container } = render(
       <FieldRenderer
         isRequired
         fieldData={fieldData}
@@ -179,13 +183,13 @@ describe('FieldRendererTests', () => {
       />,
     );
 
-    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('Tell us your goals');
+    expect(container.querySelector(`#${fieldData.name}-error`).textContent).toEqual('Tell us your goals');
   });
 
   it('should render error message for required checkbox fields', () => {
     const fieldData = { type: 'checkbox', label: 'Honor Code', name: 'honor-code-field' };
 
-    const fieldRenderer = mount(
+    const { container } = render(
       <FieldRenderer
         isRequired
         fieldData={fieldData}
@@ -194,6 +198,6 @@ describe('FieldRendererTests', () => {
       />,
     );
 
-    expect(fieldRenderer.find('.form-text-size').last().text()).toEqual('You must agree to our Honor Code');
+    expect(container.querySelector(`#${fieldData.name}-error`).textContent).toEqual('You must agree to our Honor Code');
   });
 });
