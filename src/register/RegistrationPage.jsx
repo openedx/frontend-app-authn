@@ -70,7 +70,6 @@ const RegistrationPage = (props) => {
     userPipelineDataLoaded,
     submitState,
     validations,
-    IPBasedCountryCode,
   } = useSelector(state => state.register);
 
   const {
@@ -178,18 +177,8 @@ const RegistrationPage = (props) => {
 
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
-
-      // This event will be used to track the number of users who have
-      // changed country field and selected the country other than
-      // IP based country.
-      if (configurableFormFields.country?.countryCode !== IPBasedCountryCode) {
-        sendTrackEvent('edx.bi.user.auto-populatedcountry.changed', {
-          originalCountry: IPBasedCountryCode,
-          selectedCountry: configurableFormFields.country.countryCode,
-        });
-      }
     }
-  }, [registrationResult, IPBasedCountryCode, configurableFormFields.country]);
+  }, [registrationResult]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;

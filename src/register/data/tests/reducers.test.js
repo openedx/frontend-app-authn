@@ -15,7 +15,6 @@ import reducer from '../reducers';
 describe('Registration Reducer Tests', () => {
   const defaultState = {
     backendCountryCode: '',
-    IPBasedCountryCode: '',
     registrationError: {},
     registrationResult: {},
     registrationFormData: {
@@ -247,7 +246,6 @@ describe('Registration Reducer Tests', () => {
       {
         ...defaultState,
         backendCountryCode: countryCode,
-        IPBasedCountryCode: countryCode,
       },
     );
   });
