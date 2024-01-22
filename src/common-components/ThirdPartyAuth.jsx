@@ -52,6 +52,7 @@ const ThirdPartyAuth = (props) => {
           {formatMessage(messages['enterprise.login.btn.text'])}
         </Hyperlink>
       )}
+
       {thirdPartyAuthApiStatus === PENDING_STATE ? (
         <Skeleton className="tpa-skeleton" height={36} count={2} />
       ) : (

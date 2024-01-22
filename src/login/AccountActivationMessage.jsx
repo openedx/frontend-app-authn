@@ -17,7 +17,7 @@ const AccountActivationMessage = ({ messageType }) => {
   }
 
   const variant = messageType === ACCOUNT_ACTIVATION_MESSAGE.ERROR ? 'danger' : messageType;
-  const activationOrVerification = getConfig().MARKETING_EMAILS_OPT_IN ? 'confirmation' : 'activation';
+  const activationOrConfirmation = getConfig().MARKETING_EMAILS_OPT_IN ? 'confirmation' : 'activation';
   const iconMapping = {
     [ACCOUNT_ACTIVATION_MESSAGE.SUCCESS]: CheckCircle,
     [ACCOUNT_ACTIVATION_MESSAGE.ERROR]: Error,
@@ -27,12 +27,12 @@ const AccountActivationMessage = ({ messageType }) => {
   let heading;
   switch (messageType) {
     case ACCOUNT_ACTIVATION_MESSAGE.SUCCESS: {
-      heading = formatMessage(messages[`account.${activationOrVerification}.success.message.title`]);
-      activationMessage = <span>{formatMessage(messages[`account.${activationOrVerification}.success.message`])}</span>;
+      heading = formatMessage(messages[`account.${activationOrConfirmation}.success.message.title`]);
+      activationMessage = <span>{formatMessage(messages[`account.${activationOrConfirmation}.success.message`])}</span>;
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.INFO: {
-      activationMessage = formatMessage(messages[`account.${activationOrVerification}.info.message`]);
+      activationMessage = formatMessage(messages[`account.${activationOrConfirmation}.info.message`]);
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.ERROR: {
@@ -42,7 +42,7 @@ const AccountActivationMessage = ({ messageType }) => {
         </Alert.Link>
       );
 
-      heading = formatMessage(messages[`account.${activationOrVerification}.error.message.title`]);
+      heading = formatMessage(messages[`account.${activationOrConfirmation}.error.message.title`]);
       activationMessage = (
         <FormattedMessage
           id="account.activation.error.message"

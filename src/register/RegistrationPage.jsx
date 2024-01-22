@@ -29,7 +29,9 @@ import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
 import {
   InstitutionLogistration,
-  PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+  PasswordField,
+  RedirectLogistration,
+  ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';

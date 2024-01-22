@@ -29,12 +29,14 @@ const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
   const authService = getAuthService();
   const {
-    context, errorCode, failureCount,
+    context,
+    errorCode,
+    errorCount, // This is used to trigger the useEffect, facilitating the scrolling to the top.
   } = props;
 
   useEffect(() => {
     windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
-  }, [errorCode, failureCount]);
+  }, [errorCode, errorCount]);
 
   if (!errorCode) {
     return null;
@@ -221,7 +223,7 @@ LoginFailureMessage.propTypes = {
     redirectUrl: PropTypes.string,
   }),
   errorCode: PropTypes.string.isRequired,
-  failureCount: PropTypes.number.isRequired,
+  errorCount: PropTypes.number.isRequired,
 };
 
 export default LoginFailureMessage;

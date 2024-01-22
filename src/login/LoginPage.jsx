@@ -153,7 +153,11 @@ const LoginPage = (props) => {
     }
 
     // add query params to the payload
-    const payload = { email_or_username: formData.emailOrUsername, password: formData.password, ...queryParams };
+    const payload = {
+      email_or_username: formData.emailOrUsername,
+      password: formData.password,
+      ...queryParams,
+    };
     props.loginRequest(payload);
   };
 
@@ -204,7 +208,7 @@ const LoginPage = (props) => {
       <div className="mw-xs mt-3 mb-2">
         <LoginFailureMessage
           errorCode={errorCode.type}
-          failureCount={errorCode.count}
+          errorCount={errorCode.count}
           context={errorCode.context}
         />
         <ThirdPartyAuthAlert
@@ -216,49 +220,53 @@ const LoginPage = (props) => {
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
         <Form id="sign-in-form" name="sign-in-form">
-          <FormGroup
-            name="emailOrUsername"
-            value={formFields.emailOrUsername}
-            autoComplete="on"
-            handleChange={handleOnChange}
-            handleFocus={handleOnFocus}
-            errorMessage={errors.emailOrUsername}
-            floatingLabel={formatMessage(messages['login.user.identity.label'])}
-          />
-          <PasswordField
-            name="password"
-            value={formFields.password}
-            autoComplete="off"
-            showScreenReaderText={false}
-            showRequirements={false}
-            handleChange={handleOnChange}
-            handleFocus={handleOnFocus}
-            errorMessage={errors.password}
-            floatingLabel={formatMessage(messages['login.password.label'])}
-          />
-          <StatefulButton
-            name="sign-in"
-            id="sign-in"
-            type="submit"
-            variant="brand"
-            className="login-button-width"
-            state={submitState}
-            labels={{
-              default: formatMessage(messages['sign.in.button']),
-              pending: '',
-            }}
-            onClick={handleSubmit}
-            onMouseDown={(event) => event.preventDefault()}
-          />
-          <Link
-            id="forgot-password"
-            name="forgot-password"
-            className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(RESET_PAGE)}
-            onClick={trackForgotPasswordLinkClick}
-          >
-            {formatMessage(messages['forgot.password'])}
-          </Link>
+          {!provider && (
+            <>
+              <FormGroup
+                name="emailOrUsername"
+                value={formFields.emailOrUsername}
+                autoComplete="on"
+                handleChange={handleOnChange}
+                handleFocus={handleOnFocus}
+                errorMessage={errors.emailOrUsername}
+                floatingLabel={formatMessage(messages['login.user.identity.label'])}
+              />
+              <PasswordField
+                name="password"
+                value={formFields.password}
+                autoComplete="off"
+                showScreenReaderText={false}
+                showRequirements={false}
+                handleChange={handleOnChange}
+                handleFocus={handleOnFocus}
+                errorMessage={errors.password}
+                floatingLabel={formatMessage(messages['login.password.label'])}
+              />
+              <StatefulButton
+                name="sign-in"
+                id="sign-in"
+                type="submit"
+                variant="brand"
+                className="login-button-width"
+                state={submitState}
+                labels={{
+                  default: formatMessage(messages['sign.in.button']),
+                  pending: '',
+                }}
+                onClick={handleSubmit}
+                onMouseDown={(event) => event.preventDefault()}
+              />
+              <Link
+                id="forgot-password"
+                name="forgot-password"
+                className="btn btn-link font-weight-500 text-body"
+                to={updatePathWithQueryParams(RESET_PAGE)}
+                onClick={trackForgotPasswordLinkClick}
+              >
+                {formatMessage(messages['forgot.password'])}
+              </Link>
+            </>
+          )}
           {provider && (
             <EnterpriseSSO provider={provider} />
           )}
