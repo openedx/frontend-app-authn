@@ -185,6 +185,10 @@ const LoginPage = (props) => {
       window.location.href = getConfig().LMS_BASE_URL + provider.loginUrl;
       return null;
     }
+
+    if (provider) {
+      return <EnterpriseSSO provider={provider} />;
+    }
   }
 
   if (institutionLogin) {
@@ -220,66 +224,57 @@ const LoginPage = (props) => {
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
         <Form id="sign-in-form" name="sign-in-form">
-          {!provider && (
-            <>
-              <FormGroup
-                name="emailOrUsername"
-                value={formFields.emailOrUsername}
-                autoComplete="on"
-                handleChange={handleOnChange}
-                handleFocus={handleOnFocus}
-                errorMessage={errors.emailOrUsername}
-                floatingLabel={formatMessage(messages['login.user.identity.label'])}
-              />
-              <PasswordField
-                name="password"
-                value={formFields.password}
-                autoComplete="off"
-                showScreenReaderText={false}
-                showRequirements={false}
-                handleChange={handleOnChange}
-                handleFocus={handleOnFocus}
-                errorMessage={errors.password}
-                floatingLabel={formatMessage(messages['login.password.label'])}
-              />
-              <StatefulButton
-                name="sign-in"
-                id="sign-in"
-                type="submit"
-                variant="brand"
-                className="login-button-width"
-                state={submitState}
-                labels={{
-                  default: formatMessage(messages['sign.in.button']),
-                  pending: '',
-                }}
-                onClick={handleSubmit}
-                onMouseDown={(event) => event.preventDefault()}
-              />
-              <Link
-                id="forgot-password"
-                name="forgot-password"
-                className="btn btn-link font-weight-500 text-body"
-                to={updatePathWithQueryParams(RESET_PAGE)}
-                onClick={trackForgotPasswordLinkClick}
-              >
-                {formatMessage(messages['forgot.password'])}
-              </Link>
-            </>
-          )}
-          {provider && (
-            <EnterpriseSSO provider={provider} />
-          )}
-          {!provider && (
-            <ThirdPartyAuth
-              currentProvider={currentProvider}
-              providers={providers}
-              secondaryProviders={secondaryProviders}
-              handleInstitutionLogin={handleInstitutionLogin}
-              thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-              isLoginPage
-            />
-          )}
+          <FormGroup
+            name="emailOrUsername"
+            value={formFields.emailOrUsername}
+            autoComplete="on"
+            handleChange={handleOnChange}
+            handleFocus={handleOnFocus}
+            errorMessage={errors.emailOrUsername}
+            floatingLabel={formatMessage(messages['login.user.identity.label'])}
+          />
+          <PasswordField
+            name="password"
+            value={formFields.password}
+            autoComplete="off"
+            showScreenReaderText={false}
+            showRequirements={false}
+            handleChange={handleOnChange}
+            handleFocus={handleOnFocus}
+            errorMessage={errors.password}
+            floatingLabel={formatMessage(messages['login.password.label'])}
+          />
+          <StatefulButton
+            name="sign-in"
+            id="sign-in"
+            type="submit"
+            variant="brand"
+            className="login-button-width"
+            state={submitState}
+            labels={{
+              default: formatMessage(messages['sign.in.button']),
+              pending: '',
+            }}
+            onClick={handleSubmit}
+            onMouseDown={(event) => event.preventDefault()}
+          />
+          <Link
+            id="forgot-password"
+            name="forgot-password"
+            className="btn btn-link font-weight-500 text-body"
+            to={updatePathWithQueryParams(RESET_PAGE)}
+            onClick={trackForgotPasswordLinkClick}
+          >
+            {formatMessage(messages['forgot.password'])}
+          </Link>
+          <ThirdPartyAuth
+            currentProvider={currentProvider}
+            providers={providers}
+            secondaryProviders={secondaryProviders}
+            handleInstitutionLogin={handleInstitutionLogin}
+            thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+            isLoginPage
+          />
         </Form>
       </div>
     </>
