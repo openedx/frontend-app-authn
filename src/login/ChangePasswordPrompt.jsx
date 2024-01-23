@@ -4,7 +4,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   ActionRow, ModalDialog, useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';

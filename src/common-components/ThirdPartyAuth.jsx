@@ -4,8 +4,8 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Hyperlink, Icon,
-} from '@edx/paragon';
-import { Institution } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { Institution } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 

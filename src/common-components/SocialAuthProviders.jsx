@@ -2,9 +2,9 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Icon } from '@edx/paragon';
-import { Login } from '@edx/paragon/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from '@openedx/paragon';
+import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';

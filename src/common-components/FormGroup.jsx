@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import {
   Form, TransitionReplace,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 const FormGroup = (props) => {

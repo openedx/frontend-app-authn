@@ -9,8 +9,8 @@ import {
   Icon,
   Tab,
   Tabs,
-} from '@edx/paragon';
-import { ChevronLeft } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 

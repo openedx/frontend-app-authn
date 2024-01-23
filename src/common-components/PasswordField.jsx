@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   Check, Remove, Visibility, VisibilityOff,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';

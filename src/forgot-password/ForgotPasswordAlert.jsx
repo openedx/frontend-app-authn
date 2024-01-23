@@ -2,8 +2,8 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
-import { CheckCircle, Error } from '@edx/paragon/icons';
+import { Alert } from '@openedx/paragon';
+import { CheckCircle, Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';

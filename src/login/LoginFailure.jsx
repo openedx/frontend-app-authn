@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
-import { Error } from '@edx/paragon/icons';
+import { Alert, Hyperlink } from '@openedx/paragon';
+import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import ChangePasswordPrompt from './ChangePasswordPrompt';
