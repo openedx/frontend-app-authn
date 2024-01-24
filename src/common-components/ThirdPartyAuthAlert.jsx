@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
+import { Alert } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from './messages';

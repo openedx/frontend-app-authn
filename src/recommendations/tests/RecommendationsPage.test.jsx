@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { useMediaQuery } from '@edx/paragon';
+import { useMediaQuery } from '@openedx/paragon';
 import { fireEvent, render } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -28,8 +28,8 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(),
 }));
 
-jest.mock('@edx/paragon', () => ({
-  ...jest.requireActual('@edx/paragon'),
+jest.mock('@openedx/paragon', () => ({
+  ...jest.requireActual('@openedx/paragon'),
   useMediaQuery: jest.fn(),
 }));
 

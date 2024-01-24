@@ -2,8 +2,8 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Hyperlink, Icon } from '@edx/paragon';
-import { Institution } from '@edx/paragon/icons';
+import { Button, Hyperlink, Icon } from '@openedx/paragon';
+import { Institution } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';

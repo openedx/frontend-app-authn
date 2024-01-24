@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Button, Icon, IconButton } from '@edx/paragon';
-import { Close } from '@edx/paragon/icons';
+import { Button, Icon, IconButton } from '@openedx/paragon';
+import { Close } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import validateUsername from './validator';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { breakpoints } from '@edx/paragon';
+import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';

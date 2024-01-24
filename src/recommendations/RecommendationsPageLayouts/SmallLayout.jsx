@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Skeleton } from '@edx/paragon';
+import { Skeleton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import loadingCoursesPlaceholders from '../data/loadingCoursesPlaceholders';

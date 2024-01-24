@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@edx/paragon';
-import { Error } from '@edx/paragon/icons';
+import { Alert } from '@openedx/paragon';
+import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import { windowScrollTo } from '../../data/utils';

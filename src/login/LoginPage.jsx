@@ -6,7 +6,7 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, StatefulButton,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
