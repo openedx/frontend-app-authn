@@ -11,8 +11,8 @@ import configureStore from 'redux-mock-store';
 
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
-} from '../../data/constants';
-import RegistrationPage from '../RegistrationPage';
+} from '../../../data/constants';
+import RegistrationPage from '../../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),

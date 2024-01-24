@@ -25,6 +25,7 @@ import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { LoginPage } from '../login';
+import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 
@@ -70,6 +71,8 @@ const Logistration = (props) => {
     props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
       props.backupRegistrationForm();
+    } else if (tabKey === REGISTER_PAGE) {
+      props.backupLoginForm();
     }
     setKey(tabKey);
   };
@@ -150,6 +153,7 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
+  backupLoginForm: PropTypes.func.isRequired,
   backupRegistrationForm: PropTypes.func.isRequired,
   clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
@@ -176,6 +180,7 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
+    backupLoginForm,
     backupRegistrationForm,
     clearThirdPartyAuthContextErrorMessage,
   },

@@ -112,6 +112,26 @@ const messages = defineMessages({
     description: 'Select ticket form',
     defaultMessage: 'Please choose your request type:',
   },
+  'registration.other.options.heading': {
+    id: 'registration.other.options.heading',
+    defaultMessage: 'Or register with:',
+    description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
+  },
+  'institution.login.button': {
+    id: 'institution.login.button',
+    defaultMessage: 'Institution/campus credentials',
+    description: 'shows institutions list',
+  },
+  'login.other.options.heading': {
+    id: 'login.other.options.heading',
+    defaultMessage: 'Or sign in with:',
+    description: 'Text that appears above other sign in options like social auth buttons',
+  },
+  'enterprise.login.btn.text': {
+    id: 'enterprise.login.btn.text',
+    defaultMessage: 'Company or school credentials',
+    description: 'Company or school login link text.',
+  },
 });
 
 export default messages;

@@ -9,10 +9,10 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
-import { registerNewUser } from '../data/actions';
-import { FIELDS } from '../data/constants';
-import RegistrationPage from '../RegistrationPage';
+import { registerNewUser } from '../../data/actions';
+import { FIELDS } from '../../data/constants';
+import RegistrationPage from '../../RegistrationPage';
+import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),

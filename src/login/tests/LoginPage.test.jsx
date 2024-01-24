@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
@@ -12,9 +12,7 @@ import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
-import {
-  loginRemovePasswordResetBanner, loginRequest, loginRequestFailure, loginRequestReset, setLoginFormData,
-} from '../data/actions';
+import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';
 
@@ -32,8 +30,8 @@ const mockStore = configureStore();
 describe('LoginPage', () => {
   let props = {};
   let store = {};
-  let loginFormData = {};
 
+  const emptyFieldValidation = { emailOrUsername: 'Enter your username or email', password: 'Enter your password' };
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
@@ -83,14 +81,6 @@ describe('LoginPage', () => {
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
     };
-    loginFormData = {
-      emailOrUsername: '',
-      password: '',
-      errors: {
-        emailOrUsername: '',
-        password: '',
-      },
-    };
   });
 
   // ******** test login form submission ********
@@ -103,18 +93,18 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByText(
       '',
       { selector: '#emailOrUsername' },
-    ), { target: { value: 'test@example.com' } });
+    ), { target: { value: 'test', name: 'emailOrUsername' } });
     fireEvent.change(screen.getByText(
       '',
       { selector: '#password' },
-    ), { target: { value: 'password' } });
+    ), { target: { value: 'test-password', name: 'password' } });
 
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
     ));
 
-    expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email_or_username: 'test@example.com', password: 'password' }));
+    expect(store.dispatch).toHaveBeenCalledWith(loginRequest({ email_or_username: 'test', password: 'test-password' }));
   });
 
   it('should not dispatch loginRequest on empty form submission', () => {
@@ -128,20 +118,26 @@ describe('LoginPage', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(loginRequest({}));
   });
 
-  // ******** test login form validations ********
+  it('should dismiss reset password banner on form submission', () => {
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        showResetPasswordSuccessBanner: true,
+      },
+    });
 
-  it('should match state on empty form submission', () => {
     store.dispatch = jest.fn(store.dispatch);
-
     render(reduxWrapper(<IntlLoginPage {...props} />));
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
     ));
 
-    expect(screen.getByText('Enter your username or email')).toBeDefined();
-    expect(store.dispatch).toHaveBeenCalledWith(loginRequestFailure({ errorCode: 'invalid-form' }));
+    expect(store.dispatch).toHaveBeenCalledWith(dismissPasswordResetBanner());
   });
+
+  // ******** test login form validations ********
 
   it('should match state for invalid email (less than 3 characters), on form submission', () => {
     store.dispatch = jest.fn(store.dispatch);
@@ -165,6 +161,37 @@ describe('LoginPage', () => {
     expect(screen.getByText('Username or email must have at least 3 characters.')).toBeDefined();
   });
 
+  it('should show error messages for required fields on empty form submission', () => {
+    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    fireEvent.click(screen.getByText(
+      '',
+      { selector: '.btn-brand' },
+    ));
+
+    expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual(emptyFieldValidation.emailOrUsername);
+    expect(container.querySelector('div[feedback-for="password"]').textContent).toEqual(emptyFieldValidation.password);
+
+    const alertBanner = 'We couldn\'t sign you in.Please fill in the fields below.';
+    expect(container.querySelector('#login-failure-alert').textContent).toEqual(alertBanner);
+  });
+
+  it('should run frontend validations for emailOrUsername field on form submission', () => {
+    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+
+    fireEvent.change(screen.getByText(
+      '',
+      { selector: '#emailOrUsername' },
+    ), { target: { value: 'te', name: 'emailOrUsername' } });
+
+    fireEvent.click(screen.getByText(
+      '',
+      { selector: '.btn-brand' },
+    ));
+
+    expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual('Username or email must have at least 3 characters.');
+  });
+
+  // ******** test field focus in functionality ********
   it('should reset field related error messages on onFocus event', async () => {
     store.dispatch = jest.fn(store.dispatch);
 
@@ -227,19 +254,13 @@ describe('LoginPage', () => {
   });
 
   it('should show single sign on provider button', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
-    });
-
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-          }],
+          providers: [ssoProvider],
         },
       },
     });
@@ -255,25 +276,32 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should not display institution login option when no secondary providers are present', () => {
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(queryByText('Use my university info')).toBeNull();
-  });
-
-  it('should not show sign-in header and enterprise login once user authenticated through SSO', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
-    });
-
+  it('should display sign-in header only when primary or secondary providers are available.', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-          }],
+        },
+      },
+    });
+
+    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(queryByText('Company or school credentials')).toBeNull();
+    expect(queryByText('Or sign in with:')).toBeNull();
+    expect(queryByText('Institution/campus credentials')).toBeNull();
+  });
+
+  it('should hide sign-in header and enterprise login upon successful SSO authentication', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+          secondaryProviders: [secondaryProviders],
           currentProvider: 'Apple',
         },
       },
@@ -284,20 +312,17 @@ describe('LoginPage', () => {
     expect(queryByText('Or sign in with:')).toBeNull();
   });
 
-  it('should show sign-in header providers (ENABLE ENTERPRISE LOGIN)', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
-    });
+  // ******** test enterprise login enabled scenarios ********
 
+  it('should show sign-in header for enterprise login', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-          }],
+          providers: [ssoProvider],
+          secondaryProviders: [secondaryProviders],
         },
       },
     });
@@ -308,7 +333,9 @@ describe('LoginPage', () => {
     expect(queryByText('Institution/campus credentials')).toBeDefined();
   });
 
-  it('should show sign-in header with providers (DISABLE ENTERPRISE LOGIN)', () => {
+  // ******** test enterprise login disabled scenarios ********
+
+  it('should show sign-in header for institution login if enterprise login is disabled', () => {
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: true,
     });
@@ -319,9 +346,8 @@ describe('LoginPage', () => {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-          }],
+          providers: [ssoProvider],
+          secondaryProviders: [secondaryProviders],
         },
       },
     });
@@ -329,53 +355,7 @@ describe('LoginPage', () => {
     const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Company or school credentials')).toBeNull();
-    expect(queryByText('Institution/campus credentials')).toBeNull();
-
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
-    });
-  });
-
-  it('should not show sign-in header without Providers and secondary Providers (ENABLE ENTERPRISE LOGIN)', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
-    });
-
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-        },
-      },
-    });
-
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(queryByText('Or sign in with:')).toBeNull();
-    expect(queryByText('Company or school credentials')).toBeNull();
-    expect(queryByText('Institution/campus credentials')).toBeNull();
-  });
-
-  it('should not show sign-in header without Providers and secondary Providers (DISABLE ENTERPRISE LOGIN)', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: true,
-    });
-
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        ...initialState.commonComponents,
-        thirdPartyAuthContext: {
-          ...initialState.commonComponents.thirdPartyAuthContext,
-        },
-      },
-    });
-
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(queryByText('Or sign in with:')).toBeNull();
-    expect(queryByText('Company or school credentials')).toBeNull();
-    expect(queryByText('Institution/campus credentials')).toBeNull();
+    expect(queryByText('Institution/campus credentials')).toBeDefined();
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
@@ -409,23 +389,31 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should show sign-in header with Providers and secondary Providers', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: true,
-    });
-
+  it('should not show sign-in header without primary or secondary providers', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-          }],
-          secondaryProviders: [{
-            ...secondaryProviders,
-          }],
+        },
+      },
+    });
+
+    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(queryByText('Or sign in with:')).toBeNull();
+    expect(queryByText('Institution/campus credentials')).toBeNull();
+    expect(queryByText('Company or school credentials')).toBeNull();
+  });
+
+  it('should show enterprise login if even if only secondary providers are available', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
         },
       },
     });
@@ -442,13 +430,14 @@ describe('LoginPage', () => {
 
   // ******** test alert messages ********
 
-  it('should match login error message', () => {
-    const errorMessage = 'An error has occurred. Try refreshing the page, or check your internet connection.';
+  it('should match login internal server error message', () => {
+    const expectedMessage = 'We couldn\'t sign you in.'
+                            + 'An error has occurred. Try refreshing the page, or check your internet connection.';
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
-        loginError: { errorCode: INTERNAL_SERVER_ERROR },
+        loginErrorCode: INTERNAL_SERVER_ERROR,
       },
     });
 
@@ -456,22 +445,7 @@ describe('LoginPage', () => {
     expect(screen.getByText(
       '',
       { selector: '#login-failure-alert' },
-    ).textContent).toEqual(`We couldn't sign you in.${errorMessage}`);
-  });
-
-  it('should match account activation message', () => {
-    const activationMessage = 'Success! You have activated your account.'
-                              + 'You will now receive email updates and alerts from us related '
-                              + 'to the courses you are enrolled in. Sign in to continue.';
-
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?account_activation_status=success' };
-
-    render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(screen.getByText(
-      '',
-      { selector: '#account-activation-message' },
-    ).textContent).toEqual(activationMessage);
+    ).textContent).toEqual(`${expectedMessage}`);
   });
 
   it('should match third party auth alert', () => {
@@ -498,7 +472,7 @@ describe('LoginPage', () => {
     ).textContent).toEqual(expectedMessage);
   });
 
-  it('should show tpa authentication fails error message', () => {
+  it('should show third party authentication failure message', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -510,7 +484,6 @@ describe('LoginPage', () => {
         },
       },
     });
-
     render(reduxWrapper(<IntlLoginPage {...props} />));
     expect(screen.getByText(
       '',
@@ -524,7 +497,7 @@ describe('LoginPage', () => {
       ...initialState,
       login: {
         ...initialState.login,
-        loginError: { errorCode: 'invalid-form' },
+        loginErrorCode: 'invalid-form',
       },
     });
 
@@ -537,15 +510,15 @@ describe('LoginPage', () => {
 
   // ******** test redirection ********
 
-  it('should redirect to url returned by login endpoint', () => {
-    const dashboardUrl = 'http://localhost:18000/enterprise/select/active/?success_url=/dashboard';
+  it('should redirect to url returned by login endpoint after successful authentication', () => {
+    const dashboardURL = 'https://test.com/testing-dashboard/';
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
         loginResult: {
           success: true,
-          redirectUrl: dashboardUrl,
+          redirectUrl: dashboardURL,
         },
       },
     });
@@ -553,7 +526,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(dashboardUrl);
+    expect(window.location.href).toBe(dashboardURL);
   });
 
   it('should redirect to finishAuthUrl upon successful login via SSO', () => {
@@ -584,21 +557,13 @@ describe('LoginPage', () => {
   });
 
   it('should redirect to social auth provider url on SSO button click', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'true',
-    });
-
-    const loginUrl = '/auth/login/apple-id/?auth_entry=login&next=/dashboard';
     store = mockStore({
       ...initialState,
       commonComponents: {
         ...initialState.commonComponents,
         thirdPartyAuthContext: {
           ...initialState.commonComponents.thirdPartyAuthContext,
-          providers: [{
-            ...ssoProvider,
-            loginUrl,
-          }],
+          providers: [ssoProvider],
         },
       },
     });
@@ -612,11 +577,31 @@ describe('LoginPage', () => {
       '',
       { selector: '#oa2-apple-id' },
     ));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + loginUrl);
+    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
+  });
 
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: '',
+  it('should redirect to finishAuthUrl upon successful authentication via SSO', () => {
+    const finishAuthUrl = '/auth/complete/google-oauth2/';
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        loginResult: { success: true, redirectUrl: '' },
+      },
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          finishAuthUrl,
+        },
+      },
     });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL };
+
+    render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
   });
 
   // ******** test hinted third party auth ********
@@ -648,6 +633,26 @@ describe('LoginPage', () => {
     )).toBeTruthy();
   });
 
+  it('should render the skeleton when third party status is pending', () => {
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          providers: [ssoProvider],
+        },
+        thirdPartyAuthApiStatus: PENDING_STATE,
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+
+    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(container.querySelector('.react-loading-skeleton')).toBeTruthy();
+  });
+
   it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
     secondaryProviders.skipHintedLogin = true;
     store = mockStore({
@@ -671,10 +676,6 @@ describe('LoginPage', () => {
   });
 
   it('should render regular tpa button for invalid tpa_hint value', () => {
-    mergeConfig({
-      DISABLE_ENTERPRISE_LOGIN: 'true',
-    });
-
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -698,7 +699,7 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should render other ways to sign in button', () => {
+  it('should render "other ways to sign in" button on the tpa_hint page', () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -720,10 +721,11 @@ describe('LoginPage', () => {
     ).textContent).toBeDefined();
   });
 
-  it('should render other ways to sign in button when public account creation disabled', () => {
+  it('should render other ways to sign in button when public account creation is disabled', () => {
     mergeConfig({
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
     });
+
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -752,129 +754,80 @@ describe('LoginPage', () => {
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
   });
 
-  it('tests that form is in invalid state when it is submission', () => {
+  it('tests that form is in invalid state when it is submitted', () => {
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
-        loginError: { errorCode: 'invalid-form' },
+        shouldBackupState: true,
       },
     });
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
-
-    fireEvent.change(screen.getByText(
-      '',
-      { selector: '#password' },
-    ), { target: { value: 'password', name: 'password' } });
-    fireEvent.click(screen.getByText(
-      '',
-      { selector: '.btn-brand' },
-    ));
-
-    expect(screen.getByText('Please fill in the fields below.')).toBeTruthy();
-  });
-
-  it('should reset login form errors', () => {
     store.dispatch = jest.fn(store.dispatch);
-
     render(reduxWrapper(<IntlLoginPage {...props} />));
-
-    expect(store.dispatch).toHaveBeenCalledWith(loginRequestReset());
-  });
-
-  // persists form data tests
-
-  it('should set errors in redux store on submit form for invalid input', () => {
-    const formData = {
-      errors: {
-        emailOrUsername: 'Enter your username or email',
-        password: 'Enter your password',
+    expect(store.dispatch).toHaveBeenCalledWith(backupLoginFormBegin(
+      {
+        formFields: {
+          emailOrUsername: '', password: '',
+        },
+        errors: {
+          emailOrUsername: '', password: '',
+        },
       },
-    };
-    store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    ));
+  });
 
-    fireEvent.change(screen.getByText(
-      '',
-      { selector: '#emailOrUsername' },
-    ), { target: { value: '' } });
-    fireEvent.change(screen.getByText(
-      '',
-      { selector: '#password' },
-    ), { target: { value: '' } });
+  it('should send track event when forgot password link is clicked', () => {
+    render(reduxWrapper(<IntlLoginPage {...props} />));
     fireEvent.click(screen.getByText(
-      '',
-      { selector: '.btn-brand' },
+      'Forgot password',
+      { selector: '#forgot-password' },
     ));
 
-    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData(formData));
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   });
 
-  it('should set form data in redux store on onBlur', () => {
-    store.dispatch = jest.fn(store.dispatch);
-
-    render(reduxWrapper(<IntlLoginPage {...props} />));
-    fireEvent.blur(screen.getByText(
-      '',
-      { selector: '#emailOrUsername' },
-    ));
-    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData({ emailOrUsername: '' }));
-  });
-
-  it('should clear form field errors in redux store on onFocus', () => {
-    store.dispatch = jest.fn(store.dispatch);
-
-    render(reduxWrapper(<IntlLoginPage {...props} />));
-    fireEvent.focus(screen.getByText(
-      '',
-      { selector: '#emailOrUsername' },
-    ));
-
-    expect(store.dispatch).toHaveBeenCalledWith(setLoginFormData({
-      errors: {
-        ...loginFormData.errors,
+  it('should backup the login form state when shouldBackupState is true', () => {
+    store = mockStore({
+      ...initialState,
+      login: {
+        ...initialState.login,
+        shouldBackupState: true,
       },
-    }));
+    });
+
+    store.dispatch = jest.fn(store.dispatch);
+    render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(store.dispatch).toHaveBeenCalledWith(backupLoginFormBegin(
+      {
+        formFields: {
+          emailOrUsername: '', password: '',
+        },
+        errors: {
+          emailOrUsername: '', password: '',
+        },
+      },
+    ));
   });
 
-  it('should update form fields state if updated in redux store', async () => {
-    const { rerender } = render(reduxWrapper(<IntlLoginPage {...props} />));
-
+  it('should update form fields state if updated in redux store', () => {
     store = mockStore({
       ...initialState,
       login: {
         ...initialState.login,
         loginFormData: {
-          emailOrUsername: 'john_doe',
-          password: 'password1',
+          formFields: {
+            emailOrUsername: 'john_doe', password: 'test-password',
+          },
+          errors: {
+            emailOrUsername: '', password: '',
+          },
         },
       },
     });
 
-    rerender((
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <Provider store={store}><IntlLoginPage {...props} /></Provider>
-        </MemoryRouter>
-      </IntlProvider>));
-
-    expect(screen.getByDisplayValue('password1')).toBeDefined();
-  });
-
-  it('should update reset password value when unmount called', () => {
-    store = mockStore({
-      ...initialState,
-      login: {
-        ...initialState.login,
-        resetPassword: true,
-      },
-    });
-
-    store.dispatch = jest.fn(store.dispatch);
-    const { unmount } = render(reduxWrapper(<IntlLoginPage {...props} />));
-    unmount();
-
-    expect(store.dispatch).toHaveBeenCalledWith(loginRemovePasswordResetBanner());
+    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
+    expect(container.querySelector('input#password').value).toEqual('test-password');
   });
 });

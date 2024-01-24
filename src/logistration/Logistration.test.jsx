@@ -13,6 +13,7 @@ import { clearThirdPartyAuthContextErrorMessage } from '../common-components/dat
 import {
   COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
 } from '../data/constants';
+import { backupLoginForm } from '../login/data/actions';
 import { backupRegistrationForm } from '../register/data/actions';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -258,6 +259,12 @@ describe('Logistration', () => {
     const { container } = render(reduxWrapper(<IntlLogistration />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
+  });
+  it('should fire action to backup login form on tab click', () => {
+    store.dispatch = jest.fn(store.dispatch);
+    const { container } = render(reduxWrapper(<IntlLogistration />));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
+    expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
   });
 
   it('should clear tpa context errorMessage tab click', () => {
