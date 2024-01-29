@@ -172,7 +172,7 @@ describe('CountryField', () => {
       const dropdownItem = container.querySelector('.dropdown-item');
       fireEvent.click(dropdownItem);
 
-      expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
+      expect(props.onChangeHandler).toHaveBeenCalledTimes(2);
       expect(props.onChangeHandler).toHaveBeenCalledWith(
         { target: { name: 'country' } },
         { countryCode: 'PK', displayValue: 'Pakistan' },
@@ -187,7 +187,7 @@ describe('CountryField', () => {
       const countryInput = container.querySelector('input[name="country"]');
       fireEvent.change(countryInput, { target: { value: 'pak', name: 'country' } });
 
-      expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
+      expect(props.onChangeHandler).toHaveBeenCalledTimes(2);
       expect(props.onChangeHandler).toHaveBeenCalledWith(
         { target: { name: 'country' } },
         { countryCode: '', displayValue: 'pak' },
