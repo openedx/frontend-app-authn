@@ -53,11 +53,12 @@ pull_translations:
 	rm -rf src/i18n/messages
 	mkdir src/i18n/messages
 	cd src/i18n/messages \
-	  && atlas pull --filter=$(transifex_langs) \
+	  && atlas pull $(ATLAS_OPTIONS) \
 	           translations/paragon/src/i18n/messages:paragon \
+	           translations/frontend-platform/src/i18n/messages:frontend-platform \
 	           translations/frontend-app-authn/src/i18n/messages:frontend-app-authn
 
-	$(intl_imports) paragon frontend-app-authn
+	$(intl_imports) paragon frontend-platform frontend-app-authn
 endif
 
 # This target is used by Travis.
