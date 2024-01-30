@@ -9,12 +9,16 @@ export const HTML_REGEX = /<|>/u;
 // regex from backend
 export const INVALID_NAME_REGEX = /https?:\/\/(?:[-\w.]|(?:%[\da-fA-F]{2}))*/g;
 
-const validateName = (value, formatMessage) => {
+const validateName = (value, fieldName, formatMessage) => {
   let fieldError;
   if (!value.trim()) {
-    fieldError = formatMessage(messages['empty.name.field.error']);
+    fieldError = fieldName === 'lastname'
+      ? formatMessage(messages['empty.lastname.field.error'])
+      : formatMessage(messages['empty.firstname.field.error']);
   } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
-    fieldError = formatMessage(messages['name.validation.message']);
+    fieldError = fieldName === 'lastname'
+      ? formatMessage(messages['lastname.validation.message'])
+      : formatMessage(messages['firstname.validation.message']);
   }
   return fieldError;
 };
