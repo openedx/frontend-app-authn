@@ -27,21 +27,23 @@ const NameField = (props) => {
   const {
     handleErrorChange,
     shouldFetchUsernameSuggestions,
+    name,
+    fullName,
   } = props;
 
   const handleOnBlur = (e) => {
     const { value } = e.target;
-    const fieldError = validateName(value, formatMessage);
+    const fieldError = validateName(value, name, formatMessage);
     if (fieldError) {
-      handleErrorChange('name', fieldError);
+      handleErrorChange(name, fieldError);
     } else if (shouldFetchUsernameSuggestions && !validationApiRateLimited) {
-      dispatch(fetchRealtimeValidations({ name: value }));
+      dispatch(fetchRealtimeValidations({ name: fullName.trim() }));
     }
   };
 
   const handleOnFocus = () => {
-    handleErrorChange('name', '');
-    dispatch(clearRegistrationBackendError('name'));
+    handleErrorChange(name, '');
+    dispatch(clearRegistrationBackendError(name));
   };
 
   return (
@@ -56,6 +58,7 @@ const NameField = (props) => {
 NameField.defaultProps = {
   errorMessage: '',
   shouldFetchUsernameSuggestions: false,
+  fullName: '',
 };
 
 NameField.propTypes = {
@@ -64,6 +67,8 @@ NameField.propTypes = {
   value: PropTypes.string.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleErrorChange: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  fullName: PropTypes.string,
 };
 
 export default NameField;

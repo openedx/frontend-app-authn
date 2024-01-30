@@ -56,13 +56,13 @@ describe('ConfigurableRegistrationForm', () => {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      firstname: '', lastname: '', email: '', username: '', password: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      firstname: '', lastname: '', email: '', username: '', password: '',
     },
   };
 
@@ -128,7 +128,8 @@ describe('ConfigurableRegistrationForm', () => {
   });
 
   const populateRequiredFields = (getByLabelText, payload, isThirdPartyAuth = false) => {
-    fireEvent.change(getByLabelText('Full name'), { target: { value: payload.name, name: 'name' } });
+    fireEvent.change(getByLabelText('First name'), { target: { value: payload.firstname, name: 'firstname' } });
+    fireEvent.change(getByLabelText('Last name'), { target: { value: payload.lastname, name: 'lastname' } });
     fireEvent.change(getByLabelText('Public username'), { target: { value: payload.username, name: 'username' } });
     fireEvent.change(getByLabelText('Email'), { target: { value: payload.email, name: 'email' } });
 
@@ -238,7 +239,8 @@ describe('ConfigurableRegistrationForm', () => {
       });
 
       const payload = {
-        name: 'John Doe',
+        firstname: 'John',
+        lastname: 'Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
         password: 'password1',

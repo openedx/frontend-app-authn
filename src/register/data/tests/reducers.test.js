@@ -22,13 +22,13 @@ describe('Registration Reducer Tests', () => {
         marketingEmailsOptIn: true,
       },
       formFields: {
-        name: '', email: '', username: '', password: '',
+        firstname: '', lastname: '', email: '', username: '', password: '',
       },
       emailSuggestion: {
         suggestion: '', type: '',
       },
       errors: {
-        name: '', email: '', username: '', password: '',
+        firstname: '', lastname: '', email: '', username: '', password: '',
       },
     },
     validations: null,
