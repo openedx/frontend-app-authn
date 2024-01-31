@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { render } from '@testing-library/react';
 import { Context as ResponsiveContext } from 'react-responsive';
@@ -34,6 +35,21 @@ describe('Base component tests', () => {
     const { container } = render(
       <IntlProvider locale="en">
         <BaseContainer />
+      </IntlProvider>,
+      LargeScreen,
+    );
+
+    expect(container.querySelector('.banner__image')).toBeDefined();
+  });
+
+  it('renders Image layout when ENABLE_IMAGE_LAYOUT configuration is enabled', () => {
+    mergeConfig({
+      ENABLE_IMAGE_LAYOUT: true,
+    });
+
+    const { container } = render(
+      <IntlProvider locale="en">
+        <BaseContainer showWelcomeBanner={false} />
       </IntlProvider>,
       LargeScreen,
     );

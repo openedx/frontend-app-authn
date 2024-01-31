@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -14,6 +15,7 @@ import { DEFAULT_LAYOUT, IMAGE_LAYOUT } from './data/constants';
 
 const BaseContainer = ({ children, showWelcomeBanner, username }) => {
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
+  const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
 
   useEffect(() => {
     const initRebrandExperiment = () => {
@@ -30,7 +32,7 @@ const BaseContainer = ({ children, showWelcomeBanner, username }) => {
     initRebrandExperiment();
   }, []);
 
-  if (baseContainerVersion === IMAGE_LAYOUT) {
+  if (baseContainerVersion === IMAGE_LAYOUT || enableImageLayout) {
     return (
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth - 1}>
