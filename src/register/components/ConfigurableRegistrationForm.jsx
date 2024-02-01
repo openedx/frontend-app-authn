@@ -46,12 +46,6 @@ const ConfigurableRegistrationForm = (props) => {
     showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
 
-  useEffect(() => {
-    if (!formFields.country) {
-      setFormFields(prevState => ({ ...prevState, country: { countryCode: '', displayValue: '' } }));
-    }
-  });
-
   /**
    * If auto submitting register form, we will check tos and honor code fields if they exist for feature parity.
    */
