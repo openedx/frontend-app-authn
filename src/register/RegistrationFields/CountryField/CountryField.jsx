@@ -49,6 +49,11 @@ const CountryField = (props) => {
         { target: { name: 'country' } },
         { countryCode, displayValue: countryDisplayValue },
       );
+    } else if (!selectedCountry.countryCode) {
+      onChangeHandler(
+        { target: { name: 'country' } },
+        { countryCode: '', displayValue: '' },
+      );
     }
   }, [backendCountryCode, countryList]); // eslint-disable-line react-hooks/exhaustive-deps
 
