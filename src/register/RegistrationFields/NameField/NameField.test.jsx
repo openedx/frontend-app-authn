@@ -67,43 +67,43 @@ describe('NameField', () => {
 
   describe('Test Name Field', () => {
     it('should run first name field validation when onBlur is fired', () => {
-      props.name = 'firstname';
+      props.name = 'firstName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const firstNameInput = container.querySelector('input#firstname');
-      fireEvent.blur(firstNameInput, { target: { value: '', name: 'firstname' } });
+      const firstNameInput = container.querySelector('input#firstName');
+      fireEvent.blur(firstNameInput, { target: { value: '', name: 'firstName' } });
 
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'firstname',
+        'firstName',
         'Enter your first name',
       );
     });
 
     it('should update first name field error for frontend validations', () => {
-      props.name = 'firstname';
+      props.name = 'firstName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const firstNameInput = container.querySelector('input#firstname');
-      fireEvent.blur(firstNameInput, { target: { value: 'https://invalid-name.com', name: 'firstname' } });
+      const firstNameInput = container.querySelector('input#firstName');
+      fireEvent.blur(firstNameInput, { target: { value: 'https://invalid-name.com', name: 'firstName' } });
 
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'firstname',
+        'firstName',
         'Enter a valid first name',
       );
     });
 
     it('should clear first name error on focus', () => {
-      props.name = 'firstname';
+      props.name = 'firstName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const firstNameInput = container.querySelector('input#firstname');
-      fireEvent.focus(firstNameInput, { target: { value: '', name: 'firstname' } });
+      const firstNameInput = container.querySelector('input#firstName');
+      fireEvent.focus(firstNameInput, { target: { value: '', name: 'firstName' } });
 
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'firstname',
+        'firstName',
         '',
       );
     });
@@ -115,12 +115,12 @@ describe('NameField', () => {
         shouldFetchUsernameSuggestions: true,
         fullName: 'test test',
       };
-      props.name = 'lastname';
+      props.name = 'lastName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const lastNameInput = container.querySelector('input#lastname');
+      const lastNameInput = container.querySelector('input#lastName');
       // Enter a valid name so that frontend validations are passed
-      fireEvent.blur(lastNameInput, { target: { value: 'test', name: 'lastname' } });
+      fireEvent.blur(lastNameInput, { target: { value: 'test', name: 'lastName' } });
 
       expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ name: props.fullName }));
     });
@@ -137,41 +137,41 @@ describe('NameField', () => {
         },
       });
 
-      props.name = 'lastname';
+      props.name = 'lastName';
       store.dispatch = jest.fn(store.dispatch);
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const lastNameInput = container.querySelector('input#lastname');
+      const lastNameInput = container.querySelector('input#lastName');
 
-      fireEvent.focus(lastNameInput, { target: { value: 'test', name: 'lastname' } });
+      fireEvent.focus(lastNameInput, { target: { value: 'test', name: 'lastName' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('lastname'));
+      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('lastName'));
     });
 
     it('should run last name field validation when onBlur is fired', () => {
-      props.name = 'lastname';
+      props.name = 'lastName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const lastNameInput = container.querySelector('input#lastname');
-      fireEvent.blur(lastNameInput, { target: { value: '', name: 'lastname' } });
+      const lastNameInput = container.querySelector('input#lastName');
+      fireEvent.blur(lastNameInput, { target: { value: '', name: 'lastName' } });
 
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'lastname',
+        'lastName',
         'Enter your last name',
       );
     });
 
     it('should update last name field error for frontend validation', () => {
-      props.name = 'lastname';
+      props.name = 'lastName';
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
-      const lastNameInput = container.querySelector('input#lastname');
-      fireEvent.blur(lastNameInput, { target: { value: 'https://invalid-name.com', name: 'lastname' } });
+      const lastNameInput = container.querySelector('input#lastName');
+      fireEvent.blur(lastNameInput, { target: { value: 'https://invalid-name.com', name: 'lastName' } });
 
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
-        'lastname',
+        'lastName',
         'Enter a valid last name',
       );
     });

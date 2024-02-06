@@ -7,13 +7,13 @@ const messages = defineMessages({
     description: 'register page title',
   },
   // Field labels
-  'registration.firstname.label': {
-    id: 'registration.firstname.label',
+  'registration.firstName.label': {
+    id: 'registration.firstName.label',
     defaultMessage: 'First name',
     description: 'Label that appears above first name field',
   },
-  'registration.lastname.label': {
-    id: 'registration.lastname.label',
+  'registration.lastName.label': {
+    id: 'registration.lastName.label',
     defaultMessage: 'Last name',
     description: 'Label that appears above last name field',
   },
@@ -43,8 +43,8 @@ const messages = defineMessages({
     description: 'Text for opt in option on register page.',
   },
   // Help text
-  'help.text.firstname': {
-    id: 'help.text.firstname',
+  'help.text.firstName': {
+    id: 'help.text.firstName',
     defaultMessage: 'This name will be used by any certificates that you earn.',
     description: 'Help text for first name field on registration page',
   },
@@ -81,13 +81,13 @@ const messages = defineMessages({
     description: 'Heading of institution page',
   },
   // Validation messages
-  'empty.firstname.field.error': {
-    id: 'empty.firstname.field.error',
+  'empty.firstName.field.error': {
+    id: 'empty.firstName.field.error',
     defaultMessage: 'Enter your first name',
     description: 'Error message for empty first name field',
   },
-  'empty.lastname.field.error': {
-    id: 'empty.lastname.field.error',
+  'empty.lastName.field.error': {
+    id: 'empty.lastName.field.error',
     defaultMessage: 'Enter your last name',
     description: 'Error message for empty last name field',
   },
@@ -131,13 +131,13 @@ const messages = defineMessages({
     defaultMessage: 'Username must be between 2 and 30 characters',
     description: 'Error message for empty username field',
   },
-  'firstname.validation.message': {
-    id: 'firstname.validation.message',
+  'firstName.validation.message': {
+    id: 'firstName.validation.message',
     defaultMessage: 'Enter a valid first name',
     description: 'Validation message that appears when first name contain URL',
   },
-  'lastname.validation.message': {
-    id: 'lastname.validation.message',
+  'lastName.validation.message': {
+    id: 'lastName.validation.message',
     defaultMessage: 'Enter a valid last name',
     description: 'Validation message that appears when last name contain URL',
   },
