@@ -15,7 +15,6 @@ export const storeName = 'register';
 
 export const defaultState = {
   backendCountryCode: '',
-  IPBasedCountryCode: '',
   registrationError: {},
   registrationResult: {},
   registrationFormData: {
@@ -50,7 +49,6 @@ const reducer = (state = defaultState, action = {}) => {
     case BACKUP_REGISTRATION_DATA.BEGIN:
       return {
         ...defaultState,
-        IPBasedCountryCode: state.IPBasedCountryCode,
         usernameSuggestions: state.usernameSuggestions,
         registrationFormData: { ...action.payload },
         userPipelineDataLoaded: state.userPipelineDataLoaded,
@@ -110,7 +108,6 @@ const reducer = (state = defaultState, action = {}) => {
         return {
           ...state,
           backendCountryCode: countryCode,
-          IPBasedCountryCode: countryCode,
         };
       }
       return state;
