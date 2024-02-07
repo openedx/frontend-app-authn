@@ -31,6 +31,13 @@ const CountryField = (props) => {
   } = props;
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
+
+  const countryFieldValue = {
+    userProvidedText: selectedCountry.displayValue,
+    selectionValue: selectedCountry.displayValue,
+    selectionId: selectedCountry.countryCode,
+  };
+
   const backendCountryCode = useSelector(state => state.register.backendCountryCode);
 
   useEffect(() => {
@@ -49,7 +56,7 @@ const CountryField = (props) => {
         { target: { name: 'country' } },
         { countryCode, displayValue: countryDisplayValue },
       );
-    } else if (!selectedCountry.countryCode) {
+    } else if (!selectedCountry.displayValue) {
       onChangeHandler(
         { target: { name: 'country' } },
         { countryCode: '', displayValue: '' },
@@ -65,16 +72,10 @@ const CountryField = (props) => {
 
     const { value } = event.target;
 
-    const { countryCode, displayValue, error } = validateCountryField(
+    const { error } = validateCountryField(
       value.trim(), countryList, formatMessage(messages['empty.country.field.error']), formatMessage(messages['invalid.country.field.error']),
     );
-
-    onChangeHandler({ target: { name: 'country' } }, { countryCode, displayValue });
     handleErrorChange('country', error);
-  };
-
-  const handleSelected = (value) => {
-    handleOnBlur({ target: { name: 'country', value } });
   };
 
   const handleOnFocus = (event) => {
@@ -84,11 +85,19 @@ const CountryField = (props) => {
   };
 
   const handleOnChange = (value) => {
-    onChangeHandler({ target: { name: 'country' } }, { countryCode: '', displayValue: value });
+    onChangeHandler({ target: { name: 'country' } }, { countryCode: value.selectionId, displayValue: value.userProvidedText });
+
+    // We have put this check because proviously we also had onSelected event handler and we call
+    // the onBlur on that event handler but now there is no such handler and we only have
+    // onChange so we check the is there is proper sectionId which only be
+    // proper one when we select it from dropdown's item otherwise its null.
+    if (value.selectionId !== '') {
+      handleOnBlur({ target: { name: 'country', value: value.userProvidedText } });
+    }
   };
 
   const getCountryList = () => countryList.map((country) => (
-    <FormAutosuggestOption key={country[COUNTRY_CODE_KEY]}>
+    <FormAutosuggestOption key={country[COUNTRY_CODE_KEY]} id={country[COUNTRY_CODE_KEY]}>
       {country[COUNTRY_DISPLAY_KEY]}
     </FormAutosuggestOption>
   ));
@@ -99,9 +108,8 @@ const CountryField = (props) => {
         floatingLabel={formatMessage(messages['registration.country.label'])}
         aria-label="form autosuggest"
         name="country"
-        value={selectedCountry.displayValue || ''}
+        value={countryFieldValue || {}}
         className={classNames({ 'form-field-error': props.errorMessage })}
-        onSelected={(value) => handleSelected(value)}
         onFocus={(e) => handleOnFocus(e)}
         onBlur={(e) => handleOnBlur(e)}
         onChange={(value) => handleOnChange(value)}
