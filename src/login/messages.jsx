@@ -42,11 +42,6 @@ const messages = defineMessages({
     defaultMessage: 'Choose your institution from the list below',
     description: 'Heading of the institutions list',
   },
-  'login.other.options.heading': {
-    id: 'login.other.options.heading',
-    defaultMessage: 'Or sign in with:',
-    description: 'Text that appears above other sign in options like social auth buttons',
-  },
   'non.compliant.password.title': {
     id: 'non.compliant.password.title',
     defaultMessage: 'We recently changed our password requirements',
@@ -63,11 +58,6 @@ const messages = defineMessages({
     id: 'account.locked.out.message.1',
     defaultMessage: 'To protect your account, it\'s been temporarily locked. Try again in 30 minutes.',
     description: 'Part of message for when user account has been locked out after multiple failed login attempts',
-  },
-  'enterprise.login.btn.text': {
-    id: 'enterprise.login.btn.text',
-    defaultMessage: 'Company or school credentials',
-    description: 'Company or school login link text.',
   },
   'username.or.email.format.validation.less.chars.message': {
     id: 'username.or.email.format.validation.less.chars.message',

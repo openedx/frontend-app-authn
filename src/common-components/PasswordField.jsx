@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
-} from '@edx/paragon';
+} from '@openedx/paragon';
 import {
   Check, Remove, Visibility, VisibilityOff,
-} from '@edx/paragon/icons';
+} from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
@@ -138,7 +138,7 @@ const PasswordField = (props) => {
       {props.errorMessage !== '' && (
         <Form.Control.Feedback key="error" className="form-text-size" hasIcon={false} feedback-for={props.name} type="invalid">
           {props.errorMessage}
-          <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>
+          {props.showScreenReaderText && <span className="sr-only">{formatMessage(messages['password.sr.only.helping.text'])}</span>}
         </Form.Control.Feedback>
       )}
     </Form.Group>
@@ -153,6 +153,7 @@ PasswordField.defaultProps = {
   handleChange: () => {},
   handleErrorChange: null,
   showRequirements: true,
+  showScreenReaderText: true,
   autoComplete: null,
 };
 
@@ -168,6 +169,7 @@ PasswordField.propTypes = {
   showRequirements: PropTypes.bool,
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
+  showScreenReaderText: PropTypes.bool,
 };
 
 export default PasswordField;

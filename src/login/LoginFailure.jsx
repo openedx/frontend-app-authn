@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@edx/paragon';
-import { Error } from '@edx/paragon/icons';
+import { Alert, Hyperlink } from '@openedx/paragon';
+import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import ChangePasswordPrompt from './ChangePasswordPrompt';
@@ -23,22 +23,35 @@ import {
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import messages from './messages';
+import { windowScrollTo } from '../data/utils';
 
 const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
-  const { context, errorCode } = props.loginError;
-
   const authService = getAuthService();
-  let errorList;
+  const {
+    context,
+    errorCode,
+    errorCount, // This is used to trigger the useEffect, facilitating the scrolling to the top.
+  } = props;
+
+  useEffect(() => {
+    windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  }, [errorCode, errorCount]);
+
+  if (!errorCode) {
+    return null;
+  }
+
   let resetLink = (
     <Hyperlink destination="reset" isInline>
       {formatMessage(messages['login.incorrect.credentials.error.reset.link.text'])}
     </Hyperlink>
   );
 
+  let errorMessage;
   switch (errorCode) {
     case NON_COMPLIANT_PASSWORD_EXCEPTION: {
-      errorList = (
+      errorMessage = (
         <>
           <strong>{formatMessage(messages['non.compliant.password.title'])}</strong>
           <p>{formatMessage(messages['non.compliant.password.message'])}</p>
@@ -47,7 +60,7 @@ const LoginFailureMessage = (props) => {
       break;
     }
     case FORBIDDEN_REQUEST:
-      errorList = <p>{formatMessage(messages['login.rate.limit.reached.message'])}</p>;
+      errorMessage = <p>{formatMessage(messages['login.rate.limit.reached.message'])}</p>;
       break;
     case INACTIVE_USER: {
       const supportLink = (
@@ -55,7 +68,7 @@ const LoginFailureMessage = (props) => {
           {formatMessage(messages['contact.support.link'], { platformName: context.platformName })}
         </a>
       );
-      errorList = (
+      errorMessage = (
         <p>
           <FormattedMessage
             id="login.inactive.user.error"
@@ -64,7 +77,7 @@ const LoginFailureMessage = (props) => {
             check your spam folders or {supportLink}."
             values={{
               lineBreak: <br />,
-              email: <strong className="data-hj-suppress">{props.loginError.email}</strong>,
+              email: <strong className="data-hj-suppress">{context.email}</strong>,
               supportLink,
             }}
           />
@@ -79,7 +92,7 @@ const LoginFailureMessage = (props) => {
           {formatMessage(messages['tpa.account.link'], { provider: context.provider })}
         </a>
       );
-      errorList = (
+      errorMessage = (
         <p>
           <FormattedMessage
             id="allowed.domain.login.error"
@@ -92,7 +105,7 @@ const LoginFailureMessage = (props) => {
       break;
     }
     case INVALID_FORM:
-      errorList = <p>{formatMessage(messages['login.form.invalid.error.message'])}</p>;
+      errorMessage = <p>{formatMessage(messages['login.form.invalid.error.message'])}</p>;
       break;
     case FAILED_LOGIN_ATTEMPT: {
       resetLink = (
@@ -100,7 +113,7 @@ const LoginFailureMessage = (props) => {
           {formatMessage(messages['login.incorrect.credentials.error.before.account.blocked.text'])}
         </Hyperlink>
       );
-      errorList = (
+      errorMessage = (
         <>
           <p>
             <FormattedMessage
@@ -124,7 +137,7 @@ const LoginFailureMessage = (props) => {
       break;
     }
     case ACCOUNT_LOCKED_OUT: {
-      errorList = (
+      errorMessage = (
         <>
           <p>{formatMessage(messages['account.locked.out.message.1'])}</p>
           <p>
@@ -141,9 +154,9 @@ const LoginFailureMessage = (props) => {
     }
     case INCORRECT_EMAIL_PASSWORD:
       if (context.failureCount <= 1) {
-        errorList = <p>{formatMessage(messages['login.incorrect.credentials.error'])}</p>;
+        errorMessage = <p>{formatMessage(messages['login.incorrect.credentials.error'])}</p>;
       } else if (context.failureCount === 2) {
-        errorList = (
+        errorMessage = (
           <p>
             <FormattedMessage
               id="login.incorrect.credentials.error.with.reset.link"
@@ -161,60 +174,56 @@ const LoginFailureMessage = (props) => {
       }
       return (
         <ChangePasswordPrompt
-          redirectUrl={props.loginError.redirectUrl}
+          redirectUrl={context.redirectUrl}
           variant="nudge"
         />
       );
     case REQUIRE_PASSWORD_CHANGE:
       return <ChangePasswordPrompt />;
     case TPA_AUTHENTICATION_FAILURE:
-      errorList = (
-        <p>{formatMessage(messages['login.tpa.authentication.failure'], {
-          platform_name: getConfig().SITE_NAME,
-          lineBreak: <br />,
-          errorMessage: context.errorMessage,
-        })}
+      errorMessage = (
+        <p>
+          {formatMessage(messages['login.tpa.authentication.failure'], {
+            platform_name: getConfig().SITE_NAME,
+            lineBreak: <br />,
+            errorMessage: context.errorMessage,
+          })}
         </p>
       );
       break;
     case INTERNAL_SERVER_ERROR:
     default:
-      errorList = <p>{formatMessage(messages['internal.server.error.message'])}</p>;
+      errorMessage = <p>{formatMessage(messages['internal.server.error.message'])}</p>;
       break;
   }
 
   return (
     <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      { errorList }
+      { errorMessage }
     </Alert>
   );
 };
 
 LoginFailureMessage.defaultProps = {
-  loginError: {
-    redirectUrl: null,
-    errorCode: null,
-    errorMessage: null,
-  },
+  context: {},
 };
 
 LoginFailureMessage.propTypes = {
-  loginError: PropTypes.shape({
-    context: PropTypes.shape({
-      supportLink: PropTypes.string,
-      platformName: PropTypes.string,
-      tpaHint: PropTypes.string,
-      provider: PropTypes.string,
-      allowedDomain: PropTypes.string,
-      remainingAttempts: PropTypes.number,
-      failureCount: PropTypes.number,
-      errorMessage: PropTypes.string,
-    }),
+  context: PropTypes.shape({
+    supportLink: PropTypes.string,
+    platformName: PropTypes.string,
+    tpaHint: PropTypes.string,
+    provider: PropTypes.string,
+    allowedDomain: PropTypes.string,
+    remainingAttempts: PropTypes.number,
+    failureCount: PropTypes.number,
+    errorMessage: PropTypes.string,
     email: PropTypes.string,
-    errorCode: PropTypes.string,
     redirectUrl: PropTypes.string,
   }),
+  errorCode: PropTypes.string.isRequired,
+  errorCount: PropTypes.number.isRequired,
 };
 
 export default LoginFailureMessage;

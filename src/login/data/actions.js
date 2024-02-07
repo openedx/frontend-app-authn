@@ -1,8 +1,18 @@
 import { AsyncActionType } from '../../data/utils';
 
+export const BACKUP_LOGIN_DATA = new AsyncActionType('LOGIN', 'BACKUP_LOGIN_DATA');
 export const LOGIN_REQUEST = new AsyncActionType('LOGIN', 'REQUEST');
-export const LOGIN_PERSIST_FORM_DATA = 'LOGIN_PERSIST_FORM_DATA';
-export const LOGIN_REMOVE_PASSWORD_RESET_BANNER = 'LOGIN_REMOVE_PASSWORD_RESET_BANNER';
+export const DISMISS_PASSWORD_RESET_BANNER = 'DISMISS_PASSWORD_RESET_BANNER';
+
+// Backup login form data
+export const backupLoginForm = () => ({
+  type: BACKUP_LOGIN_DATA.BASE,
+});
+
+export const backupLoginFormBegin = (data) => ({
+  type: BACKUP_LOGIN_DATA.BEGIN,
+  payload: { ...data },
+});
 
 // Login
 export const loginRequest = creds => ({
@@ -24,15 +34,6 @@ export const loginRequestFailure = (loginError) => ({
   payload: { loginError },
 });
 
-export const loginRequestReset = () => ({
-  type: LOGIN_REQUEST.RESET,
-});
-
-export const setLoginFormData = (formData) => ({
-  type: LOGIN_PERSIST_FORM_DATA,
-  payload: { formData },
-});
-
-export const loginRemovePasswordResetBanner = () => ({
-  type: LOGIN_REMOVE_PASSWORD_RESET_BANNER,
+export const dismissPasswordResetBanner = () => ({
+  type: DISMISS_PASSWORD_RESET_BANNER,
 });

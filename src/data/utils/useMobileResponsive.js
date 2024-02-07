@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { breakpoints } from '@edx/paragon';
+import { breakpoints } from '@openedx/paragon';
 
 /**
  * A react hook used to determine if the current window is mobile or not.

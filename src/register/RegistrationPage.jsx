@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Form, Spinner, StatefulButton } from '@edx/paragon';
+import { Form, Spinner, StatefulButton } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
@@ -14,7 +14,6 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
-import ThirdPartyAuth from './components/ThirdPartyAuth';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
@@ -29,10 +28,14 @@ import { getBackendValidations, isFormValid, prepareRegistrationPayload } from '
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
 import {
-  InstitutionLogistration, PasswordField, RedirectLogistration, ThirdPartyAuthAlert,
+  InstitutionLogistration,
+  PasswordField,
+  RedirectLogistration,
+  ThirdPartyAuthAlert,
 } from '../common-components';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
+import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
   COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';

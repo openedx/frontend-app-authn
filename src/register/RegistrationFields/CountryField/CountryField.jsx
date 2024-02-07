@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@edx/paragon';
+import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -48,6 +48,11 @@ const CountryField = (props) => {
       onChangeHandler(
         { target: { name: 'country' } },
         { countryCode, displayValue: countryDisplayValue },
+      );
+    } else if (!selectedCountry.countryCode) {
+      onChangeHandler(
+        { target: { name: 'country' } },
+        { countryCode: '', displayValue: '' },
       );
     }
   }, [backendCountryCode, countryList]); // eslint-disable-line react-hooks/exhaustive-deps
