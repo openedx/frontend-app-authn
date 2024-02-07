@@ -12,13 +12,13 @@ export const INVALID_NAME_REGEX = /https?:\/\/(?:[-\w.]|(?:%[\da-fA-F]{2}))*/g;
 const validateName = (value, fieldName, formatMessage) => {
   let fieldError;
   if (!value.trim()) {
-    fieldError = fieldName === 'lastname'
-      ? formatMessage(messages['empty.lastname.field.error'])
-      : formatMessage(messages['empty.firstname.field.error']);
+    fieldError = fieldName === 'lastName'
+      ? formatMessage(messages['empty.lastName.field.error'])
+      : formatMessage(messages['empty.firstName.field.error']);
   } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
-    fieldError = fieldName === 'lastname'
-      ? formatMessage(messages['lastname.validation.message'])
-      : formatMessage(messages['firstname.validation.message']);
+    fieldError = fieldName === 'lastName'
+      ? formatMessage(messages['lastName.validation.message'])
+      : formatMessage(messages['firstName.validation.message']);
   }
   return fieldError;
 };

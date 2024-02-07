@@ -120,10 +120,10 @@ const RegistrationPage = (props) => {
       }
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
         const {
-          firstname = '', lastname = '', username = '', email = '',
+          firstName = '', lastName = '', username = '', email = '',
         } = pipelineUserDetails;
         setFormFields(prevState => ({
-          ...prevState, firstname, lastname, username, email,
+          ...prevState, firstName, lastName, username, email,
         }));
         dispatch(setUserPipelineDataLoaded(true));
       }
@@ -312,22 +312,22 @@ const RegistrationPage = (props) => {
             />
             <Form id="registration-form" name="registration-form">
               <NameField
-                name="firstname"
-                value={formFields.firstname}
+                name="firstName"
+                value={formFields.firstName}
                 handleChange={handleOnChange}
                 handleErrorChange={handleErrorChange}
-                errorMessage={errors.firstname}
-                floatingLabel={formatMessage(messages['registration.firstname.label'])}
+                errorMessage={errors.firstName}
+                floatingLabel={formatMessage(messages['registration.firstName.label'])}
               />
               <NameField
-                name="lastname"
-                value={formFields.lastname}
+                name="lastName"
+                value={formFields.lastName}
                 shouldFetchUsernameSuggestions={!formFields.username.trim()}
-                fullName={`${formFields.firstname} ${formFields.lastname}`}
+                fullName={`${formFields.firstName} ${formFields.lastName}`}
                 handleChange={handleOnChange}
                 handleErrorChange={handleErrorChange}
-                errorMessage={errors.lastname}
-                floatingLabel={formatMessage(messages['registration.lastname.label'])}
+                errorMessage={errors.lastName}
+                floatingLabel={formatMessage(messages['registration.lastName.label'])}
               />
               <EmailField
                 name="email"
