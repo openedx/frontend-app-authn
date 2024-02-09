@@ -115,6 +115,10 @@ The authentication micro-frontend also requires the following additional variabl
      - Name of MFE, this will be used by the API to get runtime configurations for the specific micro frontend. For a frontend repo `frontend-app-appName`, use `appName` as APP_ID.
      - ``authn`` | ``''``
 
+   * - ``ENABLE_IMAGE_LAYOUT``
+     - Enables the image layout feature within the authn. When set to True, this feature allows the inclusion of images in the base container layout. For more details on configuring this feature, please refer to the `Modifying base container <docs/how_tos/modifying_base_container.rst>`_.
+     - ``true`` | ``''`` (empty strings are falsy)
+
 
 edX-specific Environment Variables
 ==================================
