@@ -1,4 +1,4 @@
-import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
+import { snakeCaseObject } from '@edx/frontend-platform';
 
 import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
 import messages from '../messages';
@@ -44,15 +44,15 @@ export const isFormValid = (
     }
   });
 
-  if (getConfig().SHOW_CONFIGURABLE_EDX_FIELDS) {
-    if (!configurableFormFields?.country?.displayValue) {
-      fieldErrors.country = formatMessage(messages['empty.country.field.error']);
-      isValid = false;
-    } else if (!configurableFormFields?.country?.countryCode) {
-      fieldErrors.country = formatMessage(messages['invalid.country.field.error']);
-      isValid = false;
-    }
+  // Don't validate when country field is optional or hidden and not present on registration form
+  if (configurableFormFields?.country && !configurableFormFields.country?.displayValue) {
+    fieldErrors.country = formatMessage(messages['empty.country.field.error']);
+    isValid = false;
+  } else if (configurableFormFields?.country && !configurableFormFields.country?.countryCode) {
+    fieldErrors.country = formatMessage(messages['invalid.country.field.error']);
+    isValid = false;
   }
+
   Object.keys(fieldDescriptions).forEach(key => {
     if (key === 'country' && !configurableFormFields.country.displayValue) {
       fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
