@@ -196,7 +196,7 @@ const ProgressiveProfiling = (props) => {
   });
 
   return (
-    <BaseContainer showWelcomeBanner username={authenticatedUser?.username}>
+    <BaseContainer showWelcomeBanner name={authenticatedUser?.username || authenticatedUser?.name}>
       <Helmet>
         <title>{formatMessage(messages['progressive.profiling.page.title'],
           { siteName: getConfig().SITE_NAME })}
