@@ -64,13 +64,13 @@ describe('RegistrationPage', () => {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      firstName: '', lastName: '', email: '', username: '', password: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      firstName: '', lastName: '', email: '', username: '', password: '',
     },
   };
 
@@ -134,7 +134,8 @@ describe('RegistrationPage', () => {
   });
 
   const populateRequiredFields = (getByLabelText, payload, isThirdPartyAuth = false) => {
-    fireEvent.change(getByLabelText('Full name'), { target: { value: payload.name, name: 'name' } });
+    fireEvent.change(getByLabelText('First name'), { target: { value: payload.first_name, name: 'firstName' } });
+    fireEvent.change(getByLabelText('Last name'), { target: { value: payload.last_name, name: 'lastName' } });
     fireEvent.change(getByLabelText('Public username'), { target: { value: payload.username, name: 'username' } });
     fireEvent.change(getByLabelText('Email'), { target: { value: payload.email, name: 'email' } });
 
@@ -152,7 +153,8 @@ describe('RegistrationPage', () => {
     });
 
     const emptyFieldValidation = {
-      name: 'Enter your full name',
+      firstName: 'Enter your first name',
+      lastName: 'Enter your last name',
       username: 'Username must be between 2 and 30 characters',
       email: 'Enter your email',
       password: 'Password criteria has not been met',
@@ -169,7 +171,8 @@ describe('RegistrationPage', () => {
       window.location = { href: getConfig().BASE_URL, search: '?next=/course/demo-course-url' };
 
       const payload = {
-        name: 'John Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
@@ -192,7 +195,8 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       const formPayload = {
-        name: 'John Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
         country: 'Pakistan',
@@ -228,7 +232,8 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       const payload = {
-        name: 'John Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
@@ -579,7 +584,8 @@ describe('RegistrationPage', () => {
           registrationFormData: {
             ...registrationFormData,
             formFields: {
-              name: 'John Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               username: 'john_doe',
               email: 'john.doe@yopmail.com',
               password: 'password1',
@@ -593,13 +599,15 @@ describe('RegistrationPage', () => {
 
       const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
 
-      const fullNameInput = container.querySelector('input#name');
+      const firstNameInput = container.querySelector('input#firstName');
+      const lastNameInput = container.querySelector('input#lastName');
       const usernameInput = container.querySelector('input#username');
       const emailInput = container.querySelector('input#email');
       const passwordInput = container.querySelector('input#password');
       const emailSuggestion = container.querySelector('.email-suggestion-alert-warning');
 
-      expect(fullNameInput.value).toEqual('John Doe');
+      expect(firstNameInput.value).toEqual('John');
+      expect(lastNameInput.value).toEqual('Doe');
       expect(usernameInput.value).toEqual('john_doe');
       expect(emailInput.value).toEqual('john.doe@yopmail.com');
       expect(passwordInput.value).toEqual('password1');
@@ -720,7 +728,8 @@ describe('RegistrationPage', () => {
           thirdPartyAuthContext: {
             ...initialState.commonComponents.thirdPartyAuthContext,
             pipelineUserDetails: {
-              name: 'John Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               username: 'john_doe',
               email: 'john.doe@example.com',
             },
@@ -751,7 +760,8 @@ describe('RegistrationPage', () => {
           registrationFormData: {
             ...registrationFormData,
             formFields: {
-              name: 'John Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               username: 'john_doe',
               email: 'john.doe@example.com',
             },
@@ -771,7 +781,8 @@ describe('RegistrationPage', () => {
             ...initialState.commonComponents.thirdPartyAuthContext,
             currentProvider: 'Apple',
             pipelineUserDetails: {
-              name: 'John Doe',
+              firstName: 'John',
+              lastName: 'Doe',
               username: 'john_doe',
               email: 'john.doe@example.com',
             },
@@ -783,7 +794,8 @@ describe('RegistrationPage', () => {
 
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
-        name: 'John Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
         country: 'PK',

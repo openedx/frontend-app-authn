@@ -22,13 +22,13 @@ export const defaultState = {
       marketingEmailsOptIn: true,
     },
     formFields: {
-      name: '', email: '', username: '', password: '',
+      firstName: '', lastName: '', email: '', username: '', password: '',
     },
     emailSuggestion: {
       suggestion: '', type: '',
     },
     errors: {
-      name: '', email: '', username: '', password: '',
+      firstName: '', lastName: '', email: '', username: '', password: '',
     },
   },
   validations: null,

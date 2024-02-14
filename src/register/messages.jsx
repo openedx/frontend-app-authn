@@ -7,10 +7,15 @@ const messages = defineMessages({
     description: 'register page title',
   },
   // Field labels
-  'registration.fullname.label': {
-    id: 'registration.fullname.label',
-    defaultMessage: 'Full name',
-    description: 'Label that appears above fullname field',
+  'registration.firstName.label': {
+    id: 'registration.firstName.label',
+    defaultMessage: 'First name',
+    description: 'Label that appears above first name field',
+  },
+  'registration.lastName.label': {
+    id: 'registration.lastName.label',
+    defaultMessage: 'Last name',
+    description: 'Label that appears above last name field',
   },
   'registration.email.label': {
     id: 'registration.email.label',
@@ -38,10 +43,10 @@ const messages = defineMessages({
     description: 'Text for opt in option on register page.',
   },
   // Help text
-  'help.text.name': {
-    id: 'help.text.name',
+  'help.text.firstName': {
+    id: 'help.text.firstName',
     defaultMessage: 'This name will be used by any certificates that you earn.',
-    description: 'Help text for fullname field on registration page',
+    description: 'Help text for first name field on registration page',
   },
   'help.text.username.1': {
     id: 'help.text.username.1',
@@ -76,10 +81,15 @@ const messages = defineMessages({
     description: 'Heading of institution page',
   },
   // Validation messages
-  'empty.name.field.error': {
-    id: 'empty.name.field.error',
-    defaultMessage: 'Enter your full name',
-    description: 'Error message for empty fullname field',
+  'empty.firstName.field.error': {
+    id: 'empty.firstName.field.error',
+    defaultMessage: 'Enter your first name',
+    description: 'Error message for empty first name field',
+  },
+  'empty.lastName.field.error': {
+    id: 'empty.lastName.field.error',
+    defaultMessage: 'Enter your last name',
+    description: 'Error message for empty last name field',
   },
   'empty.email.field.error': {
     id: 'empty.email.field.error',
@@ -121,10 +131,15 @@ const messages = defineMessages({
     defaultMessage: 'Username must be between 2 and 30 characters',
     description: 'Error message for empty username field',
   },
-  'name.validation.message': {
-    id: 'name.validation.message',
-    defaultMessage: 'Enter a valid name',
-    description: 'Validation message that appears when fullname contain URL',
+  'firstName.validation.message': {
+    id: 'firstName.validation.message',
+    defaultMessage: 'Enter a valid first name',
+    description: 'Validation message that appears when first name contain URL',
+  },
+  'lastName.validation.message': {
+    id: 'lastName.validation.message',
+    defaultMessage: 'Enter a valid last name',
+    description: 'Validation message that appears when last name contain URL',
   },
   'password.validation.message': {
     id: 'password.validation.message',

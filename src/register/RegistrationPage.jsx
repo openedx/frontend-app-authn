@@ -119,9 +119,11 @@ const RegistrationPage = (props) => {
         setErrorCode(prevState => ({ type: TPA_AUTHENTICATION_FAILURE, count: prevState.count + 1 }));
       }
       if (pipelineUserDetails && Object.keys(pipelineUserDetails).length !== 0) {
-        const { name = '', username = '', email = '' } = pipelineUserDetails;
+        const {
+          firstName = '', lastName = '', username = '', email = '',
+        } = pipelineUserDetails;
         setFormFields(prevState => ({
-          ...prevState, name, username, email,
+          ...prevState, firstName, lastName, username, email,
         }));
         dispatch(setUserPipelineDataLoaded(true));
       }
@@ -310,14 +312,22 @@ const RegistrationPage = (props) => {
             />
             <Form id="registration-form" name="registration-form">
               <NameField
-                name="name"
-                value={formFields.name}
-                shouldFetchUsernameSuggestions={!formFields.username.trim()}
+                name="firstName"
+                value={formFields.firstName}
                 handleChange={handleOnChange}
                 handleErrorChange={handleErrorChange}
-                errorMessage={errors.name}
-                helpText={[formatMessage(messages['help.text.name'])]}
-                floatingLabel={formatMessage(messages['registration.fullname.label'])}
+                errorMessage={errors.firstName}
+                floatingLabel={formatMessage(messages['registration.firstName.label'])}
+              />
+              <NameField
+                name="lastName"
+                value={formFields.lastName}
+                shouldFetchUsernameSuggestions={!formFields.username.trim()}
+                fullName={`${formFields.firstName} ${formFields.lastName}`}
+                handleChange={handleOnChange}
+                handleErrorChange={handleErrorChange}
+                errorMessage={errors.lastName}
+                floatingLabel={formatMessage(messages['registration.lastName.label'])}
               />
               <EmailField
                 name="email"
