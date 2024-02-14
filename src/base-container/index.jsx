@@ -13,7 +13,7 @@ import {
 import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
 import { DEFAULT_LAYOUT, IMAGE_LAYOUT } from './data/constants';
 
-const BaseContainer = ({ children, showWelcomeBanner, name }) => {
+const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
   const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
 
@@ -36,16 +36,16 @@ const BaseContainer = ({ children, showWelcomeBanner, name }) => {
     return (
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout name={name} /> : <ImageExtraSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageExtraSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.small.minWidth} maxWidth={breakpoints.small.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout name={name} /> : <ImageSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthMediumLayout name={name} /> : <ImageMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <ImageMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {showWelcomeBanner ? <AuthLargeLayout name={name} /> : <ImageLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <ImageLargeLayout />}
         </MediaQuery>
         <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
@@ -59,13 +59,13 @@ const BaseContainer = ({ children, showWelcomeBanner, name }) => {
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout name={name} /> : <DefaultSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <DefaultSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthMediumLayout name={name} /> : <DefaultMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <DefaultMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {showWelcomeBanner ? <AuthLargeLayout name={name} /> : <DefaultLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <DefaultLargeLayout />}
         </MediaQuery>
         <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
@@ -77,13 +77,13 @@ const BaseContainer = ({ children, showWelcomeBanner, name }) => {
 
 BaseContainer.defaultProps = {
   showWelcomeBanner: false,
-  name: null,
+  fullName: null,
 };
 
 BaseContainer.propTypes = {
   children: PropTypes.node.isRequired,
   showWelcomeBanner: PropTypes.bool,
-  name: PropTypes.string,
+  fullName: PropTypes.string,
 };
 
 export default BaseContainer;

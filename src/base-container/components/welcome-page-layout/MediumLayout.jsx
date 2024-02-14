@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const MediumLayout = ({ name }) => {
+const MediumLayout = ({ fullName }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -22,7 +22,7 @@ const MediumLayout = ({ name }) => {
             <div className="medium-yellow-line mt-5 mr-n2" />
             <div>
               <h1 className="h3 data-hj-suppress mw-320">
-                {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, name })}
+                {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, fullName })}
               </h1>
               <h2 className="display-1">
                 {formatMessage(messages['complete.your.profile.1'])}
@@ -46,7 +46,7 @@ const MediumLayout = ({ name }) => {
 };
 
 MediumLayout.propTypes = {
-  name: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
 };
 
 export default MediumLayout;

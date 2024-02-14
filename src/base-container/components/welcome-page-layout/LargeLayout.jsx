@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const LargeLayout = ({ name }) => {
+const LargeLayout = ({ fullName }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -20,7 +20,7 @@ const LargeLayout = ({ name }) => {
           <div className="large-screen-left-container mr-n4.5 large-yellow-line mt-5" />
           <div>
             <h1 className="welcome-to-platform data-hj-suppress">
-              {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, name })}
+              {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, fullName })}
             </h1>
             <h2 className="complete-your-profile">
               {formatMessage(messages['complete.your.profile.1'])}
@@ -43,7 +43,7 @@ const LargeLayout = ({ name }) => {
 };
 
 LargeLayout.propTypes = {
-  name: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
 };
 
 export default LargeLayout;
