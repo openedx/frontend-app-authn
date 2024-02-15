@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import { getConfig } from '@edx/frontend-platform';
 import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -12,8 +13,9 @@ import {
 import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
 import { DEFAULT_LAYOUT, IMAGE_LAYOUT } from './data/constants';
 
-const BaseContainer = ({ children, showWelcomeBanner, username }) => {
+const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
+  const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
 
   useEffect(() => {
     const initRebrandExperiment = () => {
@@ -30,20 +32,20 @@ const BaseContainer = ({ children, showWelcomeBanner, username }) => {
     initRebrandExperiment();
   }, []);
 
-  if (baseContainerVersion === IMAGE_LAYOUT) {
+  if (baseContainerVersion === IMAGE_LAYOUT || enableImageLayout) {
     return (
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <ImageExtraSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageExtraSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.small.minWidth} maxWidth={breakpoints.small.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <ImageSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthMediumLayout username={username} /> : <ImageMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <ImageMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {showWelcomeBanner ? <AuthLargeLayout username={username} /> : <ImageLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <ImageLargeLayout />}
         </MediaQuery>
         <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
@@ -57,13 +59,13 @@ const BaseContainer = ({ children, showWelcomeBanner, username }) => {
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout username={username} /> : <DefaultSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <DefaultSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthMediumLayout username={username} /> : <DefaultMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <DefaultMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {showWelcomeBanner ? <AuthLargeLayout username={username} /> : <DefaultLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <DefaultLargeLayout />}
         </MediaQuery>
         <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
@@ -75,13 +77,13 @@ const BaseContainer = ({ children, showWelcomeBanner, username }) => {
 
 BaseContainer.defaultProps = {
   showWelcomeBanner: false,
-  username: null,
+  fullName: null,
 };
 
 BaseContainer.propTypes = {
   children: PropTypes.node.isRequired,
   showWelcomeBanner: PropTypes.bool,
-  username: PropTypes.string,
+  fullName: PropTypes.string,
 };
 
 export default BaseContainer;

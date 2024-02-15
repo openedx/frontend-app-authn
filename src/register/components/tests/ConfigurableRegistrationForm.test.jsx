@@ -312,6 +312,7 @@ describe('ConfigurableRegistrationForm', () => {
       });
       const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
+      fireEvent.change(countryInput, { target: { value: 'Pak', name: 'country' } });
       fireEvent.blur(countryInput, { target: { value: 'Pak', name: 'country' } });
 
       const submitButton = container.querySelector('button.btn-brand');
