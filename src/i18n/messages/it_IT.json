@@ -64,7 +64,7 @@
   "non.compliant.password.message": "La tua password attuale non soddisfa i nuovi requisiti di sicurezza. Abbiamo appena inviato un messaggio di reimpostazione della password all&#39;indirizzo e-mail associato a questo account. Grazie per averci aiutato a mantenere i tuoi dati al sicuro.",
   "account.locked.out.message.1": "Per proteggere il tuo account, è stato temporaneamente bloccato. Riprova tra 30 minuti.",
   "enterprise.login.btn.text": "Credenziali aziendali o scolastiche",
-  "username.or.email.format.validation.less.chars.message": "Il nome utente o l&#39;e-mail deve contenere almeno 3 caratteri.",
+  "username.or.email.format.validation.less.chars.message": "Il nome utente o l&#39;e-mail deve contenere almeno 2 caratteri.",
   "email.validation.message": "Inserisci il tuo nome utente o e-mail",
   "password.validation.message": "I criteri della password non sono stati soddisfatti",
   "account.activation.success.message.title": "Completato correttamente! Hai attivato il tuo account. ",

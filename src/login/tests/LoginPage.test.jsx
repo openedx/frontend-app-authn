@@ -139,7 +139,7 @@ describe('LoginPage', () => {
 
   // ******** test login form validations ********
 
-  it('should match state for invalid email (less than 3 characters), on form submission', () => {
+  it('should match state for invalid email (less than 2 characters), on form submission', () => {
     store.dispatch = jest.fn(store.dispatch);
 
     render(reduxWrapper(<IntlLoginPage {...props} />));
@@ -151,14 +151,14 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByText(
       '',
       { selector: '#emailOrUsername' },
-    ), { target: { value: 'te' } });
+    ), { target: { value: 't' } });
 
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
     ));
 
-    expect(screen.getByText('Username or email must have at least 3 characters.')).toBeDefined();
+    expect(screen.getByText('Username or email must have at least 2 characters.')).toBeDefined();
   });
 
   it('should show error messages for required fields on empty form submission', () => {
@@ -181,14 +181,14 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByText(
       '',
       { selector: '#emailOrUsername' },
-    ), { target: { value: 'te', name: 'emailOrUsername' } });
+    ), { target: { value: 't', name: 'emailOrUsername' } });
 
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
     ));
 
-    expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual('Username or email must have at least 3 characters.');
+    expect(container.querySelector('div[feedback-for="emailOrUsername"]').textContent).toEqual('Username or email must have at least 2 characters.');
   });
 
   // ******** test field focus in functionality ********
