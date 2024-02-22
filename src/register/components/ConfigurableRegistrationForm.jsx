@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import { FormFieldRenderer } from '../../field-renderer';
 import { FIELDS } from '../data/constants';
+import { FIRST_STEP, shouldDisplayFieldInExperiment } from '../data/optimizelyExperiment/helper';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
 
@@ -31,6 +32,8 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFormFields,
     autoSubmitRegistrationForm,
+    simplifyRegistrationExpVariation,
+    simplifiedRegistrationPageStep,
   } = props;
 
   const countryList = useMemo(() => getCountryList(getLocale()), []);
@@ -105,7 +108,9 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
-  if (flags.showConfigurableRegistrationFields) {
+  if (flags.showConfigurableRegistrationFields && shouldDisplayFieldInExperiment(
+    'other_fields', simplifyRegistrationExpVariation, simplifiedRegistrationPageStep,
+  )) {
     Object.keys(fieldDescriptions).forEach(fieldName => {
       const fieldData = fieldDescriptions[fieldName];
       switch (fieldData.name) {
@@ -157,7 +162,9 @@ const ConfigurableRegistrationForm = (props) => {
     });
   }
 
-  if (flags.showConfigurableEdxFields || showCountryField) {
+  if ((flags.showConfigurableEdxFields || showCountryField) && shouldDisplayFieldInExperiment(
+    'country', simplifyRegistrationExpVariation, simplifiedRegistrationPageStep,
+  )) {
     formFieldDescriptions.push(
       <span key="country">
         <CountryField
@@ -173,7 +180,9 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
-  if (flags.showMarketingEmailOptInCheckbox) {
+  if (flags.showMarketingEmailOptInCheckbox && shouldDisplayFieldInExperiment(
+    'marketing_email_opt_in', simplifyRegistrationExpVariation, simplifiedRegistrationPageStep,
+  )) {
     formFieldDescriptions.push(
       <span key="marketing_email_opt_in">
         <FormFieldRenderer
@@ -192,7 +201,10 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
-  if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
+  if ((flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode)
+      && shouldDisplayFieldInExperiment(
+        'honor_code', simplifyRegistrationExpVariation, simplifiedRegistrationPageStep,
+      )) {
     formFieldDescriptions.push(
       <span key="honor_code">
         <HonorCode fieldType="tos_and_honor_code" onChangeHandler={handleOnChange} value={formFields.honor_code} />
@@ -227,11 +239,15 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
   autoSubmitRegistrationForm: PropTypes.bool,
+  simplifyRegistrationExpVariation: PropTypes.string,
+  simplifiedRegistrationPageStep: PropTypes.string,
 };
 
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   autoSubmitRegistrationForm: false,
+  simplifyRegistrationExpVariation: '',
+  simplifiedRegistrationPageStep: FIRST_STEP,
 };
 
 export default ConfigurableRegistrationForm;

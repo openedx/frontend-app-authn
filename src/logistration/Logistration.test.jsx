@@ -15,12 +15,15 @@ import {
 } from '../data/constants';
 import { backupLoginForm } from '../login/data/actions';
 import { backupRegistrationForm } from '../register/data/actions';
+import useSimplifyRegistrationExperimentVariation
+  from '../register/data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
 }));
 jest.mock('@edx/frontend-platform/auth');
+jest.mock('../register/data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation', () => jest.fn());
 
 const mockStore = configureStore();
 const IntlLogistration = injectIntl(Logistration);
@@ -83,6 +86,7 @@ describe('Logistration', () => {
         username: 'test-user',
       })),
     }));
+    useSimplifyRegistrationExperimentVariation.mockReturnValue('default-register-page');
 
     configure({
       loggingService: { logError: jest.fn() },

@@ -3,9 +3,12 @@ import {
   REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
-  REGISTER_SET_COUNTRY_CODE, REGISTER_SET_USER_PIPELINE_DATA_LOADED,
+  REGISTER_SET_COUNTRY_CODE,
+  REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA,
+  REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTRATION_CLEAR_BACKEND_ERROR,
 } from './actions';
+import { FIRST_STEP } from './optimizelyExperiment/helper';
 import {
   DEFAULT_STATE,
   PENDING_STATE,
@@ -35,8 +38,12 @@ export const defaultState = {
   submitState: DEFAULT_STATE,
   userPipelineDataLoaded: false,
   usernameSuggestions: [],
+  usernameSuggestionsBackup: [], // Temporary field for Simplify registration experiment
   validationApiRateLimited: false,
   shouldBackupState: false,
+  simplifyRegExpVariation: '',
+  simplifiedRegisterPageStep: FIRST_STEP,
+  isValidatingSimplifiedRegisterFirstPage: false,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -88,6 +95,7 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         validations: validationWithoutUsernameSuggestions,
+        isValidatingSimplifiedRegisterFirstPage: action.payload?.isValidatingSimplifiedRegisterFirstPage,
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
       };
     }
@@ -100,6 +108,7 @@ const reducer = (state = defaultState, action = {}) => {
     case REGISTER_CLEAR_USERNAME_SUGGESTIONS:
       return {
         ...state,
+        usernameSuggestionsBackup: action.payload?.isSuggestionClicked ? state.usernameSuggestions : [],
         usernameSuggestions: [],
       };
     case REGISTER_SET_COUNTRY_CODE: {
@@ -117,6 +126,16 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         userPipelineDataLoaded: value,
+      };
+    }
+    case REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA: {
+      const { simplifyRegExpVariation: expVariation, simplifiedRegisterPageStep: pageStep } = action.payload;
+      return {
+        ...state,
+        simplifyRegExpVariation: expVariation,
+        simplifiedRegisterPageStep: pageStep,
+        isValidatingSimplifiedRegisterFirstPage: pageStep === FIRST_STEP
+          ? false : state.isValidatingSimplifiedRegisterFirstPage,
       };
     }
     default:
