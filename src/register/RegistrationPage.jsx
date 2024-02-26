@@ -33,6 +33,7 @@ import {
   SECOND_STEP,
   shouldDisplayFieldInExperiment,
   SIMPLIFIED_REGISTRATION_VARIATION,
+  validateSimplifiedRegistrationFirstStepPayload,
 } from './data/optimizelyExperiment/helper';
 import {
   trackSimplifyRegistrationContinueBtnClicked,
@@ -41,7 +42,7 @@ import {
 import useSimplifyRegistrationExperimentVariation
   from './data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
 import {
-  getBackendValidations, isFormValid, prepareRegistrationPayload, validatePasswordField,
+  getBackendValidations, isFormValid, prepareRegistrationPayload,
 } from './data/utils';
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
@@ -305,14 +306,18 @@ const RegistrationPage = (props) => {
         formFields,
         configurableFormFields,
       );
-      // We need to explicitly validated password field because the validations for password value
-      // are different at frontend and backend.
-      const passwordFieldError = validatePasswordField(payload.password, formatMessage);
-      if (passwordFieldError) {
-        setErrors(prevErrors => ({
-          ...prevErrors,
-          password: passwordFieldError,
-        }));
+      const {
+        isValid,
+        fieldErrors,
+      } = validateSimplifiedRegistrationFirstStepPayload(payload, errors, formatMessage);
+
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        ...fieldErrors,
+      }));
+      // returning if not valid
+      if (!isValid) {
+        setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       } else {
         dispatch(fetchRealtimeValidations(payload, true));
       }
