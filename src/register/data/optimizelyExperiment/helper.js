@@ -4,6 +4,7 @@
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 
 import messages from '../../messages';
+import { validatePasswordField } from '../utils';
 
 export const DEFAULT_VARIATION = 'default-register-page';
 export const SIMPLIFIED_REGISTRATION_VARIATION = 'simplified-register-page';
@@ -77,4 +78,23 @@ export const prepareSimplifiedRegistrationFirstStepPayload = (
 
   payload = { ...payload };
   return payload;
+};
+
+export const validateSimplifiedRegistrationFirstStepPayload = (payload, errors, formatMessage) => {
+  const fieldErrors = { ...errors };
+  let isValid = true;
+  Object.keys(payload).forEach(key => {
+    if (key === 'password') {
+      // We need to explicitly validated password field because the validations for password value
+      // are different at frontend and backend.
+      fieldErrors[key] = validatePasswordField(payload[key], formatMessage);
+    } else if (!payload[key]) {
+      fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+    }
+    if (fieldErrors[key]) {
+      isValid = false;
+    }
+  });
+
+  return { isValid, fieldErrors };
 };

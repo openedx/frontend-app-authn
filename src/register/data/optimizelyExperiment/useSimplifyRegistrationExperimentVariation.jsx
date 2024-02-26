@@ -46,7 +46,9 @@ const useSimplifyRegistrationExperimentVariation = (
     return () => {
       clearTimeout(timer);
     };
-  }, [currentProvider, initExpVariation, registrationEmbedded, thirdPartyAuthApiStatus, tpaHint, variation]);
+  }, [ // eslint-disable-line react-hooks/exhaustive-deps
+    currentProvider, initExpVariation, registrationEmbedded, thirdPartyAuthApiStatus, tpaHint,
+  ]);
 
   return variation;
 };
