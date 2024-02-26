@@ -9,7 +9,7 @@ import { trackSimplifyRegistrationFirstStepViewed } from './track';
 import { COMPLETE_STATE } from '../../../data/constants';
 
 /**
- * This hooks returns activates simplify registration experiment and returns the experiment
+ * This hook returns activates simplify registration experiment and returns the experiment
  * variation for the user.
  */
 const useSimplifyRegistrationExperimentVariation = (
