@@ -6,6 +6,7 @@ import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
 import messages from '../../messages';
 import { validatePasswordField } from '../utils';
 
+export const NOT_INITIALIZED = 'experiment-not-initialized';
 export const DEFAULT_VARIATION = 'default-register-page';
 export const SIMPLIFIED_REGISTRATION_VARIATION = 'simplified-register-page';
 
@@ -41,7 +42,8 @@ export function activateSimplifyRegistrationExperiment() {
  * registration page experiment
  */
 export const shouldDisplayFieldInExperiment = (fieldName, expVariation, registerPageStep) => (
-  !expVariation || expVariation === DEFAULT_VARIATION || (expVariation === SIMPLIFIED_REGISTRATION_VARIATION
+  !expVariation || expVariation === NOT_INITIALIZED || expVariation === DEFAULT_VARIATION
+  || (expVariation === SIMPLIFIED_REGISTRATION_VARIATION
     && (
       (registerPageStep === FIRST_STEP && fieldName !== 'username')
       || (registerPageStep === SECOND_STEP && SIMPLIFIED_REGISTER_PAGE_SECOND_STEP_FIELDS.includes(fieldName))
@@ -80,16 +82,43 @@ export const prepareSimplifiedRegistrationFirstStepPayload = (
   return payload;
 };
 
-export const validateSimplifiedRegistrationFirstStepPayload = (payload, errors, formatMessage) => {
+export const validateSimplifiedRegistrationFirstStepPayload = (
+  payload, errors, configurableFormFields, fieldDescriptions, formatMessage,
+) => {
   const fieldErrors = { ...errors };
   let isValid = true;
-  Object.keys(payload).forEach(key => {
+
+  // We dont want to validate username since it is in second step of registration
+  const fieldsPayload = { ...payload };
+  delete fieldsPayload.username;
+
+  Object.keys(fieldsPayload).forEach(key => {
     if (key === 'password') {
       // We need to explicitly validated password field because the validations for password value
       // are different at frontend and backend.
-      fieldErrors[key] = validatePasswordField(payload[key], formatMessage);
-    } else if (!payload[key]) {
+      fieldErrors[key] = validatePasswordField(fieldsPayload[key], formatMessage);
+    } else if (!fieldsPayload[key]) {
       fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+    }
+    if (fieldErrors[key]) {
+      isValid = false;
+    }
+  });
+
+  // Don't validate when country field is optional or hidden and not present on registration form
+  if (configurableFormFields?.country && !configurableFormFields.country?.displayValue) {
+    fieldErrors.country = formatMessage(messages['empty.country.field.error']);
+    isValid = false;
+  } else if (configurableFormFields?.country && !configurableFormFields.country?.countryCode) {
+    fieldErrors.country = formatMessage(messages['invalid.country.field.error']);
+    isValid = false;
+  }
+
+  Object.keys(fieldDescriptions).forEach(key => {
+    if (key === 'country' && !configurableFormFields.country.displayValue) {
+      fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
+    } else if (!configurableFormFields[key]) {
+      fieldErrors[key] = fieldDescriptions[key].error_message;
     }
     if (fieldErrors[key]) {
       isValid = false;
