@@ -12,6 +12,8 @@ import configureStore from 'redux-mock-store';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
+import useSimplifyRegistrationExperimentVariation
+  from '../../data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
 import RegistrationPage from '../../RegistrationPage';
 import RegistrationFailureMessage from '../RegistrationFailure';
 
@@ -23,6 +25,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('../../data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation', () => jest.fn());
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
@@ -121,6 +124,7 @@ describe('RegistrationFailure', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+    useSimplifyRegistrationExperimentVariation.mockReturnValue('default-register-page');
   });
 
   afterEach(() => {

@@ -17,6 +17,8 @@ import {
   setUserPipelineDataLoaded,
 } from './data/actions';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
+import useSimplifyRegistrationExperimentVariation
+  from './data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
 import RegistrationPage from './RegistrationPage';
 import {
   AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
@@ -30,6 +32,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('./data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation', () => jest.fn());
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -100,6 +103,7 @@ describe('RegistrationPage', () => {
       registrationError: {},
       registrationFormData,
       usernameSuggestions: [],
+      usernameSuggestionsBackup: [],
     },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
@@ -127,6 +131,8 @@ describe('RegistrationPage', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+
+    useSimplifyRegistrationExperimentVariation.mockReturnValue('default-register-page');
   });
 
   afterEach(() => {
@@ -516,7 +522,12 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+      // TODO: temporary change to fix test
+      // expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {
+        picked_suggested_username: false,
+        variation: 'default-register-page',
+      });
     });
 
     it('should populate form with pipeline user details', () => {

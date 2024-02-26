@@ -37,6 +37,10 @@ describe('Registration Reducer Tests', () => {
     usernameSuggestions: [],
     validationApiRateLimited: false,
     shouldBackupState: false,
+    isValidatingSimplifiedRegisterFirstPage: false,
+    simplifiedRegisterPageStep: 'first-step',
+    simplifyRegExpVariation: '',
+    usernameSuggestionsBackup: [],
   };
 
   it('should return the initial state', () => {
@@ -61,6 +65,7 @@ describe('Registration Reducer Tests', () => {
         ...defaultState,
         usernameSuggestions,
         validations: validationWithoutUsernameSuggestions,
+        isValidatingSimplifiedRegisterFirstPage: undefined,
       },
     );
   });

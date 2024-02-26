@@ -13,12 +13,13 @@ import {
   TPA_AUTHENTICATION_FAILURE,
   TPA_SESSION_EXPIRED,
 } from '../data/constants';
+import { FIRST_STEP, SECOND_STEP, SIMPLIFIED_REGISTRATION_VARIATION } from '../data/optimizelyExperiment/helper';
 import messages from '../messages';
 
 const RegistrationFailureMessage = (props) => {
   const { formatMessage } = useIntl();
   const {
-    context, errorCode, failureCount,
+    context, errorCode, failureCount, simplifyRegistrationExpVariation, simplifiedRegistrationPageStep,
   } = props;
 
   useEffect(() => {
@@ -49,7 +50,12 @@ const RegistrationFailureMessage = (props) => {
       errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
       break;
     default:
-      errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
+      if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
+          && simplifiedRegistrationPageStep === SECOND_STEP) {
+        errorMessage = formatMessage(messages['simplify.registration.form.submission.error']);
+      } else {
+        errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
+      }
       break;
   }
 
@@ -65,6 +71,8 @@ RegistrationFailureMessage.defaultProps = {
   context: {
     errorMessage: null,
   },
+  simplifyRegistrationExpVariation: '',
+  simplifiedRegistrationPageStep: FIRST_STEP,
 };
 
 RegistrationFailureMessage.propTypes = {
@@ -74,6 +82,8 @@ RegistrationFailureMessage.propTypes = {
   }),
   errorCode: PropTypes.string.isRequired,
   failureCount: PropTypes.number.isRequired,
+  simplifyRegistrationExpVariation: PropTypes.string,
+  simplifiedRegistrationPageStep: PropTypes.string,
 };
 
 export default RegistrationFailureMessage;

@@ -91,7 +91,7 @@ const UsernameField = (props) => {
     event.preventDefault();
     handleErrorChange('username', ''); // clear error
     handleChange({ target: { name: 'username', value: suggestion } }); // to set suggestion as value
-    dispatch(clearUsernameSuggestions());
+    dispatch(clearUsernameSuggestions(true));
   };
 
   const handleUsernameSuggestionClose = () => {
