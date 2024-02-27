@@ -187,7 +187,7 @@ All community members are expected to follow the `Open edX Code of Conduct <http
 People
 ======
 The assigned maintainers for this component and other project details may be
-found in `Backstage <https://backstage.openedx.org/catalog/default/group/vanguards>`_. Backstage pulls this data from the ``catalog-info.yaml``
+found in `Backstage <https://backstage.openedx.org/catalog/default/group/2u-vanguards>`_. Backstage pulls this data from the ``catalog-info.yaml``
 file in this repo.
 
 Reporting Security Issues
