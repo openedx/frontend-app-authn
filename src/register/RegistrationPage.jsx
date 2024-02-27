@@ -27,6 +27,7 @@ import {
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import {
+  DEFAULT_VARIATION,
   FIRST_STEP,
   getRegisterButtonLabelInExperiment,
   NOT_INITIALIZED,
@@ -307,10 +308,13 @@ const RegistrationPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
+        || simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
+      trackSimplifyRegistrationContinueBtnClicked(simplifyRegistrationExpVariation);
+    }
 
     if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
         && simplifiedRegisterPageStep === FIRST_STEP) {
-      trackSimplifyRegistrationContinueBtnClicked();
       const { isValid, fieldErrors } = validateSimplifiedRegistrationFirstStepPayload(
         formFields, errors, configurableFormFields, fieldDescriptions, formatMessage,
       );
