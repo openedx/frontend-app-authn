@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 
 import {
   activateSimplifyRegistrationExperiment,
-  DEFAULT_VARIATION,
   getSimplifyRegistrationExperimentVariation,
+  NOT_INITIALIZED,
 } from './helper';
 import { trackSimplifyRegistrationFirstStepViewed } from './track';
 import { COMPLETE_STATE } from '../../../data/constants';
@@ -35,7 +35,7 @@ const useSimplifyRegistrationExperimentVariation = (
       } else {
         // This is to handle the case when user dont get variation for some reason, the register page
         // shows unlimited spinner.
-        setVariation(DEFAULT_VARIATION);
+        setVariation(NOT_INITIALIZED);
       }
     };
 

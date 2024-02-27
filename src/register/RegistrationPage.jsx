@@ -29,6 +29,7 @@ import {
 import {
   FIRST_STEP,
   getRegisterButtonLabelInExperiment,
+  NOT_INITIALIZED,
   prepareSimplifiedRegistrationFirstStepPayload,
   SECOND_STEP,
   shouldDisplayFieldInExperiment,
@@ -219,10 +220,18 @@ const RegistrationPage = (props) => {
   useEffect(() => {
     if (registrationResult.success) {
       // This event is used by GTM
-      sendTrackEvent('edx.bi.user.account.registered.client', {
-        variation: simplifyRegistrationExpVariation,
-        picked_suggested_username: usernameSuggestionsBackup.includes(registrationResult?.authenticatedUser?.username),
-      });
+      let registeredEventProps = {};
+
+      if (simplifyRegistrationExpVariation !== NOT_INITIALIZED) {
+        registeredEventProps = {
+          variation: simplifyRegistrationExpVariation,
+          picked_suggested_username: usernameSuggestionsBackup.includes(
+            registrationResult?.authenticatedUser?.username,
+          ),
+        };
+      }
+
+      sendTrackEvent('edx.bi.user.account.registered.client', registeredEventProps);
 
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
@@ -302,15 +311,9 @@ const RegistrationPage = (props) => {
     if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
         && simplifiedRegisterPageStep === FIRST_STEP) {
       trackSimplifyRegistrationContinueBtnClicked();
-      const payload = prepareSimplifiedRegistrationFirstStepPayload(
-        formFields,
-        configurableFormFields,
+      const { isValid, fieldErrors } = validateSimplifiedRegistrationFirstStepPayload(
+        formFields, errors, configurableFormFields, fieldDescriptions, formatMessage,
       );
-      const {
-        isValid,
-        fieldErrors,
-      } = validateSimplifiedRegistrationFirstStepPayload(payload, errors, formatMessage);
-
       setErrors(prevErrors => ({
         ...prevErrors,
         ...fieldErrors,
@@ -319,6 +322,10 @@ const RegistrationPage = (props) => {
       if (!isValid) {
         setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       } else {
+        const payload = prepareSimplifiedRegistrationFirstStepPayload(
+          formFields,
+          configurableFormFields,
+        );
         dispatch(fetchRealtimeValidations(payload, true));
       }
     } else {
