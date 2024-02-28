@@ -40,6 +40,7 @@ import {
 import {
   trackSimplifyRegistrationContinueBtnClicked,
   trackSimplifyRegistrationSecondStepViewed,
+  trackSimplifyRegistrationValidatedSubmitBtnClicked,
 } from './data/optimizelyExperiment/track';
 import useSimplifyRegistrationExperimentVariation
   from './data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
@@ -146,6 +147,7 @@ const RegistrationPage = (props) => {
     if (isValidatingSimplifiedRegisterFirstPage && backendValidations
         && Object.values(backendValidations).every(value => value === '')
     ) {
+      trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
       trackSimplifyRegistrationSecondStepViewed();
       dispatch(setSimplifyRegExperimentData(simplifyRegistrationExpVariation, SECOND_STEP));
     }
@@ -294,6 +296,10 @@ const RegistrationPage = (props) => {
       return;
     }
 
+    if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
+        || simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
+      trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
+    }
     // Preparing payload for submission
     payload = prepareRegistrationPayload(
       payload,
