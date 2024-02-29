@@ -7,6 +7,7 @@ import {
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE,
+  REGISTER_SET_EMAIL_SUGGESTIONS,
   REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTRATION_CLEAR_BACKEND_ERROR,
 } from '../actions';
@@ -64,6 +65,29 @@ describe('Registration Reducer Tests', () => {
       },
     );
   });
+
+  it('should set email suggestions', () => {
+    const emailSuggestion = {
+      type: 'test type',
+      suggestion: 'test suggestion',
+    };
+    const action = {
+      type: REGISTER_SET_EMAIL_SUGGESTIONS,
+      payload: { emailSuggestion },
+    };
+
+    expect(reducer(defaultState, action)).toEqual(
+      {
+        ...defaultState,
+        registrationFormData: {
+          ...defaultState.registrationFormData,
+          emailSuggestion: {
+            type: 'test type', suggestion: 'test suggestion',
+          },
+        },
+      });
+  });
+
   it('should set redirect url dashboard on registration success action', () => {
     const payload = {
       redirectUrl: `${getConfig().BASE_URL}${DEFAULT_REDIRECT_URL}`,

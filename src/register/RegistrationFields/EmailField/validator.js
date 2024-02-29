@@ -91,7 +91,7 @@ export const validateEmailAddress = (value, username, domainName) => {
 const validateEmail = (value, confirmEmailValue, formatMessage) => {
   let fieldError = '';
   let confirmEmailError = '';
-  let emailSuggestion = {};
+  let emailSuggestion = { suggestion: '', type: '' };
 
   if (!value) {
     fieldError = formatMessage(messages['empty.email.field.error']);

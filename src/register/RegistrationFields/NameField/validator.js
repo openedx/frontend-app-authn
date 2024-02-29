@@ -4,7 +4,7 @@ export const INVALID_NAME_REGEX = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{
 export const urlRegex = new RegExp(INVALID_NAME_REGEX);
 
 const validateName = (value, formatMessage) => {
-  let fieldError;
+  let fieldError = '';
   if (!value.trim()) {
     fieldError = formatMessage(messages['empty.name.field.error']);
   } else if (value && value.match(urlRegex)) {

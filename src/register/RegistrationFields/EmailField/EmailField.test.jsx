@@ -46,7 +46,14 @@ describe('EmailField', () => {
   );
 
   const initialState = {
-    register: {},
+    register: {
+      registrationFormData: {
+        emailSuggestion: {
+          suggestion: 'example@gmail.com',
+          type: 'warning',
+        },
+      },
+    },
   };
 
   beforeEach(() => {

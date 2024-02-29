@@ -235,6 +235,53 @@ describe('RegistrationPage', () => {
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
     });
 
+    it('should display an error when form is submitted with an invalid email', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      const emailError = 'Enter a valid email address';
+
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro_qa',
+        email: 'petro  @example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      populateRequiredFields(registrationPage, formPayload, true);
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(
+        registrationPage.find('div[feedback-for="email"]').text(),
+      ).toEqual(emailError);
+    });
+
+    it('should display an error when form is submitted with an invalid username', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      const usernameError = 'Usernames can only contain letters (A-Z, a-z), numerals (0-9), '
+                            + 'underscores (_), and hyphens (-). Usernames cannot contain spaces';
+
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro qa',
+        email: 'petro@example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const registrationPage = mount(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      populateRequiredFields(registrationPage, formPayload, true);
+      registrationPage.find('button.btn-brand').simulate('click');
+      expect(
+        registrationPage.find('div[feedback-for="username"]').text(),
+      ).toEqual(usernameError);
+    });
+
     it('should submit form with marketing email opt in value', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: 'true',
