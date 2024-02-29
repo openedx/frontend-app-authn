@@ -204,7 +204,7 @@ const messages = defineMessages({
   // Simplify Registration experiment
   'simplified.registration.exp.button': {
     id: 'simplified.registration.exp.button',
-    defaultMessage: 'Continue',
+    defaultMessage: 'Complete account creation',
     description: 'Label text for simplified registration page second step',
   },
   'simplify.registration.username.guideline.content': {
