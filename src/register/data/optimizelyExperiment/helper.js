@@ -53,7 +53,7 @@ export const shouldDisplayFieldInExperiment = (fieldName, expVariation, register
 export const getRegisterButtonLabelInExperiment = (
   existingButtonLabel, expVariation, registerPageStep, formatMessage,
 ) => {
-  if (expVariation === SIMPLIFIED_REGISTRATION_VARIATION && registerPageStep === FIRST_STEP) {
+  if (expVariation === SIMPLIFIED_REGISTRATION_VARIATION && registerPageStep === SECOND_STEP) {
     return formatMessage(messages['simplified.registration.exp.button']);
   }
   return existingButtonLabel;
