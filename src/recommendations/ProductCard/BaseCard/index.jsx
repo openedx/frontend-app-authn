@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Badge, Card, Hyperlink } from '@edx/paragon';
+import { Badge, Card, Hyperlink } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import { truncateText } from '../../data/utils';
@@ -15,9 +15,9 @@ const BaseCard = ({
   productTypeCopy,
   footer,
   handleOnClick,
-  isLoading = false,
+  isLoading,
 }) => (
-  <div className="mr-4 recommendation-card" key={`container-${uuid}`}>
+  <div className="recommendation-card" key={`container-${uuid}`}>
     <Hyperlink
       target="_blank"
       className="card-box"
@@ -39,8 +39,8 @@ const BaseCard = ({
         />
         <Card.Header
           className="mt-2"
-          title={truncateText(title)}
-          subtitle={truncateText(subtitle)}
+          title={truncateText(title, 50)}
+          subtitle={truncateText(subtitle, 30)}
         />
         <Card.Section className="d-flex">
           <div className="product-badge">

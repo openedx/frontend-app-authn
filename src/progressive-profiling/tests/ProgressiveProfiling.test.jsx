@@ -5,10 +5,10 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
-import { act } from 'react-dom/test-utils';
-import { MemoryRouter, Router } from 'react-router-dom';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
+import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import {
@@ -16,9 +16,9 @@ import {
   COMPLETE_STATE, DEFAULT_REDIRECT_URL,
   EMBEDDED,
   FAILURE_STATE,
+  PENDING_STATE,
   RECOMMENDATIONS,
 } from '../../data/constants';
-import { activateRecommendationsExperiment } from '../../recommendations/optimizelyExperiment';
 import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
 
@@ -32,25 +32,32 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 }));
 jest.mock('@edx/frontend-platform/auth', () => ({
   configure: jest.fn(),
-  ensureAuthenticatedUser: jest.fn().mockImplementation(() => Promise.resolve(true)),
-  hydrateAuthenticatedUser: jest.fn().mockImplementation(() => Promise.resolve(true)),
   getAuthenticatedUser: jest.fn(),
 }));
 jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
 }));
-jest.mock('../../recommendations/optimizelyExperiment.js', () => ({
-  activateRecommendationsExperiment: jest.fn(),
-  trackRecommendationViewedOptimizely: jest.fn(),
-  RECOMMENDATIONS_EXP_VARIATION: 'welcome_page_recommendations_enabled',
-}));
+jest.mock('react-router-dom', () => {
+  const mockNavigation = jest.fn();
 
-const history = createMemoryHistory();
+  // eslint-disable-next-line react/prop-types
+  const Navigate = ({ to }) => {
+    mockNavigation(to);
+    return <div />;
+  };
+
+  return {
+    ...jest.requireActual('react-router-dom'),
+    Navigate,
+    mockNavigate: mockNavigation,
+    useLocation: jest.fn(),
+  };
+});
 
 describe('ProgressiveProfilingTests', () => {
-  mergeConfig({
-    AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/welcome',
-  });
+  let store = {};
+
+  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const registrationResult = { redirectUrl: getConfig().LMS_BASE_URL + DEFAULT_REDIRECT_URL, success: true };
   const fields = {
     company: { name: 'company', type: 'text', label: 'Company' },
@@ -63,9 +70,6 @@ describe('ProgressiveProfilingTests', () => {
   };
   const extendedProfile = ['company'];
   const optionalFields = { fields, extended_profile: extendedProfile };
-  let props = {};
-  let store = {};
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const initialState = {
     welcomePage: {},
     commonComponents: {
@@ -85,21 +89,6 @@ describe('ProgressiveProfilingTests', () => {
     </IntlProvider>
   );
 
-  const getProgressiveProfilingPage = async () => {
-    const progressiveProfilingPage = mount(reduxWrapper(
-      <Router history={history}>
-        <IntlProgressiveProfilingPage {...props} />
-      </Router>,
-    ));
-    await act(async () => {
-      await Promise.resolve(progressiveProfilingPage);
-      await new Promise(resolve => { setImmediate(resolve); });
-      progressiveProfilingPage.update();
-    });
-
-    return progressiveProfilingPage;
-  };
-
   beforeEach(() => {
     store = mockStore(initialState);
     configure({
@@ -110,90 +99,115 @@ describe('ProgressiveProfilingTests', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
-    props = {
-      location: {
-        state: {
-          registrationResult,
-          optionalFields,
-        },
+    useLocation.mockReturnValue({
+      state: {
+        registrationResult,
+        optionalFields,
       },
-    };
+    });
+    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
   });
 
-  it('should not display button "Learn more about how we use this information."', async () => {
+  // ******** test form links and modal ********
+
+  it('should not display button "Learn more about how we use this information."', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
+    const { queryByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const button = queryByRole('button', { name: /learn more about how we use this information/i });
 
-    expect(progressiveProfilingPage.find('a.pgn__hyperlink').exists()).toBeFalsy();
+    expect(button).toBeNull();
   });
 
-  it('should display button "Learn more about how we use this information."', async () => {
+  it('should display button "Learn more about how we use this information."', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
 
-    expect(progressiveProfilingPage.find('a.pgn__hyperlink').text()).toEqual('Learn more about how we use this information.');
+    const { getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+    const learnMoreButton = getByText('Learn more about how we use this information.');
+
+    expect(learnMoreButton).toBeDefined();
   });
 
-  it('should make identify call to segment on progressive profiling page', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-    await getProgressiveProfilingPage();
+  it('should open modal on pressing skip for now button', () => {
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
+    const { getByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+    const skipButton = getByRole('button', { name: /skip for now/i });
+    fireEvent.click(skipButton);
+
+    const modalContentContainer = document.getElementsByClassName('.pgn__modal-content-container');
+
+    expect(modalContentContainer).toBeTruthy();
+
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host: '' });
+  });
+
+  // ******** test event functionality ********
+
+  it('should make identify call to segment on progressive profiling page', () => {
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
     expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
     expect(identifyAuthenticatedUser).toHaveBeenCalled();
   });
 
-  it('should submit user profile details on form submission', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
+  it('should send analytic event for support link click', () => {
+    mergeConfig({
+      AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
+    });
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+    const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
+    fireEvent.click(supportLink);
+
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
+  });
+
+  it('should set empty host property value for non-embedded experience', () => {
+    const expectedEventProperties = {
+      isGenderSelected: false,
+      isYearOfBirthSelected: false,
+      isLevelOfEducationSelected: false,
+      isWorkExperienceSelected: false,
+      host: '',
+    };
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+    const nextButton = screen.getByText('Next');
+    fireEvent.click(nextButton);
+
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
+  });
+
+  // ******** test form submission ********
+
+  it('should submit user profile details on form submission', () => {
     const formPayload = {
       gender: 'm',
       extended_profile: [{ field_name: 'company', field_value: 'test company' }],
     };
     store.dispatch = jest.fn(store.dispatch);
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    progressiveProfilingPage.find('select#gender').simulate('change', { target: { value: 'm', name: 'gender' } });
-    progressiveProfilingPage.find('input#company').simulate('change', { target: { value: 'test company', name: 'company' } });
+    const { getByLabelText, getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-    progressiveProfilingPage.find('button.btn-brand').simulate('click');
+    const genderSelect = getByLabelText('Gender');
+    const companyInput = getByLabelText('Company');
+
+    fireEvent.change(genderSelect, { target: { value: 'm' } });
+    fireEvent.change(companyInput, { target: { value: 'test company' } });
+
+    fireEvent.click(getByText('Next'));
+
     expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('abc123', formPayload));
   });
 
-  it('should set host property value empty for non-embedded experience', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-    const expectedEventProperties = {
-      isGenderSelected: false,
-      isYearOfBirthSelected: false,
-      isLevelOfEducationSelected: false,
-      host: '',
-    };
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    progressiveProfilingPage.find('button.btn-brand').simulate('click');
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
-  });
-
-  it('should open modal on pressing skip for now button', async () => {
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-    delete window.location;
-    window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-
-    progressiveProfilingPage.find('button.btn-link').simulate('click');
-    expect(progressiveProfilingPage.find('.pgn__modal-content-container').exists()).toBeTruthy();
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host: '' });
-  });
-
-  it('should send analytic event for support link click', async () => {
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-
-    progressiveProfilingPage.find('.pp-page__support-link a[target="_blank"]').simulate('click');
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
-  });
-
-  it('should show error message when patch request fails', async () => {
+  it('should show error message when patch request fails', () => {
     store = mockStore({
       ...initialState,
       welcomePage: {
@@ -202,16 +216,33 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
 
-    const progressiveProfilingPage = await getProgressiveProfilingPage();
-    expect(progressiveProfilingPage.find('#pp-page-errors').exists()).toBeTruthy();
+    const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const errorElement = container.querySelector('#pp-page-errors');
+
+    expect(errorElement).toBeTruthy();
+  });
+
+  // ******** miscellaneous tests ********
+
+  it('should redirect to login page if unauthenticated user tries to access welcome page', () => {
+    getAuthenticatedUser.mockReturnValue(null);
+    delete window.location;
+    window.location = {
+      assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+      href: getConfig().BASE_URL,
+    };
+
+    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    expect(window.location.href).toEqual(DASHBOARD_URL);
   });
 
   describe('Recommendations test', () => {
+    window.OnetrustActiveGroups = 'C0003';
     mergeConfig({
-      ENABLE_POPULAR_AND_TRENDING_RECOMMENDATIONS: true,
+      ENABLE_POST_REGISTRATION_RECOMMENDATIONS: true,
     });
 
-    it('should redirect to recommendations page if recommendations are enabled', async () => {
+    it('should redirect to recommendations page if recommendations are enabled', () => {
       store = mockStore({
         ...initialState,
         welcomePage: {
@@ -219,56 +250,24 @@ describe('ProgressiveProfilingTests', () => {
           success: true,
         },
       });
-      activateRecommendationsExperiment.mockImplementation(() => 'welcome_page_recommendations_enabled');
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const nextButton = container.querySelector('button.btn-brand');
+      expect(nextButton.textContent).toEqual('Next');
 
-      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
-
-      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Next');
-      expect(history.location.pathname).toEqual(RECOMMENDATIONS);
-    });
-
-    it('should fire segments recommendations viewed and variation group events', async () => {
-      const viewedEventProperties = {
-        page: 'authn_recommendations',
-        products: [],
-        recommendation_type: '',
-        is_control: true,
-        user_id: 3,
-      };
-      const groupEventProperties = {
-        page: 'authn_recommendations',
-        variation: 'control',
-        user_id: 3,
-      };
-      activateRecommendationsExperiment.mockImplementation(() => 'control');
-      store = mockStore({
-        ...initialState,
-        welcomePage: {
-          ...initialState.welcomePage,
-          success: true,
-        },
-      });
-
-      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-      await getProgressiveProfilingPage();
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.recommendations.group', groupEventProperties);
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.recommendations.viewed', viewedEventProperties);
+      expect(mockNavigate).toHaveBeenCalledWith(RECOMMENDATIONS);
     });
 
     it('should not redirect to recommendations page if user is on its way to enroll in a course', async () => {
       const redirectUrl = `${getConfig().LMS_BASE_URL}${DEFAULT_REDIRECT_URL}?enrollment_action=1`;
-      props = {
-        location: {
-          state: {
-            registrationResult: {
-              redirectUrl,
-              success: true,
-            },
-            optionalFields,
+      useLocation.mockReturnValue({
+        state: {
+          registrationResult: {
+            redirectUrl,
+            success: true,
           },
+          optionalFields,
         },
-      };
+      });
 
       store = mockStore({
         ...initialState,
@@ -278,10 +277,10 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const nextButton = container.querySelector('button.btn-brand');
+      expect(nextButton.textContent).toEqual('Submit');
 
-      expect(progressiveProfilingPage.find('button.btn-brand').text()).toEqual('Submit');
       expect(window.location.href).toEqual(redirectUrl);
     });
   });
@@ -293,7 +292,9 @@ describe('ProgressiveProfilingTests', () => {
     const host = 'http://example.com';
 
     beforeEach(() => {
-      props = {};
+      useLocation.mockReturnValue({
+        state: {},
+      });
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -304,23 +305,49 @@ describe('ProgressiveProfilingTests', () => {
       });
     });
 
-    it('should set host property value embedded host for on ramp experience for skip link event', async () => {
+    it('should set host property value embedded host for on ramp experience for skip link event', () => {
       delete window.location;
       window.location = {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
 
-      progressiveProfilingPage.find('button.btn-link').simulate('click');
+      const skipLinkButton = screen.getByText('Skip for now');
+      fireEvent.click(skipLinkButton);
+
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
     });
 
-    it('should set host property value to host where iframe is embedded for on ramp experience', async () => {
+    it('should show spinner while fetching the optional fields', () => {
+      delete window.location;
+      window.location = {
+        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: `?host=${host}&variant=${EMBEDDED}`,
+      };
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          thirdPartyAuthApiStatus: PENDING_STATE,
+          optionalFields,
+        },
+      });
+
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+      const tpaSpinnerElement = container.querySelector('#tpa-spinner');
+      expect(tpaSpinnerElement).toBeTruthy();
+    });
+
+    it('should set host property value to host where iframe is embedded for on ramp experience', () => {
       const expectedEventProperties = {
         isGenderSelected: false,
         isYearOfBirthSelected: false,
         isLevelOfEducationSelected: false,
+        isWorkExperienceSelected: false,
         host: 'http://example.com',
       };
       delete window.location;
@@ -328,12 +355,14 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}`,
       };
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
-      progressiveProfilingPage.find('button.btn-brand').simulate('click');
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const submitButton = screen.getByText('Next');
+      fireEvent.click(submitButton);
+
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.submit.clicked', expectedEventProperties);
     });
 
-    it('should render fields returned by backend API', async () => {
+    it('should render fields returned by backend API', () => {
       delete window.location;
       window.location = {
         assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
@@ -341,11 +370,13 @@ describe('ProgressiveProfilingTests', () => {
         search: `?variant=${EMBEDDED}&host=${host}`,
       };
 
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
-      expect(progressiveProfilingPage.find('#gender').exists()).toBeTruthy();
+      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+
+      const genderField = container.querySelector('#gender');
+      expect(genderField).toBeTruthy();
     });
 
-    it('should redirect to dashboard if API call to get form field fails', async () => {
+    it('should redirect to dashboard if API call to get form field fails', () => {
       delete window.location;
       window.location = {
         assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
@@ -360,11 +391,11 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      await getProgressiveProfilingPage();
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
-    it('should redirect to provided redirect url', async () => {
+    it('should redirect to provided redirect url', () => {
       const redirectUrl = 'https://redirect-test.com';
       delete window.location;
       window.location = {
@@ -372,7 +403,6 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL,
         search: `?variant=${EMBEDDED}&host=${host}&next=${redirectUrl}`,
       };
-      props = {};
       store = mockStore({
         ...initialState,
         commonComponents: {
@@ -389,8 +419,9 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const progressiveProfilingPage = await getProgressiveProfilingPage();
-      progressiveProfilingPage.find('button.btn-brand').simulate('click');
+      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const submitButton = screen.getByText('Submit');
+      fireEvent.click(submitButton);
       expect(window.location.href).toBe(redirectUrl);
     });
   });

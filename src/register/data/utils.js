@@ -1,112 +1,133 @@
-import { distance } from 'fastest-levenshtein';
+import { snakeCaseObject } from '@edx/frontend-platform';
 
-import {
-  COMMON_EMAIL_PROVIDERS,
-  COUNTRY_CODE_KEY,
-  COUNTRY_DISPLAY_KEY,
-  DEFAULT_SERVICE_PROVIDER_DOMAINS,
-  DEFAULT_TOP_LEVEL_DOMAINS,
-} from './constants';
+import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
+import messages from '../messages';
 
-function getLevenshteinSuggestion(word, knownWords, similarityThreshold = 4) {
-  if (!word) {
-    return null;
+/**
+ * It validates the password field value
+ * @param value
+ * @param formatMessage
+ * @returns {string}
+ */
+export const validatePasswordField = (value, formatMessage) => {
+  let fieldError = '';
+  if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
+    fieldError = formatMessage(messages['password.validation.message']);
   }
+  return fieldError;
+};
 
-  let minEditDistance = 100;
-  let mostSimilar = word;
-
-  for (let i = 0; i < knownWords.length; i++) {
-    const editDistance = distance(knownWords[i].toLowerCase(), word.toLowerCase());
-    if (editDistance < minEditDistance) {
-      minEditDistance = editDistance;
-      mostSimilar = knownWords[i];
+/**
+ * It accepts complete registration data as payload and checks if the form is valid.
+ * @param payload
+ * @param errors
+ * @param configurableFormFields
+ * @param fieldDescriptions
+ * @param formatMessage
+ * @returns {{fieldErrors, isValid: boolean}}
+ */
+export const isFormValid = (
+  payload,
+  errors,
+  configurableFormFields,
+  fieldDescriptions,
+  formatMessage,
+) => {
+  const fieldErrors = { ...errors };
+  let isValid = true;
+  Object.keys(payload).forEach(key => {
+    if (!payload[key]) {
+      fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
     }
-  }
-
-  return minEditDistance <= similarityThreshold && word !== mostSimilar ? mostSimilar : null;
-}
-
-export function getSuggestionForInvalidEmail(domain, username) {
-  if (!domain) {
-    return '';
-  }
-
-  const defaultDomains = ['yahoo', 'aol', 'hotmail', 'live', 'outlook', 'gmail'];
-  const suggestion = getLevenshteinSuggestion(domain, COMMON_EMAIL_PROVIDERS);
-
-  if (suggestion) {
-    return `${username}@${suggestion}`;
-  }
-
-  for (let i = 0; i < defaultDomains.length; i++) {
-    if (domain.includes(defaultDomains[i])) {
-      return `${username}@${defaultDomains[i]}.com`;
+    if (fieldErrors[key]) {
+      isValid = false;
     }
+  });
+
+  // Don't validate when country field is optional or hidden and not present on registration form
+  if (configurableFormFields?.country && !configurableFormFields.country?.displayValue) {
+    fieldErrors.country = formatMessage(messages['empty.country.field.error']);
+    isValid = false;
+  } else if (configurableFormFields?.country && !configurableFormFields.country?.countryCode) {
+    fieldErrors.country = formatMessage(messages['invalid.country.field.error']);
+    isValid = false;
   }
 
-  return '';
-}
-
-export function validateEmailAddress(value, username, domainName) {
-  let suggestion = null;
-  const validation = {
-    hasError: false,
-    suggestion: '',
-    type: '',
-  };
-
-  const hasMultipleSubdomains = value.match(/\./g).length > 1;
-  const [serviceLevelDomain, topLevelDomain] = domainName.split('.');
-  const tldSuggestion = !DEFAULT_TOP_LEVEL_DOMAINS.includes(topLevelDomain);
-  const serviceSuggestion = getLevenshteinSuggestion(serviceLevelDomain, DEFAULT_SERVICE_PROVIDER_DOMAINS, 2);
-
-  if (DEFAULT_SERVICE_PROVIDER_DOMAINS.includes(serviceSuggestion || serviceLevelDomain)) {
-    suggestion = `${username}@${serviceSuggestion || serviceLevelDomain}.com`;
-  }
-
-  if (!hasMultipleSubdomains && tldSuggestion) {
-    validation.suggestion = suggestion;
-    validation.type = 'error';
-  } else if (serviceSuggestion) {
-    validation.suggestion = suggestion;
-    validation.type = 'warning';
-  } else {
-    suggestion = getLevenshteinSuggestion(domainName, COMMON_EMAIL_PROVIDERS, 3);
-    if (suggestion) {
-      validation.suggestion = `${username}@${suggestion}`;
-      validation.type = 'warning';
+  Object.keys(fieldDescriptions).forEach(key => {
+    if (key === 'country' && !configurableFormFields.country.displayValue) {
+      fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
+    } else if (!configurableFormFields[key]) {
+      fieldErrors[key] = fieldDescriptions[key].error_message;
     }
+    if (fieldErrors[key]) {
+      isValid = false;
+    }
+  });
+
+  return { isValid, fieldErrors };
+};
+
+/**
+ * It prepares a payload for registration data that can be passed to registration API endpoint.
+ * @param initPayload
+ * @param configurableFormFields
+ * @param showMarketingEmailOptInCheckbox
+ * @param totalRegistrationTime
+ * @param queryParams
+ * @returns {*}
+ */
+export const prepareRegistrationPayload = (
+  initPayload,
+  configurableFormFields,
+  showMarketingEmailOptInCheckbox,
+  totalRegistrationTime,
+  queryParams,
+) => {
+  let payload = { ...initPayload };
+  Object.keys(configurableFormFields).forEach((fieldName) => {
+    if (fieldName === 'country') {
+      payload[fieldName] = configurableFormFields[fieldName].countryCode;
+    } else {
+      payload[fieldName] = configurableFormFields[fieldName];
+    }
+  });
+
+  // Don't send the marketing email opt-in value if the flag is turned off
+  if (!showMarketingEmailOptInCheckbox) {
+    delete payload.marketingEmailsOptIn;
   }
 
-  if (!hasMultipleSubdomains && tldSuggestion) {
-    validation.hasError = true;
+  payload = snakeCaseObject(payload);
+  payload.totalRegistrationTime = totalRegistrationTime;
+
+  // add query params to the payload
+  payload = { ...payload, ...queryParams };
+  return payload;
+};
+
+/**
+ * A helper for backend validations selector. It processes the api output and generates a
+ * key value dict for field errors.
+ * @param registrationError
+ * @param validations
+ * @returns {{username: string}|{name: string}|*|{}|null}
+ */
+export const getBackendValidations = (registrationError, validations) => {
+  if (validations) {
+    return validations.validationDecisions;
   }
 
-  return validation;
-}
-
-export function validateCountryField(value, countryList, errorMessage) {
-  let countryCode = '';
-  let displayValue = value;
-  let error = errorMessage;
-
-  if (value) {
-    const normalizedValue = value.toLowerCase();
-    // Handling a case here where user enters a valid country code that needs to be
-    // evaluated and set its value as a valid value.
-    const selectedCountry = countryList.find(
-      (country) => (
-        // When translations are applied, extra space added in country value, so we should trim that.
-        country[COUNTRY_DISPLAY_KEY].toLowerCase().trim() === normalizedValue
-        || country[COUNTRY_CODE_KEY].toLowerCase().trim() === normalizedValue
-      ),
+  if (Object.keys(registrationError).length > 0) {
+    const fields = Object.keys(registrationError).filter(
+      (fieldName) => !(fieldName in ['errorCode', 'usernameSuggestions']),
     );
-    if (selectedCountry) {
-      countryCode = selectedCountry[COUNTRY_CODE_KEY];
-      displayValue = selectedCountry[COUNTRY_DISPLAY_KEY];
-      error = '';
-    }
+
+    const validationDecisions = {};
+    fields.forEach(field => {
+      validationDecisions[field] = registrationError[field][0].userMessage || '';
+    });
+    return validationDecisions;
   }
-  return { error, countryCode, displayValue };
-}
+
+  return null;
+};

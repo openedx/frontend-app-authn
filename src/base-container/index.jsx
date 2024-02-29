@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { breakpoints } from '@edx/paragon';
+import { getConfig } from '@edx/frontend-platform';
+import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
@@ -13,11 +13,9 @@ import {
 import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
 import { DEFAULT_LAYOUT, IMAGE_LAYOUT } from './data/constants';
 
-const BaseContainer = ({ children, showWelcomeBanner }) => {
-  const authenticatedUser = showWelcomeBanner ? getAuthenticatedUser() : null;
-  const username = authenticatedUser ? authenticatedUser.username : null;
-
+const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const [baseContainerVersion, setBaseContainerVersion] = useState(DEFAULT_LAYOUT);
+  const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
 
   useEffect(() => {
     const initRebrandExperiment = () => {
@@ -34,22 +32,22 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
     initRebrandExperiment();
   }, []);
 
-  if (baseContainerVersion === IMAGE_LAYOUT) {
+  if (baseContainerVersion === IMAGE_LAYOUT || enableImageLayout) {
     return (
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.extraSmall.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <ImageExtraSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageExtraSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.small.minWidth} maxWidth={breakpoints.small.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <ImageSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <ImageSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {authenticatedUser ? <AuthMediumLayout username={username} /> : <ImageMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <ImageMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {authenticatedUser ? <AuthLargeLayout username={username} /> : <ImageLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <ImageLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
+        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
         </div>
       </div>
@@ -61,15 +59,15 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
       <div className="col-md-12 extra-large-screen-top-stripe" />
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
-          {authenticatedUser ? <AuthSmallLayout username={username} /> : <DefaultSmallLayout />}
+          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <DefaultSmallLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {authenticatedUser ? <AuthMediumLayout username={username} /> : <DefaultMediumLayout />}
+          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <DefaultMediumLayout />}
         </MediaQuery>
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {authenticatedUser ? <AuthLargeLayout username={username} /> : <DefaultLargeLayout />}
+          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <DefaultLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': authenticatedUser })}>
+        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
           {children}
         </div>
       </div>
@@ -79,11 +77,13 @@ const BaseContainer = ({ children, showWelcomeBanner }) => {
 
 BaseContainer.defaultProps = {
   showWelcomeBanner: false,
+  fullName: null,
 };
 
 BaseContainer.propTypes = {
   children: PropTypes.node.isRequired,
   showWelcomeBanner: PropTypes.bool,
+  fullName: PropTypes.string,
 };
 
 export default BaseContainer;

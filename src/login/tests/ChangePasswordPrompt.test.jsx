@@ -2,16 +2,22 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
-import { createMemoryHistory } from 'history';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter, Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { RESET_PAGE } from '../../data/constants';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
 const IntlChangePasswordPrompt = injectIntl(ChangePasswordPrompt);
-const history = createMemoryHistory();
+const mockedNavigator = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom')),
+  useNavigate: () => mockedNavigator,
+}));
 
 describe('ChangePasswordPromptTests', () => {
   let props = {};
@@ -35,7 +41,7 @@ describe('ChangePasswordPromptTests', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    const changePasswordPrompt = mount(
+    render(
       <IntlProvider locale="en">
         <MemoryRouter>
           <IntlChangePasswordPrompt {...props} />
@@ -43,7 +49,7 @@ describe('ChangePasswordPromptTests', () => {
       </IntlProvider>,
     );
 
-    changePasswordPrompt.find('button#password-security-close').simulate('click');
+    fireEvent.click(screen.getByText('Close'));
     expect(window.location.href).toBe(dashboardUrl);
   });
 
@@ -52,21 +58,21 @@ describe('ChangePasswordPromptTests', () => {
       variant: 'block',
     };
 
-    const changePasswordPrompt = mount(
+    render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <Router history={history}>
-            <IntlChangePasswordPrompt {...props} />
-          </Router>
+          <IntlChangePasswordPrompt {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );
 
     await act(async () => {
-      await changePasswordPrompt.find('div.pgn__modal-backdrop').first().simulate('click');
+      await fireEvent.click(screen.getByText(
+        '',
+        { selector: '.pgn__modal-backdrop' },
+      ));
     });
 
-    changePasswordPrompt.update();
-    expect(history.location.pathname).toEqual(RESET_PAGE);
+    expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
   });
 });

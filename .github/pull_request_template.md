@@ -25,5 +25,5 @@ Include a link to the sandbox for design changes or screenshot for before and af
 
 #### Post-merge Checklist
 
-* [ ] Deploy the changes to prod after verifying on stage or ask **@openedx/vanguards** to do it. 
+* [ ] Deploy the changes to prod after verifying on stage or ask **@openedx/2u-vanguards** to do it. 
 * [ ] 🎉 🙌 Celebrate! Thanks for your contribution.

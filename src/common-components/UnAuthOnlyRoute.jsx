@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
 
 import {
   DEFAULT_REDIRECT_URL,
@@ -13,7 +12,7 @@ import {
  * This wrapper redirects the requester to our default redirect url if they are
  * already authenticated.
  */
-const UnAuthOnlyRoute = (props) => {
+const UnAuthOnlyRoute = ({ children }) => {
   const [authUser, setAuthUser] = useState({});
   const [isReady, setIsReady] = useState(false);
 
@@ -30,14 +29,14 @@ const UnAuthOnlyRoute = (props) => {
       return null;
     }
 
-    return <Route {...props} />;
+    return children;
   }
 
   return null;
 };
 
 UnAuthOnlyRoute.propTypes = {
-  path: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default UnAuthOnlyRoute;

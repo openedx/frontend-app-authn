@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthService } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Icon,
+  Icon, IconButton,
   Tab,
   Tabs,
-} from '@edx/paragon';
-import { ChevronLeft } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { ArrowBackIos, ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
@@ -25,8 +25,10 @@ import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { LoginPage } from '../login';
+import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
+import { backupRegistrationForm, setSimplifyRegExperimentData } from '../register/data/actions';
+import { FIRST_STEP, SECOND_STEP } from '../register/data/optimizelyExperiment/helper';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
@@ -37,7 +39,12 @@ const Logistration = (props) => {
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
+  const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+
+  const dispatch = useDispatch();
+  const { simplifyRegExpVariation, simplifiedRegisterPageStep } = useSelector(state => state.register);
 
   useEffect(() => {
     const authService = getAuthService();
@@ -45,6 +52,12 @@ const Logistration = (props) => {
       authService.getCsrfTokenService().getCsrfToken(getConfig().LMS_BASE_URL);
     }
   });
+
+  useEffect(() => {
+    if (disablePublicAccountCreation) {
+      navigate(updatePathWithQueryParams(LOGIN_PAGE));
+    }
+  }, [navigate, disablePublicAccountCreation]);
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -62,6 +75,8 @@ const Logistration = (props) => {
     props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
       props.backupRegistrationForm();
+    } else if (tabKey === REGISTER_PAGE) {
+      props.backupLoginForm();
     }
     setKey(tabKey);
   };
@@ -82,13 +97,44 @@ const Logistration = (props) => {
     return !!provider;
   };
 
+  /**
+   * Temporary function created to resolve the complexity in tabs conditioning for simplify
+   * registration experiment
+   */
+  const getTabs = () => {
+    if (simplifiedRegisterPageStep === SECOND_STEP) {
+      return (
+        <div>
+          <IconButton
+            key="primary"
+            src={ArrowBackIos}
+            iconAs={Icon}
+            alt="Back"
+            onClick={() => {
+              dispatch(setSimplifyRegExperimentData(simplifyRegExpVariation, FIRST_STEP));
+            }}
+            variant="primary"
+            size="inline"
+            className="mr-1"
+          />
+          {formatMessage(messages['tab.back.btn.text'])}
+        </div>
+      );
+    }
+    return (
+      <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
+        <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+        <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+      </Tabs>
+    );
+  };
+
   return (
     <BaseContainer>
       <div>
         {disablePublicAccountCreation
           ? (
             <>
-              <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />
               {institutionLogin && (
                 <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
                   <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
@@ -110,16 +156,16 @@ const Logistration = (props) => {
                     <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
                   </Tabs>
                 )
-                : (!isValidTpaHint() && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={handleOnSelect}>
-                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                  </Tabs>
-                ))}
+                : (!isValidTpaHint() && !hideRegistrationLink && getTabs())}
               { key && (
-                <Redirect to={updatePathWithQueryParams(key)} />
+                <Navigate to={updatePathWithQueryParams(key)} replace />
               )}
               <div id="main-content" className="main-content">
+                {!institutionLogin && !isValidTpaHint() && hideRegistrationLink && (
+                  <h3 className="mb-4.5">
+                    {formatMessage(messages[selectedPage === LOGIN_PAGE ? 'logistration.sign.in' : 'logistration.register'])}
+                  </h3>
+                )}
                 {selectedPage === LOGIN_PAGE
                   ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
                   : (
@@ -138,6 +184,7 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
+  backupLoginForm: PropTypes.func.isRequired,
   backupRegistrationForm: PropTypes.func.isRequired,
   clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
   tpaProviders: PropTypes.shape({
@@ -164,6 +211,7 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
+    backupLoginForm,
     backupRegistrationForm,
     clearThirdPartyAuthContextErrorMessage,
   },

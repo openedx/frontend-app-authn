@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, Image } from '@edx/paragon';
+import { Hyperlink, Image } from '@openedx/paragon';
 import classNames from 'classnames';
 
 import messages from './messages';
@@ -23,13 +23,15 @@ const MediumLayout = () => {
             <div>
               <h1
                 className={classNames(
-                  'display-1 text-white mt-5 mb-5 mr-2',
+                  'display-1 text-white mt-5 mb-5 mr-2 main-heading',
                   { 'ml-4.5': getConfig().SITE_NAME !== 'edX' },
                 )}
               >
-                <span className="mr-2">{formatMessage(messages['start.learning'])}</span>
-                <span className="text-accent-a d-inline-block">
-                  {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+                <span>
+                  {formatMessage(messages['start.learning'])}{' '}
+                  <span className="text-accent-a d-inline-block">
+                    {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
+                  </span>
                 </span>
               </h1>
             </div>

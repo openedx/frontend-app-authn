@@ -3,13 +3,15 @@
 import React from 'react';
 
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import { UnAuthOnlyRoute } from '..';
 import { REGISTER_PAGE } from '../../data/constants';
 
-import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
+import {
+  MemoryRouter, Route, BrowserRouter as Router, Routes,
+} from 'react-router-dom';
 
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthenticatedUser: jest.fn(),
@@ -25,9 +27,9 @@ module.exports = RRD;
 const TestApp = () => (
   <Router>
     <div>
-      <Switch>
-        <UnAuthOnlyRoute path={REGISTER_PAGE} render={() => (<span>Register Page</span>)} />
-      </Switch>
+      <Routes>
+        <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><span>Register Page</span></UnAuthOnlyRoute>} />
+      </Routes>
     </div>
   </Router>
 );
@@ -53,7 +55,7 @@ describe('UnAuthOnlyRoute', () => {
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
 
     await act(async () => {
-      await mount(routerWrapper());
+      await render(routerWrapper());
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
@@ -64,7 +66,7 @@ describe('UnAuthOnlyRoute', () => {
     fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(null));
 
     await act(async () => {
-      await mount(routerWrapper());
+      await render(routerWrapper());
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });

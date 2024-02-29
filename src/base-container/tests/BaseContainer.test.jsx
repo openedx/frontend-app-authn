@@ -1,7 +1,8 @@
 import React from 'react';
 
+import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { Context as ResponsiveContext } from 'react-responsive';
 
 import BaseContainer from '../index';
@@ -12,16 +13,16 @@ const LargeScreen = {
 };
 
 describe('Base component tests', () => {
-  it('should should default layout', () => {
-    const baseContainer = mount(
+  it('should show default layout', () => {
+    const { container } = render(
       <IntlProvider locale="en">
         <BaseContainer />
       </IntlProvider>,
       LargeScreen,
     );
 
-    expect(baseContainer.find('.banner__image').exists()).toBeFalsy();
-    expect(baseContainer.find('.large-screen-svg-primary').exists()).toBeTruthy();
+    expect(container.querySelector('.banner__image')).toBeNull();
+    expect(container.querySelector('.large-screen-svg-primary')).toBeDefined();
   });
 
   it('[experiment] should show image layout for treatment group', () => {
@@ -31,13 +32,28 @@ describe('Base component tests', () => {
       },
     };
 
-    const baseContainer = mount(
+    const { container } = render(
       <IntlProvider locale="en">
         <BaseContainer />
       </IntlProvider>,
       LargeScreen,
     );
 
-    expect(baseContainer.find('.banner__image').exists()).toBeTruthy();
+    expect(container.querySelector('.banner__image')).toBeDefined();
+  });
+
+  it('renders Image layout when ENABLE_IMAGE_LAYOUT configuration is enabled', () => {
+    mergeConfig({
+      ENABLE_IMAGE_LAYOUT: true,
+    });
+
+    const { container } = render(
+      <IntlProvider locale="en">
+        <BaseContainer showWelcomeBanner={false} />
+      </IntlProvider>,
+      LargeScreen,
+    );
+
+    expect(container.querySelector('.banner__image')).toBeDefined();
   });
 });

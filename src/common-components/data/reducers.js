@@ -9,6 +9,7 @@ export const defaultState = {
   },
   thirdPartyAuthApiStatus: null,
   thirdPartyAuthContext: {
+    autoSubmitRegForm: false,
     currentProvider: null,
     finishAuthUrl: null,
     countryCode: null,
@@ -30,7 +31,7 @@ const reducer = (state = defaultState, action = {}) => {
     case THIRD_PARTY_AUTH_CONTEXT.SUCCESS: {
       return {
         ...state,
-        fieldDescriptions: action.payload.fieldDescriptions.fields,
+        fieldDescriptions: action.payload.fieldDescriptions?.fields,
         optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,

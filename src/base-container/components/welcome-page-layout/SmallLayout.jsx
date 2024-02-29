@@ -2,12 +2,12 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, Image } from '@edx/paragon';
+import { Hyperlink, Image } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const SmallLayout = ({ username }) => {
+const SmallLayout = ({ fullName }) => {
   const { formatMessage } = useIntl();
 
   return (
@@ -16,11 +16,11 @@ const SmallLayout = ({ username }) => {
       <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
         <Image className="logo-small" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
       </Hyperlink>
-      <div className="d-flex align-items-center mb-3 mt-3 mr-3">
+      <div className="d-flex align-items-center m-3.5">
         <div className="small-yellow-line mt-4.5" />
         <div>
           <h1 className="h5 data-hj-suppress">
-            {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, username })}
+            {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, fullName })}
           </h1>
           <h2 className="h1">
             {formatMessage(messages['complete.your.profile.1'])}
@@ -35,7 +35,7 @@ const SmallLayout = ({ username }) => {
 };
 
 SmallLayout.propTypes = {
-  username: PropTypes.string.isRequired,
+  fullName: PropTypes.string.isRequired,
 };
 
 export default SmallLayout;

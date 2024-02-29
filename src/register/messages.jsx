@@ -64,22 +64,12 @@ const messages = defineMessages({
     defaultMessage: 'Create an account for free',
     description: 'Label text for registration form submission button',
   },
-  'registration.other.options.heading': {
-    id: 'registration.other.options.heading',
-    defaultMessage: 'Or register with:',
-    description: 'A message that appears above third party auth providers i.e saml, google, facebook etc',
-  },
   'create.account.cta.button': {
     id: 'create.account.cta.button',
     defaultMessage: '{label}',
     description: 'Label text for registration form submission button for those users who are landing through redirections',
   },
   // Institution login
-  'register.institution.login.button': {
-    id: 'register.institution.login.button',
-    defaultMessage: 'Institution/campus credentials',
-    description: 'shows institutions list',
-  },
   'register.institution.login.page.title': {
     id: 'register.institution.login.page.title',
     defaultMessage: 'Register with institution/campus credentials',
@@ -110,6 +100,11 @@ const messages = defineMessages({
     id: 'empty.country.field.error',
     defaultMessage: 'Select your country or region of residence',
     description: 'Error message when no country/region is selected',
+  },
+  'invalid.country.field.error': {
+    id: 'invalid.country.field.error',
+    defaultMessage: 'Country must match with an option available in the dropdown.',
+    description: 'Error message when country is invalid',
   },
   'email.do.not.match': {
     id: 'email.do.not.match',
@@ -205,6 +200,23 @@ const messages = defineMessages({
     id: 'did.you.mean.alert.text',
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
+  },
+  // Simplify Registration experiment
+  'simplified.registration.exp.button': {
+    id: 'simplified.registration.exp.button',
+    defaultMessage: 'Complete account creation',
+    description: 'Label text for simplified registration page second step',
+  },
+  'simplify.registration.username.guideline.content': {
+    id: 'simplify.registration.username.guideline.content',
+    defaultMessage: 'To finalize your registration, please create a public username that will '
+        + 'identify you in your course communication forums. The username cannot be changed.',
+    description: 'Guideline content for username field in simplify registration experiment step 2',
+  },
+  'simplify.registration.form.submission.error': {
+    id: 'simplify.registration.form.submission.error',
+    defaultMessage: 'Please check your responses for this and the previous step and try again.',
+    description: 'Error message that appears on top of the form when invalid form is submitted',
   },
 });
 

@@ -3,13 +3,15 @@
 import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
 import { REGISTER_EMBEDDED_PAGE } from '../../data/constants';
 import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
 
-import { MemoryRouter, BrowserRouter as Router, Switch } from 'react-router-dom';
+import {
+  MemoryRouter, Route, BrowserRouter as Router, Routes,
+} from 'react-router-dom';
 
 const RRD = require('react-router-dom');
 // Just render plain div with its children
@@ -20,9 +22,12 @@ module.exports = RRD;
 const TestApp = () => (
   <Router>
     <div>
-      <Switch>
-        <EmbeddedRegistrationRoute path={REGISTER_EMBEDDED_PAGE} render={() => (<span>Embedded Register Page</span>)} />
-      </Switch>
+      <Routes>
+        <Route
+          path={REGISTER_EMBEDDED_PAGE}
+          element={<EmbeddedRegistrationRoute><span>Embedded Register Page</span></EmbeddedRegistrationRoute>}
+        />
+      </Routes>
     </div>
   </Router>
 );
@@ -42,10 +47,13 @@ describe('EmbeddedRegistrationRoute', () => {
     let embeddedRegistrationPage = null;
 
     await act(async () => {
-      embeddedRegistrationPage = await mount(routerWrapper());
+      const { container } = await render(routerWrapper());
+      embeddedRegistrationPage = container;
     });
 
-    expect(embeddedRegistrationPage.find('span').exists()).toBeFalsy();
+    const spanElement = embeddedRegistrationPage.querySelector('span');
+
+    expect(spanElement).toBeNull();
   });
 
   it('should render embedded register page if host query param is available in the url (embedded)', async () => {
@@ -58,10 +66,13 @@ describe('EmbeddedRegistrationRoute', () => {
     let embeddedRegistrationPage = null;
 
     await act(async () => {
-      embeddedRegistrationPage = await mount(routerWrapper());
+      const { container } = await render(routerWrapper());
+      embeddedRegistrationPage = container;
     });
 
-    expect(embeddedRegistrationPage.find('span').exists()).toBeTruthy();
-    expect(embeddedRegistrationPage.find('span').text()).toBe('Embedded Register Page');
+    const spanElement = embeddedRegistrationPage.querySelector('span');
+
+    expect(spanElement).toBeTruthy();
+    expect(spanElement.textContent).toBe('Embedded Register Page');
   });
 });

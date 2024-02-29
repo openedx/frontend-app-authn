@@ -58,7 +58,7 @@ describe('common components reducer', () => {
         providers: [],
         secondaryProviders: [],
         pipelineUserDetails: null,
-        errorMessage: 'An error occured',
+        errorMessage: 'An error occurred',
       },
     };
 

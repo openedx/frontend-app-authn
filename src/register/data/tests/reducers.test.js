@@ -8,7 +8,7 @@ import {
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE,
   REGISTER_SET_USER_PIPELINE_DATA_LOADED,
-  REGISTERATION_CLEAR_BACKEND_ERROR,
+  REGISTRATION_CLEAR_BACKEND_ERROR,
 } from '../actions';
 import reducer from '../reducers';
 
@@ -37,6 +37,10 @@ describe('Registration Reducer Tests', () => {
     usernameSuggestions: [],
     validationApiRateLimited: false,
     shouldBackupState: false,
+    isValidatingSimplifiedRegisterFirstPage: false,
+    simplifiedRegisterPageStep: 'first-step',
+    simplifyRegExpVariation: '',
+    usernameSuggestionsBackup: [],
   };
 
   it('should return the initial state', () => {
@@ -61,9 +65,11 @@ describe('Registration Reducer Tests', () => {
         ...defaultState,
         usernameSuggestions,
         validations: validationWithoutUsernameSuggestions,
+        isValidatingSimplifiedRegisterFirstPage: undefined,
       },
     );
   });
+
   it('should set redirect url dashboard on registration success action', () => {
     const payload = {
       redirectUrl: `${getConfig().BASE_URL}${DEFAULT_REDIRECT_URL}`,
@@ -116,7 +122,7 @@ describe('Registration Reducer Tests', () => {
       },
     );
   });
-  it('should set the register user when SSO pipline data is loaded', () => {
+  it('should set the register user when SSO pipeline data is loaded', () => {
     const payload = { value: true };
     const action = {
       type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
@@ -224,7 +230,7 @@ describe('Registration Reducer Tests', () => {
       registrationError: { email: `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account` },
     };
     const action = {
-      type: REGISTERATION_CLEAR_BACKEND_ERROR,
+      type: REGISTRATION_CLEAR_BACKEND_ERROR,
       payload: 'email',
     };
 

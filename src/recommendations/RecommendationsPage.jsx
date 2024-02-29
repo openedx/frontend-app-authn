@@ -1,34 +1,50 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Container, Hyperlink, Image, StatefulButton, Tab, Tabs,
-} from '@edx/paragon';
-import PropTypes from 'prop-types';
+  breakpoints,
+  Container,
+  Hyperlink,
+  Image, Skeleton,
+  StatefulButton,
+  useMediaQuery,
+} from '@openedx/paragon';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
 
-import { POPULAR, TRENDING } from './data/constants';
-import useProducts from './data/hooks/useProducts';
+import { EDUCATION_LEVEL_MAPPING, PERSONALIZED } from './data/constants';
+import useAlgoliaRecommendations from './data/hooks/useAlgoliaRecommendations';
 import messages from './messages';
-import RecommendationsList from './RecommendationsList';
-import { trackRecommendationsViewed } from './track';
+import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout';
+import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
+import { LINK_TIMEOUT, trackRecommendationsViewed, trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
 
-const RecommendationsPage = ({ location, countryCode }) => {
+const RecommendationsPage = () => {
   const { formatMessage } = useIntl();
+  const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
+  const location = useLocation();
+
   const registrationResponse = location.state?.registrationResult;
+  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+  const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
-  const { popularProducts, trendingProducts, isLoading } = useProducts(countryCode);
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+  const userCountry = useSelector((state) => state.register.backendCountryCode);
+  const {
+    recommendations: algoliaRecommendations,
+    isLoading,
+  } = useAlgoliaRecommendations(userCountry, educationLevel);
 
   useEffect(() => {
-    trackRecommendationsViewed(popularProducts, POPULAR, false, userId);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!isLoading && algoliaRecommendations.length > 0) {
+      trackRecommendationsViewed(algoliaRecommendations, PERSONALIZED, userId);
+    }
+  }, [isLoading, algoliaRecommendations, userId]);
 
-  const handleRedirection = () => {
+  const handleSkipRecommendationPage = () => {
     window.history.replaceState(location.state, null, '');
     if (registrationResponse) {
       window.location.href = registrationResponse.redirectUrl;
@@ -39,7 +55,8 @@ const RecommendationsPage = ({ location, countryCode }) => {
 
   const handleSkip = (e) => {
     e.preventDefault();
-    handleRedirection();
+    trackSkipButtonClicked(userId);
+    setTimeout(() => { handleSkipRecommendationPage(); }, LINK_TIMEOUT);
   };
 
   if (!registrationResponse) {
@@ -47,14 +64,9 @@ const RecommendationsPage = ({ location, countryCode }) => {
     return null;
   }
 
-  if (!isLoading && (!popularProducts.length || !trendingProducts.length)) {
-    handleRedirection();
+  if (!isLoading && !algoliaRecommendations.length) {
+    handleSkipRecommendationPage();
   }
-
-  const handleOnSelect = (tabKey) => {
-    const recommendations = tabKey === POPULAR ? popularProducts : trendingProducts;
-    trackRecommendationsViewed(recommendations, tabKey, false, userId);
-  };
 
   return (
     <>
@@ -63,76 +75,55 @@ const RecommendationsPage = ({ location, countryCode }) => {
           { siteName: getConfig().SITE_NAME })}
         </title>
       </Helmet>
-      <div className="d-flex flex-column vh-100 bg-light-200">
+      <div className="d-flex flex-column bg-light-200 min-vh-100">
         <div className="mb-2">
           <div className="col-md-12 small-screen-top-stripe medium-screen-top-stripe extra-large-screen-top-stripe" />
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
             <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
           </Hyperlink>
         </div>
-        <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1 p-1">
-          <Container id="course-recommendations" size="lg" className="recommendations-container">
-            <h2 className="text-sm-center mb-4 text-left recommendations-container__heading">
-              {formatMessage(messages['recommendation.page.heading'])}
-            </h2>
-            <Tabs
-              variant="tabs"
-              defaultActiveKey={POPULAR}
-              id="recommendations-selection"
-              onSelect={handleOnSelect}
-            >
-              <Tab tabClassName="mb-3" eventKey={POPULAR} title={formatMessage(messages['recommendation.option.popular'])}>
-                <RecommendationsList
-                  recommendations={popularProducts}
-                  userId={userId}
+        <div className="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+          <Container
+            id="course-recommendations"
+            size="lg"
+            className="pr-4 pl-4 mt-4.5 mb-4.5 mb-md-5"
+          >
+            {isExtraSmall ? (
+              <RecommendationsSmallLayout
+                userId={userId}
+                isLoading={isLoading}
+                personalizedRecommendations={algoliaRecommendations}
+              />
+            ) : (
+              <RecommendationsLargeLayout
+                userId={userId}
+                isLoading={isLoading}
+                personalizedRecommendations={algoliaRecommendations}
+              />
+            )}
+            <div className="mt-3 mt-sm-4.5 text-center">
+              {isLoading && (
+                <Skeleton height={40} width={140} />
+              )}
+              {!isLoading && algoliaRecommendations.length && (
+                <StatefulButton
+                  className="font-weight-500"
+                  type="submit"
+                  variant="outline-brand"
+                  labels={{
+                    default: formatMessage(messages['recommendation.skip.button']),
+                  }}
+                  onClick={handleSkip}
                 />
-              </Tab>
-              <Tab tabClassName="mb-3" eventKey={TRENDING} title={formatMessage(messages['recommendation.option.trending'])}>
-                <RecommendationsList
-                  recommendations={trendingProducts}
-                  userId={userId}
-                />
-              </Tab>
-            </Tabs>
+              )}
+            </div>
           </Container>
-          <div className="text-center">
-            <StatefulButton
-              className="font-weight-500"
-              type="submit"
-              variant="brand"
-              labels={{
-                default: formatMessage(messages['recommendation.skip.button']),
-              }}
-              onClick={handleSkip}
-            />
-          </div>
         </div>
       </div>
     </>
   );
 };
 
-RecommendationsPage.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      registrationResult: PropTypes.shape({
-        redirectUrl: PropTypes.string,
-      }),
-      userId: PropTypes.number,
-    }),
-  }),
-  countryCode: PropTypes.string.isRequired,
-};
+RecommendationsPage.propTypes = {};
 
-RecommendationsPage.defaultProps = {
-  location: { state: {} },
-};
-
-const mapStateToProps = state => ({
-  countryCode: state.register.backendCountryCode,
-});
-
-export default connect(
-  mapStateToProps,
-  null,
-)(RecommendationsPage);
+export default RecommendationsPage;

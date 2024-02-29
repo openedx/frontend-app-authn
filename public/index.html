@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en-us">
   <head>
-      <title>Authn | <%= process.env.SITE_NAME %></title>
+      <title><%= process.env.SITE_NAME ? 'Authn | ' + process.env.SITE_NAME : 'Authn' %></title>    
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.6/iframeResizer.contentWindow.min.js"
-              integrity="sha512-R7Piufj0/o6jG9ZKrAvS2dblFr2kkuG4XVQwStX+/4P+KwOLUXn2DXy0l1AJDxxqGhkM/FJllZHG2PKOAheYzg=="
+      <link rel="shortcut icon" href="<%=htmlWebpackPlugin.options.FAVICON_URL%>" type="image/x-icon"/>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.3.9/iframeResizer.contentWindow.min.js"
+              integrity="sha512-mdT/HQRzoRP4laVz49Mndx6rcCGA3IhuyhP3gaY0E9sZPkwbtDk9ttQIq9o8qGCf5VvJv1Xsy3k2yTjfUoczqw=="
               crossorigin="anonymous"
               referrerpolicy="no-referrer">
       </script>

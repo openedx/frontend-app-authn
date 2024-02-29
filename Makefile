@@ -1,5 +1,5 @@
 export TRANSIFEX_RESOURCE = frontend-app-authn
-transifex_langs = "ar,fr,es_419,zh_CN,pt,it,de,uk,ru,hi,fr_CA,it_IT,pt_PT,de_DE"
+transifex_langs = "ar,de,de_DE,es_419,fa_IR,fr,fr_CA,hi,it,it_IT,pt,pt_PT,ru,uk,zh_CN"
 
 intl_imports = ./node_modules/.bin/intl-imports.js
 transifex_utils = ./node_modules/.bin/transifex-utils.js
@@ -7,14 +7,14 @@ i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
 
 # This directory must match .babelrc .
-transifex_temp = ./temp/babel-plugin-react-intl
+transifex_temp = ./temp/babel-plugin-formatjs
 
 precommit:
 	npm run lint
 	npm audit
 
 requirements:
-	npm install
+	npm ci
 
 i18n.extract:
 	# Pulling display strings from .jsx files into .json files...
@@ -53,11 +53,12 @@ pull_translations:
 	rm -rf src/i18n/messages
 	mkdir src/i18n/messages
 	cd src/i18n/messages \
-	  && atlas pull --filter=$(transifex_langs) \
+	  && atlas pull $(ATLAS_OPTIONS) \
 	           translations/paragon/src/i18n/messages:paragon \
+	           translations/frontend-platform/src/i18n/messages:frontend-platform \
 	           translations/frontend-app-authn/src/i18n/messages:frontend-app-authn
 
-	$(intl_imports) paragon frontend-app-authn
+	$(intl_imports) paragon frontend-platform frontend-app-authn
 endif
 
 # This target is used by Travis.

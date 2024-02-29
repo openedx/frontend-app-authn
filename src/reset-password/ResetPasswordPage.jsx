@@ -10,11 +10,11 @@ import {
   StatefulButton,
   Tab,
   Tabs,
-} from '@edx/paragon';
-import { ChevronLeft } from '@edx/paragon/icons';
+} from '@openedx/paragon';
+import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { Redirect } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { resetPassword, validateToken } from './data/actions';
 import {
@@ -39,7 +39,8 @@ const ResetPasswordPage = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [errorCode, setErrorCode] = useState(null);
-  const [key, setKey] = useState('');
+  const { token } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
@@ -90,20 +91,7 @@ const ResetPasswordPage = (props) => {
   };
 
   const handleOnBlur = (event) => {
-    let { name, value } = event.target;
-
-    // Do not validate when focus out from 'newPassword' and focus on 'passwordValidation' icon
-    // for better user experience.
-    if (event.relatedTarget
-      && event.relatedTarget.name === 'password'
-      && name === 'newPassword'
-    ) {
-      return;
-    }
-    if (name === 'password') {
-      name = 'newPassword';
-      value = newPassword;
-    }
+    const { name, value } = event.target;
     validateInput(name, value);
   };
 
@@ -145,15 +133,14 @@ const ResetPasswordPage = (props) => {
   );
 
   if (props.status === TOKEN_STATE.PENDING) {
-    const { token } = props.match.params;
     if (token) {
       props.validateToken(token);
       return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
-    return <Redirect to={updatePathWithQueryParams(RESET_PAGE)} />;
+    navigate(updatePathWithQueryParams(RESET_PAGE));
   } else if (props.status === 'success') {
-    return <Redirect to={updatePathWithQueryParams(LOGIN_PAGE)} />;
+    navigate(updatePathWithQueryParams(LOGIN_PAGE));
   } else {
     return (
       <BaseContainer>
@@ -163,12 +150,9 @@ const ResetPasswordPage = (props) => {
               {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
             </title>
           </Helmet>
-          <Tabs activeKey="" id="controlled-tab" onSelect={(k) => setKey(k)}>
+          <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
             <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
           </Tabs>
-          { key && (
-            <Redirect to={updatePathWithQueryParams(key)} />
-          )}
           <div id="main-content" className="main-content">
             <div className="mw-xs">
               <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
@@ -220,7 +204,6 @@ const ResetPasswordPage = (props) => {
 ResetPasswordPage.defaultProps = {
   status: null,
   token: null,
-  match: null,
   errorMsg: null,
 };
 
@@ -228,11 +211,6 @@ ResetPasswordPage.propTypes = {
   resetPassword: PropTypes.func.isRequired,
   validateToken: PropTypes.func.isRequired,
   token: PropTypes.string,
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      token: PropTypes.string,
-    }),
-  }),
   status: PropTypes.string,
   errorMsg: PropTypes.string,
 };

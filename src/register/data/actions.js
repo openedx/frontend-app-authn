@@ -4,9 +4,10 @@ export const BACKUP_REGISTRATION_DATA = new AsyncActionType('REGISTRATION', 'BAC
 export const REGISTER_FORM_VALIDATIONS = new AsyncActionType('REGISTRATION', 'GET_FORM_VALIDATIONS');
 export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_NEW_USER');
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
-export const REGISTERATION_CLEAR_BACKEND_ERROR = 'REGISTERATION_CLEAR_BACKEND_ERROR';
+export const REGISTRATION_CLEAR_BACKEND_ERROR = 'REGISTRATION_CLEAR_BACKEND_ERROR';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
+export const REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA = 'REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA';
 
 // Backup registration form
 export const backupRegistrationForm = () => ({
@@ -19,18 +20,18 @@ export const backupRegistrationFormBegin = (data) => ({
 });
 
 // Validate fields from the backend
-export const fetchRealtimeValidations = (formPayload) => ({
+export const fetchRealtimeValidations = (formPayload, isValidatingSimplifiedRegisterFirstPage = false) => ({
   type: REGISTER_FORM_VALIDATIONS.BASE,
-  payload: { formPayload },
+  payload: { formPayload, isValidatingSimplifiedRegisterFirstPage },
 });
 
 export const fetchRealtimeValidationsBegin = () => ({
   type: REGISTER_FORM_VALIDATIONS.BEGIN,
 });
 
-export const fetchRealtimeValidationsSuccess = (validations) => ({
+export const fetchRealtimeValidationsSuccess = (validations, isValidatingSimplifiedRegisterFirstPage = false) => ({
   type: REGISTER_FORM_VALIDATIONS.SUCCESS,
-  payload: { validations },
+  payload: { validations, isValidatingSimplifiedRegisterFirstPage },
 });
 
 export const fetchRealtimeValidationsFailure = () => ({
@@ -47,9 +48,9 @@ export const registerNewUserBegin = () => ({
   type: REGISTER_NEW_USER.BEGIN,
 });
 
-export const registerNewUserSuccess = (redirectUrl, success) => ({
+export const registerNewUserSuccess = (authenticatedUser, redirectUrl, success) => ({
   type: REGISTER_NEW_USER.SUCCESS,
-  payload: { redirectUrl, success },
+  payload: { authenticatedUser, redirectUrl, success },
 
 });
 
@@ -58,12 +59,13 @@ export const registerNewUserFailure = (error) => ({
   payload: { ...error },
 });
 
-export const clearUsernameSuggestions = () => ({
+export const clearUsernameSuggestions = (isSuggestionClicked = false) => ({
   type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
+  payload: { isSuggestionClicked },
 });
 
-export const clearRegistertionBackendError = (fieldName) => ({
-  type: REGISTERATION_CLEAR_BACKEND_ERROR,
+export const clearRegistrationBackendError = (fieldName) => ({
+  type: REGISTRATION_CLEAR_BACKEND_ERROR,
   payload: fieldName,
 });
 
@@ -75,4 +77,10 @@ export const setCountryFromThirdPartyAuthContext = (countryCode) => ({
 export const setUserPipelineDataLoaded = (value) => ({
   type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   payload: { value },
+});
+
+// Simplify Registration Experiment Actions
+export const setSimplifyRegExperimentData = (simplifyRegExpVariation, simplifiedRegisterPageStep) => ({
+  type: REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA,
+  payload: { simplifyRegExpVariation, simplifiedRegisterPageStep },
 });
