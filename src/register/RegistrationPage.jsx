@@ -17,7 +17,6 @@ import RegistrationFailure from './components/RegistrationFailure';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
-  fetchRealtimeValidations,
   registerNewUser,
   setSimplifyRegExperimentData,
   setUserPipelineDataLoaded,
@@ -31,11 +30,9 @@ import {
   FIRST_STEP,
   getRegisterButtonLabelInExperiment,
   NOT_INITIALIZED,
-  prepareSimplifiedRegistrationFirstStepPayload,
   SECOND_STEP,
   shouldDisplayFieldInExperiment,
   SIMPLIFIED_REGISTRATION_VARIATION,
-  validateSimplifiedRegistrationFirstStepPayload,
 } from './data/optimizelyExperiment/helper';
 import {
   trackSimplifyRegistrationContinueBtnClicked,
@@ -96,7 +93,6 @@ const RegistrationPage = (props) => {
     usernameSuggestionsBackup,
     submitState,
     validations,
-    isValidatingSimplifiedRegisterFirstPage,
     simplifyRegExpVariation,
     simplifiedRegisterPageStep,
   } = useSelector(state => state.register);
@@ -142,22 +138,6 @@ const RegistrationPage = (props) => {
   const simplifyRegistrationExpVariation = useSimplifyRegistrationExperimentVariation(
     simplifyRegExpVariation, registrationEmbedded, tpaHint, currentProvider, thirdPartyAuthApiStatus,
   );
-
-  useEffect(() => {
-    if (isValidatingSimplifiedRegisterFirstPage && backendValidations) {
-      if (Object.values(backendValidations).every(value => value === '')) {
-        setErrorCode({ type: '', count: 0 });
-        trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
-        trackSimplifyRegistrationSecondStepViewed();
-        dispatch(setSimplifyRegExperimentData(simplifyRegistrationExpVariation, SECOND_STEP));
-      } else {
-        setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
-      }
-    }
-  }, [ // eslint-disable-line react-hooks/exhaustive-deps
-    isValidatingSimplifiedRegisterFirstPage,
-    backendValidations,
-  ]);
 
   /**
    * Set the userPipelineDetails data in formFields for only first time
@@ -324,8 +304,11 @@ const RegistrationPage = (props) => {
 
     if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
         && simplifiedRegisterPageStep === FIRST_STEP) {
-      const { isValid, fieldErrors } = validateSimplifiedRegistrationFirstStepPayload(
-        formFields, errors, configurableFormFields, fieldDescriptions, formatMessage,
+      const payload = { ...formFields };
+      // We dont want to validate username since it is in second step of registration
+      delete payload.username;
+      const { isValid, fieldErrors } = isFormValid(
+        payload, errors, configurableFormFields, fieldDescriptions, formatMessage,
       );
       setErrors(prevErrors => ({
         ...prevErrors,
@@ -335,11 +318,10 @@ const RegistrationPage = (props) => {
       if (!isValid) {
         setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       } else {
-        const payload = prepareSimplifiedRegistrationFirstStepPayload(
-          formFields,
-          configurableFormFields,
-        );
-        dispatch(fetchRealtimeValidations(payload, true));
+        setErrorCode({ type: '', count: 0 });
+        trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
+        trackSimplifyRegistrationSecondStepViewed();
+        dispatch(setSimplifyRegExperimentData(simplifyRegistrationExpVariation, SECOND_STEP));
       }
     } else {
       registerUser();
