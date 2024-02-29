@@ -144,12 +144,15 @@ const RegistrationPage = (props) => {
   );
 
   useEffect(() => {
-    if (isValidatingSimplifiedRegisterFirstPage && backendValidations
-        && Object.values(backendValidations).every(value => value === '')
-    ) {
-      trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
-      trackSimplifyRegistrationSecondStepViewed();
-      dispatch(setSimplifyRegExperimentData(simplifyRegistrationExpVariation, SECOND_STEP));
+    if (isValidatingSimplifiedRegisterFirstPage && backendValidations) {
+      if (Object.values(backendValidations).every(value => value === '')) {
+        setErrorCode({ type: '', count: 0 });
+        trackSimplifyRegistrationValidatedSubmitBtnClicked(simplifyRegistrationExpVariation);
+        trackSimplifyRegistrationSecondStepViewed();
+        dispatch(setSimplifyRegExperimentData(simplifyRegistrationExpVariation, SECOND_STEP));
+      } else {
+        setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
+      }
     }
   }, [ // eslint-disable-line react-hooks/exhaustive-deps
     isValidatingSimplifiedRegisterFirstPage,
