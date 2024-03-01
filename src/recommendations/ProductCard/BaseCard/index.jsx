@@ -20,7 +20,7 @@ const BaseCard = ({
   <div className="recommendation-card" key={`container-${uuid}`}>
     <Hyperlink
       target="_blank"
-      className="card-box"
+      className="card-box d-inline"
       showLaunchIcon={false}
       onClick={handleOnClick}
     >
