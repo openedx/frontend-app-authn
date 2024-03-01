@@ -1,7 +1,10 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
-import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
+import { LETTER_REGEX, NUMBER_REGEX, VALID_EMAIL_REGEX } from '../../data/constants';
 import messages from '../messages';
+import validateUsername from '../RegistrationFields/UsernameField/validator';
+
+export const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
 /**
  * It validates the password field value
@@ -41,6 +44,21 @@ export const isFormValid = (
     }
     if (fieldErrors[key]) {
       isValid = false;
+    }
+    if (isValid && payload.email && !emailRegex.test(payload.email)) {
+      fieldErrors.email = formatMessage(messages['email.invalid.format.error']);
+      isValid = false;
+    }
+    if (isValid && payload.username) {
+      const usernameError = validateUsername(payload.username, formatMessage);
+      if (usernameError) {
+        fieldErrors.username = usernameError;
+        isValid = false;
+      }
+    }
+    if (isValid && payload.password) {
+      const passwordError = validatePasswordField(payload.password, formatMessage);
+      fieldErrors.password = passwordError;
     }
   });
 
