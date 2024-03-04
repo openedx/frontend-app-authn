@@ -25,23 +25,6 @@ describe('Base component tests', () => {
     expect(container.querySelector('.large-screen-svg-primary')).toBeDefined();
   });
 
-  it('[experiment] should show image layout for treatment group', () => {
-    window.experiments = {
-      rebrandExperiment: {
-        variation: 'image-layout',
-      },
-    };
-
-    const { container } = render(
-      <IntlProvider locale="en">
-        <BaseContainer />
-      </IntlProvider>,
-      LargeScreen,
-    );
-
-    expect(container.querySelector('.banner__image')).toBeDefined();
-  });
-
   it('renders Image layout when ENABLE_IMAGE_LAYOUT configuration is enabled', () => {
     mergeConfig({
       ENABLE_IMAGE_LAYOUT: true,
