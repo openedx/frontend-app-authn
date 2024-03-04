@@ -42,6 +42,15 @@ describe('Logistration', () => {
       </MemoryRouter>
     </IntlProvider>
   );
+  const loginFormData = {
+    formFields: {
+      emailOrUsername: '', password: '',
+    },
+
+    errors: {
+      emailOrUsername: '', password: '',
+    },
+  };
 
   const initialState = {
     register: {
@@ -71,7 +80,9 @@ describe('Logistration', () => {
       },
     },
     login: {
+      loginFormData,
       loginResult: { success: false, redirectUrl: '' },
+
     },
   };
 
