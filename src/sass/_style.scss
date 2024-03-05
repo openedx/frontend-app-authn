@@ -457,3 +457,18 @@ select.form-control {
 .pgn__form-control-decorator-trailing {
   right: 0 !important;
 }
+
+.authn-container {
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 140px;
+    background-color: #fff;
+    clip-path: polygon(101% 0%, 0% 100%, 101% 100%);
+  }
+}
