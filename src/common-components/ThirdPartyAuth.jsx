@@ -18,6 +18,7 @@ import {
   RenderInstitutionButton,
   SocialAuthProviders,
 } from './index';
+import classNames from "classnames";
 
 /**
  * This component renders the Single sign-on (SSO) buttons for the providers passed.
@@ -47,14 +48,23 @@ const ThirdPartyAuth = (props) => {
         </div>
       )}
       {(isLoginPage && !isEnterpriseLoginDisabled && isSocialAuthActive) && (
-        <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={enterpriseLoginURL}>
+        <Hyperlink
+          className={classNames(
+            "btn btn-link btn-sm text-body p-0",
+            { "mb-0": thirdPartyAuthApiStatus === PENDING_STATE },
+            { "mb-4": thirdPartyAuthApiStatus !== PENDING_STATE },
+          )}
+          destination={enterpriseLoginURL}
+        >
           <Icon src={Institution} className="institute-icon" />
           {formatMessage(messages['enterprise.login.btn.text'])}
         </Hyperlink>
       )}
 
-      {thirdPartyAuthApiStatus === PENDING_STATE ? (
-        <Skeleton className="tpa-skeleton" height={36} count={2} />
+      {thirdPartyAuthApiStatus === PENDING_STATE || true ? (
+        <div className="mt-4">
+          <Skeleton className="tpa-skeleton" height={36} count={2} />
+        </div>
       ) : (
         <>
           {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
