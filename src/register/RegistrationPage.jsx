@@ -36,6 +36,7 @@ import {
 } from './data/optimizelyExperiment/helper';
 import {
   trackSimplifyRegistrationContinueBtnClicked,
+  trackSimplifyRegistrationInvalidFormSubmitBtnClicked,
   trackSimplifyRegistrationSecondStepViewed,
   trackSimplifyRegistrationValidatedSubmitBtnClicked,
 } from './data/optimizelyExperiment/track';
@@ -275,6 +276,10 @@ const RegistrationPage = (props) => {
 
     // returning if not valid
     if (!isValid) {
+      if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
+        || simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
+        trackSimplifyRegistrationInvalidFormSubmitBtnClicked(simplifyRegistrationExpVariation, fieldErrors);
+      }
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       return;
     }
@@ -316,6 +321,10 @@ const RegistrationPage = (props) => {
       }));
       // returning if not valid
       if (!isValid) {
+        trackSimplifyRegistrationInvalidFormSubmitBtnClicked(simplifyRegistrationExpVariation, {
+          ...errors,
+          ...fieldErrors,
+        });
         setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       } else {
         setErrorCode({ type: '', count: 0 });
