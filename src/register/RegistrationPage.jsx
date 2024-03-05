@@ -276,8 +276,7 @@ const RegistrationPage = (props) => {
 
     // returning if not valid
     if (!isValid) {
-      if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
-        || simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
+      if (simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
         trackSimplifyRegistrationInvalidFormSubmitBtnClicked(simplifyRegistrationExpVariation, fieldErrors);
       }
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
