@@ -54,7 +54,7 @@ export const isFormValid = (
   }
 
   Object.keys(fieldDescriptions).forEach(key => {
-    if (key === 'country' && !configurableFormFields.country.displayValue) {
+    if (key === 'country' && !configurableFormFields?.country?.displayValue) {
       fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
     } else if (!configurableFormFields[key]) {
       fieldErrors[key] = fieldDescriptions[key].error_message;

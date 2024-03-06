@@ -209,8 +209,9 @@ const messages = defineMessages({
   },
   'simplify.registration.username.guideline.content': {
     id: 'simplify.registration.username.guideline.content',
-    defaultMessage: 'To finalize your registration, please create a public username that will '
-        + 'identify you in your course communication forums. The username cannot be changed.',
+    defaultMessage: 'To finalize your registration, please confirm your country of residence '
+        + 'and create a public username that will identify you in your course communication forums. '
+        + 'The username cannot be changed.',
     description: 'Guideline content for username field in simplify registration experiment step 2',
   },
   'simplify.registration.form.submission.error': {

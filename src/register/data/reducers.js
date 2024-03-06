@@ -55,7 +55,7 @@ const reducer = (state = defaultState, action = {}) => {
       };
     case BACKUP_REGISTRATION_DATA.BEGIN:
       return {
-        ...defaultState,
+        ...state,
         usernameSuggestions: state.usernameSuggestions,
         registrationFormData: { ...action.payload },
         userPipelineDataLoaded: state.userPipelineDataLoaded,
