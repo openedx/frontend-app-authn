@@ -308,12 +308,15 @@ const RegistrationPage = (props) => {
 
     if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
         && simplifiedRegisterPageStep === FIRST_STEP) {
-      const payload = { ...formFields };
-      // We dont want to validate username since it is in second step of registration
-      delete payload.username;
+      // We don't want to validate username and country since these are in the second step of registration
+      const { username, ...formFieldsPayload } = formFields;
+      const { country, ...configurableFormFieldsPayload } = configurableFormFields;
+      const { country: countryDescription, ...fieldDescriptionsPayload } = fieldDescriptions;
+
       const { isValid, fieldErrors } = isFormValid(
-        payload, errors, configurableFormFields, fieldDescriptions, formatMessage,
+        formFieldsPayload, errors, configurableFormFieldsPayload, fieldDescriptionsPayload, formatMessage,
       );
+
       setErrors(prevErrors => ({
         ...prevErrors,
         ...fieldErrors,
