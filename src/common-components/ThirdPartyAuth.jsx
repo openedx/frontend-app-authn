@@ -6,6 +6,7 @@ import {
   Hyperlink, Icon,
 } from '@openedx/paragon';
 import { Institution } from '@openedx/paragon/icons';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
@@ -47,14 +48,23 @@ const ThirdPartyAuth = (props) => {
         </div>
       )}
       {(isLoginPage && !isEnterpriseLoginDisabled && isSocialAuthActive) && (
-        <Hyperlink className="btn btn-link btn-sm text-body p-0 mb-4" destination={enterpriseLoginURL}>
+        <Hyperlink
+          className={classNames(
+            'btn btn-link btn-sm text-body p-0',
+            { 'mb-0': thirdPartyAuthApiStatus === PENDING_STATE },
+            { 'mb-4': thirdPartyAuthApiStatus !== PENDING_STATE },
+          )}
+          destination={enterpriseLoginURL}
+        >
           <Icon src={Institution} className="institute-icon" />
           {formatMessage(messages['enterprise.login.btn.text'])}
         </Hyperlink>
       )}
 
       {thirdPartyAuthApiStatus === PENDING_STATE ? (
-        <Skeleton className="tpa-skeleton" height={36} count={2} />
+        <div className="mt-4">
+          <Skeleton className="tpa-skeleton" height={36} count={2} />
+        </div>
       ) : (
         <>
           {(isEnterpriseLoginDisabled && isInstitutionAuthActive) && (
