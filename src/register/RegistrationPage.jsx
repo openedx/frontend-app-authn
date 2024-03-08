@@ -18,6 +18,7 @@ import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
   registerNewUser,
+  setEmailSuggestionInStore,
   setUserPipelineDataLoaded,
 } from './data/actions';
 import {
@@ -223,7 +224,7 @@ const RegistrationPage = (props) => {
     }
 
     // Validating form data before submitting
-    const { isValid, fieldErrors } = isFormValid(
+    const { isValid, fieldErrors, emailSuggestion } = isFormValid(
       payload,
       registrationEmbedded ? temporaryErrors : errors,
       configurableFormFields,
@@ -231,6 +232,7 @@ const RegistrationPage = (props) => {
       formatMessage,
     );
     setErrors({ ...fieldErrors });
+    dispatch(setEmailSuggestionInStore(emailSuggestion));
 
     // returning if not valid
     if (!isValid) {

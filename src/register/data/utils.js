@@ -1,10 +1,10 @@
 import { snakeCaseObject } from '@edx/frontend-platform';
 
-import { LETTER_REGEX, NUMBER_REGEX, VALID_EMAIL_REGEX } from '../../data/constants';
+import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
 import messages from '../messages';
+import validateEmail from '../RegistrationFields/EmailField/validator';
+import validateName from '../RegistrationFields/NameField/validator';
 import validateUsername from '../RegistrationFields/UsernameField/validator';
-
-export const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
 /**
  * It validates the password field value
@@ -38,27 +38,43 @@ export const isFormValid = (
 ) => {
   const fieldErrors = { ...errors };
   let isValid = true;
+  let emailSuggestion = {};
+
   Object.keys(payload).forEach(key => {
-    if (!payload[key]) {
-      fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
-    }
-    if (fieldErrors[key]) {
-      isValid = false;
-    }
-    if (isValid && payload.email && !emailRegex.test(payload.email)) {
-      fieldErrors.email = formatMessage(messages['email.invalid.format.error']);
-      isValid = false;
-    }
-    if (isValid && payload.username) {
-      const usernameError = validateUsername(payload.username, formatMessage);
-      if (usernameError) {
-        fieldErrors.username = usernameError;
+    switch (key) {
+    case 'name':
+      fieldErrors.name = validateName(payload.name, formatMessage);
+      if (fieldErrors.name) { isValid = false; }
+      break;
+    case 'email': {
+      const {
+        fieldError, confirmEmailError, suggestion,
+      } = validateEmail(payload.email, configurableFormFields?.confirm_email, formatMessage);
+      if (fieldError) {
+        fieldErrors.email = fieldError;
         isValid = false;
       }
+      if (confirmEmailError) {
+        fieldErrors.confirm_email = confirmEmailError;
+        isValid = false;
+      }
+      emailSuggestion = suggestion;
+      break;
     }
-    if (isValid && payload.password) {
-      const passwordError = validatePasswordField(payload.password, formatMessage);
-      fieldErrors.password = passwordError;
+    case 'username':
+      fieldErrors.username = validateUsername(payload.username, formatMessage);
+      if (fieldErrors.username) { isValid = false; }
+      break;
+    case 'password':
+      fieldErrors.password = validatePasswordField(payload.password, formatMessage);
+      if (fieldErrors.password) { isValid = false; }
+      break;
+    default:
+      if (!payload[key]) {
+        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+        if (fieldErrors[key]) { isValid = false; }
+      }
+      break;
     }
   });
 
@@ -77,12 +93,10 @@ export const isFormValid = (
     } else if (!configurableFormFields[key]) {
       fieldErrors[key] = fieldDescriptions[key].error_message;
     }
-    if (fieldErrors[key]) {
-      isValid = false;
-    }
+    if (fieldErrors[key]) { isValid = false; }
   });
 
-  return { isValid, fieldErrors };
+  return { isValid, fieldErrors, emailSuggestion };
 };
 
 /**
