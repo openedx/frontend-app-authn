@@ -36,6 +36,7 @@ import {
 } from './data/optimizelyExperiment/helper';
 import {
   trackSimplifyRegistrationContinueBtnClicked,
+  trackSimplifyRegistrationInvalidFormSubmitBtnClicked,
   trackSimplifyRegistrationSecondStepViewed,
   trackSimplifyRegistrationValidatedSubmitBtnClicked,
 } from './data/optimizelyExperiment/track';
@@ -275,6 +276,9 @@ const RegistrationPage = (props) => {
 
     // returning if not valid
     if (!isValid) {
+      if (simplifyRegistrationExpVariation === DEFAULT_VARIATION) {
+        trackSimplifyRegistrationInvalidFormSubmitBtnClicked(simplifyRegistrationExpVariation, fieldErrors);
+      }
       setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       return;
     }
@@ -304,18 +308,25 @@ const RegistrationPage = (props) => {
 
     if (simplifyRegistrationExpVariation === SIMPLIFIED_REGISTRATION_VARIATION
         && simplifiedRegisterPageStep === FIRST_STEP) {
-      const payload = { ...formFields };
-      // We dont want to validate username since it is in second step of registration
-      delete payload.username;
+      // We don't want to validate username and country since these are in the second step of registration
+      const { username, ...formFieldsPayload } = formFields;
+      const { country, ...configurableFormFieldsPayload } = configurableFormFields;
+      const { country: countryDescription, ...fieldDescriptionsPayload } = fieldDescriptions;
+
       const { isValid, fieldErrors } = isFormValid(
-        payload, errors, configurableFormFields, fieldDescriptions, formatMessage,
+        formFieldsPayload, errors, configurableFormFieldsPayload, fieldDescriptionsPayload, formatMessage,
       );
+
       setErrors(prevErrors => ({
         ...prevErrors,
         ...fieldErrors,
       }));
       // returning if not valid
       if (!isValid) {
+        trackSimplifyRegistrationInvalidFormSubmitBtnClicked(simplifyRegistrationExpVariation, {
+          ...errors,
+          ...fieldErrors,
+        });
         setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
       } else {
         setErrorCode({ type: '', count: 0 });

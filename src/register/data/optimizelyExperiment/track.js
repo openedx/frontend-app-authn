@@ -5,6 +5,7 @@ export const eventNames = {
   simplifyRegistrationSecondStepViewed: 'edx.bi.user.simplifyregistration.step2.viewed',
   simplifyRegistrationContinueBtnClicked: 'edx.bi.user.registration.submit.click',
   simplifyRegistrationValidatedSubmitBtnClicked: 'edx.bi.user.registration.validated.submit.click',
+  simplifyRegistrationInvalidFormSubmitBtnClicked: 'edx.bi.user.registration.invalid.form.submit.click',
 };
 
 export const trackSimplifyRegistrationFirstStepViewed = (expVariation) => {
@@ -28,5 +29,12 @@ export const trackSimplifyRegistrationContinueBtnClicked = (expVariation) => {
 export const trackSimplifyRegistrationValidatedSubmitBtnClicked = (expVariation) => {
   sendTrackEvent(eventNames.simplifyRegistrationValidatedSubmitBtnClicked, {
     variation: expVariation,
+  });
+};
+
+export const trackSimplifyRegistrationInvalidFormSubmitBtnClicked = (expVariation, formErrors) => {
+  sendTrackEvent(eventNames.simplifyRegistrationInvalidFormSubmitBtnClicked, {
+    variation: expVariation,
+    ...formErrors,
   });
 };

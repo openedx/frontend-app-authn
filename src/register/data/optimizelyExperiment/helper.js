@@ -13,7 +13,8 @@ export const SIMPLIFIED_REGISTRATION_VARIATION = 'simplified-register-page';
 export const FIRST_STEP = 'first-step';
 export const SECOND_STEP = 'second-step';
 
-export const SIMPLIFIED_REGISTER_PAGE_SECOND_STEP_FIELDS = ['username', 'tos_and_honor_code', 'honor_code'];
+export const SIMPLIFIED_REGISTER_PAGE_SECOND_STEP_FIELDS = ['username', 'country'];
+export const SIMPLIFIED_REGISTER_PAGE_COMMON_FIELDS = ['tos_and_honor_code', 'honor_code'];
 
 const SIMPLIFY_REGISTRATION_EXP_PAGE = 'authn_register_page';
 
@@ -45,7 +46,8 @@ export const shouldDisplayFieldInExperiment = (fieldName, expVariation, register
   !expVariation || expVariation === NOT_INITIALIZED || expVariation === DEFAULT_VARIATION
   || (expVariation === SIMPLIFIED_REGISTRATION_VARIATION
     && (
-      (registerPageStep === FIRST_STEP && fieldName !== 'username')
+      SIMPLIFIED_REGISTER_PAGE_COMMON_FIELDS.includes(fieldName)
+        || (registerPageStep === FIRST_STEP && !SIMPLIFIED_REGISTER_PAGE_SECOND_STEP_FIELDS.includes(fieldName))
       || (registerPageStep === SECOND_STEP && SIMPLIFIED_REGISTER_PAGE_SECOND_STEP_FIELDS.includes(fieldName))
     ))
 );
