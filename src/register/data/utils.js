@@ -38,7 +38,7 @@ export const isFormValid = (
 ) => {
   const fieldErrors = { ...errors };
   let isValid = true;
-  let emailSuggestion = {};
+  let emailSuggestion = { suggestion: '', type: '' };
 
   Object.keys(payload).forEach(key => {
     switch (key) {
@@ -70,10 +70,6 @@ export const isFormValid = (
       if (fieldErrors.password) { isValid = false; }
       break;
     default:
-      if (!payload[key]) {
-        fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
-        if (fieldErrors[key]) { isValid = false; }
-      }
       break;
     }
   });

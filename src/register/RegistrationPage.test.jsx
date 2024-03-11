@@ -238,8 +238,10 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
       const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       populateRequiredFields(getByLabelText, formPayload, true);
+
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
+
       const validationErrors = container.querySelector('#validation-errors');
       expect(validationErrors.textContent).toContain(emailError);
     });

@@ -348,6 +348,49 @@ describe('ConfigurableRegistrationForm', () => {
       expect(confirmEmailErrorElement.textContent).toEqual('The email addresses do not match.');
     });
 
+    it('should show error if email and confirm email fields do not match on submit click', () => {
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro_qa',
+        email: 'petro@example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email',
+            },
+            country: { name: 'country' },
+          },
+        },
+      });
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+
+      populateRequiredFields(getByLabelText, formPayload, true);
+      fireEvent.change(
+        getByLabelText('Confirm Email'),
+        { target: { value: 'test2@gmail.com', name: 'confirm_email' } },
+      );
+
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
+
+      const confirmEmailErrorElement = container.querySelector('div#confirm_email-error');
+      expect(confirmEmailErrorElement.textContent).toEqual('The email addresses do not match.');
+
+      const validationErrors = container.querySelector('#validation-errors');
+      expect(validationErrors.textContent).toContain(
+        "We couldn't create your account.Please check your responses and try again.",
+      );
+    });
+
     it('should run validations for configurable focused field on form submission', () => {
       const professionError = 'Enter your profession';
       store = mockStore({
