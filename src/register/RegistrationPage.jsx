@@ -189,7 +189,9 @@ const RegistrationPage = (props) => {
   const handleOnChange = (event) => {
     const { name } = event.target;
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    dispatch(clearRegistrationBackendError(name));
+    if (registrationError[name]) {
+      dispatch(clearRegistrationBackendError(name));
+    }
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
     setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
