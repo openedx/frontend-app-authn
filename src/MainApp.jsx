@@ -28,6 +28,7 @@ import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
 
 import './index.scss';
+import {LoginPage} from "./login";
 
 registerIcons();
 
@@ -46,6 +47,7 @@ const MainApp = () => (
       <Route
         path={LOGIN_PAGE}
         element={
+        // <UnAuthOnlyRoute><LoginPage /></UnAuthOnlyRoute>
           <UnAuthOnlyRoute><Logistration selectedPage={LOGIN_PAGE} /></UnAuthOnlyRoute>
         }
       />
