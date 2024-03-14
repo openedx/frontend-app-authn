@@ -46,28 +46,21 @@ import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 const LoginPage = (props) => {
   const dispatch = useDispatch();
   const { formatMessage } = useIntl();
+  const backedUpFormData = useSelector(state => state.login.loginFormData);
+  const loginErrorCode = useSelector(state => state.login.loginErrorCode);
+  const loginErrorContext = useSelector(state => state.login.loginErrorContext);
+  const loginResult = useSelector(state => state.login.loginResult);
+  const shouldBackupState = useSelector(state => state.login.shouldBackupState);
+  const showResetPasswordSuccessBanner = useSelector(state => state.login.showResetPasswordSuccessBanner);
+  const submitState = useSelector(state => state.login.submitState);
 
-  const {
-    loginFormData: backedUpFormData,
-    loginErrorCode,
-    loginErrorContext,
-    loginResult,
-    shouldBackupState,
-    showResetPasswordSuccessBanner,
-    submitState,
-  } = useSelector(state => state.login);
-
-  const {
-    thirdPartyAuthApiStatus,
-    thirdPartyAuthContext: {
-      providers,
-      currentProvider,
-      secondaryProviders,
-      finishAuthUrl,
-      platformName,
-      errorMessage: thirdPartyErrorMessage,
-    },
-  } = useSelector(state => state.commonComponents);
+  const thirdPartyAuthApiStatus = useSelector(state => state.commonComponents.thirdPartyAuthApiStatus);
+  const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
+  const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
+  const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
+  const finishAuthUrl = useSelector(state => state.commonComponents.thirdPartyAuthContext.finishAuthUrl);
+  const platformName = useSelector(state => state.commonComponents.thirdPartyAuthContext.platformName);
+  const thirdPartyErrorMessage = useSelector(state => state.commonComponents.thirdPartyAuthContext.errorMessage);
 
   const {
     institutionLogin,
@@ -92,6 +85,7 @@ const LoginPage = (props) => {
     }
     dispatch(getTPADataFromBackend(payload));
   }, [dispatch, queryParams, tpaHint]);
+
   /**
    * Backup the login form in redux when login page is toggled.
    */
