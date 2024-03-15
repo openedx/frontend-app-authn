@@ -201,24 +201,6 @@ const messages = defineMessages({
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
   },
-  // Simplify Registration experiment
-  'simplified.registration.exp.button': {
-    id: 'simplified.registration.exp.button',
-    defaultMessage: 'Complete account creation',
-    description: 'Label text for simplified registration page second step',
-  },
-  'simplify.registration.username.guideline.content': {
-    id: 'simplify.registration.username.guideline.content',
-    defaultMessage: 'To finalize your registration, please confirm your country of residence '
-        + 'and create a public username that will identify you in your course communication forums. '
-        + 'The username cannot be changed.',
-    description: 'Guideline content for username field in simplify registration experiment step 2',
-  },
-  'simplify.registration.form.submission.error': {
-    id: 'simplify.registration.form.submission.error',
-    defaultMessage: 'Please check your responses for this and the previous step and try again.',
-    description: 'Error message that appears on top of the form when invalid form is submitted',
-  },
 });
 
 export default messages;
