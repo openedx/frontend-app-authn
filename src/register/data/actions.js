@@ -7,7 +7,6 @@ export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_
 export const REGISTRATION_CLEAR_BACKEND_ERROR = 'REGISTRATION_CLEAR_BACKEND_ERROR';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
-export const REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA = 'REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA';
 
 // Backup registration form
 export const backupRegistrationForm = () => ({
@@ -20,18 +19,18 @@ export const backupRegistrationFormBegin = (data) => ({
 });
 
 // Validate fields from the backend
-export const fetchRealtimeValidations = (formPayload, isValidatingSimplifiedRegisterFirstPage = false) => ({
+export const fetchRealtimeValidations = (formPayload) => ({
   type: REGISTER_FORM_VALIDATIONS.BASE,
-  payload: { formPayload, isValidatingSimplifiedRegisterFirstPage },
+  payload: { formPayload },
 });
 
 export const fetchRealtimeValidationsBegin = () => ({
   type: REGISTER_FORM_VALIDATIONS.BEGIN,
 });
 
-export const fetchRealtimeValidationsSuccess = (validations, isValidatingSimplifiedRegisterFirstPage = false) => ({
+export const fetchRealtimeValidationsSuccess = (validations) => ({
   type: REGISTER_FORM_VALIDATIONS.SUCCESS,
-  payload: { validations, isValidatingSimplifiedRegisterFirstPage },
+  payload: { validations },
 });
 
 export const fetchRealtimeValidationsFailure = () => ({
@@ -59,9 +58,8 @@ export const registerNewUserFailure = (error) => ({
   payload: { ...error },
 });
 
-export const clearUsernameSuggestions = (isSuggestionClicked = false) => ({
+export const clearUsernameSuggestions = () => ({
   type: REGISTER_CLEAR_USERNAME_SUGGESTIONS,
-  payload: { isSuggestionClicked },
 });
 
 export const clearRegistrationBackendError = (fieldName) => ({
@@ -77,10 +75,4 @@ export const setCountryFromThirdPartyAuthContext = (countryCode) => ({
 export const setUserPipelineDataLoaded = (value) => ({
   type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   payload: { value },
-});
-
-// Simplify Registration Experiment Actions
-export const setSimplifyRegExperimentData = (simplifyRegExpVariation, simplifiedRegisterPageStep) => ({
-  type: REGISTER_SET_SIMPLIFY_REGISTRATION_EXP_DATA,
-  payload: { simplifyRegExpVariation, simplifiedRegisterPageStep },
 });

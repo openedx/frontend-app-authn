@@ -11,8 +11,6 @@ import configureStore from 'redux-mock-store';
 
 import { registerNewUser } from '../../data/actions';
 import { FIELDS } from '../../data/constants';
-import useSimplifyRegistrationExperimentVariation
-  from '../../data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation';
 import RegistrationPage from '../../RegistrationPage';
 import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
 
@@ -24,7 +22,6 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
-jest.mock('../../data/optimizelyExperiment/useSimplifyRegistrationExperimentVariation', () => jest.fn());
 
 const IntlConfigurableRegistrationForm = injectIntl(ConfigurableRegistrationForm);
 const IntlRegistrationPage = injectIntl(RegistrationPage);
@@ -96,10 +93,6 @@ describe('ConfigurableRegistrationForm', () => {
       registrationError: {},
       registrationFormData,
       usernameSuggestions: [],
-      isValidatingSimplifiedRegisterFirstPage: false,
-      simplifiedRegisterPageStep: 'first-step',
-      simplifyRegExpVariation: '',
-      usernameSuggestionsBackup: [],
     },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
@@ -128,7 +121,6 @@ describe('ConfigurableRegistrationForm', () => {
     };
     window.location = { search: '' };
     getLocale.mockImplementationOnce(() => ('en-us'));
-    useSimplifyRegistrationExperimentVariation.mockReturnValue('default-register-page');
   });
 
   afterEach(() => {
