@@ -42,11 +42,11 @@ describe('Logistration', () => {
       </MemoryRouter>
     </IntlProvider>
   );
+
   const loginFormData = {
     formFields: {
       emailOrUsername: '', password: '',
     },
-
     errors: {
       emailOrUsername: '', password: '',
     },
@@ -82,7 +82,6 @@ describe('Logistration', () => {
     login: {
       loginFormData,
       loginResult: { success: false, redirectUrl: '' },
-
     },
   };
 
