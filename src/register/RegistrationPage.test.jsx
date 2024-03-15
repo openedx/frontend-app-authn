@@ -221,6 +221,54 @@ describe('RegistrationPage', () => {
       expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
     });
 
+    it('should display an error when form is submitted with an invalid email', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      const emailError = "We couldn't create your account.Please check your responses and try again.";
+
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro_qa',
+        email: 'petro  @example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      populateRequiredFields(getByLabelText, formPayload, true);
+
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
+
+      const validationErrors = container.querySelector('#validation-errors');
+      expect(validationErrors.textContent).toContain(emailError);
+    });
+
+    it('should display an error when form is submitted with an invalid username', () => {
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+      const usernameError = "We couldn't create your account.Please check your responses and try again.";
+
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro qa',
+        email: 'petro@example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      populateRequiredFields(getByLabelText, formPayload, true);
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
+      const validationErrors = container.querySelector('#validation-errors');
+      expect(validationErrors.textContent).toContain(usernameError);
+    });
+
     it('should submit form with marketing email opt in value', () => {
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: 'true',

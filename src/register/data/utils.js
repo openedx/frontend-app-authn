@@ -2,6 +2,9 @@ import { snakeCaseObject } from '@edx/frontend-platform';
 
 import { LETTER_REGEX, NUMBER_REGEX } from '../../data/constants';
 import messages from '../messages';
+import validateEmail from '../RegistrationFields/EmailField/validator';
+import validateName from '../RegistrationFields/NameField/validator';
+import validateUsername from '../RegistrationFields/UsernameField/validator';
 
 /**
  * It validates the password field value
@@ -35,12 +38,39 @@ export const isFormValid = (
 ) => {
   const fieldErrors = { ...errors };
   let isValid = true;
+  let emailSuggestion = { suggestion: '', type: '' };
+
   Object.keys(payload).forEach(key => {
-    if (!payload[key]) {
-      fieldErrors[key] = formatMessage(messages[`empty.${key}.field.error`]);
+    switch (key) {
+    case 'name':
+      fieldErrors.name = validateName(payload.name, formatMessage);
+      if (fieldErrors.name) { isValid = false; }
+      break;
+    case 'email': {
+      const {
+        fieldError, confirmEmailError, suggestion,
+      } = validateEmail(payload.email, configurableFormFields?.confirm_email, formatMessage);
+      if (fieldError) {
+        fieldErrors.email = fieldError;
+        isValid = false;
+      }
+      if (confirmEmailError) {
+        fieldErrors.confirm_email = confirmEmailError;
+        isValid = false;
+      }
+      emailSuggestion = suggestion;
+      break;
     }
-    if (fieldErrors[key]) {
-      isValid = false;
+    case 'username':
+      fieldErrors.username = validateUsername(payload.username, formatMessage);
+      if (fieldErrors.username) { isValid = false; }
+      break;
+    case 'password':
+      fieldErrors.password = validatePasswordField(payload.password, formatMessage);
+      if (fieldErrors.password) { isValid = false; }
+      break;
+    default:
+      break;
     }
   });
 
@@ -59,12 +89,10 @@ export const isFormValid = (
     } else if (!configurableFormFields[key]) {
       fieldErrors[key] = fieldDescriptions[key].error_message;
     }
-    if (fieldErrors[key]) {
-      isValid = false;
-    }
+    if (fieldErrors[key]) { isValid = false; }
   });
 
-  return { isValid, fieldErrors };
+  return { isValid, fieldErrors, emailSuggestion };
 };
 
 /**
