@@ -6,6 +6,7 @@ export const REGISTER_NEW_USER = new AsyncActionType('REGISTRATION', 'REGISTER_N
 export const REGISTER_CLEAR_USERNAME_SUGGESTIONS = 'REGISTRATION_CLEAR_USERNAME_SUGGESTIONS';
 export const REGISTRATION_CLEAR_BACKEND_ERROR = 'REGISTRATION_CLEAR_BACKEND_ERROR';
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
+export const REGISTER_SET_EMAIL_SUGGESTIONS = 'REGISTER_SET_EMAIL_SUGGESTIONS';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
 
 // Backup registration form
@@ -35,6 +36,12 @@ export const fetchRealtimeValidationsSuccess = (validations) => ({
 
 export const fetchRealtimeValidationsFailure = () => ({
   type: REGISTER_FORM_VALIDATIONS.FAILURE,
+});
+
+// Set email field frontend validations
+export const setEmailSuggestionInStore = (emailSuggestion) => ({
+  type: REGISTER_SET_EMAIL_SUGGESTIONS,
+  payload: { emailSuggestion },
 });
 
 // Register

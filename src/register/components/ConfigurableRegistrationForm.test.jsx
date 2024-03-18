@@ -11,6 +11,7 @@ import configureStore from 'redux-mock-store';
 
 import ConfigurableRegistrationForm from './ConfigurableRegistrationForm';
 import { FIELDS } from '../data/constants';
+import RegistrationPage from '../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -22,7 +23,20 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
 }));
 
 const IntlConfigurableRegistrationForm = injectIntl(ConfigurableRegistrationForm);
+const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
+const populateRequiredFields = (registrationPage, payload, isThirdPartyAuth = false) => {
+  registrationPage.find('input#name').simulate('change', { target: { value: payload.name, name: 'name' } });
+  registrationPage.find('input#username').simulate('change', { target: { value: payload.username, name: 'username' } });
+  registrationPage.find('input#email').simulate('change', { target: { value: payload.email, name: 'email' } });
+
+  registrationPage.find('input[name="country"]').simulate('change', { target: { value: payload.country, name: 'country' } });
+  registrationPage.find('input[name="country"]').simulate('blur', { target: { value: payload.country, name: 'country' } });
+
+  if (!isThirdPartyAuth) {
+    registrationPage.find('input#password').simulate('change', { target: { value: payload.password, name: 'password' } });
+  }
+};
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -181,6 +195,53 @@ describe('ConfigurableRegistrationForm', () => {
       expect(props.setFormFields.mock.calls[1][0]()).toEqual({
         [FIELDS.TERMS_OF_SERVICE]: true,
       });
+    });
+
+    it('should show error if email and confirm email fields do not match on submit click', () => {
+      const formPayload = {
+        name: 'Petro',
+        username: 'petro_qa',
+        email: 'petro@example.com',
+        password: 'password1',
+        country: 'Ukraine',
+        honor_code: true,
+        totalRegistrationTime: 0,
+      };
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            confirm_email: {
+              name: 'confirm_email', type: 'text', label: 'Confirm Email',
+            },
+            country: { name: 'country' },
+          },
+        },
+      });
+      const registrationPage = mount(routerWrapper(reduxWrapper(
+        <IntlRegistrationPage {...props} />,
+      )));
+
+      populateRequiredFields(registrationPage, formPayload, true);
+      registrationPage.find('input#confirm_email').simulate(
+        'change', { target: { value: 'test2@gmail.com', name: 'confirm_email' } },
+      );
+
+      const button = registrationPage.find('button.btn-brand');
+      button.simulate('click');
+
+      registrationPage.update();
+
+      const confirmEmailErrorElement = registrationPage.find('div#confirm_email-error');
+      expect(confirmEmailErrorElement.text()).toEqual('The email addresses do not match.');
+
+      const validationErrors = registrationPage.find('#validation-errors');
+      const firstValidationErrorText = validationErrors.first().text();
+      expect(firstValidationErrorText).toContain(
+        "We couldn't create your account.Please check your responses and try again.",
+      );
     });
   });
 });
