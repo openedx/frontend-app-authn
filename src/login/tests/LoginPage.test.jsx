@@ -40,8 +40,18 @@ describe('LoginPage', () => {
     </IntlProvider>
   );
 
+  const loginFormData = {
+    formFields: {
+      emailOrUsername: '', password: '',
+    },
+    errors: {
+      emailOrUsername: '', password: '',
+    },
+  };
+
   const initialState = {
     login: {
+      loginFormData,
       loginResult: { success: false, redirectUrl: '' },
     },
     commonComponents: {
