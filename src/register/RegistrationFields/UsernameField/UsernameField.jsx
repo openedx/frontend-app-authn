@@ -41,7 +41,8 @@ const UsernameField = (props) => {
   let className = '';
   let suggestedUsernameDiv = null;
   let iconButton = null;
-  const { usernameSuggestions, validationApiRateLimited } = useSelector(state => state.register);
+  const usernameSuggestions = useSelector(state => state.register.usernameSuggestions);
+  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
 
   /**
    * We need to remove the placeholder from the field, adding a space will do that.
