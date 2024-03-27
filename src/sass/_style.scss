@@ -11,7 +11,6 @@
 // ----------------------------
 // #COLORS
 // ----------------------------
-$font-blue: #126f9a;
 $white: #FFFFFF;
 
 // social platforms
@@ -105,10 +104,10 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   font-size: 14px;
 
   background-color: $white;
-  border: 1px solid $font-blue;
+  border: 1px solid $primary;
   width: 224px;
   height: 36px;
-  color: $font-blue;
+  color: $primary;
 
   .btn-tpa__image-icon{
     background-color: transparent;
@@ -133,7 +132,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .btn-tpa__font-container {
-  background-color: $font-blue;
+  background-color: $primary;
   color: $white;
   font-size: 11px;
 
