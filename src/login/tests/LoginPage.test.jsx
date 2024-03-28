@@ -84,7 +84,6 @@ describe('LoginPage', () => {
   });
 
   // ******** test login form submission ********
-
   it('should submit form for valid input', () => {
     store.dispatch = jest.fn(store.dispatch);
 
