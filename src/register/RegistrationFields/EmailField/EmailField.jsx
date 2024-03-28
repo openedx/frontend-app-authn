@@ -37,10 +37,8 @@ const EmailField = (props) => {
     confirmEmailValue,
   } = props;
 
-  const {
-    registrationFormData: backedUpFormData,
-    validationApiRateLimited,
-  } = useSelector(state => state.register);
+  const backedUpFormData = useSelector(state => state.register.registrationFormData);
+  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
 
   const [emailSuggestion, setEmailSuggestion] = useState({ ...backedUpFormData?.emailSuggestion });
 
