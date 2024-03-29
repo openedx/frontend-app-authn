@@ -8,7 +8,7 @@ export const welcomePageContextSelector = createSelector(
   commonComponentsSelector,
   commonComponents => ({
     fields: commonComponents.optionalFields.fields,
-    extended_profile: commonComponents.optionalFields.extended_profile,
+    extendedProfile: commonComponents.optionalFields.extendedProfile,
     nextUrl: commonComponents.thirdPartyAuthContext.welcomePageRedirectUrl,
   }),
 );

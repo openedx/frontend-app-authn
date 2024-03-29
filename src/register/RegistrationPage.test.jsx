@@ -108,7 +108,7 @@ describe('RegistrationPage', () => {
       fieldDescriptions: {},
       optionalFields: {
         fields: {},
-        extended_profile: [],
+        extendedProfile: [],
       },
     },
   };
@@ -513,9 +513,9 @@ describe('RegistrationPage', () => {
         commonComponents: {
           ...initialState.commonComponents,
           optionalFields: {
-            extended_profile: [],
+            extendedProfile: [],
             fields: {
-              level_of_education: { name: 'level_of_education', error_message: false },
+              levelOfEducation: { name: 'level_of_education', errorMessage: false },
             },
           },
         },
@@ -679,9 +679,9 @@ describe('RegistrationPage', () => {
         commonComponents: {
           ...initialState.commonComponents,
           optionalFields: {
-            extended_profile: {},
+            extendedProfile: {},
             fields: {
-              level_of_education: { name: 'level_of_education', error_message: false },
+              levelOfEducation: { name: 'level_of_education', errorMessage: false },
             },
           },
         },

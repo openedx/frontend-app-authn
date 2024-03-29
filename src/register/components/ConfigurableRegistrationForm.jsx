@@ -92,8 +92,8 @@ const ConfigurableRegistrationForm = (props) => {
   const handleOnBlur = (event) => {
     const { name, value } = event.target;
     let error = '';
-    if ((!value || !value.trim()) && fieldDescriptions[name]?.error_message) {
-      error = fieldDescriptions[name].error_message;
+    if ((!value || !value.trim()) && fieldDescriptions[name]?.errorMessage) {
+      error = fieldDescriptions[name].errorMessage;
     } else if (name === 'confirm_email' && value !== email) {
       error = formatMessage(messages['email.do.not.match']);
     }
@@ -105,9 +105,19 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
+  function snakeToCamel(string) {
+    let splitStringArr = string.split("_");
+    let camelCaseStr = splitStringArr.reduce((acc, curr, i) => {
+      curr = i !== 0 ? curr[0].toUpperCase() + curr.slice(1) : curr;
+      return acc + curr;
+    }, "");
+    return camelCaseStr;
+  }
+
   if (flags.showConfigurableRegistrationFields) {
     Object.keys(fieldDescriptions).forEach(fieldName => {
-      const fieldData = fieldDescriptions[fieldName];
+      let fieldData = fieldDescriptions[fieldName];
+      fieldData = {...fieldData, name: snakeToCamel(fieldData.name)}
       switch (fieldData.name) {
         case FIELDS.COUNTRY:
           showCountryField = true;
@@ -194,7 +204,7 @@ const ConfigurableRegistrationForm = (props) => {
 
   if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
     formFieldDescriptions.push(
-      <span key="honor_code">
+      <span key="tos_and_honor_code">
         <HonorCode fieldType="tos_and_honor_code" onChangeHandler={handleOnChange} value={formFields.honor_code} />
       </span>,
     );

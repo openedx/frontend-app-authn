@@ -40,7 +40,7 @@ const RegistrationFailureMessage = (props) => {
     case TPA_AUTHENTICATION_FAILURE:
       errorMessage = formatMessage(messages['registration.tpa.authentication.failure'],
         {
-          platform_name: getConfig().SITE_NAME,
+          platformName: getConfig().SITE_NAME,
           lineBreak: <br />,
           errorMessage: context.errorMessage,
         });

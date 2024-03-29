@@ -1,8 +1,8 @@
 // Registration Fields
 export const FIELDS = {
   COUNTRY: 'country',
-  HONOR_CODE: 'honor_code',
-  TERMS_OF_SERVICE: 'terms_of_service',
+  HONOR_CODE: 'honorCode',
+  TERMS_OF_SERVICE: 'termsOfService',
 };
 
 // Registration Error Codes

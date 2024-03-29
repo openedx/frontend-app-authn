@@ -23,7 +23,7 @@ describe('common components reducer', () => {
     };
     const optionalFields = {
       fields: [],
-      extended_profile: {},
+      extendedProfile: {},
     };
     const thirdPartyAuthContext = { ...state.thirdPartyAuthContext };
     const action = {
@@ -39,7 +39,7 @@ describe('common components reducer', () => {
         fieldDescriptions: [],
         optionalFields: {
           fields: [],
-          extended_profile: {},
+          extendedProfile: {},
         },
         thirdPartyAuthApiStatus: 'complete',
       },

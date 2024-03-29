@@ -100,7 +100,7 @@ describe('ConfigurableRegistrationForm', () => {
       fieldDescriptions: {},
       optionalFields: {
         fields: {},
-        extended_profile: [],
+        extendedProfile: [],
       },
     },
   };
@@ -150,9 +150,9 @@ describe('ConfigurableRegistrationForm', () => {
         ...props,
         fieldDescriptions: {
           profession: { name: 'profession', type: 'text', label: 'Profession' },
-          terms_of_service: {
+          termsOfService: {
             name: FIELDS.TERMS_OF_SERVICE,
-            error_message: 'You must agree to the Terms and Service agreement of our site',
+            errorMessage: 'You must agree to the Terms and Service agreement of our site',
           },
         },
       };
@@ -175,13 +175,13 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
         fieldDescriptions: {
-          terms_of_service: {
+          termsOfService: {
             name: FIELDS.TERMS_OF_SERVICE,
-            error_message: 'You must agree to the Terms and Service agreement of our site',
+            errorMessage: 'You must agree to the Terms and Service agreement of our site',
           },
-          honor_code: {
+          honorCode: {
             name: FIELDS.HONOR_CODE,
-            error_message: 'You must agree to the Honor Code agreement of our site',
+            errorMessage: 'You must agree to the Honor Code agreement of our site',
           },
         },
         autoSubmitRegistrationForm: true,
@@ -210,7 +210,7 @@ describe('ConfigurableRegistrationForm', () => {
             profession: { name: 'profession', type: 'text', label: 'Profession' },
             terms_of_service: {
               name: FIELDS.TERMS_OF_SERVICE,
-              error_message: 'You must agree to the Terms and Service agreement of our site',
+              errorMessage: 'You must agree to the Terms and Service agreement of our site',
             },
           },
         },
@@ -274,10 +274,10 @@ describe('ConfigurableRegistrationForm', () => {
           ...initialState.commonComponents,
           fieldDescriptions: {
             profession: {
-              name: 'profession', type: 'text', label: 'Profession', error_message: professionError,
+              name: 'profession', type: 'text', label: 'Profession', errorMessage: professionError,
             },
             confirm_email: {
-              name: 'confirm_email', type: 'text', label: 'Confirm Email', error_message: confirmEmailError,
+              name: 'confirm_email', type: 'text', label: 'Confirm Email', errorMessage: confirmEmailError,
             },
             country: { name: 'country' },
           },
@@ -329,7 +329,7 @@ describe('ConfigurableRegistrationForm', () => {
         commonComponents: {
           ...initialState.commonComponents,
           fieldDescriptions: {
-            confirm_email: {
+            confirmEmail: {
               name: 'confirm_email', type: 'text', label: 'Confirm Email',
             },
           },
@@ -364,7 +364,7 @@ describe('ConfigurableRegistrationForm', () => {
         commonComponents: {
           ...initialState.commonComponents,
           fieldDescriptions: {
-            confirm_email: {
+            confirmEmail: {
               name: 'confirm_email', type: 'text', label: 'Confirm Email',
             },
             country: { name: 'country' },
@@ -399,7 +399,7 @@ describe('ConfigurableRegistrationForm', () => {
           ...initialState.commonComponents,
           fieldDescriptions: {
             profession: {
-              name: 'profession', type: 'text', label: 'Profession', error_message: professionError,
+              name: 'profession', type: 'text', label: 'Profession', errorMessage: professionError,
             },
           },
         },

@@ -201,8 +201,8 @@ const messages = defineMessages({
   },
   'login.tpa.authentication.failure': {
     id: 'login.tpa.authentication.failure',
-    defaultMessage: 'We are sorry, you are not authorized to access {platform_name} via this channel. '
-        + 'Please contact your learning administrator or manager in order to access {platform_name}.'
+    defaultMessage: 'We are sorry, you are not authorized to access {platformName} via this channel. '
+        + 'Please contact your learning administrator or manager in order to access {platformName}.'
         + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
     description: 'Error message third party authentication pipeline fails',
   },

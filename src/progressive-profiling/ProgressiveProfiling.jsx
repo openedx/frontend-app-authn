@@ -79,7 +79,7 @@ const ProgressiveProfiling = (props) => {
       setRegistrationResult(registrationResponse);
       setFormFieldData({
         fields: location.state?.optionalFields.fields,
-        extendedProfile: location.state?.optionalFields.extended_profile,
+        extendedProfile: location.state?.optionalFields.extendedProfile,
       });
     }
   }, [location.state]);
@@ -88,7 +88,7 @@ const ProgressiveProfiling = (props) => {
     if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
       setFormFieldData({
         fields: welcomePageContext.fields,
-        extendedProfile: welcomePageContext.extended_profile,
+        extendedProfile: welcomePageContext.extendedProfile,
       });
       const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : getConfig().SEARCH_CATALOG_URL;
       setRegistrationResult({ redirectUrl: nextUrl });
@@ -154,9 +154,9 @@ const ProgressiveProfiling = (props) => {
       'edx.bi.welcome.page.submit.clicked',
       {
         isGenderSelected: !!values.gender,
-        isYearOfBirthSelected: !!values.year_of_birth,
-        isLevelOfEducationSelected: !!values.level_of_education,
-        isWorkExperienceSelected: !!values.work_experience,
+        isYearOfBirthSelected: !!values.yearOfBirth,
+        isLevelOfEducationSelected: !!values.levelOfEducation,
+        isWorkExperienceSelected: !!values.workExperience,
         host: queryParams?.host || '',
       },
     );
@@ -214,7 +214,7 @@ const ProgressiveProfiling = (props) => {
           success
           redirectUrl={registrationResult.redirectUrl}
           redirectToRecommendationsPage={showRecommendationsPage}
-          educationLevel={values?.level_of_education}
+          educationLevel={values?.levelOfEducation}
           userId={authenticatedUser?.userId}
         />
       )}
@@ -291,7 +291,7 @@ ProgressiveProfiling.propTypes = {
   shouldRedirect: PropTypes.bool,
   submitState: PropTypes.string,
   welcomePageContext: PropTypes.shape({
-    extended_profile: PropTypes.arrayOf(PropTypes.string),
+    extendedProfile: PropTypes.arrayOf(PropTypes.string),
     fields: PropTypes.shape({}),
     nextUrl: PropTypes.string,
   }),
