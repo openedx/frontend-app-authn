@@ -25,8 +25,9 @@ import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
+import getBackendValidations from './data/selectors';
 import {
-  getBackendValidations, isFormValid, prepareRegistrationPayload,
+  isFormValid, prepareRegistrationPayload,
 } from './data/utils';
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
@@ -65,38 +66,26 @@ const RegistrationPage = (props) => {
     institutionLogin,
   } = props;
 
-  const {
-    registrationFormData: backedUpFormData,
-    registrationError,
-    registrationError: {
-      errorCode: registrationErrorCode,
-    } = {},
-    registrationResult,
-    shouldBackupState,
-    userPipelineDataLoaded,
-    submitState,
-    validations,
-  } = useSelector(state => state.register);
+  const backedUpFormData = useSelector(state => state.register.registrationFormData);
+  const registrationError = useSelector(state => state.register.registrationError);
+  const registrationErrorCode = registrationError?.errorCode;
+  const registrationResult = useSelector(state => state.register.registrationResult);
+  const shouldBackupState = useSelector(state => state.register.shouldBackupState);
+  const userPipelineDataLoaded = useSelector(state => state.register.userPipelineDataLoaded);
+  const submitState = useSelector(state => state.register.submitState);
 
-  const {
-    fieldDescriptions,
-    optionalFields,
-    thirdPartyAuthApiStatus,
-    thirdPartyAuthContext,
-    thirdPartyAuthContext: {
-      autoSubmitRegForm,
-      errorMessage: thirdPartyAuthErrorMessage,
-      finishAuthUrl,
-      currentProvider,
-      providers,
-      secondaryProviders,
-      pipelineUserDetails,
-    },
-  } = useSelector(state => state.commonComponents);
+  const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
+  const optionalFields = useSelector(state => state.commonComponents.optionalFields);
+  const thirdPartyAuthApiStatus = useSelector(state => state.commonComponents.thirdPartyAuthApiStatus);
+  const autoSubmitRegForm = useSelector(state => state.commonComponents.thirdPartyAuthContext.autoSubmitRegForm);
+  const thirdPartyAuthErrorMessage = useSelector(state => state.commonComponents.thirdPartyAuthContext.errorMessage);
+  const finishAuthUrl = useSelector(state => state.commonComponents.thirdPartyAuthContext.finishAuthUrl);
+  const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
+  const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
+  const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
+  const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
 
-  const backendValidations = useMemo(
-    () => getBackendValidations(registrationError, validations), [registrationError, validations],
-  );
+  const backendValidations = useSelector(getBackendValidations);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
 
@@ -130,7 +119,9 @@ const RegistrationPage = (props) => {
       }
     }
   }, [ // eslint-disable-line react-hooks/exhaustive-deps
-    thirdPartyAuthContext,
+    thirdPartyAuthApiStatus,
+    thirdPartyAuthErrorMessage,
+    pipelineUserDetails,
     userPipelineDataLoaded,
   ]);
 
