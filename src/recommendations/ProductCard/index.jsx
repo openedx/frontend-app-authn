@@ -63,7 +63,8 @@ const ProductCard = ({
       `recommendation.product-card.pill-text.${createCodeFriendlyProduct(productType)}`
     ],
   );
-  const handleCardClick = () => {
+  const handleCardClick = (event) => {
+    event.preventDefault();
     trackRecommendationClick(
       product,
       position + 1,
@@ -83,6 +84,7 @@ const ProductCard = ({
       productType={productType}
       variant={variant}
       isLoading={isLoading}
+      redirectUrl={product.url || product?.activeCourseRun?.marketingUrl}
       footer={(
         <Footer
           quickFacts={product.degree?.quickFacts}

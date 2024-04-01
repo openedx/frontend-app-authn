@@ -43,7 +43,7 @@ describe('LoginFailureMessage', () => {
   it('should match non compliant password error message', () => {
     props = {
       errorCode: NON_COMPLIANT_PASSWORD_EXCEPTION,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -71,7 +71,7 @@ describe('LoginFailureMessage', () => {
         supportLink: 'http://support.openedx.test',
       },
       errorCode: INACTIVE_USER,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -101,7 +101,7 @@ describe('LoginFailureMessage', () => {
         resetLink: '/reset',
       },
       errorCode: FAILED_LOGIN_ATTEMPT,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -127,7 +127,7 @@ describe('LoginFailureMessage', () => {
         resetLink: '/reset',
       },
       errorCode: INCORRECT_EMAIL_PASSWORD,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -147,7 +147,7 @@ describe('LoginFailureMessage', () => {
   it('test match user account locked out', () => {
     props = {
       errorCode: ACCOUNT_LOCKED_OUT,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -171,7 +171,7 @@ describe('LoginFailureMessage', () => {
         resetLink: '/reset',
       },
       errorCode: INCORRECT_EMAIL_PASSWORD,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -191,7 +191,7 @@ describe('LoginFailureMessage', () => {
   it('should match rate limit error message', () => {
     props = {
       errorCode: FORBIDDEN_REQUEST,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -211,7 +211,7 @@ describe('LoginFailureMessage', () => {
   it('should match internal server error message', () => {
     props = {
       errorCode: INTERNAL_SERVER_ERROR,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -231,7 +231,7 @@ describe('LoginFailureMessage', () => {
   it('should match invalid form error message', () => {
     props = {
       errorCode: INVALID_FORM,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -250,7 +250,7 @@ describe('LoginFailureMessage', () => {
   it('should match internal server of error message', () => {
     props = {
       errorCode: 'invalid-error-code',
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -269,7 +269,7 @@ describe('LoginFailureMessage', () => {
   it('should match tpa authentication failed error message', () => {
     props = {
       errorCode: TPA_AUTHENTICATION_FAILURE,
-      failureCount: 0,
+      errorCount: 0,
       context: { errorMessage: 'An error occurred' },
     };
 
@@ -295,7 +295,7 @@ describe('LoginFailureMessage', () => {
   it('should show modal that nudges users to change password', () => {
     props = {
       errorCode: NUDGE_PASSWORD_CHANGE,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -321,7 +321,7 @@ describe('LoginFailureMessage', () => {
   it('should show modal that requires users to change password', () => {
     props = {
       errorCode: REQUIRE_PASSWORD_CHANGE,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(
@@ -354,7 +354,7 @@ describe('LoginFailureMessage', () => {
         tpaHint: 'google-auth2',
       },
       errorCode: ALLOWED_DOMAIN_LOGIN_ERROR,
-      failureCount: 0,
+      errorCount: 0,
     };
 
     render(

@@ -105,7 +105,7 @@ describe('ProgressiveProfilingTests', () => {
         optionalFields,
       },
     });
-    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123' });
+    getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123', name: 'Test User' });
   });
 
   // ******** test form links and modal ********

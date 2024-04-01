@@ -16,12 +16,14 @@ const BaseCard = ({
   footer,
   handleOnClick,
   isLoading,
+  redirectUrl,
 }) => (
   <div className="recommendation-card" key={`container-${uuid}`}>
     <Hyperlink
       target="_blank"
       className="card-box d-inline"
       showLaunchIcon={false}
+      destination={redirectUrl}
       onClick={handleOnClick}
     >
       <Card
@@ -67,6 +69,7 @@ BaseCard.propTypes = {
   customHeaderImage: PropTypes.string.isRequired,
   schoolLogo: PropTypes.string.isRequired,
   isLoading: PropTypes.bool,
+  redirectUrl: PropTypes.string.isRequired,
   handleOnClick: PropTypes.func.isRequired,
 };
 

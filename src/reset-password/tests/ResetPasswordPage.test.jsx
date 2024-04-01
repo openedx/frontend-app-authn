@@ -5,6 +5,7 @@ import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -102,7 +103,9 @@ describe('ResetPasswordPage', () => {
     fireEvent.change(confirmPasswordInput, { target: { value: password } });
 
     const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i, id: 'submit-new-password' });
-    fireEvent.click(resetPasswordButton);
+    await act(async () => {
+      fireEvent.click(resetPasswordButton);
+    });
     expect(store.dispatch).toHaveBeenCalledWith(
       resetPassword({ new_password1: password, new_password2: password }, props.token, {}),
     );
