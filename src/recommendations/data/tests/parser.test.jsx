@@ -3,8 +3,8 @@ import processCourseSearchResult from '../algoliaResultsParser';
 
 describe('AlgoliaResultsParserTests', () => {
   const dataToBeProcessed = {
-    activeRunKey: 'course-v1:TEST_COURSE_RUN',
-    activeRunType: 'test_course_run_type',
+    active_run_key: 'course-v1:TEST_COURSE_RUN',
+    active_run_type: 'test_course_run_type',
     marketingUrl: 'test_marketingUrl',
     minEffort: 1,
     maxEffort: 2,
@@ -12,7 +12,12 @@ describe('AlgoliaResultsParserTests', () => {
     allowedIn: [],
     blockedIn: [],
     cardImageUrl: 'test_src',
-    owners: [],
+    owners: [
+      {
+        name: 'Test Org',
+        logoImageUrl: 'http://logourl.com',
+      },
+    ],
     title: 'test_title',
     uuid: 'test_uuid',
     recentEnrollmentCount: 1,

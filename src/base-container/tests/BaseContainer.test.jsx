@@ -16,7 +16,9 @@ describe('Base component tests', () => {
   it('should show default layout', () => {
     const { container } = render(
       <IntlProvider locale="en">
-        <BaseContainer />
+        <BaseContainer>
+          <div>Test Content</div>
+        </BaseContainer>
       </IntlProvider>,
       LargeScreen,
     );
@@ -32,7 +34,9 @@ describe('Base component tests', () => {
 
     const { container } = render(
       <IntlProvider locale="en">
-        <BaseContainer showWelcomeBanner={false} />
+        <BaseContainer showWelcomeBanner={false}>
+          <div>Test Content</div>
+        </BaseContainer>
       </IntlProvider>,
       LargeScreen,
     );

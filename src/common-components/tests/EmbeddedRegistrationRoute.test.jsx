@@ -6,7 +6,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-import { REGISTER_EMBEDDED_PAGE } from '../../data/constants';
+import { PAGE_NOT_FOUND, REGISTER_EMBEDDED_PAGE } from '../../data/constants';
 import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
 
 import {
@@ -27,6 +27,10 @@ const TestApp = () => (
           path={REGISTER_EMBEDDED_PAGE}
           element={<EmbeddedRegistrationRoute><span>Embedded Register Page</span></EmbeddedRegistrationRoute>}
         />
+        <Route
+          path={PAGE_NOT_FOUND}
+          element={<span>Page not found</span>}
+        />
       </Routes>
     </div>
   </Router>
@@ -45,15 +49,13 @@ describe('EmbeddedRegistrationRoute', () => {
 
   it('should not render embedded register page if host query param is not available in the url', async () => {
     let embeddedRegistrationPage = null;
-
     await act(async () => {
       const { container } = await render(routerWrapper());
       embeddedRegistrationPage = container;
     });
 
-    const spanElement = embeddedRegistrationPage.querySelector('span');
-
-    expect(spanElement).toBeNull();
+    const renderedPage = embeddedRegistrationPage.querySelector('span');
+    expect(renderedPage.textContent).toBe('Page not found');
   });
 
   it('should render embedded register page if host query param is available in the url (embedded)', async () => {
@@ -64,15 +66,13 @@ describe('EmbeddedRegistrationRoute', () => {
     };
 
     let embeddedRegistrationPage = null;
-
     await act(async () => {
       const { container } = await render(routerWrapper());
       embeddedRegistrationPage = container;
     });
 
-    const spanElement = embeddedRegistrationPage.querySelector('span');
-
-    expect(spanElement).toBeTruthy();
-    expect(spanElement.textContent).toBe('Embedded Register Page');
+    const renderedPage = embeddedRegistrationPage.querySelector('span');
+    expect(renderedPage).toBeTruthy();
+    expect(renderedPage.textContent).toBe('Embedded Register Page');
   });
 });

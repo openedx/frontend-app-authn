@@ -14,7 +14,12 @@ const mockedRecommendedProducts = [
     image: {
       src: 'test_src',
     },
-    owners: [],
+    owners: [
+      {
+        name: 'Test Org',
+        logoImageUrl: 'http://logourl.com',
+      },
+    ],
     title: 'test_title',
     uuid: 'test_uuid',
     objectID: 'course-test_uuid',
@@ -37,7 +42,12 @@ const mockedRecommendedProducts = [
     image: {
       src: 'test_src',
     },
-    owners: [],
+    owners: [
+      {
+        name: 'Test Org',
+        logoImageUrl: 'http://logourl.com',
+      },
+    ],
     title: 'test_title',
     uuid: 'test_uuid2',
     objectID: 'course-test_uuid',
@@ -60,7 +70,12 @@ const mockedRecommendedProducts = [
     image: {
       src: 'test_src',
     },
-    owners: [],
+    owners: [
+      {
+        name: 'Test Org',
+        logoImageUrl: 'http://logourl.com',
+      },
+    ],
     title: 'test_title',
     uuid: 'test_uuid3',
     objectID: 'course-test_uuid',
@@ -83,7 +98,12 @@ const mockedRecommendedProducts = [
     image: {
       src: 'test_src',
     },
-    owners: [],
+    owners: [
+      {
+        name: 'Test Org',
+        logoImageUrl: 'http://logourl.com',
+      },
+    ],
     title: 'test_title',
     uuid: 'test_uuid4',
     objectID: 'course-test_uuid',
