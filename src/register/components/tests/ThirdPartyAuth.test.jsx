@@ -12,6 +12,9 @@ import configureStore from 'redux-mock-store';
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../../../data/constants';
+import { NOT_INITIALIZED } from '../../data/optimizelyExperiment/helper';
+import useMultiStepRegistrationExperimentVariation
+  from '../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import RegistrationPage from '../../RegistrationPage';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -22,6 +25,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation', () => jest.fn());
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -120,6 +124,7 @@ describe('ThirdPartyAuth', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+    useMultiStepRegistrationExperimentVariation.mockReturnValue(NOT_INITIALIZED);
   });
 
   afterEach(() => {
