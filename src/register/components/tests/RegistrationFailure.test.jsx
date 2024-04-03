@@ -12,6 +12,9 @@ import configureStore from 'redux-mock-store';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
+import { NOT_INITIALIZED } from '../../data/optimizelyExperiment/helper';
+import useMultiStepRegistrationExperimentVariation
+  from '../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import RegistrationPage from '../../RegistrationPage';
 import RegistrationFailureMessage from '../RegistrationFailure';
 
@@ -23,6 +26,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation', () => jest.fn());
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
@@ -121,6 +125,7 @@ describe('RegistrationFailure', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+    useMultiStepRegistrationExperimentVariation.mockReturnValue(NOT_INITIALIZED);
   });
 
   afterEach(() => {
