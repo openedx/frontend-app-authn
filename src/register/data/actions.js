@@ -8,6 +8,8 @@ export const REGISTRATION_CLEAR_BACKEND_ERROR = 'REGISTRATION_CLEAR_BACKEND_ERRO
 export const REGISTER_SET_COUNTRY_CODE = 'REGISTER_SET_COUNTRY_CODE';
 export const REGISTER_SET_USER_PIPELINE_DATA_LOADED = 'REGISTER_SET_USER_PIPELINE_DATA_LOADED';
 export const REGISTER_SET_EMAIL_SUGGESTIONS = 'REGISTER_SET_EMAIL_SUGGESTIONS';
+export const REGISTER_SET_MULTI_STEP_REGISTRATION_EXP_DATA = 'REGISTER_SET_MULTI_STEP_REGISTRATION_EXP_DATA';
+
 // Backup registration form
 export const backupRegistrationForm = () => ({
   type: BACKUP_REGISTRATION_DATA.BASE,
@@ -19,18 +21,19 @@ export const backupRegistrationFormBegin = (data) => ({
 });
 
 // Validate fields from the backend
-export const fetchRealtimeValidations = (formPayload) => ({
+export const fetchRealtimeValidations = (formPayload, isValidatingMultiStepRegistrationPage) => ({
   type: REGISTER_FORM_VALIDATIONS.BASE,
-  payload: { formPayload },
+  payload: { formPayload, isValidatingMultiStepRegistrationPage },
 });
 
-export const fetchRealtimeValidationsBegin = () => ({
+export const fetchRealtimeValidationsBegin = (isValidatingMultiStepRegistrationPage) => ({
   type: REGISTER_FORM_VALIDATIONS.BEGIN,
+  payload: { isValidatingMultiStepRegistrationPage },
 });
 
-export const fetchRealtimeValidationsSuccess = (validations) => ({
+export const fetchRealtimeValidationsSuccess = (validations, isValidatingMultiStepRegistrationPage) => ({
   type: REGISTER_FORM_VALIDATIONS.SUCCESS,
-  payload: { validations },
+  payload: { validations, isValidatingMultiStepRegistrationPage },
 });
 
 export const fetchRealtimeValidationsFailure = () => ({
@@ -81,4 +84,12 @@ export const setCountryFromThirdPartyAuthContext = (countryCode) => ({
 export const setUserPipelineDataLoaded = (value) => ({
   type: REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   payload: { value },
+});
+
+// Multi Step Registration Experiment Actions
+export const setMultiStepRegistrationExpData = (
+  multiStepRegExpVariation, multiStepRegistrationPageStep, isValidatingMultiStepRegistrationPage,
+) => ({
+  type: REGISTER_SET_MULTI_STEP_REGISTRATION_EXP_DATA,
+  payload: { multiStepRegExpVariation, multiStepRegistrationPageStep, isValidatingMultiStepRegistrationPage },
 });
