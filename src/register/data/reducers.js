@@ -5,9 +5,11 @@ import {
   REGISTER_NEW_USER,
   REGISTER_SET_COUNTRY_CODE,
   REGISTER_SET_EMAIL_SUGGESTIONS,
+  REGISTER_SET_MULTI_STEP_REGISTRATION_EXP_DATA,
   REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTRATION_CLEAR_BACKEND_ERROR,
 } from './actions';
+import { FIRST_STEP } from './optimizelyExperiment/helper';
 import {
   DEFAULT_STATE,
   PENDING_STATE,
@@ -35,10 +37,14 @@ export const defaultState = {
   },
   validations: null,
   submitState: DEFAULT_STATE,
+  validationsSubmitState: DEFAULT_STATE,
   userPipelineDataLoaded: false,
   usernameSuggestions: [],
   validationApiRateLimited: false,
   shouldBackupState: false,
+  multiStepRegExpVariation: '',
+  multiStepRegistrationPageStep: FIRST_STEP,
+  isValidatingMultiStepRegistrationPage: false,
 };
 
 const reducer = (state = defaultState, action = {}) => {
@@ -85,12 +91,22 @@ const reducer = (state = defaultState, action = {}) => {
         registrationError: { ...registrationErrorTemp },
       };
     }
+    case REGISTER_FORM_VALIDATIONS.BEGIN: {
+      return {
+        ...state,
+        validationsSubmitState: action.payload?.isValidatingMultiStepRegistrationPage
+          ? PENDING_STATE
+          : state.validationsSubmitState,
+      };
+    }
     case REGISTER_FORM_VALIDATIONS.SUCCESS: {
       const { usernameSuggestions, ...validationWithoutUsernameSuggestions } = action.payload.validations;
       return {
         ...state,
         validations: validationWithoutUsernameSuggestions,
+        isValidatingMultiStepRegistrationPage: !!action.payload?.isValidatingMultiStepRegistrationPage,
         usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
+        validationsSubmitState: DEFAULT_STATE,
       };
     }
     case REGISTER_FORM_VALIDATIONS.FAILURE:
@@ -98,6 +114,7 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         validationApiRateLimited: true,
         validations: null,
+        validationsSubmitState: DEFAULT_STATE,
       };
     case REGISTER_CLEAR_USERNAME_SUGGESTIONS:
       return {
@@ -129,6 +146,14 @@ const reducer = (state = defaultState, action = {}) => {
           emailSuggestion: action.payload.emailSuggestion,
         },
       };
+    case REGISTER_SET_MULTI_STEP_REGISTRATION_EXP_DATA: {
+      return {
+        ...state,
+        multiStepRegExpVariation: action.payload.multiStepRegExpVariation,
+        multiStepRegistrationPageStep: action.payload.multiStepRegistrationPageStep,
+        isValidatingMultiStepRegistrationPage: !!action.payload?.isValidatingMultiStepRegistrationPage,
+      };
+    }
     default:
       return {
         ...state,
