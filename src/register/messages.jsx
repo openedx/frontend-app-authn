@@ -201,6 +201,29 @@ const messages = defineMessages({
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
   },
+  // MultiStep Registration experiment
+  'multistep.registration.exp.continue.button': {
+    id: 'multistep.registration.exp.continue.button',
+    defaultMessage: 'Continue',
+    description: 'Label text for multistep registration page second step',
+  },
+  'multistep.registration.username.second.step.guideline.content': {
+    id: 'multistep.registration.username.second.step.guideline.content',
+    defaultMessage: 'Finish Registration',
+    description: 'Guideline content for username field in multi-step registration experiment step 2',
+  },
+  'multistep.registration.username.third.step.guideline.content': {
+    id: 'multistep.registration.username.third.step.guideline.content',
+    defaultMessage: 'To finalize your registration, please confirm your country of residence '
+        + 'and create a public username that will identify you in your course communication forums. '
+        + 'The username cannot be changed.',
+    description: 'Guideline content for username field in multi-step registration experiment step 2',
+  },
+  'multistep.registration.form.submission.error': {
+    id: 'multistep.registration.form.submission.error',
+    defaultMessage: 'Please check your responses for this and the previous step and try again.',
+    description: 'Error message that appears on top of the form when invalid form is submitted',
+  },
 });
 
 export default messages;
