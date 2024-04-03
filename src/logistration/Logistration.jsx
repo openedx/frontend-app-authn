@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -7,10 +7,11 @@ import { getAuthService } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Icon,
+  IconButton,
   Tab,
   Tabs,
 } from '@openedx/paragon';
-import { ChevronLeft } from '@openedx/paragon/icons';
+import { ArrowBackIos, ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
@@ -27,7 +28,11 @@ import {
 import { LoginPage } from '../login';
 import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
+import { backupRegistrationForm, setMultiStepRegistrationExpData } from '../register/data/actions';
+import {
+  FIRST_STEP,
+  getMultiStepRegistrationPreviousStep,
+} from '../register/data/optimizelyExperiment/helper';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
@@ -41,6 +46,10 @@ const Logistration = (props) => {
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+
+  const dispatch = useDispatch();
+  const multiStepRegExpVariation = useSelector(state => state.register.multiStepRegExpVariation);
+  const multiStepRegistrationPageStep = useSelector(state => state.register.multiStepRegistrationPageStep);
 
   useEffect(() => {
     const authService = getAuthService();
@@ -91,6 +100,39 @@ const Logistration = (props) => {
     </div>
   );
 
+  /**
+   * Temporary function created to resolve the complexity in tabs conditioning for multi-step
+   * registration experiment
+   */
+  const getTabs = () => {
+    if (multiStepRegistrationPageStep !== FIRST_STEP) {
+      const prevStep = getMultiStepRegistrationPreviousStep(multiStepRegistrationPageStep);
+      return (
+        <div>
+          <IconButton
+            key="primary"
+            src={ArrowBackIos}
+            iconAs={Icon}
+            alt="Back"
+            onClick={() => {
+              dispatch(setMultiStepRegistrationExpData(multiStepRegExpVariation, prevStep));
+            }}
+            variant="primary"
+            size="inline"
+            className="mr-1"
+          />
+          {formatMessage(messages['tab.back.btn.text'])}
+        </div>
+      );
+    }
+    return (
+      <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
+        <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
+        <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+      </Tabs>
+    );
+  };
+
   const isValidTpaHint = () => {
     const { provider } = getTpaProvider(tpaHint, providers, secondaryProviders);
     return !!provider;
@@ -123,12 +165,7 @@ const Logistration = (props) => {
                     <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
                   </Tabs>
                 )
-                : (!isValidTpaHint() && !hideRegistrationLink && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
-                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
-                  </Tabs>
-                ))}
+                : (!isValidTpaHint() && !hideRegistrationLink && getTabs())}
               { key && (
                 <Navigate to={updatePathWithQueryParams(key)} replace />
               )}

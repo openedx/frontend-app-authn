@@ -15,12 +15,16 @@ import {
 } from '../data/constants';
 import { backupLoginForm } from '../login/data/actions';
 import { backupRegistrationForm } from '../register/data/actions';
+import { FIRST_STEP, NOT_INITIALIZED } from '../register/data/optimizelyExperiment/helper';
+import useMultiStepRegistrationExperimentVariation
+  from '../register/data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
 }));
 jest.mock('@edx/frontend-platform/auth');
+jest.mock('../register/data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation', () => jest.fn());
 
 const mockStore = configureStore();
 const IntlLogistration = injectIntl(Logistration);
@@ -63,6 +67,8 @@ describe('Logistration', () => {
       registrationError: {},
       usernameSuggestions: [],
       validationApiRateLimited: false,
+      multiStepRegExpVariation: '',
+      multiStepRegistrationPageStep: FIRST_STEP,
     },
     commonComponents: {
       thirdPartyAuthContext: {
@@ -83,6 +89,7 @@ describe('Logistration', () => {
         username: 'test-user',
       })),
     }));
+    useMultiStepRegistrationExperimentVariation.mockReturnValue(NOT_INITIALIZED);
 
     configure({
       loggingService: { logError: jest.fn() },
