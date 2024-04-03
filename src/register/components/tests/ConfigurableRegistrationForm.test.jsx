@@ -11,6 +11,9 @@ import configureStore from 'redux-mock-store';
 
 import { registerNewUser } from '../../data/actions';
 import { FIELDS } from '../../data/constants';
+import { FIRST_STEP, NOT_INITIALIZED } from '../../data/optimizelyExperiment/helper';
+import useMultiStepRegistrationExperimentVariation
+  from '../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import RegistrationPage from '../../RegistrationPage';
 import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
 
@@ -22,6 +25,7 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('../../data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation', () => jest.fn());
 
 const IntlConfigurableRegistrationForm = injectIntl(ConfigurableRegistrationForm);
 const IntlRegistrationPage = injectIntl(RegistrationPage);
@@ -93,6 +97,9 @@ describe('ConfigurableRegistrationForm', () => {
       registrationError: {},
       registrationFormData,
       usernameSuggestions: [],
+      multiStepRegistrationPageStep: FIRST_STEP,
+      multiStepRegExpVariation: '',
+      isValidatingMultiStepRegistrationPage: false,
     },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
@@ -121,6 +128,7 @@ describe('ConfigurableRegistrationForm', () => {
     };
     window.location = { search: '' };
     getLocale.mockImplementationOnce(() => ('en-us'));
+    useMultiStepRegistrationExperimentVariation.mockReturnValue(NOT_INITIALIZED);
   });
 
   afterEach(() => {
