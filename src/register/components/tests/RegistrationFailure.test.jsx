@@ -101,7 +101,7 @@ describe('RegistrationFailure', () => {
       fieldDescriptions: {},
       optionalFields: {
         fields: {},
-        extendedProfile: [],
+        extended_profile: [],
       },
     },
   };

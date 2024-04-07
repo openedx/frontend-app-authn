@@ -5,7 +5,7 @@ export const defaultState = {
   fieldDescriptions: {},
   optionalFields: {
     fields: {},
-    extendedProfile: [],
+    extended_profile: [],
   },
   thirdPartyAuthApiStatus: null,
   thirdPartyAuthContext: {

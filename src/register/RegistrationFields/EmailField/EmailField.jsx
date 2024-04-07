@@ -51,7 +51,7 @@ const EmailField = (props) => {
     const { fieldError, confirmEmailError, suggestion } = validateEmail(value, confirmEmailValue, formatMessage);
 
     if (confirmEmailError) {
-      handleErrorChange('confirmEmail', confirmEmailError);
+      handleErrorChange('confirm_email', confirmEmailError);
     }
 
     dispatch(setEmailSuggestionInStore(suggestion));

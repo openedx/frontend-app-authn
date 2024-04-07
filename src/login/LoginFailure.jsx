@@ -184,7 +184,7 @@ const LoginFailureMessage = (props) => {
       errorMessage = (
         <p>
           {formatMessage(messages['login.tpa.authentication.failure'], {
-            platformName: getConfig().SITE_NAME,
+            platform_name: getConfig().SITE_NAME,
             lineBreak: <br />,
             errorMessage: context.errorMessage,
           })}

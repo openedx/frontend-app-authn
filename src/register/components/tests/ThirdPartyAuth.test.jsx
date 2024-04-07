@@ -100,7 +100,7 @@ describe('ThirdPartyAuth', () => {
       fieldDescriptions: {},
       optionalFields: {
         fields: {},
-        extendedProfile: [],
+        extended_profile: [],
       },
     },
   };

@@ -69,7 +69,7 @@ describe('ProgressiveProfilingTests', () => {
     },
   };
   const extendedProfile = ['company'];
-  const optionalFields = { fields, extendedProfile };
+  const optionalFields = { fields, extended_profile: extendedProfile };
   const initialState = {
     welcomePage: {},
     commonComponents: {
