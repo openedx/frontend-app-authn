@@ -43,7 +43,7 @@ export function* fetchRealtimeValidations(action) {
     yield put(fetchRealtimeValidationsBegin());
     const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);
 
-    yield put(fetchRealtimeValidationsSuccess(camelCaseObject(fieldValidations)));
+    yield put(fetchRealtimeValidationsSuccess(fieldValidations));
   } catch (e) {
     if (e.response && e.response.status === 403) {
       yield put(fetchRealtimeValidationsFailure());
