@@ -25,6 +25,7 @@ const ThirdPartyAuth = (props) => {
   const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
   const isSocialAuthActive = !!providers.length && !currentProvider;
   const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
+  const isThirdPartyAuthActive = isSocialAuthActive || (isEnterpriseLoginDisabled && isInstitutionAuthActive);
 
   return (
     <>
@@ -34,7 +35,7 @@ const ThirdPartyAuth = (props) => {
         </div>
       )}
 
-      {thirdPartyAuthApiStatus === PENDING_STATE ? (
+      {thirdPartyAuthApiStatus === PENDING_STATE && isThirdPartyAuthActive ? (
         <Skeleton className="tpa-skeleton" height={36} count={2} />
       ) : (
         <>
