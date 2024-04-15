@@ -34,10 +34,17 @@ import {
   getRegisterButtonLabelInExperiment,
   getRegisterButtonSubmitStateInExperiment,
   MULTI_STEP_REGISTRATION_EXP_VARIATION,
-  NOT_INITIALIZED,
   SECOND_STEP,
   shouldDisplayFieldInExperiment, THIRD_STEP,
 } from './data/optimizelyExperiment/helper';
+import {
+  trackMultiStepRegistrationFormSubmitBtnClicked,
+  trackMultiStepRegistrationStep1SubmitBtnClicked,
+  trackMultiStepRegistrationStep2SubmitBtnClicked,
+  trackMultiStepRegistrationStep2Viewed,
+  trackMultiStepRegistrationStep3SubmitBtnClicked,
+  trackMultiStepRegistrationStep3Viewed,
+} from './data/optimizelyExperiment/track';
 import useMultiStepRegistrationExperimentVariation
   from './data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import getBackendValidations from './data/selectors';
@@ -136,6 +143,17 @@ const RegistrationPage = (props) => {
     ) {
       setErrorCode({ type: '', count: 0 });
       const nextStep = getMultiStepRegistrationNextStep(multiStepRegistrationPageStep);
+      if (nextStep === SECOND_STEP) {
+        trackMultiStepRegistrationStep2Viewed(multiStepRegistrationExpVariation);
+        if (multiStepRegistrationExpVariation === CONTROL) {
+          trackMultiStepRegistrationFormSubmitBtnClicked(multiStepRegistrationExpVariation);
+        }
+      } else if (nextStep === THIRD_STEP) {
+        trackMultiStepRegistrationStep3Viewed();
+        if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION) {
+          trackMultiStepRegistrationFormSubmitBtnClicked(multiStepRegistrationExpVariation);
+        }
+      }
       dispatch(setMultiStepRegistrationExpData(multiStepRegistrationExpVariation, nextStep));
     }
   }, [ // eslint-disable-line react-hooks/exhaustive-deps
@@ -215,7 +233,8 @@ const RegistrationPage = (props) => {
     if (registrationResult.success) {
       let registeredEventProps = {};
 
-      if (multiStepRegistrationExpVariation !== NOT_INITIALIZED) {
+      if (multiStepRegistrationExpVariation === CONTROL
+          || multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION) {
         registeredEventProps = {
           variation: multiStepRegistrationExpVariation,
         };
@@ -300,15 +319,25 @@ const RegistrationPage = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (multiStepRegistrationExpVariation === CONTROL
+        && multiStepRegistrationPageStep === SECOND_STEP) {
+      trackMultiStepRegistrationStep2SubmitBtnClicked(multiStepRegistrationExpVariation);
+    }
+    if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
+        && multiStepRegistrationPageStep === THIRD_STEP) {
+      trackMultiStepRegistrationStep3SubmitBtnClicked();
+    }
     if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
         && multiStepRegistrationPageStep !== THIRD_STEP) {
       let formFieldsPayload = {};
 
       if (multiStepRegistrationPageStep === FIRST_STEP) {
+        trackMultiStepRegistrationStep1SubmitBtnClicked(multiStepRegistrationExpVariation);
         // We only want to validate email in the first step of registration
         // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
         formFieldsPayload = { email: formFields.email };
       } else if (multiStepRegistrationPageStep === SECOND_STEP) {
+        trackMultiStepRegistrationStep2SubmitBtnClicked(multiStepRegistrationExpVariation);
         // We only want to validate name and password field in the second step of registration
         // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
         formFieldsPayload = { name: formFields.name, password: formFields.password };
@@ -328,6 +357,7 @@ const RegistrationPage = (props) => {
         dispatch(fetchRealtimeValidations(formFieldsPayload, true));
       }
     } else if (multiStepRegistrationExpVariation === CONTROL && multiStepRegistrationPageStep !== SECOND_STEP) {
+      trackMultiStepRegistrationStep1SubmitBtnClicked(multiStepRegistrationExpVariation);
       // We only want to validate name, email and password fields in the first step of CONTROL registration
       // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
       const formFieldsPayload = { name: formFields.name, email: formFields.email, password: formFields.password };
@@ -518,6 +548,7 @@ const RegistrationPage = (props) => {
                     secondaryProviders={secondaryProviders}
                     handleInstitutionLogin={handleInstitutionLogin}
                     thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+                    multiStepRegistrationExpVariation={multiStepRegistrationExpVariation}
                   />
                 )}
               </Form>

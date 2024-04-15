@@ -570,11 +570,7 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      // TODO: temporary change to fix test
-      // expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {
-        variation: 'default-register-page',
-      });
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
     });
 
     it('should populate form with pipeline user details', () => {
