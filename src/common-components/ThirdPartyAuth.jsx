@@ -32,6 +32,7 @@ const ThirdPartyAuth = (props) => {
     handleInstitutionLogin,
     thirdPartyAuthApiStatus,
     isLoginPage,
+    multiStepRegistrationExpVariation,
   } = props;
   const isInstitutionAuthActive = !!secondaryProviders.length && !currentProvider;
   const isSocialAuthActive = !!providers.length && !currentProvider;
@@ -79,6 +80,7 @@ const ThirdPartyAuth = (props) => {
               <SocialAuthProviders
                 socialAuthProviders={providers}
                 referrer={isLoginPage ? LOGIN_PAGE : REGISTER_PAGE}
+                multiStepRegistrationExpVariation={multiStepRegistrationExpVariation}
               />
             </div>
           )}
@@ -94,6 +96,7 @@ ThirdPartyAuth.defaultProps = {
   secondaryProviders: [],
   thirdPartyAuthApiStatus: PENDING_STATE,
   isLoginPage: false,
+  multiStepRegistrationExpVariation: '',
 };
 
 ThirdPartyAuth.propTypes = {
@@ -121,6 +124,7 @@ ThirdPartyAuth.propTypes = {
   ),
   thirdPartyAuthApiStatus: PropTypes.string,
   isLoginPage: PropTypes.bool,
+  multiStepRegistrationExpVariation: PropTypes.string,
 };
 
 export default ThirdPartyAuth;
