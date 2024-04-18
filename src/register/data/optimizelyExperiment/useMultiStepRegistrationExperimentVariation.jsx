@@ -5,6 +5,7 @@ import {
   getMultiStepRegistrationExperimentVariation,
   NOT_INITIALIZED,
 } from './helper';
+import { trackMultiStepRegistrationStep1Viewed } from './track';
 import { COMPLETE_STATE } from '../../../data/constants';
 
 /**
@@ -30,6 +31,7 @@ const useMultiStepRegistrationExperimentVariation = (
       const expVariation = getMultiStepRegistrationExperimentVariation();
       if (expVariation) {
         setVariation(expVariation);
+        trackMultiStepRegistrationStep1Viewed(expVariation);
       } else {
         // This is to handle the case when user dont get variation for some reason, the register page
         // shows unlimited spinner.
