@@ -31,6 +31,7 @@ import {
   CONTROL,
   FIRST_STEP,
   getMultiStepRegistrationNextStep,
+  getRegisterButtonClassInExperiment,
   getRegisterButtonLabelInExperiment,
   getRegisterButtonSubmitStateInExperiment,
   MULTI_STEP_REGISTRATION_EXP_VARIATION,
@@ -526,7 +527,10 @@ const RegistrationPage = (props) => {
                   name="register-user"
                   type="submit"
                   variant="brand"
-                  className="mt-4 mb-4"
+                  className={`
+                    mt-4 mb-4 
+                    ${getRegisterButtonClassInExperiment(multiStepRegistrationExpVariation, multiStepRegistrationPageStep)}
+                  `}
                   state={getRegisterButtonSubmitStateInExperiment(
                     submitState,
                     validationsSubmitState,
