@@ -85,7 +85,8 @@ export const getRegisterButtonClassInExperiment = (expVariation, registerPageSte
 export const getRegisterButtonSubmitStateInExperiment = (
   registerSubmitState, validationsSubmitState, expVariation, registerPageStep,
 ) => {
-  if (expVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION && registerPageStep !== THIRD_STEP) {
+  if ((expVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION && registerPageStep !== THIRD_STEP)
+    || (expVariation === CONTROL && registerPageStep !== SECOND_STEP)) {
     return validationsSubmitState;
   }
   return registerSubmitState;
