@@ -75,6 +75,13 @@ export const getRegisterButtonLabelInExperiment = (
   return existingButtonLabel;
 };
 
+export const getRegisterButtonClassInExperiment = (expVariation, registerPageStep) => {
+  if (expVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION && registerPageStep === FIRST_STEP) {
+    return 'continue-button';
+  }
+  return 'register-button';
+};
+
 export const getRegisterButtonSubmitStateInExperiment = (
   registerSubmitState, validationsSubmitState, expVariation, registerPageStep,
 ) => {
