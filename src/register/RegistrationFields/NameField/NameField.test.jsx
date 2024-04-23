@@ -94,6 +94,25 @@ describe('NameField', () => {
       );
     });
 
+    it('should validate for full name length', () => {
+      const longName = `
+        5cnx16mn7qTSbtiha1W473ZtV5prGBCEtNrfLkqizJirf
+        v5kbzBpLRbdh7FY5qujb8viQ9zPziE1fWnbFu5tj4FXaY5GDESvVwjQkE
+        txUPE3r9mk4HYcSfXVJPWAWRuK2LJZycZWDm0BMFLZ63YdyQAZhjyvjn7
+        SCqKjSHDx7mgwFp35PF4CxwtwNLxY11eqf5F88wQ9k2JQ9U8uKSFyTKCM
+        A456CGA5KjUugYdT1qKdvvnXtaQr8WA87m9jpe16
+      `;
+      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const nameInput = container.querySelector('input#name');
+      fireEvent.blur(nameInput, { target: { value: longName, name: 'name' } });
+
+      expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
+      expect(props.handleErrorChange).toHaveBeenCalledWith(
+        'name',
+        'Full name cannot be longer than 255 characters',
+      );
+    });
+
     it('should clear error on focus', () => {
       const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
 
