@@ -126,6 +126,11 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid name',
     description: 'Validation message that appears when fullname contain URL',
   },
+  'name.validation.length.message': {
+    id: 'name.validation.message',
+    defaultMessage: 'Full name can not be longer than 255 symbols',
+    description: 'Validation message that appears when fullname contain URL',
+  },
   'password.validation.message': {
     id: 'password.validation.message',
     defaultMessage: 'Password criteria has not been met',
