@@ -17,9 +17,10 @@ export const trackMultiStepRegistrationStep1Viewed = (expVariation) => {
   });
 };
 
-export const trackMultiStepRegistrationStep2Viewed = (expVariation) => {
+export const trackMultiStepRegistrationStep2Viewed = (expVariation, isMarketingLead) => {
   sendTrackEvent(eventNames.multiStepRegistrationStep2Viewed, {
     variation: expVariation,
+    is_marketing_lead: isMarketingLead,
   });
 };
 
