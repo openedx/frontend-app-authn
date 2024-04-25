@@ -145,7 +145,8 @@ const RegistrationPage = (props) => {
       setErrorCode({ type: '', count: 0 });
       const nextStep = getMultiStepRegistrationNextStep(multiStepRegistrationPageStep);
       if (nextStep === SECOND_STEP) {
-        trackMultiStepRegistrationStep2Viewed(multiStepRegistrationExpVariation);
+        const isMarketingLead = formFields.email && configurableFormFields?.marketingEmailsOptIn;
+        trackMultiStepRegistrationStep2Viewed(multiStepRegistrationExpVariation, isMarketingLead);
         if (multiStepRegistrationExpVariation === CONTROL) {
           trackMultiStepRegistrationFormSubmitBtnClicked(multiStepRegistrationExpVariation);
         }
