@@ -97,7 +97,7 @@ const CountryField = (props) => {
   };
 
   const getCountryList = () => countryList.map((country) => (
-    <FormAutosuggestOption key={country[COUNTRY_CODE_KEY]} id={country[COUNTRY_CODE_KEY]}>
+    <FormAutosuggestOption key={country[COUNTRY_DISPLAY_KEY]} id={country[COUNTRY_CODE_KEY]}>
       {country[COUNTRY_DISPLAY_KEY]}
     </FormAutosuggestOption>
   ));
