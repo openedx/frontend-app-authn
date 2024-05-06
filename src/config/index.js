@@ -34,8 +34,6 @@ const configuration = {
   ZENDESK_LOGO_URL: process.env.ZENDESK_LOGO_URL,
   ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID || '',
   ALGOLIA_SEARCH_API_KEY: process.env.ALGOLIA_SEARCH_API_KEY || '',
-  // Multi Step Registration Experiment
-  MULTI_STEP_REGISTRATION_EXPERIMENT_ID: process.env.MULTI_STEP_REGISTRATION_EXPERIMENT_ID || '',
 };
 
 export default configuration;
