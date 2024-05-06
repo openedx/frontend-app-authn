@@ -17,37 +17,14 @@ import RegistrationFailure from './components/RegistrationFailure';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
-  fetchRealtimeValidations,
   registerNewUser,
   setEmailSuggestionInStore,
-  setMultiStepRegistrationExpData,
   setUserPipelineDataLoaded,
 } from './data/actions';
 import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
-import {
-  CONTROL,
-  FIRST_STEP,
-  getMultiStepRegistrationNextStep,
-  getRegisterButtonClassInExperiment,
-  getRegisterButtonLabelInExperiment,
-  getRegisterButtonSubmitStateInExperiment,
-  MULTI_STEP_REGISTRATION_EXP_VARIATION,
-  SECOND_STEP,
-  shouldDisplayFieldInExperiment, THIRD_STEP,
-} from './data/optimizelyExperiment/helper';
-import {
-  trackMultiStepRegistrationFormSubmitBtnClicked,
-  trackMultiStepRegistrationStep1SubmitBtnClicked,
-  trackMultiStepRegistrationStep2SubmitBtnClicked,
-  trackMultiStepRegistrationStep2Viewed,
-  trackMultiStepRegistrationStep3SubmitBtnClicked,
-  trackMultiStepRegistrationStep3Viewed,
-} from './data/optimizelyExperiment/track';
-import useMultiStepRegistrationExperimentVariation
-  from './data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import getBackendValidations from './data/selectors';
 import {
   isFormValid, prepareRegistrationPayload,
@@ -97,13 +74,6 @@ const RegistrationPage = (props) => {
   const shouldBackupState = useSelector(state => state.register.shouldBackupState);
   const userPipelineDataLoaded = useSelector(state => state.register.userPipelineDataLoaded);
   const submitState = useSelector(state => state.register.submitState);
-  const backendValidations = useSelector(getBackendValidations);
-  const multiStepRegExpVariation = useSelector(state => state.register.multiStepRegExpVariation);
-  const multiStepRegistrationPageStep = useSelector(state => state.register.multiStepRegistrationPageStep);
-  const isValidatingMultiStepRegistrationPage = useSelector(
-    state => state.register.isValidatingMultiStepRegistrationPage,
-  );
-  const validationsSubmitState = useSelector(state => state.register.validationsSubmitState);
 
   const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
   const optionalFields = useSelector(state => state.commonComponents.optionalFields);
@@ -116,6 +86,7 @@ const RegistrationPage = (props) => {
   const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
   const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
 
+  const backendValidations = useSelector(getBackendValidations);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
 
@@ -131,38 +102,6 @@ const RegistrationPage = (props) => {
   const buttonLabel = cta
     ? formatMessage(messages['create.account.cta.button'], { label: cta })
     : formatMessage(messages['create.account.for.free.button']);
-
-  /**
-   * Multi-Step Registration Page Experiment
-   */
-  const multiStepRegistrationExpVariation = useMultiStepRegistrationExperimentVariation(
-    multiStepRegExpVariation, registrationEmbedded, tpaHint, currentProvider, thirdPartyAuthApiStatus,
-  );
-
-  useEffect(() => {
-    if (isValidatingMultiStepRegistrationPage && backendValidations
-        && Object.values(backendValidations).every(value => value === '')
-    ) {
-      setErrorCode({ type: '', count: 0 });
-      const nextStep = getMultiStepRegistrationNextStep(multiStepRegistrationPageStep);
-      if (nextStep === SECOND_STEP) {
-        const isMarketingLead = formFields.email && configurableFormFields?.marketingEmailsOptIn;
-        trackMultiStepRegistrationStep2Viewed(multiStepRegistrationExpVariation, isMarketingLead);
-        if (multiStepRegistrationExpVariation === CONTROL) {
-          trackMultiStepRegistrationFormSubmitBtnClicked(multiStepRegistrationExpVariation);
-        }
-      } else if (nextStep === THIRD_STEP) {
-        trackMultiStepRegistrationStep3Viewed();
-        if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION) {
-          trackMultiStepRegistrationFormSubmitBtnClicked(multiStepRegistrationExpVariation);
-        }
-      }
-      dispatch(setMultiStepRegistrationExpData(multiStepRegistrationExpVariation, nextStep));
-    }
-  }, [ // eslint-disable-line react-hooks/exhaustive-deps
-    isValidatingMultiStepRegistrationPage,
-    backendValidations,
-  ]);
 
   /**
    * Set the userPipelineDetails data in formFields for only first time
@@ -210,11 +149,8 @@ const RegistrationPage = (props) => {
         formFields: { ...formFields },
         errors: { ...errors },
       }));
-      dispatch(setMultiStepRegistrationExpData(
-        multiStepRegistrationExpVariation, multiStepRegistrationPageStep, false,
-      ));
     }
-  }, [shouldBackupState]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [shouldBackupState, configurableFormFields, formFields, errors, dispatch, backedUpFormData]);
 
   useEffect(() => {
     if (backendValidations) {
@@ -234,22 +170,13 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (registrationResult.success) {
-      let registeredEventProps = {};
-
-      if (multiStepRegistrationExpVariation === CONTROL
-          || multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION) {
-        registeredEventProps = {
-          variation: multiStepRegistrationExpVariation,
-        };
-      }
-
       // This event is used by GTM
-      sendTrackEvent('edx.bi.user.account.registered.client', registeredEventProps);
+      sendTrackEvent('edx.bi.user.account.registered.client', {});
 
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
     }
-  }, [registrationResult]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [registrationResult]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;
@@ -324,67 +251,7 @@ const RegistrationPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (multiStepRegistrationExpVariation === CONTROL
-        && multiStepRegistrationPageStep === SECOND_STEP) {
-      trackMultiStepRegistrationStep2SubmitBtnClicked(multiStepRegistrationExpVariation);
-    }
-    if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
-        && multiStepRegistrationPageStep === THIRD_STEP) {
-      trackMultiStepRegistrationStep3SubmitBtnClicked();
-    }
-    if (multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
-        && multiStepRegistrationPageStep !== THIRD_STEP) {
-      let formFieldsPayload = {};
-
-      if (multiStepRegistrationPageStep === FIRST_STEP) {
-        trackMultiStepRegistrationStep1SubmitBtnClicked(multiStepRegistrationExpVariation);
-        // We only want to validate email in the first step of registration
-        // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
-        formFieldsPayload = { email: formFields.email };
-      } else if (multiStepRegistrationPageStep === SECOND_STEP) {
-        trackMultiStepRegistrationStep2SubmitBtnClicked(multiStepRegistrationExpVariation);
-        // We only want to validate name and password field in the second step of registration
-        // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
-        formFieldsPayload = { name: formFields.name, password: formFields.password };
-      }
-
-      const { isValid, fieldErrors } = isFormValid(
-        formFieldsPayload, errors, {}, {}, formatMessage,
-      );
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        ...fieldErrors,
-      }));
-      // returning if not valid
-      if (!isValid) {
-        setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
-      } else {
-        dispatch(fetchRealtimeValidations(formFieldsPayload, true));
-      }
-    } else if (multiStepRegistrationExpVariation === CONTROL && multiStepRegistrationPageStep !== SECOND_STEP) {
-      trackMultiStepRegistrationStep1SubmitBtnClicked(multiStepRegistrationExpVariation);
-      // We only want to validate name, email and password fields in the first step of CONTROL registration
-      // Doing manual validations to avoid the case where user clicks CTA without focusing out of field.
-      const formFieldsPayload = { name: formFields.name, email: formFields.email, password: formFields.password };
-
-      const { isValid, fieldErrors } = isFormValid(
-        formFieldsPayload, errors, {}, {}, formatMessage,
-      );
-
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        ...fieldErrors,
-      }));
-      // returning if not valid
-      if (!isValid) {
-        setErrorCode(prevState => ({ type: FORM_SUBMISSION_ERROR, count: prevState.count + 1 }));
-      } else {
-        dispatch(fetchRealtimeValidations(formFieldsPayload, true));
-      }
-    } else {
-      registerUser();
-    }
+    registerUser();
   };
 
   useEffect(() => {
@@ -419,150 +286,106 @@ const RegistrationPage = (props) => {
             getConfig().ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN && !!Object.keys(optionalFields.fields).length
           }
         />
-        {(autoSubmitRegForm && !errorCode.type)
-        || (!multiStepRegistrationExpVariation && !(registrationEmbedded || !!tpaHint || !!currentProvider))
-          ? (
-            <div className="mw-xs mt-5 text-center">
-              <Spinner animation="border" variant="primary" id="tpa-spinner" />
-            </div>
-          ) : (
-            <div
-              className={classNames(
-                'mw-xs mt-3',
-                { 'w-100 m-auto pt-4 main-content': registrationEmbedded },
+        {autoSubmitRegForm && !errorCode.type ? (
+          <div className="mw-xs mt-5 text-center">
+            <Spinner animation="border" variant="primary" id="tpa-spinner" />
+          </div>
+        ) : (
+          <div
+            className={classNames(
+              'mw-xs mt-3',
+              { 'w-100 m-auto pt-4 main-content': registrationEmbedded },
+            )}
+          >
+            <ThirdPartyAuthAlert
+              currentProvider={currentProvider}
+              platformName={platformName}
+              referrer={REGISTER_PAGE}
+            />
+            <RegistrationFailure
+              errorCode={errorCode.type}
+              failureCount={errorCode.count}
+              context={{ provider: currentProvider, errorMessage: thirdPartyAuthErrorMessage }}
+            />
+            <Form id="registration-form" name="registration-form">
+              <NameField
+                name="name"
+                value={formFields.name}
+                shouldFetchUsernameSuggestions={!formFields.username.trim()}
+                handleChange={handleOnChange}
+                handleErrorChange={handleErrorChange}
+                errorMessage={errors.name}
+                helpText={[formatMessage(messages['help.text.name'])]}
+                floatingLabel={formatMessage(messages['registration.fullname.label'])}
+              />
+              <EmailField
+                name="email"
+                value={formFields.email}
+                confirmEmailValue={configurableFormFields?.confirm_email}
+                handleErrorChange={handleErrorChange}
+                handleChange={handleOnChange}
+                errorMessage={errors.email}
+                helpText={[formatMessage(messages['help.text.email'])]}
+                floatingLabel={formatMessage(messages['registration.email.label'])}
+              />
+              {!flags.autoGeneratedUsernameEnabled && (
+                <UsernameField
+                  name="username"
+                  spellCheck="false"
+                  value={formFields.username}
+                  handleChange={handleOnChange}
+                  handleErrorChange={handleErrorChange}
+                  errorMessage={errors.username}
+                  helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
+                  floatingLabel={formatMessage(messages['registration.username.label'])}
+                />
               )}
-            >
-              <ThirdPartyAuthAlert
-                currentProvider={currentProvider}
-                platformName={platformName}
-                referrer={REGISTER_PAGE}
-              />
-              <RegistrationFailure
-                errorCode={errorCode.type}
-                failureCount={errorCode.count}
-                context={{ provider: currentProvider, errorMessage: thirdPartyAuthErrorMessage }}
-                multiStepRegistrationPageStep={multiStepRegistrationPageStep}
-              />
-              <Form id="registration-form" name="registration-form">
-                {(multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
-                  && multiStepRegistrationPageStep === SECOND_STEP) && (
-                  <p className="h3 mb-4">
-                    {formatMessage(messages['multistep.registration.username.second.step.guideline.content'])}
-                  </p>
-                )}
-                {((multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION
-                    && multiStepRegistrationPageStep === THIRD_STEP)
-                    || (multiStepRegistrationExpVariation === CONTROL && multiStepRegistrationPageStep === SECOND_STEP))
-                    && (
-                      <p className="small mb-4">
-                        {formatMessage(messages['multistep.registration.username.third.step.guideline.content'])}
-                      </p>
-                    )}
-                {shouldDisplayFieldInExperiment(
-                  'name', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-                ) && (
-                  <NameField
-                    name="name"
-                    value={formFields.name}
-                    shouldFetchUsernameSuggestions={!formFields.username.trim()}
-                    handleChange={handleOnChange}
-                    handleErrorChange={handleErrorChange}
-                    errorMessage={errors.name}
-                    helpText={[formatMessage(messages['help.text.name'])]}
-                    floatingLabel={formatMessage(messages['registration.fullname.label'])}
-                  />
-                )}
-                {shouldDisplayFieldInExperiment(
-                  'email', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-                ) && (
-                  <EmailField
-                    name="email"
-                    value={formFields.email}
-                    confirmEmailValue={configurableFormFields?.confirm_email}
-                    handleErrorChange={handleErrorChange}
-                    handleChange={handleOnChange}
-                    errorMessage={errors.email}
-                    helpText={[formatMessage(messages['help.text.email'])]}
-                    floatingLabel={formatMessage(messages['registration.email.label'])}
-                  />
-                )}
-                {!flags.autoGeneratedUsernameEnabled && shouldDisplayFieldInExperiment(
-                  'username', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-                ) && (
-                  <UsernameField
-                    name="username"
-                    spellCheck="false"
-                    value={formFields.username}
-                    handleChange={handleOnChange}
-                    handleErrorChange={handleErrorChange}
-                    errorMessage={errors.username}
-                    helpText={[formatMessage(messages['help.text.username.1']), formatMessage(messages['help.text.username.2'])]}
-                    floatingLabel={formatMessage(messages['registration.username.label'])}
-                  />
-                )}
-                {!currentProvider && shouldDisplayFieldInExperiment(
-                  'password', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-                ) && (
-                  <PasswordField
-                    name="password"
-                    value={formFields.password}
-                    handleChange={handleOnChange}
-                    handleErrorChange={handleErrorChange}
-                    errorMessage={errors.password}
-                    floatingLabel={formatMessage(messages['registration.password.label'])}
-                  />
-                )}
-                <ConfigurableRegistrationForm
-                  email={formFields.email}
-                  fieldErrors={errors}
-                  formFields={configurableFormFields}
-                  setFieldErrors={registrationEmbedded ? setTemporaryErrors : setErrors}
-                  setFormFields={setConfigurableFormFields}
-                  autoSubmitRegisterForm={autoSubmitRegForm}
-                  fieldDescriptions={fieldDescriptions}
-                  multiStepRegistrationExpVariation={multiStepRegistrationExpVariation}
-                  multiStepRegistrationPageStep={multiStepRegistrationPageStep}
+              {!currentProvider && (
+                <PasswordField
+                  name="password"
+                  value={formFields.password}
+                  handleChange={handleOnChange}
+                  handleErrorChange={handleErrorChange}
+                  errorMessage={errors.password}
+                  floatingLabel={formatMessage(messages['registration.password.label'])}
                 />
-                <StatefulButton
-                  id="register-user"
-                  name="register-user"
-                  type="submit"
-                  variant="brand"
-                  className={`
-                    mt-4 mb-4 
-                    ${getRegisterButtonClassInExperiment(multiStepRegistrationExpVariation, multiStepRegistrationPageStep)}
-                  `}
-                  state={getRegisterButtonSubmitStateInExperiment(
-                    submitState,
-                    validationsSubmitState,
-                    multiStepRegistrationExpVariation,
-                    multiStepRegistrationPageStep,
-                  )}
-                  labels={{
-                    default: getRegisterButtonLabelInExperiment(
-                      buttonLabel, multiStepRegistrationExpVariation, multiStepRegistrationPageStep, formatMessage,
-                    ),
-                    pending: '',
-                  }}
-                  onClick={handleSubmit}
-                  onMouseDown={(e) => e.preventDefault()}
+              )}
+              <ConfigurableRegistrationForm
+                email={formFields.email}
+                fieldErrors={errors}
+                formFields={configurableFormFields}
+                setFieldErrors={registrationEmbedded ? setTemporaryErrors : setErrors}
+                setFormFields={setConfigurableFormFields}
+                autoSubmitRegisterForm={autoSubmitRegForm}
+                fieldDescriptions={fieldDescriptions}
+              />
+              <StatefulButton
+                id="register-user"
+                name="register-user"
+                type="submit"
+                variant="brand"
+                className="register-button mt-4 mb-4"
+                state={submitState}
+                labels={{
+                  default: buttonLabel,
+                  pending: '',
+                }}
+                onClick={handleSubmit}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+              {!registrationEmbedded && (
+                <ThirdPartyAuth
+                  currentProvider={currentProvider}
+                  providers={providers}
+                  secondaryProviders={secondaryProviders}
+                  handleInstitutionLogin={handleInstitutionLogin}
+                  thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
                 />
-                {(!registrationEmbedded && shouldDisplayFieldInExperiment(
-                  'ThirdPartyAuth', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-                ))
-                && (
-                  <ThirdPartyAuth
-                    currentProvider={currentProvider}
-                    providers={providers}
-                    secondaryProviders={secondaryProviders}
-                    handleInstitutionLogin={handleInstitutionLogin}
-                    thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-                    multiStepRegistrationExpVariation={multiStepRegistrationExpVariation}
-                  />
-                )}
-              </Form>
-            </div>
-          )}
+              )}
+            </Form>
+          </div>
+        )}
+
       </>
     );
   };

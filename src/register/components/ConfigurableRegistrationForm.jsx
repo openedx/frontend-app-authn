@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 
 import { FormFieldRenderer } from '../../field-renderer';
 import { FIELDS } from '../data/constants';
-import { FIRST_STEP, shouldDisplayFieldInExperiment } from '../data/optimizelyExperiment/helper';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
 
@@ -32,8 +31,6 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFormFields,
     autoSubmitRegistrationForm,
-    multiStepRegistrationExpVariation,
-    multiStepRegistrationPageStep,
   } = props;
 
   /** The reason for adding the entry 'United States' is that Chrome browser aut-fill the form with the 'Unites
@@ -112,9 +109,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
   };
 
-  if (flags.showConfigurableRegistrationFields && shouldDisplayFieldInExperiment(
-    'other_fields', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-  )) {
+  if (flags.showConfigurableRegistrationFields) {
     Object.keys(fieldDescriptions).forEach(fieldName => {
       const fieldData = fieldDescriptions[fieldName];
       switch (fieldData.name) {
@@ -166,9 +161,7 @@ const ConfigurableRegistrationForm = (props) => {
     });
   }
 
-  if ((flags.showConfigurableEdxFields || showCountryField) && shouldDisplayFieldInExperiment(
-    'country', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-  )) {
+  if (flags.showConfigurableEdxFields || showCountryField) {
     formFieldDescriptions.push(
       <span key="country">
         <CountryField
@@ -184,9 +177,7 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
-  if (flags.showMarketingEmailOptInCheckbox && shouldDisplayFieldInExperiment(
-    'marketing_email_opt_in', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-  )) {
+  if (flags.showMarketingEmailOptInCheckbox) {
     formFieldDescriptions.push(
       <span key="marketing_email_opt_in">
         <FormFieldRenderer
@@ -205,10 +196,7 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
-  if ((flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode)
-      && shouldDisplayFieldInExperiment(
-        'honor_code', multiStepRegistrationExpVariation, multiStepRegistrationPageStep,
-      )) {
+  if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
     formFieldDescriptions.push(
       <span key="honor_code">
         <HonorCode fieldType="tos_and_honor_code" onChangeHandler={handleOnChange} value={formFields.honor_code} />
@@ -243,15 +231,11 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
   autoSubmitRegistrationForm: PropTypes.bool,
-  multiStepRegistrationExpVariation: PropTypes.string,
-  multiStepRegistrationPageStep: PropTypes.string,
 };
 
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   autoSubmitRegistrationForm: false,
-  multiStepRegistrationExpVariation: '',
-  multiStepRegistrationPageStep: FIRST_STEP,
 };
 
 export default ConfigurableRegistrationForm;

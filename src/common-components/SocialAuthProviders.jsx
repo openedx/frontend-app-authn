@@ -9,24 +9,14 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
-import { CONTROL, MULTI_STEP_REGISTRATION_EXP_VARIATION } from '../register/data/optimizelyExperiment/helper';
-import { trackMultiStepRegistrationSSOBtnClicked } from '../register/data/optimizelyExperiment/track';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
-  const {
-    referrer,
-    socialAuthProviders,
-    multiStepRegistrationExpVariation,
-  } = props;
+  const { referrer, socialAuthProviders } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (multiStepRegistrationExpVariation === CONTROL
-        || multiStepRegistrationExpVariation === MULTI_STEP_REGISTRATION_EXP_VARIATION) {
-      trackMultiStepRegistrationSSOBtnClicked(multiStepRegistrationExpVariation);
-    }
     const url = e.currentTarget.dataset.providerUrl;
     window.location.href = getConfig().LMS_BASE_URL + url;
   }
@@ -70,7 +60,6 @@ const SocialAuthProviders = (props) => {
 SocialAuthProviders.defaultProps = {
   referrer: LOGIN_PAGE,
   socialAuthProviders: [],
-  multiStepRegistrationExpVariation: '',
 };
 
 SocialAuthProviders.propTypes = {
@@ -84,7 +73,6 @@ SocialAuthProviders.propTypes = {
     registerUrl: PropTypes.string,
     skipRegistrationForm: PropTypes.bool,
   })),
-  multiStepRegistrationExpVariation: PropTypes.string,
 };
 
 export default SocialAuthProviders;

@@ -11,7 +11,6 @@ import {
   REGISTER_SET_USER_PIPELINE_DATA_LOADED,
   REGISTRATION_CLEAR_BACKEND_ERROR,
 } from '../actions';
-import { FIRST_STEP } from '../optimizelyExperiment/helper';
 import reducer from '../reducers';
 
 describe('Registration Reducer Tests', () => {
@@ -35,14 +34,10 @@ describe('Registration Reducer Tests', () => {
     },
     validations: null,
     submitState: DEFAULT_STATE,
-    validationsSubmitState: DEFAULT_STATE,
     userPipelineDataLoaded: false,
     usernameSuggestions: [],
     validationApiRateLimited: false,
     shouldBackupState: false,
-    multiStepRegExpVariation: '',
-    multiStepRegistrationPageStep: FIRST_STEP,
-    isValidatingMultiStepRegistrationPage: false,
   };
 
   it('should return the initial state', () => {
