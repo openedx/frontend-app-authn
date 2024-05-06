@@ -132,12 +132,6 @@ const messages = defineMessages({
     defaultMessage: 'Company or school credentials',
     description: 'Company or school login link text.',
   },
-  // multi step registration experiment messages
-  'tab.back.btn.text': {
-    id: 'tab.back.btn.text',
-    defaultMessage: 'Back',
-    description: 'Tab back button text',
-  },
 });
 
 export default messages;
