@@ -40,13 +40,10 @@ export function* handleNewUserRegistration(action) {
 
 export function* fetchRealtimeValidations(action) {
   try {
-    yield put(fetchRealtimeValidationsBegin(action.payload?.isValidatingMultiStepRegistrationPage));
+    yield put(fetchRealtimeValidationsBegin());
     const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);
 
-    yield put(fetchRealtimeValidationsSuccess(
-      camelCaseObject(fieldValidations),
-      action.payload?.isValidatingMultiStepRegistrationPage,
-    ));
+    yield put(fetchRealtimeValidationsSuccess(camelCaseObject(fieldValidations)));
   } catch (e) {
     if (e.response && e.response.status === 403) {
       yield put(fetchRealtimeValidationsFailure());
