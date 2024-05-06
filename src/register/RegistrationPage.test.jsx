@@ -17,9 +17,6 @@ import {
   setUserPipelineDataLoaded,
 } from './data/actions';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
-import { NOT_INITIALIZED } from './data/optimizelyExperiment/helper';
-import useMultiStepRegistrationExperimentVariation
-  from './data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation';
 import RegistrationPage from './RegistrationPage';
 import {
   AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
@@ -33,7 +30,6 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
-jest.mock('./data/optimizelyExperiment/useMultiStepRegistrationExperimentVariation', () => jest.fn());
 
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
@@ -132,7 +128,6 @@ describe('RegistrationPage', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
-    useMultiStepRegistrationExperimentVariation.mockReturnValue(NOT_INITIALIZED);
   });
 
   afterEach(() => {

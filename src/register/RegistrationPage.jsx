@@ -176,7 +176,7 @@ const RegistrationPage = (props) => {
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
     }
-  }, [registrationResult]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [registrationResult]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;
