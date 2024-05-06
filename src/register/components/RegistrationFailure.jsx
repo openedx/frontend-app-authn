@@ -13,13 +13,12 @@ import {
   TPA_AUTHENTICATION_FAILURE,
   TPA_SESSION_EXPIRED,
 } from '../data/constants';
-import { FIRST_STEP } from '../data/optimizelyExperiment/helper';
 import messages from '../messages';
 
 const RegistrationFailureMessage = (props) => {
   const { formatMessage } = useIntl();
   const {
-    context, errorCode, failureCount, multiStepRegistrationPageStep,
+    context, errorCode, failureCount,
   } = props;
 
   useEffect(() => {
@@ -50,11 +49,7 @@ const RegistrationFailureMessage = (props) => {
       errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
       break;
     default:
-      if (multiStepRegistrationPageStep !== FIRST_STEP) {
-        errorMessage = formatMessage(messages['multistep.registration.form.submission.error']);
-      } else {
-        errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
-      }
+      errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
       break;
   }
 
@@ -70,7 +65,6 @@ RegistrationFailureMessage.defaultProps = {
   context: {
     errorMessage: null,
   },
-  multiStepRegistrationPageStep: FIRST_STEP,
 };
 
 RegistrationFailureMessage.propTypes = {
@@ -80,7 +74,6 @@ RegistrationFailureMessage.propTypes = {
   }),
   errorCode: PropTypes.string.isRequired,
   failureCount: PropTypes.number.isRequired,
-  multiStepRegistrationPageStep: PropTypes.string,
 };
 
 export default RegistrationFailureMessage;
