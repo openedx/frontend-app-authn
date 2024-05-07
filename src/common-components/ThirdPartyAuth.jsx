@@ -37,6 +37,7 @@ const ThirdPartyAuth = (props) => {
   const isSocialAuthActive = !!providers.length && !currentProvider;
   const isEnterpriseLoginDisabled = getConfig().DISABLE_ENTERPRISE_LOGIN;
   const enterpriseLoginURL = getConfig().LMS_BASE_URL + ENTERPRISE_LOGIN_URL;
+  const isThirdPartyAuthActive = isSocialAuthActive || (isEnterpriseLoginDisabled && isInstitutionAuthActive);
 
   return (
     <>
@@ -61,7 +62,7 @@ const ThirdPartyAuth = (props) => {
         </Hyperlink>
       )}
 
-      {thirdPartyAuthApiStatus === PENDING_STATE ? (
+      {thirdPartyAuthApiStatus === PENDING_STATE && isThirdPartyAuthActive ? (
         <div className="mt-4">
           <Skeleton className="tpa-skeleton" height={36} count={2} />
         </div>
