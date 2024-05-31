@@ -96,7 +96,7 @@ const RegistrationPage = (props) => {
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
-  const [errors, setErrors] = useState({ ...backedUpFormData.errors });
+  const [errors, setErrors] = useState({ });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
   // temporary error state for embedded experience because we don't want to show errors on blur
@@ -169,6 +169,7 @@ const RegistrationPage = (props) => {
       if (registrationEmbedded) {
         setTemporaryErrors(prevErrors => ({ ...prevErrors, ...backendValidations }));
       } else {
+        console.log(backendValidations, "backendValidations")
         setErrors(prevErrors => ({ ...prevErrors, ...backendValidations }));
       }
     }
@@ -271,7 +272,7 @@ const RegistrationPage = (props) => {
       registerUser();
     }
   }, [autoSubmitRegForm, userPipelineDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
-
+console.log(currentProvider)
   const renderForm = () => {
     if (institutionLogin) {
       return (

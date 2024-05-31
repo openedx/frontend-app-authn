@@ -95,6 +95,7 @@ const reducer = (state = defaultState, action = {}) => {
     }
     case REGISTER_FORM_VALIDATIONS.SUCCESS: {
       const { usernameSuggestions, ...validationWithoutUsernameSuggestions } = action.payload.validations;
+      console.log(action.payload.validations, validationWithoutUsernameSuggestions)
       return {
         ...state,
         validations: validationWithoutUsernameSuggestions,

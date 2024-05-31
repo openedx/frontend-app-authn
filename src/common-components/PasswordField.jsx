@@ -25,6 +25,7 @@ const PasswordField = (props) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
+    console.log(name, props.name, e.relatedTarget?.name)
     if (name === props.name && e.relatedTarget?.name === 'passwordIcon') {
       return; // Do not run validations on password icon click
     }
@@ -67,7 +68,8 @@ const PasswordField = (props) => {
       props.handleErrorChange('password', '');
       dispatch(clearRegistrationBackendError('password'));
     }
-    setTimeout(() => setShowTooltip(props.showRequirements && true), 150);
+    //setShowTooltip(props.showRequirements && true)
+    setTimeout(() => setShowTooltip(props.showRequirements && true), 1550);
   };
 
   const HideButton = (
