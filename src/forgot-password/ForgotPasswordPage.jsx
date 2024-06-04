@@ -41,7 +41,7 @@ const ForgotPasswordPage = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'reset');
+    sendPageEvent('login_and_registration', 'forgot-password');
     sendTrackEvent('edx.bi.password_reset_form.viewed', { category: 'user-engagement' });
   }, []);
 
