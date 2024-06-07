@@ -1,3 +1,4 @@
+import { getConfig } from '@edx/frontend-platform';
 import { logError } from '@edx/frontend-platform/logging';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
@@ -7,6 +8,7 @@ import {
   getThirdPartyAuthContextSuccess,
   THIRD_PARTY_AUTH_CONTEXT,
 } from './actions';
+import { progressiveProfilingFields, registerFields } from './constants';
 import {
   getThirdPartyAuthContext,
 } from './service';
@@ -20,7 +22,16 @@ export function* fetchThirdPartyAuthContext(action) {
     } = yield call(getThirdPartyAuthContext, action.payload.urlParams);
 
     yield put(setCountryFromThirdPartyAuthContext(thirdPartyAuthContext.countryCode));
-    yield put(getThirdPartyAuthContextSuccess(fieldDescriptions, optionalFields, thirdPartyAuthContext));
+    // hard code country field, level of education and gender fields
+    if (getConfig().ENABLE_HARD_CODE_OPTIONAL_FIELDS) {
+      yield put(getThirdPartyAuthContextSuccess(
+        registerFields,
+        progressiveProfilingFields,
+        thirdPartyAuthContext,
+      ));
+    } else {
+      yield put(getThirdPartyAuthContextSuccess(fieldDescriptions, optionalFields, thirdPartyAuthContext));
+    }
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());
     logError(e);
