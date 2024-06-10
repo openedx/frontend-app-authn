@@ -60,7 +60,7 @@ const InstitutionLogistration = props => {
                     className="btn nav-item p-0 mb-1 institutions--provider-link"
                     destination={lmsBaseUrl + provider.loginUrl}
                   >
-                    {provider.name}
+                    {provider?.name}
                   </Hyperlink>
                 </td>
               </tr>
