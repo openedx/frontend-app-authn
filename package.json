@@ -49,7 +49,7 @@
     "classnames": "2.5.1",
     "core-js": "3.36.1",
     "fastest-levenshtein": "1.0.16",
-    "form-urlencoded": "6.1.4",
+    "form-urlencoded": "6.1.5",
     "prop-types": "15.8.1",
     "query-string": "7.1.3",
     "react": "^17.0.2",
