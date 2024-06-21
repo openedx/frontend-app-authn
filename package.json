@@ -73,7 +73,7 @@
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
     "@edx/reactifex": "1.1.0",
-    "@openedx/frontend-build": "13.1.4",
+    "@openedx/frontend-build": "14.0.10",
     "babel-plugin-formatjs": "10.5.16",
     "eslint-plugin-import": "2.29.1",
     "glob": "7.2.3",
