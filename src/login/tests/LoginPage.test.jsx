@@ -830,4 +830,50 @@ describe('LoginPage', () => {
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');
   });
+
+  it('should not redirect to provisioning URL when not configured', () => {
+    mergeConfig({
+      TPA_UNLINKED_ACCOUNT_PROVISION_URL: '',
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          currentProvider: ssoProvider.name,
+        },
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE) };
+
+    render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toEqual(getConfig().BASE_URL.concat(LOGIN_PAGE));
+  });
+
+  it('should redirect to provisioning URL on unlinked third-party auth account', () => {
+    mergeConfig({
+      TPA_UNLINKED_ACCOUNT_PROVISION_URL: 'http://example.com/signup',
+    });
+
+    store = mockStore({
+      ...initialState,
+      commonComponents: {
+        ...initialState.commonComponents,
+        thirdPartyAuthContext: {
+          ...initialState.commonComponents.thirdPartyAuthContext,
+          currentProvider: ssoProvider.name,
+        },
+      },
+    });
+
+    delete window.location;
+    window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE) };
+
+    render(reduxWrapper(<IntlLoginPage {...props} />));
+    expect(window.location.href).toEqual('http://example.com/signup');
+  });
 });
