@@ -9,6 +9,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import { APP_NAME } from '../../../data/constants';
 import { registerNewUser } from '../../data/actions';
 import { FIELDS } from '../../data/constants';
 import { NOT_INITIALIZED } from '../../data/optimizelyExperiment/helper';
@@ -265,7 +266,7 @@ describe('ConfigurableRegistrationForm', () => {
 
       fireEvent.click(submitButton);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK', app_name: APP_NAME }));
     });
 
     it('should show error messages for required fields on empty form submission', () => {
