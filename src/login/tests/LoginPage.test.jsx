@@ -11,7 +11,9 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { APP_NAME, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
+import {
+  APP_NAME, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE,
+} from '../../data/constants';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';

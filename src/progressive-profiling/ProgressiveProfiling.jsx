@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig, snakeCaseObject } from '@edx/frontend-platform';
-import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser } from '@edx/frontend-platform/analytics';
 import {
   AxiosJwtAuthService,
   configure as configureAuth,
@@ -39,6 +39,13 @@ import {
 import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
 import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
+import {
+  trackDisablePostRegistrationRecommendations,
+  trackProgressiveProfilingPageViewed,
+  trackProgressiveProfilingSkipLinkClick,
+  trackProgressiveProfilingSubmitClick,
+  trackProgressiveProfilingSupportLinkCLick,
+} from '../tracking/trackers/progressive-profiling';
 
 const ProgressiveProfiling = (props) => {
   const { formatMessage } = useIntl();
@@ -98,14 +105,13 @@ const ProgressiveProfiling = (props) => {
   useEffect(() => {
     if (authenticatedUser?.userId) {
       identifyAuthenticatedUser(authenticatedUser.userId);
-      sendPageEvent('login_and_registration', 'welcome');
+      trackProgressiveProfilingPageViewed();
     }
   }, [authenticatedUser]);
 
   useEffect(() => {
     if (!enablePostRegistrationRecommendations) {
-      sendTrackEvent(
-        'edx.bi.user.recommendations.not.enabled',
+      trackDisablePostRegistrationRecommendations(
         { functionalCookiesConsent, page: 'authn_recommendations' },
       );
       return;
@@ -149,29 +155,23 @@ const ProgressiveProfiling = (props) => {
       });
     }
     props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
-
-    sendTrackEvent(
-      'edx.bi.welcome.page.submit.clicked',
-      {
-        isGenderSelected: !!values.gender,
-        isYearOfBirthSelected: !!values.year_of_birth,
-        isLevelOfEducationSelected: !!values.level_of_education,
-        isWorkExperienceSelected: !!values.work_experience,
-        host: queryParams?.host || '',
-      },
-    );
+    const eventProperties = {
+      isGenderSelected: !!values.gender,
+      isYearOfBirthSelected: !!values.year_of_birth,
+      isLevelOfEducationSelected: !!values.level_of_education,
+      isWorkExperienceSelected: !!values.work_experience,
+      host: queryParams?.host || '',
+    };
+    trackProgressiveProfilingSubmitClick(eventProperties);
   };
 
   const handleSkip = (e) => {
     e.preventDefault();
     window.history.replaceState(location.state, null, '');
     setShowModal(true);
-    sendTrackEvent(
-      'edx.bi.welcome.page.skip.link.clicked',
-      {
-        host: queryParams?.host || '',
-      },
-    );
+    trackProgressiveProfilingSkipLinkClick({
+      host: queryParams?.host || '',
+    });
   };
 
   const onChangeHandler = (e) => {
@@ -242,7 +242,7 @@ const ProgressiveProfiling = (props) => {
                     destination={getConfig().AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
                     target="_blank"
                     showLaunchIcon={false}
-                    onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
+                    onClick={() => (trackProgressiveProfilingSupportLinkCLick())}
                   >
                     {formatMessage(messages['optional.fields.information.link'])}
                   </Hyperlink>
