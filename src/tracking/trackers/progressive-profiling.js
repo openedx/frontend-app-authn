@@ -1,4 +1,4 @@
-import { createEventTracker, createLinkTracker, createPageEventTracker } from '../../data/segment/utils';
+import { createEventTracker, createPageEventTracker } from '../../data/segment/utils';
 
 export const eventNames = {
   progressiveProfilingSubmitClick: 'edx.bi.welcome.page.submit.clicked',
@@ -9,9 +9,9 @@ export const eventNames = {
 };
 
 // Event link tracker for Progressive profiling skip button click
-export const trackProgressiveProfilingSkipLinkClick = (evenProperties) => createEventTracker(
+export const trackProgressiveProfilingSkipLinkClick = evenProperties => createEventTracker(
   eventNames.progressiveProfilingSkipLinkClick, { ...evenProperties },
-);
+)();
 
 // Event tracker for progressive profiling submit button click
 export const trackProgressiveProfilingSubmitClick = (evenProperties) => createEventTracker(
