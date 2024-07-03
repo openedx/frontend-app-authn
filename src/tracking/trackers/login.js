@@ -22,14 +22,6 @@ export const trackLoginPageViewed = () => {
   createPageEventTracker(eventNames.loginAndRegistration, 'login')();
 };
 
-// Tracks the progressive profiling page event.
-export const trackRegisterFormToggled = () => {
-  createEventTracker(
-    eventNames.registerFormToggled,
-    { category: categories.userEngagement },
-  )();
-};
-
 // Tracks the login sucess event.
 export const trackLoginSuccess = () => createEventTracker(
   eventNames.loginSuccess,
