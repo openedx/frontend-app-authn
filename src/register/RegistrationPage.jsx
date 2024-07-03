@@ -44,7 +44,7 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  APP_NAME, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
@@ -222,7 +222,7 @@ const RegistrationPage = (props) => {
 
   const registerUser = () => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
-    let payload = { ...formFields };
+    let payload = { ...formFields, app_name: APP_NAME };
 
     if (currentProvider) {
       delete payload.password;
