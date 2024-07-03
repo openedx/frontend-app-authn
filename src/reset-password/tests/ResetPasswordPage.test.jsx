@@ -21,6 +21,7 @@ const token = '1c-bmjdkc-5e60e084cf8113048ca7';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
 }));
 
 jest.mock('@edx/frontend-platform/auth');
