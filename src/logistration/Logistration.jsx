@@ -20,7 +20,7 @@ import {
   tpaProvidersSelector,
 } from '../common-components/data/selectors';
 import messages from '../common-components/messages';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { APP_NAME, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
@@ -56,11 +56,11 @@ const Logistration = (props) => {
   }, [navigate, disablePublicAccountCreation]);
 
   const handleInstitutionLogin = (e) => {
-    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement', app_name: APP_NAME });
     if (typeof e === 'string') {
-      sendPageEvent('login_and_registration', e === '/login' ? 'login' : 'register');
+      sendPageEvent('login_and_registration', e === '/login' ? 'login' : 'register', { app_name: APP_NAME });
     } else {
-      sendPageEvent('login_and_registration', e.target.dataset.eventName);
+      sendPageEvent('login_and_registration', e.target.dataset.eventName, { app_name: APP_NAME });
     }
 
     setInstitutionLogin(!institutionLogin);
@@ -70,7 +70,7 @@ const Logistration = (props) => {
     if (tabKey === currentTab) {
       return;
     }
-    sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
+    sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement', app_name: APP_NAME });
     props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
       props.backupRegistrationForm();

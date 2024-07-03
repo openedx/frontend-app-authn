@@ -11,7 +11,9 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
+import {
+  APP_NAME, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE,
+} from '../../data/constants';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';
@@ -751,7 +753,7 @@ describe('LoginPage', () => {
 
   it('should send page event when login page is rendered', () => {
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login', { app_name: APP_NAME });
   });
 
   it('tests that form is in invalid state when it is submitted', () => {
@@ -784,7 +786,7 @@ describe('LoginPage', () => {
       { selector: '#forgot-password' },
     ));
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement', app_name: APP_NAME });
   });
 
   it('should backup the login form state when shouldBackupState is true', () => {

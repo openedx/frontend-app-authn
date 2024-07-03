@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, StatefulButton,
@@ -43,6 +42,9 @@ import {
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
+import {
+  trackForgotPasswordLinkClick, trackLoginPageViewed, trackLoginSuccess,
+} from '../tracking/trackers/login';
 
 const LoginPage = (props) => {
   const {
@@ -78,8 +80,14 @@ const LoginPage = (props) => {
   const tpaHint = getTpaHint();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'login');
+    trackLoginPageViewed();
   }, []);
+
+  useEffect(() => {
+    if (loginResult.success) {
+      trackLoginSuccess();
+    }
+  }, [loginResult]);
 
   useEffect(() => {
     const payload = { ...queryParams };
@@ -169,9 +177,6 @@ const LoginPage = (props) => {
   const handleOnFocus = (event) => {
     const { name } = event.target;
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-  };
-  const trackForgotPasswordLinkClick = () => {
-    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
 
   const { provider, skipHintedLogin } = getTpaProvider(tpaHint, providers, secondaryProviders);

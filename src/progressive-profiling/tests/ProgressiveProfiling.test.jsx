@@ -12,6 +12,7 @@ import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import {
+  APP_NAME,
   AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE, DEFAULT_REDIRECT_URL,
   EMBEDDED,
@@ -143,8 +144,9 @@ describe('ProgressiveProfilingTests', () => {
     const modalContentContainer = document.getElementsByClassName('.pgn__modal-content-container');
 
     expect(modalContentContainer).toBeTruthy();
+    const payload = { host: '', app_name: APP_NAME };
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host: '' });
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', payload);
   });
 
   // ******** test event functionality ********
@@ -165,7 +167,7 @@ describe('ProgressiveProfilingTests', () => {
     const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
     fireEvent.click(supportLink);
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked', { app_name: APP_NAME });
   });
 
   it('should set empty host property value for non-embedded experience', () => {
@@ -175,6 +177,7 @@ describe('ProgressiveProfilingTests', () => {
       isLevelOfEducationSelected: false,
       isWorkExperienceSelected: false,
       host: '',
+      app_name: APP_NAME,
     };
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
@@ -316,7 +319,7 @@ describe('ProgressiveProfilingTests', () => {
       const skipLinkButton = screen.getByText('Skip for now');
       fireEvent.click(skipLinkButton);
 
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host, app_name: APP_NAME });
     });
 
     it('should show spinner while fetching the optional fields', () => {
@@ -349,6 +352,7 @@ describe('ProgressiveProfilingTests', () => {
         isLevelOfEducationSelected: false,
         isWorkExperienceSelected: false,
         host: 'http://example.com',
+        app_name: APP_NAME,
       };
       delete window.location;
       window.location = {

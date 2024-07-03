@@ -4,7 +4,6 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, Spinner, StatefulButton } from '@openedx/paragon';
 import classNames from 'classnames';
@@ -44,11 +43,12 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  APP_NAME, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
+import { trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracking/trackers/register';
 
 /**
  * Main Registration Page component
@@ -138,7 +138,7 @@ const RegistrationPage = (props) => {
 
   useEffect(() => {
     if (!formStartTime) {
-      sendPageEvent('login_and_registration', 'register');
+      trackRegistrationPageViewed();
       const payload = { ...queryParams, is_register_page: true };
       if (tpaHint) {
         payload.tpa_hint = tpaHint;
@@ -183,7 +183,7 @@ const RegistrationPage = (props) => {
   useEffect(() => {
     if (registrationResult.success) {
       // This event is used by GTM
-      sendTrackEvent('edx.bi.user.account.registered.client', {});
+      trackRegistrationSuccess();
 
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
@@ -222,7 +222,7 @@ const RegistrationPage = (props) => {
 
   const registerUser = () => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
-    let payload = { ...formFields };
+    let payload = { ...formFields, app_name: APP_NAME };
 
     if (currentProvider) {
       delete payload.password;
