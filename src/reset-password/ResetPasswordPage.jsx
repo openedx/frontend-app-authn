@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent } from '@edx/frontend-platform/analytics';
+// import { sendPageEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
@@ -31,6 +31,7 @@ import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { trackResetPasswordPageViewed } from '../tracking/trackers/reset-password';
 
 const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
@@ -44,7 +45,7 @@ const ResetPasswordPage = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'reset-password');
+    trackResetPasswordPageViewed();
   }, []);
 
   useEffect(() => {
