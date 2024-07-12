@@ -46,7 +46,7 @@ import {
   APP_NAME, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
-  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
+  getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, removeCookie, setCookie,
 } from '../data/utils';
 import { trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracking/trackers/register';
 
@@ -187,6 +187,9 @@ const RegistrationPage = (props) => {
 
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
+
+      // remove marketingEmailsOptIn cookie that was set on SSO registration flow
+      removeCookie('marketingEmailsOptIn');
     }
   }, [registrationResult]);
 

@@ -11,3 +11,11 @@ export default function setCookie(cookieName, cookieValue, cookieExpiry) {
     cookies.set(cookieName, cookieValue, options);
   }
 }
+
+export function removeCookie(cookieName) {
+  if (cookieName) {
+    const cookies = new Cookies();
+    const options = { domain: getConfig().SESSION_COOKIE_DOMAIN, path: '/' };
+    cookies.remove(cookieName, options);
+  }
+}

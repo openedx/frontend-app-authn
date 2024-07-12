@@ -8,4 +8,4 @@ export {
   windowScrollTo,
 } from './dataUtils';
 export { default as AsyncActionType } from './reduxUtils';
-export { default as setCookie } from './cookies';
+export { default as setCookie, removeCookie } from './cookies';
