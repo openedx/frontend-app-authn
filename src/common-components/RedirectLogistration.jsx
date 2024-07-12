@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import {
   AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
 } from '../data/constants';
-import { setCookie } from '../data/utils';
+import setCookie from '../data/utils/cookies';
 
 const RedirectLogistration = (props) => {
   const {
