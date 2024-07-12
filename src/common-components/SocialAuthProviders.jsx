@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -8,15 +9,20 @@ import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { setCookie } from '../data/utils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
   const { referrer, socialAuthProviders } = props;
+  const registrationFields = useSelector(state => state.register.registrationFormData);
 
   function handleSubmit(e) {
     e.preventDefault();
 
+    if (referrer === REGISTER_PAGE) {
+      setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
+    }
     const url = e.currentTarget.dataset.providerUrl;
     window.location.href = getConfig().LMS_BASE_URL + url;
   }
