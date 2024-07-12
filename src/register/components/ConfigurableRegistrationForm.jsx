@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getCountryList, getLocale, useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
 import { FormFieldRenderer } from '../../field-renderer';
+import { backupRegistrationFormBegin } from '../data/actions';
 import { FIELDS } from '../data/constants';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
@@ -32,6 +34,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFormFields,
     autoSubmitRegistrationForm,
   } = props;
+  const dispatch = useDispatch();
 
   /** The reason for adding the entry 'United States' is that Chrome browser aut-fill the form with the 'Unites
   States' instead of 'United States of America' which does not exist in country dropdown list and gets the user
@@ -49,6 +52,8 @@ const ConfigurableRegistrationForm = (props) => {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
     showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
+
+  const backedUpFormData = useSelector(state => state.register.registrationFormData);
 
   /**
    * If auto submitting register form, we will check tos and honor code fields if they exist for feature parity.
@@ -89,6 +94,16 @@ const ConfigurableRegistrationForm = (props) => {
       if (event.target.type === 'checkbox') {
         setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
       }
+    }
+    // setting marketingEmailsOptIn state for SSO authentication flow for register API call
+    if (name === 'marketingEmailsOptIn') {
+      dispatch(backupRegistrationFormBegin({
+        ...backedUpFormData,
+        configurableFormFields: {
+          ...backedUpFormData.configurableFormFields,
+          [name]: value,
+        },
+      }));
     }
     setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
