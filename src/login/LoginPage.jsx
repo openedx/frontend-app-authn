@@ -176,6 +176,18 @@ const LoginPage = (props) => {
 
   const { provider, skipHintedLogin } = getTpaProvider(tpaHint, providers, secondaryProviders);
 
+  const unlinkedProvisionUrl = getConfig().TPA_UNLINKED_ACCOUNT_PROVISION_URL;
+
+  /**
+   * When currentProvider exists and we are in a login page, it is
+   * because the third-party authenticated account is not linked.
+   * See also ThirdPartyAuthAlert.jsx.
+   */
+  if (currentProvider && unlinkedProvisionUrl) {
+    window.location.href = unlinkedProvisionUrl;
+    return null;
+  }
+
   if (tpaHint) {
     if (thirdPartyAuthApiStatus === PENDING_STATE) {
       return <Skeleton height={36} />;
