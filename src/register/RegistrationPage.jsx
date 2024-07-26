@@ -188,8 +188,10 @@ const RegistrationPage = (props) => {
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
 
-      // remove marketingEmailsOptIn cookie that was set on SSO registration flow
+      // Remove marketingEmailsOptIn cookie that was set on SSO registration flow
       removeCookie('marketingEmailsOptIn');
+      // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
+      removeCookie('ssoPipelineRedirectionDone');
     }
   }, [registrationResult]);
 

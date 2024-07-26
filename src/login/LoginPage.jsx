@@ -41,6 +41,7 @@ import {
   getTpaProvider,
   updatePathWithQueryParams,
 } from '../data/utils';
+import { removeCookie } from '../data/utils/cookies';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 import {
   trackForgotPasswordLinkClick, trackLoginPageViewed, trackLoginSuccess,
@@ -86,6 +87,9 @@ const LoginPage = (props) => {
   useEffect(() => {
     if (loginResult.success) {
       trackLoginSuccess();
+
+      // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
+      removeCookie('ssoPipelineRedirectionDone');
     }
   }, [loginResult]);
 
