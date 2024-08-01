@@ -15,7 +15,7 @@ const generateProductKey = (product) => (
 export const getProductMapping = (recommendedProducts) => recommendedProducts.map((product) => ({
   product_key: generateProductKey(product),
   product_line: product.cardType,
-  product_source: product.productSource.name,
+  product_source: product?.productSource?.name,
 }));
 
 export const trackRecommendationClick = (product, position, userId) => {
@@ -25,7 +25,7 @@ export const trackRecommendationClick = (product, position, userId) => {
     recommendation_type: product.recommendationType,
     product_key: generateProductKey(product),
     product_line: product.cardType,
-    product_source: product.productSource.name,
+    product_source: product?.productSource?.name,
     user_id: userId,
   });
 
