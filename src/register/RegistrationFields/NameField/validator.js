@@ -11,7 +11,7 @@ export const INVALID_NAME_REGEX = /https?:\/\/(?:[-\w.]|(?:%[\da-fA-F]{2}))*/g;
 
 const validateName = (value, formatMessage) => {
   let fieldError = '';
-  if (!value.trim()) {
+  if (!value || (value && !value.trim())) {
     fieldError = formatMessage(messages['empty.name.field.error']);
   } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
     fieldError = formatMessage(messages['name.validation.message']);
