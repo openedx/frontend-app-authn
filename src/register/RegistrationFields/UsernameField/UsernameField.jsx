@@ -100,27 +100,30 @@ const UsernameField = (props) => {
     dispatch(clearUsernameSuggestions());
   };
 
-  const suggestedUsernames = () => (
-    <div className={className}>
-      <span className="text-gray username-suggestion--label">{formatMessage(messages['registration.username.suggestion.label'])}</span>
-      <div className="username-scroll-suggested--form-field">
-        {usernameSuggestions.map((username, index) => (
-          <Button
-            type="button"
-            name="username"
-            variant="outline-dark"
-            className="username-suggestions--chip data-hj-suppress"
-            autoComplete={props.autoComplete}
-            key={`suggestion-${index.toString()}`}
-            onClick={(e) => handleSuggestionClick(e, username)}
-          >
-            {username}
-          </Button>
-        ))}
-      </div>
-      {iconButton}
-    </div>
-  );
+const suggestedUsernames = () => {
+    const validSuggestions = usernameSuggestions.filter(username => usernameRegex.test(username)); // Filter valid suggestions
+    return (
+        <div className={className}>
+            <span className="text-gray username-suggestion--label">{formatMessage(messages['registration.username.suggestion.label'])}</span>
+            <div className="username-scroll-suggested--form-field">
+                {validSuggestions.map((username, index) => (
+                    <Button
+                        type="button"
+                        name="username"
+                        variant="outline-dark"
+                        className="username-suggestions--chip data-hj-suppress"
+                        autoComplete={props.autoComplete}
+                        key={`suggestion-${index.toString()}`}
+                        onClick={(e) => handleSuggestionClick(e, username)} 
+                    >
+                        {username}
+                    </Button>
+                ))}
+            </div>
+            {iconButton}
+        </div>
+    );
+};
 
   if (usernameSuggestions.length > 0 && errorMessage && value === ' ') {
     className = 'username-suggestions__error';
