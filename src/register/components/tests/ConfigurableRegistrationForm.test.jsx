@@ -251,7 +251,7 @@ describe('ConfigurableRegistrationForm', () => {
         country: 'Pakistan',
         honor_code: true,
         profession: 'Engineer',
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store.dispatch = jest.fn(store.dispatch);
@@ -362,7 +362,7 @@ describe('ConfigurableRegistrationForm', () => {
         password: 'password1',
         country: 'Ukraine',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store = mockStore({

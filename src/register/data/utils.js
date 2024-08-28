@@ -126,8 +126,8 @@ export const prepareRegistrationPayload = (
     delete payload.marketingEmailsOptIn;
   }
 
-  payload = snakeCaseObject(payload);
   payload.totalRegistrationTime = totalRegistrationTime;
+  payload = snakeCaseObject(payload);
 
   // add query params to the payload
   payload = { ...payload, ...queryParams };
