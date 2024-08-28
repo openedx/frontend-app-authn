@@ -892,6 +892,7 @@ describe('RegistrationPage', () => {
         country: 'PK',
         social_auth_provider: 'Apple',
         total_registration_time: 0,
+        app_name: APP_NAME,
       }));
     });
   });
