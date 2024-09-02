@@ -183,7 +183,7 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Pakistan',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
         next: '/course/demo-course-url',
       };
 
@@ -206,7 +206,7 @@ describe('RegistrationPage', () => {
         country: 'Pakistan',
         honor_code: true,
         social_auth_provider: 'Apple',
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store = mockStore({
@@ -239,7 +239,7 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Ukraine',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store.dispatch = jest.fn(store.dispatch);
@@ -264,7 +264,7 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Ukraine',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store.dispatch = jest.fn(store.dispatch);
@@ -290,7 +290,7 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Pakistan',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
         marketing_emails_opt_in: true,
       };
 
@@ -317,7 +317,7 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Pakistan',
         honor_code: true,
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       };
 
       store.dispatch = jest.fn(store.dispatch);
@@ -882,7 +882,7 @@ describe('RegistrationPage', () => {
         email: 'john.doe@example.com',
         country: 'PK',
         social_auth_provider: 'Apple',
-        totalRegistrationTime: 0,
+        total_registration_time: 0,
       }));
     });
   });
