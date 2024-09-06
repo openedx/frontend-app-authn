@@ -4,7 +4,7 @@ Adding Custom Fields to the Registration Page in Authn
 
 Introduction
 ------------
-This guide explains how to add custom fields to the registration page of your Open edX instance. To integrate custom fields with the new Authn MFE, additional configuration steps are required. Custom fields can be either required—added directly to the registration page—or optional, and will be added to a secondary registration page that users can skip.
+This guide explains how to add custom fields to the registration page of your Open edX instance. To integrate custom fields with the new Authn MFE, additional configuration steps are required. Custom fields can be either required—added directly to the registration page—or optional, and will be added to the progressive profiling page (welcome page) that users can skip.
 
 Two main ways to add additional fields depending on the type of fields you want
 ------------
