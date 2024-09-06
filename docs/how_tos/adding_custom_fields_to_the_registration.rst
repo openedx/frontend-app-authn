@@ -20,7 +20,8 @@ You need to redefine several constants in the settings. Several methods can be u
     - Go to `Site configurations` in admin: {{LMS}}/admin/site_configuration/siteconfiguration/
     - Add new settings to OrderedDict (create new `Site configurations` if it wasn't before):
 
-    .. code-block::
+    .. code-block:: json
+
         {
             "ENABLE_DYNAMIC_REGISTRATION_FIELDS": "true",
             "MFE_CONFIG": {
@@ -45,7 +46,8 @@ You need to redefine several constants in the settings. Several methods can be u
 #. **For the local development or testing settings can be overriden in configuration files:**
     - For example, constants can be added here: `env/apps/openedx/settings/lms/development.py`:
 
-    .. code-block::
+    .. code-block:: python
+
         ENABLE_DYNAMIC_REGISTRATION_FIELDS = "true"
 
         MFE_CONFIG["ENABLE_DYNAMIC_REGISTRATION_FIELDS"] = "true"
@@ -56,7 +58,8 @@ You need to redefine several constants in the settings. Several methods can be u
 
 `In total, you must redefine 3 constants using the method that is most preferable for you:`
 
-    .. code-block::
+    .. code-block:: python
+
         ENABLE_DYNAMIC_REGISTRATION_FIELD = True,
 
         MFE_CONFIG["ENABLE_DYNAMIC_REGISTRATION_FIELDS"] = True,
@@ -74,21 +77,23 @@ Everything said above in instructions “**A**” is also relevant for adding fi
 
     Example:
 
-    .. code-block::
+    .. code-block:: json
+
         {
-            "REGISTRATION_EXTENSION_FORM" = "you_application.form.ExtendedUserProfileForm",
+            "REGISTRATION_EXTENSION_FORM": "you_application.form.ExtendedUserProfileForm",
 
             "extended_profile_fields": [
-            "your_new_field_id",
-            "subscribe_to_emails",
-            "confirm_age_consent",
-            "something_else"
+                "your_new_field_id",
+                "subscribe_to_emails",
+                "confirm_age_consent",
+                "something_else"
             ]
         }
 
 `In total, you must migrate to DB new user profile fields and redefine 3 constants using the method that is most preferable for you:`
 
-    .. code-block::
+    .. code-block:: python
+
         ENABLE_DYNAMIC_REGISTRATION_FIELD = True,
 
         MFE_CONFIG["ENABLE_DYNAMIC_REGISTRATION_FIELDS"] = True,
