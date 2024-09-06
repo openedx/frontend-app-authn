@@ -101,7 +101,7 @@ To configure dynamic registration fields within Authn, perform the following ste
 
    Add your `custom field <https://edx.readthedocs.io/projects/edx-installing-configuring-and-running/en/latest/configuration/retrieve_extended_profile_metadata.html>`_ to the `extended_profile_fields` list to ensure it is checked correctly during registration.
 
-   .. warning:: If this step is missed, fields from the extension form will not be added. For more information, please see the condition in: `helper.py <https://github.com/openedx/edx-platform/blob/master/openedx/core/djangoapps/user_authn/api/helper.py#L97>`_.
+   .. warning:: If this step is missed, fields from the extension form will not be saved. For more information, please see the condition in: `helper.py <https://github.com/openedx/edx-platform/blob/master/openedx/core/djangoapps/user_authn/api/helper.py#L97>`_.
 
 
 After adding all required settings, verify that the context has been properly extended with the new fields by inspecting the networks tab in your browser's developer tools.
