@@ -1,5 +1,3 @@
-import { messages as paragonMessages } from '@edx/paragon';
-
 import arMessages from './messages/ar.json';
 import deMessages from './messages/de.json';
 import plMessages from './messages/pl.json';
@@ -38,6 +36,5 @@ const appMessages = {
 };
 
 export default [
-  paragonMessages,
   appMessages,
 ];
