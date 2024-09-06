@@ -5,23 +5,23 @@ exports[`Zendesk Help should match login page third party auth alert message sna
   cookies={true}
   defer={true}
   webWidget={
-    Object {
-      "answerBot": Object {
-        "avatar": Object {
-          "name": Object {
+    {
+      "answerBot": {
+        "avatar": {
+          "name": {
             "*": "edX Support",
           },
           "url": undefined,
         },
         "contactOnlyAfterQuery": true,
         "suppress": false,
-        "title": Object {
+        "title": {
           "*": "edX Support",
         },
       },
-      "chat": Object {
-        "departments": Object {
-          "enabled": Array [
+      "chat": {
+        "departments": {
+          "enabled": [
             "account settings",
             "billing and payments",
             "certificates",
@@ -33,17 +33,17 @@ exports[`Zendesk Help should match login page third party auth alert message sna
         },
         "suppress": false,
       },
-      "contactForm": Object {
+      "contactForm": {
         "attachments": true,
-        "selectTicketForm": Object {
+        "selectTicketForm": {
           "*": "Please choose your request type:",
         },
-        "ticketForms": Array [
-          Object {
-            "fields": Array [
-              Object {
+        "ticketForms": [
+          {
+            "fields": [
+              {
                 "id": "description",
-                "prefill": Object {
+                "prefill": {
                   "*": "",
                 },
               },
@@ -53,10 +53,10 @@ exports[`Zendesk Help should match login page third party auth alert message sna
           },
         ],
       },
-      "contactOptions": Object {
+      "contactOptions": {
         "enabled": false,
       },
-      "helpCenter": Object {
+      "helpCenter": {
         "originalArticleButton": true,
       },
     }
