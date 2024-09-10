@@ -40,7 +40,10 @@ const ConfigurableRegistrationForm = (props) => {
   States' instead of 'United States of America' which does not exist in country dropdown list and gets the user
   confused and unable to create an account. So we added the United States entry in the dropdown list.
  */
-  const countryList = useMemo(() => getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]), []);
+
+  const countryList = useMemo(() => (
+    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]).filter(country => country.code !== 'RU')
+  ), []);
 
   let showTermsOfServiceAndHonorCode = false;
   let showCountryField = false;
