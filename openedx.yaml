@@ -3,6 +3,6 @@
 
 nick: Authn MFE
 oeps: {}
-owner: openedx/2u-vanguards
+owner: openedx/2u-infinity
 openedx-release:
   ref: master
