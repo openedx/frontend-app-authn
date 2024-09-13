@@ -21,7 +21,7 @@ exports[`ThirdPartyAuthAlert should match login page third party auth alert mess
 `;
 
 exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
-Array [
+[
   <div
     className="fade alert-content alert-success mt-n2 mb-5 alert show"
     id="tpa-alert"

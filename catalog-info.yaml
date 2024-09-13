@@ -13,6 +13,6 @@ metadata:
   annotations:
     openedx.org/arch-interest-groups: ""
 spec:
-  owner: group:2u-vanguards
+  owner: group:2u-infinity
   type: 'service'
   lifecycle: 'production'
