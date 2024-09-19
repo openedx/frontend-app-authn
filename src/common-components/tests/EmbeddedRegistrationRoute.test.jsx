@@ -5,13 +5,12 @@ import React from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-
-import { PAGE_NOT_FOUND, REGISTER_EMBEDDED_PAGE } from '../../data/constants';
-import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
-
 import {
   MemoryRouter, Route, BrowserRouter as Router, Routes,
 } from 'react-router-dom';
+
+import { PAGE_NOT_FOUND, REGISTER_EMBEDDED_PAGE } from '../../data/constants';
+import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
 
 const RRD = require('react-router-dom');
 // Just render plain div with its children
