@@ -6,7 +6,7 @@ import { Helmet } from 'react-helmet';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import {
-  EmbeddedRegistrationRoute, NotFoundPage, registerIcons, UnAuthOnlyRoute, Zendesk,
+  EmbeddedRegistrationRoute, NotFoundPage, registerIcons, UnAuthOnlyRoute,
 } from './common-components';
 import configureStore from './data/configureStore';
 import {
@@ -22,6 +22,7 @@ import {
 import { updatePathWithQueryParams } from './data/utils';
 import { ForgotPasswordPage } from './forgot-password';
 import Logistration from './logistration/Logistration';
+import MainAppSlot from './plugin-slots/MainAppSlot';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RecommendationsPage } from './recommendations';
 import { RegistrationPage } from './register';
@@ -36,7 +37,6 @@ const MainApp = () => (
     <Helmet>
       <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
     </Helmet>
-    {getConfig().ZENDESK_KEY && <Zendesk />}
     <Routes>
       <Route path="/" element={<Navigate replace to={updatePathWithQueryParams(REGISTER_PAGE)} />} />
       <Route
@@ -57,6 +57,7 @@ const MainApp = () => (
       <Route path={PAGE_NOT_FOUND} element={<NotFoundPage />} />
       <Route path="*" element={<Navigate replace to={PAGE_NOT_FOUND} />} />
     </Routes>
+    <MainAppSlot />
   </AppProvider>
 );
 
