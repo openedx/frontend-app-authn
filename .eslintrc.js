@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { createConfig } = require('@openedx/frontend-build');
 
-module.exports = createConfig('eslint', {
+const config = createConfig('eslint', {
   rules: {
     // Temporarily update the 'indent', 'template-curly-spacing' and
     // 'no-multiple-empty-lines' rules since they are causing eslint
@@ -50,3 +50,14 @@ module.exports = createConfig('eslint', {
     'function-paren-newline': 'off',
   },
 });
+
+config.settings = {
+  'import/resolver': {
+    node: {
+      paths: ['src', 'node_modules'],
+      extensions: ['.js', '.jsx'],
+    },
+  },
+};
+
+module.exports = config;
