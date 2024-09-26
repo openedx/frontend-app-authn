@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -16,9 +16,6 @@ import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
-import {
-  tpaProvidersSelector,
-} from '../common-components/data/selectors';
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
@@ -30,17 +27,18 @@ import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 
 const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+  const { selectedPage } = props;
   const tpaHint = getTpaHint();
-  const {
-    providers, secondaryProviders,
-  } = tpaProviders;
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+
+  const dispatch = useDispatch();
+  const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
+  const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
 
   useEffect(() => {
     const authService = getAuthService();
@@ -71,11 +69,11 @@ const Logistration = (props) => {
       return;
     }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    props.clearThirdPartyAuthContextErrorMessage();
+    dispatch(clearThirdPartyAuthContextErrorMessage());
     if (tabKey === LOGIN_PAGE) {
-      props.backupRegistrationForm();
+      dispatch(backupRegistrationForm());
     } else if (tabKey === REGISTER_PAGE) {
-      props.backupLoginForm();
+      dispatch(backupLoginForm());
     }
     setKey(tabKey);
   };
@@ -156,35 +154,10 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
-  backupLoginForm: PropTypes.func.isRequired,
-  backupRegistrationForm: PropTypes.func.isRequired,
-  clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
-  tpaProviders: PropTypes.shape({
-    providers: PropTypes.arrayOf(PropTypes.shape({})),
-    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
-};
-
-Logistration.defaultProps = {
-  tpaProviders: {
-    providers: [],
-    secondaryProviders: [],
-  },
 };
 
 Logistration.defaultProps = {
   selectedPage: REGISTER_PAGE,
 };
 
-const mapStateToProps = state => ({
-  tpaProviders: tpaProvidersSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    backupLoginForm,
-    backupRegistrationForm,
-    clearThirdPartyAuthContextErrorMessage,
-  },
-)(Logistration);
+export default Logistration;

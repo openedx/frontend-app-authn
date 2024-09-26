@@ -43,6 +43,15 @@ describe('Logistration', () => {
     </IntlProvider>
   );
 
+  const loginFormData = {
+    formFields: {
+      emailOrUsername: '', password: '',
+    },
+    errors: {
+      emailOrUsername: '', password: '',
+    },
+  };
+
   const initialState = {
     register: {
       registrationFormData: {
@@ -71,6 +80,7 @@ describe('Logistration', () => {
       },
     },
     login: {
+      loginFormData,
       loginResult: { success: false, redirectUrl: '' },
     },
   };

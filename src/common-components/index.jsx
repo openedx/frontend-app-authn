@@ -9,7 +9,7 @@ export { default as InstitutionLogistration } from './InstitutionLogistration';
 export { RenderInstitutionButton } from './InstitutionLogistration';
 export { default as reducer } from './data/reducers';
 export { default as saga } from './data/sagas';
-export { storeName } from './data/selectors';
+export { storeName } from './data/reducers';
 export { default as FormGroup } from './FormGroup';
 export { default as PasswordField } from './PasswordField';
 export { default as Zendesk } from './Zendesk';
