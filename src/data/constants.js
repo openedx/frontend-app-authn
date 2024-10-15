@@ -38,3 +38,14 @@ export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+
 export const AUTH_PARAMS = ['course_id', 'enrollment_action', 'course_mode', 'email_opt_in', 'purchase_workflow', 'next', 'register_for_free', 'track', 'is_account_recovery', 'variant', 'host', 'cta'];
 export const REDIRECT = 'redirect';
 export const APP_NAME = 'authn_mfe';
+
+export const PAGE_TYPES = {
+  accountCreation: 'account-creation',
+  signIn: 'sign-in',
+};
+
+export const ELEMENT_TYPES = {
+  BUTTON: 'BUTTON',
+};
+
+export const EVENT_TYPES = { ElementClicked: 'redventures.usertracking.v3.ElementClicked' };

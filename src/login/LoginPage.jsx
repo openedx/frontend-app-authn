@@ -32,7 +32,8 @@ import { thirdPartyAuthContextSelector } from '../common-components/data/selecto
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
+  DEFAULT_STATE, ELEMENT_TYPES, PENDING_STATE,
+  RESET_PAGE,
 } from '../data/constants';
 import {
   getActivationStatus,
@@ -44,7 +45,7 @@ import {
 import { removeCookie } from '../data/utils/cookies';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 import {
-  trackForgotPasswordLinkClick, trackLoginPageViewed, trackLoginSuccess,
+  trackForgotPasswordLinkClick, trackLoginPageViewed, trackLoginSuccess, trackSignIn,
 } from '../tracking/trackers/login';
 
 const LoginPage = (props) => {
@@ -151,6 +152,7 @@ const LoginPage = (props) => {
   };
 
   const handleSubmit = (event) => {
+    trackSignIn(ELEMENT_TYPES.BUTTON, formatMessage(messages['sign.in.button.name']), formatMessage(messages['sign.in.button']));
     event.preventDefault();
     if (showResetPasswordSuccessBanner) {
       props.dismissPasswordResetBanner();

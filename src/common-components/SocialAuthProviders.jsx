@@ -9,16 +9,25 @@ import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import {
+  ELEMENT_TYPES, LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES,
+} from '../data/constants';
 import { setCookie } from '../data/utils';
+import { trackSignIn } from '../tracking/trackers/login';
+import { trackAccountCreationEvents } from '../tracking/trackers/register';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
   const { referrer, socialAuthProviders } = props;
   const registrationFields = useSelector(state => state.register.registrationFormData);
 
-  function handleSubmit(e) {
+  function handleSubmit(e, providerName) {
     e.preventDefault();
+    if (referrer === LOGIN_PAGE) {
+      trackSignIn(ELEMENT_TYPES.BUTTON, providerName.toLowerCase(), providerName);
+    } else {
+      trackAccountCreationEvents(ELEMENT_TYPES.BUTTON, providerName.toLowerCase(), providerName);
+    }
 
     if (referrer === REGISTER_PAGE) {
       setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
@@ -34,7 +43,7 @@ const SocialAuthProviders = (props) => {
       type="button"
       className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
-      onClick={handleSubmit}
+      onClick={(e) => handleSubmit(e, provider.name)}
     >
       {provider.iconImage ? (
         <div aria-hidden="true">

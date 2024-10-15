@@ -43,13 +43,13 @@ import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../c
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  APP_NAME, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  APP_NAME, COMPLETE_STATE, ELEMENT_TYPES, PENDING_STATE,
+  REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, removeCookie, setCookie,
 } from '../data/utils';
-import { trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracking/trackers/register';
-
+import { trackAccountCreationEvents, trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracking/trackers/register';
 /**
  * Main Registration Page component
  */
@@ -267,6 +267,7 @@ const RegistrationPage = (props) => {
   };
 
   const handleSubmit = (e) => {
+    trackAccountCreationEvents(ELEMENT_TYPES.BUTTON, formatMessage(messages['create.account.for.free.button.text']), buttonLabel);
     e.preventDefault();
     registerUser();
   };
