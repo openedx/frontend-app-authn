@@ -25,6 +25,8 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
+const mockTagular = jest.fn();
+window.tagular = mockTagular;
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
