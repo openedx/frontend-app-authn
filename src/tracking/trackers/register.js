@@ -1,4 +1,4 @@
-import { createCohesionEvent } from '../../data/cohesion/utils';
+import { createCohesionEvent } from '../../cohesion/utils';
 import { PAGE_TYPES } from '../../data/constants';
 import { createEventTracker, createPageEventTracker } from '../../data/segment/utils';
 

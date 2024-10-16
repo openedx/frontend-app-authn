@@ -1,78 +1,45 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
-
-<head>
-  <title>
-    <%= (process.env.SITE_NAME && process.env.SITE_NAME !='null' ) ? 'Authentication | ' + process.env.SITE_NAME
-      : 'Authentication' %>
-  </title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="<%=htmlWebpackPlugin.options.FAVICON_URL%>" type="image/x-icon" />
-
-  <style type='text/css'>
-    .preampjs [data-preamp],
-    .fusejs [data-fuse] {
-      opacity: 0 !important
-    }
-  </style>
-  <script type="text/javascript">
-    !function (co, h, e, s, i, o, n) {
-      var d = 'documentElement'; var a = 'className'; h[d][a] += ' preampjs fusejs';
-      n.k = e; co._Cohesion = n; co._Preamp = { k: s, start: new Date }; co._Fuse = { k: i }; co._Tagular = { k: o };
-      [e, s, i, o].map(function (x) { co[x] = co[x] || function () { (co[x].q = co[x].q || []).push([].slice.call(arguments)) } });
-      var b = function () { var u = h[d][a]; h[d][a] = u.replace(/ ?preampjs| ?fusejs/g, '') };
-      h.addEventListener('DOMContentLoaded', function () {
-        co.setTimeout(b, 3e3);
-        co._Preamp.docReady = co._Fuse.docReady = !0
-      }); var z = h.createElement('script');
-      z.async = 1; z.src = 'https://cdn.cohesionapps.com/cohesion/cohesion-latest.min.js';
-      z.onerror = function () { var ce = 'error', f = 'function'; for (var o of co[e].q || []) o[0] === ce && typeof o[1] == f && o[1](); co[e] = function (n, cb) { n === ce && typeof cb == f && cb() }; b() };
-      h.head.appendChild(z);
-    }
-      (window, document, 'cohesion', 'preamp', 'fuse', 'tagular', {
-        tagular: {
-          writeKey: process.env.Cohesion_Write_Key,
-          sourceKey: process.env.Cohesion_Source_Key,
-          taggy: {
-            enabled: true
-          }
-        }
-      })
-  </script>
-
-
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.4.4/iframeResizer.contentWindow.min.js"
-    integrity="sha512-IWwZFBvHzN41wNI6etRLLuLrDDj/6AwJcPt7cmKJAzluYTIHHQ1PF8wh0rSy05jxEvvjflVvH2MxeV6riyEEXg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
+  <head>
+    <title>
+      <%= (process.env.SITE_NAME && process.env.SITE_NAME !='null' ) ?
+      'Authentication | ' + process.env.SITE_NAME : 'Authentication' %>
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="<%=htmlWebpackPlugin.options.FAVICON_URL%>"
+      type="image/x-icon"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/4.4.4/iframeResizer.contentWindow.min.js"
+      integrity="sha512-IWwZFBvHzN41wNI6etRLLuLrDDj/6AwJcPt7cmKJAzluYTIHHQ1PF8wh0rSy05jxEvvjflVvH2MxeV6riyEEXg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      window.tagular("beam", {
+        "@type": "core.Identify.v1",
+        traits: {},
+        externalIds: [
+          {
+            id: window.analytics.user().anonymousId(),
+            type: "segment_anonym_id",
+            collection: "users",
+            encoding: "none",
+          },
+        ],
+      });
     </script>
-  <% if (process.env.OPTIMIZELY_URL) { %>
+    <% if (process.env.OPTIMIZELY_URL) { %>
     <script src="<%= process.env.OPTIMIZELY_URL %>"></script>
     <% } else if (process.env.OPTIMIZELY_PROJECT_ID) { %>
-      <script
-        src="<%= process.env.MARKETING_SITE_BASE_URL %>/optimizelyjs/<%= process.env.OPTIMIZELY_PROJECT_ID %>.js"></script>
-      <% } %>
+    <script src="<%= process.env.MARKETING_SITE_BASE_URL %>/optimizelyjs/<%= process.env.OPTIMIZELY_PROJECT_ID %>.js"></script>
+    <% } %>
+  </head>
 
-        <script>
-          window.tagular("beam", {
-            "@type": "core.Identify.v1",
-            traits: {},
-            externalIds: [
-              {
-                id: window.analytics.user().anonymousId(),
-                type: "segment_anonym_id",
-                collection: "users",
-                encoding: "none",
-              },
-            ],
-          });
-
-        </script>
-</head>
-
-<body>
-  <div id="root"></div>
-</body>
-
+  <body>
+    <div id="root"></div>
+  </body>
 </html>

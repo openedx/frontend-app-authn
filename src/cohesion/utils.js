@@ -1,4 +1,4 @@
-import { EVENT_TYPES } from '../constants';
+import { EVENT_TYPES } from '../data/constants';
 
 /**
  * Creates a web element object for cohesion tracking purposes.
