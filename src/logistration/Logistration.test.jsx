@@ -69,6 +69,7 @@ describe('Logistration', () => {
       usernameSuggestions: [],
       validationApiRateLimited: false,
     },
+    cohesion: { eventData: {} },
     commonComponents: {
       thirdPartyAuthContext: {
         providers: [],

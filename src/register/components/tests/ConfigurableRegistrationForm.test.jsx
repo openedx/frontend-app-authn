@@ -99,6 +99,7 @@ describe('ConfigurableRegistrationForm', () => {
       registrationFormData,
       usernameSuggestions: [],
     },
+    cohesion: { eventData: {} },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
       thirdPartyAuthContext,

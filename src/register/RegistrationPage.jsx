@@ -11,6 +11,12 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
 
+import {
+  InstitutionLogistration,
+  PasswordField,
+  RedirectLogistration,
+  ThirdPartyAuthAlert,
+} from '../common-components';
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
 import {
@@ -34,22 +40,21 @@ import {
 import messages from './messages';
 import { EmailField, NameField, UsernameField } from './RegistrationFields';
 import {
-  InstitutionLogistration,
-  PasswordField,
-  RedirectLogistration,
-  ThirdPartyAuthAlert,
-} from '../common-components';
+  ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
+} from '../cohesion/constants';
+import { setCohesionEventStates } from '../cohesion/data/actions';
+import trackCohesionEvent from '../cohesion/trackers';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  APP_NAME, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  APP_NAME, COMPLETE_STATE, PENDING_STATE,
+  REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, removeCookie, setCookie,
 } from '../data/utils';
 import { trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracking/trackers/register';
-
 /**
  * Main Registration Page component
  */
@@ -89,6 +94,7 @@ const RegistrationPage = (props) => {
   const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
   const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
   const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
+  const cohesionEventData = useSelector(state => state.cohesion.eventData);
 
   const backendValidations = useSelector(getBackendValidations);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
@@ -185,6 +191,9 @@ const RegistrationPage = (props) => {
       // This event is used by GTM
       trackRegistrationSuccess();
 
+      // This event is used by cohestion upon successful registration
+      trackCohesionEvent(cohesionEventData);
+
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
 
@@ -193,7 +202,7 @@ const RegistrationPage = (props) => {
       // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
       removeCookie('ssoPipelineRedirectionDone');
     }
-  }, [registrationResult]);
+  }, [registrationResult, cohesionEventData]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;
@@ -268,6 +277,13 @@ const RegistrationPage = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const eventData = {
+      pageType: PAGE_TYPES.ACCOUNT_CREATION,
+      elementType: ELEMENT_TYPES.BUTTON,
+      webElementText: ELEMENT_TEXT.CREATE_ACCOUNT,
+      webElementName: ELEMENT_NAME.CREATE_ACCOUNT,
+    };
+    dispatch(setCohesionEventStates(eventData));
     registerUser();
   };
 

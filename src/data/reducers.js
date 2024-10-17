@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import { reducer as cohesionReducer, storeName as cohesionStoreName } from '../cohesion/data/reducers';
 import {
   reducer as commonComponentsReducer,
   storeName as commonComponentsStoreName,
@@ -31,6 +32,7 @@ const createRootReducer = () => combineReducers({
   [commonComponentsStoreName]: commonComponentsReducer,
   [forgotPasswordStoreName]: forgotPasswordReducer,
   [resetPasswordStoreName]: resetPasswordReducer,
+  [cohesionStoreName]: cohesionReducer,
   [authnProgressiveProfilingStoreName]: authnProgressiveProfilingReducers,
 });
 export default createRootReducer;

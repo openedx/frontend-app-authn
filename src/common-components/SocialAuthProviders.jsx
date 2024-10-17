@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -9,16 +9,31 @@ import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { PAGE_TYPES } from '../cohesion/constants';
+import { setCohesionEventStates } from '../cohesion/data/actions';
+import {
+  LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES,
+} from '../data/constants';
 import { setCookie } from '../data/utils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const { referrer, socialAuthProviders } = props;
   const registrationFields = useSelector(state => state.register.registrationFormData);
 
   function handleSubmit(e) {
     e.preventDefault();
+    const elementType = e.target.nodeName;
+    const elementText = e.target.name;
+    const eventData = {
+      pageType: referrer === LOGIN_PAGE ? PAGE_TYPES.SIGN_IN : PAGE_TYPES.ACCOUNT_CREATION,
+      elementType,
+      webElementText: elementText,
+      webElementName: elementText.toLowerCase(),
+    };
+
+    dispatch(setCohesionEventStates(eventData));
 
     if (referrer === REGISTER_PAGE) {
       setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);

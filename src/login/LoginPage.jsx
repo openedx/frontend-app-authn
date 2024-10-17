@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
@@ -21,6 +21,11 @@ import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 import {
+  ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
+} from '../cohesion/constants';
+import { setCohesionEventStates } from '../cohesion/data/actions';
+import trackCohesionEvent from '../cohesion/trackers';
+import {
   FormGroup,
   InstitutionLogistration,
   PasswordField,
@@ -31,9 +36,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
-} from '../data/constants';
+import { DEFAULT_STATE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -72,8 +75,10 @@ const LoginPage = (props) => {
     getTPADataFromBackend,
   } = props;
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const cohesionEventData = useSelector(state => state.cohesion.eventData);
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0, context: {} });
@@ -87,11 +92,13 @@ const LoginPage = (props) => {
   useEffect(() => {
     if (loginResult.success) {
       trackLoginSuccess();
+      // This event is used by cohestion upon successful login
+      trackCohesionEvent(cohesionEventData);
 
       // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
       removeCookie('ssoPipelineRedirectionDone');
     }
-  }, [loginResult]);
+  }, [loginResult, cohesionEventData]);
 
   useEffect(() => {
     const payload = { ...queryParams };
@@ -152,6 +159,13 @@ const LoginPage = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const eventData = {
+      pageType: PAGE_TYPES.SIGN_IN,
+      elementType: ELEMENT_TYPES.BUTTON,
+      webElementText: ELEMENT_TEXT.SIGN_IN,
+      webElementName: ELEMENT_NAME.SIGN_IN,
+    };
+    dispatch(setCohesionEventStates(eventData));
     if (showResetPasswordSuccessBanner) {
       props.dismissPasswordResetBanner();
     }
