@@ -1,5 +1,3 @@
-import { createCohesionEvent } from '../../cohesion/utils';
-import { PAGE_TYPES } from '../../data/constants';
 import { createEventTracker, createPageEventTracker } from '../../data/segment/utils';
 
 export const eventNames = {
@@ -21,9 +19,4 @@ export const trackRegistrationSuccess = () => createEventTracker(
 // Tracks the progressive profiling page event.
 export const trackRegistrationPageViewed = () => {
   createPageEventTracker(eventNames.loginAndRegistration, 'register')();
-};
-
-// Tracks the account creation page events.
-export const trackAccountCreationEvents = (elementType, webElementName, webElementText) => {
-  createCohesionEvent(PAGE_TYPES.accountCreation, elementType, webElementName, webElementText);
 };

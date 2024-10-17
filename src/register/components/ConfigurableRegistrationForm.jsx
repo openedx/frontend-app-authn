@@ -5,9 +5,11 @@ import { getConfig } from '@edx/frontend-platform';
 import { getCountryList, getLocale, useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
-import { ELEMENT_TYPES } from '../../data/constants';
+import {
+  ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
+} from '../../cohesion/constants';
+import trackCohesionEvent from '../../cohesion/trackers';
 import { FormFieldRenderer } from '../../field-renderer';
-import { trackAccountCreationEvents } from '../../tracking/trackers/register';
 import { backupRegistrationFormBegin } from '../data/actions';
 import { FIELDS } from '../data/constants';
 import messages from '../messages';
@@ -103,10 +105,13 @@ const ConfigurableRegistrationForm = (props) => {
     // setting marketingEmailsOptIn state for SSO authentication flow for register API call
     if (name === 'marketingEmailsOptIn') {
       if (!value) {
-        trackAccountCreationEvents(ELEMENT_TYPES.BUTTON,
-          formatMessage(messages['registration.opt.out.label.name']),
-          formatMessage(messages['registration.opt.in.label'],
-            { siteName: getConfig().SITE_NAME }));
+        const cohesionEventData = {
+          pageType: PAGE_TYPES.ACCOUNT_CREATION,
+          elementType: ELEMENT_TYPES.BUTTON,
+          webElementText: ELEMENT_TEXT.CREATE_ACCOUNT,
+          webElementName: ELEMENT_NAME.CREATE_ACCOUNT,
+        };
+        trackCohesionEvent(cohesionEventData);
       }
       dispatch(backupRegistrationFormBegin({
         ...backedUpFormData,

@@ -37,12 +37,6 @@ const messages = defineMessages({
     defaultMessage: 'I agree that {siteName} may send me marketing messages.',
     description: 'Text for opt in option on register page.',
   },
-  'registration.opt.out.label.name': {
-    id: 'registration.opt.out.label.name',
-    defaultMessage: 'opt-out',
-    description: 'Text for opt out option on register page tracking event',
-  },
-
   // Help text
   'help.text.name': {
     id: 'help.text.name',
@@ -69,11 +63,6 @@ const messages = defineMessages({
     id: 'create.account.for.free.button',
     defaultMessage: 'Create an account for free',
     description: 'Label text for registration form submission button',
-  },
-  'create.account.for.free.button.text': {
-    id: 'create.account.for.free.button.text',
-    defaultMessage: 'create-account',
-    description: 'Label text for registration form submission button  for tracking event',
   },
   'create.account.cta.button': {
     id: 'create.account.cta.button',

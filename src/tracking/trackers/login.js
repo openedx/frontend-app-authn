@@ -1,5 +1,3 @@
-import { createCohesionEvent } from '../../cohesion/utils';
-import { PAGE_TYPES } from '../../data/constants';
 import { createEventTracker, createPageEventTracker } from '../../data/segment/utils';
 
 export const eventNames = {
@@ -29,7 +27,3 @@ export const trackLoginSuccess = () => createEventTracker(
   eventNames.loginSuccess,
   {},
 )();
-
-export const trackSignIn = (elementType, webElementText, webElementName) => {
-  createCohesionEvent(PAGE_TYPES.signIn, elementType, webElementText, webElementName);
-};

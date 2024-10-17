@@ -99,6 +99,7 @@ describe('RegistrationFailure', () => {
       registrationFormData,
       usernameSuggestions: [],
     },
+    cohesion: { eventData: {} },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
       thirdPartyAuthContext,

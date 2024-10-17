@@ -11,6 +11,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import mockTagular from '../../cohesion/utils';
 import {
   APP_NAME, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE,
 } from '../../data/constants';
@@ -25,8 +26,7 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
-const mockTagular = jest.fn();
-window.tagular = mockTagular;
+mockTagular();
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -60,6 +60,7 @@ describe('LoginPage', () => {
     register: {
       validationApiRateLimited: false,
     },
+    cohesion: { eventData: {} },
   };
 
   const secondaryProviders = {
