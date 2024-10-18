@@ -11,6 +11,7 @@ import {
 import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import mockTagular from '../../cohesion/utils';
 import {
   APP_NAME,
   AUTHN_PROGRESSIVE_PROFILING,
@@ -25,6 +26,7 @@ import ProgressiveProfiling from '../ProgressiveProfiling';
 
 const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
 const mockStore = configureStore();
+mockTagular();
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -54,6 +56,13 @@ jest.mock('react-router-dom', () => {
     useLocation: jest.fn(),
   };
 });
+
+const eventData = {
+  pageType: 'test-page',
+  elementType: 'test-element-type',
+  webElementText: 'test-element-text',
+  webElementName: 'test-element-name',
+};
 
 describe('ProgressiveProfilingTests', () => {
   let store = {};
@@ -252,6 +261,9 @@ describe('ProgressiveProfilingTests', () => {
           ...initialState.welcomePage,
           success: true,
         },
+        cohesion: {
+          eventData,
+        },
       });
       const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
       const nextButton = container.querySelector('button.btn-brand');
@@ -277,6 +289,9 @@ describe('ProgressiveProfilingTests', () => {
         welcomePage: {
           ...initialState.welcomePage,
           success: true,
+        },
+        cohesion: {
+          eventData,
         },
       });
 
@@ -420,6 +435,9 @@ describe('ProgressiveProfilingTests', () => {
         welcomePage: {
           ...initialState.welcomePage,
           success: true,
+        },
+        cohesion: {
+          eventData,
         },
       });
 
