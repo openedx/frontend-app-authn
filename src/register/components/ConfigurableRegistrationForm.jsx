@@ -108,8 +108,8 @@ const ConfigurableRegistrationForm = (props) => {
         const cohesionEventData = {
           pageType: PAGE_TYPES.ACCOUNT_CREATION,
           elementType: ELEMENT_TYPES.BUTTON,
-          webElementText: ELEMENT_TEXT.CREATE_ACCOUNT,
-          webElementName: ELEMENT_NAME.CREATE_ACCOUNT,
+          webElementText: ELEMENT_TEXT.OPT_IN_TEXT,
+          webElementName: ELEMENT_NAME.OPT_OUT,
         };
         trackCohesionEvent(cohesionEventData);
       }
