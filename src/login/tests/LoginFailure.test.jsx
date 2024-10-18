@@ -1,10 +1,12 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import configureStore from 'redux-mock-store';
 
 import {
   ACCOUNT_LOCKED_OUT,
@@ -25,13 +27,27 @@ import LoginFailureMessage from '../LoginFailure';
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
+const mockStore = configureStore();
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 
+const eventData = {
+  pageType: 'test-page',
+  elementType: 'test-element-type',
+  webElementText: 'test-element-text',
+  webElementName: 'test-element-name',
+};
+
 describe('LoginFailureMessage', () => {
   let props = {};
+  let store = {};
+
+  const initialState = {
+    cohesion: { eventData: {} },
+  };
 
   beforeAll(() => {
+    store = mockStore(initialState);
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({
@@ -298,11 +314,19 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
+    store = mockStore({
+      ...initialState,
+      cohesion: {
+        eventData,
+      },
+    });
     render(
       <IntlProvider locale="en">
-        <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
-        </MemoryRouter>
+        <Provider store={store}>
+          <MemoryRouter>
+            <IntlLoginFailureMessage {...props} />
+          </MemoryRouter>
+        </Provider>
       </IntlProvider>,
     );
 
@@ -323,12 +347,20 @@ describe('LoginFailureMessage', () => {
       errorCode: REQUIRE_PASSWORD_CHANGE,
       errorCount: 0,
     };
+    store = mockStore({
+      ...initialState,
+      cohesion: {
+        eventData,
+      },
+    });
 
     render(
       <IntlProvider locale="en">
-        <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
-        </MemoryRouter>
+        <Provider store={store}>
+          <MemoryRouter>
+            <IntlLoginFailureMessage {...props} />
+          </MemoryRouter>
+        </Provider>
       </IntlProvider>,
     );
 
