@@ -18,20 +18,6 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script>
-      window.tagular("beam", {
-        "@type": "core.Identify.v1",
-        traits: {},
-        externalIds: [
-          {
-            id: window.analytics.user().anonymousId(),
-            type: "segment_anonym_id",
-            collection: "users",
-            encoding: "none",
-          },
-        ],
-      });
-    </script>
     <% if (process.env.OPTIMIZELY_URL) { %>
     <script src="<%= process.env.OPTIMIZELY_URL %>"></script>
     <% } else if (process.env.OPTIMIZELY_PROJECT_ID) { %>
