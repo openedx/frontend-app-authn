@@ -43,7 +43,6 @@ import {
   ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
 } from '../cohesion/constants';
 import { setCohesionEventStates } from '../cohesion/data/actions';
-import trackCohesionEvent from '../cohesion/trackers';
 import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
@@ -94,7 +93,6 @@ const RegistrationPage = (props) => {
   const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
   const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
   const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
-  const cohesionEventData = useSelector(state => state.cohesion.eventData);
 
   const backendValidations = useSelector(getBackendValidations);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
@@ -191,9 +189,6 @@ const RegistrationPage = (props) => {
       // This event is used by GTM
       trackRegistrationSuccess();
 
-      // This event is used by cohestion upon successful registration
-      trackCohesionEvent(cohesionEventData);
-
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
 
@@ -202,7 +197,7 @@ const RegistrationPage = (props) => {
       // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
       removeCookie('ssoPipelineRedirectionDone');
     }
-  }, [registrationResult, cohesionEventData]);
+  }, [registrationResult]);
 
   const handleOnChange = (event) => {
     const { name } = event.target;
