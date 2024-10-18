@@ -5,6 +5,7 @@ import { AppProvider } from '@edx/frontend-platform/react';
 import { Helmet } from 'react-helmet';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
+import Cohesion from './cohesion';
 import {
   EmbeddedRegistrationRoute, NotFoundPage, registerIcons, UnAuthOnlyRoute,
 } from './common-components';
@@ -29,11 +30,13 @@ import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
 
 import './index.scss';
+import './cohesion/cohesion.scss';
 
 registerIcons();
 
 const MainApp = () => (
   <AppProvider store={configureStore()}>
+    <Cohesion />
     <Helmet>
       <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
     </Helmet>

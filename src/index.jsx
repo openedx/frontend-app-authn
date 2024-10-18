@@ -9,14 +9,12 @@ import {
 } from '@edx/frontend-platform';
 import { ErrorPage } from '@edx/frontend-platform/react';
 
-import cohesion from './cohesion';
 import configuration from './config';
 import messages from './i18n';
 import MainApp from './MainApp';
 import './cohesion/cohesion.scss';
 
 subscribe(APP_READY, () => {
-  cohesion();
   ReactDOM.render(
     <MainApp />,
     document.getElementById('root'),

@@ -28,7 +28,7 @@ const RedirectLogistration = (props) => {
   let finalRedirectUrl = '';
 
   if (success) {
-    // This event is used by cohestion upon successful login
+    // This event is used by cohesion upon successful login
     trackCohesionEvent(cohesionEventData);
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
