@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -10,6 +11,7 @@ import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
 import messages from './messages';
+import trackCohesionEvent from '../cohesion/trackers';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
@@ -17,11 +19,13 @@ import useMobileResponsive from '../data/utils/useMobileResponsive';
 const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
   const isMobileView = useMobileResponsive();
   const [redirectToResetPasswordPage, setRedirectToResetPasswordPage] = useState(false);
+  const cohesionEventData = useSelector(state => state.cohesion.eventData);
   const handlers = {
     handleToggleOff: () => {
       if (variant === 'block') {
         setRedirectToResetPasswordPage(true);
       } else {
+        trackCohesionEvent(cohesionEventData);
         window.location.href = redirectUrl || getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
       }
     },
