@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -9,8 +9,8 @@ import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { PAGE_TYPES } from '../cohesion/constants';
-import { setCohesionEventStates } from '../cohesion/data/actions';
+import { ELEMENT_TYPES, PAGE_TYPES } from '../cohesion/constants';
+import trackCohesionEvent from '../cohesion/trackers';
 import {
   LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES,
 } from '../data/constants';
@@ -18,22 +18,19 @@ import { setCookie } from '../data/utils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
   const { referrer, socialAuthProviders } = props;
   const registrationFields = useSelector(state => state.register.registrationFormData);
 
-  function handleSubmit(e) {
+  function handleSubmit(e, providerName) {
     e.preventDefault();
-    const elementType = e.target.nodeName;
-    const elementText = e.target.name;
     const eventData = {
       pageType: referrer === LOGIN_PAGE ? PAGE_TYPES.SIGN_IN : PAGE_TYPES.ACCOUNT_CREATION,
-      elementType,
-      webElementText: elementText,
-      webElementName: elementText.toLowerCase(),
+      elementType: ELEMENT_TYPES.BUTTON,
+      webElementText: providerName,
+      webElementName: providerName.toLowerCase(),
     };
-
-    dispatch(setCohesionEventStates(eventData));
+    // This event is used by cohesion upon successful login
+    trackCohesionEvent(eventData);
 
     if (referrer === REGISTER_PAGE) {
       setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
@@ -49,7 +46,7 @@ const SocialAuthProviders = (props) => {
       type="button"
       className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
-      onClick={handleSubmit}
+      onClick={(event) => handleSubmit(event, provider?.name)}
     >
       {provider.iconImage ? (
         <div aria-hidden="true">
