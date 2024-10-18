@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
@@ -24,7 +24,6 @@ import {
   ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
 } from '../cohesion/constants';
 import { setCohesionEventStates } from '../cohesion/data/actions';
-import trackCohesionEvent from '../cohesion/trackers';
 import {
   FormGroup,
   InstitutionLogistration,
@@ -78,7 +77,6 @@ const LoginPage = (props) => {
   const dispatch = useDispatch();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const cohesionEventData = useSelector(state => state.cohesion.eventData);
 
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0, context: {} });
@@ -92,13 +90,10 @@ const LoginPage = (props) => {
   useEffect(() => {
     if (loginResult.success) {
       trackLoginSuccess();
-      // This event is used by cohestion upon successful login
-      trackCohesionEvent(cohesionEventData);
-
       // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
       removeCookie('ssoPipelineRedirectionDone');
     }
-  }, [loginResult, cohesionEventData]);
+  }, [loginResult]);
 
   useEffect(() => {
     const payload = { ...queryParams };
