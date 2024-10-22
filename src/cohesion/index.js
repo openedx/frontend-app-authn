@@ -15,14 +15,19 @@ const CohesionScript = () => {
             co.setTimeout(b, 3e3);
             co._Preamp.docReady = co._Fuse.docReady = !0
         }); var z = h.createElement('script');
-        z.async = 1; z.src = 'https://cdn.cohesionapps.com/cohesion/cohesion-latest.min.js';
+        z.async = 1; z.src = 'https://beam.edx.org/cohesion/cohesion-latest.min.js';
         z.onerror = function () { var ce = 'error',f = 'function'; for (var o of co[e].q || []) o[0] === ce && typeof o[1] == f && o[1](); co[e] = function (n, cb) { n === ce && typeof cb == f && cb() }; b() };
         h.head.appendChild(z);
       }
       (window, document, 'cohesion', 'preamp', 'fuse', 'tagular', {
         tagular: {
+          apiHost: 'https://beam.edx.org/v2/t',
           writeKey: "${process.env.COHESION_WRITE_KEY}",
           sourceKey: "${process.env.COHESION_SOURCE_KEY}",
+          cookieDomain: 'edx.org',
+          domainWhitelist: ["edx.org"],
+          apiVersion: 'v2/t',
+          multiparty: true,
           taggy: {
             enabled: true
           }
