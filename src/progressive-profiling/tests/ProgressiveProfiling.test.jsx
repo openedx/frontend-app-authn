@@ -6,7 +6,7 @@ import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platfor
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
-  fireEvent, render, screen,
+  fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -299,7 +299,9 @@ describe('ProgressiveProfilingTests', () => {
       const nextButton = container.querySelector('button.btn-brand');
       expect(nextButton.textContent).toEqual('Submit');
 
-      expect(window.location.href).toEqual(redirectUrl);
+      await waitFor(() => {
+        expect(window.location.href).toEqual(redirectUrl);
+      });
     });
   });
 
@@ -414,7 +416,7 @@ describe('ProgressiveProfilingTests', () => {
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
-    it('should redirect to provided redirect url', () => {
+    it('should redirect to provided redirect url', async () => {
       const redirectUrl = 'https://redirect-test.com';
       delete window.location;
       window.location = {
@@ -444,7 +446,9 @@ describe('ProgressiveProfilingTests', () => {
       render(reduxWrapper(<IntlProgressiveProfilingPage />));
       const submitButton = screen.getByText('Submit');
       fireEvent.click(submitButton);
-      expect(window.location.href).toBe(redirectUrl);
+      await waitFor(() => {
+        expect(window.location.href).toBe(redirectUrl);
+      });
     });
   });
 });
