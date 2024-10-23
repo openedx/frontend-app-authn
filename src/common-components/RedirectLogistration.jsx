@@ -81,8 +81,9 @@ const RedirectLogistration = (props) => {
         />
       );
     }
-
-    window.location.href = finalRedirectUrl;
+    setTimeout(() => {
+      window.location.href = finalRedirectUrl;
+    }, 400);
   }
 
   return null;

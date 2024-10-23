@@ -36,7 +36,9 @@ const SocialAuthProviders = (props) => {
       setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
     }
     const url = e.currentTarget.dataset.providerUrl;
-    window.location.href = getConfig().LMS_BASE_URL + url;
+    setTimeout(() => {
+      window.location.href = getConfig().LMS_BASE_URL + url;
+    }, 400);
   }
 
   const socialAuth = socialAuthProviders.map((provider, index) => (
