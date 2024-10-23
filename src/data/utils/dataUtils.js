@@ -81,3 +81,9 @@ export const isHostAvailableInQueryParams = () => {
   const queryParams = getAllPossibleQueryParams();
   return 'host' in queryParams;
 };
+
+export const redirectWithDelay = (redirectUrl) => {
+  setTimeout(() => {
+    window.location.href = redirectUrl;
+  }, 400);
+};

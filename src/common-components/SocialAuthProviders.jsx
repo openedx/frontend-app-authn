@@ -15,6 +15,7 @@ import {
   LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES,
 } from '../data/constants';
 import { setCookie } from '../data/utils';
+import { redirectWithDelay } from '../data/utils/dataUtils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
@@ -36,9 +37,7 @@ const SocialAuthProviders = (props) => {
       setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
     }
     const url = e.currentTarget.dataset.providerUrl;
-    setTimeout(() => {
-      window.location.href = getConfig().LMS_BASE_URL + url;
-    }, 400);
+    redirectWithDelay(getConfig().LMS_BASE_URL + url);
   }
 
   const socialAuth = socialAuthProviders.map((provider, index) => (
