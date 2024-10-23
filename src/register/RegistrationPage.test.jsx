@@ -6,7 +6,7 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -508,7 +508,7 @@ describe('RegistrationPage', () => {
       expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
     });
 
-    it('should redirect to url returned in registration result after successful account creation', () => {
+    it('should redirect to url returned in registration result after successful account creation', async () => {
       const dashboardURL = 'https://test.com/testing-dashboard/';
       store = mockStore({
         ...initialState,
@@ -523,10 +523,12 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(window.location.href).toBe(dashboardURL);
+      await waitFor(() => {
+        expect(window.location.href).toBe(dashboardURL);
+      });
     });
 
-    it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
+    it('should redirect to dashboard if features flags are configured but no optional fields are configured', async () => {
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
@@ -550,7 +552,9 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(window.location.href).toBe(dashboardUrl);
+      await waitFor(() => {
+        expect(window.location.href).toBe(dashboardUrl);
+      });
     });
 
     it('should redirect to progressive profiling page if optional fields are configured', () => {

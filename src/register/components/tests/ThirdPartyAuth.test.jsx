@@ -5,7 +5,7 @@ import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import {
   configure, getLocale, injectIntl, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -342,7 +342,7 @@ describe('ThirdPartyAuth', () => {
       expect(headingElement).toBeTruthy();
     });
 
-    it('should redirect to social auth provider url on SSO button click', () => {
+    it('should redirect to social auth provider url on SSO button click', async () => {
       const registerUrl = '/auth/login/apple-id/?auth_entry=register&next=/dashboard';
       store = mockStore({
         ...initialState,
@@ -368,10 +368,12 @@ describe('ThirdPartyAuth', () => {
       const ssoButton = container.querySelector('button#oa2-apple-id');
       fireEvent.click(ssoButton);
 
-      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
+      await waitFor(() => {
+        expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
+      });
     });
 
-    it('should redirect to finishAuthUrl upon successful registration via SSO', () => {
+    it('should redirect to finishAuthUrl upon successful registration via SSO', async () => {
       const authCompleteUrl = '/auth/complete/google-oauth2/';
       store = mockStore({
         ...initialState,
@@ -394,7 +396,9 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL };
 
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+      await waitFor(() => {
+        expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+      });
     });
 
     // ******** test alert messages ********

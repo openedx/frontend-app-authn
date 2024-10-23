@@ -515,7 +515,7 @@ describe('LoginPage', () => {
 
   // ******** test redirection ********
 
-  it('should redirect to url returned by login endpoint after successful authentication', () => {
+  it('should redirect to url returned by login endpoint after successful authentication', async () => {
     const dashboardURL = 'https://test.com/testing-dashboard/';
     store = mockStore({
       ...initialState,
@@ -531,10 +531,12 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(dashboardURL);
+    await waitFor(() => {
+      expect(window.location.href).toBe(dashboardURL);
+    });
   });
 
-  it('should redirect to finishAuthUrl upon successful login via SSO', () => {
+  it('should redirect to finishAuthUrl upon successful login via SSO', async () => {
     const authCompleteUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
@@ -558,10 +560,12 @@ describe('LoginPage', () => {
     window.location = { href: getConfig().BASE_URL };
 
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    });
   });
 
-  it('should redirect to social auth provider url on SSO button click', () => {
+  it('should redirect to social auth provider url on SSO button click', async () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -582,10 +586,12 @@ describe('LoginPage', () => {
       '',
       { selector: '#oa2-apple-id' },
     ));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
+    });
   });
 
-  it('should redirect to finishAuthUrl upon successful authentication via SSO', () => {
+  it('should redirect to finishAuthUrl upon successful authentication via SSO', async () => {
     const finishAuthUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
@@ -606,7 +612,9 @@ describe('LoginPage', () => {
     window.location = { href: getConfig().BASE_URL };
 
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
+    });
   });
 
   // ******** test hinted third party auth ********

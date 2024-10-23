@@ -9,6 +9,7 @@ import {
   AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
 } from '../data/constants';
 import setCookie from '../data/utils/cookies';
+import { redirectWithDelay } from '../data/utils/dataUtils';
 
 const RedirectLogistration = (props) => {
   const {
@@ -81,8 +82,7 @@ const RedirectLogistration = (props) => {
         />
       );
     }
-
-    window.location.href = finalRedirectUrl;
+    redirectWithDelay(finalRedirectUrl);
   }
 
   return null;
