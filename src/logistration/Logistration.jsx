@@ -28,6 +28,7 @@ import { LoginPage } from '../login';
 import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import WelcomeMsg from '../common-components/Welcome';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
@@ -99,6 +100,7 @@ const Logistration = (props) => {
   return (
     <BaseContainer>
       <div>
+      <WelcomeMsg></WelcomeMsg>
         {disablePublicAccountCreation
           ? (
             <>

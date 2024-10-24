@@ -16,7 +16,7 @@
 .content {
   @include media-breakpoint-up('xl') {
     display: flex;
-    justify-content: center;
+    // justify-content: center;
     width: 50vw;
     margin-top: 4rem;
   }
@@ -96,7 +96,7 @@
 
 @include media-breakpoint-only('md') {
   .medium-screen-top-stripe {
-    display: flex;
+    display: none;
     height: 0.5rem;
     background-image: linear-gradient(
       102.02deg,
@@ -113,7 +113,7 @@
 
 @include media-breakpoint-only('lg') {
   .medium-screen-top-stripe {
-    display: flex;
+    display: none;
     height: 0.5rem;
     background-image: linear-gradient(
       102.02deg,
@@ -133,7 +133,7 @@
 
 @include media-breakpoint-up('xl') {
  .extra-large-screen-top-stripe {
-   display: flex;
+  display: none;
    height: 0.5rem;
    background-image: linear-gradient(
      102.02deg,
@@ -159,6 +159,7 @@
 
 .large-screen-svg-primary {
   fill: $primary-400;
+  display: none;
 }
 
 .medium-screen-svg-light,
