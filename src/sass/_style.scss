@@ -30,6 +30,16 @@ $main-blue: #2E6CD3;
 $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
 
+  .content {
+    display: flex;
+    width: 50vw;
+    height: 50vh;
+    margin: 12rem auto; 
+    justify-content: center; 
+    padding: 0 50px;
+}
+
+
 .btn-brand {
   color: #FFFFFF;
   background-color: $main-blue;
@@ -100,17 +110,17 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
     #2E6CD333 70% 
   ), url('../img/abstract-plexus-blue-geometrical-shapes-connection-ai-generated-image-2.png');
   background-color: $main-blue !important; 
-  background-size: cover; 
+  background-size: 100%;
   background-position: center; 
 }
 
 .col-md-9 {
-  flex: 0 0 85%;
+  flex: 0 0 100%;
   max-width: 100%; 
 }
 
 .text-welcome {
-  width: 509px;
+  // width: 509px;
   font-size: 38px;
   line-height: 163%;
   font-family: 'Montserrat', sans-serif;
@@ -124,11 +134,11 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   display: flex;            
   justify-content: center;    
   align-items: center;       
-  padding: 40px 10px;              
+  padding: 40px 20px;              
   border-radius: 20px; 
   margin: 0 auto;
-  margin-top: 7rem;
-  max-width: 454px;
+  margin-top: 15rem;
+  max-width: 45%;
 }
 
 .compass-modal img {
@@ -494,7 +504,7 @@ select.form-control {
 }
 
 .mw-xs {
-  max-width: 533px !important;
+  max-width: 100% !important;
 }
 
 

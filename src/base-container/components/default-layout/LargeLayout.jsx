@@ -13,15 +13,15 @@ const LargeLayout = () => {
 
   return (
     <div className="w-50 d-flex">
-      <div className="col-md-9 bg-primary-400">
-      <Compass></Compass> 
+      <div className="min-vh-100 col-md-9 bg-primary-400">
+      <Compass/> 
         {/* <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image className="logo position-absolute" alt={getConfig().SITE_NAME} src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink> */}
-        <div className="min-vh-100 d-flex align-items-center">
+        {/* <div className="min-vh-100 d-flex align-items-center">
  
           <div className={classNames({ 'large-yellow-line mr-n4.5': getConfig().SITE_NAME === 'edX' })} />    
-        </div>
+        </div> */}
       </div>
     </div>
   );
