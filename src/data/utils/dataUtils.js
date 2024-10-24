@@ -85,5 +85,5 @@ export const isHostAvailableInQueryParams = () => {
 export const redirectWithDelay = (redirectUrl) => {
   setTimeout(() => {
     window.location.href = redirectUrl;
-  }, 400);
+  }, 1000);
 };
