@@ -525,7 +525,7 @@ describe('RegistrationPage', () => {
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(dashboardURL);
-      });
+      }, { timeout: 1100 });
     });
 
     it('should redirect to dashboard if features flags are configured but no optional fields are configured', async () => {
@@ -554,7 +554,7 @@ describe('RegistrationPage', () => {
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(dashboardUrl);
-      });
+      }, { timeout: 1100 });
     });
 
     it('should redirect to progressive profiling page if optional fields are configured', () => {

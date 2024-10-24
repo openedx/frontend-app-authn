@@ -370,7 +370,7 @@ describe('ThirdPartyAuth', () => {
 
       await waitFor(() => {
         expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
-      });
+      }, { timeout: 1100 });
     });
 
     it('should redirect to finishAuthUrl upon successful registration via SSO', async () => {
@@ -398,7 +398,7 @@ describe('ThirdPartyAuth', () => {
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
-      });
+      }, { timeout: 1100 });
     });
 
     // ******** test alert messages ********

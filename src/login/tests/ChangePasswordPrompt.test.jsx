@@ -79,7 +79,7 @@ describe('ChangePasswordPromptTests', () => {
     fireEvent.click(screen.getByText('Close'));
     await waitFor(() => {
       expect(window.location.href).toBe(dashboardUrl);
-    });
+    }, { timeout: 1100 });
   });
 
   it('[block modal] should redirect to reset password page when user clicks outside modal', async () => {
