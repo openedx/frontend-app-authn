@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
-  fireEvent, render, screen,
+  fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
@@ -77,7 +77,9 @@ describe('ChangePasswordPromptTests', () => {
     );
 
     fireEvent.click(screen.getByText('Close'));
-    await expect(window.location.href).toBe(dashboardUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(dashboardUrl);
+    }, { timeout: 1100 });
   });
 
   it('[block modal] should redirect to reset password page when user clicks outside modal', async () => {

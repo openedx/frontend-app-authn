@@ -301,7 +301,7 @@ describe('ProgressiveProfilingTests', () => {
 
       await waitFor(() => {
         expect(window.location.href).toEqual(redirectUrl);
-      });
+      }, { timeout: 1100 });
     });
   });
 
@@ -448,7 +448,7 @@ describe('ProgressiveProfilingTests', () => {
       fireEvent.click(submitButton);
       await waitFor(() => {
         expect(window.location.href).toBe(redirectUrl);
-      });
+      }, { timeout: 1100 });
     });
   });
 });

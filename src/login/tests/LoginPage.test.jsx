@@ -533,7 +533,7 @@ describe('LoginPage', () => {
     render(reduxWrapper(<IntlLoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(dashboardURL);
-    });
+    }, { timeout: 1100 });
   });
 
   it('should redirect to finishAuthUrl upon successful login via SSO', async () => {
@@ -562,7 +562,7 @@ describe('LoginPage', () => {
     render(reduxWrapper(<IntlLoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
-    });
+    }, { timeout: 1100 });
   });
 
   it('should redirect to social auth provider url on SSO button click', async () => {
@@ -588,7 +588,7 @@ describe('LoginPage', () => {
     ));
     await waitFor(() => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
-    });
+    }, { timeout: 1100 });
   });
 
   it('should redirect to finishAuthUrl upon successful authentication via SSO', async () => {
@@ -614,7 +614,7 @@ describe('LoginPage', () => {
     render(reduxWrapper(<IntlLoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
-    });
+    }, { timeout: 1100 });
   });
 
   // ******** test hinted third party auth ********

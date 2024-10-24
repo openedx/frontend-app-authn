@@ -14,6 +14,7 @@ import messages from './messages';
 import trackCohesionEvent from '../cohesion/trackers';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
+import { redirectWithDelay } from '../data/utils/dataUtils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
 
 const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
@@ -26,7 +27,7 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
         setRedirectToResetPasswordPage(true);
       } else {
         trackCohesionEvent(cohesionEventData);
-        window.location.href = redirectUrl || getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+        redirectWithDelay(redirectUrl || getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL));
       }
     },
   };
