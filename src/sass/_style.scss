@@ -11,6 +11,8 @@
 // ----------------------------
 // #COLORS
 // ----------------------------
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 $white: #FFFFFF;
 
 // social platforms
@@ -23,8 +25,116 @@ $microsoft-focus-black: #000;
 $apple-black: #000000;
 $apple-focus-black: $apple-black;
 
+$main-blue: #2E6CD3;
+
 $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
+
+.btn-brand {
+  color: #FFFFFF;
+  background-color: $main-blue;
+  border-color: $main-blue;
+
+  &:hover {
+    background-color: $main-blue;
+    border-color: $main-blue;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    border: solid 2px  $main-blue;
+    border-radius: calc(0.375rem + 4px);
+  }
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: $main-blue;
+  background-color: transparent;
+  border-bottom: 2px solid $main-blue;
+  &:hover {
+    background-color: #FFF !important;    
+  }
+  &:focus::before {
+    content: "";    
+    border: solid 2px  $main-blue;
+    border-radius: calc(0.375rem + 4px);
+  }
+}
+
+
+.nav-tabs .nav-link:hover {
+  background-color: transparent; /* White background on hover */
+}
+
+.nav-tabs .nav-link.active, 
+.nav-tabs .nav-item.show .nav-link {
+  background-color: transparent; /* White background for active state */
+  border-bottom: 2px solid $main-blue; /* Active tab border */
+  color: $main-blue;
+}
+
+.nav-tabs .nav-link.active:hover {
+  background-color: transparent; /* White background on hover for active link */
+  color: $main-blue;
+}
+
+.nav-tabs .nav-link:focus::before {
+  content: "";
+  border: solid 2px $main-blue;
+  border-radius: calc(0.375rem + 4px);
+}
+
+.bg-primary-400 {
+  background-image: linear-gradient(
+    to top, 
+    #18386De6 7%,
+    #2E6CD333 70% 
+  ), url('../img/abstract-plexus-blue-geometrical-shapes-connection-ai-generated-image-2.png');
+  background-color: $main-blue !important; 
+  background-size: cover; 
+  background-position: center; 
+}
+
+.col-md-9 {
+  flex: 0 0 85%;
+  max-width: 100%; 
+}
+
+.text-welcome {
+  width: 509px;
+  font-size: 38px;
+  line-height: 163%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800; 
+  text-align: left;
+  margin-bottom: 129px;
+}
+
+.compass-modal {
+  background-color: white;
+  display: flex;            
+  justify-content: center;    
+  align-items: center;       
+  padding: 40px 10px;              
+  border-radius: 20px; 
+  margin: 0 auto;
+  margin-top: 7rem;
+  max-width: 454px;
+}
+
+.compass-modal img {
+  max-width: 100%;
+  height: auto; 
+}
 
 // Forgot Password Page
 .forgot-password-button-width {
@@ -88,11 +198,11 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .form-control {
-  background-color: $white !important;
+  background-color: #FBFBFB !important;
   font-size: 0.875rem;
   line-height: 1.5;
   height: 2.75rem;
-
+  border: 1px solid #AEACAC;
 }
 
 .btn-social {
@@ -382,6 +492,11 @@ select.form-control {
   margin-top: 0.188rem !important;
   line-height: 1.25rem;
 }
+
+.mw-xs {
+  max-width: 533px !important;
+}
+
 
 @media (min-width: 1024px) {
   .mw-500 {
