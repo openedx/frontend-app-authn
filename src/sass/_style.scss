@@ -34,7 +34,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
     display: flex;
     width: 50vw;
     height: 50vh;
-    margin: 12rem auto; 
+    margin: 8rem auto; 
     justify-content: center; 
     padding: 0 50px;
 }
@@ -125,8 +125,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   line-height: 163%;
   font-family: 'Montserrat', sans-serif;
   font-weight: 800; 
-  text-align: left;
-  margin-bottom: 129px;
+  text-align: left; 
 }
 
 .compass-modal {
@@ -137,7 +136,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   padding: 40px 20px;              
   border-radius: 20px; 
   margin: 0 auto;
-  margin-top: 15rem;
+  margin-top: 12rem;
   max-width: 45%;
 }
 
