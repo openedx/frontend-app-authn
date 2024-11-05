@@ -90,7 +90,7 @@ describe('NameField', () => {
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'name',
-        'Enter a valid name',
+        'The name must be between 3 to 30 characters and can only contain letters.',
       );
     });
 
