@@ -41,6 +41,14 @@ describe('LoginPage', () => {
   const initialState = {
     login: {
       loginResult: { success: false, redirectUrl: '' },
+      loginFormData: {
+        formFields: {
+          emailOrUsername: '', password: '',
+        },
+        errors: {
+          emailOrUsername: '', password: '',
+        },
+      },
     },
     commonComponents: {
       thirdPartyAuthApiStatus: null,
