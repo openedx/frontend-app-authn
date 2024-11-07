@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -33,7 +33,7 @@ import { thirdPartyAuthContextSelector } from '../common-components/data/selecto
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
+  PENDING_STATE, RESET_PAGE,
 } from '../data/constants';
 import {
   getActivationStatus,
@@ -46,11 +46,6 @@ import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
 
 const LoginPage = (props) => {
   const {
-    backedUpFormData,
-    loginErrorCode,
-    loginErrorContext,
-    loginResult,
-    shouldBackupState,
     thirdPartyAuthContext: {
       providers,
       currentProvider,
@@ -59,15 +54,32 @@ const LoginPage = (props) => {
       platformName,
       errorMessage: thirdPartyErrorMessage,
     },
-    thirdPartyAuthApiStatus,
     institutionLogin,
-    showResetPasswordSuccessBanner,
-    submitState,
     // Actions
     backupFormState,
     handleInstitutionLogin,
     getTPADataFromBackend,
   } = props;
+  const {
+    backedUpFormData,
+    loginErrorCode,
+    loginErrorContext,
+    loginResult,
+    shouldBackupState,
+    showResetPasswordSuccessBanner,
+    submitState,
+    thirdPartyAuthApiStatus,
+  } = useSelector((state) => ({
+    backedUpFormData: state.login.loginFormData,
+    loginErrorCode: state.login.loginErrorCode,
+    loginErrorContext: state.login.loginErrorContext,
+    loginResult: state.login.loginResult,
+    shouldBackupState: state.login.shouldBackupState,
+    showResetPasswordSuccessBanner: state.login.showResetPasswordSuccessBanner,
+    submitState: state.login.submitState,
+    thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
+    thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
+  }));
   const { formatMessage } = useIntl();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
@@ -281,27 +293,15 @@ const LoginPage = (props) => {
   );
 };
 
-const mapStateToProps = state => {
-  const loginPageState = state.login;
-  return {
-    backedUpFormData: loginPageState.loginFormData,
-    loginErrorCode: loginPageState.loginErrorCode,
-    loginErrorContext: loginPageState.loginErrorContext,
-    loginResult: loginPageState.loginResult,
-    shouldBackupState: loginPageState.shouldBackupState,
-    showResetPasswordSuccessBanner: loginPageState.showResetPasswordSuccessBanner,
-    submitState: loginPageState.submitState,
-    thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
-    thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
-  };
-};
+const mapStateToProps = state => ({
+  thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
+});
 
 LoginPage.propTypes = {
   backedUpFormData: PropTypes.shape({
     formFields: PropTypes.shape({}),
     errors: PropTypes.shape({}),
   }),
-  loginErrorCode: PropTypes.string,
   loginErrorContext: PropTypes.shape({
     email: PropTypes.string,
     redirectUrl: PropTypes.string,
@@ -311,10 +311,6 @@ LoginPage.propTypes = {
     redirectUrl: PropTypes.string,
     success: PropTypes.bool,
   }),
-  shouldBackupState: PropTypes.bool,
-  showResetPasswordSuccessBanner: PropTypes.bool,
-  submitState: PropTypes.string,
-  thirdPartyAuthApiStatus: PropTypes.string,
   institutionLogin: PropTypes.bool.isRequired,
   thirdPartyAuthContext: PropTypes.shape({
     currentProvider: PropTypes.string,
@@ -341,13 +337,8 @@ LoginPage.defaultProps = {
       emailOrUsername: '', password: '',
     },
   },
-  loginErrorCode: null,
   loginErrorContext: {},
   loginResult: {},
-  shouldBackupState: false,
-  showResetPasswordSuccessBanner: false,
-  submitState: DEFAULT_STATE,
-  thirdPartyAuthApiStatus: PENDING_STATE,
   thirdPartyAuthContext: {
     currentProvider: null,
     errorMessage: null,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -24,16 +24,20 @@ import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
-import { LoginPage } from '../login';
 import { backupLoginForm } from '../login/data/actions';
+import LoginPageSlot from '../plugin-slots/LoginPage';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 
-const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+const Logistration = ({
+  selectedPage,
+}) => {
   const tpaHint = getTpaHint();
+  const tpaProviders = useSelector(tpaProvidersSelector);
+  const dispatch = useDispatch();
   const {
-    providers, secondaryProviders,
+    providers,
+    secondaryProviders,
   } = tpaProviders;
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
@@ -45,7 +49,8 @@ const Logistration = (props) => {
   useEffect(() => {
     const authService = getAuthService();
     if (authService) {
-      authService.getCsrfTokenService().getCsrfToken(getConfig().LMS_BASE_URL);
+      authService.getCsrfTokenService()
+        .getCsrfToken(getConfig().LMS_BASE_URL);
     }
   });
 
@@ -71,11 +76,11 @@ const Logistration = (props) => {
       return;
     }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    props.clearThirdPartyAuthContextErrorMessage();
+    dispatch(clearThirdPartyAuthContextErrorMessage());
     if (tabKey === LOGIN_PAGE) {
-      props.backupRegistrationForm();
+      dispatch(backupRegistrationForm());
     } else if (tabKey === REGISTER_PAGE) {
-      props.backupLoginForm();
+      dispatch(backupLoginForm());
     }
     setKey(tabKey);
   };
@@ -111,7 +116,7 @@ const Logistration = (props) => {
                 {!institutionLogin && (
                   <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
                 )}
-                <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                <LoginPageSlot institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
               </div>
             </>
           )
@@ -124,12 +129,16 @@ const Logistration = (props) => {
                   </Tabs>
                 )
                 : (!isValidTpaHint() && !hideRegistrationLink && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
+                  <Tabs
+                    defaultActiveKey={selectedPage}
+                    id="controlled-tab"
+                    onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}
+                  >
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
                 ))}
-              { key && (
+              {key && (
                 <Navigate to={updatePathWithQueryParams(key)} replace />
               )}
               <div id="main-content" className="main-content">
@@ -139,7 +148,12 @@ const Logistration = (props) => {
                   </h3>
                 )}
                 {selectedPage === LOGIN_PAGE
-                  ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                  ? (
+                    <LoginPageSlot
+                      institutionLogin={institutionLogin}
+                      handleInstitutionLogin={handleInstitutionLogin}
+                    />
+                  )
                   : (
                     <RegistrationPage
                       institutionLogin={institutionLogin}
@@ -156,35 +170,10 @@ const Logistration = (props) => {
 
 Logistration.propTypes = {
   selectedPage: PropTypes.string,
-  backupLoginForm: PropTypes.func.isRequired,
-  backupRegistrationForm: PropTypes.func.isRequired,
-  clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
-  tpaProviders: PropTypes.shape({
-    providers: PropTypes.arrayOf(PropTypes.shape({})),
-    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
-};
-
-Logistration.defaultProps = {
-  tpaProviders: {
-    providers: [],
-    secondaryProviders: [],
-  },
 };
 
 Logistration.defaultProps = {
   selectedPage: REGISTER_PAGE,
 };
 
-const mapStateToProps = state => ({
-  tpaProviders: tpaProvidersSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    backupLoginForm,
-    backupRegistrationForm,
-    clearThirdPartyAuthContextErrorMessage,
-  },
-)(Logistration);
+export default Logistration;
