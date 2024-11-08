@@ -3,16 +3,9 @@ import messages from '../../messages';
 const MIN_NAME_LENGTH = 3;
 const MAX_NAME_LENGTH = 30;
 
-// Regex para permitir solo letras y un espacio en el medio (sin números ni caracteres especiales)
-export const VALID_NAME_REGEX = /^[a-zA-Z]+( [a-zA-Z]+)*$/u;
-
-// Regex para URL
+export const VALID_NAME_REGEX = /^[\p{L}]+( [\p{L}]+)*$/u;
 export const URL_REGEX = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi;
-
-// Regex para etiquetas HTML
 export const HTML_REGEX = /<|>/u;
-
-// Regex de URLs del backend
 export const INVALID_NAME_REGEX = /https?:\/\/(?:[-\w.]|(?:%[\da-fA-F]{2}))/g;
 
 const validateName = (value, formatMessage) => {
