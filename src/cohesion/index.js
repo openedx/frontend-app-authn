@@ -39,18 +39,36 @@ const CohesionScript = () => {
     // Id Stitching script (executed after the cohesionScript is loaded)
     cohesionScript.onload = () => {
       idStitching.innerHTML = `
-        window.tagular("beam", {
-          "@type": "core.Identify.v1",
-          traits: {},
-          externalIds: [
-            {
-              id: window.analytics.user().anonymousId(),
-              type: "segment_anonym_id",
-              collection: "users",
-              encoding: "none",
-            },
-          ],
-        });
+        cohesion("tagular:ready", function () {
+            window.analytics.ready(function () {
+            const cohesionAnonymId = window.tagular("getAliasSet")["anonymousId"];
+            const segmentAnonymId = window.analytics.user().anonymousId();
+                const segmentUserId = window.analytics.user().id();
+
+            window.analytics.identify(segmentUserId, {
+                  cohesion_anonymous_id: cohesionAnonymId,
+            });
+
+            window.tagular("beam", {
+              "@type": "core.Identify.v1",
+              traits: {},
+              externalIds: [
+                {
+                    id: segmentAnonymId,
+                    type: "segment_anonymous_id",
+                    collection: "users",
+                    encoding: "none",
+                },
+                {
+                    id: cohesionAnonymId,
+                    type: "cohesion_anonymous_id",
+                    collection: "users",
+                    encoding: "none",
+                },
+              ],
+            });
+            });
+          });
       `;
       document.head.appendChild(idStitching);
     };
