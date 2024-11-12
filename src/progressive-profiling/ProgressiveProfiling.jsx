@@ -252,6 +252,10 @@ const ProgressiveProfiling = (props) => {
                 <StatefulButton
                   type="submit"
                   variant="brand"
+                  style={{
+                    backgroundColor: '#CC00CC',
+                    borderColor: '#CC00CC',
+                  }}
                   className="pp-page__button-width"
                   state={submitState}
                   labels={{
@@ -265,6 +269,10 @@ const ProgressiveProfiling = (props) => {
                   className="text-gray-700 font-weight-500"
                   type="submit"
                   variant="link"
+                  style={{
+                    backgroundColor: '#CC00CC',
+                    borderColor: '#CC00CC',
+                  }}
                   labels={{
                     default: formatMessage(messages['optional.fields.skip.button']),
                   }}

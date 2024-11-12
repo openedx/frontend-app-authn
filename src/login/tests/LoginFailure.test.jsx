@@ -364,7 +364,7 @@ describe('LoginFailureMessage', () => {
     );
 
     const errorMessage = "We couldn't sign you in.As test.com user, You must login with your test.com Google account.";
-    const url = 'http://localhost:18000/dashboard/?tpa_hint=google-auth2';
+    const url = 'http://localhost:8000/dashboard/?tpa_hint=google-auth2';
 
     expect(screen.getByText(
       '',

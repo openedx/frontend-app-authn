@@ -364,6 +364,10 @@ const RegistrationPage = (props) => {
                 name="register-user"
                 type="submit"
                 variant="brand"
+                style={{
+                  backgroundColor: '#CC00CC',
+                  borderColor: '#CC00CC',
+                }}
                 className="register-button mt-4 mb-4"
                 state={submitState}
                 labels={{

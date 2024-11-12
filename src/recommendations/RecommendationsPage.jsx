@@ -77,7 +77,6 @@ const RecommendationsPage = () => {
       </Helmet>
       <div className="d-flex flex-column bg-light-200 min-vh-100">
         <div className="mb-2">
-          <div className="col-md-12 small-screen-top-stripe medium-screen-top-stripe extra-large-screen-top-stripe" />
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
             <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
           </Hyperlink>
@@ -110,6 +109,10 @@ const RecommendationsPage = () => {
                   className="font-weight-500"
                   type="submit"
                   variant="outline-brand"
+                  style={{
+                    backgroundColor: '#CC00CC',
+                    borderColor: '#CC00CC',
+                  }}
                   labels={{
                     default: formatMessage(messages['recommendation.skip.button']),
                   }}

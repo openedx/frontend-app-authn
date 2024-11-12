@@ -12,6 +12,17 @@
     justify-content: space-between;
   }
 }
+.layout-container {
+  position: relative;
+}
+
+.red-stroke-line {
+  height: 10px;
+  background-color: #660066;
+  background-image: linear-gradient(to right, #CC00CC, #660066);
+  width: 100%;
+}
+
 
 .content {
   @include media-breakpoint-up('xl') {
@@ -133,7 +144,7 @@
 
 @include media-breakpoint-up('xl') {
  .extra-large-screen-top-stripe {
-   display: flex;
+   display: none;
    height: 0.5rem;
    background-image: linear-gradient(
      102.02deg,

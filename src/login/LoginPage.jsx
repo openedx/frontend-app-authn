@@ -250,6 +250,10 @@ const LoginPage = (props) => {
             type="submit"
             variant="brand"
             className="login-button-width"
+            style={{
+              backgroundColor: '#CC00CC',
+              borderColor: '#CC00CC',
+            }}
             state={submitState}
             labels={{
               default: formatMessage(messages['sign.in.button']),

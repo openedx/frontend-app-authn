@@ -131,6 +131,10 @@ const ForgotPasswordPage = (props) => {
               type="submit"
               variant="brand"
               className="forgot-password--button"
+              style={{
+                backgroundColor: '#CC00CC',
+                borderColor: '#CC00CC',
+              }}
               state={submitState}
               labels={{
                 default: formatMessage(messages['forgot.password.page.submit.button']),

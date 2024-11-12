@@ -183,6 +183,10 @@ const ResetPasswordPage = (props) => {
                   type="submit"
                   variant="brand"
                   className="reset-password--button"
+                  style={{
+                    backgroundColor: '#CC00CC',
+                    borderColor: '#CC00CC',
+                  }}
                   state={props.status}
                   labels={{
                     default: formatMessage(messages['reset.password']),

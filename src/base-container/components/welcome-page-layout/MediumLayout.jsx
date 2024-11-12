@@ -12,7 +12,6 @@ const MediumLayout = ({ fullName }) => {
 
   return (
     <>
-      <div className="w-100 medium-screen-top-stripe" />
       <div className="w-100 p-0 mb-3 d-flex">
         <div className="col-md-10 bg-light-200">
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
