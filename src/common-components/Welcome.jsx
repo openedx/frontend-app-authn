@@ -11,7 +11,7 @@ const WelcomeMsg = () => {
 
   return (
     <div className="container-fluid d-flex py-5 align-items-start">
-      <h2 className="text-welcome">
+      <h1 className="text-welcome">
         {lang === 'en' ? (
           <FormattedMessage
             id="welcome.message.en"
@@ -25,7 +25,7 @@ const WelcomeMsg = () => {
             description="welcome message in Polish"
           />
         )}
-      </h2>
+      </h1>
     </div>
   );
 };

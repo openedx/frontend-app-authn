@@ -261,7 +261,7 @@ const LoginPage = (props) => {
           <Link
             id="forgot-password"
             name="forgot-password"
-            className="btn btn-link font-weight-500 text-body"
+            className="btn btn-link font-weight-500 text-body mb-4 mt-4"
             to={updatePathWithQueryParams(RESET_PAGE)}
             onClick={trackForgotPasswordLinkClick}
           >
