@@ -5,6 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';
 import classNames from 'classnames';
 import Compass from '../../../common-components/Compass';
+// import compassBcgImage from '../../../img/abstract-plexus-blue-geometrical-shapes-connection-ai-generated-image-2.png';
 
 import messages from './messages';
 
@@ -14,6 +15,7 @@ const LargeLayout = () => {
   return (
     <div className="w-50 d-flex">
       <div className="min-vh-100 col-md-9 bg-primary-400">
+        {/* <img src={compassBcgImage} alt="" className='background' /> */}
       <Compass/> 
         {/* <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
           <Image className="logo position-absolute" alt={getConfig().SITE_NAME} src={getConfig().LOGO_WHITE_URL} />
