@@ -133,7 +133,7 @@
   "help.text.username.1": "Nazwa, która będzie cię identyfikować na kursach.",
   "help.text.username.2": "Nie można tego później zmienić.",
   "help.text.email": "Do aktywacji konta i ważnych aktualizacji",
-  "create.account.for.free.button": "Załóż konto za darmo",
+  "create.account.for.free.button": "Załóż konto",
   "registration.other.options.heading": "Lub zarejestruj się przez:",
   "create.account.cta.button": "{label}",
   "register.institution.login.button": "Dane logowania instytucji/uczelni",
