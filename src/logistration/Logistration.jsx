@@ -30,6 +30,8 @@ import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 import WelcomeMsg from '../common-components/Welcome';
 
+
+
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
   const tpaHint = getTpaHint();
@@ -42,6 +44,8 @@ const Logistration = (props) => {
   const navigate = useNavigate();
   const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+
+
 
   useEffect(() => {
     const authService = getAuthService();
@@ -96,6 +100,20 @@ const Logistration = (props) => {
     const { provider } = getTpaProvider(tpaHint, providers, secondaryProviders);
     return !!provider;
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const invalidTabPanel = document.querySelector('#controlled-tab-tabpane-undefined');
+      const suspiciousLink = document.querySelector('#controlled-tab-tab-null');
+      if (invalidTabPanel) {
+        invalidTabPanel.remove();
+      }
+      if (suspiciousLink) {
+        suspiciousLink.removeAttribute("href");
+      }
+    }, 0);
+    return () => clearTimeout(timeout);
+  }, [selectedPage]);
 
   return (
     <BaseContainer>
