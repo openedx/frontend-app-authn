@@ -278,7 +278,9 @@ const RegistrationPage = (props) => {
       webElementText: ELEMENT_TEXT.CREATE_ACCOUNT,
       webElementName: ELEMENT_NAME.CREATE_ACCOUNT,
     };
-    dispatch(setCohesionEventStates(eventData));
+    if (currentProvider) {
+      dispatch(setCohesionEventStates(eventData));
+    }
     registerUser();
   };
 

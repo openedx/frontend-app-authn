@@ -160,7 +160,10 @@ const LoginPage = (props) => {
       webElementText: ELEMENT_TEXT.SIGN_IN,
       webElementName: ELEMENT_NAME.SIGN_IN,
     };
-    dispatch(setCohesionEventStates(eventData));
+    if (currentProvider) {
+      dispatch(setCohesionEventStates(eventData));
+    }
+
     if (showResetPasswordSuccessBanner) {
       props.dismissPasswordResetBanner();
     }
