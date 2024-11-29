@@ -160,9 +160,8 @@ const LoginPage = (props) => {
       webElementText: ELEMENT_TEXT.SIGN_IN,
       webElementName: ELEMENT_NAME.SIGN_IN,
     };
-    if (currentProvider) {
-      dispatch(setCohesionEventStates(eventData));
-    }
+
+    dispatch(setCohesionEventStates(eventData));
 
     if (showResetPasswordSuccessBanner) {
       props.dismissPasswordResetBanner();
@@ -229,6 +228,7 @@ const LoginPage = (props) => {
         success={loginResult.success}
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
+        currentProvider={currentProvider}
       />
       <div className="mw-xs mt-3 mb-2">
         <LoginFailureMessage
