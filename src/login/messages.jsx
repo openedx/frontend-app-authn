@@ -95,11 +95,6 @@ const messages = defineMessages({
     defaultMessage: 'Your account could not be activated',
     description: 'Account Activation error message title',
   },
-  'account.activation.support.link': {
-    id: 'account.activation.support.link',
-    defaultMessage: 'contact support',
-    description: 'Link text used in account activation error message to go to learner help center',
-  },
   // Email Confirmation Strings
   'account.confirmation.success.message.title': {
     id: 'account.confirmation.success.message.title',

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@openedx/paragon';
+import { Alert, Hyperlink } from '@openedx/paragon';
 import { CheckCircle, Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
@@ -36,19 +36,17 @@ const AccountActivationMessage = ({ messageType }) => {
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.ERROR: {
-      const supportLink = (
-        <Alert.Link href={getConfig().ACTIVATION_EMAIL_SUPPORT_LINK}>
-          {formatMessage(messages['account.activation.support.link'])}
-        </Alert.Link>
+      const supportEmail = (
+        <Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink>
       );
 
       heading = formatMessage(messages[`account.${activationOrConfirmation}.error.message.title`]);
       activationMessage = (
         <FormattedMessage
           id="account.activation.error.message"
-          defaultMessage="Something went wrong, please {supportLink} to resolve this issue."
+          defaultMessage="Something went wrong, please contact {supportEmail} to resolve this issue."
           description="Account activation error message"
-          values={{ supportLink }}
+          values={{ supportEmail }}
         />
       );
       break;

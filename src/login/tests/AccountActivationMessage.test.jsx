@@ -58,7 +58,7 @@ describe('AccountActivationMessage', () => {
     );
 
     const expectedMessage = 'Your account could not be activated'
-                            + 'Something went wrong, please contact support to resolve this issue.';
+                            + 'Something went wrong, please contact  to resolve this issue.';
 
     expect(screen.getByText(
       '',
@@ -121,7 +121,7 @@ describe('EmailConfirmationMessage', () => {
       </IntlProvider>,
     );
     const expectedMessage = 'Your email could not be confirmed'
-                            + 'Something went wrong, please contact support to resolve this issue.';
+                            + 'Something went wrong, please contact  to resolve this issue.';
     expect(screen.getByText(
       '',
       { selector: '#account-activation-message' },
