@@ -22,6 +22,7 @@ const configuration = {
   SEARCH_CATALOG_URL: process.env.SEARCH_CATALOG_URL || null,
   TOS_AND_HONOR_CODE: process.env.TOS_AND_HONOR_CODE || null,
   TOS_LINK: process.env.TOS_LINK || null,
+  TPA_UNLINKED_ACCOUNT_PROVISION_URL: process.env.TPA_UNLINKED_ACCOUNT_PROVISION_URL || null,
   // Base container images
   BANNER_IMAGE_LARGE: process.env.BANNER_IMAGE_LARGE || '',
   BANNER_IMAGE_MEDIUM: process.env.BANNER_IMAGE_MEDIUM || '',
