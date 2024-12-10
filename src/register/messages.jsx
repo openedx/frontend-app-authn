@@ -123,7 +123,7 @@ const messages = defineMessages({
   },
   'name.validation.message': {
     id: 'name.validation.message',
-    defaultMessage: 'Enter a valid name',
+    defaultMessage: 'The name must be between 3 to 30 characters and can only contain letters.',
     description: 'Validation message that appears when fullname contain URL',
   },
   'password.validation.message': {
@@ -165,8 +165,8 @@ const messages = defineMessages({
   'registration.tpa.authentication.failure': {
     id: 'registration.tpa.authentication.failure',
     defaultMessage: 'We are sorry, you are not authorized to access {platform_name} via this channel. '
-        + 'Please contact your learning administrator or manager in order to access {platform_name}.'
-        + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
+      + 'Please contact your learning administrator or manager in order to access {platform_name}.'
+      + '{lineBreak}{lineBreak}Error Details:{lineBreak}{errorMessage}',
     description: 'Error message third party authentication pipeline fails',
   },
   // Terms of Service and Honor Code
