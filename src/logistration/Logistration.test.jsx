@@ -3,16 +3,14 @@ import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import Logistration from './Logistration';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
-import {
-  COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
-} from '../data/constants';
+import { COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import { backupLoginForm } from '../login/data/actions';
 import { backupRegistrationForm } from '../register/data/actions';
 
@@ -23,25 +21,26 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth');
 
 const mockStore = configureStore();
-const IntlLogistration = injectIntl(Logistration);
+let store = {};
+const getComponent = (props) => (
+  <IntlProvider locale="en">
+    <MemoryRouter>
+      <Provider store={store}>
+        <Logistration {...props} />
+      </Provider>
+    </MemoryRouter>
+  </IntlProvider>
+);
+
+const renderComponent = (props = {}) => render(getComponent(props));
 
 describe('Logistration', () => {
-  let store = {};
-
   const secondaryProviders = {
     id: 'saml-test',
     name: 'Test University',
     loginUrl: '/dummy-auth',
     registerUrl: '/dummy_auth',
   };
-
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
-    </IntlProvider>
-  );
 
   const initialState = {
     register: {
@@ -50,16 +49,26 @@ describe('Logistration', () => {
           marketingEmailsOptIn: true,
         },
         formFields: {
-          name: '', email: '', username: '', password: '',
+          name: '',
+          email: '',
+          username: '',
+          password: '',
         },
         emailSuggestion: {
-          suggestion: '', type: '',
+          suggestion: '',
+          type: '',
         },
         errors: {
-          name: '', email: '', username: '', password: '',
+          name: '',
+          email: '',
+          username: '',
+          password: '',
         },
       },
-      registrationResult: { success: false, redirectUrl: '' },
+      registrationResult: {
+        success: false,
+        redirectUrl: '',
+      },
       registrationError: {},
       usernameSuggestions: [],
       validationApiRateLimited: false,
@@ -71,7 +80,18 @@ describe('Logistration', () => {
       },
     },
     login: {
-      loginResult: { success: false, redirectUrl: '' },
+      loginResult: {
+        success: false,
+        redirectUrl: '',
+      },
+      loginFormData: {
+        formFields: {
+          emailOrUsername: '', password: '',
+        },
+        errors: {
+          emailOrUsername: '', password: '',
+        },
+      },
     },
   };
 
@@ -90,16 +110,22 @@ describe('Logistration', () => {
         ENVIRONMENT: 'production',
         LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
       },
-      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+      messages: {
+        'es-419': {},
+        de: {},
+        'en-us': {},
+      },
     });
   });
 
   it('should do nothing when user clicks on the same tab (login/register) again', () => {
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = renderComponent();
     // While staying on the registration form, clicking the register tab again
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
 
-    expect(sendTrackEvent).not.toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
+    expect(sendTrackEvent)
+      .not
+      .toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
   });
 
   it('should render registration page', () => {
@@ -107,16 +133,18 @@ describe('Logistration', () => {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = renderComponent();
 
-    expect(container.querySelector('RegistrationPage')).toBeDefined();
+    expect(container.querySelector('RegistrationPage'))
+      .toBeDefined();
   });
 
   it('should render login page', () => {
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = renderComponent(props);
 
-    expect(container.querySelector('LoginPage')).toBeDefined();
+    expect(container.querySelector('LoginPage'))
+      .toBeDefined();
   });
 
   it('should render login/register headings when show registration links is disabled', () => {
@@ -125,18 +153,20 @@ describe('Logistration', () => {
     });
 
     let props = { selectedPage: LOGIN_PAGE };
-    const { rerender } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { rerender } = renderComponent(props);
 
     // verifying sign in heading
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    expect(screen.getByRole('heading', { level: 3 }).textContent)
+      .toEqual('Sign in');
 
     // register page is still accessible when SHOW_REGISTRATION_LINKS is false
     // but it needs to be accessed directly
     props = { selectedPage: REGISTER_PAGE };
-    rerender(reduxWrapper(<IntlLogistration {...props} />));
+    rerender(getComponent(props));
 
     // verifying register heading
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Register');
+    expect(screen.getByRole('heading', { level: 3 }).textContent)
+      .toEqual('Register');
   });
 
   it('should render only login page when public account creation is disabled', () => {
@@ -160,14 +190,16 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = renderComponent(props);
 
     // verifying sign in heading for institution login false
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    expect(screen.getByRole('heading', { level: 3 }).textContent)
+      .toEqual('Sign in');
 
     // verifying tabs heading for institution login true
     fireEvent.click(screen.getByRole('link'));
-    expect(container.querySelector('#controlled-tab')).toBeDefined();
+    expect(container.querySelector('#controlled-tab'))
+      .toBeDefined();
   });
 
   it('should display institution login option when secondary providers are present', () => {
@@ -190,12 +222,14 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<IntlLogistration {...props} />));
-    expect(screen.getByText('Institution/campus credentials')).toBeDefined();
+    renderComponent(props);
+    expect(screen.getByText('Institution/campus credentials'))
+      .toBeDefined();
 
     // on clicking "Institution/campus credentials" button, it should display institution login page
     fireEvent.click(screen.getByText('Institution/campus credentials'));
-    expect(screen.getByText('Test University')).toBeDefined();
+    expect(screen.getByText('Test University'))
+      .toBeDefined();
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
@@ -221,11 +255,13 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<IntlLogistration {...props} />));
+    renderComponent(props);
     fireEvent.click(screen.getByText('Institution/campus credentials'));
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
-    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    expect(sendTrackEvent)
+      .toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(sendPageEvent)
+      .toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
@@ -251,11 +287,15 @@ describe('Logistration', () => {
     });
 
     delete window.location;
-    window.location = { hostname: getConfig().SITE_NAME, href: getConfig().BASE_URL };
+    window.location = {
+      hostname: getConfig().SITE_NAME,
+      href: getConfig().BASE_URL,
+    };
 
-    render(reduxWrapper(<IntlLogistration />));
+    renderComponent();
     fireEvent.click(screen.getByText('Institution/campus credentials'));
-    expect(screen.getByText('Test University')).toBeDefined();
+    expect(screen.getByText('Test University'))
+      .toBeDefined();
 
     mergeConfig({
       DISABLE_ENTERPRISE_LOGIN: '',
@@ -264,23 +304,26 @@ describe('Logistration', () => {
 
   it('should fire action to backup registration form on tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = renderComponent();
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
+    expect(store.dispatch)
+      .toHaveBeenCalledWith(backupRegistrationForm());
   });
 
   it('should fire action to backup login form on tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = renderComponent(props);
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
+    expect(store.dispatch)
+      .toHaveBeenCalledWith(backupLoginForm());
   });
 
   it('should clear tpa context errorMessage tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = renderComponent();
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(clearThirdPartyAuthContextErrorMessage());
+    expect(store.dispatch)
+      .toHaveBeenCalledWith(clearThirdPartyAuthContextErrorMessage());
   });
 });
