@@ -60,10 +60,16 @@ const MainApp = () => (
           domainWhitelist: ["edx.org"],
           apiVersion: 'v2/t',
           multiparty: true,
-          taggy: {
-            enabled: true
-          }
-        }
+          useBeacon: true,
+        },
+        consent: {
+          onetrust: {
+              enabled: true,
+              optIn: true
+          },
+          required: true,
+          domain: '.edx.org',
+        },
       });`}
       </script>
 
