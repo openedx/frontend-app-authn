@@ -1,10 +1,12 @@
-import { renderHook } from '@testing-library/react-hooks';
+import React from 'react';
+
+import { render } from '@testing-library/react';
 import algoliasearchHelper from 'algoliasearch-helper';
 
 import mockedRecommendedProducts from './mockedData';
-import CreateAlgoliaSearchHelperMock from './test_utils/test_utils';
 import isOneTrustFunctionalCookieEnabled from '../../../data/oneTrust';
 import useAlgoliaRecommendations from '../hooks/useAlgoliaRecommendations';
+import CreateAlgoliaSearchHelperMock from './test_utils/test_utils';
 
 jest.mock('algoliasearch-helper');
 
@@ -17,6 +19,23 @@ jest.mock('../../../data/algolia', () => ({
 
 jest.mock('../algoliaResultsParser', () => jest.fn((course) => course));
 
+const renderHook = (hookCallback) => {
+  const result = {
+    current: null,
+  };
+
+  const Component = () => {
+    const val = hookCallback();
+    React.useEffect(() => {
+      result.current = val;
+    });
+    return null;
+  };
+
+  render(<Component />);
+  return { result };
+};
+
 describe('useAlgoliaRecommendations Tests', () => {
   const MockSearchHelperWithData = new CreateAlgoliaSearchHelperMock(mockedRecommendedProducts);
   const MockSearchHelperWithoutData = new CreateAlgoliaSearchHelperMock();
@@ -28,8 +47,10 @@ describe('useAlgoliaRecommendations Tests', () => {
       () => useAlgoliaRecommendations('PK', 'Introductory'),
     );
 
-    expect(result.current.recommendations).toEqual(mockedRecommendedProducts);
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.recommendations)
+      .toEqual(mockedRecommendedProducts);
+    expect(result.current.isLoading)
+      .toBe(false);
   });
 
   it('should not fetch recommendations if functional cookies are not set', async () => {
@@ -39,8 +60,10 @@ describe('useAlgoliaRecommendations Tests', () => {
       () => useAlgoliaRecommendations('PK', 'Introductory'),
     );
 
-    expect(result.current.recommendations).toEqual([]);
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.recommendations)
+      .toEqual([]);
+    expect(result.current.isLoading)
+      .toBe(false);
   });
 
   it('should return empty list if no recommendations returned from Algolia', async () => {
@@ -50,7 +73,9 @@ describe('useAlgoliaRecommendations Tests', () => {
       () => useAlgoliaRecommendations('PK', 'Introductory'),
     );
 
-    expect(result.current.recommendations).toEqual([]);
-    expect(result.current.isLoading).toBe(false);
+    expect(result.current.recommendations)
+      .toEqual([]);
+    expect(result.current.isLoading)
+      .toBe(false);
   });
 });
