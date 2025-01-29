@@ -93,7 +93,7 @@ const messages = defineMessages({
   'register.third.party.auth.account.not.linked': {
     id: 'register.third.party.auth.account.not.linked',
     defaultMessage: 'You\'ve successfully signed into {currentProvider}! We just need a little more information '
-                    + 'before you start learning with {platformName}.',
+                    + 'before you start learning with Yagnesh.',
     description: 'Message that appears on register page if user has successfully authenticated with TPA '
                   + 'but no associated platform account exists',
   },
