@@ -21,10 +21,10 @@ const MediumLayout = () => {
       </Hyperlink>
       <div className="ml-5 pb-4 pt-4">
         <h1 className="display-2 banner__heading">
-          <span className="text-dark-900">
+          <span className="text-light-100">
             PT
           </span>
-          <span className="text-danger-500 d-inline-block">
+          <span className="text-light-100 d-inline-block">
               EdTechLab
           </span>
         </h1>
