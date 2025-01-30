@@ -5,6 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';
 
 import './index.scss';
+import backgroundImage from './background.png'
 import messages from './messages';
 
 const LargeLayout = () => {
@@ -13,7 +14,7 @@ const LargeLayout = () => {
   return (
     <div
       className="w-50 bg-primary-500 banner__image large-layout"
-      style={{ backgroundImage: `url(${getConfig().BANNER_IMAGE_LARGE})` }}
+      style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
         <Image className="company-logo position-absolute" alt={getConfig().SITE_NAME} src={getConfig().LOGO_WHITE_URL} />
