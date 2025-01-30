@@ -25,7 +25,6 @@ import { ResetPasswordPage } from './reset-password';
 
 import './index.scss';
 
-registerIcons();
 
 const MainApp = () => (
   <AppProvider store={configureStore()}>
