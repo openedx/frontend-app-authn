@@ -21,10 +21,10 @@ const MediumLayout = () => {
       <div className="ml-5 pb-4 pt-4">
         <h1 className="display-2 banner__heading">
           <span className="text-light-500">
-            {formatMessage(messages['your.career.turning.point'])}{' '}
+            PT
           </span>
           <span className="text-warning-300 d-inline-block">
-            {formatMessage(messages['is.here'])}
+              EdTechLab
           </span>
         </h1>
       </div>
