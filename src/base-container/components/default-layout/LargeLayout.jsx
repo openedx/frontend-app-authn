@@ -21,7 +21,7 @@ const LargeLayout = () => {
           <h1
             className={classNames(
               'display-2 text-white mw-xs',
-              { 'ml-6': getConfig().SITE_NAME !== 'edX' },
+              
             )}
           >
             {formatMessage(messages['start.learning'])}
