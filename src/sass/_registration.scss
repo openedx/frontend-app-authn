@@ -65,22 +65,20 @@
   margin-right: 0.25rem;
 }
 
-.username-suggestions {
+.username__form-group-wrapper {
   position: relative;
-  margin-top: -2.5rem;
-  margin-left: 15px;
+}
+
+.username-suggestions {
+  position: absolute;
+  inset: 0;
+  padding-left: 15px;
+  z-index: 100;
 }
 
 .username-suggestions__close__button {
   right: 1rem;
   position: absolute;
-}
-
-.username-suggestions__error {
-  position: relative;
-  margin-top: -13.7%;
-  margin-bottom: 11%;
-  margin-left: 15px;
 }
 
 .username-scroll-suggested--form-field {
