@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Form, TransitionReplace,
@@ -7,9 +7,34 @@ import PropTypes from 'prop-types';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
+  const [inputValue, setInputValue] = useState(props.value || '');
+  const valueRef = useRef('');
+
+  useEffect(() => {
+    const input = document.getElementsByName(props.name)[0];
+    if (!input) { return undefined; }
+
+    const updateValue = () => {
+      if (input.value && input.value !== valueRef.current) {
+        valueRef.current = input.value;
+        setInputValue(input.value);
+      }
+    };
+
+    requestAnimationFrame(updateValue); // Detect autofill on page load
+
+    input.addEventListener('input', updateValue);
+    input.addEventListener('focus', updateValue);
+
+    return () => {
+      input.removeEventListener('input', updateValue);
+      input.removeEventListener('focus', updateValue);
+    };
+  }, [props.name]);
 
   const handleFocus = (e) => {
     setHasFocus(true);
+    setInputValue(inputValue || '');
     if (props.handleFocus) { props.handleFocus(e); }
   };
   const handleClick = (e) => {
@@ -18,6 +43,10 @@ const FormGroup = (props) => {
   const handleOnBlur = (e) => {
     setHasFocus(false);
     if (props.handleBlur) { props.handleBlur(e); }
+  };
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+    if (props.handleChange) { props.handleChange(e); }
   };
 
   return (
@@ -31,14 +60,14 @@ const FormGroup = (props) => {
         autoComplete={props.autoComplete}
         spellCheck={props.spellCheck}
         name={props.name}
-        value={props.value}
+        value={inputValue}
         onFocus={handleFocus}
         onBlur={handleOnBlur}
         onClick={handleClick}
-        onChange={props.handleChange}
+        onChange={handleChange}
         controlClassName={props.borderClass}
         trailingElement={props.trailingElement}
-        floatingLabel={props.floatingLabel}
+        floatingLabel={!inputValue ? props.floatingLabel : ''}
       >
         {props.options ? props.options() : null}
       </Form.Control>
