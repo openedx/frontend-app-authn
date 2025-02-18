@@ -618,6 +618,15 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
+          registrationFormData: {
+            ...registrationFormData,
+            formFields: {
+              name: 'test',
+              username: 'test',
+              email: 'test@example.com',
+              password: 'test',
+            },
+          },
           backedUpFormData: { ...registrationFormData },
         },
         commonComponents: {
