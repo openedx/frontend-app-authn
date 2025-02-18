@@ -67,7 +67,7 @@ const FormGroup = (props) => {
         onChange={handleChange}
         controlClassName={props.borderClass}
         trailingElement={props.trailingElement}
-        floatingLabel={!inputValue ? props.floatingLabel : ''}
+        floatingLabel={props.floatingLabel}
       >
         {props.options ? props.options() : null}
       </Form.Control>
