@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
@@ -37,6 +37,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFormFields,
     autoSubmitRegistrationForm,
+    countries,
   } = props;
   const dispatch = useDispatch();
 
@@ -44,10 +45,6 @@ const ConfigurableRegistrationForm = (props) => {
   States' instead of 'United States of America' which does not exist in country dropdown list and gets the user
   confused and unable to create an account. So we added the United States entry in the dropdown list.
  */
-
-  const countryList = useMemo(() => (
-    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]).filter(country => country.code !== 'RU')
-  ), []);
 
   let showTermsOfServiceAndHonorCode = false;
   let showCountryField = false;
@@ -81,6 +78,17 @@ const ConfigurableRegistrationForm = (props) => {
       }
     }
   }, [autoSubmitRegistrationForm]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const removeDisabledCountries = useCallback((countryList) => {
+    if (!countries.length) {
+      return countryList;
+    }
+    const allowedCountries = new Set(countries.map(({ code }) => code));
+    return countryList.filter(({ code }) => allowedCountries.has(code));
+  }, [countries]);
+
+  const countryList = useMemo(() => removeDisabledCountries(
+    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }].filter(country => country.code !== 'RU')), []), [removeDisabledCountries]);
 
   const handleErrorChange = (fieldName, error) => {
     if (fieldName) {
@@ -262,11 +270,16 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
   autoSubmitRegistrationForm: PropTypes.bool,
+  countries: PropTypes.arrayOf(PropTypes.shape({
+    code: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  })),
 };
 
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   autoSubmitRegistrationForm: false,
+  countries: [],
 };
 
 export default ConfigurableRegistrationForm;

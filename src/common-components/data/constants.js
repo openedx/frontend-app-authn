@@ -77,3 +77,7 @@ export const progressiveProfilingFields = {
     },
   },
 };
+
+export const FIELD_LABELS = {
+  COUNTRY: 'country',
+};
