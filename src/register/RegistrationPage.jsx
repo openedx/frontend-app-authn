@@ -95,6 +95,7 @@ const RegistrationPage = (props) => {
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
+  const countries = useSelector(state => state.commonComponents.countries);
   // temporary error state for embedded experience because we don't want to show errors on blur
   const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
 
@@ -358,6 +359,7 @@ const RegistrationPage = (props) => {
                 setFormFields={setConfigurableFormFields}
                 autoSubmitRegisterForm={autoSubmitRegForm}
                 fieldDescriptions={fieldDescriptions}
+                countries={countries}
               />
               <StatefulButton
                 id="register-user"

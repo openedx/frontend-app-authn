@@ -8,6 +8,7 @@ import {
   THIRD_PARTY_AUTH_CONTEXT,
 } from './actions';
 import {
+  getCountryList,
   getThirdPartyAuthContext,
 } from './service';
 import { setCountryFromThirdPartyAuthContext } from '../../register/data/actions';
@@ -19,8 +20,10 @@ export function* fetchThirdPartyAuthContext(action) {
       fieldDescriptions, optionalFields, thirdPartyAuthContext,
     } = yield call(getThirdPartyAuthContext, action.payload.urlParams);
 
+    const countries = (yield call(getCountryList)) || [];
+
     yield put(setCountryFromThirdPartyAuthContext(thirdPartyAuthContext.countryCode));
-    yield put(getThirdPartyAuthContextSuccess(fieldDescriptions, optionalFields, thirdPartyAuthContext));
+    yield put(getThirdPartyAuthContextSuccess(fieldDescriptions, optionalFields, thirdPartyAuthContext, countries));
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());
     logError(e);
