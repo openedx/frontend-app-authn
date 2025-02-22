@@ -8,11 +8,6 @@ import * as api from '../service';
 
 const { loggingService } = initializeMockLogging();
 
-jest.mock('../service', () => ({
-  getCountryList: jest.fn(),
-  getThirdPartyAuthContext: jest.fn(),
-}));
-
 describe('fetchThirdPartyAuthContext', () => {
   const params = {
     payload: { urlParams: {} },
@@ -36,7 +31,6 @@ describe('fetchThirdPartyAuthContext', () => {
         thirdPartyAuthContext: data,
         fieldDescriptions: {},
         optionalFields: {},
-        countries: [],
       }));
 
     const dispatched = [];
@@ -50,7 +44,7 @@ describe('fetchThirdPartyAuthContext', () => {
     expect(dispatched).toEqual([
       actions.getThirdPartyAuthContextBegin(),
       setCountryFromThirdPartyAuthContext(),
-      actions.getThirdPartyAuthContextSuccess({}, {}, data, []),
+      actions.getThirdPartyAuthContextSuccess({}, {}, data),
     ]);
     getThirdPartyAuthContext.mockClear();
   });

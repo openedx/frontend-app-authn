@@ -13,15 +13,9 @@ export const getThirdPartyAuthContextBegin = () => ({
   type: THIRD_PARTY_AUTH_CONTEXT.BEGIN,
 });
 
-export const getThirdPartyAuthContextSuccess = (
-  fieldDescriptions,
-  optionalFields,
-  thirdPartyAuthContext,
-  countries) => ({
+export const getThirdPartyAuthContextSuccess = (fieldDescriptions, optionalFields, thirdPartyAuthContext) => ({
   type: THIRD_PARTY_AUTH_CONTEXT.SUCCESS,
-  payload: {
-    fieldDescriptions, optionalFields, thirdPartyAuthContext, countries,
-  },
+  payload: { fieldDescriptions, optionalFields, thirdPartyAuthContext },
 });
 
 export const getThirdPartyAuthContextFailure = () => ({
