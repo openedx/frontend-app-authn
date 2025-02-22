@@ -88,7 +88,7 @@ const ConfigurableRegistrationForm = (props) => {
   }, [countries]);
 
   const countryList = useMemo(() => removeDisabledCountries(
-    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]), []), [removeDisabledCountries]);
+    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }])), [removeDisabledCountries]);
 
   const handleErrorChange = (fieldName, error) => {
     if (fieldName) {
