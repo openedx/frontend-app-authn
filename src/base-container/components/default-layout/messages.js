@@ -3,12 +3,12 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'start.learning': {
     id: 'start.learningy',
-    defaultMessage: 'KKU Academy Connecting',
+    defaultMessage: 'Connecting with',
     description: '',
   },
   'with.site.name': {
     id: 'with.site.name',
-    defaultMessage: 'The World for Mastery Learning',
+    defaultMessage: '{siteName}',
     description: '',
   },
 });
