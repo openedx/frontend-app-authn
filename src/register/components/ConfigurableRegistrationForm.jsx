@@ -37,7 +37,7 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFormFields,
     autoSubmitRegistrationForm,
-    countries,
+    countriesCodesList,
   } = props;
   const dispatch = useDispatch();
 
@@ -80,12 +80,11 @@ const ConfigurableRegistrationForm = (props) => {
   }, [autoSubmitRegistrationForm]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const removeDisabledCountries = useCallback((countryList) => {
-    if (!countries.length) {
+    if (!countriesCodesList.length) {
       return countryList;
     }
-    const allowedCountries = new Set(countries.map(({ code }) => code));
-    return countryList.filter(({ code }) => allowedCountries.has(code));
-  }, [countries]);
+    return countryList.filter(({ code }) => countriesCodesList.find(x => x === code));
+  }, [countriesCodesList]);
 
   const countryList = useMemo(() => removeDisabledCountries(
     getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }])), [removeDisabledCountries]);
@@ -270,7 +269,7 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
   autoSubmitRegistrationForm: PropTypes.bool,
-  countries: PropTypes.arrayOf(PropTypes.shape({
+  countriesCodesList: PropTypes.arrayOf(PropTypes.shape({
     code: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
   })),
@@ -279,7 +278,7 @@ ConfigurableRegistrationForm.propTypes = {
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   autoSubmitRegistrationForm: false,
-  countries: [],
+  countriesCodesList: [],
 };
 
 export default ConfigurableRegistrationForm;

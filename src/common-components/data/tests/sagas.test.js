@@ -36,7 +36,7 @@ describe('fetchThirdPartyAuthContext', () => {
         thirdPartyAuthContext: data,
         fieldDescriptions: {},
         optionalFields: {},
-        countries: [],
+        countriesCodesList: [],
       }));
 
     const dispatched = [];

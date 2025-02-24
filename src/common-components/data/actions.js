@@ -17,10 +17,10 @@ export const getThirdPartyAuthContextSuccess = (
   fieldDescriptions,
   optionalFields,
   thirdPartyAuthContext,
-  countries) => ({
+  countriesCodesList) => ({
   type: THIRD_PARTY_AUTH_CONTEXT.SUCCESS,
   payload: {
-    fieldDescriptions, optionalFields, thirdPartyAuthContext, countries,
+    fieldDescriptions, optionalFields, thirdPartyAuthContext, countriesCodesList,
   },
 });
 
