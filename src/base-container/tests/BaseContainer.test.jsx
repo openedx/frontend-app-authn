@@ -23,7 +23,7 @@ describe('Base component tests', () => {
       LargeScreen,
     );
 
-    expect(container.querySelector('.The World for Mastery Learning')).toBeNull();
+    expect(container.querySelector('.banner__image')).toBeNull();
     expect(container.querySelector('.large-screen-svg-primary')).toBeDefined();
   });
 
