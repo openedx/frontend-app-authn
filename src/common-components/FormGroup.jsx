@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Form, TransitionReplace,
@@ -7,6 +7,27 @@ import PropTypes from 'prop-types';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
+  const [isAutoFill, setIsAutoFill] = useState(true);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      if (inputRef.current) {
+        const isAutoFillField = inputRef.current.matches(':autofill');
+        setIsAutoFill(isAutoFillField);
+      }
+    });
+
+    if (inputRef.current) {
+      observer.observe(inputRef.current, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleFocus = (e) => {
     setHasFocus(true);
@@ -23,6 +44,7 @@ const FormGroup = (props) => {
   return (
     <Form.Group controlId={props.name} className={props.className} isInvalid={props.errorMessage !== ''}>
       <Form.Control
+        ref={inputRef}
         as={props.as}
         readOnly={props.readOnly}
         type={props.type}
@@ -39,6 +61,7 @@ const FormGroup = (props) => {
         controlClassName={props.borderClass}
         trailingElement={props.trailingElement}
         floatingLabel={props.floatingLabel}
+        isAutoFill={isAutoFill}
       >
         {props.options ? props.options() : null}
       </Form.Control>
