@@ -3,7 +3,7 @@ import { defineMessages } from '@edx/frontend-platform/i18n';
 const messages = defineMessages({
   'welcome.to.platform': {
     id: 'welcome.to.platform',
-    defaultMessage: 'Welcome to The World for Mastery Learning,{fullName}!',
+    defaultMessage: 'Welcome to {siteName},{fullName}!',
     description: 'Welcome message that appears on progressive profile page',
   },
   'complete.your.profile.1': {
