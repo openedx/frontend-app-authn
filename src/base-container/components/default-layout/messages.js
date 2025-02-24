@@ -4,7 +4,7 @@ const messages = defineMessages({
   'start.learning': {
     id: 'start.learningy',
     defaultMessage: 'KKU Academy Connecting',
-    description: 'Header text for logistration MFE pages',
+    description: '',
   },
   'with.site.name': {
     id: 'with.site.name',
