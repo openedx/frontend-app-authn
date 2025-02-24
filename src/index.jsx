@@ -15,8 +15,8 @@ import MainApp from './MainApp';
 
 subscribe(APP_READY, () => {
   ReactDOM.render(
-    <MainApp />,
-    document.getElementById('root'),
+	  <div className={'mfe-authn'}><MainApp/> </div>,
+		  document.getElementById('root'),
   );
 });
 
