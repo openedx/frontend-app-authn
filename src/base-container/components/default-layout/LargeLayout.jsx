@@ -17,11 +17,11 @@ const LargeLayout = () => {
           <Image className="logo position-absolute" alt={getConfig().SITE_NAME} src={getConfig().LOGO_WHITE_URL} />
         </Hyperlink>
         <div className="min-vh-100 d-flex align-items-center">
-          <div className={classNames({ 'large-yellow-line mr-n4.5': getConfig().SITE_NAME === 'edX' })} />
+          <div className={classNames({ 'large-yellow-line mr-n4.5': getConfig().SITE_NAME === 'The World for Mastery Learning' })} />
           <h1
             className={classNames(
               'display-2 text-white mw-xs',
-              { 'ml-6': getConfig().SITE_NAME !== 'edX' },
+              { 'ml-6': getConfig().SITE_NAME !== 'The World for Mastery Learning' },
             )}
           >
             {formatMessage(messages['start.learning'])}
