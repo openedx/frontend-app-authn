@@ -130,11 +130,13 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
     background-color: transparent;
     max-height: 24px;
     max-width: 24px;
+    background-color: #990000;
+    border-color: #15376d;
   }
 }
 
 .btn-tpa__font-container {
-  background-color: $primary;
+  background-color: #990000;
   color: $white;
   font-size: 11px;
 
