@@ -5,6 +5,7 @@ const messages = defineMessages({
     id: 'start.learningy',
     defaultMessage: 'Connecting with',
     description: '',
+    color: #990000!important,
   },
   'with.site.name': {
     id: 'with.site.name',
