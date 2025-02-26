@@ -216,6 +216,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   display: inherit;
   margin: 0 auto;
   margin-bottom: 2rem;
+  background-color: $990000;
 }
 
 .institute-icon {
@@ -339,11 +340,13 @@ select.form-control {
 
 .logistration-button {
   color: $gray-700;
+  background-color: $990000;
 }
 
 .logistration-button:hover{
   color: $gray-700;
   text-decoration: none;
+  background-color: $990000;
 }
 
 
