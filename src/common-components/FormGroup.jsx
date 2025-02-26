@@ -7,25 +7,36 @@ import PropTypes from 'prop-types';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
-  const [isAutoFill, setIsAutoFill] = useState(true);
+  const [isAutoFill, setIsAutoFill] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    const observer = new MutationObserver(() => {
+    const checkAutoFill = () => {
       if (inputRef.current) {
-        const isAutoFillField = inputRef.current.matches(':autofill');
+        // Check both standard and vendor-prefixed autofill
+        const isAutoFillField = inputRef.current.matches(
+          ':autofill, :-webkit-autofill',
+        );
         setIsAutoFill(isAutoFillField);
       }
-    });
-
+    };
+    const observer = new MutationObserver(checkAutoFill);
     if (inputRef.current) {
+      // Check immediately on mount
+      checkAutoFill();
+
+      // Configure observer to watch style changes only
       observer.observe(inputRef.current, {
         attributes: true,
-        childList: true,
-        subtree: true,
+        attributeFilter: ['style'], // Autofill often changes styles
       });
+      // Fallback check for browser timing issues
+      const timeoutId = setTimeout(checkAutoFill, 100);
+      return () => {
+        observer.disconnect();
+        clearTimeout(timeoutId);
+      };
     }
-
     return () => observer.disconnect();
   }, []);
 
