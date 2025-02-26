@@ -42,6 +42,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 .main-content {
   @extend .pt-4;
   min-width: 464px !important;
+  border-color: $990000;
 }
 
 .welcome-page-content {
@@ -123,21 +124,21 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   align-items: center;
   padding-left: 1rem;
   width: 14rem;
-  background-color: #990000;
-  border-color: #15376d;
+  background-color: $990000;
+  border-color: $15376d;
 
   .btn-tpa__image-icon {
     background-color: transparent;
     max-height: 24px;
     max-width: 24px;
-    background-color: #990000;
-    border-color: #15376d;
+    background-color: $990000;
+    border-color: $15376d;
   }
 }
 
 .btn-tpa__font-container {
-  background-color: #990000;
-  color: $white;
+  background-color: $990000;
+  color: #white;
   font-size: 11px;
 
   margin-left: -6px;
