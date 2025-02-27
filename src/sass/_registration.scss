@@ -23,21 +23,21 @@
   }
 
   .alert-link  {
-    color: $primary !important;
+    color: var(--pgn-color-primary-base) !important;
 
     &:hover {
       text-decoration: underline;
-      color: $info-700 !important;
+      color: var(--pgn-color-info-700) !important;
     }
   }
 }
 
 .email-suggestion-alert-warning {
-  color: $info-500 !important;
+  color: var(--pgn-color-info-500) !important;
 
   &:hover {
     text-decoration: underline;
-    color: $info-700 !important;
+    color: var(--pgn-color-info-700) !important;
   }
 }
 
@@ -56,7 +56,7 @@
   line-height: 24px;
   font-size: 12px;
   font-weight: normal;
-  color: $primary-700;
+  color: var(--pgn-color-primary-700);
 }
 
 .username-suggestion--label {
@@ -99,7 +99,7 @@
   }
 }
 
-@media (max-width: map-get($grid-breakpoints, "sm")) {
+@media (--pgn-size-breakpoint-max-width-sm) {
   .username-scroll-suggested--form-field {
     width: 15rem;
   }
