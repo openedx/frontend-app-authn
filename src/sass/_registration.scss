@@ -1,7 +1,7 @@
 .register-button {
   min-width: 14.4rem;
-  background-color: #990000; // ใช้ค่าสี HEX โดยตรง
-  border-color: #15376d;
+  $my-color: #990000; // กำหนดตัวแปร SCSS ที่ถูกต้อง
+  background-color: $my-color;
   font-size: 14px;
   font-weight: 500;
   line-height: 30px;
@@ -62,7 +62,8 @@
   line-height: 24px;
   font-size: 12px;
   font-weight: normal;
-  color: #990000;
+  $my-color: #990000; // กำหนดตัวแปร SCSS ที่ถูกต้อง
+  background-color: $my-color;
 }
 
 .username-suggestion--label {
