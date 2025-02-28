@@ -29,6 +29,7 @@ import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
 
 import './index.scss';
+import './cohesion/cohesion.scss';
 
 registerIcons();
 
