@@ -93,6 +93,7 @@ const RegistrationPage = (props) => {
   const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
   const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
   const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
+  const countriesCodesList = useSelector(state => state.commonComponents.countriesCodesList);
 
   const backendValidations = useSelector(getBackendValidations);
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
@@ -392,6 +393,7 @@ const RegistrationPage = (props) => {
                   setFormFields={setConfigurableFormFields}
                   autoSubmitRegisterForm={autoSubmitRegForm}
                   fieldDescriptions={fieldDescriptions}
+                  countriesCodesList={countriesCodesList}
                 />
                 <StatefulButton
                   id="register-user"
