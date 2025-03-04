@@ -35,9 +35,6 @@ registerIcons();
 const MainApp = () => (
   <AppProvider store={configureStore()}>
     <Helmet>
-      {/* Cohesion Snippet */}
-      <script src="https://www.edx.org/beam-wrapper.js" />
-
       <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
     </Helmet>
     <Routes>
