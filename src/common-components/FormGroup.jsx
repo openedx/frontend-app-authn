@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Form, TransitionReplace,
@@ -7,6 +7,38 @@ import PropTypes from 'prop-types';
 
 const FormGroup = (props) => {
   const [hasFocus, setHasFocus] = useState(false);
+  const [isAutoFill, setIsAutoFill] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    const checkAutoFill = () => {
+      if (inputRef.current) {
+        // Check both standard and vendor-prefixed autofill
+        const isAutoFillField = inputRef.current.matches(
+          ':autofill, :-webkit-autofill',
+        );
+        setIsAutoFill(isAutoFillField);
+      }
+    };
+    const observer = new MutationObserver(checkAutoFill);
+    if (inputRef.current) {
+      // Check immediately on mount
+      checkAutoFill();
+
+      // Configure observer to watch style changes only
+      observer.observe(inputRef.current, {
+        attributes: true,
+        attributeFilter: ['style'], // Autofill often changes styles
+      });
+      // Fallback check for browser timing issues
+      const timeoutId = setTimeout(checkAutoFill, 100);
+      return () => {
+        observer.disconnect();
+        clearTimeout(timeoutId);
+      };
+    }
+    return () => observer.disconnect();
+  }, []);
 
   const handleFocus = (e) => {
     setHasFocus(true);
@@ -23,6 +55,7 @@ const FormGroup = (props) => {
   return (
     <Form.Group controlId={props.name} className={props.className} isInvalid={props.errorMessage !== ''}>
       <Form.Control
+        ref={inputRef}
         as={props.as}
         readOnly={props.readOnly}
         type={props.type}
@@ -39,6 +72,7 @@ const FormGroup = (props) => {
         controlClassName={props.borderClass}
         trailingElement={props.trailingElement}
         floatingLabel={props.floatingLabel}
+        isAutoFill={isAutoFill}
       >
         {props.options ? props.options() : null}
       </Form.Control>
