@@ -10,6 +10,7 @@ import {
 } from './actions';
 import { progressiveProfilingFields, registerFields } from './constants';
 import {
+  getCountryList,
   getThirdPartyAuthContext,
 } from './service';
 import { setCountryFromThirdPartyAuthContext } from '../../register/data/actions';
@@ -20,6 +21,7 @@ export function* fetchThirdPartyAuthContext(action) {
     const {
       fieldDescriptions, optionalFields, thirdPartyAuthContext,
     } = yield call(getThirdPartyAuthContext, action.payload.urlParams);
+    const countriesCodesList = (yield call(getCountryList)) || [];
 
     yield put(setCountryFromThirdPartyAuthContext(thirdPartyAuthContext.countryCode));
     // hard code country field, level of education and gender fields
@@ -28,9 +30,15 @@ export function* fetchThirdPartyAuthContext(action) {
         registerFields,
         progressiveProfilingFields,
         thirdPartyAuthContext,
+        countriesCodesList,
       ));
     } else {
-      yield put(getThirdPartyAuthContextSuccess(fieldDescriptions, optionalFields, thirdPartyAuthContext));
+      yield put(getThirdPartyAuthContextSuccess(
+        fieldDescriptions,
+        optionalFields,
+        thirdPartyAuthContext,
+        countriesCodesList,
+      ));
     }
   } catch (e) {
     yield put(getThirdPartyAuthContextFailure());
