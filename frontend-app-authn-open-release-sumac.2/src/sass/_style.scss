@@ -1,0 +1,459 @@
+// Load component based styles
+@import "_base_component.scss";
+@import "_registration.scss";
+@import "_recommendations_page.scss";
+@import "_reset_password.scss";
+@import "_progressive_profiling_page.scss";
+@import "_login_page.scss";
+@import "_forgot_password.scss";
+@import "_recommendations_card_base.scss";
+//
+// ----------------------------
+// #COLORS
+// ----------------------------
+$white: #FFFFFF;
+
+// social platforms
+$facebook-blue: #1877F2;
+$facebook-focus-blue: #29487d;
+$google-blue: #4285f4;
+$google-focus-blue: #287ae6;
+$microsoft-black: #2f2f2f;
+$microsoft-focus-black: #000;
+$apple-black: #000000;
+$apple-focus-black: $apple-black;
+
+$elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
+
+
+// Forgot Password Page
+.forgot-password-button-width {
+  min-width: 6rem;
+}
+.spinner--position-centered {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  position: absolute;
+  margin: auto;
+}
+
+.main-content {
+  @extend .pt-4;
+  min-width: 464px !important;
+}
+
+.welcome-page-content {
+  min-width: 464px !important;
+}
+
+.stateful-button-width {
+  width: 12rem;
+}
+
+.tpa-skeleton {
+  margin-bottom: 0.75rem;
+}
+
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.close {
+  padding-bottom: 0px !important;
+  padding-top: 3px !important;
+}
+
+.focus-out {
+  position: absolute;
+  padding-left: 17px;
+  opacity: 0.75;
+  z-index: 1;
+}
+
+.alert-link {
+  font-weight: normal;
+  text-decoration: underline;
+  color: $info-300 !important;
+
+  &:hover {
+    color: $info-500 !important;
+  }
+}
+
+.form-control {
+  background-color: $white !important;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  height: 2.75rem;
+
+}
+
+.btn-social {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  margin-bottom: 1rem;
+  font-size: 14px;
+
+  background-color: $white;
+  border: 1px solid $primary;
+  width: 224px;
+  height: 36px;
+  color: $primary;
+
+  .btn-tpa__image-icon{
+    background-color: transparent;
+    max-height: 24px;
+    max-width: 24px;
+  }
+}
+
+.btn-tpa {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 1rem;
+  width: 14rem;
+
+  .btn-tpa__image-icon {
+    background-color: transparent;
+    max-height: 24px;
+    max-width: 24px;
+  }
+}
+
+.btn-tpa__font-container {
+  background-color: $primary;
+  color: $white;
+  font-size: 11px;
+
+  margin-left: -6px;
+  padding-top: 10px;
+  min-width: 30px;
+  height: 35px;
+}
+
+.btn-oa2-facebook {
+  color: $white;
+  border-color: $facebook-blue;
+  background-color: $facebook-blue;
+
+  &:hover,
+  &:focus {
+    background-color: $facebook-focus-blue;
+    border: 1px solid $facebook-focus-blue;
+    color: $white;
+  }
+}
+
+.btn-oa2-google-oauth2 {
+  color: $white;
+  border-color: $google-blue;
+  background-color: $google-blue;
+
+  .ibtn-tpa__image-icon {
+    margin-left: -6px;
+    max-height: 34px;
+    max-width: 34px;
+    height: 34px;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $google-focus-blue;
+    border: 1px solid $google-focus-blue;
+    color: $white;
+  }
+}
+
+.btn-oa2-apple-id {
+  color: $white;
+  border-color: $apple-black;
+  background-color: $apple-black;
+  font-size: 16px;
+
+  .ibtn-tpa__image-icon {
+    max-height: 1.8em;
+    max-width: 2.0em;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $apple-focus-black;
+    border: 1px solid $apple-focus-black;
+    color: $white;
+  }
+}
+
+.btn-oa2-azuread-oauth2 {
+  color: $white;
+  border-color: $microsoft-black;
+  background-color: $microsoft-black;
+
+  &:hover,
+  &:focus {
+    background-color: $microsoft-focus-black;
+    border: 1px solid $microsoft-focus-black;
+    color: $white;
+  }
+}
+
+.submit {
+  display: inherit;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+}
+
+.institute-icon {
+  @extend .mr-1;
+  @extend .text-gray;
+
+  display: inline-block;
+  margin-bottom: 0.25rem;
+  height: 18px;
+  width: 18px;
+
+  svg {
+    display: inline-block;
+  }
+}
+
+.login-help {
+  padding-left: 14px;
+}
+
+.invalid-feedback {
+  color: $red;
+}
+
+.full-vertical-height {
+  height: 100vh;
+}
+
+.help-links {
+  margin-left: -5px;
+}
+
+select.form-control {
+  background: none !important;
+}
+
+#honor-code p {
+  margin: 0;
+  padding: 0;
+}
+
+#honor-code a span {
+  @extend .sr-only;
+}
+
+.font-weight-500 {
+  font-weight: 500 !important;
+}
+
+.mw-420 {
+  max-width: 420px;
+}
+
+.mw-500 {
+  max-width: 500px;
+}
+
+.mw-32em {
+  max-width: 32em;
+}
+
+.h-90 {
+  height: 90%;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mt-7 {
+  margin-top: 7rem;
+}
+
+.pt-10 {
+  padding-top: 10px;
+}
+
+#password-requirement-left {
+  opacity: 1;
+  @extend .x-small;
+  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
+  right: 0.2rem !important;
+  .tooltip-inner {
+    background: $white;
+    display: block;
+    color: $gray-500;
+  }
+  .arrow::before {
+    border-left-color: $white;
+  }
+}
+
+#password-requirement-top {
+  @extend .x-small;
+  filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
+  opacity: 1;
+  width: 90%;
+  bottom: 10px !important;
+  display: flex;
+  justify-content: center;
+
+  .tooltip-inner {
+    min-width: 464px !important;
+    background: $white;
+    display: block;
+    color: $gray-500;
+  }
+  .arrow::before {
+    border-top-color: $white;
+  }
+
+}
+
+.yellow-border {
+  border: 2px solid $accent-b;
+}
+
+.institutions__heading {
+  color: $primary-700;
+}
+
+.logistration-button {
+  color: $gray-700;
+}
+
+.logistration-button:hover{
+  color: $gray-700;
+  text-decoration: none;
+}
+
+
+#forgot-password {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.icon-size {
+  width: 2.3rem;
+}
+.has-floating-label {
+  color: $gray-500;
+}
+
+.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.pgn__form-text {
+  font-size: 0.75rem;
+}
+
+.form-group__form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+    font-size: 16px;
+    color: $primary-700;
+}
+
+.form-group__form-field .form-control:not([value='']):not(:focus) ~
+  .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 16px;
+}
+
+.pgn__form-group {
+  margin-bottom: 1.75rem;
+}
+
+.form-text-size {
+  margin-top: 0.188rem !important;
+  line-height: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .mw-500 {
+    width: 500px;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-control {
+    width: 100%;
+  }
+}
+
+@media (min-width: 463px) {
+  .reset-password-container {
+    width: 420px;
+    max-width: 420px;
+  }
+
+  .tpa-skeleton {
+    min-width: 464px !important;
+  }
+}
+
+
+@media (max-width: 767px) {
+  .welcome-page-content {
+    padding-top: 1.5rem !important;
+  }
+}
+
+
+.alert {
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Smaller than Extra Small (Mobile Screens)
+@media (max-width: 464px) {
+  .btn-social {
+    min-width: 100%;
+    margin-bottom: 0.75rem;
+    margin-right: 0 !important;
+  }
+
+  .welcome-page-content,
+  .main-content {
+    min-width: 100vw !important;
+    padding: 1.5rem !important;
+  }
+
+  #password-requirement-top {
+    display: unset;
+    .tooltip-inner {
+      max-width: inherit;
+      min-width: unset !important;
+    }
+  }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: $light-200;
+}
+
+.institutions--provider-link {
+  font-weight: normal;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: $primary-700
+}
+
+.pgn__form-control-decorator-trailing {
+  right: 0 !important;
+}

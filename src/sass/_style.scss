@@ -132,8 +132,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .btn-tpa__font-container {
-  background-color: $primary;
-  color: $white;
+  color: #white;
   font-size: 11px;
 
   margin-left: -6px;
@@ -457,3 +456,4 @@ select.form-control {
 .pgn__form-control-decorator-trailing {
   right: 0 !important;
 }
+

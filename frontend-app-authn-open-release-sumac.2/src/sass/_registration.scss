@@ -1,0 +1,117 @@
+.register-button {
+  min-width: 14.4rem;
+}
+
+.pgn__form-autosuggest__wrapper > .pgn__form-group {
+  margin-bottom: 0 !important;
+}
+
+.email-suggestion-alert-error  {
+  padding: 0.5rem 1rem;
+
+  .email-suggestion__close {
+    float: right;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .email-suggestion__text {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
+
+  .alert-link  {
+    color: $primary !important;
+
+    &:hover {
+      text-decoration: underline;
+      color: $info-700 !important;
+    }
+  }
+}
+
+.email-suggestion-alert-warning {
+  color: $info-500 !important;
+
+  &:hover {
+    text-decoration: underline;
+    color: $info-700 !important;
+  }
+}
+
+.form-field--checkbox {
+  .pgn__form-label {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+  }
+  margin-left: 3px;
+}
+
+.username-suggestions--chip {
+  padding: 1px 0.5rem;
+  margin: 0.25rem;
+  border-radius: 0.375rem;
+  line-height: 24px;
+  font-size: 12px;
+  font-weight: normal;
+  color: $primary-700;
+}
+
+.username-suggestion--label {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  margin-right: 0.25rem;
+}
+
+.username-suggestions {
+  position: relative;
+  margin-top: -2.5rem;
+  margin-left: 15px;
+}
+
+.username-suggestions__close__button {
+  right: 1rem;
+  position: absolute;
+}
+
+.username-suggestions__error {
+  position: relative;
+  margin-top: -13.7%;
+  margin-bottom: 11%;
+  margin-left: 15px;
+}
+
+.username-scroll-suggested--form-field {
+  width: 20rem;
+  white-space: nowrap;
+  overflow-x: auto;
+  display: inline-flex;
+}
+
+@media (max-width: 372px) {
+  .username-scroll-suggested--form-field {
+    width: 11rem !important;
+  }
+  .username-suggestions__close__button {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, "sm")) {
+  .username-scroll-suggested--form-field {
+    width: 15rem;
+  }
+  .username-suggestions__close__button {
+    right: 0.5rem;
+  }
+}
+
+.form-field-error {
+  border: 1px solid var(--danger-300, #CA3A2F) !important;
+
+  input {
+    border: none;
+  }
+}

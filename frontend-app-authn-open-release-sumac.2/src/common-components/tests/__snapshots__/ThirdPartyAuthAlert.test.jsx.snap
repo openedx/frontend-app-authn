@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ThirdPartyAuthAlert should match login page third party auth alert message snapshot 1`] = `
+<div
+  className="fade alert-content alert-warning mt-n2 mb-5 alert show"
+  id="tpa-alert"
+  role="alert"
+>
+  <div
+    className="pgn__alert-message-wrapper"
+  >
+    <div
+      className="alert-message-content"
+    >
+      <p>
+        You have successfully signed into Google, but your Google account does not have a linked Your Platform Name Here account. To link your accounts, sign in now using your Your Platform Name Here password.
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ThirdPartyAuthAlert should match register page third party auth alert message snapshot 1`] = `
+[
+  <div
+    className="fade alert-content alert-success mt-n2 mb-5 alert show"
+    id="tpa-alert"
+    role="alert"
+  >
+    <div
+      className="pgn__alert-message-wrapper"
+    >
+      <div
+        className="alert-message-content"
+      >
+        <div
+          className="alert-heading h4"
+        >
+          Almost done!
+        </div>
+        <p>
+          You've successfully signed into Google! We just need a little more information before you start learning with Your Platform Name Here.
+        </p>
+      </div>
+    </div>
+  </div>,
+  <h4
+    className="mt-4 mb-4"
+  >
+    Finish creating your account
+  </h4>,
+]
+`;

@@ -1,0 +1,11 @@
+.eslintignore
+.eslintrc.json
+.gitignore
+docker-compose.yml
+Dockerfile
+Makefile
+npm-debug.log
+
+coverage
+node_modules
+public
