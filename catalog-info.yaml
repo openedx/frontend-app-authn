@@ -1,0 +1,19 @@
+# This file records information about this repo. Its use is described in OEP-55:
+# https://open-edx-proposals.readthedocs.io/en/latest/processes/oep-0055-proc-project-maintainers.html
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: 'frontend-app-authn'
+  description: "Micro-frontend for authentication service. It contains views for login, registration and password reset functionality."
+  links:
+    - url: 'https://github.com/openedx/frontend-app-authn/blob/master/README.rst'
+      title: 'Documentation'
+      icon: 'Article'
+  annotations:
+    openedx.org/arch-interest-groups: ""
+    openedx.org/release: "master"
+spec:
+  owner: group:2u-infinity
+  type: 'service'
+  lifecycle: 'production'

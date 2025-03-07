@@ -1,0 +1,25 @@
+.pp-page__button-width{
+    min-width: 6rem;
+}
+.pp-page__support-link {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+.pp-page__heading {
+    line-height: 1.75rem;
+    font-size: 1.375rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+
+    @include media-breakpoint-down('md') {
+      line-height: 1.5rem;
+      font-size: 1.125rem;
+    }
+}
+@media (max-width: 464px) {
+    .pp-page__support-link {
+      font-size: 0.688rem;
+      font-weight: normal;
+      line-height: 0.938rem;
+    }
+}
