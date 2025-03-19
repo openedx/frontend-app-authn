@@ -15,7 +15,7 @@ const trackCohesionEvent = (eventData) => {
     text: eventData.webElementText,
     name: eventData.webElementName,
   };
-  window.tagular('beam', {
+  window.tagular?.('beam', {
     '@type': EVENT_TYPES.ElementClicked,
     webElement,
   });
