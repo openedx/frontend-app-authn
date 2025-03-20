@@ -192,6 +192,7 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
         autoSubmitRegistrationForm: true,
+        countriesCodesList: [{ code: 'AX', name: 'Åland Islands' }, { code: 'AL', name: 'Albania' }],
       };
 
       render(routerWrapper(reduxWrapper(
