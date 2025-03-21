@@ -3,7 +3,7 @@ Enable Social Auth Locally
 
 Please follow the steps below to enable social auth (SSO) locally.
 
-1. Follow `Enabling Third Party Authentication <https://edx.readthedocs.io/projects/edx-installing-configuring-and-running/en/latest/configuration/tpa/index.html>`_ for backend configuration.
+1. Follow `Enabling Third Party Authentication <https://docs.openedx.org/en/latest/site_ops/install_configure_run_guide/configuration/tpa/index.html>`_ for backend configuration.
 
 2. Authn has a component for rendering Social Auth providers at frontend which goes through each provider.
 
