@@ -51,7 +51,7 @@ This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see 
 Environment Variables/Setup Notes
 =================================
 
-This MFE is configured via environment variables supplied at build time.  All micro-frontends have a shared set of required environment variables, as documented in the Open edX Developer Guide under `Required Environment Variables <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
+This MFE is configured via environment variables supplied at build time.  All micro-frontends have a shared set of required environment variables, as documented in the Open edX Developer Guide under `Required Environment Variables <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
 
 The authentication micro-frontend also requires the following additional variable:
 
@@ -142,13 +142,13 @@ Furthermore, there are several edX-specific environment variables that enable in
      - ``true`` | ``''`` (empty strings are falsy)    
 
 For more information see the document: `Micro-frontend applications in Open
-edX <https://edx.readthedocs.io/projects/edx-developer-docs/en/latest/developers_guide/micro_frontends_in_open_edx.html#required-environment-variables>`__.
+edX <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
 
 How To Contribute
 =================
 
 Contributions are very welcome, and strongly encouraged! We've
-put together `some documentation that describes our contribution process <https://edx.readthedocs.org/projects/edx-developer-guide/en/latest/process/index.html>`_.
+put together `some documentation that describes our contribution process <https://docs.openedx.org/en/latest/developers/references/developer_guide/process/index.html>`_.
 
 Even though they were written with edx-platform in mind, the guidelines should be followed for Open edX code in general.
 
