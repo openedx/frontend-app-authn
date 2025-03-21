@@ -29,7 +29,13 @@ Getting Started
 Installation
 ============
 
-This MFE is bundled with `Devstack <https://github.com/openedx/devstack>`_, see the `Getting Started <https://github.com/openedx/devstack#getting-started>`_ section for setup instructions.
+`Tutor`_ is currently recommended as a development environment for your new MFE. Please refer to the `relevant tutor-mfe documentation`_ to get started using it.
+
+.. _Tutor: https://github.com/overhangio/tutor
+.. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
+
+Devstack (Deprecated) instructions
+==================================
 
 1. Install Devstack using the `Getting Started <https://github.com/openedx/devstack#getting-started>`_ instructions.
 
