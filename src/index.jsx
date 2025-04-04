@@ -1,27 +1,36 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { StrictMode } from 'react';
 
 import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
 } from '@edx/frontend-platform';
 import { ErrorPage } from '@edx/frontend-platform/react';
+import { createRoot } from 'react-dom/client';
 
 import configuration from './config';
 import messages from './i18n';
 import MainApp from './MainApp';
 
 subscribe(APP_READY, () => {
-  ReactDOM.render(
-    <MainApp />,
-    document.getElementById('root'),
+  const root = createRoot(document.getElementById('root'));
+
+  root.render(
+    <StrictMode>
+      <MainApp />
+    </StrictMode>,
   );
 });
 
 subscribe(APP_INIT_ERROR, (error) => {
-  ReactDOM.render(<ErrorPage message={error.message} />, document.getElementById('root'));
+  const root = createRoot(document.getElementById('root'));
+
+  root.render(
+    <StrictMode>
+      <ErrorPage message={error.message} />
+    </StrictMode>,
+  );
 });
 
 initialize({
