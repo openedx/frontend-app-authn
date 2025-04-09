@@ -35,6 +35,7 @@ const reducer = (state = defaultState, action = {}) => {
         optionalFields: action.payload.optionalFields,
         thirdPartyAuthContext: action.payload.thirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
+        countries: action.payload.countries,
       };
     }
     case THIRD_PARTY_AUTH_CONTEXT.FAILURE:
