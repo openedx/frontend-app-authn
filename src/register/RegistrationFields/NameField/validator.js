@@ -15,6 +15,8 @@ const validateName = (value, formatMessage) => {
     fieldError = formatMessage(messages['empty.name.field.error']);
   } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
     fieldError = formatMessage(messages['name.validation.message']);
+  } else if (value && value.length > 255) {
+    fieldError = formatMessage(messages['name.validation.length.message']);
   }
   return fieldError;
 };
