@@ -70,6 +70,9 @@ const Logistration = (props) => {
     if (tabKey === currentTab) {
       return;
     }
+
+    window.tagular?.('pageView');
+
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement', app_name: APP_NAME });
     props.clearThirdPartyAuthContextErrorMessage();
     if (tabKey === LOGIN_PAGE) {
