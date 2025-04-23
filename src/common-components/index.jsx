@@ -2,6 +2,7 @@ export { default as RedirectLogistration } from './RedirectLogistration';
 export { default as registerIcons } from './RegisterFaIcons';
 export { default as EmbeddedRegistrationRoute } from './EmbeddedRegistrationRoute';
 export { default as UnAuthOnlyRoute } from './UnAuthOnlyRoute';
+export { default as RouteTracker } from './RouteTracker';
 export { default as NotFoundPage } from './NotFoundPage';
 export { default as SocialAuthProviders } from './SocialAuthProviders';
 export { default as ThirdPartyAuthAlert } from './ThirdPartyAuthAlert';
