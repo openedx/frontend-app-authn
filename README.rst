@@ -1,5 +1,5 @@
 ##################
-frontend-app-authn
+frontend-app-authn TEST
 ##################
 
 |Build Status| |ci-badge| |Codecov| |semantic-release|
