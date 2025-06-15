@@ -40,10 +40,8 @@ export const updatePathWithQueryParams = (path) => {
     return path;
   }
 
-  if (queryParams.indexOf('track=pwreset') > -1) {
-    queryParams = queryParams.replace(
-      '?track=pwreset&', '?',
-    ).replace('?track=pwreset', '').replace('&track=pwreset', '').replace('?&', '?');
+  if (queryParams.includes('track=pwreset')) {
+    queryParams = queryParams.replace('?track=pwreset&', '?',).replace('?track=pwreset', '').replace('&track=pwreset', '').replace('?&', '?');
   }
 
   return `${path}${queryParams}`;
@@ -53,7 +51,7 @@ export const getAllPossibleQueryParams = (locationURl = null) => {
   const urlParams = locationURl ? QueryString.parseUrl(locationURl).query : QueryString.parse(window.location.search);
   const params = {};
   Object.entries(urlParams).forEach(([key, value]) => {
-    if (AUTH_PARAMS.indexOf(key) > -1) {
+    if (AUTH_PARAMS.includes(key)) {
       params[key] = value;
     }
   });

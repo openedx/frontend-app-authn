@@ -1,8 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { mergeConfig } from '@edx/frontend-platform';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import {
+  configureI18n, injectIntl, IntlProvider, mergeSiteConfig
+} from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
@@ -16,11 +16,16 @@ import ForgotPasswordPage from '../ForgotPasswordPage';
 
 const mockedNavigator = jest.fn();
 
-jest.mock('@edx/frontend-platform/analytics', () => ({
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
+  getAuthenticatedUser: jest.fn(() => ({
+    userId: 3,
+    username: 'test-user',
+  })),
 }));
-jest.mock('@edx/frontend-platform/auth');
+
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom')),
   useNavigate: () => mockedNavigator,
@@ -36,9 +41,11 @@ const initialState = {
 };
 
 describe('ForgotPasswordPage', () => {
-  mergeConfig({
-    LOGIN_ISSUE_SUPPORT_LINK: '',
-    INFO_EMAIL: '',
+  mergeSiteConfig({
+    custom: {
+      LOGIN_ISSUE_SUPPORT_LINK: '',
+      INFO_EMAIL: '',
+    }
   });
 
   let props = {};
@@ -54,18 +61,8 @@ describe('ForgotPasswordPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    jest.mock('@edx/frontend-platform/auth', () => ({
-      getAuthenticatedUser: jest.fn(() => ({
-        userId: 3,
-        username: 'test-user',
-      })),
-    }));
-    configure({
-      loggingService: { logError: jest.fn() },
-      config: {
-        ENVIRONMENT: 'production',
-        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
-      },
+
+    configureI18n({
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     props = {
@@ -84,8 +81,10 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display need other help signing in button', () => {
-    mergeConfig({
-      LOGIN_ISSUE_SUPPORT_LINK: '/support',
+    mergeSiteConfig({
+      custom: {
+        LOGIN_ISSUE_SUPPORT_LINK: '/support',
+      }
     });
     render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const forgotPasswordButton = screen.findByText('Need help signing in?');
@@ -113,7 +112,7 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: { status: INTERNAL_SERVER_ERROR },
     });
     const expectedMessage = 'We were unable to contact you.'
-                            + 'An error has occurred. Try refreshing the page, or check your internet connection.';
+      + 'An error has occurred. Try refreshing the page, or check your internet connection.';
 
     const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
 
@@ -233,8 +232,8 @@ describe('ForgotPasswordPage', () => {
     });
 
     const successMessage = 'Check your emailWe sent an email to  with instructions to reset your password. If you do not '
-                           + 'receive a password reset message after 1 minute, verify that you entered the correct email address,'
-                           + ' or check your spam folder. If you need further assistance, contact technical support.';
+      + 'receive a password reset message after 1 minute, verify that you entered the correct email address,'
+      + ' or check your spam folder. If you need further assistance, contact technical support.';
 
     const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const successElement = findByTextContent(container, successMessage);
@@ -251,8 +250,8 @@ describe('ForgotPasswordPage', () => {
       },
     });
     const successMessage = 'Invalid password reset link'
-                            + 'This password reset link is invalid. It may have been used already. '
-                            + 'Enter your email below to receive a new link.';
+      + 'This password reset link is invalid. It may have been used already. '
+      + 'Enter your email below to receive a new link.';
 
     const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const successElement = findByTextContent(container, successMessage);

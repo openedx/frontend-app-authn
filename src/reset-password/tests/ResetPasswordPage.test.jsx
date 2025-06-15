@@ -1,14 +1,14 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { CurrentAppProvider, configureI18n, getSiteConfig, injectIntl, IntlProvider } from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useParams } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import { testAppId, initializeMockServices } from '../../setupTest';
 import { LOGIN_PAGE, RESET_PAGE } from '../../data/constants';
 import { resetPassword, validateToken } from '../data/actions';
 import {
@@ -16,18 +16,18 @@ import {
 } from '../data/constants';
 import ResetPasswordPage from '../ResetPasswordPage';
 
-const mockedNavigator = jest.fn();
-const token = '1c-bmjdkc-5e60e084cf8113048ca7';
-
-jest.mock('@edx/frontend-platform/auth');
+const mockNavigate = jest.fn();
+const mockParams = jest.fn();
 jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom')),
-  useNavigate: () => mockedNavigator,
-  useParams: jest.fn().mockReturnValue({ token }),
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  useParams: jest.fn(),
 }));
 
+initializeMockServices();
 const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
+const token = '1c-bmjdkc-5e60e084cf8113048ca7';
 
 describe('ResetPasswordPage', () => {
   let props = {};
@@ -36,7 +36,9 @@ describe('ResetPasswordPage', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
+        <CurrentAppProvider appId={testAppId}>
+          <Provider store={store}>{children}</Provider>
+        </CurrentAppProvider>
       </MemoryRouter>
     </IntlProvider>
   );
@@ -50,12 +52,7 @@ describe('ResetPasswordPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    configure({
-      loggingService: { logError: jest.fn() },
-      config: {
-        ENVIRONMENT: 'production',
-        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
-      },
+    configureI18n({
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     props = {
@@ -67,6 +64,7 @@ describe('ResetPasswordPage', () => {
         params: {},
       },
     };
+    useParams.mockReturnValue({ token: null });
   });
 
   afterEach(() => {
@@ -84,15 +82,6 @@ describe('ResetPasswordPage', () => {
         status: TOKEN_STATE.VALID,
       },
     });
-
-    jest.mock('@edx/frontend-platform/auth', () => ({
-      getHttpClient: jest.fn(() => ({
-        post: async () => ({
-          data: {},
-          catch: () => {},
-        }),
-      })),
-    }));
 
     store.dispatch = jest.fn(store.dispatch);
     render(reduxWrapper(<IntlResetPasswordPage {...props} />));
@@ -204,27 +193,30 @@ describe('ResetPasswordPage', () => {
     store.dispatch = jest.fn(store.dispatch);
     props = {
       status:
-      TOKEN_STATE.PENDING,
+        TOKEN_STATE.PENDING,
     };
+    useParams.mockReturnValue({ token });
 
     render(reduxWrapper(<IntlResetPasswordPage {...props} />));
 
     expect(store.dispatch).toHaveBeenCalledWith(validateToken(token));
+
+    useParams.mockClear();
   });
   it('should redirect the user to Reset password email screen ', async () => {
     props = {
       status:
-      PASSWORD_RESET_ERROR,
+        PASSWORD_RESET_ERROR,
     };
     render(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
+    expect(mockNavigate).toHaveBeenCalledWith(RESET_PAGE);
   });
   it('should redirect the user to root url of the application ', async () => {
     props = {
       status: SUCCESS,
     };
     render(reduxWrapper(<IntlResetPasswordPage {...props} />));
-    expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
+    expect(mockNavigate).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 
   it('shows spinner during token validation', () => {
@@ -243,6 +235,6 @@ describe('ResetPasswordPage', () => {
 
     fireEvent.click(signInTab);
 
-    expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
+    expect(mockNavigate).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 });

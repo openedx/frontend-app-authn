@@ -1,5 +1,4 @@
-import { camelCaseObject } from '@edx/frontend-platform';
-import { logError, logInfo } from '@edx/frontend-platform/logging';
+import { camelCaseObject, logError, logInfo } from '@openedx/frontend-base';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 import {

@@ -1,12 +1,12 @@
 import { runSaga } from 'redux-saga';
 
 import { setCountryFromThirdPartyAuthContext } from '../../../register/data/actions';
-import initializeMockLogging from '../../../setupTest';
+import { initializeMockServices } from '../../../setupTest';
 import * as actions from '../actions';
 import { fetchThirdPartyAuthContext } from '../sagas';
 import * as api from '../service';
 
-const { loggingService } = initializeMockLogging();
+const { loggingService } = initializeMockServices();
 
 describe('fetchThirdPartyAuthContext', () => {
   const params = {

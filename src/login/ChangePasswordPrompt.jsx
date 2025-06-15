@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@openedx/paragon';
@@ -9,10 +8,10 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
-import messages from './messages';
 import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
+import messages from './messages';
 
 const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
   const isMobileView = useMobileResponsive();
@@ -22,11 +21,11 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
       if (variant === 'block') {
         setRedirectToResetPasswordPage(true);
       } else {
-        window.location.href = redirectUrl || getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+        window.location.href = redirectUrl || getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
       }
     },
   };
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isOpen, open, close] = useToggle(true, handlers);
   const { formatMessage } = useIntl();
   const navigate = useNavigate();

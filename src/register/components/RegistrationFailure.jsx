@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import { Alert } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -33,17 +32,19 @@ const RegistrationFailureMessage = (props) => {
   switch (errorCode) {
     case INTERNAL_SERVER_ERROR:
       errorMessage = formatMessage(messages['registration.request.server.error']);
-     break;
+      break;
     case FORBIDDEN_REQUEST:
       errorMessage = formatMessage(messages['registration.rate.limit.error']);
       break;
     case TPA_AUTHENTICATION_FAILURE:
-      errorMessage = formatMessage(messages['registration.tpa.authentication.failure'],
+      errorMessage = formatMessage(
+        messages['registration.tpa.authentication.failure'],
         {
-          platform_name: getConfig().SITE_NAME,
+          platform_name: getSiteConfig().siteName,
           lineBreak: <br />,
           errorMessage: context.errorMessage,
-        });
+        }
+      );
       break;
     case TPA_SESSION_EXPIRED:
       errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });

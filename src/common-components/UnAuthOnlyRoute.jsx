@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { fetchAuthenticatedUser, getAuthenticatedUser, getSiteConfig } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
 import {
@@ -25,7 +24,7 @@ const UnAuthOnlyRoute = ({ children }) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
-      global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+      global.location.href = getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
       return null;
     }
 

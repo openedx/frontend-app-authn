@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@openedx/frontend-base';
 import renderer from 'react-test-renderer';
 
 import { REGISTER_PAGE } from '../../data/constants';

@@ -1,12 +1,12 @@
 import { distance } from 'fastest-levenshtein';
 
+import { VALID_EMAIL_REGEX } from '../../../data/constants';
+import messages from '../../messages';
 import {
   COMMON_EMAIL_PROVIDERS,
   DEFAULT_SERVICE_PROVIDER_DOMAINS,
   DEFAULT_TOP_LEVEL_DOMAINS,
 } from './constants';
-import { VALID_EMAIL_REGEX } from '../../../data/constants';
-import messages from '../../messages';
 
 export const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
 
@@ -18,11 +18,11 @@ export const getLevenshteinSuggestion = (word, knownWords, similarityThreshold =
   let minEditDistance = 100;
   let mostSimilar = word;
 
-  for (let i = 0; i < knownWords.length; i++) {
-    const editDistance = distance(knownWords[i].toLowerCase(), word.toLowerCase());
+  for (const knownWord of knownWords) {
+    const editDistance = distance(knownWord.toLowerCase(), word.toLowerCase());
     if (editDistance < minEditDistance) {
       minEditDistance = editDistance;
-      mostSimilar = knownWords[i];
+      mostSimilar = knownWord;
     }
   }
 
@@ -41,9 +41,9 @@ export const getSuggestionForInvalidEmail = (domain, username) => {
     return `${username}@${suggestion}`;
   }
 
-  for (let i = 0; i < defaultDomains.length; i++) {
-    if (domain.includes(defaultDomains[i])) {
-      return `${username}@${defaultDomains[i]}.com`;
+  for (const defaultDomain of defaultDomains) {
+    if (domain.includes(defaultDomain)) {
+      return `${username}@${defaultDomain}.com`;
     }
   }
 

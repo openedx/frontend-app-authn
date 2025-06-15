@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { getAuthService } from '@edx/frontend-platform/auth';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import {
+  useAppConfig, getAuthService, getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
+} from '@openedx/frontend-base';
 import {
   Icon,
   Tab,
@@ -39,13 +38,13 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const navigate = useNavigate();
-  const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
-  const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
+  const disablePublicAccountCreation = useAppConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  const hideRegistrationLink = useAppConfig().SHOW_REGISTRATION_LINKS === false;
 
   useEffect(() => {
     const authService = getAuthService();
     if (authService) {
-      authService.getCsrfTokenService().getCsrfToken(getConfig().LMS_BASE_URL);
+      authService.getCsrfTokenService().getCsrfToken(getSiteConfig().lmsBaseUrl);
     }
   });
 
@@ -129,7 +128,7 @@ const Logistration = (props) => {
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
                 ))}
-              { key && (
+              {key && (
                 <Navigate to={updatePathWithQueryParams(key)} replace />
               )}
               <div id="main-content" className="main-content">

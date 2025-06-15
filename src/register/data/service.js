@@ -1,5 +1,4 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient, getHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig, getHttpClient } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 export async function registerRequest(registrationInformation) {
@@ -10,7 +9,7 @@ export async function registerRequest(registrationInformation) {
 
   const { data } = await getAuthenticatedHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/api/user/v2/account/registration/`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v2/account/registration/`,
       QueryString.stringify(registrationInformation),
       requestConfig,
     )
@@ -19,7 +18,7 @@ export async function registerRequest(registrationInformation) {
     });
 
   return {
-    redirectUrl: data.redirect_url || `${getConfig().LMS_BASE_URL}/dashboard`,
+    redirectUrl: data.redirect_url || `${getSiteConfig().lmsBaseUrl}/dashboard`,
     success: data.success || false,
     authenticatedUser: data.authenticated_user,
   };
@@ -32,7 +31,7 @@ export async function getFieldsValidations(formPayload) {
 
   const { data } = await getHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v1/validation/registration`,
       QueryString.stringify(formPayload),
       requestConfig,
     )

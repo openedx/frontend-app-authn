@@ -1,21 +1,29 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable max-classes-per-file */
+import siteConfig from 'site.config';
 
-import { getConfig } from '@edx/frontend-platform';
-import { configure as configureLogging } from '@edx/frontend-platform/logging';
+import { addAppConfigs, configureAnalytics, configureAuth, configureLogging, getSiteConfig, mergeSiteConfig, MockAnalyticsService, MockAuthService, MockLoggingService } from '@openedx/frontend-base';
 
-class MockLoggingService {
-  logInfo = jest.fn();
+mergeSiteConfig(siteConfig);
+addAppConfigs();
 
-  logError = jest.fn();
-}
+export const testAppId = getSiteConfig().apps[0].appId;
 
-export default function initializeMockLogging() {
+export function initializeMockServices() {
   const loggingService = configureLogging(MockLoggingService, {
-    config: getConfig(),
+    config: getSiteConfig(),
   });
 
-  return { loggingService };
+  const authService = configureAuth(MockAuthService, {
+    config: getSiteConfig(),
+    loggingService,
+  });
+
+  const analyticsService = configureAnalytics(MockAnalyticsService, {
+    config: getSiteConfig(),
+    httpClient: authService.getAuthenticatedHttpClient(),
+    loggingService,
+  });
+
+  return { analyticsService, authService, loggingService };
 }
 
 class ResizeObserver {
@@ -47,7 +55,7 @@ window.location = location;
 const localStorageMock = jest.fn(() => {
   let store = {};
   return {
-    getItem: (key) => (store[key] || null),
+    getItem: (key) => (store[key] ?? null),
     setItem: (key, value) => {
       store[key] = value.toString();
     },

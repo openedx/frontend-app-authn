@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import { Alert, Icon } from '@openedx/paragon';
 import { Close, Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import validateEmail from './validator';
 import { FormGroup } from '../../../common-components';
 import {
   clearRegistrationBackendError,
@@ -14,6 +13,7 @@ import {
   setEmailSuggestionInStore,
 } from '../../data/actions';
 import messages from '../../messages';
+import validateEmail from './validator';
 
 /**
  * Email field wrapper. It accepts following handlers

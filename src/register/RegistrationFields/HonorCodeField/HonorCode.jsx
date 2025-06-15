@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
 import { Form, Hyperlink } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
@@ -28,11 +27,11 @@ const HonorCode = (props) => {
                 Member process your personal data in accordance with the {privacyPolicy}."
           description="Text that appears on registration form stating honor code and privacy policy"
           values={{
-            platformName: getConfig().SITE_NAME,
+            platformName: getSiteConfig().siteName,
             tosAndHonorCode: (
               <Hyperlink
                 className="inline-link"
-                destination={getConfig().TOS_AND_HONOR_CODE || '#'}
+                destination={useAppConfig().TOS_AND_HONOR_CODE || '#'}
                 target="_blank"
                 showLaunchIcon={false}
               >
@@ -42,7 +41,7 @@ const HonorCode = (props) => {
             privacyPolicy: (
               <Hyperlink
                 className="inline-link"
-                destination={getConfig().PRIVACY_POLICY || '#'}
+                destination={useAppConfig().PRIVACY_POLICY || '#'}
                 target="_blank"
                 showLaunchIcon={false}
               >
@@ -70,9 +69,9 @@ const HonorCode = (props) => {
           defaultMessage="I agree to the {platformName}&nbsp;{tosAndHonorCode}"
           description="Text that appears on registration form stating honor code"
           values={{
-            platformName: getConfig().SITE_NAME,
+            platformName: getSiteConfig().siteName,
             tosAndHonorCode: (
-              <Hyperlink variant="muted" destination={getConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
+              <Hyperlink variant="muted" destination={useAppConfig().TOS_AND_HONOR_CODE || '#'} target="_blank">
                 {formatMessage(messages['honor.code'])}
               </Hyperlink>
             ),

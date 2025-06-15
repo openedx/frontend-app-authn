@@ -143,10 +143,6 @@ Furthermore, there are several edX-specific environment variables that enable in
      - Enables support for opting in marketing emails that helps us getting user consent for sending marketing emails.
      - ``true`` | ``''`` (empty strings are falsy)
 
-   * - ``SHOW_CONFIGURABLE_EDX_FIELDS``
-     - For edX, country and honor code fields are required by default. This flag enables edX specific required fields.
-     - ``true`` | ``''`` (empty strings are falsy)    
-
 For more information see the document: `Micro-frontend applications in Open
 edX <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
 

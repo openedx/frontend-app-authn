@@ -1,4 +1,4 @@
-import { logError, logInfo } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@openedx/frontend-base';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 // Actions

@@ -1,7 +1,4 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import { Button, Hyperlink, Icon } from '@openedx/paragon';
 import { Institution } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -31,7 +28,7 @@ export const RenderInstitutionButton = props => {
  * This component renders the page list of available institutions for login
  * */
 const InstitutionLogistration = props => {
-  const lmsBaseUrl = getConfig().LMS_BASE_URL;
+  const lmsBaseUrl = getSiteConfig().lmsBaseUrl;
   const { formatMessage } = useIntl();
   const {
     secondaryProviders,

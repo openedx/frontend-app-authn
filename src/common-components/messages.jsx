@@ -1,4 +1,4 @@
-import { defineMessages } from '@edx/frontend-platform/i18n';
+import { defineMessages } from '@openedx/frontend-base';
 
 const messages = defineMessages({
   // institution login strings
@@ -85,32 +85,22 @@ const messages = defineMessages({
   'login.third.party.auth.account.not.linked': {
     id: 'login.third.party.auth.account.not.linked',
     defaultMessage: 'You have successfully signed into {currentProvider}, but your {currentProvider} '
-                    + 'account does not have a linked {platformName} account. To link your accounts, '
-                    + 'sign in now using your {platformName} password.',
+      + 'account does not have a linked {platformName} account. To link your accounts, '
+      + 'sign in now using your {platformName} password.',
     description: 'Message that appears on login page if user has successfully authenticated with social '
-                  + 'auth but no associated platform account exists',
+      + 'auth but no associated platform account exists',
   },
   'register.third.party.auth.account.not.linked': {
     id: 'register.third.party.auth.account.not.linked',
     defaultMessage: 'You\'ve successfully signed into {currentProvider}! We just need a little more information '
-                    + 'before you start learning with {platformName}.',
+      + 'before you start learning with {platformName}.',
     description: 'Message that appears on register page if user has successfully authenticated with TPA '
-                  + 'but no associated platform account exists',
+      + 'but no associated platform account exists',
   },
   'registration.using.tpa.form.heading': {
     id: 'registration.using.tpa.form.heading',
     defaultMessage: 'Finish creating your account',
     description: 'Heading that appears above form when user is trying to create account using social auth',
-  },
-  supportTitle: {
-    id: 'zendesk.supportTitle',
-    description: 'Title for the support button',
-    defaultMessage: 'edX Support',
-  },
-  selectTicketForm: {
-    id: 'zendesk.selectTicketForm',
-    description: 'Select ticket form',
-    defaultMessage: 'Please choose your request type:',
   },
   'registration.other.options.heading': {
     id: 'registration.other.options.heading',

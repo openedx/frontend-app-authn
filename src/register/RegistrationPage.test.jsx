@@ -1,15 +1,17 @@
-import React from 'react';
 import { Provider } from 'react-redux';
+import Cookies from 'universal-cookie';
 
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import {
-  configure, getLocale, injectIntl, IntlProvider,
-} from '@edx/frontend-platform/i18n';
+  CurrentAppProvider, configureI18n, getAppConfig, getSiteConfig, getLocale, injectIntl, IntlProvider, mergeAppConfig,
+} from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import {
+  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+} from '../data/constants';
+import { initializeMockServices, testAppId } from '../setupTest';
 import {
   backupRegistrationFormBegin,
   clearRegistrationBackendError,
@@ -18,21 +20,16 @@ import {
 } from './data/actions';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
 import RegistrationPage from './RegistrationPage';
-import {
-  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
-} from '../data/constants';
 
-jest.mock('@edx/frontend-platform/analytics', () => ({
-  sendPageEvent: jest.fn(),
-  sendTrackEvent: jest.fn(),
-}));
-jest.mock('@edx/frontend-platform/i18n', () => ({
-  ...jest.requireActual('@edx/frontend-platform/i18n'),
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
   getLocale: jest.fn(),
 }));
 
+const { analyticsService } = initializeMockServices();
 const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
+
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -50,8 +47,11 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+// Mock Cookies class
+jest.mock('universal-cookie');
+
 describe('RegistrationPage', () => {
-  mergeConfig({
+  mergeAppConfig(testAppId, {
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
     USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
@@ -76,7 +76,9 @@ describe('RegistrationPage', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
+      <CurrentAppProvider appId={testAppId}>
+        <Provider store={store}>{children}</Provider>
+      </CurrentAppProvider>
     </IntlProvider>
   );
 
@@ -91,7 +93,6 @@ describe('RegistrationPage', () => {
     finishAuthUrl: null,
     providers: [],
     pipelineUserDetails: null,
-    countryCode: null,
   };
 
   const initialState = {
@@ -115,12 +116,7 @@ describe('RegistrationPage', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    configure({
-      loggingService: { logError: jest.fn() },
-      config: {
-        ENVIRONMENT: 'production',
-        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
-      },
+    configureI18n({
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     props = {
@@ -146,25 +142,17 @@ describe('RegistrationPage', () => {
     }
     fireEvent.change(getByLabelText('Email'), { target: { value: payload.email, name: 'email' } });
 
-    fireEvent.change(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
-    fireEvent.blur(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
-
     if (!isThirdPartyAuth) {
       fireEvent.change(getByLabelText('Password'), { target: { value: payload.password, name: 'password' } });
     }
   };
 
   describe('Test Registration Page', () => {
-    mergeConfig({
-      SHOW_CONFIGURABLE_EDX_FIELDS: true,
-    });
-
     const emptyFieldValidation = {
       name: 'Enter your full name',
       username: 'Username must be between 2 and 30 characters',
       email: 'Enter your email',
       password: 'Password criteria has not been met',
-      country: 'Select your country or region of residence',
     };
 
     // ******** test registration form submission ********
@@ -174,26 +162,23 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL, search: '?next=/course/demo-course-url' };
+      window.location = { href: getSiteConfig().baseUrl, search: '?next=/course/demo-course-url' };
 
       const payload = {
         name: 'John Doe',
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
-        country: 'Pakistan',
-        honor_code: true,
         total_registration_time: 0,
         next: '/course/demo-course-url',
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, getByText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       populateRequiredFields(getByLabelText, payload);
-      const button = container.querySelector('button.btn-brand');
-      fireEvent.click(button);
+      fireEvent.click(getByText('Create an account for free'));
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
     });
 
     it('should submit form without password field when current provider is present', () => {
@@ -203,8 +188,6 @@ describe('RegistrationPage', () => {
         name: 'John Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
-        country: 'Pakistan',
-        honor_code: true,
         social_auth_provider: 'Apple',
         total_registration_time: 0,
       };
@@ -225,7 +208,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, formPayload, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload }));
     });
 
     it('should display an error when form is submitted with an invalid email', () => {
@@ -237,8 +220,6 @@ describe('RegistrationPage', () => {
         username: 'petro_qa',
         email: 'petro  @example.com',
         password: 'password1',
-        country: 'Ukraine',
-        honor_code: true,
         total_registration_time: 0,
       };
 
@@ -262,8 +243,6 @@ describe('RegistrationPage', () => {
         username: 'petro qa',
         email: 'petro@example.com',
         password: 'password1',
-        country: 'Ukraine',
-        honor_code: true,
         total_registration_time: 0,
       };
 
@@ -277,7 +256,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should submit form with marketing email opt in value', () => {
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         MARKETING_EMAILS_OPT_IN: 'true',
       });
 
@@ -288,8 +267,6 @@ describe('RegistrationPage', () => {
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
-        country: 'Pakistan',
-        honor_code: true,
         total_registration_time: 0,
         marketing_emails_opt_in: true,
       };
@@ -299,15 +276,15 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
 
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         MARKETING_EMAILS_OPT_IN: '',
       });
     });
 
     it('should submit form without UsernameField when autoGeneratedUsernameEnabled is true', () => {
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_AUTO_GENERATED_USERNAME: true,
       });
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
@@ -315,8 +292,6 @@ describe('RegistrationPage', () => {
         name: 'John Doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
-        country: 'Pakistan',
-        honor_code: true,
         total_registration_time: 0,
       };
 
@@ -325,21 +300,21 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload, false, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
-      mergeConfig({
+      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
+      mergeAppConfig(testAppId, {
         ENABLE_AUTO_GENERATED_USERNAME: false,
       });
     });
 
     it('should not display UsernameField when ENABLE_AUTO_GENERATED_USERNAME is true', () => {
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_AUTO_GENERATED_USERNAME: true,
       });
 
       const { queryByLabelText } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(queryByLabelText('Username')).toBeNull();
 
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_AUTO_GENERATED_USERNAME: false,
       });
     });
@@ -375,7 +350,7 @@ describe('RegistrationPage', () => {
 
     it('should set errors with validations returned by registration api', () => {
       const usernameError = 'It looks like this username is already taken';
-      const emailError = `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`;
+      const emailError = `This email is already associated with an existing or previous ${getSiteConfig().siteName} account`;
       store = mockStore({
         ...initialState,
         register: {
@@ -456,7 +431,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should display opt-in/opt-out checkbox', () => {
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         MARKETING_EMAILS_OPT_IN: 'true',
       });
 
@@ -464,7 +439,7 @@ describe('RegistrationPage', () => {
       const checkboxDivs = container.querySelectorAll('div.form-field--checkbox');
       expect(checkboxDivs.length).toEqual(1);
 
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         MARKETING_EMAILS_OPT_IN: '',
       });
     });
@@ -472,7 +447,7 @@ describe('RegistrationPage', () => {
     it('should show button label based on cta query params value', () => {
       const buttonLabel = 'Register';
       delete window.location;
-      window.location = { href: getConfig().BASE_URL, search: `?cta=${buttonLabel}` };
+      window.location = { href: getSiteConfig().baseUrl, search: `?cta=${buttonLabel}` };
       const { container } = render(reduxWrapper(<IntlRegistrationPage {...props} />));
       const button = container.querySelector('button[type="submit"] span');
 
@@ -493,7 +468,7 @@ describe('RegistrationPage', () => {
       });
 
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      expect(Cookies.prototype.set).toHaveBeenCalledWith(getAppConfig(testAppId).USER_RETENTION_COOKIE_NAME, true, { domain: 'local.openedx.io', path: '/' });
     });
 
     it('should redirect to url returned in registration result after successful account creation', () => {
@@ -509,13 +484,13 @@ describe('RegistrationPage', () => {
         },
       });
       delete window.location;
-      window.location = { href: getConfig().BASE_URL };
+      window.location = { href: getSiteConfig().baseUrl };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(dashboardURL);
     });
 
     it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
       const dashboardUrl = 'https://test.com/testing-dashboard/';
@@ -536,14 +511,14 @@ describe('RegistrationPage', () => {
         },
       });
       delete window.location;
-      window.location = { href: getConfig().BASE_URL };
+      window.location = { href: getSiteConfig().baseUrl };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
       expect(window.location.href).toBe(dashboardUrl);
     });
 
     it('should redirect to progressive profiling page if optional fields are configured', () => {
       getLocale.mockImplementation(() => ('en-us'));
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
 
@@ -592,7 +567,7 @@ describe('RegistrationPage', () => {
 
     it('should send page event when register page is rendered', () => {
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
+      expect(analyticsService.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register', undefined);
     });
 
     it('should send track event when user has successfully registered', () => {
@@ -608,9 +583,9 @@ describe('RegistrationPage', () => {
       });
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL };
+      window.location = { href: getSiteConfig().baseUrl };
       render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+      expect(analyticsService.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
     });
 
     it('should populate form with pipeline user details', () => {
@@ -704,14 +679,14 @@ describe('RegistrationPage', () => {
 
     it('should call the postMessage API when embedded variant is rendered', () => {
       getLocale.mockImplementation(() => ('en-us'));
-      mergeConfig({
+      mergeAppConfig(testAppId, {
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
 
       window.parent.postMessage = jest.fn();
 
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
 
       store = mockStore({
         ...initialState,
@@ -737,21 +712,17 @@ describe('RegistrationPage', () => {
 
     it('should not display validations error on blur event when embedded variant is rendered', () => {
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
       const { container } = render(reduxWrapper(<IntlRegistrationPage {...props} />));
 
       const usernameInput = container.querySelector('input#username');
       fireEvent.blur(usernameInput, { target: { value: '', name: 'username' } });
       expect(container.querySelector('div[feedback-for="username"]')).toBeFalsy();
-
-      const countryInput = container.querySelector('input[name="country"]');
-      fireEvent.blur(countryInput, { target: { value: '', name: 'country' } });
-      expect(container.querySelector('div[feedback-for="country"]')).toBeFalsy();
     });
 
     it('should set errors in temporary state when validations are returned by registration api', () => {
       delete window.location;
-      window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
 
       const usernameError = 'It looks like this username is already taken';
       const emailError = 'This email is already associated with an existing or previous account';
@@ -766,8 +737,8 @@ describe('RegistrationPage', () => {
         },
       });
       const { container } = render(routerWrapper(reduxWrapper(
-        <IntlRegistrationPage {...props} />),
-      ));
+        <IntlRegistrationPage {...props} />
+      )));
 
       const usernameFeedback = container.querySelector('div[feedback-for="username"]');
       const emailFeedback = container.querySelector('div[feedback-for="email"]');
@@ -779,7 +750,7 @@ describe('RegistrationPage', () => {
     it('should clear error on focus for embedded experience also', () => {
       delete window.location;
       window.location = {
-        href: getConfig().BASE_URL.concat(REGISTER_PAGE),
+        href: getSiteConfig().baseUrl.concat(REGISTER_PAGE),
         search: '?host=http://localhost/host-website',
       };
 
@@ -805,7 +776,6 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
-          backendCountryCode: 'PK',
           userPipelineDataLoaded: false,
         },
         commonComponents: {
@@ -840,7 +810,6 @@ describe('RegistrationPage', () => {
         ...initialState,
         register: {
           ...initialState.register,
-          backendCountryCode: 'PK',
           userPipelineDataLoaded: true,
           registrationFormData: {
             ...registrationFormData,
@@ -851,10 +820,6 @@ describe('RegistrationPage', () => {
             },
             configurableFormFields: {
               marketingEmailsOptIn: true,
-              country: {
-                countryCode: 'PK',
-                displayValue: 'Pakistan',
-              },
             },
           },
         },
@@ -880,7 +845,6 @@ describe('RegistrationPage', () => {
         name: 'John Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
-        country: 'PK',
         social_auth_provider: 'Apple',
         total_registration_time: 0,
       }));

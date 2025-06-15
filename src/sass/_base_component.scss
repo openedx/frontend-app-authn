@@ -1,20 +1,21 @@
+@use "@openedx/paragon/scss/core/core" as paragon;
 
 .layout {
   display: flex;
 
-  @include media-breakpoint-down('lg') {
+  @include paragon.media-breakpoint-down('lg') {
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  @include media-breakpoint-up('xl') {
+  @include paragon.media-breakpoint-up('xl') {
     justify-content: space-between;
   }
 }
 
 .content {
-  @include media-breakpoint-up('xl') {
+  @include paragon.media-breakpoint-up('xl') {
     display: flex;
     justify-content: center;
     width: 50vw;
@@ -47,7 +48,7 @@
   font-weight: 700;
   line-height: 1;
 
-  @include media-breakpoint-down('xl') {
+  @include paragon.media-breakpoint-down('xl') {
     font-size: 3.75rem;
   }
 
@@ -60,7 +61,7 @@
   margin-bottom: 0.5rem;
   font-weight: 700;
 
-  @include media-breakpoint-down('xl') {
+  @include paragon.media-breakpoint-down('xl') {
     font-size: 1.375rem;
     line-height: 1.75rem;
   }
@@ -72,7 +73,7 @@
 }
 
 .large-screen-left-container {
-  @include media-breakpoint-down('xl') {
+  @include paragon.media-breakpoint-down('xl') {
     flex: 0 0 25%;
     max-width: 25%;
   }
@@ -85,94 +86,92 @@
 
 .small-screen-top-stripe {
   height: 0.25rem;
-  background-image: linear-gradient(
-    102.02deg,
-    $brand-700,
-    $brand-700 20%,
-    $brand 20%,
-  );
+  background-image: linear-gradient(102.02deg,
+      paragon.$brand-700,
+      paragon.$brand-700 20%,
+      paragon.$brand 20%,
+    );
   background-repeat: no-repeat;
 }
 
-@include media-breakpoint-only('md') {
+@include paragon.media-breakpoint-only('md') {
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
-    background-image: linear-gradient(
-      102.02deg,
-      $brand-700,
-      $brand-700 10%,
-      $brand 10%,
-      $brand 90%,
-      $primary-700 90%,
-      $primary-700 100%,
-    );
+    background-image: linear-gradient(102.02deg,
+        paragon.$brand-700,
+        paragon.$brand-700 10%,
+        paragon.$brand 10%,
+        paragon.$brand 90%,
+        paragon.$primary-700 90%,
+        paragon.$primary-700 100%,
+      );
     background-repeat: no-repeat;
   }
 }
 
-@include media-breakpoint-only('lg') {
+@include paragon.media-breakpoint-only('lg') {
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
-    background-image: linear-gradient(
-      102.02deg,
-      $brand-700 10%,
-      $brand 10%,
-      $brand 65%,
-      $primary-700 65%,
-      $primary-700 75%,
-      $accent-a 75%,
-      $accent-a 75%
-    );
+    background-image: linear-gradient(102.02deg,
+        paragon.$brand-700 10%,
+        paragon.$brand 10%,
+        paragon.$brand 65%,
+        paragon.$primary-700 65%,
+        paragon.$primary-700 75%,
+        paragon.$accent-a 75%,
+        paragon.$accent-a 75%);
     background-repeat: no-repeat;
   }
 }
 
-.extra-large-screen-top-stripe { display: none; }
+.extra-large-screen-top-stripe {
+  display: none;
+}
 
-@include media-breakpoint-up('xl') {
- .extra-large-screen-top-stripe {
-   display: flex;
-   height: 0.5rem;
-   background-image: linear-gradient(
-     102.02deg,
-     $brand-700 10%,
-     $brand 10%,
-     $brand 45%,
-     $primary-700 45%,
-     $primary-700 55%,
-     $accent-a 55%,
-     $accent-a 75%,
-     $info-200 75%,
-  );
-   background-repeat: no-repeat;
- }
+@include paragon.media-breakpoint-up('xl') {
+  .extra-large-screen-top-stripe {
+    display: flex;
+    height: 0.5rem;
+    background-image: linear-gradient(102.02deg,
+        paragon.$brand-700 10%,
+        paragon.$brand 10%,
+        paragon.$brand 45%,
+        paragon.$primary-700 45%,
+        paragon.$primary-700 55%,
+        paragon.$accent-a 55%,
+        paragon.$accent-a 75%,
+        paragon.$info-200 75%,
+      );
+    background-repeat: no-repeat;
+  }
 }
 
 .large-screen-svg-light,
 .large-screen-svg-primary {
-  fill: $light-200;
+  fill: paragon.$light-200;
   overflow: hidden;
   position: absolute;
 }
 
 .large-screen-svg-primary {
-  fill: $primary-400;
+  fill: paragon.$primary-400;
 }
 
 .medium-screen-svg-light,
 .medium-screen-svg-primary {
-  fill: $light-200;
+  fill: paragon.$light-200;
   overflow: inherit;
   position: absolute;
 }
 
 .medium-screen-svg-primary {
-  fill: $primary-400;
+  fill: paragon.$primary-400;
 }
 
-[dir=rtl]{
+[dir=rtl] {
+
   .medium-screen-svg-light,
   .medium-screen-svg-primary,
   .large-screen-svg-light,
@@ -184,20 +183,20 @@
 .small-yellow-line {
   width: 80px;
   height: 0;
-  border: 2px solid $accent-b;
+  border: 2px solid paragon.$accent-b;
   transform: rotate(102.02deg);
 }
 
 .medium-yellow-line {
   width: 120px;
   height: 0;
-  border: 3px solid $accent-b;
+  border: 3px solid paragon.$accent-b;
   transform: rotate(102.02deg);
 }
 
 .large-yellow-line {
   width: 240px;
   height: 0;
-  border: 3px solid $accent-b;
+  border: 3px solid paragon.$accent-b;
   transform: rotate(102.02deg);
 }

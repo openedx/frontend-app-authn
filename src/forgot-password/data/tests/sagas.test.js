@@ -1,11 +1,11 @@
 import { runSaga } from 'redux-saga';
 
-import initializeMockLogging from '../../../setupTest';
+import { initializeMockServices } from '../../../setupTest';
 import * as actions from '../actions';
 import { handleForgotPassword } from '../sagas';
 import * as api from '../service';
 
-const { loggingService } = initializeMockLogging();
+const { loggingService } = initializeMockServices();
 
 describe('handleForgotPassword', () => {
   const params = {

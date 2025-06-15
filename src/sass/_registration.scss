@@ -1,12 +1,15 @@
+@use "@openedx/paragon/scss/core/core" as paragon;
+@use "sass:map";
+
 .register-button {
   min-width: 14.4rem;
 }
 
-.pgn__form-autosuggest__wrapper > .pgn__form-group {
+.pgn__form-autosuggest__wrapper>.pgn__form-group {
   margin-bottom: 0 !important;
 }
 
-.email-suggestion-alert-error  {
+.email-suggestion-alert-error {
   padding: 0.5rem 1rem;
 
   .email-suggestion__close {
@@ -22,22 +25,22 @@
     line-height: 1.25rem;
   }
 
-  .alert-link  {
-    color: $primary !important;
+  .alert-link {
+    color: paragon.$primary !important;
 
     &:hover {
       text-decoration: underline;
-      color: $info-700 !important;
+      color: paragon.$info-700 !important;
     }
   }
 }
 
 .email-suggestion-alert-warning {
-  color: $info-500 !important;
+  color: paragon.$info-500 !important;
 
   &:hover {
     text-decoration: underline;
-    color: $info-700 !important;
+    color: paragon.$info-700 !important;
   }
 }
 
@@ -46,6 +49,7 @@
     font-size: 0.75rem;
     line-height: 1.25rem;
   }
+
   margin-left: 3px;
 }
 
@@ -56,7 +60,7 @@
   line-height: 24px;
   font-size: 12px;
   font-weight: normal;
-  color: $primary-700;
+  color: paragon.$primary-700;
 }
 
 .username-suggestion--label {
@@ -94,15 +98,17 @@
   .username-scroll-suggested--form-field {
     width: 11rem !important;
   }
+
   .username-suggestions__close__button {
     right: 0.5rem;
   }
 }
 
-@media (max-width: map-get($grid-breakpoints, "sm")) {
+@media (max-width: map.get(paragon.$grid-breakpoints, "sm")) {
   .username-scroll-suggested--form-field {
     width: 15rem;
   }
+
   .username-suggestions__close__button {
     right: 0.5rem;
   }

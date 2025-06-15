@@ -1,10 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { mergeConfig } from '@edx/frontend-platform';
 import {
-  configure, getLocale, injectIntl, IntlProvider,
-} from '@edx/frontend-platform/i18n';
+  configureI18n, getLocale, injectIntl, IntlProvider, mergeSiteConfig
+} from '@openedx/frontend-base';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -15,12 +13,10 @@ import {
 import RegistrationPage from '../../RegistrationPage';
 import RegistrationFailureMessage from '../RegistrationFailure';
 
-jest.mock('@edx/frontend-platform/analytics', () => ({
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
-}));
-jest.mock('@edx/frontend-platform/i18n', () => ({
-  ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
 
@@ -44,10 +40,12 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('RegistrationFailure', () => {
-  mergeConfig({
-    PRIVACY_POLICY: 'https://privacy-policy.com',
-    TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
-    USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
+  mergeSiteConfig({
+    custom: {
+      PRIVACY_POLICY: 'https://privacy-policy.com',
+      TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
+      USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
+    }
   });
 
   let props = {};
@@ -108,12 +106,7 @@ describe('RegistrationFailure', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    configure({
-      loggingService: { logError: jest.fn() },
-      config: {
-        ENVIRONMENT: 'production',
-        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
-      },
+    configureI18n({
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
     props = {

@@ -1,7 +1,7 @@
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject } from '@openedx/frontend-base';
 import { runSaga } from 'redux-saga';
 
-import initializeMockLogging from '../../../setupTest';
+import { initializeMockServices } from '../../../setupTest';
 import * as actions from '../actions';
 import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from '../constants';
 import {
@@ -10,7 +10,7 @@ import {
 } from '../sagas';
 import * as api from '../service';
 
-const { loggingService } = initializeMockLogging();
+const { loggingService } = initializeMockServices();
 
 describe('fetchRealtimeValidations', () => {
   const params = {

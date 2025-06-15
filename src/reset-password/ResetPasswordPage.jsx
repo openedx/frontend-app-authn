@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import {
   Form,
   Icon,
@@ -16,6 +15,12 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import BaseContainer from '../base-container';
+import { PasswordField } from '../common-components';
+import {
+  LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
+} from '../data/constants';
+import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 import { resetPassword, validateToken } from './data/actions';
 import {
   FORM_SUBMISSION_ERROR, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
@@ -24,12 +29,6 @@ import { resetPasswordResultSelector } from './data/selectors';
 import { validatePassword } from './data/service';
 import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
-import BaseContainer from '../base-container';
-import { PasswordField } from '../common-components';
-import {
-  LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
-} from '../data/constants';
-import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
 const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
@@ -43,13 +42,19 @@ const ResetPasswordPage = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
+    if (props.status === PASSWORD_RESET_ERROR) {
+      navigate(updatePathWithQueryParams(RESET_PAGE));
+    }
+    if (props.status === 'success') {
+      navigate(updatePathWithQueryParams(LOGIN_PAGE));
+    }
+    if (props.status !== TOKEN_STATE.PENDING) {
       setErrorCode(props.status);
     }
     if (props.status === PASSWORD_VALIDATION_ERROR) {
       setFormErrors({ newPassword: newPasswordError });
     }
-  }, [props.status, newPasswordError]);
+  }, [props.status]);
 
   const validatePasswordFromBackend = async (password) => {
     let errorMessage = '';
@@ -132,22 +137,18 @@ const ResetPasswordPage = (props) => {
     </div>
   );
 
-  if (props.status === TOKEN_STATE.PENDING) {
-    if (token) {
-      props.validateToken(token);
-      return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
-    }
-  } else if (props.status === PASSWORD_RESET_ERROR) {
-    navigate(updatePathWithQueryParams(RESET_PAGE));
-  } else if (props.status === 'success') {
-    navigate(updatePathWithQueryParams(LOGIN_PAGE));
+  if (props.status === TOKEN_STATE.PENDING && token) {
+    props.validateToken(token);
+    return (
+      <Spinner animation="border" variant="primary" className="spinner--position-centered" />
+    );
   } else {
     return (
       <BaseContainer>
         <div>
           <Helmet>
             <title>
-              {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
+              {formatMessage(messages['reset.password.page.title'], { siteName: getSiteConfig().siteName })}
             </title>
           </Helmet>
           <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
@@ -198,7 +199,6 @@ const ResetPasswordPage = (props) => {
       </BaseContainer>
     );
   }
-  return null;
 };
 
 ResetPasswordPage.defaultProps = {

@@ -1,14 +1,12 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { mergeConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { injectIntl, IntlProvider, mergeSiteConfig } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 import { CountryField } from '../index';
+import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 
 const IntlCountryField = injectIntl(CountryField);
 const mockStore = configureStore();
@@ -73,8 +71,10 @@ describe('CountryField', () => {
   });
 
   describe('Test Country Field', () => {
-    mergeConfig({
-      SHOW_CONFIGURABLE_EDX_FIELDS: true,
+    mergeSiteConfig({
+      custom: {
+        SHOW_CONFIGURABLE_EDX_FIELDS: true,
+      }
     });
 
     const emptyFieldValidation = {

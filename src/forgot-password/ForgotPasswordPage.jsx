@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
-import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { useIntl } from '@edx/frontend-platform/i18n';
+import {
+  useAppConfig,
+  getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
+} from '@openedx/frontend-base';
 import {
   Form,
   Hyperlink,
@@ -17,17 +18,17 @@ import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 
-import { forgotPassword, setForgotPasswordFormData } from './data/actions';
-import { forgotPasswordResultSelector } from './data/selectors';
-import ForgotPasswordAlert from './ForgotPasswordAlert';
-import messages from './messages';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
 import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { forgotPassword, setForgotPasswordFormData } from './data/actions';
+import { forgotPasswordResultSelector } from './data/selectors';
+import ForgotPasswordAlert from './ForgotPasswordAlert';
+import messages from './messages';
 
 const ForgotPasswordPage = (props) => {
-  const platformName = getConfig().SITE_NAME;
+  const platformName = getSiteConfig().siteName;
   const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
   const {
     status, submitState, emailValidationError,
@@ -97,8 +98,11 @@ const ForgotPasswordPage = (props) => {
   return (
     <BaseContainer>
       <Helmet>
-        <title>{formatMessage(messages['forgot.password.page.title'],
-          { siteName: getConfig().SITE_NAME })}
+        <title>
+          {formatMessage(
+            messages['forgot.password.page.title'],
+            { siteName: getSiteConfig().siteName }
+          )}
         </title>
       </Helmet>
       <div>
@@ -139,12 +143,12 @@ const ForgotPasswordPage = (props) => {
               onClick={handleSubmit}
               onMouseDown={(e) => e.preventDefault()}
             />
-            {(getConfig().LOGIN_ISSUE_SUPPORT_LINK) && (
+            {(useAppConfig().LOGIN_ISSUE_SUPPORT_LINK) && (
               <Hyperlink
                 id="forgot-password"
                 name="forgot-password"
                 className="ml-4 font-weight-500 text-body"
-                destination={getConfig().LOGIN_ISSUE_SUPPORT_LINK}
+                destination={useAppConfig().LOGIN_ISSUE_SUPPORT_LINK}
                 target="_blank"
                 showLaunchIcon={false}
               >
@@ -154,7 +158,7 @@ const ForgotPasswordPage = (props) => {
             <p className="mt-5.5 small text-gray-700">
               {formatMessage(messages['additional.help.text'], { platformName })}
               <span>
-                <Hyperlink isInline destination={`mailto:${getConfig().INFO_EMAIL}`}>{getConfig().INFO_EMAIL}</Hyperlink>
+                <Hyperlink isInline destination={`mailto:${useAppConfig().INFO_EMAIL}`}>{useAppConfig().INFO_EMAIL}</Hyperlink>
               </span>
             </p>
           </Form>

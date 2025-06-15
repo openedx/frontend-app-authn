@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
 } from '@openedx/paragon';
@@ -10,10 +10,10 @@ import {
 } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
 import { validatePasswordField } from '../register/data/utils';
+import messages from './messages';
 
 const PasswordField = (props) => {
   const { formatMessage } = useIntl();

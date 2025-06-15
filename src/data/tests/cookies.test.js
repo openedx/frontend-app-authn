@@ -1,12 +1,6 @@
-import { getConfig } from '@edx/frontend-platform';
 import Cookies from 'universal-cookie';
 
 import { setCookie } from '../utils';
-
-// Mock getConfig function
-jest.mock('@edx/frontend-platform', () => ({
-  getConfig: jest.fn(),
-}));
 
 // Mock Cookies class
 jest.mock('universal-cookie');
@@ -17,9 +11,7 @@ describe('setCookie function', () => {
   });
 
   it('should set a cookie with default options', () => {
-    getConfig.mockReturnValue({ SESSION_COOKIE_DOMAIN: 'example.com' });
-
-    setCookie('testCookie', 'testValue');
+    setCookie('testCookie', 'testValue', 'example.com');
 
     expect(Cookies).toHaveBeenCalled();
     expect(Cookies).toHaveBeenCalledWith();
@@ -30,10 +22,8 @@ describe('setCookie function', () => {
   });
 
   it('should set a cookie with specified expiry', () => {
-    getConfig.mockReturnValue({ SESSION_COOKIE_DOMAIN: 'example.com' });
-
     const expiry = new Date('2023-12-31');
-    setCookie('testCookie', 'testValue', expiry);
+    setCookie('testCookie', 'testValue', 'example.com', expiry);
 
     expect(Cookies).toHaveBeenCalled();
     expect(Cookies).toHaveBeenCalledWith();
@@ -45,7 +35,7 @@ describe('setCookie function', () => {
   });
 
   it('should not set a cookie if cookieName is undefined', () => {
-    setCookie(undefined, 'testValue');
+    setCookie(undefined, 'testValue', 'example.com');
 
     expect(Cookies).not.toHaveBeenCalled();
   });

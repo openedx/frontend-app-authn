@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { getCountryList, getLocale, useIntl } from '@edx/frontend-platform/i18n';
+import {
+  useAppConfig,
+  getSiteConfig, getLocale, useIntl
+} from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
+import { getCountryList } from '../../data/countries';
 import { FormFieldRenderer } from '../../field-renderer';
 import { FIELDS } from '../data/constants';
 import messages from '../messages';
@@ -16,10 +19,6 @@ import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
  * Country and Honor Code/Terms of Services (if enabled) will appear at the bottom of the form, even if they
  * appear higher in order returned by backend. This is to make the user experience better.
  *
- * For edX only:
- *  Country and honor code fields are required by default, and we will continue to show them on
- *  frontend even if the API doesn't return it. The `SHOW_CONFIGURABLE_EDX_FIELDS` flag will enable
- *  it for edX.
  * */
 const ConfigurableRegistrationForm = (props) => {
   const { formatMessage } = useIntl();
@@ -32,11 +31,16 @@ const ConfigurableRegistrationForm = (props) => {
     setFormFields,
     autoSubmitRegistrationForm,
   } = props;
+  const {
+    ENABLE_DYNAMIC_REGISTRATION_FIELDS,
+    MARKETING_EMAILS_OPT_IN,
+  } = useAppConfig();
 
-  /** The reason for adding the entry 'United States' is that Chrome browser aut-fill the form with the 'Unites
-  States' instead of 'United States of America' which does not exist in country dropdown list and gets the user
-  confused and unable to create an account. So we added the United States entry in the dropdown list.
- */
+  /**
+   * The reason for adding the entry 'United States' is that Chrome auto-fills the form with 'United
+   * States' instead of 'United States of America', which does not exist in the country dropdown list.
+   * So we added the United States entry in the dropdown list.
+   */
   const countryList = useMemo(() => getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]), []);
 
   let showTermsOfServiceAndHonorCode = false;
@@ -45,9 +49,8 @@ const ConfigurableRegistrationForm = (props) => {
   const formFieldDescriptions = [];
   const honorCode = [];
   const flags = {
-    showConfigurableRegistrationFields: getConfig().ENABLE_DYNAMIC_REGISTRATION_FIELDS,
-    showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
-    showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
+    showConfigurableRegistrationFields: ENABLE_DYNAMIC_REGISTRATION_FIELDS,
+    showMarketingEmailOptInCheckbox: MARKETING_EMAILS_OPT_IN,
   };
 
   /**
@@ -161,7 +164,7 @@ const ConfigurableRegistrationForm = (props) => {
     });
   }
 
-  if (flags.showConfigurableEdxFields || showCountryField) {
+  if (showCountryField) {
     formFieldDescriptions.push(
       <span key="country">
         <CountryField
@@ -183,7 +186,7 @@ const ConfigurableRegistrationForm = (props) => {
         <FormFieldRenderer
           fieldData={{
             type: 'checkbox',
-            label: formatMessage(messages['registration.opt.in.label'], { siteName: getConfig().SITE_NAME }),
+            label: formatMessage(messages['registration.opt.in.label'], { siteName: getSiteConfig().siteName }),
             name: 'marketingEmailsOptIn',
           }}
           value={formFields.marketingEmailsOptIn}
@@ -196,7 +199,7 @@ const ConfigurableRegistrationForm = (props) => {
     );
   }
 
-  if (flags.showConfigurableEdxFields || showTermsOfServiceAndHonorCode) {
+  if (showTermsOfServiceAndHonorCode) {
     formFieldDescriptions.push(
       <span key="honor_code">
         <HonorCode fieldType="tos_and_honor_code" onChangeHandler={handleOnChange} value={formFields.honor_code} />

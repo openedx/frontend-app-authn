@@ -1,8 +1,7 @@
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable react/function-component-definition */
-import React from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
+import { getSiteConfig } from '@openedx/frontend-base';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import {
@@ -15,7 +14,7 @@ import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
 const RRD = require('react-router-dom');
 // Just render plain div with its children
 // eslint-disable-next-line react/prop-types
-RRD.BrowserRouter = ({ children }) => <div>{ children }</div>;
+RRD.BrowserRouter = ({ children }) => <div>{children}</div>;
 module.exports = RRD;
 
 const TestApp = () => (
@@ -60,7 +59,7 @@ describe('EmbeddedRegistrationRoute', () => {
   it('should render embedded register page if host query param is available in the url (embedded)', async () => {
     delete window.location;
     window.location = {
-      href: getConfig().BASE_URL.concat(REGISTER_EMBEDDED_PAGE),
+      href: getSiteConfig().baseUrl.concat(REGISTER_EMBEDDED_PAGE),
       search: '?host=http://localhost/host-websit',
     };
 

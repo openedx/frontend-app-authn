@@ -1,12 +1,11 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
-import validateName from './validator';
 import { FormGroup } from '../../../common-components';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
+import validateName from './validator';
 
 /**
  * Name field wrapper. It accepts following handlers

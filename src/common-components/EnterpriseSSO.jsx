@@ -1,8 +1,5 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
 import {
   Button, Form,
   Icon,
@@ -10,8 +7,8 @@ import {
 import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import messages from './messages';
 
 /**
  * This component renders the Single sign-on (SSO) button only for the tpa provider passed
@@ -19,12 +16,12 @@ import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
 const EnterpriseSSO = (props) => {
   const { formatMessage } = useIntl();
   const tpaProvider = props.provider;
-  const hideRegistrationLink = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false
-    || getConfig().SHOW_REGISTRATION_LINKS === false;
+  const hideRegistrationLink = useAppConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false
+    || useAppConfig().SHOW_REGISTRATION_LINKS === false;
 
   const handleSubmit = (e, url) => {
     e.preventDefault();
-    window.location.href = getConfig().LMS_BASE_URL + url;
+    window.location.href = getSiteConfig().lmsBaseUrl + url;
   };
 
   const handleClick = (e) => {
@@ -50,7 +47,7 @@ const EnterpriseSSO = (props) => {
                 {tpaProvider.iconImage ? (
                   <div aria-hidden="true">
                     <img className="btn-tpa__image-icon" src={tpaProvider.iconImage} alt={`icon ${tpaProvider.name}`} />
-                    <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
+                    <span className="pl-2" aria-hidden="true">{tpaProvider.name}</span>
                   </div>
                 )
                   : (
@@ -62,7 +59,7 @@ const EnterpriseSSO = (props) => {
                             <Icon className="h-75" src={Login} />
                           )}
                       </div>
-                      <span className="pl-2" aria-hidden="true">{ tpaProvider.name }</span>
+                      <span className="pl-2" aria-hidden="true">{tpaProvider.name}</span>
                     </>
                   )}
               </Button>

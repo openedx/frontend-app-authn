@@ -1,7 +1,4 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { getSiteConfig, injectIntl, IntlProvider } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 
 import { TermsOfService } from '../index';
@@ -20,7 +17,7 @@ describe('TermsOfServiceTest', () => {
   });
 
   it('should render error msg if Terms of Service checkbox is not checked', () => {
-    const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Terms of Service`;
+    const errorMessage = `You must agree to the ${getSiteConfig().siteName} Terms of Service`;
     const { container } = render(
       <IntlProvider locale="en">
         <IntlTermsOfService errorMessage={errorMessage} onChangeHandler={changeHandler} />
@@ -37,7 +34,7 @@ describe('TermsOfServiceTest', () => {
       </IntlProvider>,
     );
 
-    const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Terms of Servicein a new tab';
+    const expectedMsg = `I agree to the ${getSiteConfig().siteName}\u00a0Terms of Servicein a new tab`;
 
     const termsOfServiceLabel = container.querySelector('#terms-of-service label');
     expect(termsOfServiceLabel.textContent).toEqual(expectedMsg);

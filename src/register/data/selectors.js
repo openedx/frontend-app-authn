@@ -28,6 +28,7 @@ const getBackendValidations = createSelector(
     }
 
     return null;
-  });
+  }
+);
 
 export default getBackendValidations;

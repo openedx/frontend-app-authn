@@ -1,7 +1,5 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
+import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
 
-// eslint-disable-next-line import/prefer-default-export
 export async function patchAccount(username, commitValues) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/merge-patch+json' },
@@ -9,7 +7,7 @@ export async function patchAccount(username, commitValues) {
 
   await getAuthenticatedHttpClient()
     .patch(
-      `${getConfig().LMS_BASE_URL}/api/user/v1/accounts/${username}`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v1/accounts/${username}`,
       commitValues,
       requestConfig,
     )

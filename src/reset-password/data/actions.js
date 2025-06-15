@@ -46,5 +46,5 @@ export const resetPasswordSuccess = data => ({
 
 export const resetPasswordFailure = (errorCode, errorMsg = null) => ({
   type: RESET_PASSWORD.FAILURE,
-  payload: { errorCode, errorMsg: errorMsg || errorCode },
+  payload: { errorCode, errorMsg: errorMsg ?? errorCode },
 });

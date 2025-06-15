@@ -21,7 +21,8 @@ describe('Payload validation', () => {
       errors,
       configurableFormFields,
       fieldDescriptions,
-      formatMessage);
+      formatMessage
+    );
 
     expect(fieldErrors.name).toBeDefined();
     expect(isValid).toBe(false);
@@ -31,7 +32,12 @@ describe('Payload validation', () => {
     const payload = { email: 'invalid-email' };
     const errors = {};
     const { isValid, fieldErrors } = isFormValid(
-      payload, errors, configurableFormFields, fieldDescriptions, formatMessage);
+      payload,
+      errors,
+      configurableFormFields,
+      fieldDescriptions,
+      formatMessage
+    );
 
     expect(fieldErrors.email).toBeDefined();
     expect(isValid).toBe(false);
@@ -41,7 +47,12 @@ describe('Payload validation', () => {
     const payload = { username: 'invalid username' };
     const errors = {};
     const { isValid, fieldErrors } = isFormValid(
-      payload, errors, configurableFormFields, fieldDescriptions, formatMessage);
+      payload,
+      errors,
+      configurableFormFields,
+      fieldDescriptions,
+      formatMessage
+    );
 
     expect(fieldErrors.username).toBeDefined();
     expect(isValid).toBe(false);
@@ -51,7 +62,12 @@ describe('Payload validation', () => {
     const payload = { password: 'short' };
     const errors = {};
     const { isValid, fieldErrors } = isFormValid(
-      payload, errors, configurableFormFields, fieldDescriptions, formatMessage);
+      payload,
+      errors,
+      configurableFormFields,
+      fieldDescriptions,
+      formatMessage
+    );
 
     expect(fieldErrors.password).toBeDefined();
     expect(isValid).toBe(false);
@@ -66,7 +82,12 @@ describe('Payload validation', () => {
     };
     const errors = {};
     const { isValid, fieldErrors } = isFormValid(
-      payload, errors, configurableFormFields, fieldDescriptions, formatMessage);
+      payload,
+      errors,
+      configurableFormFields,
+      fieldDescriptions,
+      formatMessage
+    );
 
     expect(fieldErrors.name).toBeDefined();
     expect(fieldErrors.email).toBeDefined();

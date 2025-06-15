@@ -1,8 +1,6 @@
-import { getConfig } from '@edx/frontend-platform';
-import { getHttpClient } from '@edx/frontend-platform/auth';
+import { getSiteConfig, getHttpClient } from '@openedx/frontend-base';
 import formurlencoded from 'form-urlencoded';
 
-// eslint-disable-next-line import/prefer-default-export
 export async function validateToken(token) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -10,7 +8,7 @@ export async function validateToken(token) {
 
   const { data } = await getHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/user_api/v1/account/password_reset/token/validate/`,
+      `${getSiteConfig().lmsBaseUrl}/user_api/v1/account/password_reset/token/validate/`,
       formurlencoded({ token }),
       requestConfig,
     )
@@ -20,12 +18,11 @@ export async function validateToken(token) {
   return data;
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export async function resetPassword(payload, token, queryParams) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   };
-  const url = new URL(`${getConfig().LMS_BASE_URL}/password/reset/${token}/`);
+  const url = new URL(`${getSiteConfig().lmsBaseUrl}/password/reset/${token}/`);
 
   if (queryParams.is_account_recovery) {
     url.searchParams.append('is_account_recovery', true);
@@ -45,7 +42,7 @@ export async function validatePassword(payload) {
   };
   const { data } = await getHttpClient()
     .post(
-      `${getConfig().LMS_BASE_URL}/api/user/v1/validation/registration`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v1/validation/registration`,
       formurlencoded(payload),
       requestConfig,
     )
@@ -56,7 +53,7 @@ export async function validatePassword(payload) {
   let errorMessage = '';
   // Be careful about grabbing this message, since we could have received an HTTP error or the
   // endpoint didn't give us what we expect. We only care if we get a clear error message.
-  if (data.validation_decisions && data.validation_decisions.password) {
+  if (data.validation_decisions?.password) {
     errorMessage = data.validation_decisions.password;
   }
 

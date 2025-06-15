@@ -1,12 +1,13 @@
+@use "@openedx/paragon/scss/core/core" as paragon;
+
 // Load component based styles
-@import "_base_component.scss";
-@import "_registration.scss";
-@import "_recommendations_page.scss";
-@import "_reset_password.scss";
-@import "_progressive_profiling_page.scss";
-@import "_login_page.scss";
-@import "_forgot_password.scss";
-@import "_recommendations_card_base.scss";
+@use "_base_component.scss";
+@use "_registration.scss";
+@use "_reset_password.scss";
+@use "_progressive_profiling_page.scss";
+@use "_login_page.scss";
+@use "_forgot_password.scss";
+
 //
 // ----------------------------
 // #COLORS
@@ -30,6 +31,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 .forgot-password-button-width {
   min-width: 6rem;
 }
+
 .spinner--position-centered {
   left: 0;
   right: 0;
@@ -80,10 +82,10 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 .alert-link {
   font-weight: normal;
   text-decoration: underline;
-  color: $info-300 !important;
+  color: paragon.$info-300 !important;
 
   &:hover {
-    color: $info-500 !important;
+    color: paragon.$info-500 !important;
   }
 }
 
@@ -104,12 +106,12 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   font-size: 14px;
 
   background-color: $white;
-  border: 1px solid $primary;
+  border: 1px solid paragon.$primary;
   width: 224px;
   height: 36px;
-  color: $primary;
+  color: paragon.$primary;
 
-  .btn-tpa__image-icon{
+  .btn-tpa__image-icon {
     background-color: transparent;
     max-height: 24px;
     max-width: 24px;
@@ -132,7 +134,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .btn-tpa__font-container {
-  background-color: $primary;
+  background-color: paragon.$primary;
   color: $white;
   font-size: 11px;
 
@@ -232,7 +234,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 }
 
 .invalid-feedback {
-  color: $red;
+  color: paragon.$red;
 }
 
 .full-vertical-height {
@@ -293,11 +295,13 @@ select.form-control {
   @extend .x-small;
   filter: drop-shadow($elevation-level-2-shadow) drop-shadow($elevation-level-2-shadow) !important;
   right: 0.2rem !important;
+
   .tooltip-inner {
     background: $white;
     display: block;
-    color: $gray-500;
+    color: paragon.$gray-500;
   }
+
   .arrow::before {
     border-left-color: $white;
   }
@@ -316,8 +320,9 @@ select.form-control {
     min-width: 464px !important;
     background: $white;
     display: block;
-    color: $gray-500;
+    color: paragon.$gray-500;
   }
+
   .arrow::before {
     border-top-color: $white;
   }
@@ -325,19 +330,19 @@ select.form-control {
 }
 
 .yellow-border {
-  border: 2px solid $accent-b;
+  border: 2px solid paragon.$accent-b;
 }
 
 .institutions__heading {
-  color: $primary-700;
+  color: paragon.$primary-700;
 }
 
 .logistration-button {
-  color: $gray-700;
+  color: paragon.$gray-700;
 }
 
-.logistration-button:hover{
-  color: $gray-700;
+.logistration-button:hover {
+  color: paragon.$gray-700;
   text-decoration: none;
 }
 
@@ -351,8 +356,9 @@ select.form-control {
 .icon-size {
   width: 2.3rem;
 }
+
 .has-floating-label {
-  color: $gray-500;
+  color: paragon.$gray-500;
 }
 
 .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
@@ -364,13 +370,12 @@ select.form-control {
   font-size: 0.75rem;
 }
 
-.form-group__form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
-    font-size: 16px;
-    color: $primary-700;
+.form-group__form-field .form-control:focus~.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+  font-size: 16px;
+  color: paragon.$primary-700;
 }
 
-.form-group__form-field .form-control:not([value='']):not(:focus) ~
-  .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+.form-group__form-field .form-control:not([value='']):not(:focus)~.pgn__form-control-floating-label .pgn__form-control-floating-label-content {
   font-size: 16px;
 }
 
@@ -436,6 +441,7 @@ select.form-control {
 
   #password-requirement-top {
     display: unset;
+
     .tooltip-inner {
       max-width: inherit;
       min-width: unset !important;
@@ -444,14 +450,14 @@ select.form-control {
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: $light-200;
+  background-color: paragon.$light-200;
 }
 
 .institutions--provider-link {
   font-weight: normal;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  color: $primary-700
+  color: paragon.$primary-700
 }
 
 .pgn__form-control-decorator-trailing {

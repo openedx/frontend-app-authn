@@ -1,14 +1,11 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
-import { useIntl } from '@edx/frontend-platform/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import { Icon } from '@openedx/paragon';
 import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import messages from './messages';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
@@ -18,7 +15,7 @@ const SocialAuthProviders = (props) => {
     e.preventDefault();
 
     const url = e.currentTarget.dataset.providerUrl;
-    window.location.href = getConfig().LMS_BASE_URL + url;
+    window.location.href = getSiteConfig().lmsBaseUrl + url;
   }
 
   const socialAuth = socialAuthProviders.map((provider, index) => (

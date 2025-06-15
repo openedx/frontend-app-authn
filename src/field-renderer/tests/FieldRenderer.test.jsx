@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
+import { getSiteConfig } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 
 import FieldRenderer from '../FieldRenderer';
@@ -45,7 +43,7 @@ describe('FieldRendererTests', () => {
       name: 'yob-field',
     };
 
-    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
+    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => { }} />);
     expect(container.innerHTML).toEqual('');
   });
 
@@ -86,7 +84,7 @@ describe('FieldRendererTests', () => {
   it('should render checkbox field', () => {
     const fieldData = {
       type: 'checkbox',
-      label: `I agree that ${getConfig().SITE_NAME} may send me marketing messages.`,
+      label: `I agree that ${getSiteConfig().siteName} may send me marketing messages.`,
       name: 'marketing-emails-opt-in-field',
     };
 
@@ -105,7 +103,7 @@ describe('FieldRendererTests', () => {
       type: 'unknown',
     };
 
-    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => {}} />);
+    const { container } = render(<FieldRenderer fieldData={fieldData} onChangeHandler={() => { }} />);
     expect(container.innerHTML).toContain('');
   });
 

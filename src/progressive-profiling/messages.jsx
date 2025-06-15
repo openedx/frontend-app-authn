@@ -1,4 +1,4 @@
-import { defineMessages } from '@edx/frontend-platform/i18n';
+import { defineMessages } from '@openedx/frontend-base';
 
 const messages = defineMessages({
   'progressive.profiling.page.title': {
@@ -25,11 +25,6 @@ const messages = defineMessages({
     id: 'optional.fields.skip.button',
     defaultMessage: 'Skip for now',
     description: 'Skip button text',
-  },
-  'optional.fields.next.button': {
-    id: 'optional.fields.next.button',
-    defaultMessage: 'Next',
-    description: 'Next button text',
   },
   // modal dialog box
   'continue.to.platform': {

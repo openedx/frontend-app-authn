@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@openedx/frontend-base';
 import { render, screen } from '@testing-library/react';
 
 import { DefaultLargeLayout, DefaultMediumLayout, DefaultSmallLayout } from './index';

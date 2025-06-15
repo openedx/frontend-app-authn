@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { getConfig } from '@edx/frontend-platform';
-import { getAuthService } from '@edx/frontend-platform/auth';
-import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
+import {
+  FormattedMessage, getAuthService, getSiteConfig, useIntl
+} from '@openedx/frontend-base';
 import { Alert, Hyperlink } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
+import { windowScrollTo } from '../data/utils';
 import ChangePasswordPrompt from './ChangePasswordPrompt';
 import {
   ACCOUNT_LOCKED_OUT,
@@ -23,7 +24,6 @@ import {
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
 import messages from './messages';
-import { windowScrollTo } from '../data/utils';
 
 const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
@@ -75,6 +75,7 @@ const LoginFailureMessage = (props) => {
             defaultMessage="In order to sign in, you need to activate your account.{lineBreak}
             {lineBreak}We just sent an activation link to {email}. If you do not receive an email,
             check your spam folders or {supportLink}."
+            description="An error message shown to users when they sign in if they have not yet activated their account. It attempts to explain to them how to activate their account by looking for an email from the system."
             values={{
               lineBreak: <br />,
               email: <strong className="data-hj-suppress">{context.email}</strong>,
@@ -86,7 +87,7 @@ const LoginFailureMessage = (props) => {
       break;
     }
     case ALLOWED_DOMAIN_LOGIN_ERROR: {
-      const url = `${getConfig().LMS_BASE_URL}/dashboard/?tpa_hint=${context.tpaHint}`;
+      const url = `${getSiteConfig().lmsBaseUrl}/dashboard/?tpa_hint=${context.tpaHint}`;
       const tpaLink = (
         <a href={url}>
           {formatMessage(messages['tpa.account.link'], { provider: context.provider })}
@@ -161,6 +162,7 @@ const LoginFailureMessage = (props) => {
             <FormattedMessage
               id="login.incorrect.credentials.error.with.reset.link"
               defaultMessage="The username, email, or password you entered is incorrect. Please try again or {resetLink}."
+              description="An error message shown to users if some part of their login information was incorrect."
               values={{ resetLink }}
             />
           </p>
@@ -184,7 +186,7 @@ const LoginFailureMessage = (props) => {
       errorMessage = (
         <p>
           {formatMessage(messages['login.tpa.authentication.failure'], {
-            platform_name: getConfig().SITE_NAME,
+            platform_name: getSiteConfig().siteName,
             lineBreak: <br />,
             errorMessage: context.errorMessage,
           })}
@@ -200,7 +202,7 @@ const LoginFailureMessage = (props) => {
   return (
     <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
       <Alert.Heading>{formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
-      { errorMessage }
+      {errorMessage}
     </Alert>
   );
 };

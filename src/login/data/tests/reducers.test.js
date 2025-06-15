@@ -1,4 +1,4 @@
-import { getConfig } from '@edx/frontend-platform';
+import { getSiteConfig } from '@openedx/frontend-base';
 
 import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, PENDING_STATE } from '../../../data/constants';
 import { RESET_PASSWORD } from '../../../reset-password';
@@ -109,7 +109,7 @@ describe('login reducer', () => {
 
   it('should set redirect url on login success action', () => {
     const payload = {
-      redirectUrl: `${getConfig().BASE_URL}${DEFAULT_REDIRECT_URL}`,
+      redirectUrl: `${getSiteConfig().baseUrl}${DEFAULT_REDIRECT_URL}`,
       success: true,
     };
     const action = {

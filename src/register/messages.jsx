@@ -1,4 +1,4 @@
-import { defineMessages } from '@edx/frontend-platform/i18n';
+import { defineMessages } from '@openedx/frontend-base';
 
 const messages = defineMessages({
   'register.page.title': {
@@ -160,7 +160,7 @@ const messages = defineMessages({
   'registration.tpa.session.expired': {
     id: 'registration.tpa.session.expired',
     defaultMessage: 'Registration using {provider} has timed out.',
-    description: '',
+    description: 'Error message that appears when a user has not registered in the required timeframe for the registration method they chose.',
   },
   'registration.tpa.authentication.failure': {
     id: 'registration.tpa.authentication.failure',

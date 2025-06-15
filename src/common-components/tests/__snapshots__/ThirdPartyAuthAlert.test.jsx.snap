@@ -13,7 +13,7 @@ exports[`ThirdPartyAuthAlert should match login page third party auth alert mess
       className="alert-message-content"
     >
       <p>
-        You have successfully signed into Google, but your Google account does not have a linked Your Platform Name Here account. To link your accounts, sign in now using your Your Platform Name Here password.
+        You have successfully signed into Google, but your Google account does not have a linked Test Site account. To link your accounts, sign in now using your Test Site password.
       </p>
     </div>
   </div>
@@ -39,7 +39,7 @@ exports[`ThirdPartyAuthAlert should match register page third party auth alert m
           Almost done!
         </div>
         <p>
-          You've successfully signed into Google! We just need a little more information before you start learning with Your Platform Name Here.
+          You've successfully signed into Google! We just need a little more information before you start learning with Test Site.
         </p>
       </div>
     </div>

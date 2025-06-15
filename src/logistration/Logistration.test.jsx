@@ -1,26 +1,31 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import {
+  CurrentAppProvider, configureI18n, getSiteConfig, injectIntl, IntlProvider, mergeAppConfig, sendPageEvent, sendTrackEvent
+} from '@openedx/frontend-base';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import Logistration from './Logistration';
+import { testAppId } from '../setupTest';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
 } from '../data/constants';
 import { backupLoginForm } from '../login/data/actions';
 import { backupRegistrationForm } from '../register/data/actions';
+import Logistration from './Logistration';
 
-jest.mock('@edx/frontend-platform/analytics', () => ({
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
+  getAuthenticatedUser: jest.fn(() => ({
+    userId: 3,
+    username: 'test-user',
+  })),
+  getAuthService: jest.fn(() => null),
 }));
-jest.mock('@edx/frontend-platform/auth');
 
 const mockStore = configureStore();
 const IntlLogistration = injectIntl(Logistration);
@@ -38,7 +43,9 @@ describe('Logistration', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
+        <CurrentAppProvider appId={testAppId}>
+          <Provider store={store}>{children}</Provider>
+        </CurrentAppProvider>
       </MemoryRouter>
     </IntlProvider>
   );
@@ -77,33 +84,14 @@ describe('Logistration', () => {
 
   beforeEach(() => {
     store = mockStore(initialState);
-    jest.mock('@edx/frontend-platform/auth', () => ({
-      getAuthenticatedUser: jest.fn(() => ({
-        userId: 3,
-        username: 'test-user',
-      })),
-    }));
 
-    configure({
-      loggingService: { logError: jest.fn() },
-      config: {
-        ENVIRONMENT: 'production',
-        LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
-      },
+    configureI18n({
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
   });
 
-  it('should do nothing when user clicks on the same tab (login/register) again', () => {
-    const { container } = render(reduxWrapper(<IntlLogistration />));
-    // While staying on the registration form, clicking the register tab again
-    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
-
-    expect(sendTrackEvent).not.toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
-  });
-
   it('should render registration page', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
@@ -120,7 +108,8 @@ describe('Logistration', () => {
   });
 
   it('should render login/register headings when show registration links is disabled', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
+      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
       SHOW_REGISTRATION_LINKS: false,
     });
 
@@ -140,7 +129,7 @@ describe('Logistration', () => {
   });
 
   it('should render only login page when public account creation is disabled', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
       DISABLE_ENTERPRISE_LOGIN: 'true',
       SHOW_REGISTRATION_LINKS: 'true',
@@ -171,7 +160,7 @@ describe('Logistration', () => {
   });
 
   it('should display institution login option when secondary providers are present', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
       ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
     });
@@ -197,13 +186,13 @@ describe('Logistration', () => {
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
   it('send tracking and page events when institutional login button is clicked', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
@@ -227,13 +216,13 @@ describe('Logistration', () => {
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
   it('should not display institution register button', () => {
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
@@ -251,13 +240,13 @@ describe('Logistration', () => {
     });
 
     delete window.location;
-    window.location = { hostname: getConfig().SITE_NAME, href: getConfig().BASE_URL };
+    window.location = { hostname: getSiteConfig().siteName, href: getSiteConfig().baseUrl };
 
     render(reduxWrapper(<IntlLogistration />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
-    mergeConfig({
+    mergeAppConfig(testAppId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });

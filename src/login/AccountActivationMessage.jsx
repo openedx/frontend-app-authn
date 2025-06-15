@@ -1,7 +1,4 @@
-import React from 'react';
-
-import { getConfig } from '@edx/frontend-platform';
-import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, useAppConfig, useIntl } from '@openedx/frontend-base';
 import { Alert } from '@openedx/paragon';
 import { CheckCircle, Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
@@ -17,7 +14,7 @@ const AccountActivationMessage = ({ messageType }) => {
   }
 
   const variant = messageType === ACCOUNT_ACTIVATION_MESSAGE.ERROR ? 'danger' : messageType;
-  const activationOrConfirmation = getConfig().MARKETING_EMAILS_OPT_IN ? 'confirmation' : 'activation';
+  const activationOrConfirmation = useAppConfig().MARKETING_EMAILS_OPT_IN ? 'confirmation' : 'activation';
   const iconMapping = {
     [ACCOUNT_ACTIVATION_MESSAGE.SUCCESS]: CheckCircle,
     [ACCOUNT_ACTIVATION_MESSAGE.ERROR]: Error,
@@ -37,7 +34,7 @@ const AccountActivationMessage = ({ messageType }) => {
     }
     case ACCOUNT_ACTIVATION_MESSAGE.ERROR: {
       const supportLink = (
-        <Alert.Link href={getConfig().ACTIVATION_EMAIL_SUPPORT_LINK}>
+        <Alert.Link href={useAppConfig().ACTIVATION_EMAIL_SUPPORT_LINK}>
           {formatMessage(messages['account.activation.support.link'])}
         </Alert.Link>
       );

@@ -5,7 +5,6 @@ export const REGISTER_EMBEDDED_PAGE = '/register-embedded';
 export const RESET_PAGE = '/reset';
 export const AUTHN_PROGRESSIVE_PROFILING = '/welcome';
 export const DEFAULT_REDIRECT_URL = '/dashboard';
-export const RECOMMENDATIONS = '/recommendations';
 export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
 export const PAGE_NOT_FOUND = '/notfound';
 export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
@@ -29,9 +28,9 @@ export const EMBEDDED = 'embedded';
 export const LETTER_REGEX = /[a-zA-Z]/;
 export const NUMBER_REGEX = /\d/;
 export const VALID_EMAIL_REGEX = '(^[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9A-Z]+)*'
-                                 + '|^"([\\001-\\010\\013\\014\\016-\\037!#-\\[\\]-\\177]|\\\\[\\001-\\011\\013\\014\\016-\\177])*"'
-                                 + ')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+)(?:[A-Z0-9-]{2,63})'
-                                 + '|\\[(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\]$';
+  + '|^"([\\001-\\010\\013\\014\\016-\\037!#-\\[\\]-\\177]|\\\\[\\001-\\011\\013\\014\\016-\\177])*"'
+  + ')@((?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+)(?:[A-Z0-9-]{2,63})'
+  + '|\\[(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\]$';
 
 // Query string parameters that can be passed to LMS to manage
 // things like auto-enrollment upon login and registration.

@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 import { clearRegistrationBackendError } from '../../data/actions';
 import messages from '../../messages';
+import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 
 /**
  * Country field wrapper. It accepts following handlers
@@ -73,7 +73,10 @@ const CountryField = (props) => {
     const { value } = event.target;
 
     const { error } = validateCountryField(
-      value.trim(), countryList, formatMessage(messages['empty.country.field.error']), formatMessage(messages['invalid.country.field.error']),
+      value.trim(),
+      countryList,
+      formatMessage(messages['empty.country.field.error']),
+      formatMessage(messages['invalid.country.field.error'])
     );
     handleErrorChange('country', error);
   };
@@ -85,7 +88,10 @@ const CountryField = (props) => {
   };
 
   const handleOnChange = (value) => {
-    onChangeHandler({ target: { name: 'country' } }, { countryCode: value.selectionId, displayValue: value.userProvidedText });
+    onChangeHandler(
+      { target: { name: 'country' } },
+      { countryCode: value.selectionId, displayValue: value.userProvidedText }
+    );
 
     // We have put this check because proviously we also had onSelected event handler and we call
     // the onBlur on that event handler but now there is no such handler and we only have

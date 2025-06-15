@@ -1,11 +1,10 @@
-import React from 'react';
-
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { CurrentAppProvider, injectIntl, IntlProvider } from '@openedx/frontend-base';
 import {
   render, screen,
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { testAppId, initializeMockServices } from '../../setupTest';
 import {
   ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
@@ -22,11 +21,19 @@ import {
 } from '../data/constants';
 import LoginFailureMessage from '../LoginFailure';
 
-jest.mock('@edx/frontend-platform/auth', () => ({
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
   getAuthService: jest.fn(),
 }));
 
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
+const providerWrapper = children => (
+  <IntlProvider locale="en">
+    <CurrentAppProvider appId={testAppId}>
+      {children}
+    </CurrentAppProvider>
+  </IntlProvider>
+);
 
 describe('LoginFailureMessage', () => {
   let props = {};
@@ -46,16 +53,12 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.We recently changed our password requirements'
-                            + 'Your current password does not meet the new security requirements. We just sent a '
-                            + 'password-reset message to the email address associated with this account. '
-                            + 'Thank you for helping us keep your data safe.';
+      + 'Your current password does not meet the new security requirements. We just sent a '
+      + 'password-reset message to the email address associated with this account. '
+      + 'Thank you for helping us keep your data safe.';
 
     expect(screen.getByText(
       '',
@@ -74,15 +77,11 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.In order to sign in, you need to activate your account. '
-                            + 'We just sent an activation link to text@example.com. If you do not receive an email, '
-                            + 'check your spam folders or contact openedX support.';
+      + 'We just sent an activation link to text@example.com. If you do not receive an email, '
+      + 'check your spam folders or contact openedX support.';
 
     expect(screen.getByText(
       '',
@@ -104,14 +103,10 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.The username, email or password you entered is incorrect. '
-                            + 'You have 3 more sign in attempts before your account is temporarily locked.If you\'ve forgotten your password, click here to reset it.';
+      + 'You have 3 more sign in attempts before your account is temporarily locked.If you\'ve forgotten your password, click here to reset it.';
 
     expect(screen.getByText(
       '',
@@ -130,11 +125,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.The username, email, or password you entered is incorrect. Please try again.';
 
@@ -150,11 +141,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.To protect your account, it\'s been temporarily locked. Try again in 30 minutes.To be on the safe side, you can reset your password before trying again.';
     expect(screen.getByText(
@@ -174,11 +161,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.The username, email, or password you entered is incorrect. Please try again or reset your password.';
 
@@ -194,11 +177,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.Too many failed login attempts. Try again later.';
 
@@ -214,11 +193,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your internet connection.';
 
@@ -234,11 +209,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.Please fill in the fields below.';
     expect(screen.getByText(
@@ -253,11 +224,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessage = 'We couldn\'t sign you in.An error has occurred. Try refreshing the page, or check your internet connection.';
     expect(screen.getByText(
@@ -273,11 +240,7 @@ describe('LoginFailureMessage', () => {
       context: { errorMessage: 'An error occurred' },
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const expectedMessageSubstring = 'We are sorry, you are not authorized to access';
 
@@ -298,16 +261,10 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(providerWrapper(<MemoryRouter><IntlLoginFailureMessage {...props} /></MemoryRouter>));
 
     const message = 'Our system detected that your password is vulnerable. '
-                         + 'We recommend you change it so that your account stays secure.';
+      + 'We recommend you change it so that your account stays secure.';
     expect(screen.getByText(
       'Password security',
       { selector: '.pgn__modal-title' },
@@ -324,13 +281,7 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
-        </MemoryRouter>
-      </IntlProvider>,
-    );
+    render(providerWrapper(<MemoryRouter><IntlLoginFailureMessage {...props} /></MemoryRouter>));
 
     expect(screen.getByText(
       'Password change required',
@@ -341,7 +292,7 @@ describe('LoginFailureMessage', () => {
       { selector: '.pgn__modal-body' },
     ).textContent).toEqual(
       'Our system detected that your password is vulnerable. '
-               + 'Change your password so that your account stays secure.',
+      + 'Change your password so that your account stays secure.',
     );
   });
 
@@ -357,14 +308,10 @@ describe('LoginFailureMessage', () => {
       errorCount: 0,
     };
 
-    render(
-      <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
-      </IntlProvider>,
-    );
+    render(providerWrapper(<IntlLoginFailureMessage {...props} />));
 
     const errorMessage = "We couldn't sign you in.As test.com user, You must login with your test.com Google account.";
-    const url = 'http://localhost:18000/dashboard/?tpa_hint=google-auth2';
+    const url = 'http://localhost:8000/dashboard/?tpa_hint=google-auth2';
 
     expect(screen.getByText(
       '',

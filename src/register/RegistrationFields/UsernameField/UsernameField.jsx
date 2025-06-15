@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@openedx/frontend-base';
 import { Button, Icon, IconButton } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import validateUsername from './validator';
 import { FormGroup } from '../../../common-components';
 import {
   clearRegistrationBackendError,
@@ -14,6 +13,7 @@ import {
   fetchRealtimeValidations,
 } from '../../data/actions';
 import messages from '../../messages';
+import validateUsername from './validator';
 
 /**
  * Username field wrapper. It accepts following handlers

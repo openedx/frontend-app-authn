@@ -1,6 +1,6 @@
 import { runSaga } from 'redux-saga';
 
-import initializeMockLogging from '../../../setupTest';
+import { initializeMockServices } from '../../../setupTest';
 import {
   passwordResetFailure,
   resetPasswordBegin,
@@ -11,7 +11,7 @@ import { PASSWORD_RESET } from '../constants';
 import { handleResetPassword, handleValidateToken } from '../sagas';
 import * as api from '../service';
 
-const { loggingService } = initializeMockLogging();
+const { loggingService } = initializeMockServices();
 
 describe('handleResetPassword', () => {
   const params = {
