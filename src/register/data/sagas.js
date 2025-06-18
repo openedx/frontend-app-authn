@@ -1,11 +1,14 @@
 import { camelCaseObject } from '@edx/frontend-platform';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import {
+  call, put, race, take, takeEvery,
+} from 'redux-saga/effects';
 
 import {
   fetchRealtimeValidationsBegin,
   fetchRealtimeValidationsFailure,
   fetchRealtimeValidationsSuccess,
+  REGISTER_CLEAR_USERNAME_SUGGESTIONS,
   REGISTER_FORM_VALIDATIONS,
   REGISTER_NEW_USER,
   registerNewUserBegin,
@@ -41,9 +44,15 @@ export function* handleNewUserRegistration(action) {
 export function* fetchRealtimeValidations(action) {
   try {
     yield put(fetchRealtimeValidationsBegin());
-    const { fieldValidations } = yield call(getFieldsValidations, action.payload.formPayload);
 
-    yield put(fetchRealtimeValidationsSuccess(camelCaseObject(fieldValidations)));
+    const { response } = yield race({
+      response: call(getFieldsValidations, action.payload.formPayload),
+      cancel: take(REGISTER_CLEAR_USERNAME_SUGGESTIONS),
+    });
+
+    if (response) {
+      yield put(fetchRealtimeValidationsSuccess(camelCaseObject(response.fieldValidations)));
+    }
   } catch (e) {
     if (e.response && e.response.status === 403) {
       yield put(fetchRealtimeValidationsFailure());
