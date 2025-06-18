@@ -64,52 +64,52 @@ $header-height: 104px;
   }
 
   &.light {
-    background-color: $white;
+    background-color: var(--pgn-color-white);
 
     .title {
-      color: $black;
+      color: var(--pgn-color-black);
     }
 
     .subtitle {
-      color: $gray-700;
+      color: var(--pgn-color-gray-700);
     }
 
     .badge {
-      background-color: $light-500;
-      color: $black;
+      background-color: var(--pgn-color-light-500);
+      color: var(--pgn-color-black);
     }
 
     .footer-content {
-      color: $gray-700;
+      color: var(--pgn-color-gray-700);
     }
   }
 
   &.dark {
-    background-color: $primary-500;
+    background-color: var(--pgn-color-primary-500);
 
     .pgn__card-header-title-md {
-      color: $white;
+      color: var(--pgn-color-white);
     }
 
     .pgn__card-header-subtitle-md {
-      color: $light-200;
+      color: var(--pgn-color-light-200);
     }
 
     .title {
-      color: $white;
+      color: var(--pgn-color-white);
     }
 
     .subtitle {
-      color: $light-200;
+      color: var(--pgn-color-light-200);
     }
 
     .badge {
-      background-color: $dark-200;
-      color: $white;
+      background-color: var(--pgn-color-dark-200);
+      color: var(--pgn-color-white);
     }
 
     .footer-content {
-      color: $light-200;
+      color: var(--pgn-color-light-200);
     }
   }
 }

@@ -3,7 +3,7 @@ $card-gap: 24px;
 .recommendations-container__card-list {
   gap: $card-gap $card-gap;
 
-  @include media-breakpoint-down(sm) {
+  @media (-pgn-size-breakpoint-max-width-sm) {
     margin-bottom: 0 !important;
   }
 
@@ -11,15 +11,15 @@ $card-gap: 24px;
     flex: 0 1 100%;
     cursor: pointer;
 
-    @include media-breakpoint-up(sm) {
+    @media (--pgn-size-breakpoint-min-width-sm) {
       flex: 0 1 calc(50% - #{$card-gap - 12});
     }
 
-    @include media-breakpoint-up(md) {
+    @media (--pgn-size-breakpoint-min-width-md) {
       flex: 0 1 calc(33.333% - #{$card-gap - 8});
     }
 
-    @include media-breakpoint-up(lg) {
+    @media (--pgn-size-breakpoint-min-width-lg) {
       flex: 0 1 calc(25% - #{$card-gap - 6});
     }
   }
