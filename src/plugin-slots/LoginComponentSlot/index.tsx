@@ -1,16 +1,22 @@
 import React from 'react';
 
 import { PluginSlot } from '@openedx/frontend-plugin-framework';
-import PropTypes from 'prop-types';
 
 import LoginPage from '../../login/LoginPage';
 
-const LoginPageSlot = ({
+const LoginComponentSlot = ({
   institutionLogin,
   handleInstitutionLogin,
+}: {
+  institutionLogin: boolean,
+  handleInstitutionLogin: (value: boolean) => void,
 }) => (
   <PluginSlot
-    id="login_page_slot"
+    id="org.openedx.frontend.authn.login_component.v1"
+    pluginProps={{
+      isInstitutionLogin: institutionLogin,
+      setInstitutionLogin: handleInstitutionLogin,
+    }}
   >
     <LoginPage
       institutionLogin={institutionLogin}
@@ -19,9 +25,4 @@ const LoginPageSlot = ({
   </PluginSlot>
 );
 
-LoginPageSlot.propTypes = {
-  institutionLogin: PropTypes.bool.isRequired,
-  handleInstitutionLogin: PropTypes.func.isRequired,
-};
-
-export default LoginPageSlot;
+export default LoginComponentSlot;
