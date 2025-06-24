@@ -25,7 +25,7 @@ import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
 import { backupLoginForm } from '../login/data/actions';
-import LoginPageSlot from '../plugin-slots/LoginPage';
+import LoginComponentSlot from '../plugin-slots/LoginComponentSlot';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 
@@ -116,7 +116,7 @@ const Logistration = ({
                 {!institutionLogin && (
                   <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
                 )}
-                <LoginPageSlot institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                <LoginComponentSlot institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
               </div>
             </>
           )
@@ -149,7 +149,7 @@ const Logistration = ({
                 )}
                 {selectedPage === LOGIN_PAGE
                   ? (
-                    <LoginPageSlot
+                    <LoginComponentSlot
                       institutionLogin={institutionLogin}
                       handleInstitutionLogin={handleInstitutionLogin}
                     />
