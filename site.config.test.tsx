@@ -37,7 +37,6 @@ const siteConfig: SiteConfig = {
       PRIVACY_POLICY: null,
       SEARCH_CATALOG_URL: null,
       SESSION_COOKIE_DOMAIN: 'local.openedx.io',
-      SHOW_CONFIGURABLE_EDX_FIELDS: false,
       SHOW_REGISTRATION_LINKS: false,
       TOS_AND_HONOR_CODE: null,
       TOS_LINK: null,

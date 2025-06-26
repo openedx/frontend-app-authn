@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 
 import {
-  configureI18n, getLocale, injectIntl, IntlProvider, mergeSiteConfig
+  configureI18n, getLocale, injectIntl, IntlProvider, mergeAppConfig
 } from '@openedx/frontend-base';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -10,6 +10,7 @@ import configureStore from 'redux-mock-store';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
+import { testAppId } from '../../../setupTest';
 import RegistrationPage from '../../RegistrationPage';
 import RegistrationFailureMessage from '../RegistrationFailure';
 
@@ -40,12 +41,10 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('RegistrationFailure', () => {
-  mergeSiteConfig({
-    custom: {
-      PRIVACY_POLICY: 'https://privacy-policy.com',
-      TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
-      USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
-    }
+  mergeAppConfig(testAppId, {
+    PRIVACY_POLICY: 'https://privacy-policy.com',
+    TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
+    USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
   });
 
   let props = {};

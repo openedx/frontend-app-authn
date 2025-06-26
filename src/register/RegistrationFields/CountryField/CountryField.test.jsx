@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 
-import { injectIntl, IntlProvider, mergeSiteConfig } from '@openedx/frontend-base';
+import { injectIntl, IntlProvider } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -71,12 +71,6 @@ describe('CountryField', () => {
   });
 
   describe('Test Country Field', () => {
-    mergeSiteConfig({
-      custom: {
-        SHOW_CONFIGURABLE_EDX_FIELDS: true,
-      }
-    });
-
     const emptyFieldValidation = {
       country: 'Select your country or region of residence',
     };
