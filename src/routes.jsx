@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router';
 
 import { EmbeddedRegistrationRoute, NotFoundPage, UnAuthOnlyRoute } from './common-components';
-import { LOGIN_PAGE, PAGE_NOT_FOUND } from './data/constants';
+import { LOGIN_PAGE } from './data/constants';
 import { ForgotPasswordPage } from './forgot-password';
 import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
@@ -57,12 +57,6 @@ const routes = [
           <NotFoundPage />
         ),
       },
-      {
-        path: '*',
-        element: (
-          <Navigate replace to={PAGE_NOT_FOUND} />
-        ),
-      }
     ]
   }
 ];
