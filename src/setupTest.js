@@ -5,8 +5,6 @@ import { addAppConfigs, configureAnalytics, configureAuth, configureLogging, get
 mergeSiteConfig(siteConfig);
 addAppConfigs();
 
-export const testAppId = getSiteConfig().apps[0].appId;
-
 export function initializeMockServices() {
   const loggingService = configureLogging(MockLoggingService, {
     config: getSiteConfig(),

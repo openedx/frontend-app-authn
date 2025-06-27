@@ -8,7 +8,8 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter, useParams } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { testAppId, initializeMockServices } from '../../setupTest';
+import { appId } from '../../constants';
+import { initializeMockServices } from '../../setupTest';
 import { LOGIN_PAGE, RESET_PAGE } from '../../data/constants';
 import { resetPassword, validateToken } from '../data/actions';
 import {
@@ -36,7 +37,7 @@ describe('ResetPasswordPage', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <CurrentAppProvider appId={testAppId}>
+        <CurrentAppProvider appId={appId}>
           <Provider store={store}>{children}</Provider>
         </CurrentAppProvider>
       </MemoryRouter>

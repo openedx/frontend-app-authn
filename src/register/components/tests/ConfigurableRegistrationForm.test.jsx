@@ -7,7 +7,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { testAppId } from '../../../setupTest';
+import { appId } from '../../../constants';
 import { registerNewUser } from '../../data/actions';
 import { FIELDS } from '../../data/constants';
 import RegistrationPage from '../../RegistrationPage';
@@ -30,7 +30,7 @@ const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
 describe('ConfigurableRegistrationForm', () => {
-  mergeAppConfig(testAppId, {
+  mergeAppConfig(appId, {
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
   });
@@ -54,7 +54,7 @@ describe('ConfigurableRegistrationForm', () => {
 
   const reduxWrapper = children => (
     <IntlProvider locale="en">
-      <CurrentAppProvider appId={testAppId}>
+      <CurrentAppProvider appId={appId}>
         <Provider store={store}>{children}</Provider>
       </CurrentAppProvider>
     </IntlProvider>
@@ -126,7 +126,7 @@ describe('ConfigurableRegistrationForm', () => {
   };
 
   describe('Test Configurable Fields', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
     });
 
@@ -201,7 +201,7 @@ describe('ConfigurableRegistrationForm', () => {
     });
 
     it('should submit form with fields returned by backend in payload', () => {
-      mergeAppConfig(testAppId, {
+      mergeAppConfig(appId, {
         ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
       });
       getLocale.mockImplementation(() => ('en-us'));

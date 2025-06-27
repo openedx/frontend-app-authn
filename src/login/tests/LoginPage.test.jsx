@@ -10,7 +10,8 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { initializeMockServices, testAppId } from '../../setupTest';
+import { appId } from '../../constants';
+import { initializeMockServices } from '../../setupTest';
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
@@ -30,7 +31,7 @@ describe('LoginPage', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <CurrentAppProvider appId={testAppId}>
+        <CurrentAppProvider appId={appId}>
           <Provider store={store}>{children}</Provider>
         </CurrentAppProvider>
       </MemoryRouter>
@@ -85,7 +86,7 @@ describe('LoginPage', () => {
   it('should submit form for valid input', () => {
     store.dispatch = jest.fn(store.dispatch);
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
 
@@ -272,7 +273,7 @@ describe('LoginPage', () => {
       { selector: `#${ssoProvider.id}` },
     )).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
@@ -337,7 +338,7 @@ describe('LoginPage', () => {
   // ******** test enterprise login disabled scenarios ********
 
   it('should show sign-in header for institution login if enterprise login is disabled', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: true,
     });
 
@@ -358,13 +359,13 @@ describe('LoginPage', () => {
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
   it('should show sign-in header with secondary Providers and without Providers', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: true,
     });
 
@@ -385,7 +386,7 @@ describe('LoginPage', () => {
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
@@ -424,7 +425,7 @@ describe('LoginPage', () => {
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
@@ -694,7 +695,7 @@ describe('LoginPage', () => {
     const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
     expect(container.querySelector(`#${ssoProvider.id}`).querySelector('#provider-name').textContent).toEqual(`${ssoProvider.name}`);
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
@@ -712,7 +713,7 @@ describe('LoginPage', () => {
       },
     });
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
       SHOW_REGISTRATION_LINKS: true,
     });
@@ -727,7 +728,7 @@ describe('LoginPage', () => {
   });
 
   it('should render other ways to sign in button when public account creation is disabled', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
     });
 

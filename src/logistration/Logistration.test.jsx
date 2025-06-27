@@ -7,7 +7,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { testAppId } from '../setupTest';
+import { appId } from '../constants';
 import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
 import {
   COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
@@ -43,7 +43,7 @@ describe('Logistration', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <CurrentAppProvider appId={testAppId}>
+        <CurrentAppProvider appId={appId}>
           <Provider store={store}>{children}</Provider>
         </CurrentAppProvider>
       </MemoryRouter>
@@ -91,7 +91,7 @@ describe('Logistration', () => {
   });
 
   it('should render registration page', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
@@ -108,7 +108,7 @@ describe('Logistration', () => {
   });
 
   it('should render login/register headings when show registration links is disabled', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
       SHOW_REGISTRATION_LINKS: false,
     });
@@ -129,7 +129,7 @@ describe('Logistration', () => {
   });
 
   it('should render only login page when public account creation is disabled', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
       DISABLE_ENTERPRISE_LOGIN: 'true',
       SHOW_REGISTRATION_LINKS: 'true',
@@ -160,7 +160,7 @@ describe('Logistration', () => {
   });
 
   it('should display institution login option when secondary providers are present', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
       ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
     });
@@ -186,13 +186,13 @@ describe('Logistration', () => {
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
   it('send tracking and page events when institutional login button is clicked', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
@@ -216,13 +216,13 @@ describe('Logistration', () => {
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });
 
   it('should not display institution register button', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
@@ -246,7 +246,7 @@ describe('Logistration', () => {
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       DISABLE_ENTERPRISE_LOGIN: '',
     });
   });

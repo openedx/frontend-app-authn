@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { Context as ResponsiveContext } from 'react-responsive';
 
 import BaseContainer from '../index';
-import { testAppId } from '../../setupTest';
+import { appId } from '../../constants';
 
 const LargeScreen = {
   wrappingComponent: ResponsiveContext.Provider,
@@ -26,7 +26,7 @@ describe('Base component tests', () => {
   });
 
   it('renders Image layout when ENABLE_IMAGE_LAYOUT configuration is enabled', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       ENABLE_IMAGE_LAYOUT: true,
     });
 

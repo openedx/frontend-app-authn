@@ -1,5 +1,7 @@
 import { EnvironmentTypes, SiteConfig } from '@openedx/frontend-base';
 
+import { appId } from './src/constants';
+
 const siteConfig: SiteConfig = {
   siteId: 'test-site',
   siteName: 'Test Site',
@@ -10,7 +12,7 @@ const siteConfig: SiteConfig = {
 
   environment: EnvironmentTypes.TEST,
   apps: [{
-    appId: 'test-app',
+    appId,
     config: {
       ACTIVATION_EMAIL_SUPPORT_LINK: null,
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,

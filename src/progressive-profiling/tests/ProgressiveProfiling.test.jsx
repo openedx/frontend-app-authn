@@ -17,7 +17,7 @@ import {
 import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { testAppId } from '../../setupTest';
+import { appId } from '../../constants';
 import {
   AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE, DEFAULT_REDIRECT_URL,
@@ -87,7 +87,7 @@ describe('ProgressiveProfilingTests', () => {
   const reduxWrapper = children => (
     <IntlProvider locale="en">
       <MemoryRouter>
-        <CurrentAppProvider appId={testAppId}>
+        <CurrentAppProvider appId={appId}>
           <Provider store={store}>{children}</Provider>
         </CurrentAppProvider>
       </MemoryRouter>
@@ -111,7 +111,7 @@ describe('ProgressiveProfilingTests', () => {
   // ******** test form links and modal ********
 
   it('should not display button "Learn more about how we use this information."', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
     const { queryByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
@@ -121,7 +121,7 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   it('should display button "Learn more about how we use this information."', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
 
@@ -157,7 +157,7 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   it('should send analytic event for support link click', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
     render(reduxWrapper(<IntlProgressiveProfilingPage />));
@@ -200,7 +200,7 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   describe('Embedded Form Workflow Test', () => {
-    mergeAppConfig(testAppId, {
+    mergeAppConfig(appId, {
       SEARCH_CATALOG_URL: 'http://localhost/search',
     });
     const host = 'http://example.com';

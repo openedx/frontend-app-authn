@@ -10,7 +10,7 @@ import configureStore from 'redux-mock-store';
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../../../data/constants';
-import { testAppId } from '../../../setupTest';
+import { appId } from '../../../constants';
 import RegistrationPage from '../../RegistrationPage';
 
 jest.mock('@openedx/frontend-base', () => ({
@@ -40,7 +40,7 @@ jest.mock('react-router-dom', () => {
 });
 
 describe('ThirdPartyAuth', () => {
-  mergeAppConfig(testAppId, {
+  mergeAppConfig(appId, {
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
     USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
