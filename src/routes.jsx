@@ -19,34 +19,49 @@ const routes = [
         path: 'register-embedded',
         element: (
           <EmbeddedRegistrationRoute><RegistrationPage /></EmbeddedRegistrationRoute>
-        )
+        ),
       },
       {
         path: 'login',
+        handle: {
+          role: 'org.openedx.frontend.role.login',
+        },
         element: (
           <UnAuthOnlyRoute><Logistration selectedPage={LOGIN_PAGE} /></UnAuthOnlyRoute>
-        )
+        ),
       },
       {
         path: 'register',
+        handle: {
+          role: 'org.openedx.frontend.role.register',
+        },
         element: (
           <UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>
         ),
       },
       {
         path: 'reset',
+        handle: {
+          role: 'org.openedx.frontend.role.resetPassword',
+        },
         element: (
           <UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>
         ),
       },
       {
         path: 'password_reset_confirm/:token',
+        handle: {
+          role: 'org.openedx.frontend.role.confirmPassword',
+        },
         element: (
           <ResetPasswordPage />
         ),
       },
       {
         path: 'welcome',
+        handle: {
+          role: 'org.openedx.frontend.role.welcome',
+        },
         element: (
           <ProgressiveProfiling />
         ),
