@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 
 import {
-  configureI18n, injectIntl, IntlProvider, mergeSiteConfig
+  configureI18n, injectIntl, IntlProvider, mergeAppConfig
 } from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
@@ -11,6 +11,7 @@ import configureStore from 'redux-mock-store';
 
 import { INTERNAL_SERVER_ERROR, LOGIN_PAGE } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
+import { appId } from '../../constants';
 import { setForgotPasswordFormData } from '../data/actions';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
@@ -41,11 +42,9 @@ const initialState = {
 };
 
 describe('ForgotPasswordPage', () => {
-  mergeSiteConfig({
-    custom: {
-      LOGIN_ISSUE_SUPPORT_LINK: '',
-      INFO_EMAIL: '',
-    }
+  mergeAppConfig(appId, {
+    LOGIN_ISSUE_SUPPORT_LINK: '',
+    INFO_EMAIL: '',
   });
 
   let props = {};
@@ -81,10 +80,8 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should display need other help signing in button', () => {
-    mergeSiteConfig({
-      custom: {
-        LOGIN_ISSUE_SUPPORT_LINK: '/support',
-      }
+    mergeAppConfig(appId, {
+      LOGIN_ISSUE_SUPPORT_LINK: '/support',
     });
     render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
     const forgotPasswordButton = screen.findByText('Need help signing in?');

@@ -1,5 +1,5 @@
 {
-  "name": "@edx/frontend-app-authn",
+  "name": "@openedx/frontend-app-authn",
   "version": "1.0.0",
   "description": "Frontend authentication",
   "repository": {
@@ -7,6 +7,9 @@
     "url": "git+https://github.com/openedx/frontend-app-authn.git"
   },
   "main": "src/index.ts",
+  "files": [
+    "/src"
+  ],
   "browserslist": [
     "extends @edx/browserslist-config"
   ],
@@ -22,7 +25,7 @@
     "snapshot": "openedx test --updateSnapshot",
     "test": "openedx test --coverage --passWithNoTests"
   },
-  "author": "edX",
+  "author": "Open edX",
   "license": "AGPL-3.0",
   "homepage": "https://github.com/openedx/frontend-app-authn#readme",
   "publishConfig": {
@@ -33,7 +36,7 @@
   },
   "dependencies": {
     "@edx/brand": "npm:@openedx/brand-openedx@^1.2.3",
-    "@edx/openedx-atlas": "^0.6.0",
+    "@edx/openedx-atlas": "^0.7.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -64,7 +67,7 @@
     "react-test-renderer": "^18.3.1"
   },
   "peerDependencies": {
-    "@openedx/frontend-base": "^1.0.0-alpha.0",
+    "@openedx/frontend-base": "^1.0.0-alpha.1",
     "@openedx/paragon": "^22",
     "react": "^18",
     "react-dom": "^18",

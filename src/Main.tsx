@@ -2,7 +2,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { CurrentAppProvider } from '@openedx/frontend-base';
 
-import { appId } from './app';
+import { appId } from './constants';
 import {
   registerIcons,
 } from './common-components';

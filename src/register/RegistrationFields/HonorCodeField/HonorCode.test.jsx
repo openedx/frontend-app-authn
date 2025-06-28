@@ -3,21 +3,21 @@ import {
 } from '@openedx/frontend-base';
 import { render } from '@testing-library/react';
 
-import { testAppId } from '../../../setupTest';
+import { appId } from '../../../constants';
 import { HonorCode } from '../index';
 
 const IntlHonorCode = injectIntl(HonorCode);
 
 const providerWrapper = children => (
   <IntlProvider locale="en">
-    <CurrentAppProvider appId={testAppId}>
+    <CurrentAppProvider appId={appId}>
       {children}
     </CurrentAppProvider>
   </IntlProvider>
 );
 
 describe('HonorCodeTest', () => {
-  mergeAppConfig(testAppId, {
+  mergeAppConfig(appId, {
     PRIVACY_POLICY: 'http://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
   });

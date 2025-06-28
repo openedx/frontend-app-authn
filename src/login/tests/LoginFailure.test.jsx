@@ -4,7 +4,7 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { testAppId, initializeMockServices } from '../../setupTest';
+import { appId } from '../../constants';
 import {
   ACCOUNT_LOCKED_OUT,
   ALLOWED_DOMAIN_LOGIN_ERROR,
@@ -29,7 +29,7 @@ jest.mock('@openedx/frontend-base', () => ({
 const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
 const providerWrapper = children => (
   <IntlProvider locale="en">
-    <CurrentAppProvider appId={testAppId}>
+    <CurrentAppProvider appId={appId}>
       {children}
     </CurrentAppProvider>
   </IntlProvider>

@@ -1,8 +1,7 @@
 import { App } from '@openedx/frontend-base';
+import { appId } from './constants';
 import routes from './routes';
 import messages from './i18n';
-
-export const appId = 'org.openedx.frontend.app.authn';
 
 const app: App = {
   appId,

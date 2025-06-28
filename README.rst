@@ -34,26 +34,6 @@ Installation
 .. _Tutor: https://github.com/overhangio/tutor
 .. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
 
-Devstack (Deprecated) instructions
-==================================
-
-1. Install Devstack using the `Getting Started <https://github.com/openedx/devstack#getting-started>`_ instructions.
-
-2. Start up LMS, if it's not already started.
-
-4. Within this project (frontend-app-authn), install requirements and start the development server:
-
-   .. code-block::
-
-      npm install
-      npm start # The server will run on port 1999
-
-5. Once the dev server is up, visit http://localhost:1999 to access the MFE
-
-   .. image:: ./docs/images/frontend-app-authn-localhost-preview.png
-
-   **Note:** Follow `Enable social auth locally <docs/how_tos/enable_social_auth.rst>`_ for enabling Social Sign-on Buttons (SSO) locally
-
 Environment Variables/Setup Notes
 =================================
 

@@ -4,14 +4,14 @@ import {
 } from '@testing-library/react';
 
 
-import { testAppId } from '../../setupTest';
+import { appId } from '../../constants';
 import { ACCOUNT_ACTIVATION_MESSAGE } from '../data/constants';
 import AccountActivationMessage from '../AccountActivationMessage';
 
 const IntlAccountActivationMessage = injectIntl(AccountActivationMessage);
 const providerWrapper = children => (
   <IntlProvider locale="en">
-    <CurrentAppProvider appId={testAppId}>
+    <CurrentAppProvider appId={appId}>
       {children}
     </CurrentAppProvider>
   </IntlProvider>
