@@ -1,6 +1,6 @@
 {
   "name": "@openedx/frontend-app-authn",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Frontend authentication",
   "repository": {
     "type": "git",
