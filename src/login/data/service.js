@@ -1,4 +1,4 @@
-import { getAuthenticatedHttpClient, getSiteConfig } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 export async function loginRequest(creds) {
@@ -17,8 +17,11 @@ export async function loginRequest(creds) {
       throw (e);
     });
 
+  const defaultRedirectUrl = getUrlByRouteRole('org.openedx.frontend.role.dashboard');
+  const redirectUrl = data.redirect_url ?? defaultRedirectUrl;
+
   return {
-    redirectUrl: data.redirect_url || `${getSiteConfig().lmsBaseUrl}/dashboard`,
-    success: data.success || false,
+    redirectUrl,
+    success: data.success ?? false,
   };
 }
