@@ -18,7 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { resetPassword, validateToken } from './data/actions';
 import {
-  FORM_SUBMISSION_ERROR, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
+  FORM_SUBMISSION_ERROR, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, SUCCESS, TOKEN_STATE,
 } from './data/constants';
 import { resetPasswordResultSelector } from './data/selectors';
 import { validatePassword } from './data/service';
@@ -30,6 +30,7 @@ import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { trackPasswordResetSuccess, trackResetPasswordPageViewed } from '../tracking/trackers/reset-password';
 
 const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
@@ -41,6 +42,15 @@ const ResetPasswordPage = (props) => {
   const [errorCode, setErrorCode] = useState(null);
   const { token } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (props.status === TOKEN_STATE.VALID) {
+      trackResetPasswordPageViewed();
+    }
+    if (props.status === SUCCESS) {
+      trackPasswordResetSuccess();
+    }
+  }, [props.status]);
 
   useEffect(() => {
     if (props.status !== TOKEN_STATE.PENDING && props.status !== PASSWORD_RESET_ERROR) {
@@ -139,7 +149,7 @@ const ResetPasswordPage = (props) => {
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
     navigate(updatePathWithQueryParams(RESET_PAGE));
-  } else if (props.status === 'success') {
+  } else if (props.status === SUCCESS) {
     navigate(updatePathWithQueryParams(LOGIN_PAGE));
   } else {
     return (

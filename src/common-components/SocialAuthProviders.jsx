@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -8,17 +9,35 @@ import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { ELEMENT_TYPES, PAGE_TYPES } from '../cohesion/constants';
+import trackCohesionEvent from '../cohesion/trackers';
+import {
+  LOGIN_PAGE, REGISTER_PAGE, SUPPORTED_ICON_CLASSES,
+} from '../data/constants';
+import { setCookie } from '../data/utils';
+import { redirectWithDelay } from '../data/utils/dataUtils';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
   const { referrer, socialAuthProviders } = props;
+  const registrationFields = useSelector(state => state.register.registrationFormData);
 
-  function handleSubmit(e) {
+  function handleSubmit(e, providerName) {
     e.preventDefault();
+    const eventData = {
+      pageType: referrer === LOGIN_PAGE ? PAGE_TYPES.SIGN_IN : PAGE_TYPES.ACCOUNT_CREATION,
+      elementType: ELEMENT_TYPES.BUTTON,
+      webElementText: providerName,
+      webElementName: providerName.toLowerCase(),
+    };
+    // This event is used by cohesion upon successful login
+    trackCohesionEvent(eventData);
 
+    if (referrer === REGISTER_PAGE) {
+      setCookie('marketingEmailsOptIn', registrationFields?.configurableFormFields?.marketingEmailsOptIn);
+    }
     const url = e.currentTarget.dataset.providerUrl;
-    window.location.href = getConfig().LMS_BASE_URL + url;
+    redirectWithDelay(getConfig().LMS_BASE_URL + url);
   }
 
   const socialAuth = socialAuthProviders.map((provider, index) => (
@@ -28,7 +47,7 @@ const SocialAuthProviders = (props) => {
       type="button"
       className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
-      onClick={handleSubmit}
+      onClick={(event) => handleSubmit(event, provider?.name)}
     >
       {provider.iconImage ? (
         <div aria-hidden="true">

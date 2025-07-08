@@ -19,6 +19,11 @@ import ResetPasswordPage from '../ResetPasswordPage';
 const mockedNavigator = jest.fn();
 const token = '1c-bmjdkc-5e60e084cf8113048ca7';
 
+jest.mock('@edx/frontend-platform/analytics', () => ({
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
+}));
+
 jest.mock('@edx/frontend-platform/auth');
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom')),

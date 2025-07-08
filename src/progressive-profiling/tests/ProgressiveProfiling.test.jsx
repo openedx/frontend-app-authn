@@ -6,12 +6,14 @@ import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platfor
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
-  fireEvent, render, screen,
+  fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
+import mockTagular from '../../cohesion/utils';
 import {
+  APP_NAME,
   AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE, DEFAULT_REDIRECT_URL,
   EMBEDDED,
@@ -24,6 +26,7 @@ import ProgressiveProfiling from '../ProgressiveProfiling';
 
 const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
 const mockStore = configureStore();
+mockTagular();
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -53,6 +56,13 @@ jest.mock('react-router-dom', () => {
     useLocation: jest.fn(),
   };
 });
+
+const eventData = {
+  pageType: 'test-page',
+  elementType: 'test-element-type',
+  webElementText: 'test-element-text',
+  webElementName: 'test-element-name',
+};
 
 describe('ProgressiveProfilingTests', () => {
   let store = {};
@@ -143,8 +153,9 @@ describe('ProgressiveProfilingTests', () => {
     const modalContentContainer = document.getElementsByClassName('.pgn__modal-content-container');
 
     expect(modalContentContainer).toBeTruthy();
+    const payload = { host: '', app_name: APP_NAME };
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host: '' });
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', payload);
   });
 
   // ******** test event functionality ********
@@ -165,7 +176,7 @@ describe('ProgressiveProfilingTests', () => {
     const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
     fireEvent.click(supportLink);
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked');
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.support.link.clicked', { app_name: APP_NAME });
   });
 
   it('should set empty host property value for non-embedded experience', () => {
@@ -175,6 +186,7 @@ describe('ProgressiveProfilingTests', () => {
       isLevelOfEducationSelected: false,
       isWorkExperienceSelected: false,
       host: '',
+      app_name: APP_NAME,
     };
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
@@ -249,6 +261,9 @@ describe('ProgressiveProfilingTests', () => {
           ...initialState.welcomePage,
           success: true,
         },
+        cohesion: {
+          eventData,
+        },
       });
       const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
       const nextButton = container.querySelector('button.btn-brand');
@@ -275,13 +290,18 @@ describe('ProgressiveProfilingTests', () => {
           ...initialState.welcomePage,
           success: true,
         },
+        cohesion: {
+          eventData,
+        },
       });
 
       const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
       const nextButton = container.querySelector('button.btn-brand');
       expect(nextButton.textContent).toEqual('Submit');
 
-      expect(window.location.href).toEqual(redirectUrl);
+      await waitFor(() => {
+        expect(window.location.href).toEqual(redirectUrl);
+      }, { timeout: 1100 });
     });
   });
 
@@ -316,7 +336,7 @@ describe('ProgressiveProfilingTests', () => {
       const skipLinkButton = screen.getByText('Skip for now');
       fireEvent.click(skipLinkButton);
 
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host });
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.welcome.page.skip.link.clicked', { host, app_name: APP_NAME });
     });
 
     it('should show spinner while fetching the optional fields', () => {
@@ -349,6 +369,7 @@ describe('ProgressiveProfilingTests', () => {
         isLevelOfEducationSelected: false,
         isWorkExperienceSelected: false,
         host: 'http://example.com',
+        app_name: APP_NAME,
       };
       delete window.location;
       window.location = {
@@ -395,7 +416,7 @@ describe('ProgressiveProfilingTests', () => {
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
-    it('should redirect to provided redirect url', () => {
+    it('should redirect to provided redirect url', async () => {
       const redirectUrl = 'https://redirect-test.com';
       delete window.location;
       window.location = {
@@ -417,12 +438,17 @@ describe('ProgressiveProfilingTests', () => {
           ...initialState.welcomePage,
           success: true,
         },
+        cohesion: {
+          eventData,
+        },
       });
 
       render(reduxWrapper(<IntlProgressiveProfilingPage />));
       const submitButton = screen.getByText('Submit');
       fireEvent.click(submitButton);
-      expect(window.location.href).toBe(redirectUrl);
+      await waitFor(() => {
+        expect(window.location.href).toBe(redirectUrl);
+      }, { timeout: 1100 });
     });
   });
 });

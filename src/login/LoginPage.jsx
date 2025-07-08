@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, StatefulButton,
@@ -22,6 +21,10 @@ import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 import {
+  ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
+} from '../cohesion/constants';
+import { setCohesionEventStates } from '../cohesion/data/actions';
+import {
   FormGroup,
   InstitutionLogistration,
   PasswordField,
@@ -32,9 +35,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
-} from '../data/constants';
+import { DEFAULT_STATE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -42,7 +43,11 @@ import {
   getTpaProvider,
   updatePathWithQueryParams,
 } from '../data/utils';
+import { removeCookie } from '../data/utils/cookies';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
+import {
+  trackForgotPasswordLinkClick, trackLoginPageViewed, trackLoginSuccess,
+} from '../tracking/trackers/login';
 
 const LoginPage = (props) => {
   const {
@@ -69,6 +74,7 @@ const LoginPage = (props) => {
     getTPADataFromBackend,
   } = props;
   const { formatMessage } = useIntl();
+  const dispatch = useDispatch();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
@@ -78,8 +84,16 @@ const LoginPage = (props) => {
   const tpaHint = getTpaHint();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'login');
+    trackLoginPageViewed();
   }, []);
+
+  useEffect(() => {
+    if (loginResult.success) {
+      trackLoginSuccess();
+      // Remove this cookie that was set to capture marketingEmailsOptIn for the onboarding component
+      removeCookie('ssoPipelineRedirectionDone');
+    }
+  }, [loginResult]);
 
   useEffect(() => {
     const payload = { ...queryParams };
@@ -140,6 +154,15 @@ const LoginPage = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const eventData = {
+      pageType: PAGE_TYPES.SIGN_IN,
+      elementType: ELEMENT_TYPES.BUTTON,
+      webElementText: ELEMENT_TEXT.SIGN_IN,
+      webElementName: ELEMENT_NAME.SIGN_IN,
+    };
+
+    dispatch(setCohesionEventStates(eventData));
+
     if (showResetPasswordSuccessBanner) {
       props.dismissPasswordResetBanner();
     }
@@ -169,9 +192,6 @@ const LoginPage = (props) => {
   const handleOnFocus = (event) => {
     const { name } = event.target;
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-  };
-  const trackForgotPasswordLinkClick = () => {
-    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
 
   const { provider, skipHintedLogin } = getTpaProvider(tpaHint, providers, secondaryProviders);
@@ -208,6 +228,7 @@ const LoginPage = (props) => {
         success={loginResult.success}
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
+        currentProvider={currentProvider}
       />
       <div className="mw-xs mt-3 mb-2">
         <LoginFailureMessage

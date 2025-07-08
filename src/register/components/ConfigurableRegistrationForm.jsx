@@ -1,10 +1,16 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { getCountryList, getLocale, useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
+import {
+  ELEMENT_NAME, ELEMENT_TEXT, ELEMENT_TYPES, PAGE_TYPES,
+} from '../../cohesion/constants';
+import trackCohesionEvent from '../../cohesion/trackers';
 import { FormFieldRenderer } from '../../field-renderer';
+import { backupRegistrationFormBegin } from '../data/actions';
 import { FIELDS } from '../data/constants';
 import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
@@ -31,13 +37,14 @@ const ConfigurableRegistrationForm = (props) => {
     setFieldErrors,
     setFormFields,
     autoSubmitRegistrationForm,
+    countriesCodesList,
   } = props;
+  const dispatch = useDispatch();
 
   /** The reason for adding the entry 'United States' is that Chrome browser aut-fill the form with the 'Unites
   States' instead of 'United States of America' which does not exist in country dropdown list and gets the user
   confused and unable to create an account. So we added the United States entry in the dropdown list.
  */
-  const countryList = useMemo(() => getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }]), []);
 
   let showTermsOfServiceAndHonorCode = false;
   let showCountryField = false;
@@ -49,6 +56,8 @@ const ConfigurableRegistrationForm = (props) => {
     showConfigurableEdxFields: getConfig().SHOW_CONFIGURABLE_EDX_FIELDS,
     showMarketingEmailOptInCheckbox: getConfig().MARKETING_EMAILS_OPT_IN,
   };
+
+  const backedUpFormData = useSelector(state => state.register.registrationFormData);
 
   /**
    * If auto submitting register form, we will check tos and honor code fields if they exist for feature parity.
@@ -70,6 +79,16 @@ const ConfigurableRegistrationForm = (props) => {
     }
   }, [autoSubmitRegistrationForm]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const removeDisabledCountries = useCallback((countryList) => {
+    if (!countriesCodesList.length) {
+      return countryList;
+    }
+    return countryList.filter(({ code }) => countriesCodesList.find(x => x === code));
+  }, [countriesCodesList]);
+
+  const countryList = useMemo(() => removeDisabledCountries(
+    getCountryList(getLocale()).concat([{ code: 'US', name: 'United States' }])), [removeDisabledCountries]);
+
   const handleErrorChange = (fieldName, error) => {
     if (fieldName) {
       setFieldErrors(prevErrors => ({
@@ -89,6 +108,25 @@ const ConfigurableRegistrationForm = (props) => {
       if (event.target.type === 'checkbox') {
         setFieldErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
       }
+    }
+    // setting marketingEmailsOptIn state for SSO authentication flow for register API call
+    if (name === 'marketingEmailsOptIn') {
+      if (!value) {
+        const cohesionEventData = {
+          pageType: PAGE_TYPES.ACCOUNT_CREATION,
+          elementType: ELEMENT_TYPES.BUTTON,
+          webElementText: ELEMENT_TEXT.OPT_IN_TEXT,
+          webElementName: ELEMENT_NAME.OPT_OUT,
+        };
+        trackCohesionEvent(cohesionEventData);
+      }
+      dispatch(backupRegistrationFormBegin({
+        ...backedUpFormData,
+        configurableFormFields: {
+          ...backedUpFormData.configurableFormFields,
+          [name]: value,
+        },
+      }));
     }
     setFormFields(prevState => ({ ...prevState, [name]: value }));
   };
@@ -231,11 +269,16 @@ ConfigurableRegistrationForm.propTypes = {
   setFieldErrors: PropTypes.func.isRequired,
   setFormFields: PropTypes.func.isRequired,
   autoSubmitRegistrationForm: PropTypes.bool,
+  countriesCodesList: PropTypes.arrayOf(PropTypes.shape({
+    code: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  })),
 };
 
 ConfigurableRegistrationForm.defaultProps = {
   fieldDescriptions: {},
   autoSubmitRegistrationForm: false,
+  countriesCodesList: [],
 };
 
 export default ConfigurableRegistrationForm;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
@@ -25,6 +24,10 @@ import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
 import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import {
+  trackForgotPasswordPageEvent,
+  trackForgotPasswordPageViewed,
+} from '../tracking/trackers/forgotpassword';
 
 const ForgotPasswordPage = (props) => {
   const platformName = getConfig().SITE_NAME;
@@ -41,8 +44,8 @@ const ForgotPasswordPage = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'reset');
-    sendTrackEvent('edx.bi.password_reset_form.viewed', { category: 'user-engagement' });
+    trackForgotPasswordPageEvent();
+    trackForgotPasswordPageViewed();
   }, []);
 
   useEffect(() => {

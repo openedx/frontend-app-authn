@@ -11,7 +11,10 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
-import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
+import mockTagular from '../../cohesion/utils';
+import {
+  APP_NAME, COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE,
+} from '../../data/constants';
 import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '../data/actions';
 import { INTERNAL_SERVER_ERROR } from '../data/constants';
 import LoginPage from '../LoginPage';
@@ -23,6 +26,7 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
+mockTagular();
 
 const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
@@ -56,6 +60,7 @@ describe('LoginPage', () => {
     register: {
       validationApiRateLimited: false,
     },
+    cohesion: { eventData: {} },
   };
 
   const secondaryProviders = {
@@ -510,7 +515,7 @@ describe('LoginPage', () => {
 
   // ******** test redirection ********
 
-  it('should redirect to url returned by login endpoint after successful authentication', () => {
+  it('should redirect to url returned by login endpoint after successful authentication', async () => {
     const dashboardURL = 'https://test.com/testing-dashboard/';
     store = mockStore({
       ...initialState,
@@ -526,10 +531,12 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(dashboardURL);
+    await waitFor(() => {
+      expect(window.location.href).toBe(dashboardURL);
+    }, { timeout: 1100 });
   });
 
-  it('should redirect to finishAuthUrl upon successful login via SSO', () => {
+  it('should redirect to finishAuthUrl upon successful login via SSO', async () => {
     const authCompleteUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
@@ -553,10 +560,12 @@ describe('LoginPage', () => {
     window.location = { href: getConfig().BASE_URL };
 
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+    }, { timeout: 1100 });
   });
 
-  it('should redirect to social auth provider url on SSO button click', () => {
+  it('should redirect to social auth provider url on SSO button click', async () => {
     store = mockStore({
       ...initialState,
       commonComponents: {
@@ -577,10 +586,12 @@ describe('LoginPage', () => {
       '',
       { selector: '#oa2-apple-id' },
     ));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + ssoProvider.loginUrl);
+    }, { timeout: 1100 });
   });
 
-  it('should redirect to finishAuthUrl upon successful authentication via SSO', () => {
+  it('should redirect to finishAuthUrl upon successful authentication via SSO', async () => {
     const finishAuthUrl = '/auth/complete/google-oauth2/';
     store = mockStore({
       ...initialState,
@@ -601,7 +612,9 @@ describe('LoginPage', () => {
     window.location = { href: getConfig().BASE_URL };
 
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
+    await waitFor(() => {
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
+    }, { timeout: 1100 });
   });
 
   // ******** test hinted third party auth ********
@@ -751,7 +764,7 @@ describe('LoginPage', () => {
 
   it('should send page event when login page is rendered', () => {
     render(reduxWrapper(<IntlLoginPage {...props} />));
-    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login', { app_name: APP_NAME });
   });
 
   it('tests that form is in invalid state when it is submitted', () => {
@@ -784,7 +797,7 @@ describe('LoginPage', () => {
       { selector: '#forgot-password' },
     ));
 
-    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement', app_name: APP_NAME });
   });
 
   it('should backup the login form state when shouldBackupState is true', () => {

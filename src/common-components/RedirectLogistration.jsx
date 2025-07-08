@@ -1,11 +1,15 @@
+import { useSelector } from 'react-redux';
+
 import { getConfig } from '@edx/frontend-platform';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
+import trackCohesionEvent from '../cohesion/trackers';
 import {
   AUTHN_PROGRESSIVE_PROFILING, RECOMMENDATIONS, REDIRECT,
 } from '../data/constants';
-import { setCookie } from '../data/utils';
+import setCookie from '../data/utils/cookies';
+import { redirectWithDelay } from '../data/utils/dataUtils';
 
 const RedirectLogistration = (props) => {
   const {
@@ -20,10 +24,16 @@ const RedirectLogistration = (props) => {
     userId,
     registrationEmbedded,
     host,
+    currectProvider,
   } = props;
+  const cohesionEventData = useSelector(state => state.cohesion.eventData);
   let finalRedirectUrl = '';
 
   if (success) {
+    // This event is used by cohesion upon successful login and registration
+    if (!currectProvider) {
+      trackCohesionEvent(cohesionEventData);
+    }
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.
     // Note: For multiple enterprise use case, we need to make sure that user first visits the
@@ -75,8 +85,7 @@ const RedirectLogistration = (props) => {
         />
       );
     }
-
-    window.location.href = finalRedirectUrl;
+    redirectWithDelay(finalRedirectUrl);
   }
 
   return null;
@@ -94,6 +103,7 @@ RedirectLogistration.defaultProps = {
   userId: null,
   registrationEmbedded: false,
   host: '',
+  currectProvider: '',
 };
 
 RedirectLogistration.propTypes = {
@@ -108,6 +118,7 @@ RedirectLogistration.propTypes = {
   userId: PropTypes.number,
   registrationEmbedded: PropTypes.bool,
   host: PropTypes.string,
+  currectProvider: PropTypes.string,
 };
 
 export default RedirectLogistration;

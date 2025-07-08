@@ -4,9 +4,8 @@ import { getConfig } from '@edx/frontend-platform';
 import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import PropTypes from 'prop-types';
 
-import {
-  DEFAULT_REDIRECT_URL,
-} from '../data/constants';
+import { RESET_PAGE } from '../data/constants';
+import { updatePathWithQueryParams } from '../data/utils';
 
 /**
  * This wrapper redirects the requester to our default redirect url if they are
@@ -25,7 +24,12 @@ const UnAuthOnlyRoute = ({ children }) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
-      global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+      const updatedPath = updatePathWithQueryParams(window.location.pathname);
+      if (updatedPath.startsWith(RESET_PAGE)) {
+        global.location.href = getConfig().LMS_BASE_URL;
+        return null;
+      }
+      global.location.href = getConfig().LMS_BASE_URL.concat(updatedPath);
       return null;
     }
 

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import setCookie from '../data/utils/cookies';
 
 const ThirdPartyAuthAlert = (props) => {
   const { formatMessage } = useIntl();
@@ -20,7 +21,10 @@ const ThirdPartyAuthAlert = (props) => {
     message = formatMessage(messages['register.third.party.auth.account.not.linked'], { currentProvider, platformName });
   }
 
-  if (!currentProvider) {
+  if (currentProvider) {
+    // Setting this cookie to capture marketingEmailsOptIn for SSO flow on the onboarding component
+    setCookie('ssoPipelineRedirectionDone', true);
+  } else {
     return null;
   }
 
