@@ -1,15 +1,11 @@
-import React from 'react';
-
 import { mergeConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
 
 import AccountActivationMessage from '../AccountActivationMessage';
 import { ACCOUNT_ACTIVATION_MESSAGE } from '../data/constants';
-
-const IntlAccountActivationMessage = injectIntl(AccountActivationMessage);
 
 describe('AccountActivationMessage', () => {
   beforeEach(() => {
@@ -21,7 +17,7 @@ describe('AccountActivationMessage', () => {
   it('should match account already activated message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
       </IntlProvider>,
     );
 
@@ -36,7 +32,7 @@ describe('AccountActivationMessage', () => {
   it('should match account activated success message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
       </IntlProvider>,
     );
 
@@ -53,7 +49,7 @@ describe('AccountActivationMessage', () => {
   it('should match account activation error message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
       </IntlProvider>,
     );
 
@@ -69,7 +65,7 @@ describe('AccountActivationMessage', () => {
   it('should not display anything for invalid message type', () => {
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType="invalid-message" />
+        <AccountActivationMessage messageType="invalid-message" />
       </IntlProvider>,
     );
 
@@ -88,7 +84,7 @@ describe('EmailConfirmationMessage', () => {
   it('should match email already confirmed message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
       </IntlProvider>,
     );
 
@@ -103,7 +99,7 @@ describe('EmailConfirmationMessage', () => {
   it('should match email confirmation success message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
       </IntlProvider>,
     );
     const expectedMessage = 'Success! You have confirmed your email.Sign in to continue.';
@@ -117,7 +113,7 @@ describe('EmailConfirmationMessage', () => {
   it('should match email confirmation error message', () => {
     render(
       <IntlProvider locale="en">
-        <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+        <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
       </IntlProvider>,
     );
     const expectedMessage = 'Your email could not be confirmed'
