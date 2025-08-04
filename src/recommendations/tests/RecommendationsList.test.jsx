@@ -1,14 +1,12 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { render } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 
 import mockedProductData from './mockedData';
 import RecommendationList from '../RecommendationsList';
 
-const IntlRecommendationList = injectIntl(RecommendationList);
 const mockStore = configureStore();
 
 describe('RecommendationsListTests', () => {
@@ -25,7 +23,7 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const { container } = render(reduxWrapper(<IntlRecommendationList {...props} />));
+    const { container } = render(reduxWrapper(<RecommendationList {...props} />));
 
     const recommendationCards = container.querySelectorAll('.recommendation-card');
     expect(recommendationCards.length).toEqual(mockedProductData.length);
@@ -37,7 +35,7 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const { getByText } = render(reduxWrapper(<IntlRecommendationList {...props} />));
+    const { getByText } = render(reduxWrapper(<RecommendationList {...props} />));
 
     const firstFooterContent = getByText('1 Course');
     const secondFooterContent = getByText('2 Courses');

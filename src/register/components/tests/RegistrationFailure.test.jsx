@@ -1,9 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import {
-  configure, getLocale, injectIntl, IntlProvider,
+  configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -24,8 +23,6 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   getLocale: jest.fn(),
 }));
 
-const IntlRegistrationPage = injectIntl(RegistrationPage);
-const IntlRegistrationFailure = injectIntl(RegistrationFailureMessage);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -137,7 +134,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -153,7 +150,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -172,7 +169,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -191,7 +188,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<IntlRegistrationFailure {...props} />));
+      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -211,7 +208,7 @@ describe('RegistrationFailure', () => {
         },
       });
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const validationError = screen.queryByText('An error has occurred. Try refreshing the page, or check your internet connection.');
 
       expect(validationError).not.toBeNull();
