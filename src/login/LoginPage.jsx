@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form, StatefulButton,
 } from '@openedx/paragon';
@@ -365,4 +365,4 @@ export default connect(
     loginRequest,
     getTPADataFromBackend: getThirdPartyAuthContext,
   },
-)(injectIntl(LoginPage));
+)(LoginPage);
