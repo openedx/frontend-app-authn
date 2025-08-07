@@ -11,7 +11,7 @@
     margin-bottom: 0.5rem;
     font-weight: 700;
 
-    @include media-breakpoint-down('md') {
+    @media (--pgn-size-breakpoint-max-width-md) {
       line-height: 1.5rem;
       font-size: 1.125rem;
     }
