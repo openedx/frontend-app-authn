@@ -1,9 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { useMediaQuery } from '@openedx/paragon';
 import { fireEvent, render } from '@testing-library/react';
 import { useLocation } from 'react-router-dom';
@@ -16,7 +15,6 @@ import mockedRecommendedProducts from '../data/tests/mockedData';
 import RecommendationsPage from '../RecommendationsPage';
 import { eventNames, getProductMapping } from '../track';
 
-const IntlRecommendationsPage = injectIntl(RecommendationsPage);
 const mockStore = configureStore();
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
@@ -77,7 +75,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should redirect to dashboard if user is not coming from registration workflow', () => {
-    render(reduxWrapper(<IntlRecommendationsPage />));
+    render(reduxWrapper(<RecommendationsPage />));
     expect(window.location.href).toEqual(dashboardUrl);
   });
 
@@ -86,14 +84,14 @@ describe('RecommendationsPageTests', () => {
       recommendations: [],
       isLoading: false,
     });
-    render(reduxWrapper(<IntlRecommendationsPage />));
+    render(reduxWrapper(<RecommendationsPage />));
     expect(window.location.href).toEqual(dashboardUrl);
   });
 
   it('should redirect user if they click "Skip for now" button', () => {
     mockUseLocation();
     jest.useFakeTimers();
-    const { container } = render(reduxWrapper(<IntlRecommendationsPage />));
+    const { container } = render(reduxWrapper(<RecommendationsPage />));
     const skipButton = container.querySelector('.pgn__stateful-btn-state-default');
     fireEvent.click(skipButton);
     jest.advanceTimersByTime(300);
@@ -103,7 +101,7 @@ describe('RecommendationsPageTests', () => {
   it('should display recommendations small layout for small screen', () => {
     mockUseLocation();
     useMediaQuery.mockReturnValue(true);
-    const { container } = render(reduxWrapper(<IntlRecommendationsPage />));
+    const { container } = render(reduxWrapper(<RecommendationsPage />));
 
     const recommendationsSmallLayout = container.querySelector('#recommendations-small-layout');
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
@@ -115,7 +113,7 @@ describe('RecommendationsPageTests', () => {
   it('should display recommendations large layout for large screen', () => {
     mockUseLocation();
     useMediaQuery.mockReturnValue(false);
-    const { container } = render(reduxWrapper(<IntlRecommendationsPage />));
+    const { container } = render(reduxWrapper(<RecommendationsPage />));
 
     const pgnCollapsible = container.querySelector('.pgn_collapsible');
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
@@ -131,7 +129,7 @@ describe('RecommendationsPageTests', () => {
       recommendations: [],
       isLoading: true,
     });
-    const { container } = render(reduxWrapper(<IntlRecommendationsPage />));
+    const { container } = render(reduxWrapper(<RecommendationsPage />));
 
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
 
@@ -145,7 +143,7 @@ describe('RecommendationsPageTests', () => {
       recommendations: [],
       isLoading: true,
     });
-    const { container } = render(reduxWrapper(<IntlRecommendationsPage />));
+    const { container } = render(reduxWrapper(<RecommendationsPage />));
 
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
 
@@ -160,7 +158,7 @@ describe('RecommendationsPageTests', () => {
     });
 
     useMediaQuery.mockReturnValue(false);
-    render(reduxWrapper(<IntlRecommendationsPage />));
+    render(reduxWrapper(<RecommendationsPage />));
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(

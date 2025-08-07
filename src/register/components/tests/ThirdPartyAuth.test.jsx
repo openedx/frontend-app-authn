@@ -1,9 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import {
-  configure, getLocale, injectIntl, IntlProvider,
+  configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -23,7 +22,6 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   getLocale: jest.fn(),
 }));
 
-const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -157,7 +155,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       const { queryByLabelText } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />, { store })),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />, { store })),
       );
 
       const passwordField = queryByLabelText('Password');
@@ -182,7 +180,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
       );
       const tpaButton = container.querySelector(`button#${ssoProvider.id}`);
 
@@ -207,7 +205,7 @@ describe('ThirdPartyAuth', () => {
         search: `?next=/dashboard&tpa_hint=${ssoProvider.id}`,
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const skeletonElement = container.querySelector('.react-loading-skeleton');
 
       expect(skeletonElement).toBeTruthy();
@@ -231,7 +229,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const iconElement = container.querySelector(`button#${ssoProvider.id} div span.pgn__icon`);
 
       expect(iconElement).toBeTruthy();
@@ -254,7 +252,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
     });
 
@@ -275,7 +273,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const providerButton = container.querySelector(`button#${ssoProvider.id} span#provider-name`);
 
       expect(providerButton.textContent).toEqual(expectedMessage);
@@ -294,7 +292,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />, { store })),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />, { store })),
       );
 
       const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
@@ -315,7 +313,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
       );
 
       const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
@@ -329,7 +327,7 @@ describe('ThirdPartyAuth', () => {
         institutionLogin: true,
       };
 
-      const { getByText } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByText } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const headingElement = getByText('Register with institution/campus credentials');
       expect(headingElement).toBeTruthy();
     });
@@ -354,7 +352,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL };
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
       );
 
       const ssoButton = container.querySelector('button#oa2-apple-id');
@@ -385,7 +383,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     });
 
@@ -406,7 +404,7 @@ describe('ThirdPartyAuth', () => {
       const expectedMessage = `${'You\'ve successfully signed into Apple! We just need a little more information before '
                               + 'you start learning with '}${ getConfig().SITE_NAME }.`;
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const tpaAlert = container.querySelector('#tpa-alert p');
       expect(tpaAlert.textContent).toEqual(expectedMessage);
     });
@@ -437,7 +435,7 @@ describe('ThirdPartyAuth', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
       );
 
       const alertHeading = container.querySelector('div.alert-heading');
