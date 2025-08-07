@@ -1,6 +1,4 @@
-import React from 'react';
-
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   render, screen,
 } from '@testing-library/react';
@@ -26,8 +24,6 @@ jest.mock('@edx/frontend-platform/auth', () => ({
   getAuthService: jest.fn(),
 }));
 
-const IntlLoginFailureMessage = injectIntl(LoginFailureMessage);
-
 describe('LoginFailureMessage', () => {
   let props = {};
 
@@ -48,7 +44,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -76,7 +72,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -106,7 +102,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -132,7 +128,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -152,7 +148,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -176,7 +172,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -196,7 +192,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -216,7 +212,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -236,7 +232,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -255,7 +251,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -275,7 +271,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -301,7 +297,7 @@ describe('LoginFailureMessage', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
+          <LoginFailureMessage {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );
@@ -327,7 +323,7 @@ describe('LoginFailureMessage', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <IntlLoginFailureMessage {...props} />
+          <LoginFailureMessage {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );
@@ -359,7 +355,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
