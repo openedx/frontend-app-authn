@@ -1,12 +1,8 @@
-import React from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { fireEvent, render } from '@testing-library/react';
 
 import { TermsOfService } from '../index';
-
-const IntlTermsOfService = injectIntl(TermsOfService);
 
 describe('TermsOfServiceTest', () => {
   let value = false;
@@ -23,7 +19,7 @@ describe('TermsOfServiceTest', () => {
     const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Terms of Service`;
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlTermsOfService errorMessage={errorMessage} onChangeHandler={changeHandler} />
+        <TermsOfService errorMessage={errorMessage} onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
     const errorElement = container.querySelector('.form-text-size');
@@ -33,7 +29,7 @@ describe('TermsOfServiceTest', () => {
   it('should render Terms of Service field', () => {
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlTermsOfService onChangeHandler={changeHandler} />
+        <TermsOfService onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
 
@@ -48,7 +44,7 @@ describe('TermsOfServiceTest', () => {
   it('should change value when Terms of Service field is checked', () => {
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlTermsOfService onChangeHandler={changeHandler} />
+        <TermsOfService onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
     const field = container.querySelector('input#tos');
