@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { windowScrollTo } from '../../data/utils';
 import {
   FORBIDDEN_REQUEST,
+  FORBIDDEN_USERNAME,
   INTERNAL_SERVER_ERROR,
   TPA_AUTHENTICATION_FAILURE,
   TPA_SESSION_EXPIRED,
@@ -47,6 +48,9 @@ const RegistrationFailureMessage = (props) => {
       break;
     case TPA_SESSION_EXPIRED:
       errorMessage = formatMessage(messages['registration.tpa.session.expired'], { provider: context.provider });
+      break;
+    case FORBIDDEN_USERNAME:
+      errorMessage = formatMessage(messages['registration.forbidden.username']);
       break;
     default:
       errorMessage = formatMessage(messages['registration.empty.form.submission.error']);
