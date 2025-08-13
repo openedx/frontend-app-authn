@@ -162,6 +162,11 @@ const messages = defineMessages({
     defaultMessage: 'Registration using {provider} has timed out.',
     description: '',
   },
+  'registration.forbidden.username': {
+    id: 'registration.forbidden.username',
+    defaultMessage: 'Usernames can\'t include words that could be mistaken for course roles. Please choose a different username.',
+    description: '',
+  },
   'registration.tpa.authentication.failure': {
     id: 'registration.tpa.authentication.failure',
     defaultMessage: 'We are sorry, you are not authorized to access {platform_name} via this channel. '
