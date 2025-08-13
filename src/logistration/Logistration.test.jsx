@@ -1,9 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -23,7 +22,6 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/auth');
 
 const mockStore = configureStore();
-const IntlLogistration = injectIntl(Logistration);
 
 describe('Logistration', () => {
   let store = {};
@@ -95,7 +93,7 @@ describe('Logistration', () => {
   });
 
   it('should do nothing when user clicks on the same tab (login/register) again', () => {
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = render(reduxWrapper(<Logistration />));
     // While staying on the registration form, clicking the register tab again
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
 
@@ -107,14 +105,14 @@ describe('Logistration', () => {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = render(reduxWrapper(<Logistration />));
 
     expect(container.querySelector('RegistrationPage')).toBeDefined();
   });
 
   it('should render login page', () => {
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = render(reduxWrapper(<Logistration {...props} />));
 
     expect(container.querySelector('LoginPage')).toBeDefined();
   });
@@ -125,7 +123,7 @@ describe('Logistration', () => {
     });
 
     let props = { selectedPage: LOGIN_PAGE };
-    const { rerender } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { rerender } = render(reduxWrapper(<Logistration {...props} />));
 
     // verifying sign in heading
     expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
@@ -133,7 +131,7 @@ describe('Logistration', () => {
     // register page is still accessible when SHOW_REGISTRATION_LINKS is false
     // but it needs to be accessed directly
     props = { selectedPage: REGISTER_PAGE };
-    rerender(reduxWrapper(<IntlLogistration {...props} />));
+    rerender(reduxWrapper(<Logistration {...props} />));
 
     // verifying register heading
     expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Register');
@@ -160,7 +158,7 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = render(reduxWrapper(<Logistration {...props} />));
 
     // verifying sign in heading for institution login false
     expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
@@ -190,7 +188,7 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<IntlLogistration {...props} />));
+    render(reduxWrapper(<Logistration {...props} />));
     expect(screen.getByText('Institution/campus credentials')).toBeDefined();
 
     // on clicking "Institution/campus credentials" button, it should display institution login page
@@ -221,7 +219,7 @@ describe('Logistration', () => {
     });
 
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<IntlLogistration {...props} />));
+    render(reduxWrapper(<Logistration {...props} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
 
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -253,7 +251,7 @@ describe('Logistration', () => {
     delete window.location;
     window.location = { hostname: getConfig().SITE_NAME, href: getConfig().BASE_URL };
 
-    render(reduxWrapper(<IntlLogistration />));
+    render(reduxWrapper(<Logistration />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
@@ -264,7 +262,7 @@ describe('Logistration', () => {
 
   it('should fire action to backup registration form on tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = render(reduxWrapper(<Logistration />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
   });
@@ -272,14 +270,14 @@ describe('Logistration', () => {
   it('should fire action to backup login form on tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<IntlLogistration {...props} />));
+    const { container } = render(reduxWrapper(<Logistration {...props} />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
     expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
   });
 
   it('should clear tpa context errorMessage tab click', () => {
     store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<IntlLogistration />));
+    const { container } = render(reduxWrapper(<Logistration />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(store.dispatch).toHaveBeenCalledWith(clearThirdPartyAuthContextErrorMessage());
   });
