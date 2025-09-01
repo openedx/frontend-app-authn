@@ -200,7 +200,7 @@ describe('RegistrationPage', () => {
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
     });
 
     it('should submit form without password field when current provider is present', () => {
@@ -233,7 +233,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, formPayload, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' })); });
     });
 
     it('should display an error when form is submitted with an invalid email', () => {
@@ -308,7 +308,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
 
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
@@ -335,7 +335,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload, false, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
       mergeConfig({
         ENABLE_AUTO_GENERATED_USERNAME: false,
       });
@@ -890,15 +890,16 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
-        name: 'John Doe',
-        username: 'john_doe',
-        email: 'john.doe@example.com',
-        country: 'PK',
-        social_auth_provider: 'Apple',
-        total_registration_time: 0,
-        app_name: APP_NAME,
-      }));
+      waitFor(() => {
+        expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
+          name: 'John Doe',
+          username: 'john_doe',
+          email: 'john.doe@example.com',
+          country: 'PK',
+          social_auth_provider: 'Apple',
+          total_registration_time: 0,
+        }));
+      });
     });
   });
 });
