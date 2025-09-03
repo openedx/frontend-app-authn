@@ -1,16 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { getConfig } from '@edx/frontend-platform';
-import { breakpoints } from '@openedx/paragon';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import MediaQuery from 'react-responsive';
+import { getConfig } from "@edx/frontend-platform";
+import { breakpoints } from "@openedx/paragon";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import MediaQuery from "react-responsive";
 
-import { DefaultLargeLayout, DefaultMediumLayout, DefaultSmallLayout } from './components/default-layout';
+import { DefaultLargeLayout, DefaultMediumLayout, DefaultSmallLayout } from "./components/default-layout";
 import {
-  ImageExtraSmallLayout, ImageLargeLayout, ImageMediumLayout, ImageSmallLayout,
-} from './components/image-layout';
-import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
+  ImageExtraSmallLayout,
+  ImageLargeLayout,
+  ImageMediumLayout,
+  ImageSmallLayout,
+} from "./components/image-layout";
+import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from "./components/welcome-page-layout";
 
 const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
@@ -30,16 +33,14 @@ const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
           {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <ImageLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
-          {children}
-        </div>
+        <div className={classNames("content", { "align-items-center mt-0": showWelcomeBanner })}>{children}</div>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="col-md-12 extra-large-screen-top-stripe" />
+    <div style={{ background: "linear-gradient(135deg, #FFCDD2 0%, #ffffff 50%, #FFCDD2 100%)", minHeight: "100vh" }}>
+      {/* <div className="col-md-12 extra-large-screen-top-stripe" /> */}
       <div className="layout">
         <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
           {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <DefaultSmallLayout />}
@@ -50,11 +51,9 @@ const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
         <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
           {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <DefaultLargeLayout />}
         </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
-          {children}
-        </div>
+        <div className={classNames("content", { "align-items-center mt-0": showWelcomeBanner })}>{children}</div>
       </div>
-    </>
+    </div>
   );
 };
 
