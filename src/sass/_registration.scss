@@ -1,12 +1,71 @@
 .register-button {
   min-width: 14.4rem;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+    color: white;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.5);
+    color: white;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+  }
+}
+
+// Registration form container
+.registration-container {
+  background: linear-gradient(135deg, #ffcdd2 0%, #ffffff 50%, #ffcdd2 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.registration-form-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 12px 40px rgba(211, 47, 47, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(211, 47, 47, 0.1);
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    color: #d32f2f;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+  }
 }
 
 .pgn__form-autosuggest__wrapper > .pgn__form-group {
   margin-bottom: 0 !important;
 }
 
-.email-suggestion-alert-error  {
+.email-suggestion-alert-error {
   padding: 0.5rem 1rem;
 
   .email-suggestion__close {
@@ -22,7 +81,7 @@
     line-height: 1.25rem;
   }
 
-  .alert-link  {
+  .alert-link {
     color: $primary !important;
 
     &:hover {
@@ -109,7 +168,7 @@
 }
 
 .form-field-error {
-  border: 1px solid var(--danger-300, #CA3A2F) !important;
+  border: 1px solid var(--danger-300, #ca3a2f) !important;
 
   input {
     border: none;

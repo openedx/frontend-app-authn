@@ -11,10 +11,15 @@
 // ----------------------------
 // #COLORS
 // ----------------------------
-$white: #FFFFFF;
+$white: #ffffff;
+
+// Primary colors theme
+$primary-red: #d32f2f;
+$primary-red-dark: #b71c1c;
+$primary-red-light: #ffcdd2;
 
 // social platforms
-$facebook-blue: #1877F2;
+$facebook-blue: #1877f2;
 $facebook-focus-blue: #29487d;
 $google-blue: #4285f4;
 $google-focus-blue: #287ae6;
@@ -25,6 +30,22 @@ $apple-focus-black: $apple-black;
 
 $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
+// Global body styling
+body {
+  font-family: "Inter", "Segoe UI", "Roboto", sans-serif;
+  background: linear-gradient(135deg, #ffcdd2 0%, #ffffff 50%, #ffcdd2 100%);
+  min-height: 100vh;
+}
+
+// Enhanced shadows and transitions
+.auth-form {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(211, 47, 47, 0.2);
+  }
+}
 
 // Forgot Password Page
 .forgot-password-button-width {
@@ -39,13 +60,135 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   margin: auto;
 }
 
+// Custom Tabs styling for full width (2 tabs only)
+.custom-tabs {
+  .custom-nav-tabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 2px solid $primary-red-light;
+    margin-bottom: 2rem;
+
+    .custom-nav-item {
+      flex: 1; // Each tab takes equal width (50% each)
+      margin: 0;
+    }
+
+    .custom-nav-link {
+      display: block;
+      width: 100%;
+      border: none;
+      background: none;
+      color: #666;
+      font-weight: 500;
+      padding: 1rem 2rem;
+      border-radius: 8px 8px 0 0;
+      // transition: all 0.3s ease;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1rem;
+
+      &:hover {
+        color: $primary-red;
+      }
+
+      &.active {
+        color: $primary-red;
+        background-color: white;
+        border-bottom: 2px solid $primary-red;
+        font-weight: 600;
+      }
+
+      &:focus {
+        outline: 2px solid $primary-red;
+      }
+    }
+  }
+
+  .custom-tab-content {
+    .custom-tab-pane {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+    }
+  }
+}
+
+// Keep original Paragon tabs styling for other use cases
+.nav-tabs {
+  border-bottom: 2px solid $primary-red-light;
+  margin-bottom: 2rem;
+
+  .nav-link {
+    border: none;
+    color: #666;
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+    text-align: center;
+
+    &:hover {
+      color: $primary-red;
+      background-color: $primary-red-light;
+      border-color: transparent;
+    }
+
+    &.active {
+      color: $primary-red;
+      background-color: white;
+      border-bottom: 3px solid $primary-red;
+      font-weight: 600;
+    }
+  }
+}
+
+// Card styling for better layout
+.auth-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(211, 47, 47, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(211, 47, 47, 0.1);
+  overflow: hidden;
+}
+
+// Link styling
+.btn-link {
+  color: $primary-red;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: $primary-red-dark;
+    text-decoration: underline;
+  }
+}
+
 .main-content {
   @extend .pt-4;
   min-width: 464px !important;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(211, 47, 47, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(211, 47, 47, 0.1);
+  padding: 2rem;
+  margin: 2rem auto;
 }
 
 .welcome-page-content {
   min-width: 464px !important;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(211, 47, 47, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(211, 47, 47, 0.1);
+  padding: 2rem;
+  margin: 2rem auto;
 }
 
 .stateful-button-width {
@@ -92,7 +235,18 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   font-size: 0.875rem;
   line-height: 1.5;
   height: 2.75rem;
+  border: 2px solid rgba(211, 47, 47, 0.2);
+  border-radius: 8px;
+  transition: all 0.3s ease;
 
+  &:focus {
+    border-color: $primary-red;
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+  }
+
+  &:hover {
+    border-color: rgba(211, 47, 47, 0.4);
+  }
 }
 
 .btn-social {
@@ -104,15 +258,53 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   font-size: 14px;
 
   background-color: $white;
-  border: 1px solid $primary;
+  border: 2px solid $primary-red-light;
   width: 224px;
-  height: 36px;
-  color: $primary;
+  height: 48px;
+  color: $primary-red;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 
-  .btn-tpa__image-icon{
+  &:hover {
+    border-color: $primary-red;
+    background-color: $primary-red-light;
+    transform: translateY(-2px);
+  }
+
+  .btn-tpa__image-icon {
     background-color: transparent;
     max-height: 24px;
     max-width: 24px;
+  }
+}
+
+// Primary button styles
+.btn-brand {
+  background: linear-gradient(135deg, $primary-red 0%, $primary-red-dark 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  color: $white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, $primary-red-dark 0%, $primary-red 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+    color: $white;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.5);
+    color: $white;
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
   }
 }
 
@@ -183,7 +375,7 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
 
   .ibtn-tpa__image-icon {
     max-height: 1.8em;
-    max-width: 2.0em;
+    max-width: 2em;
   }
 
   &:hover,
@@ -321,7 +513,6 @@ select.form-control {
   .arrow::before {
     border-top-color: $white;
   }
-
 }
 
 .yellow-border {
@@ -336,11 +527,10 @@ select.form-control {
   color: $gray-700;
 }
 
-.logistration-button:hover{
+.logistration-button:hover {
   color: $gray-700;
   text-decoration: none;
 }
-
 
 #forgot-password {
   &:hover {
@@ -364,13 +554,18 @@ select.form-control {
   font-size: 0.75rem;
 }
 
-.form-group__form-field .form-control:focus ~ .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
-    font-size: 16px;
-    color: $primary-700;
+.form-group__form-field
+  .form-control:focus
+  ~ .pgn__form-control-floating-label
+  .pgn__form-control-floating-label-content {
+  font-size: 16px;
+  color: $primary-700;
 }
 
-.form-group__form-field .form-control:not([value='']):not(:focus) ~
-  .pgn__form-control-floating-label .pgn__form-control-floating-label-content {
+.form-group__form-field
+  .form-control:not([value=""]):not(:focus)
+  ~ .pgn__form-control-floating-label
+  .pgn__form-control-floating-label-content {
   font-size: 16px;
 }
 
@@ -406,13 +601,11 @@ select.form-control {
   }
 }
 
-
 @media (max-width: 767px) {
   .welcome-page-content {
     padding-top: 1.5rem !important;
   }
 }
-
 
 .alert {
   p:last-child {
@@ -451,7 +644,7 @@ select.form-control {
   font-weight: normal;
   font-size: 0.875rem;
   line-height: 1.5rem;
-  color: $primary-700
+  color: $primary-700;
 }
 
 .pgn__form-control-decorator-trailing {
