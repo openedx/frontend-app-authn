@@ -6,6 +6,7 @@ import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -20,6 +21,12 @@ import RegistrationPage from './RegistrationPage';
 import {
   AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
+
+jest.mock('react-google-recaptcha-v3', () => ({
+  useGoogleReCaptcha: jest.fn(),
+  // eslint-disable-next-line react/prop-types
+  GoogleReCaptchaProvider: ({ children }) => <div>{children}</div>,
+}));
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -126,6 +133,8 @@ describe('RegistrationPage', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+    const mockExecuteRecaptchaNew = jest.fn(() => Promise.resolve('mock-token'));
+    useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptchaNew });
   });
 
   afterEach(() => {
