@@ -235,7 +235,6 @@ const RegistrationPage = (props) => {
   };
 
   const registerUser = async () => {
-    let recaptchaToken = '';
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields, app_name: APP_NAME };
 
@@ -265,33 +264,28 @@ const RegistrationPage = (props) => {
     }
 
     if (executeRecaptcha) {
-      try {
-        recaptchaToken = await executeRecaptcha('submit_post');
-        if (!recaptchaToken) {
-          setCaptchaError(intl.formatMessage(messages['discussions.captcha.verification.label']));
-          return;
-        }
-      } catch (error) {
+      const recaptchaToken = await executeRecaptcha('submit_post');
+      if (!recaptchaToken) {
         setCaptchaError(intl.formatMessage(messages['discussions.captcha.verification.label']));
         return;
       }
       setCaptchaError('');
-    }
-    // Preparing payload for submission
-    if (recaptchaToken) {
-      payload = prepareRegistrationPayload(
-        payload,
-        configurableFormFields,
-        flags.showMarketingEmailOptInCheckbox,
-        totalRegistrationTime,
-        queryParams);
+      // Preparing payload for submission
+      if (recaptchaToken) {
+        payload = prepareRegistrationPayload(
+          payload,
+          configurableFormFields,
+          flags.showMarketingEmailOptInCheckbox,
+          totalRegistrationTime,
+          queryParams);
 
-      const updatedpayload = {
-        ...payload,
-        captcha_token: recaptchaToken,
-      };
-      // making register call
-      dispatch(registerNewUser(updatedpayload));
+        const updatedpayload = {
+          ...payload,
+          captcha_token: recaptchaToken,
+        };
+        // making register call
+        dispatch(registerNewUser(updatedpayload));
+      }
     }
   };
 
