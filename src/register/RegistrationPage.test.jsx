@@ -5,7 +5,9 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
