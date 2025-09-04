@@ -4,7 +4,8 @@ import { mergeConfig } from '@edx/frontend-platform';
 import {
   getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -20,6 +21,11 @@ jest.mock('@edx/frontend-platform/analytics', () => ({
 jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
+}));
+jest.mock('react-google-recaptcha-v3', () => ({
+  useGoogleReCaptcha: jest.fn(),
+  // eslint-disable-next-line react/prop-types
+  GoogleReCaptchaProvider: ({ children }) => <div>{children}</div>,
 }));
 
 const mockStore = configureStore();
@@ -212,6 +218,8 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
+      const mockExecuteRecaptchaNew = jest.fn(() => Promise.resolve('mock-token'));
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptchaNew });
       render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(document.querySelector('#profession')).toBeTruthy();
       expect(document.querySelector('#tos')).toBeTruthy();
@@ -222,6 +230,8 @@ describe('ConfigurableRegistrationForm', () => {
         SHOW_CONFIGURABLE_EDX_FIELDS: true,
       });
       getLocale.mockImplementation(() => ('en-us'));
+      const mockExecuteRecaptchaNew = jest.fn(() => Promise.resolve('mock-token'));
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptchaNew });
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       store = mockStore({
         ...initialState,
@@ -257,7 +267,9 @@ describe('ConfigurableRegistrationForm', () => {
 
       fireEvent.click(submitButton);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => {
+        expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      });
     });
 
     it('should show error messages for required fields on empty form submission', () => {

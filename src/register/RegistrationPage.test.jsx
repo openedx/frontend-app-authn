@@ -5,7 +5,10 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import {
+  fireEvent, render, screen, waitFor,
+} from '@testing-library/react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -20,6 +23,12 @@ import RegistrationPage from './RegistrationPage';
 import {
   AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
+
+jest.mock('react-google-recaptcha-v3', () => ({
+  useGoogleReCaptcha: jest.fn(),
+  // eslint-disable-next-line react/prop-types
+  GoogleReCaptchaProvider: ({ children }) => <div>{children}</div>,
+}));
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -126,6 +135,8 @@ describe('RegistrationPage', () => {
       institutionLogin: false,
     };
     window.location = { search: '' };
+    const mockExecuteRecaptchaNew = jest.fn(() => Promise.resolve('mock-token'));
+    useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptchaNew });
   });
 
   afterEach(() => {
@@ -167,6 +178,35 @@ describe('RegistrationPage', () => {
 
     // ******** test registration form submission ********
 
+    it('should show captcha error if executeRecaptcha returns null token', async () => {
+      const mockExecuteRecaptcha = jest.fn().mockResolvedValue(null);
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+      getLocale.mockImplementation(() => ('en-us'));
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL, search: '?next=/course/demo-course-url' };
+
+      const payload = {
+        name: 'John Doe',
+        username: 'john_doe',
+        email: 'john.doe@gmail.com',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        total_registration_time: 0,
+        next: '/course/demo-course-url',
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      populateRequiredFields(getByLabelText, payload);
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
+
+      waitFor(() => expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument());
+    });
+
     it('should submit form for valid input', () => {
       getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
@@ -191,7 +231,7 @@ describe('RegistrationPage', () => {
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
     });
 
     it('should submit form without password field when current provider is present', () => {
@@ -223,7 +263,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, formPayload, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload, country: 'PK' })); });
     });
 
     it('should display an error when form is submitted with an invalid email', () => {
@@ -297,7 +337,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
 
       mergeConfig({
         MARKETING_EMAILS_OPT_IN: '',
@@ -323,7 +363,7 @@ describe('RegistrationPage', () => {
       populateRequiredFields(getByLabelText, payload, false, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' }));
+      waitFor(() => { expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK' })); });
       mergeConfig({
         ENABLE_AUTO_GENERATED_USERNAME: false,
       });
@@ -874,14 +914,16 @@ describe('RegistrationPage', () => {
       store.dispatch = jest.fn(store.dispatch);
 
       render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
-        name: 'John Doe',
-        username: 'john_doe',
-        email: 'john.doe@example.com',
-        country: 'PK',
-        social_auth_provider: 'Apple',
-        total_registration_time: 0,
-      }));
+      waitFor(() => {
+        expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
+          name: 'John Doe',
+          username: 'john_doe',
+          email: 'john.doe@example.com',
+          country: 'PK',
+          social_auth_provider: 'Apple',
+          total_registration_time: 0,
+        }));
+      });
     });
   });
 });
