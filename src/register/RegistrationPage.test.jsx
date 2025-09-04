@@ -5,7 +5,7 @@ import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics'
 import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -182,6 +182,35 @@ describe('RegistrationPage', () => {
     };
 
     // ******** test registration form submission ********
+
+    it('should show captcha error if executeRecaptcha returns null token', async () => {
+      const mockExecuteRecaptcha = jest.fn().mockResolvedValue(null);
+      useGoogleReCaptcha.mockReturnValue({ executeRecaptcha: mockExecuteRecaptcha });
+      getLocale.mockImplementation(() => ('en-us'));
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL, search: '?next=/course/demo-course-url' };
+
+      const payload = {
+        name: 'John Doe',
+        username: 'john_doe',
+        email: 'john.doe@gmail.com',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+        total_registration_time: 0,
+        next: '/course/demo-course-url',
+      };
+
+      store.dispatch = jest.fn(store.dispatch);
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      populateRequiredFields(getByLabelText, payload);
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
+
+      waitFor(() => expect(screen.getByText('CAPTCHA verification failed.')).toBeInTheDocument());
+    });
 
     it('should submit form for valid input', () => {
       getLocale.mockImplementation(() => ('en-us'));
