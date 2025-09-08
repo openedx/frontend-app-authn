@@ -54,7 +54,7 @@ const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
         backgroundPosition: 'center',
       }}
     >
-      <div className={cn('tw-flex tw-items-center tw-justify-center', isLoginPage ? 'tw-w-[50vw]' : 'tw-w-full')}>
+      <div className={cn('tw-flex tw-justify-center !tw-mt-[12%]', isLoginPage ? 'tw-w-[50vw]' : 'tw-w-full')}>
         {children}
       </div>
       {isLoginPage && <DefaultLargeLayout />}
