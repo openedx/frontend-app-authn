@@ -3,7 +3,6 @@
   display: flex;
 
   @include media-breakpoint-down('lg') {
-    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
