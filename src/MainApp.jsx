@@ -49,7 +49,7 @@ const MainApp = () => (
           <UnAuthOnlyRoute><Logistration selectedPage={LOGIN_PAGE} /></UnAuthOnlyRoute>
         }
       />
-      <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>} />
+      {/* <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>} /> */}
       <Route path={RESET_PAGE} element={<UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>} />
       <Route path={PASSWORD_RESET_CONFIRM} element={<ResetPasswordPage />} />
       <Route path={AUTHN_PROGRESSIVE_PROFILING} element={<ProgressiveProfiling />} />
