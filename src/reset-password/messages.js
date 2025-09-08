@@ -8,8 +8,23 @@ const messages = defineMessages({
   },
   'reset.password.page.title': {
     id: 'reset.password.page.title',
-    defaultMessage: 'Reset Password | {siteName}',
+    defaultMessage: 'Reset your Instructor password',
     description: 'page title',
+  },
+  'confirm.password.placeholder': {
+    id: 'confirm.password.placeholder',
+    defaultMessage: 'Enter your password',
+    description: 'Confirm password field placeholder for the reset password page.',
+  },
+  'new.password.placeholder': {
+    id: 'new.password.placeholder',
+    defaultMessage: 'Enter your password',
+    description: 'New password field placeholder for the reset password page.',
+  },
+  'verifying.token': {
+    id: 'verifying.token',
+    defaultMessage: 'Verify link, please wait...',
+    description: 'Verifying token message for the reset password page.',
   },
   'reset.password': {
     id: 'reset.password',
@@ -18,7 +33,12 @@ const messages = defineMessages({
   },
   'reset.password.page.instructions': {
     id: 'reset.password.page.instructions',
-    defaultMessage: 'Enter and confirm your new password.',
+    defaultMessage: 'Enter your new password.',
+    description: 'Instructions message for reset password page.',
+  },
+  'reset.password.page.instructions.2': {
+    id: 'reset.password.page.instructions.2',
+    defaultMessage: 'Password must contain at least 8 characters.',
     description: 'Instructions message for reset password page.',
   },
   'new.password.label': {

@@ -8,12 +8,12 @@ const messages = defineMessages({
   },
   'forgot.password.page.heading': {
     id: 'forgot.password.page.heading',
-    defaultMessage: 'Reset password',
+    defaultMessage: 'Reset your password',
     description: 'The page heading for the forgot password page.',
   },
   'forgot.password.page.instructions': {
     id: 'forgot.password.page.instructions',
-    defaultMessage: 'Please enter your email address below and we will send you an email with instructions on how to reset your password.',
+    defaultMessage: 'Enter your email and we will send you a link to reset your password.',
     description: 'Instructions message for forgot password page.',
   },
   'forgot.password.page.invalid.email.message': {
@@ -26,9 +26,14 @@ const messages = defineMessages({
     defaultMessage: 'Email',
     description: 'Email field label for the forgot password page.',
   },
+  'forgot.password.page.email.field.placeholder': {
+    id: 'forgot.password.page.email.field.placeholder',
+    defaultMessage: 'Enter your email',
+    description: 'Email field label for the forgot password page.',
+  },
   'forgot.password.page.submit.button': {
     id: 'forgot.password.page.submit.button',
-    defaultMessage: 'Submit',
+    defaultMessage: 'Send link to email',
     description: 'Submit button text for the forgot password page.',
   },
   'forgot.password.error.alert.title': {
@@ -55,6 +60,19 @@ const messages = defineMessages({
     id: 'forgot.password.email.help.text',
     defaultMessage: 'The email address you used to register with {platformName}',
     description: 'text help for the email',
+  },
+  'forgot.password.page.go.back.text': {
+    id: 'forgot.password.page.go.back.text',
+    defaultMessage: 'Go back',
+    description: 'Go back text for forgot password page.',
+  },
+  'forgot.password.confirmation.message.heading': {
+    id: 'forgot.password.confirmation.message.heading',
+    defaultMessage: 'Email sent',
+  },
+  'forgot.password.confirmation.message': {
+    id: 'forgot.password.confirmation.message',
+    defaultMessage: 'Check your email and open the link we sent to continue.',
   },
   // Confirmation Alert Message
   'confirmation.message.title': {
@@ -90,13 +108,23 @@ const messages = defineMessages({
   // Reset password token validation failure
   'invalid.token.heading': {
     id: 'invalid.token.heading',
-    defaultMessage: 'Invalid password reset link',
+    defaultMessage: 'Invalid link',
     description: 'Alert heading when reset password link is invalid',
   },
   'invalid.token.error.message': {
     id: 'invalid.token.error.message',
-    defaultMessage: 'This password reset link is invalid. It may have been used already. Enter your email below to receive a new link.',
+    defaultMessage: 'The link you received via email is invalid.',
     description: 'Alert message when reset password link has expired or is invalid',
+  },
+  'invalid.token.back.to.login': {
+    id: 'invalid.token.back.to.login',
+    defaultMessage: 'Back to login',
+    description: 'Back to login text for invalid token page',
+  },
+  'email.sent.back.to.login': {
+    id: 'email.sent.back.to.login',
+    defaultMessage: 'Log in now',
+    description: 'Back to login text for email sent page',
   },
   'token.validation.rate.limit.error.heading': {
     id: 'token.validation.rate.limit.error.heading',
