@@ -28,6 +28,7 @@ import { LoginPage } from '../login';
 import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
+import { Description, LMSLogo, Title } from '../shared/index.ts';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
@@ -39,7 +40,9 @@ const Logistration = (props) => {
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
   const navigate = useNavigate();
-  const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  // const disablePublicAccountCreation = getConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false;
+  // Fake
+  const disablePublicAccountCreation = true;
   const hideRegistrationLink = getConfig().SHOW_REGISTRATION_LINKS === false;
 
   useEffect(() => {
@@ -98,7 +101,8 @@ const Logistration = (props) => {
 
   return (
     <BaseContainer>
-      <div>
+      <div className="tw-flex tw-flex-col tw-items-center tw-gap-12">
+        <LMSLogo />
         {disablePublicAccountCreation
           ? (
             <>
@@ -107,9 +111,12 @@ const Logistration = (props) => {
                   <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
                 </Tabs>
               )}
-              <div id="main-content" className="main-content">
+              <div id="main-content" className="tw-w-[360px] tw-flex tw-flex-col tw-gap-8">
                 {!institutionLogin && (
-                  <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
+                  <div className="tw-text-center tw-flex tw-flex-col tw-gap-3">
+                    <Title message={formatMessage(messages['logistration.sign.in'])} />
+                    <Description message={formatMessage(messages['enter.your.details'])} />
+                  </div>
                 )}
                 <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
               </div>

@@ -2,42 +2,49 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Hyperlink, Image } from '@openedx/paragon';
-import classNames from 'classnames';
+import { Image } from '@openedx/paragon';
 
 import messages from './messages';
+import illustration from '../../../assets/images/illustration-1.svg';
+import { GlassCard } from '../../../shared/index.ts';
+import { cn } from '../../../utils/cn';
 
 const LargeLayout = () => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className="w-50 d-flex">
-      <div className="col-md-9 bg-primary-400">
-        <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-          <Image className="logo position-absolute" alt={getConfig().SITE_NAME} src={getConfig().LOGO_WHITE_URL} />
-        </Hyperlink>
-        <div className="min-vh-100 d-flex align-items-center">
-          <div className={classNames({ 'large-yellow-line mr-n4.5': getConfig().SITE_NAME === 'edX' })} />
-          <h1
-            className={classNames(
-              'display-2 text-white mw-xs',
-              { 'ml-6': getConfig().SITE_NAME !== 'edX' },
-            )}
-          >
-            {formatMessage(messages['start.learning'])}
-            <div className="text-accent-a">
-              {formatMessage(messages['with.site.name'], { siteName: getConfig().SITE_NAME })}
-            </div>
-          </h1>
+    <div
+      className={cn('w-50 d-flex tw-pl-0 tw-py-6 tw-pr-6 tw-h-full')}
+    >
+      <GlassCard className="tw-min-w-[696px]">
+        <div
+          id="content-container"
+          className={cn(
+            'tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-12',
+          )}
+        >
+          <Image src={illustration} alt="Illustration" />
+          <div className="tw-text-center tw-space-y-2">
+            <h3
+              className={cn(
+                'tw-font-semibold tw-text-[30px] tw-leading-[38px]',
+                'tw-text-transparent tw-bg-clip-text tw-bg-gradient-to-b tw-from-[#43cbff] tw-to-[#9708cc]',
+              )}
+            >
+              {formatMessage(messages['welcome.to'], {
+                siteName: getConfig().SITE_NAME,
+              })}
+            </h3>
+            <p
+              className={cn(
+                'tw-text-gray-600 tw-text-[16px] tw-leading-[24px]',
+              )}
+            >
+              {formatMessage(messages['sign.in.to.explore'])}
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="col-md-3 bg-white p-0">
-        <svg className="ml-n1 w-100 h-100 large-screen-svg-primary" preserveAspectRatio="xMaxYMin meet">
-          <g transform="skewX(171.6)">
-            <rect x="0" y="0" height="100%" width="100%" />
-          </g>
-        </svg>
-      </div>
+      </GlassCard>
     </div>
   );
 };

@@ -5,14 +5,22 @@ import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import MediaQuery from 'react-responsive';
+import { useLocation } from 'react-router-dom';
 
-import { DefaultLargeLayout, DefaultMediumLayout, DefaultSmallLayout } from './components/default-layout';
+import { LOGIN_PAGE } from '../data/constants';
+import { DefaultLargeLayout } from './components/default-layout';
 import {
   ImageExtraSmallLayout, ImageLargeLayout, ImageMediumLayout, ImageSmallLayout,
 } from './components/image-layout';
 import { AuthLargeLayout, AuthMediumLayout, AuthSmallLayout } from './components/welcome-page-layout';
+import backgroundImage from '../assets/images/auth-background.png';
+import { cn } from '../utils/cn';
 
 const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
+  const location = useLocation();
+  const currentPage = location.pathname;
+  const isLoginPage = currentPage === LOGIN_PAGE;
+
   const enableImageLayout = getConfig().ENABLE_IMAGE_LAYOUT;
 
   if (enableImageLayout) {
@@ -38,23 +46,19 @@ const BaseContainer = ({ children, showWelcomeBanner, fullName }) => {
   }
 
   return (
-    <>
-      <div className="col-md-12 extra-large-screen-top-stripe" />
-      <div className="layout">
-        <MediaQuery maxWidth={breakpoints.small.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthSmallLayout fullName={fullName} /> : <DefaultSmallLayout />}
-        </MediaQuery>
-        <MediaQuery minWidth={breakpoints.medium.minWidth} maxWidth={breakpoints.large.maxWidth - 1}>
-          {showWelcomeBanner ? <AuthMediumLayout fullName={fullName} /> : <DefaultMediumLayout />}
-        </MediaQuery>
-        <MediaQuery minWidth={breakpoints.extraLarge.minWidth}>
-          {showWelcomeBanner ? <AuthLargeLayout fullName={fullName} /> : <DefaultLargeLayout />}
-        </MediaQuery>
-        <div className={classNames('content', { 'align-items-center mt-0': showWelcomeBanner })}>
-          {children}
-        </div>
+    <div
+      className="layout tw-h-screen"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className={cn('tw-flex tw-items-center tw-justify-center', isLoginPage ? 'tw-w-[50vw]' : 'tw-w-full')}>
+        {children}
       </div>
-    </>
+      {isLoginPage && <DefaultLargeLayout />}
+    </div>
   );
 };
 

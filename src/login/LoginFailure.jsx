@@ -3,8 +3,7 @@ import React, { useEffect } from 'react';
 import { getConfig } from '@edx/frontend-platform';
 import { getAuthService } from '@edx/frontend-platform/auth';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
-import { Alert, Hyperlink } from '@openedx/paragon';
-import { Error } from '@openedx/paragon/icons';
+import { Hyperlink } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import ChangePasswordPrompt from './ChangePasswordPrompt';
@@ -24,6 +23,7 @@ import {
 } from './data/constants';
 import messages from './messages';
 import { windowScrollTo } from '../data/utils';
+import { AlertWrapper } from '../shared/index.ts';
 
 const LoginFailureMessage = (props) => {
   const { formatMessage } = useIntl();
@@ -198,10 +198,9 @@ const LoginFailureMessage = (props) => {
   }
 
   return (
-    <Alert id="login-failure-alert" className="mb-5" variant="danger" icon={Error}>
-      <Alert.Heading>{formatMessage(messages['login.failure.header.title'])}</Alert.Heading>
+    <AlertWrapper>
       { errorMessage }
-    </Alert>
+    </AlertWrapper>
   );
 };
 

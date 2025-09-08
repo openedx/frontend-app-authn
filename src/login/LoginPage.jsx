@@ -5,7 +5,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { injectIntl, useIntl } from '@edx/frontend-platform/i18n';
 import {
-  Form, StatefulButton,
+  Form,
 } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
@@ -22,7 +22,6 @@ import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 import {
-  FormGroup,
   InstitutionLogistration,
   PasswordField,
   RedirectLogistration,
@@ -32,9 +31,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
-} from '../data/constants';
+import { DEFAULT_STATE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -43,6 +40,7 @@ import {
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
+import { FormGroupWrapper, StatefulButtonWrapper } from '../shared/index.ts';
 
 const LoginPage = (props) => {
   const {
@@ -209,12 +207,7 @@ const LoginPage = (props) => {
         redirectUrl={loginResult.redirectUrl}
         finishAuthUrl={finishAuthUrl}
       />
-      <div className="mw-xs mt-3 mb-2">
-        <LoginFailureMessage
-          errorCode={errorCode.type}
-          errorCount={errorCode.count}
-          context={errorCode.context}
-        />
+      <div className="mw-xs">
         <ThirdPartyAuthAlert
           currentProvider={currentProvider}
           platformName={platformName}
@@ -223,17 +216,24 @@ const LoginPage = (props) => {
           messageType={activationMsgType}
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
-        <Form id="sign-in-form" name="sign-in-form">
-          <FormGroup
+        <Form id="sign-in-form" name="sign-in-form" className="tw-flex tw-flex-col tw-gap-[20px]">
+          <LoginFailureMessage
+            errorCode={errorCode.type}
+            errorCount={errorCode.count}
+            context={errorCode.context}
+          />
+          <FormGroupWrapper
+            label={formatMessage(messages['login.user.identity.label'])}
             name="emailOrUsername"
             value={formFields.emailOrUsername}
             autoComplete="on"
             handleChange={handleOnChange}
             handleFocus={handleOnFocus}
             errorMessage={errors.emailOrUsername}
-            floatingLabel={formatMessage(messages['login.user.identity.label'])}
+            placeholder={formatMessage(messages['login.user.identity.placeholder'])}
           />
           <PasswordField
+            label={formatMessage(messages['login.password.label'])}
             name="password"
             value={formFields.password}
             autoComplete="off"
@@ -243,30 +243,33 @@ const LoginPage = (props) => {
             handleFocus={handleOnFocus}
             errorMessage={errors.password}
             floatingLabel={formatMessage(messages['login.password.label'])}
+            placeholder={formatMessage(messages['login.password.placeholder'])}
+            borderClass="tw-rounded-[8px] tw-border-gray-300"
           />
-          <StatefulButton
-            name="sign-in"
-            id="sign-in"
-            type="submit"
-            variant="brand"
-            className="login-button-width"
-            state={submitState}
-            labels={{
-              default: formatMessage(messages['sign.in.button']),
-              pending: '',
-            }}
-            onClick={handleSubmit}
-            onMouseDown={(event) => event.preventDefault()}
-          />
-          <Link
-            id="forgot-password"
-            name="forgot-password"
-            className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(RESET_PAGE)}
-            onClick={trackForgotPasswordLinkClick}
-          >
-            {formatMessage(messages['forgot.password'])}
-          </Link>
+          <div className="tw-flex tw-flex-col tw-gap-6">
+            <Link
+              id="forgot-password"
+              name="forgot-password"
+              className="tw-font-semibold tw-text-sm tw-text-brand-700 hover:tw-text-brand-600"
+              to={updatePathWithQueryParams(RESET_PAGE)}
+              onClick={trackForgotPasswordLinkClick}
+            >
+              {formatMessage(messages['forgot.password'])}
+            </Link>
+            <StatefulButtonWrapper
+              name="sign-in"
+              id="sign-in"
+              type="submit"
+              variant="brand"
+              state={submitState}
+              labels={{
+                default: formatMessage(messages['sign.in.button']),
+                pending: '',
+              }}
+              onClick={handleSubmit}
+              onMouseDown={(event) => event.preventDefault()}
+            />
+          </div>
           <ThirdPartyAuth
             currentProvider={currentProvider}
             providers={providers}

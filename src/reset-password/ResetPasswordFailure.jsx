@@ -1,22 +1,19 @@
 import React from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@openedx/paragon';
-import { Error } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 import { FORM_SUBMISSION_ERROR, PASSWORD_RESET, PASSWORD_VALIDATION_ERROR } from './data/constants';
 import messages from './messages';
+import { AlertWrapper } from '../shared/index.ts';
 
 const ResetPasswordFailure = (props) => {
   const { formatMessage } = useIntl();
   const { errorCode, errorMsg } = props;
 
   let errorMessage = null;
-  let heading = formatMessage(messages['reset.password.failure.heading']);
   switch (errorCode) {
     case PASSWORD_RESET.FORBIDDEN_REQUEST:
-      heading = formatMessage(messages['reset.server.rate.limit.error']);
       errorMessage = formatMessage(messages['rate.limit.error']);
       break;
     case PASSWORD_RESET.INTERNAL_SERVER_ERROR:
@@ -34,10 +31,11 @@ const ResetPasswordFailure = (props) => {
 
   if (errorMessage) {
     return (
-      <Alert id="validation-errors" className="mb-5" variant="danger" icon={Error}>
-        <Alert.Heading>{heading}</Alert.Heading>
+      <AlertWrapper
+        status="danger"
+      >
         <p>{errorMessage}</p>
-      </Alert>
+      </AlertWrapper>
     );
   }
 
