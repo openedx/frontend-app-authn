@@ -2,12 +2,11 @@ import React from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
-import { Alert } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
-import { AlertWrapper } from '../shared';
+import { LOGIN_PAGE } from '../data/constants';
+import { AlertWrapper } from '../shared/index.ts';
 
 const ThirdPartyAuthAlert = (props) => {
   const { formatMessage } = useIntl();

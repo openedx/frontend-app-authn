@@ -5,7 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Image } from '@openedx/paragon';
 
 import illustration from '../../../assets/images/illustration-1.svg';
-import { GlassCard } from '../../../shared';
+import { GlassCard } from '../../../shared/index.ts';
 import { cn } from '../../../utils/cn';
 import messages from '../default-layout/messages';
 

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
-import cn from '../utils/cn';
+import { cn } from '../utils/cn';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
@@ -22,15 +22,15 @@ const SocialAuthProviders = (props) => {
     window.location.href = getConfig().LMS_BASE_URL + url;
   }
 
-  const socialAuth = socialAuthProviders.map((provider, index) => (
+  const socialAuth = socialAuthProviders.map((provider) => (
     <button
       id={provider.id}
       key={provider.id}
       type="button"
       className={cn(`btn-social btn-${provider.id}`,
-       'tw-w-full tw-h-auto tw-rounded-[100px] tw-py-[10px] tw-px-[16px]',
-       'tw-border-solid tw-border-1 tw-border-gray-300',
-       'tw-flex tw-items-center tw-justify-center',
+        'tw-w-full tw-h-auto tw-rounded-[100px] tw-py-[10px] tw-px-[16px]',
+        'tw-border-solid tw-border-1 tw-border-gray-300',
+        'tw-flex tw-items-center tw-justify-center',
       )}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
       onClick={handleSubmit}

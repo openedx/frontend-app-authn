@@ -116,7 +116,7 @@ const Logistration = (props) => {
                 {!institutionLogin && (
                   <div className="tw-text-center tw-flex tw-flex-col tw-gap-3">
                     <Title message={formatMessage(messages['logistration.sign.in'])} />
-                    <Description message={formatMessage(messages['logistration.details'], {providerName: formatProviderNames(providers)})} />
+                    <Description message={formatMessage(messages['logistration.details'], { providerName: formatProviderNames(providers) })} />
                   </div>
                 )}
                 <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />

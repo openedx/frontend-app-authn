@@ -273,12 +273,12 @@ const LoginPage = (props) => {
             platformName={platformName}
           />
           <ThirdPartyAuth
-              currentProvider={currentProvider}
-              providers={providers}
-              secondaryProviders={secondaryProviders}
-              handleInstitutionLogin={handleInstitutionLogin}
-              thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-              isLoginPage
+            currentProvider={currentProvider}
+            providers={providers}
+            secondaryProviders={secondaryProviders}
+            handleInstitutionLogin={handleInstitutionLogin}
+            thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+            isLoginPage
           />
         </div>
       </div>
