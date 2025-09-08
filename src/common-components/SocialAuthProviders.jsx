@@ -49,7 +49,7 @@ const SocialAuthProviders = (props) => {
               )}
           </div>
         )}
-      <span id="provider-name" className="notranslate tw-pl-3 tw-text-md tw-font-semibold tw-leading-6" aria-hidden="true">
+      <span id="provider-name" className="notranslate tw-pl-3 tw-text-md tw-font-semibold tw-leading-6 tw-text-gray-700" aria-hidden="true">
         {formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })}
       </span>
       <span className="sr-only">
