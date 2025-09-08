@@ -208,15 +208,11 @@ const LoginPage = (props) => {
         finishAuthUrl={finishAuthUrl}
       />
       <div className="mw-xs">
-        <ThirdPartyAuthAlert
-          currentProvider={currentProvider}
-          platformName={platformName}
-        />
         <AccountActivationMessage
           messageType={activationMsgType}
         />
         {showResetPasswordSuccessBanner && <ResetPasswordSuccess />}
-        <Form id="sign-in-form" name="sign-in-form" className="tw-flex tw-flex-col tw-gap-[20px]">
+        {/* <Form id="sign-in-form" name="sign-in-form" className="tw-flex tw-flex-col tw-gap-[20px]">
           <LoginFailureMessage
             errorCode={errorCode.type}
             errorCount={errorCode.count}
@@ -270,15 +266,21 @@ const LoginPage = (props) => {
               onMouseDown={(event) => event.preventDefault()}
             />
           </div>
-          <ThirdPartyAuth
+        </Form> */}
+        <div className="tw-flex tw-flex-col tw-gap-[20px]">
+          <ThirdPartyAuthAlert
             currentProvider={currentProvider}
-            providers={providers}
-            secondaryProviders={secondaryProviders}
-            handleInstitutionLogin={handleInstitutionLogin}
-            thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
-            isLoginPage
+            platformName={platformName}
           />
-        </Form>
+          <ThirdPartyAuth
+              currentProvider={currentProvider}
+              providers={providers}
+              secondaryProviders={secondaryProviders}
+              handleInstitutionLogin={handleInstitutionLogin}
+              thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
+              isLoginPage
+          />
+        </div>
       </div>
     </>
   );

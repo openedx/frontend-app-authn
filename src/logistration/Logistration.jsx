@@ -29,6 +29,7 @@ import { backupLoginForm } from '../login/data/actions';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 import { Description, LMSLogo, Title } from '../shared/index.ts';
+import { formatProviderNames } from '../utils/providers.ts';
 
 const Logistration = (props) => {
   const { selectedPage, tpaProviders } = props;
@@ -115,7 +116,7 @@ const Logistration = (props) => {
                 {!institutionLogin && (
                   <div className="tw-text-center tw-flex tw-flex-col tw-gap-3">
                     <Title message={formatMessage(messages['logistration.sign.in'])} />
-                    <Description message={formatMessage(messages['enter.your.details'])} />
+                    <Description message={formatMessage(messages['logistration.details'], {providerName: formatProviderNames(providers)})} />
                   </div>
                 )}
                 <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />

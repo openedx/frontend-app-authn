@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import messages from './messages';
 import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import cn from '../utils/cn';
 
 const SocialAuthProviders = (props) => {
   const { formatMessage } = useIntl();
@@ -26,7 +27,11 @@ const SocialAuthProviders = (props) => {
       id={provider.id}
       key={provider.id}
       type="button"
-      className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
+      className={cn(`btn-social btn-${provider.id}`,
+       'tw-w-full tw-h-auto tw-rounded-[100px] tw-py-[10px] tw-px-[16px]',
+       'tw-border-solid tw-border-1 tw-border-gray-300',
+       'tw-flex tw-items-center tw-justify-center',
+      )}
       data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
       onClick={handleSubmit}
     >
@@ -44,7 +49,9 @@ const SocialAuthProviders = (props) => {
               )}
           </div>
         )}
-      <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
+      <span id="provider-name" className="notranslate tw-pl-3 tw-text-md tw-font-semibold tw-leading-6" aria-hidden="true">
+        {formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })}
+      </span>
       <span className="sr-only">
         {referrer === LOGIN_PAGE
           ? formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })

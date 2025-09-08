@@ -10,12 +10,12 @@ const messages = defineMessages({
   // logistration strings
   'logistration.sign.in': {
     id: 'logistration.sign.in',
-    defaultMessage: 'Log in as teacher',
+    defaultMessage: 'Log in',
     description: 'Text that appears on the tab to switch between login and register',
   },
-  'enter.your.details': {
+  'logistration.details': {
     id: 'enter.your.details',
-    defaultMessage: 'Welcome back! Please enter your details.',
+    defaultMessage: 'Please log in with your {providerName} account',
     description: 'Text that appears on the login page',
   },
   'logistration.register': {
@@ -42,7 +42,7 @@ const messages = defineMessages({
   // social auth providers
   'sso.sign.in.with': {
     id: 'sso.sign.in.with',
-    defaultMessage: 'Sign in with {providerName}',
+    defaultMessage: 'Log in with {providerName}',
     description: 'Screen reader text that appears before social auth provider name',
   },
   'sso.create.account.using': {

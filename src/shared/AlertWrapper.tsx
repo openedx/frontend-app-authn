@@ -11,7 +11,7 @@ interface AlertWrapperProps {
   children: React.ReactNode;
 }
 
-const AlertWrapper = ({ status, children }: AlertWrapperProps) => (
+const AlertWrapper = ({ status = 'danger', children }: AlertWrapperProps) => (
   <Alert
     id="validation-errors"
     className={cn('tw-shadow-none tw-border-solid tw-border-[1px] tw-rounded-[8px] tw-p-[8px] tw-gap-[4px] tw-text-[14px] tw-font-[400]',
