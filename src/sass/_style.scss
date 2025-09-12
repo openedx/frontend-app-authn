@@ -93,6 +93,9 @@ $elevation-level-2-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.15);
   line-height: 1.5;
   height: 2.75rem;
 
+  &.is-invalid {
+    border-color: var(--danger-300, #CA3A2F);
+  }
 }
 
 .btn-social {
@@ -375,7 +378,7 @@ select.form-control {
 }
 
 .pgn__form-group {
-  margin-bottom: 1.75rem;
+  margin-bottom: 0px;
 }
 
 .form-text-size {
