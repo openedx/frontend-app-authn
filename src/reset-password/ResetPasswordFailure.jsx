@@ -32,6 +32,7 @@ const ResetPasswordFailure = (props) => {
   if (errorMessage) {
     return (
       <AlertWrapper
+        id="validation-errors"
         status="danger"
       >
         <p>{errorMessage}</p>

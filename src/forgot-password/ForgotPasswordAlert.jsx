@@ -47,6 +47,7 @@ const ForgotPasswordAlert = (props) => {
   if (message) {
     return (
       <AlertWrapper
+        id="validation-errors"
         status={status}
       >
         <p>{message}</p>

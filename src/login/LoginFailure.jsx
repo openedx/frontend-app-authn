@@ -198,7 +198,7 @@ const LoginFailureMessage = (props) => {
   }
 
   return (
-    <AlertWrapper>
+    <AlertWrapper id="login-failure-alert">
       { errorMessage }
     </AlertWrapper>
   );

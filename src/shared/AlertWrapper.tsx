@@ -7,13 +7,14 @@ import { AlertCircle } from '@untitledui/icons/AlertCircle';
 import { cn } from '../utils/cn';
 
 interface AlertWrapperProps {
-  status: string;
+  status: 'complete' | 'incomplete';
   children: React.ReactNode;
+  id: string;
 }
 
-const AlertWrapper = ({ status = 'danger', children }: AlertWrapperProps) => (
+const AlertWrapper = ({ status = 'incomplete', children, id }: AlertWrapperProps) => (
   <Alert
-    id="validation-errors"
+    id={id}
     className={cn('tw-shadow-none tw-border-solid tw-border-[1px] tw-rounded-[8px] tw-p-[8px] tw-gap-[4px] tw-text-[14px] tw-font-[400]',
       status === 'complete' ? 'tw-text-success-700' : 'tw-text-error-700 tw-border-error-300 tw-bg-error-50',
     )}

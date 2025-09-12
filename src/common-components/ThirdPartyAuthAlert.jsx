@@ -25,7 +25,7 @@ const ThirdPartyAuthAlert = (props) => {
   }
 
   return (
-    <AlertWrapper>
+    <AlertWrapper id="tpa-alert">
       <p>{ message }</p>
     </AlertWrapper>
   );
