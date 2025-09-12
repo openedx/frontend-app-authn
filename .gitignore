@@ -18,4 +18,4 @@ temp/babel-plugin-react-intl
 *~
 /temp
 /.vscode
-src/i18n/messages
+# src/i18n/messages
