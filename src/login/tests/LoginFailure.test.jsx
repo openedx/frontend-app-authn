@@ -64,7 +64,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -92,7 +92,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -122,7 +122,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -148,7 +148,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -168,7 +168,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -192,7 +192,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -212,7 +212,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -232,7 +232,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -252,7 +252,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -271,7 +271,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -291,7 +291,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 
@@ -391,7 +391,7 @@ describe('LoginFailureMessage', () => {
 
     render(
       <IntlProvider locale="en">
-        <IntlLoginFailureMessage {...props} />
+        <LoginFailureMessage {...props} />
       </IntlProvider>,
     );
 

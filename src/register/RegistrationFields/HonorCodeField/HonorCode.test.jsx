@@ -1,12 +1,8 @@
-import React from 'react';
-
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { render } from '@testing-library/react';
 
 import { HonorCode } from '../index';
-
-const IntlHonorCode = injectIntl(HonorCode);
 
 describe('HonorCodeTest', () => {
   mergeConfig({
@@ -28,7 +24,7 @@ describe('HonorCodeTest', () => {
     const errorMessage = `You must agree to the ${getConfig().SITE_NAME} Honor Code`;
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlHonorCode
+        <HonorCode
           errorMessage={errorMessage}
           onChangeHandler={changeHandler}
         />
@@ -43,7 +39,7 @@ describe('HonorCodeTest', () => {
     const expectedMsg = 'I agree to the Your Platform Name Here\u00a0Honor Codein a new tab';
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlHonorCode onChangeHandler={changeHandler} />
+        <HonorCode onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
 
@@ -56,7 +52,7 @@ describe('HonorCodeTest', () => {
   it('should render Terms of Service and Honor code field', () => {
     const { container } = render(
       <IntlProvider locale="en">
-        <IntlHonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
+        <HonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
       </IntlProvider>,
     );
     const expectedMsg = 'By creating an account, you agree to the Terms of Service and Honor Code and you '

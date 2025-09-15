@@ -1,10 +1,9 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { configure, injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
@@ -24,7 +23,6 @@ import {
 import { saveUserProfile } from '../data/actions';
 import ProgressiveProfiling from '../ProgressiveProfiling';
 
-const IntlProgressiveProfilingPage = injectIntl(ProgressiveProfiling);
 const mockStore = configureStore();
 mockTagular();
 
@@ -124,7 +122,7 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
-    const { queryByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { queryByRole } = render(reduxWrapper(<ProgressiveProfiling />));
     const button = queryByRole('button', { name: /learn more about how we use this information/i });
 
     expect(button).toBeNull();
@@ -135,7 +133,7 @@ describe('ProgressiveProfilingTests', () => {
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
 
-    const { getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { getByText } = render(reduxWrapper(<ProgressiveProfiling />));
 
     const learnMoreButton = getByText('Learn more about how we use this information.');
 
@@ -145,7 +143,7 @@ describe('ProgressiveProfilingTests', () => {
   it('should open modal on pressing skip for now button', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const { getByRole } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { getByRole } = render(reduxWrapper(<ProgressiveProfiling />));
 
     const skipButton = getByRole('button', { name: /skip for now/i });
     fireEvent.click(skipButton);
@@ -161,7 +159,7 @@ describe('ProgressiveProfilingTests', () => {
   // ******** test event functionality ********
 
   it('should make identify call to segment on progressive profiling page', () => {
-    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<ProgressiveProfiling />));
 
     expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
     expect(identifyAuthenticatedUser).toHaveBeenCalled();
@@ -171,7 +169,7 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
     });
-    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<ProgressiveProfiling />));
 
     const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
     fireEvent.click(supportLink);
@@ -190,7 +188,7 @@ describe('ProgressiveProfilingTests', () => {
     };
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<ProgressiveProfiling />));
 
     const nextButton = screen.getByText('Next');
     fireEvent.click(nextButton);
@@ -206,7 +204,7 @@ describe('ProgressiveProfilingTests', () => {
       extended_profile: [{ field_name: 'company', field_value: 'test company' }],
     };
     store.dispatch = jest.fn(store.dispatch);
-    const { getByLabelText, getByText } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { getByLabelText, getByText } = render(reduxWrapper(<ProgressiveProfiling />));
 
     const genderSelect = getByLabelText('Gender');
     const companyInput = getByLabelText('Company');
@@ -228,7 +226,7 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
 
-    const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    const { container } = render(reduxWrapper(<ProgressiveProfiling />));
     const errorElement = container.querySelector('#pp-page-errors');
 
     expect(errorElement).toBeTruthy();
@@ -244,7 +242,7 @@ describe('ProgressiveProfilingTests', () => {
       href: getConfig().BASE_URL,
     };
 
-    render(reduxWrapper(<IntlProgressiveProfilingPage />));
+    render(reduxWrapper(<ProgressiveProfiling />));
     expect(window.location.href).toEqual(DASHBOARD_URL);
   });
 
@@ -265,7 +263,7 @@ describe('ProgressiveProfilingTests', () => {
           eventData,
         },
       });
-      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
       const nextButton = container.querySelector('button.btn-brand');
       expect(nextButton.textContent).toEqual('Next');
 
@@ -295,7 +293,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
       const nextButton = container.querySelector('button.btn-brand');
       expect(nextButton.textContent).toEqual('Submit');
 
@@ -331,7 +329,7 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
-      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<ProgressiveProfiling />));
 
       const skipLinkButton = screen.getByText('Skip for now');
       fireEvent.click(skipLinkButton);
@@ -356,7 +354,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
 
       const tpaSpinnerElement = container.querySelector('#tpa-spinner');
       expect(tpaSpinnerElement).toBeTruthy();
@@ -376,7 +374,7 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}`,
       };
-      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<ProgressiveProfiling />));
       const submitButton = screen.getByText('Next');
       fireEvent.click(submitButton);
 
@@ -391,7 +389,7 @@ describe('ProgressiveProfilingTests', () => {
         search: `?variant=${EMBEDDED}&host=${host}`,
       };
 
-      const { container } = render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
 
       const genderField = container.querySelector('#gender');
       expect(genderField).toBeTruthy();
@@ -412,7 +410,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<ProgressiveProfiling />));
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
@@ -443,7 +441,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      render(reduxWrapper(<IntlProgressiveProfilingPage />));
+      render(reduxWrapper(<ProgressiveProfiling />));
       const submitButton = screen.getByText('Submit');
       fireEvent.click(submitButton);
       await waitFor(() => {

@@ -1,7 +1,6 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -9,7 +8,6 @@ import configureStore from 'redux-mock-store';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
 import { NameField } from '../index';
 
-const IntlNameField = injectIntl(NameField);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -69,7 +67,7 @@ describe('NameField', () => {
     const fieldValidation = { name: 'Enter your full name' };
 
     it('should run name field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.blur(nameInput, { target: { value: '', name: 'name' } });
@@ -82,7 +80,7 @@ describe('NameField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.blur(nameInput, { target: { value: 'https://invalid-name.com', name: 'name' } });
@@ -95,7 +93,7 @@ describe('NameField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.focus(nameInput, { target: { value: '', name: 'name' } });
@@ -113,7 +111,7 @@ describe('NameField', () => {
         ...props,
         shouldFetchUsernameSuggestions: true,
       };
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
 
       const nameInput = container.querySelector('input#name');
       // Enter a valid name so that frontend validations are passed
@@ -135,7 +133,7 @@ describe('NameField', () => {
       });
 
       store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
 
       const nameInput = container.querySelector('input#name');
 

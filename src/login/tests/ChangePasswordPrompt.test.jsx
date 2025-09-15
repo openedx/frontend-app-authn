@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
@@ -14,7 +14,6 @@ import mockTagular from '../../cohesion/utils';
 import { RESET_PAGE } from '../../data/constants';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
-const IntlChangePasswordPrompt = injectIntl(ChangePasswordPrompt);
 const mockedNavigator = jest.fn();
 const mockStore = configureStore();
 mockTagular();
@@ -70,7 +69,7 @@ describe('ChangePasswordPromptTests', () => {
       <IntlProvider locale="en">
         <Provider store={store}>
           <MemoryRouter>
-            <IntlChangePasswordPrompt {...props} />
+            <ChangePasswordPrompt {...props} />
           </MemoryRouter>
         </Provider>
       </IntlProvider>,
@@ -96,7 +95,7 @@ describe('ChangePasswordPromptTests', () => {
       <IntlProvider locale="en">
         <Provider store={store}>
           <MemoryRouter>
-            <IntlChangePasswordPrompt {...props} />
+            <ChangePasswordPrompt {...props} />
           </MemoryRouter>
         </Provider>
       </IntlProvider>,
