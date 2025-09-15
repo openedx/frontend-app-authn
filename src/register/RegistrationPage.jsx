@@ -411,6 +411,7 @@ const RegistrationPage = (props) => {
                   setFormFields={setConfigurableFormFields}
                   autoSubmitRegisterForm={autoSubmitRegForm}
                   fieldDescriptions={fieldDescriptions}
+                  countriesCodesList={countriesCodesList}
                 />
                 {captchaError && (
                   <div className="mt-3 pgn__form-text-invalid pgn__form-text">

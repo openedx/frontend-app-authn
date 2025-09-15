@@ -37,15 +37,14 @@ const MainApp = () => {
   const recaptchaSiteKeyWeb = getConfig().RECAPTCHA_SITE_KEY_WEB;
 
   return (
-    <AppProvider store={configureStore()}>
-      <GoogleReCaptchaProvider
+     <GoogleReCaptchaProvider
         reCaptchaKey={recaptchaSiteKeyWeb}
         useEnterprise
       >
+      <AppProvider store={configureStore()}>
         <Helmet>
           <link rel="shortcut icon" href={getConfig().FAVICON_URL} type="image/x-icon" />
         </Helmet>
-        {getConfig().ZENDESK_KEY && <Zendesk />}
         <Routes>
           <Route path="/" element={<Navigate replace to={updatePathWithQueryParams(REGISTER_PAGE)} />} />
           <Route
@@ -66,8 +65,10 @@ const MainApp = () => {
           <Route path={PAGE_NOT_FOUND} element={<NotFoundPage />} />
           <Route path="*" element={<Navigate replace to={PAGE_NOT_FOUND} />} />
         </Routes>
-      </GoogleReCaptchaProvider>
-    </AppProvider>
+        <RouteTracker />
+        <MainAppSlot />
+      </AppProvider>
+    </GoogleReCaptchaProvider>
   );
 };
 
