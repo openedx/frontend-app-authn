@@ -393,7 +393,7 @@ describe('ThirdPartyAuth', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
       }, { timeout: 1100 });

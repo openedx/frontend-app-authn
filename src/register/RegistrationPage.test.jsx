@@ -520,7 +520,7 @@ describe('RegistrationPage', () => {
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(dashboardURL);
       }, { timeout: 1100 });
@@ -549,7 +549,7 @@ describe('RegistrationPage', () => {
       });
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       await waitFor(() => {
         expect(window.location.href).toBe(dashboardUrl);
       }, { timeout: 1100 });
@@ -605,7 +605,7 @@ describe('RegistrationPage', () => {
     });
 
     it('should send page event when register page is rendered', () => {
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register', { app_name: APP_NAME });
     });
 
@@ -623,7 +623,7 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', { app_name: APP_NAME });
     });
 

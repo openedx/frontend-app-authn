@@ -69,7 +69,7 @@ describe('ChangePasswordPromptTests', () => {
       <IntlProvider locale="en">
         <Provider store={store}>
           <MemoryRouter>
-            <IntlChangePasswordPrompt {...props} />
+            <ChangePasswordPrompt {...props} />
           </MemoryRouter>
         </Provider>
       </IntlProvider>,
@@ -95,7 +95,7 @@ describe('ChangePasswordPromptTests', () => {
       <IntlProvider locale="en">
         <Provider store={store}>
           <MemoryRouter>
-            <IntlChangePasswordPrompt {...props} />
+            <ChangePasswordPrompt {...props} />
           </MemoryRouter>
         </Provider>
       </IntlProvider>,

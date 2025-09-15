@@ -528,7 +528,7 @@ describe('LoginPage', () => {
 
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(dashboardURL);
     }, { timeout: 1100 });
@@ -557,7 +557,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     }, { timeout: 1100 });
@@ -609,7 +609,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     await waitFor(() => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + finishAuthUrl);
     }, { timeout: 1100 });
@@ -761,7 +761,7 @@ describe('LoginPage', () => {
   // ******** miscellaneous tests ********
 
   it('should send page event when login page is rendered', () => {
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login', { app_name: APP_NAME });
   });
 
