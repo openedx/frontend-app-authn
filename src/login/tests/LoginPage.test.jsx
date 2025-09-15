@@ -1,9 +1,8 @@
-import React from 'react';
 import { Provider } from 'react-redux';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
@@ -28,7 +27,6 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 }));
 mockTagular();
 
-const IntlLoginPage = injectIntl(LoginPage);
 const mockStore = configureStore();
 
 describe('LoginPage', () => {
@@ -93,7 +91,7 @@ describe('LoginPage', () => {
   it('should submit form for valid input', () => {
     store.dispatch = jest.fn(store.dispatch);
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     fireEvent.change(screen.getByText(
       '',
@@ -114,7 +112,7 @@ describe('LoginPage', () => {
 
   it('should not dispatch loginRequest on empty form submission', () => {
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     fireEvent.click(screen.getByText(
       '',
@@ -133,7 +131,7 @@ describe('LoginPage', () => {
     });
 
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
@@ -147,7 +145,7 @@ describe('LoginPage', () => {
   it('should match state for invalid email (less than 2 characters), on form submission', () => {
     store.dispatch = jest.fn(store.dispatch);
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     fireEvent.change(screen.getByText(
       '',
@@ -167,7 +165,7 @@ describe('LoginPage', () => {
   });
 
   it('should show error messages for required fields on empty form submission', () => {
-    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { container } = render(reduxWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByText(
       '',
       { selector: '.btn-brand' },
@@ -181,7 +179,7 @@ describe('LoginPage', () => {
   });
 
   it('should run frontend validations for emailOrUsername field on form submission', () => {
-    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { container } = render(reduxWrapper(<LoginPage {...props} />));
 
     fireEvent.change(screen.getByText(
       '',
@@ -200,7 +198,7 @@ describe('LoginPage', () => {
   it('should reset field related error messages on onFocus event', async () => {
     store.dispatch = jest.fn(store.dispatch);
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     await act(async () => {
       // clicking submit button with empty fields to make the errors appear
@@ -229,7 +227,7 @@ describe('LoginPage', () => {
   // ******** test form buttons and links ********
 
   it('should match default button state', () => {
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText('Sign in')).toBeDefined();
   });
 
@@ -242,7 +240,7 @@ describe('LoginPage', () => {
       },
     });
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     expect(screen.getByText(
       'pending',
@@ -250,7 +248,7 @@ describe('LoginPage', () => {
   });
 
   it('should show forgot password link', () => {
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     expect(screen.getByText(
       'Forgot password',
@@ -270,7 +268,7 @@ describe('LoginPage', () => {
       },
     });
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: `#${ssoProvider.id}` },
@@ -292,7 +290,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Or sign in with:')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeNull();
@@ -312,7 +310,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Or sign in with:')).toBeNull();
   });
@@ -332,7 +330,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Company or school credentials')).toBeDefined();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
@@ -357,7 +355,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
@@ -385,7 +383,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
@@ -405,7 +403,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeNull();
     expect(queryByText('Company or school credentials')).toBeNull();
@@ -423,7 +421,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { queryByText } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { queryByText } = render(reduxWrapper(<LoginPage {...props} />));
     expect(queryByText('Or sign in with:')).toBeDefined();
     expect(queryByText('Company or school credentials')).toBeNull();
     expect(queryByText('Institution/campus credentials')).toBeDefined();
@@ -446,7 +444,7 @@ describe('LoginPage', () => {
       },
     });
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: '#login-failure-alert' },
@@ -470,7 +468,7 @@ describe('LoginPage', () => {
                             + 'linked '}${ getConfig().SITE_NAME } account. To link your accounts, sign in now using your ${
                              getConfig().SITE_NAME } password.`;
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: '#tpa-alert' },
@@ -489,7 +487,7 @@ describe('LoginPage', () => {
         },
       },
     });
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: '#login-failure-alert' },
@@ -506,7 +504,7 @@ describe('LoginPage', () => {
       },
     });
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: '#login-failure-alert' },
@@ -580,7 +578,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
 
     fireEvent.click(screen.getByText(
       '',
@@ -635,7 +633,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
       { selector: `#${ssoProvider.id}` },
@@ -662,7 +660,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
-    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { container } = render(reduxWrapper(<LoginPage {...props} />));
     expect(container.querySelector('.react-loading-skeleton')).toBeTruthy();
   });
 
@@ -684,7 +682,7 @@ describe('LoginPage', () => {
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.loginUrl);
   });
 
@@ -704,7 +702,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
 
-    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { container } = render(reduxWrapper(<LoginPage {...props} />));
     expect(container.querySelector(`#${ssoProvider.id}`).querySelector('#provider-name').textContent).toEqual(`${ssoProvider.name}`);
 
     mergeConfig({
@@ -728,7 +726,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       'Show me other ways to sign in or register',
     ).textContent).toBeDefined();
@@ -754,7 +752,7 @@ describe('LoginPage', () => {
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
 
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       'Show me other ways to sign in',
     ).textContent).toBeDefined();
@@ -777,7 +775,7 @@ describe('LoginPage', () => {
     });
 
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(store.dispatch).toHaveBeenCalledWith(backupLoginFormBegin(
       {
         formFields: {
@@ -791,7 +789,7 @@ describe('LoginPage', () => {
   });
 
   it('should send track event when forgot password link is clicked', () => {
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByText(
       'Forgot password',
       { selector: '#forgot-password' },
@@ -810,7 +808,7 @@ describe('LoginPage', () => {
     });
 
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlLoginPage {...props} />));
+    render(reduxWrapper(<LoginPage {...props} />));
     expect(store.dispatch).toHaveBeenCalledWith(backupLoginFormBegin(
       {
         formFields: {
@@ -839,7 +837,7 @@ describe('LoginPage', () => {
       },
     });
 
-    const { container } = render(reduxWrapper(<IntlLoginPage {...props} />));
+    const { container } = render(reduxWrapper(<LoginPage {...props} />));
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');
   });
