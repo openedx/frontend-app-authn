@@ -206,6 +206,11 @@ const messages = defineMessages({
     defaultMessage: 'Did you mean',
     description: 'Did you mean alert suggestion',
   },
+  'registration.captcha.verification.label': {
+    id: 'registration.captcha.verification.label',
+    defaultMessage: 'CAPTCHA verification failed.',
+    description: 'CAPTCHA verification failed',
+  },
 });
 
 export default messages;

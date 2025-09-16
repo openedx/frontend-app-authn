@@ -8,6 +8,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, Spinner, StatefulButton } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
 
@@ -58,6 +59,7 @@ import { trackRegistrationPageViewed, trackRegistrationSuccess } from '../tracki
  * Main Registration Page component
  */
 const RegistrationPage = (props) => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
 
@@ -230,7 +232,7 @@ const RegistrationPage = (props) => {
     }
   };
 
-  const registerUser = () => {
+  const registerUser = async () => {
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields, app_name: APP_NAME };
 
@@ -259,16 +261,38 @@ const RegistrationPage = (props) => {
       return;
     }
 
-    // Preparing payload for submission
-    payload = prepareRegistrationPayload(
-      payload,
-      configurableFormFields,
-      flags.showMarketingEmailOptInCheckbox,
-      totalRegistrationTime,
-      queryParams);
+    if (executeRecaptcha) {
+      const recaptchaToken = await executeRecaptcha('submit_registration_form');
+      if (!recaptchaToken) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          captchaError: formatMessage(messages['registration.captcha.verification.label']),
+        }));
+        return;
+      }
+      setErrors(prevErrors => ({
+        ...prevErrors,
+        captchaError: '',
+      }));
 
-    // making register call
-    dispatch(registerNewUser(payload));
+      // Preparing payload for submission
+      if (recaptchaToken) {
+        payload = prepareRegistrationPayload(
+          payload,
+          configurableFormFields,
+          flags.showMarketingEmailOptInCheckbox,
+          totalRegistrationTime,
+          queryParams,
+        );
+
+        const updatedpayload = {
+          ...payload,
+          captcha_token: recaptchaToken,
+        };
+        // making register call
+        dispatch(registerNewUser(updatedpayload));
+      }
+    }
   };
 
   const handleSubmit = (e) => {
@@ -395,6 +419,11 @@ const RegistrationPage = (props) => {
                   fieldDescriptions={fieldDescriptions}
                   countriesCodesList={countriesCodesList}
                 />
+                {errors?.captchaError && (
+                  <div className="mt-3 pgn__form-text-invalid pgn__form-text">
+                    {errors.captchaError}
+                  </div>
+                )}
                 <StatefulButton
                   id="register-user"
                   name="register-user"
