@@ -4,7 +4,7 @@ import { mergeConfig } from '@edx/frontend-platform';
 import {
   getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
@@ -225,7 +225,7 @@ describe('ConfigurableRegistrationForm', () => {
       expect(document.querySelector('#tos')).toBeTruthy();
     });
 
-    it('should submit form with fields returned by backend in payload', () => {
+    it('should submit form with fields returned by backend in payload', async () => {
       mergeConfig({
         SHOW_CONFIGURABLE_EDX_FIELDS: true,
       });
@@ -265,7 +265,9 @@ describe('ConfigurableRegistrationForm', () => {
 
       fireEvent.click(submitButton);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK', app_name: APP_NAME }));
+      await waitFor(() => {
+        expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload, country: 'PK', app_name: APP_NAME }));
+      });
     });
 
     it('should show error messages for required fields on empty form submission', () => {

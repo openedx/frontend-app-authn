@@ -37,6 +37,7 @@ const configuration = {
   ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID || '',
   ALGOLIA_SEARCH_API_KEY: process.env.ALGOLIA_SEARCH_API_KEY || '',
   AUTO_GENERATED_USERNAME_EXPERIMENT_ID: process.env.AUTO_GENERATED_USERNAME_EXPERIMENT_ID || '',
+  RECAPTCHA_SITE_KEY_WEB: process.env.RECAPTCHA_SITE_KEY_WEB || '',
 };
 
 export default configuration;
