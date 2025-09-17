@@ -267,7 +267,7 @@ const RegistrationPage = (props) => {
     } catch (err) {
       setErrors(prev => ({
         ...prev,
-        captchaError: formatMessage(messages['registration.captcha.verification.label']) || err.message,
+        captchaError: err.message,
       }));
       return;
     }

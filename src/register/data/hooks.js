@@ -1,9 +1,13 @@
 import { useCallback } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
+import messages from '../messages';
+
 const useRecaptchaSubmission = (actionName = 'submit') => {
+  const { formatMessage } = useIntl();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const recaptchaKey = getConfig().RECAPTCHA_SITE_KEY_WEB;
 
@@ -13,7 +17,7 @@ const useRecaptchaSubmission = (actionName = 'submit') => {
     if (executeRecaptcha && recaptchaKey) {
       const token = await executeRecaptcha(actionName);
       if (!token) {
-        throw new Error('reCAPTCHA verification failed. Please try again.');
+        throw new Error(formatMessage(messages['registration.captcha.verification.label']));
       }
       return token;
     }
@@ -24,7 +28,7 @@ const useRecaptchaSubmission = (actionName = 'submit') => {
       console.warn(`reCAPTCHA not ready for action: ${actionName}. Proceeding without token.`);
     }
     return null;
-  }, [executeRecaptcha, recaptchaKey, actionName]);
+  }, [executeRecaptcha, recaptchaKey, actionName, formatMessage]);
 
   return {
     executeWithFallback,

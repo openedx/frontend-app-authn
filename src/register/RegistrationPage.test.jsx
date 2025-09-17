@@ -435,7 +435,7 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       useRecaptchaSubmission.mockReturnValue({
-        executeWithFallback: jest.fn().mockRejectedValue(new Error('reCAPTCHA verification failed')),
+        executeWithFallback: jest.fn().mockRejectedValue(new Error('CAPTCHA verification failed.')),
         isReady: true,
         isLoading: false,
       });
