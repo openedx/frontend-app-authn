@@ -1,8 +1,9 @@
-import { renderHook } from '@testing-library/react';
 import { getConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
-import useRecaptchaSubmission from './hooks';
+import { renderHook } from '@testing-library/react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+
+import useRecaptchaSubmission from './hooks';
 
 jest.mock('@edx/frontend-platform', () => ({
   getConfig: jest.fn(),
@@ -33,7 +34,7 @@ describe('useRecaptchaSubmission', () => {
     });
 
     await expect(result.current.executeWithFallback()).rejects.toThrow(
-      'CAPTCHA verification failed.'
+      'CAPTCHA verification failed.',
     );
   });
 
@@ -52,7 +53,7 @@ describe('useRecaptchaSubmission', () => {
 
     expect(token).toBeNull();
     expect(warnSpy).toHaveBeenCalledWith(
-      'reCAPTCHA not ready for action: test_action. Proceeding without token.'
+      'reCAPTCHA not ready for action: test_action. Proceeding without token.',
     );
 
     warnSpy.mockRestore();
