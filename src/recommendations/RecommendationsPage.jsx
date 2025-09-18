@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   breakpoints,
@@ -21,18 +22,35 @@ import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
 import { LINK_TIMEOUT, trackRecommendationsViewed, trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
+import { getAllPossibleQueryParams } from '../data/utils';
 
 const RecommendationsPage = () => {
   const { formatMessage } = useIntl();
+  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
   const location = useLocation();
+  const queryParams = getAllPossibleQueryParams();
+  // flag to show recommendations for onboarding component experience
+  const showRecommendations = !!queryParams?.finalRedirectUrl && !!queryParams?.country;
+  const backendCountryCode = useSelector((state) => state.register.backendCountryCode);
 
-  const registrationResponse = location.state?.registrationResult;
-  const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-  const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
-  const userId = location.state?.userId;
+  const [redirectUrl, setRedirectUrl] = useState(location.state?.registrationResult?.redirectUrl);
+  const [educationLevel, setEducationLevel] = useState(EDUCATION_LEVEL_MAPPING[location.state?.educationLevel]);
+  const [userId, setUserId] = useState(location.state?.userId || null);
+  const [userCountry, setUserCountry] = useState(backendCountryCode);
 
-  const userCountry = useSelector((state) => state.register.backendCountryCode);
+  useEffect(() => {
+    if (showRecommendations) {
+      const authenticatedUser = getAuthenticatedUser();
+      if (authenticatedUser) {
+        setRedirectUrl(queryParams.finalRedirectUrl);
+        setEducationLevel(EDUCATION_LEVEL_MAPPING[queryParams?.levelOfEducation]);
+        setUserCountry(queryParams.country);
+        setUserId(authenticatedUser?.userId);
+      }
+    }
+  }, [showRecommendations, queryParams]);
+
   const {
     recommendations: algoliaRecommendations,
     isLoading,
@@ -46,8 +64,8 @@ const RecommendationsPage = () => {
 
   const handleSkipRecommendationPage = () => {
     window.history.replaceState(location.state, null, '');
-    if (registrationResponse) {
-      window.location.href = registrationResponse.redirectUrl;
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
     } else {
       window.location.href = DASHBOARD_URL;
     }
@@ -59,7 +77,7 @@ const RecommendationsPage = () => {
     setTimeout(() => { handleSkipRecommendationPage(); }, LINK_TIMEOUT);
   };
 
-  if (!registrationResponse) {
+  if (!redirectUrl && !showRecommendations) {
     window.location.href = DASHBOARD_URL;
     return null;
   }
