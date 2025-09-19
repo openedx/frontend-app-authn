@@ -11,6 +11,10 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 24]
+    continue-on-error: ${{ matrix.node == 24 }}
 
     steps:
     - name: Checkout
@@ -18,7 +22,7 @@ jobs:
     - name: Setup Nodejs
       uses: actions/setup-node@v4
       with:
-        node-version-file: '.nvmrc'
+        node-version: ${{ matrix.node }}
 
     - name: Install Dependencies
       run: npm ci
