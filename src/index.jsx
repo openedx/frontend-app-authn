@@ -3,6 +3,11 @@ import 'regenerator-runtime/runtime';
 
 import React, { StrictMode } from 'react';
 
+import '@fontsource/plus-jakarta-sans/400.css';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+
 import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,
 } from '@edx/frontend-platform';

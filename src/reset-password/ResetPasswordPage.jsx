@@ -5,13 +5,8 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
   Form,
-  Icon,
   Spinner,
-  StatefulButton,
-  Tab,
-  Tabs,
 } from '@openedx/paragon';
-import { ChevronLeft } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -30,13 +25,15 @@ import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import {
+  Description, GlassCard, LMSLogo, StatefulButtonWrapper, Title,
+} from '../shared/index.ts';
 
 const ResetPasswordPage = (props) => {
   const { formatMessage } = useIntl();
   const newPasswordError = formatMessage(messages['password.validation.message']);
 
   const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [errorCode, setErrorCode] = useState(null);
   const { token } = useParams();
@@ -74,15 +71,6 @@ const ResetPasswordPage = (props) => {
           validatePasswordFromBackend(value);
         }
         break;
-      case 'confirmPassword':
-        if (!value) {
-          formErrors.confirmPassword = formatMessage(messages['confirm.your.password']);
-        } else if (value !== newPassword) {
-          formErrors.confirmPassword = formatMessage(messages['passwords.do.not.match']);
-        } else {
-          formErrors.confirmPassword = '';
-        }
-        break;
       default:
         break;
     }
@@ -95,13 +83,6 @@ const ResetPasswordPage = (props) => {
     validateInput(name, value);
   };
 
-  const handleConfirmPasswordChange = (e) => {
-    const { value } = e.target;
-
-    setConfirmPassword(value);
-    validateInput('confirmPassword', value);
-  };
-
   const handleOnFocus = (e) => {
     setFormErrors({ ...formErrors, [e.target.name]: '' });
   };
@@ -110,12 +91,11 @@ const ResetPasswordPage = (props) => {
     e.preventDefault();
 
     const isPasswordValid = validateInput('newPassword', newPassword);
-    const isPasswordConfirmed = validateInput('confirmPassword', confirmPassword);
 
-    if (isPasswordValid && isPasswordConfirmed) {
+    if (isPasswordValid) {
       const formPayload = {
         new_password1: newPassword,
-        new_password2: confirmPassword,
+        new_password2: newPassword,
       };
       const params = getAllPossibleQueryParams();
       props.resetPassword(formPayload, props.token, params);
@@ -125,17 +105,20 @@ const ResetPasswordPage = (props) => {
     }
   };
 
-  const tabTitle = (
-    <div className="d-inline-flex flex-wrap align-items-center">
-      <Icon src={ChevronLeft} />
-      <span className="ml-2">{formatMessage(messages['sign.in'])}</span>
-    </div>
-  );
-
   if (props.status === TOKEN_STATE.PENDING) {
     if (token) {
       props.validateToken(token);
-      return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
+      return (
+        <BaseContainer>
+          <GlassCard className="!tw-w-[576px] !tw-h-fit tw-p-8 tw-flex tw-flex-col tw-gap-12">
+            <LMSLogo />
+            <div className="tw-flex tw-flex-col tw-gap-8 tw-items-center">
+              <Spinner animation="border" variant="primary" />
+              <Description message={formatMessage(messages['verifying.token'])} />
+            </div>
+          </GlassCard>
+        </BaseContainer>
+      );
     }
   } else if (props.status === PASSWORD_RESET_ERROR) {
     navigate(updatePathWithQueryParams(RESET_PAGE));
@@ -144,57 +127,51 @@ const ResetPasswordPage = (props) => {
   } else {
     return (
       <BaseContainer>
-        <div>
+        <GlassCard className="!tw-w-[576px] !tw-h-fit tw-p-8 tw-flex tw-flex-col tw-gap-12">
           <Helmet>
             <title>
               {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
             </title>
           </Helmet>
-          <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
-            <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
-          </Tabs>
-          <div id="main-content" className="main-content">
-            <div className="mw-xs">
-              <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
-              <h4>{formatMessage(messages['reset.password'])}</h4>
-              <p className="mb-4">{formatMessage(messages['reset.password.page.instructions'])}</p>
-              <Form id="set-reset-password-form" name="set-reset-password-form">
-                <PasswordField
-                  name="newPassword"
-                  value={newPassword}
-                  handleChange={(e) => setNewPassword(e.target.value)}
-                  handleBlur={handleOnBlur}
-                  handleFocus={handleOnFocus}
-                  errorMessage={formErrors.newPassword}
-                  floatingLabel={formatMessage(messages['new.password.label'])}
-                />
-                <PasswordField
-                  name="confirmPassword"
-                  value={confirmPassword}
-                  handleChange={handleConfirmPasswordChange}
-                  handleFocus={handleOnFocus}
-                  errorMessage={formErrors.confirmPassword}
-                  showRequirements={false}
-                  floatingLabel={formatMessage(messages['confirm.password.label'])}
-                />
-                <StatefulButton
-                  id="submit-new-password"
-                  name="submit-new-password"
-                  type="submit"
-                  variant="brand"
-                  className="reset-password--button"
-                  state={props.status}
-                  labels={{
-                    default: formatMessage(messages['reset.password']),
-                    pending: '',
-                  }}
-                  onClick={e => handleSubmit(e)}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-              </Form>
+          <LMSLogo />
+          <div className="tw-flex tw-flex-col tw-gap-8 tw-w-full">
+            <div className="tw-text-center tw-flex tw-flex-col tw-gap-3">
+              <Title message={formatMessage(messages['reset.password.page.title'])} />
+              <div className="tw-flex tw-flex-col tw-gap-1">
+                <Description message={formatMessage(messages['reset.password.page.instructions'])} />
+                <Description message={formatMessage(messages['reset.password.page.instructions.2'])} />
+              </div>
             </div>
+            <ResetPasswordFailure errorCode={errorCode} errorMsg={props.errorMsg} />
+            <Form id="set-reset-password-form" name="set-reset-password-form" className="tw-flex tw-flex-col tw-gap-6 tw-w-full">
+              <PasswordField
+                name="newPassword"
+                value={newPassword}
+                handleChange={(e) => setNewPassword(e.target.value)}
+                handleBlur={handleOnBlur}
+                handleFocus={handleOnFocus}
+                errorMessage={formErrors.newPassword}
+                label={formatMessage(messages['new.password.label'])}
+                floatingLabel={formatMessage(messages['new.password.label'])}
+                placeholder={formatMessage(messages['new.password.placeholder'])}
+              />
+              <StatefulButtonWrapper
+                id="submit-new-password"
+                name="submit-new-password"
+                type="submit"
+                variant="brand"
+                className="reset-password--button"
+                state={props.status}
+                labels={{
+                  default: formatMessage(messages['reset.password']),
+                  pending: '',
+                }}
+                onClick={e => handleSubmit(e)}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+            </Form>
           </div>
-        </div>
+        </GlassCard>
       </BaseContainer>
     );
   }

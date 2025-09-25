@@ -6,8 +6,10 @@ import {
   Form, Icon, IconButton, OverlayTrigger, Tooltip, useToggle,
 } from '@openedx/paragon';
 import {
-  Check, Remove, Visibility, VisibilityOff,
+  Check, Remove,
 } from '@openedx/paragon/icons';
+import { Eye } from '@untitledui/icons/Eye';
+import { EyeOff } from '@untitledui/icons/EyeOff';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
@@ -75,7 +77,7 @@ const PasswordField = (props) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       name="passwordIcon"
-      src={VisibilityOff}
+      src={EyeOff}
       iconAs={Icon}
       onClick={setHiddenTrue}
       size="sm"
@@ -89,7 +91,7 @@ const PasswordField = (props) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       name="passwordIcon"
-      src={Visibility}
+      src={Eye}
       iconAs={Icon}
       onClick={setHiddenFalse}
       size="sm"
@@ -116,12 +118,17 @@ const PasswordField = (props) => {
     </Tooltip>
   );
 
+  const Label = props.label && (
+    <p className="tw-text-gray-700 tw-text-[14px] tw-font-[500] tw-leading-[24px] tw-mb-[6px]">{props.label}</p>
+  );
+
   return (
     <Form.Group controlId={props.name} isInvalid={props.errorMessage !== ''}>
+      {Label}
       <OverlayTrigger key="tooltip" placement={placement} overlay={tooltip} show={showTooltip}>
         <Form.Control
           as="input"
-          className="form-group__form-field"
+          className="form-group__form-field tw-rounded-[8px] tw-border-gray-300 tw-shadow-xs"
           type={isPasswordHidden ? 'password' : 'text'}
           name={props.name}
           value={props.value}
@@ -130,9 +137,9 @@ const PasswordField = (props) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={props.handleChange}
-          controlClassName={props.borderClass}
+          controlClassName={`${props.borderClass} tw-rounded-[8px] tw-border-gray-300 tw-shadow-xs tw-py-[10px] tw-px-[14px]`}
           trailingElement={isPasswordHidden ? ShowButton : HideButton}
-          floatingLabel={props.floatingLabel}
+          placeholder={props.placeholder}
         />
       </OverlayTrigger>
       {props.errorMessage !== '' && (
@@ -155,12 +162,13 @@ PasswordField.defaultProps = {
   showRequirements: true,
   showScreenReaderText: true,
   autoComplete: null,
+  placeholder: '',
 };
 
 PasswordField.propTypes = {
+  label: PropTypes.string.isRequired,
   borderClass: PropTypes.string,
   errorMessage: PropTypes.string,
-  floatingLabel: PropTypes.string.isRequired,
   handleBlur: PropTypes.func,
   handleFocus: PropTypes.func,
   handleChange: PropTypes.func,
@@ -170,6 +178,7 @@ PasswordField.propTypes = {
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
   showScreenReaderText: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 export default PasswordField;

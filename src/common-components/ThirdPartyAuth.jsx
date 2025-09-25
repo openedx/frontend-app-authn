@@ -41,13 +41,13 @@ const ThirdPartyAuth = (props) => {
 
   return (
     <>
-      {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
+      {/* {((isEnterpriseLoginDisabled && isInstitutionAuthActive) || isSocialAuthActive) && (
         <div className="mt-4 mb-3 h4">
           {isLoginPage
             ? formatMessage(messages['login.other.options.heading'])
             : formatMessage(messages['registration.other.options.heading'])}
         </div>
-      )}
+      )} */}
       {(isLoginPage && !isEnterpriseLoginDisabled && isSocialAuthActive) && (
         <Hyperlink
           className={classNames(
@@ -61,10 +61,9 @@ const ThirdPartyAuth = (props) => {
           {formatMessage(messages['enterprise.login.btn.text'])}
         </Hyperlink>
       )}
-
-      {thirdPartyAuthApiStatus === PENDING_STATE && isThirdPartyAuthActive ? (
-        <div className="mt-4">
-          <Skeleton className="tpa-skeleton" height={36} count={2} />
+      { thirdPartyAuthApiStatus === PENDING_STATE && isThirdPartyAuthActive ? (
+        <div className="tw-rounded-[100px]">
+          <Skeleton className="tpa-skeleton tw-rounded-[100px] tw-w-full !tw-min-w-0" height={36} count={providers.length} />
         </div>
       ) : (
         <>

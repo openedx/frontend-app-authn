@@ -4,3 +4,87 @@
 @import "~@edx/brand/paragon/overrides";
 
 @import "sass/style";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Force Plus Jakarta Sans to be the default font family */
+body, html {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+}
+
+/* Ensure Tailwind font utilities use Plus Jakarta Sans */
+.tw-font-sans {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif !important;
+}
+
+//Overrides for Paragon error styles
+.form-control.is-invalid {
+  border-color: #FDA29B;
+}
+
+.pgn__form-text-invalid {
+  color: #D92D20;
+}
+
+.pgn__form-control-decorator-group {
+  margin-inline-end: 0;
+}
+
+.alert-danger .alert-icon {
+  color: #D92D20;
+}
+.alert .alert-icon {
+  margin-inline-end: 2px; 
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  margin-left: 2px
+}
+
+.alert-message-content {
+  line-height: 20px;
+}
+
+.alert {
+  margin-bottom: 0;
+}
+
+// Overrides for Paragon button icon size
+.btn-icon .btn-icon__icon-container .pgn__icon.btn-icon__icon {
+  height: 16px;
+  width: 16px;
+  color:#7839EE;
+}
+
+// Reset focus, hover, and active styles for btn-icon btn-icon-secondary btn-icon-sm
+.btn-icon.btn-icon-secondary.btn-icon-sm {
+  &:focus,
+  &:hover,
+  &:active,
+  &:focus-visible {
+    // Reset background
+    background-color: inherit !important;
+    background: inherit !important;
+    
+    // Reset border
+    border-color: inherit !important;
+    border: inherit !important;
+    
+    // Reset color
+    color: inherit !important;
+    
+    // Reset box-shadow
+    box-shadow: none !important;
+    
+    // Reset outline
+    outline: none !important;
+    
+    // Reset transform/scale effects
+    transform: none !important;
+    
+    // Reset opacity
+    opacity: inherit !important;
+  }
+}
