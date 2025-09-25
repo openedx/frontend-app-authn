@@ -1,11 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   prefix: 'tw-',
-  content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './plugins/**/*.{js,jsx,ts,tsx}',
-    './public/index.html',
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './plugins/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   theme: {
     extend: {
       boxShadow: {
@@ -87,18 +83,18 @@ module.exports = {
           950: '#0C111D',
         },
         brand: {
-          25: '#F3F8FB',
-          50: '#E9F1F8',
-          100: '#D2E3F1',
-          200: '#BCD5E9',
-          300: '#90BADA',
-          400: '#4C91C2',
-          500: '#3183BA',
+          25: '#FBFAFF',
+          50: '#F5F3FF',
+          100: '#ECE9FE',
+          200: '#DDD6FE',
+          300: '#C3B5FD',
+          400: '#A48AFB',
+          500: '#875BF7',
           600: '#7839EE',
           700: '#6927DA',
-          800: '#015583',
-          900: '#00466D',
-          950: '#003757',
+          800: '#5720B7',
+          900: '#491C96',
+          950: '#2E125E',
         },
         error: {
           25: '#FFFBFA',
