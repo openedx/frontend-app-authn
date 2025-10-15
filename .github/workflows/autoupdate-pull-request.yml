@@ -2,11 +2,11 @@ name: autoupdate
 on:
   push:
     branches:
-      - master
+      - release-ulmo
   pull_request:
     types: [ labeled ]  
     branches:
-      - master  
+      - release-ulmo  
 jobs:
   autoupdate:
     name: autoupdate
