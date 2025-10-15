@@ -101,7 +101,7 @@ const UsernameField = (props) => {
   };
 
   const suggestedUsernames = () => (
-    <div className={className}>
+    <div className={className} role="listbox">
       <span className="text-gray username-suggestion--label">{formatMessage(messages['registration.username.suggestion.label'])}</span>
       <div className="username-scroll-suggested--form-field">
         {usernameSuggestions.map((username, index) => (
@@ -112,7 +112,9 @@ const UsernameField = (props) => {
             className="username-suggestions--chip data-hj-suppress"
             autoComplete={props.autoComplete}
             key={`suggestion-${index.toString()}`}
+            tabIndex={0}
             onClick={(e) => handleSuggestionClick(e, username)}
+            role="option"
           >
             {username}
           </Button>
@@ -123,7 +125,7 @@ const UsernameField = (props) => {
   );
 
   if (usernameSuggestions.length > 0 && errorMessage && value === ' ') {
-    className = 'username-suggestions__error';
+    className = 'username-suggestions';
     iconButton = <IconButton src={Close} iconAs={Icon} alt="Close" onClick={() => handleUsernameSuggestionClose()} variant="black" size="sm" className="username-suggestions__close__button" />;
     suggestedUsernameDiv = suggestedUsernames();
   } else if (usernameSuggestions.length > 0 && value === ' ') {
@@ -134,14 +136,15 @@ const UsernameField = (props) => {
     suggestedUsernameDiv = suggestedUsernames();
   }
   return (
-    <FormGroup
-      {...props}
-      handleChange={handleOnChange}
-      handleFocus={handleOnFocus}
-      handleBlur={handleOnBlur}
-    >
+    <div className="username__form-group-wrapper">
       {suggestedUsernameDiv}
-    </FormGroup>
+      <FormGroup
+        {...props}
+        handleChange={handleOnChange}
+        handleFocus={handleOnFocus}
+        handleBlur={handleOnBlur}
+      />
+    </div>
   );
 };
 
