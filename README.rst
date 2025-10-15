@@ -8,7 +8,7 @@ frontend-app-authn
 Purpose
 ********
 
-This is a micro-frontend application responsible for the login, registration and password reset functionality.
+This is a 2U fork of a micro-frontend application responsible for the login, registration and password reset functionality.
 
 **What is the domain of this MFE?**
 
