@@ -1,21 +1,19 @@
-@use "@openedx/paragon/scss/core/core" as paragon;
-
 .layout {
   display: flex;
 
-  @include paragon.media-breakpoint-down('lg') {
+  @media (--pgn-size-breakpoint-max-width-lg) {
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
 
-  @include paragon.media-breakpoint-up('xl') {
+  @media (--pgn-size-breakpoint-min-width-xl) {
     justify-content: space-between;
   }
 }
 
 .content {
-  @include paragon.media-breakpoint-up('xl') {
+  @media (--pgn-size-breakpoint-min-width-xl) {
     display: flex;
     justify-content: center;
     width: 50vw;
@@ -48,7 +46,7 @@
   font-weight: 700;
   line-height: 1;
 
-  @include paragon.media-breakpoint-down('xl') {
+  @media (--pgn-size-breakpoint-max-width-xl) {
     font-size: 3.75rem;
   }
 
@@ -61,7 +59,7 @@
   margin-bottom: 0.5rem;
   font-weight: 700;
 
-  @include paragon.media-breakpoint-down('xl') {
+  @media (-pgn-size-breakpoint-max-width-xl) {
     font-size: 1.375rem;
     line-height: 1.75rem;
   }
@@ -73,7 +71,7 @@
 }
 
 .large-screen-left-container {
-  @include paragon.media-breakpoint-down('xl') {
+  @media (-pgn-size-breakpoint-max-width-xl) {
     flex: 0 0 25%;
     max-width: 25%;
   }
@@ -86,42 +84,46 @@
 
 .small-screen-top-stripe {
   height: 0.25rem;
-  background-image: linear-gradient(102.02deg,
-      paragon.$brand-700,
-      paragon.$brand-700 20%,
-      paragon.$brand 20%,
-    );
+  background-image: linear-gradient(
+    102.02deg,
+    var(--pgn-color-brand-700),
+    var(--pgn-color-brand-700) 20%,
+    var(--pgn-color-brand-base) 20%,
+  );
   background-repeat: no-repeat;
 }
 
-@include paragon.media-breakpoint-only('md') {
+@media (--pgn-size-breakpoint-min-width-md) and (--pgn-size-breakpoint-max-width-md) {
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
-    background-image: linear-gradient(102.02deg,
-        paragon.$brand-700,
-        paragon.$brand-700 10%,
-        paragon.$brand 10%,
-        paragon.$brand 90%,
-        paragon.$primary-700 90%,
-        paragon.$primary-700 100%,
-      );
+    background-image: linear-gradient(
+      102.02deg,
+      var(--pgn-color-brand-700),
+      var(--pgn-color-brand-700) 10%,
+      var(--pgn-color-brand-base) 10%,
+      var(--pgn-color-brand-base) 90%,
+      var(--pgn-color-primary-700) 90%,
+      var(--pgn-color-primary-700) 100%,
+    );
     background-repeat: no-repeat;
   }
 }
 
-@include paragon.media-breakpoint-only('lg') {
+@media (--pgn-size-breakpoint-min-width-lg) and (--pgn-size-breakpoint-max-width-lg){
   .medium-screen-top-stripe {
     display: flex;
     height: 0.5rem;
-    background-image: linear-gradient(102.02deg,
-        paragon.$brand-700 10%,
-        paragon.$brand 10%,
-        paragon.$brand 65%,
-        paragon.$primary-700 65%,
-        paragon.$primary-700 75%,
-        paragon.$accent-a 75%,
-        paragon.$accent-a 75%);
+    background-image: linear-gradient(
+      102.02deg,
+      var(--pgn-color-brand-700) 10%,
+      var(--pgn-color-brand-base) 10%,
+      var(--pgn-color-brand-base) 65%,
+      var(--pgn-color-primary-700) 65%,
+      var(--pgn-color-primary-700) 75%,
+      var(--pgn-color-accent-a) 75%,
+      var(--pgn-color-accent-a) 75%
+    );
     background-repeat: no-repeat;
   }
 }
@@ -130,44 +132,45 @@
   display: none;
 }
 
-@include paragon.media-breakpoint-up('xl') {
-  .extra-large-screen-top-stripe {
-    display: flex;
-    height: 0.5rem;
-    background-image: linear-gradient(102.02deg,
-        paragon.$brand-700 10%,
-        paragon.$brand 10%,
-        paragon.$brand 45%,
-        paragon.$primary-700 45%,
-        paragon.$primary-700 55%,
-        paragon.$accent-a 55%,
-        paragon.$accent-a 75%,
-        paragon.$info-200 75%,
-      );
-    background-repeat: no-repeat;
-  }
+@media (--pgn-size-breakpoint-min-width-xl) {
+ .extra-large-screen-top-stripe {
+   display: flex;
+   height: 0.5rem;
+   background-image: linear-gradient(
+     102.02deg,
+     var(--pgn-color-brand-700) 10%,
+     var(--pgn-color-brand-base) 10%,
+     var(--pgn-color-brand-base) 45%,
+     var(--pgn-color-primary-700) 45%,
+     var(--pgn-color-primary-700) 55%,
+     var(--pgn-color-accent-a) 55%,
+     var(--pgn-color-accent-a) 75%,
+     var(--pgn-color-info-200) 75%,
+  );
+   background-repeat: no-repeat;
+ }
 }
 
 .large-screen-svg-light,
 .large-screen-svg-primary {
-  fill: paragon.$light-200;
+  fill: var(--pgn-color-light-200);
   overflow: hidden;
   position: absolute;
 }
 
 .large-screen-svg-primary {
-  fill: paragon.$primary-400;
+  fill: var(--pgn-color-primary-400);
 }
 
 .medium-screen-svg-light,
 .medium-screen-svg-primary {
-  fill: paragon.$light-200;
+  fill: var(--pgn-color-light-200);
   overflow: inherit;
   position: absolute;
 }
 
 .medium-screen-svg-primary {
-  fill: paragon.$primary-400;
+  fill: var(--pgn-color-primary-400);
 }
 
 [dir=rtl] {
@@ -183,20 +186,20 @@
 .small-yellow-line {
   width: 80px;
   height: 0;
-  border: 2px solid paragon.$accent-b;
+  border: 2px solid var(--pgn-color-accent-b);
   transform: rotate(102.02deg);
 }
 
 .medium-yellow-line {
   width: 120px;
   height: 0;
-  border: 3px solid paragon.$accent-b;
+  border: 3px solid var(--pgn-color-accent-b);
   transform: rotate(102.02deg);
 }
 
 .large-yellow-line {
   width: 240px;
   height: 0;
-  border: 3px solid paragon.$accent-b;
+  border: 3px solid var(--pgn-color-accent-b);
   transform: rotate(102.02deg);
 }
