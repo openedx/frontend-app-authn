@@ -26,7 +26,7 @@ export function* handleValidateToken(action) {
       yield put(passwordResetFailure(PASSWORD_RESET.INVALID_TOKEN));
     }
   } catch (err) {
-    if (err.response && err.response.status === 429) {
+    if (err.response?.status === 429) {
       yield put(passwordResetFailure(PASSWORD_RESET.FORBIDDEN_REQUEST));
       logInfo(err);
     } else {
@@ -51,7 +51,7 @@ export function* handleResetPassword(action) {
       yield put(resetPasswordFailure(PASSWORD_VALIDATION_ERROR, resetErrors));
     }
   } catch (err) {
-    if (err.response && err.response.status === 429) {
+    if (err.response?.status === 429) {
       yield put(resetPasswordFailure(PASSWORD_RESET.FORBIDDEN_REQUEST));
       logInfo(err);
     } else {

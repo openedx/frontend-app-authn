@@ -16,8 +16,8 @@ export async function getThirdPartyAuthContext(urlParams) {
       throw (e);
     });
   return {
-    fieldDescriptions: data.registrationFields || {},
-    optionalFields: data.optionalFields || {},
-    thirdPartyAuthContext: data.contextData || {},
+    fieldDescriptions: data.registrationFields ?? {},
+    optionalFields: data.optionalFields ?? {},
+    thirdPartyAuthContext: data.contextData ?? {},
   };
 }

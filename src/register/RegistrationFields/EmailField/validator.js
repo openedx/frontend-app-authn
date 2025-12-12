@@ -63,8 +63,8 @@ export const validateEmailAddress = (value, username, domainName) => {
   const tldSuggestion = !DEFAULT_TOP_LEVEL_DOMAINS.includes(topLevelDomain);
   const serviceSuggestion = getLevenshteinSuggestion(serviceLevelDomain, DEFAULT_SERVICE_PROVIDER_DOMAINS, 2);
 
-  if (DEFAULT_SERVICE_PROVIDER_DOMAINS.includes(serviceSuggestion || serviceLevelDomain)) {
-    suggestion = `${username}@${serviceSuggestion || serviceLevelDomain}.com`;
+  if (DEFAULT_SERVICE_PROVIDER_DOMAINS.includes(serviceSuggestion ?? serviceLevelDomain)) {
+    suggestion = `${username}@${serviceSuggestion ?? serviceLevelDomain}.com`;
   }
 
   if (!hasMultipleSubdomains && tldSuggestion) {
