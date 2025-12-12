@@ -18,8 +18,8 @@ export async function registerRequest(registrationInformation) {
     });
 
   return {
-    redirectUrl: data.redirect_url || `${getSiteConfig().lmsBaseUrl}/dashboard`,
-    success: data.success || false,
+    redirectUrl: data.redirect_url ?? `${getSiteConfig().lmsBaseUrl}/dashboard`,
+    success: data.success ?? false,
     authenticatedUser: data.authenticated_user,
   };
 }

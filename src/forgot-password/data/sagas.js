@@ -20,7 +20,7 @@ export function* handleForgotPassword(action) {
 
     yield put(forgotPasswordSuccess(action.payload.email));
   } catch (e) {
-    if (e.response && e.response.status === 403) {
+    if (e.response?.status === 403) {
       yield put(forgotPasswordForbidden());
       logInfo(e);
     } else {

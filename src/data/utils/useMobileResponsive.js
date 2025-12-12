@@ -10,7 +10,7 @@ import { breakpoints } from '@openedx/paragon';
 const useMobileResponsive = (breakpoint) => {
   const [isMobileWindow, setIsMobileWindow] = useState();
   const checkForMobile = () => {
-    setIsMobileWindow(window.matchMedia(`(max-width: ${breakpoint || breakpoints.small.maxWidth}px)`).matches);
+    setIsMobileWindow(window.matchMedia(`(max-width: ${breakpoint ?? breakpoints.small.maxWidth}px)`).matches);
   };
   useEffect(() => {
     checkForMobile();

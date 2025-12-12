@@ -22,7 +22,7 @@ const getBackendValidations = createSelector(
 
       const validationDecisions = {};
       fields.forEach(field => {
-        validationDecisions[field] = registrationError[field][0].userMessage || '';
+        validationDecisions[field] = registrationError[field][0].userMessage ?? '';
       });
       return validationDecisions;
     }

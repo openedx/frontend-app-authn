@@ -74,7 +74,7 @@ const reducer = (state = defaultState, action = {}) => {
         registrationError: { ...action.payload },
         submitState: DEFAULT_STATE,
         validations: null,
-        usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
+        usernameSuggestions: usernameSuggestions ?? state.usernameSuggestions,
       };
     }
     case REGISTRATION_CLEAR_BACKEND_ERROR: {
@@ -90,7 +90,7 @@ const reducer = (state = defaultState, action = {}) => {
       return {
         ...state,
         validations: validationWithoutUsernameSuggestions,
-        usernameSuggestions: usernameSuggestions || state.usernameSuggestions,
+        usernameSuggestions: usernameSuggestions ?? state.usernameSuggestions,
       };
     }
     case REGISTER_FORM_VALIDATIONS.FAILURE:

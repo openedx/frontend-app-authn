@@ -44,7 +44,7 @@ export function* fetchRealtimeValidations(action) {
 
     yield put(fetchRealtimeValidationsSuccess(camelCaseObject(fieldValidations)));
   } catch (e) {
-    if (e.response && e.response.status === 403) {
+    if (e.response?.status === 403) {
       yield put(fetchRealtimeValidationsFailure());
       logInfo(e);
     } else {
