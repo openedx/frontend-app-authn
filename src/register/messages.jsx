@@ -127,8 +127,8 @@ const messages = defineMessages({
     description: 'Validation message that appears when fullname contain URL',
   },
   'name.validation.length.message': {
-    id: 'name.validation.message',
-    defaultMessage: 'Full name cannot be longer than 255 characters',
+    id: 'registration.name.validation.length.message',
+    defaultMessage: 'Full name cannot be longer than {limit} characters',
     description: 'Validation message that appears when the full name exceeds the character limit',
   },
   'password.validation.message': {

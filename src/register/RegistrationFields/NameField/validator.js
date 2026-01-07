@@ -18,7 +18,7 @@ const validateName = (value, formatMessage) => {
   } else if (URL_REGEX.test(value) || HTML_REGEX.test(value) || INVALID_NAME_REGEX.test(value)) {
     fieldError = formatMessage(messages['name.validation.message']);
   } else if (value && value.length > MAX_FULL_NAME_LENGTH) {
-    fieldError = formatMessage(messages['name.validation.length.message']);
+    fieldError = formatMessage(messages['name.validation.length.message'], { limit: MAX_FULL_NAME_LENGTH });
   }
   return fieldError;
 };

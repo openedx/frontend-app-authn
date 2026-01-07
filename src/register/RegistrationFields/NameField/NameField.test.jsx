@@ -6,7 +6,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
+import messages from '../../messages';
 import { NameField } from '../index';
+import { MAX_FULL_NAME_LENGTH } from './validator';
 
 const mockStore = configureStore();
 
@@ -107,7 +109,7 @@ describe('NameField', () => {
       expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'name',
-        'Full name cannot be longer than 255 characters',
+        messages['name.validation.length.message'].defaultMessage.replace('{limit}', MAX_FULL_NAME_LENGTH),
       );
     });
 
