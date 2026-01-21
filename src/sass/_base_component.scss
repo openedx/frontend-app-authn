@@ -201,3 +201,100 @@
   border: 3px solid var(--pgn-color-accent-b);
   transform: rotate(102.02deg);
 }
+.auth-hero-left {
+  padding-left: 3.5rem;
+  padding-right: 3.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-hero-base-logo {
+  // reuse existing .logo sizes, just ensure it sits above everything
+  position: relative;
+  z-index: 2;
+}
+
+.auth-hero-content {
+  // distance from top stripe & logo to hero block (matches Figma visually)
+  margin-top: 7rem;
+  max-width: 560px;
+}
+
+/* enterprise logo in white card */
+.auth-hero-enterprise-logo-wrapper {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-hero-enterprise-logo {
+  max-width: 145px;
+  max-height: 74px;
+  object-fit: contain;
+}
+
+/* yellow slanted line */
+.auth-hero-slash {
+  width: 0;                       // only height+border matters
+  height: 110px;                  // tune this to match logo/heading height
+  border-left: 6px solid #F0CC00; // Figma yellow
+  border-radius: 999px;
+  transform: skewX(-12deg);       // gives that forward slash look
+  transform-origin: center;
+}
+
+/* heading text: "Start learning" + "with edX" */
+.auth-hero-heading {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-hero-heading-line {
+  font-family: 'Inter', sans-serif;
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 60px;
+  letter-spacing: -1.2px;
+  color: #FFFFFF; // for "Start learning"
+}
+
+.auth-hero-heading-line.text-accent-a {
+  color: #03C7E8 !important; // for "with edX"
+}
+
+/* enterprise message aligned under heading, same left edge */
+.auth-hero-message {
+  max-width: 492px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 36px;
+}
+
+.auth-hero-message p {
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.auth-hero-message a {
+  color: #03c7e8;
+  text-decoration: underline;
+}
+
+/* simple responsive tweaks */
+@media (max-width: 1199.98px) {
+  .auth-hero-heading-line {
+    font-size: 2.5rem;
+  }
+
+  .auth-hero-content {
+    margin-top: 4rem;
+  }
+}
