@@ -25,6 +25,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "engines": {
+    "node": "24"
+  },
   "bugs": {
     "url": "https://github.com/openedx/frontend-app-authn/issues"
   },
