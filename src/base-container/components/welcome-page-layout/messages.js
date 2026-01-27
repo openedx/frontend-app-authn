@@ -6,17 +6,17 @@ const messages = defineMessages({
     defaultMessage: 'Welcome to {siteName}, {fullName}!',
     description: 'Welcome message that appears on progressive profile page',
   },
-    'start.learning': {
+  'start.learning': {
     id: 'start.learning',
     defaultMessage: 'Start learning',
     description: 'Header text for logistration MFE pages',
   },
-    'with.site.name': {
+  'with.site.name': {
     id: 'with.site.name',
     defaultMessage: 'with {siteName}',
     description: 'Header text with site name for logistration MFE pages',
   },
-    'with.edx': {
+  'with.edx': {
     id: 'with.edx',
     defaultMessage: ' with edX',
   },
