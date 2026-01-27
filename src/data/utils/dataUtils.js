@@ -114,3 +114,13 @@ export const addEnterpriseSlugToNext = (queryParams, enterpriseSlug) => {
 
   return updatedParams;
 };
+
+export const redirectWithDelay = (url, delay = 1000) => {
+  if (!url) {
+    return;
+  }
+
+  window.setTimeout(() => {
+    window.location.assign(url);
+  }, delay);
+};

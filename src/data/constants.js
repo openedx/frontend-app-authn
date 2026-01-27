@@ -9,7 +9,7 @@ export const RECOMMENDATIONS = '/recommendations';
 export const PASSWORD_RESET_CONFIRM = '/password_reset_confirm/:token/';
 export const PAGE_NOT_FOUND = '/notfound';
 export const ENTERPRISE_LOGIN_URL = '/enterprise/login';
-export const APP_NAME = 'authn'; 
+export const APP_NAME = 'authn';
 
 // Constants
 export const SUPPORTED_ICON_CLASSES = ['apple', 'facebook', 'google', 'microsoft'];

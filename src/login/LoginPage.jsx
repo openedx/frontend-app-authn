@@ -44,7 +44,7 @@ const LoginPage = ({
 }) => {
   const dispatch = useDispatch();
   const backupFormState = useCallback((data) => dispatch(backupLoginFormBegin(data)), [dispatch]);
-   const getTPADataFromBackend = useCallback(
+  const getTPADataFromBackend = useCallback(
     (urlParams) => dispatch(getThirdPartyAuthContext(urlParams)),
     [dispatch],
   );

@@ -1,14 +1,13 @@
 import React from 'react';
-import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import messages from './messages';
-
 
 const LargeLayout = ({ fullName = null }) => {
   const { formatMessage } = useIntl();
@@ -20,8 +19,7 @@ const LargeLayout = ({ fullName = null }) => {
   const enterpriseLogoUrl = enterpriseBranding?.enterpriseLogoUrl || null;
   const enterpriseName = enterpriseBranding?.enterpriseName || null;
 
-  const enterpriseWelcomeHtml =
-    enterpriseBranding?.enterpriseBrandedWelcomeString
+  const enterpriseWelcomeHtml = enterpriseBranding?.enterpriseBrandedWelcomeString
     || enterpriseBranding?.platformWelcomeString
     || '';
 
