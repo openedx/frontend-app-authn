@@ -1,40 +1,76 @@
 import React from 'react';
-
+import { useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';
 import PropTypes from 'prop-types';
-
+import classNames from 'classnames';
 import messages from './messages';
 
-const MediumLayout = ({ fullName }) => {
+const MediumLayout = ({ fullName = null }) => {
   const { formatMessage } = useIntl();
+
+  const enterpriseBranding = useSelector(
+    state => state.commonComponents?.thirdPartyAuthContext?.enterpriseBranding,
+  );
+
+  const enterpriseLogoUrl = enterpriseBranding?.enterpriseLogoUrl || null;
+  const enterpriseName = enterpriseBranding?.enterpriseName || null;
+  const enterpriseWelcomeHtml =
+    enterpriseBranding?.enterpriseBrandedWelcomeString
+    || enterpriseBranding?.platformWelcomeString
+    || '';
+
+  const siteName = getConfig().SITE_NAME;
+  const baseLogoSrc = getConfig().LOGO_WHITE_URL || getConfig().LOGO_URL;
 
   return (
     <>
       <div className="w-100 medium-screen-top-stripe" />
       <div className="w-100 p-0 mb-3 d-flex">
-        <div className="col-md-10 bg-light-200">
+        <div className="col-md-10 bg-primary-400 auth-hero-left">
           <Hyperlink destination={getConfig().MARKETING_SITE_BASE_URL}>
-            <Image className="logo" alt={getConfig().SITE_NAME} src={getConfig().LOGO_URL} />
+            <Image className="logo auth-hero-base-logo" alt={siteName} src={baseLogoSrc} />
           </Hyperlink>
-          <div className="d-flex align-items-center justify-content-center mb-4 ml-5">
-            <div className="medium-yellow-line mt-5 mr-n2" />
-            <div>
-              <h1 className="h3 data-hj-suppress mw-320">
-                {formatMessage(messages['welcome.to.platform'], { siteName: getConfig().SITE_NAME, fullName })}
-              </h1>
-              <h2 className="display-1">
-                {formatMessage(messages['complete.your.profile.1'])}
-                <div className="text-accent-a">
-                  {formatMessage(messages['complete.your.profile.2'])}
+
+          <div className="auth-hero-content d-flex flex-column">
+            <div className="d-flex align-items-center">
+              {enterpriseLogoUrl && (
+                <div className="auth-hero-enterprise-logo-wrapper mr-4">
+                  <Image
+                    alt={enterpriseName || 'Enterprise'}
+                    src={enterpriseLogoUrl}
+                    className="auth-hero-enterprise-logo"
+                  />
                 </div>
-              </h2>
+              )}
+
+               <div className="auth-hero-slash" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="191" height="250" viewBox="0 0 191 250" fill="none" style={{ width: '100%', height: '100%' }}>
+                <line x1="69.8107" y1="33.833" x2="32.9503" y2="206.952" stroke="#F0CC00" strokeWidth="8" />
+              </svg>
             </div>
+
+              <div className="auth-hero-heading">
+                <div className="auth-hero-heading-line text-white">
+                  {formatMessage(messages['start.learning'])}
+                </div>
+                <div className="auth-hero-heading-line text-accent-a">
+                  {formatMessage(messages['with.site.name'], { siteName })}
+                </div>
+              </div>
+            </div>
+
+            {enterpriseWelcomeHtml && (
+              <div
+                className="auth-hero-message mt-4"
+                dangerouslySetInnerHTML={{ __html: enterpriseWelcomeHtml }}
+              />
+            )}
           </div>
         </div>
         <div className="col-md-2 bg-white p-0">
-          <svg className="w-100 h-100 medium-screen-svg-light" preserveAspectRatio="xMaxYMin meet">
+          <svg className="w-100 h-100 medium-screen-svg-primary" preserveAspectRatio="xMaxYMin meet">
             <g transform="skewX(168)">
               <rect x="0" y="0" height="100%" width="100%" />
             </g>
@@ -46,7 +82,11 @@ const MediumLayout = ({ fullName }) => {
 };
 
 MediumLayout.propTypes = {
-  fullName: PropTypes.string.isRequired,
+  fullName: PropTypes.string,
+};
+
+MediumLayout.defaultProps = {
+  fullName: null,
 };
 
 export default MediumLayout;

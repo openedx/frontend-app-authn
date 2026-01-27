@@ -36,8 +36,13 @@ const reducer = (state = defaultState, action = {}) => {
     optionalFields: action.payload.optionalFields,
     thirdPartyAuthContext: {
       ...action.payload.thirdPartyAuthContext,
-      enterpriseBranding: action.payload.thirdPartyAuthContext.enterpriseBranding || null,
-    },
+      enterpriseBranding: action.payload.thirdPartyAuthContext.enterpriseBranding
+            ? {
+                ...action.payload.thirdPartyAuthContext.enterpriseBranding,
+                enterpriseSlug: action.payload.thirdPartyAuthContext.enterpriseBranding.enterpriseSlug || null,
+              }
+            : null,
+        },
     thirdPartyAuthApiStatus: COMPLETE_STATE,
   };
 }
