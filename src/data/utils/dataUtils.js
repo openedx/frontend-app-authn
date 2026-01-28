@@ -116,7 +116,9 @@ export const addEnterpriseSlugToNext = (queryParams, enterpriseSlug) => {
 };
 
 export const redirectWithDelay = (url, delay = 1000) => {
-  if (!url) return;
+  if (!url) {
+    return;
+  }
 
   window.setTimeout(() => {
     if (window.location && typeof window.location.assign === 'function') {

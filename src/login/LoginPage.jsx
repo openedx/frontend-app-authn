@@ -24,7 +24,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { APP_NAME,PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { APP_NAME, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
