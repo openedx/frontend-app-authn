@@ -24,7 +24,7 @@ import { getThirdPartyAuthContext } from '../common-components/data/actions';
 import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { APP_NAME,PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -37,6 +37,11 @@ import { backupLoginFormBegin, dismissPasswordResetBanner, loginRequest } from '
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
+
+const DEFAULT_LOGIN_FORM = {
+  formFields: { emailOrUsername: '', password: '' },
+  errors: { emailOrUsername: '', password: '' },
+};
 
 const LoginPage = ({
   institutionLogin,
@@ -86,17 +91,17 @@ const LoginPage = ({
     count: 0,
     context: {},
   });
-  const [formFields, setFormFields] = useState({
-    ...(backedUpFormData?.formFields || { emailOrUsername: '', password: '' }),
-  });
+  const backedUp = backedUpFormData || DEFAULT_LOGIN_FORM;
 
-  const [errors, setErrors] = useState({
-    ...(backedUpFormData?.errors || { emailOrUsername: '', password: '' }),
-  });
+  // 2) Normalize base URL for redirects (prevents undefined href in tests)
+  const LMS_BASE = getConfig().LMS_BASE_URL || getConfig().BASE_URL || '';
+
+  const [formFields, setFormFields] = useState({ ...backedUp.formFields });
+  const [errors, setErrors] = useState({ ...backedUp.errors });
   const tpaHint = getTpaHint();
 
   useEffect(() => {
-    sendPageEvent('login_and_registration', 'login');
+    sendPageEvent('login_and_registration', 'login', { app_name: APP_NAME });
   }, []);
 
   useEffect(() => {
@@ -205,7 +210,7 @@ const LoginPage = ({
     }));
   };
   const trackForgotPasswordLinkClick = () => {
-    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
+    sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement', app_name: APP_NAME });
   };
 
   const {
@@ -219,7 +224,7 @@ const LoginPage = ({
     }
 
     if (skipHintedLogin) {
-      window.location.href = getConfig().LMS_BASE_URL + provider.loginUrl;
+      window.location.href = `${LMS_BASE}${provider.loginUrl}`;
       return null;
     }
 

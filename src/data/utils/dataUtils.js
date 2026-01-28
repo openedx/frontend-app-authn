@@ -116,11 +116,13 @@ export const addEnterpriseSlugToNext = (queryParams, enterpriseSlug) => {
 };
 
 export const redirectWithDelay = (url, delay = 1000) => {
-  if (!url) {
-    return;
-  }
+  if (!url) return;
 
   window.setTimeout(() => {
-    window.location.assign(url);
+    if (window.location && typeof window.location.assign === 'function') {
+      window.location.assign(url);
+    } else {
+      window.location.href = url;
+    }
   }, delay);
 };
