@@ -81,13 +81,18 @@ const LoginPage = ({
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
-  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [errorCode, setErrorCode] = useState({
     type: '',
     count: 0,
     context: {},
   });
-  const [errors, setErrors] = useState({ ...backedUpFormData.errors });
+  const [formFields, setFormFields] = useState({
+    ...(backedUpFormData?.formFields || { emailOrUsername: '', password: '' }),
+  });
+
+  const [errors, setErrors] = useState({
+    ...(backedUpFormData?.errors || { emailOrUsername: '', password: '' }),
+  });
   const tpaHint = getTpaHint();
 
   useEffect(() => {
