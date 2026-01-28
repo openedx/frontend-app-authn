@@ -5,11 +5,10 @@ import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
 import messages from './messages';
 
-const LargeLayout = ({ fullName = null }) => {
+const LargeLayout = () => {
   const { formatMessage } = useIntl();
 
   const enterpriseBranding = useSelector(
@@ -95,10 +94,6 @@ const LargeLayout = ({ fullName = null }) => {
       </div>
     </div>
   );
-};
-
-LargeLayout.propTypes = {
-  fullName: PropTypes.string,
 };
 
 export default LargeLayout;
