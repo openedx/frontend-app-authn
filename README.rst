@@ -26,31 +26,46 @@ This is a micro-frontend application responsible for the login, registration and
 Getting Started
 ***************
 
-Installation
-============
+Prerequisites
+=============
 
 `Tutor`_ is currently recommended as a development environment for your new MFE. Please refer to the `relevant tutor-mfe documentation`_ to get started using it.
 
 .. _Tutor: https://github.com/overhangio/tutor
 .. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
 
-Devstack (Deprecated) instructions
-==================================
+Cloning and Startup
+===================
 
-1. Install Devstack using the `Getting Started <https://github.com/openedx/devstack#getting-started>`_ instructions.
+1. Clone your new repo:
 
-2. Start up LMS, if it's not already started.
+.. code-block:: bash
 
-4. Within this project (frontend-app-authn), install requirements and start the development server:
+   git clone https://github.com/edx/frontend-app-authn.git
 
-   .. code-block::
+2. Use the version of Node specified in the ``.nvmrc`` file.
 
-      npm install
-      npm start # The server will run on port 1999
+   The current version of the micro-frontend build scripts supports the version of Node found in ``.nvmrc``.
+   Using other major versions of node *may* work, but this is unsupported.  For
+   convenience, this repository includes a ``.nvmrc`` file to help in setting the
+   correct node version via `nvm <https://github.com/nvm-sh/nvm>`_.
 
-5. Once the dev server is up, visit http://localhost:1999 to access the MFE
+3. Install npm dependencies:
 
-   .. image:: ./docs/images/frontend-app-authn-localhost-preview.png
+.. code-block:: bash
+
+   cd frontend-app-authn && npm install
+
+4. Update the application port to use for local development:
+
+   The default port is 1999. If this does not work for you, update the line
+   ``PORT=1999`` to your port in all ``.env.*`` files
+
+5. Start the devserver. The app will be running at ``localhost:1999``, or whatever port you change it too.
+
+   .. code-block:: bash
+
+      npm run dev
 
    **Note:** Follow `Enable social auth locally <docs/how_tos/enable_social_auth.rst>`_ for enabling Social Sign-on Buttons (SSO) locally
 
@@ -115,7 +130,7 @@ The authentication micro-frontend also requires the following additional variabl
 
    * - ``MFE_CONFIG_API_URL``
      - Link of the API to get runtime mfe configuration variables from the site configuration or django settings.
-     - ``/api/v1/mfe_config`` | ``''`` (empty strings are falsy)  
+     - ``/api/v1/mfe_config`` | ``''`` (empty strings are falsy)
 
    * - ``APP_ID``
      - Name of MFE, this will be used by the API to get runtime configurations for the specific micro frontend. For a frontend repo `frontend-app-appName`, use `appName` as APP_ID.
@@ -145,7 +160,7 @@ Furthermore, there are several edX-specific environment variables that enable in
 
    * - ``SHOW_CONFIGURABLE_EDX_FIELDS``
      - For edX, country and honor code fields are required by default. This flag enables edX specific required fields.
-     - ``true`` | ``''`` (empty strings are falsy)    
+     - ``true`` | ``''`` (empty strings are falsy)
 
 For more information see the document: `Micro-frontend applications in Open
 edX <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
