@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { logError } from '@edx/frontend-platform/logging';
+import { logError, logInfo } from '@edx/frontend-platform/logging';
 import { getThirdPartyAuthContext } from './api';
 
 // Error constants

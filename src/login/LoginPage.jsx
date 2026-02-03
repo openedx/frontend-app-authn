@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { camelCaseObject } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
@@ -192,12 +193,12 @@ const LoginPage = ({
     };
     loginUser(payload, {
       onSuccess: (data) => {
-        debugger;
         setLoginResult(data);
         setLoginError({ errorCode: '', context: {} }); // Clear errors on success
       },
-      onError: (errorData) => {
-        setLoginError(errorData);
+      onError: (transformedError) => {
+        // Error is already transformed by the hook
+        setLoginError(transformedError);
       },
     });
   };
@@ -252,6 +253,7 @@ const LoginPage = ({
       />
     );
   }
+  console.log('Rendering LoginPage', errorCode);
   return (
     <>
       <Helmet>

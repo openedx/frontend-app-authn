@@ -194,7 +194,7 @@ const RegistrationPage = (props) => {
       });
       setFormStartTime(Date.now());
     }
-  }, [formStartTime, queryParams, tpaHint, thirdPartyAuthMutation, setThirdPartyAuthContextBegin]);
+  }, [formStartTime, queryParams, tpaHint, setThirdPartyAuthContextBegin]);
 
 
   // Handle backend validation errors from context
