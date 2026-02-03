@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
 import { FormattedMessage, useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@openedx/paragon';

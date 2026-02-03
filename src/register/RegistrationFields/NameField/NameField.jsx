@@ -1,13 +1,10 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import { useIntl } from '@edx/frontend-platform/i18n';
 import PropTypes from 'prop-types';
 
 import validateName from './validator';
 import { FormGroup } from '../../../common-components';
-import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
-
+import { useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/api.hook';
 /**
  * Name field wrapper. It accepts following handlers
  * - handleChange for setting value change and
@@ -21,9 +18,22 @@ import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../d
  */
 const NameField = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+  const {
+    setValidationsSuccess,
+    setValidationsFailure,
+    validationApiRateLimited,
+    clearRegistrationBackendError,
+  } = useRegisterContext();
 
+  // const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => {
+      setValidationsSuccess(data);
+    },
+    onError: () => {
+      setValidationsFailure();
+    },
+  });
   const {
     handleErrorChange,
     shouldFetchUsernameSuggestions,
@@ -35,13 +45,14 @@ const NameField = (props) => {
     if (fieldError) {
       handleErrorChange('name', fieldError);
     } else if (shouldFetchUsernameSuggestions && !validationApiRateLimited) {
-      dispatch(fetchRealtimeValidations({ name: value }));
+      fieldValidationsMutation.mutate({ name: value });
+      // dispatch(fetchRealtimeValidations({ name: value }));
     }
   };
 
   const handleOnFocus = () => {
     handleErrorChange('name', '');
-    dispatch(clearRegistrationBackendError('name'));
+    clearRegistrationBackendError('name');
   };
 
   return (

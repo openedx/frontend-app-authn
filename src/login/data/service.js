@@ -2,6 +2,7 @@ import { getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import * as QueryString from 'query-string';
 
+// TODO: Delete this file
 // eslint-disable-next-line import/prefer-default-export
 export async function loginRequest(creds) {
   const requestConfig = {
