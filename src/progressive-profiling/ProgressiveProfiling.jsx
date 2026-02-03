@@ -33,6 +33,7 @@ import {
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
   FAILURE_STATE,
+  DEFAULT_STATE,
   PENDING_STATE,
 } from '../data/constants';
 import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
