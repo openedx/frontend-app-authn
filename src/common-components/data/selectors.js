@@ -1,28 +1,30 @@
-import { createSelector } from 'reselect';
+// TODO: delete this file
 
-export const storeName = 'commonComponents';
+// import { createSelector } from 'reselect';
 
-export const commonComponentsSelector = state => ({ ...state[storeName] });
+// export const storeName = 'commonComponents';
 
-export const thirdPartyAuthContextSelector = createSelector(
-  commonComponentsSelector,
-  commonComponents => commonComponents.thirdPartyAuthContext,
-);
+// export const commonComponentsSelector = state => ({ ...state[storeName] });
 
-export const fieldDescriptionSelector = createSelector(
-  commonComponentsSelector,
-  commonComponents => commonComponents.fieldDescriptions,
-);
+// export const thirdPartyAuthContextSelector = createSelector(
+//   commonComponentsSelector,
+//   commonComponents => commonComponents.thirdPartyAuthContext,
+// );
 
-export const optionalFieldsSelector = createSelector(
-  commonComponentsSelector,
-  commonComponents => commonComponents.optionalFields,
-);
+// export const fieldDescriptionSelector = createSelector(
+//   commonComponentsSelector,
+//   commonComponents => commonComponents.fieldDescriptions,
+// );
 
-export const tpaProvidersSelector = createSelector(
-  commonComponentsSelector,
-  commonComponents => ({
-    providers: commonComponents.thirdPartyAuthContext.providers,
-    secondaryProviders: commonComponents.thirdPartyAuthContext.secondaryProviders,
-  }),
-);
+// export const optionalFieldsSelector = createSelector(
+//   commonComponentsSelector,
+//   commonComponents => commonComponents.optionalFields,
+// );
+
+// export const tpaProvidersSelector = createSelector(
+//   commonComponentsSelector,
+//   commonComponents => ({
+//     providers: commonComponents.thirdPartyAuthContext.providers,
+//     secondaryProviders: commonComponents.thirdPartyAuthContext.secondaryProviders,
+//   }),
+// );

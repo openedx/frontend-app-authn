@@ -1,3 +1,4 @@
+// TODO check if some of these exports can be removed
 export { default as RedirectLogistration } from './RedirectLogistration';
 export { default as registerIcons } from './RegisterFaIcons';
 export { default as EmbeddedRegistrationRoute } from './EmbeddedRegistrationRoute';

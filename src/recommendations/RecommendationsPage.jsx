@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -21,18 +20,26 @@ import RecommendationsLargeLayout from './RecommendationsPageLayouts/LargeLayout
 import RecommendationsSmallLayout from './RecommendationsPageLayouts/SmallLayout';
 import { LINK_TIMEOUT, trackRecommendationsViewed, trackSkipButtonClicked } from './track';
 import { DEFAULT_REDIRECT_URL } from '../data/constants';
+import { RegisterProvider, useRegisterContext } from '../register/components/RegisterContext';
 
-const RecommendationsPage = () => {
+const RecommendationsPageInner = () => {
   const { formatMessage } = useIntl();
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
+  const {
+    registrationResult,
+    backendCountryCode,
+  } = useRegisterContext();
   const location = useLocation();
 
-  const registrationResponse = location.state?.registrationResult;
+  // const registrationResponse = location.state?.registrationResult;
+  // todo: check infinite redirect because is ""
+  const registrationResponse = registrationResult;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
-  const userCountry = useSelector((state) => state.register.backendCountryCode);
+  //  const userCountry = useSelector((state) => state.register.backendCountryCode);
+  const userCountry = backendCountryCode;
   const {
     recommendations: algoliaRecommendations,
     isLoading,
@@ -124,6 +131,10 @@ const RecommendationsPage = () => {
   );
 };
 
-RecommendationsPage.propTypes = {};
+const RecommendationsPage = (props) => (
+  <RegisterProvider>
+    <RecommendationsPageInner {...props} />
+  </RegisterProvider>
+);
 
 export default RecommendationsPage;
