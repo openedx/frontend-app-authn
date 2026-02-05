@@ -7,13 +7,16 @@ import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
-
-import Main from './Main';
+import { Component } from 'react';
 
 const routes = [
   {
     id: 'org.openedx.frontend.route.authn.main',
-    Component: Main,
+    // Component: Main,
+    async lazy () {
+      const module = await import('./Main');
+      return {Component: module.default};
+    },
     children: [
       {
         path: 'register-embedded',
