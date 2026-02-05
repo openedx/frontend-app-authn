@@ -12,7 +12,6 @@ import { Component } from 'react';
 const routes = [
   {
     id: 'org.openedx.frontend.route.authn.main',
-    // Component: Main,
     async lazy () {
       const module = await import('./Main');
       return {Component: module.default};
