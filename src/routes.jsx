@@ -12,9 +12,9 @@ import { Component } from 'react';
 const routes = [
   {
     id: 'org.openedx.frontend.route.authn.main',
-    async lazy () {
+    async lazy() {
       const module = await import('./Main');
-      return {Component: module.default};
+      return { Component: module.default };
     },
     children: [
       {
