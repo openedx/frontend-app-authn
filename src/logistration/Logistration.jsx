@@ -24,6 +24,7 @@ import LoginComponentSlot from '../plugin-slots/LoginComponentSlot';
 import { RegistrationPage } from '../register';
 import { backupRegistrationForm } from '../register/data/actions';
 import { RegisterProvider } from '../register/components/RegisterContext.tsx';
+import { LoginProvider } from '../login/components/LoginContext';
 
 const LogistrationPageInner = ({
   selectedPage,
@@ -183,7 +184,9 @@ const LogistrationPageInner = ({
 const LogistrationPage = (props) => (
   <ThirdPartyAuthProvider>
     <RegisterProvider>
-      <LogistrationPageInner {...props} />
+      <LoginProvider>
+        <LogistrationPageInner {...props} />
+      </LoginProvider>
     </RegisterProvider>
   </ThirdPartyAuthProvider>
 );

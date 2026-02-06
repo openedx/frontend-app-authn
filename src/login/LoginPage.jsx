@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { camelCaseObject } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
@@ -36,21 +35,11 @@ import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import { useLogin } from './data/apiHook';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
+import { useLoginContext } from './components/LoginContext';
 
 const LoginPage = ({
   institutionLogin,
   handleInstitutionLogin,
-  // Props expected by tests (for Redux compatibility)
-  loginRequest,
-  loginResult: propLoginResult,
-  loginErrorCode,
-  loginFormData,
-  submitState,
-  thirdPartyAuthApiStatus: propThirdPartyAuthApiStatus,
-  shouldBackupState: propShouldBackupState,
-  showResetPasswordSuccessBanner: propShowResetPasswordSuccessBanner,
-  dismissPasswordResetBanner,
-  backupLoginFormBegin,
 }) => {
   // Context for third-party auth
   const {
@@ -61,17 +50,25 @@ const LoginPage = ({
     setThirdPartyAuthContextFailure,
   } = useThirdPartyAuthContext();
 
+  const {
+    formFields,
+    setFormFields,
+    errors,
+    setErrors,
+    setErrorCode,
+    errorCode,
+  } = useLoginContext();
+
   // Hook for third-party auth API call
   const { mutate: fetchThirdPartyAuth, isPending: isFetchingAuth } = useThirdPartyAuthHook();
 
   // React Query for server state
-  const [loginResult, setLoginResult] = useState(propLoginResult || { success: false, redirectUrl: '' });
-  const [loginError, setLoginError] = useState({ errorCode: loginErrorCode || '', context: {} });
+  const [loginResult, setLoginResult] = useState({ success: false, redirectUrl: '' });
+  const [loginError, setLoginError] = useState({ errorCode: '', context: {} });
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin();
 
   // Local UI state (migrated from Redux)
-  const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner || false);
-  const [shouldBackupState] = useState(propShouldBackupState || false);
+  const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(false);
   const {
     providers,
     currentProvider,
@@ -84,20 +81,6 @@ const LoginPage = ({
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
-  // Form state (migrated from Redux)
-  const [formFields, setFormFields] = useState({
-    emailOrUsername: loginFormData?.formFields?.emailOrUsername || '', 
-    password: loginFormData?.formFields?.password || '',
-  });
-  const [errorCode, setErrorCode] = useState({
-    type: loginErrorCode || '',
-    count: 0,
-    context: {},
-  });
-  const [errors, setErrors] = useState({
-    emailOrUsername: loginFormData?.errors?.emailOrUsername || '', 
-    password: loginFormData?.errors?.password || '',
-  });
   const tpaHint = useMemo(() => getTpaHint(), []);
 
   useEffect(() => {
@@ -126,32 +109,6 @@ const LoginPage = ({
     // check this eslint, I put it because is the way to avoid initial infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParams, tpaHint, setThirdPartyAuthContextBegin]);
-
-  // Backup the login form in redux when login page is toggled.
-  useEffect(() => {
-    if (shouldBackupState && backupLoginFormBegin) {
-      backupLoginFormBegin({
-        formFields: { ...formFields },
-        errors: { ...errors },
-      });
-    }
-  }, [backupLoginFormBegin, shouldBackupState, formFields, errors]);
-
-  useEffect(() => {
-    if (propLoginResult) {
-      setLoginResult(propLoginResult);
-    }
-  }, [propLoginResult]);
-
-  useEffect(() => {
-    if (loginErrorCode) {
-      setErrorCode(prevState => ({
-        type: loginErrorCode,
-        count: prevState.count + 1,
-        context: {},
-      }));
-    }
-  }, [loginErrorCode]);
 
   useEffect(() => {
     if (loginError.errorCode) {
@@ -206,12 +163,12 @@ const LoginPage = ({
     const formData = { ...formFields };
     const validationErrors = validateFormFields(formData);
     if (validationErrors.emailOrUsername || validationErrors.password) {
-      setErrors({ ...validationErrors });
-      setErrorCode(prevState => ({
+      setErrors(validationErrors);
+      setErrorCode({
         type: INVALID_FORM,
-        count: prevState.count + 1,
+        count: errorCode.count + 1,
         context: {},
-      }));
+      });
       return;
     }
 
@@ -221,22 +178,15 @@ const LoginPage = ({
       password: formData.password,
       ...queryParams,
     };
-
-    // Use loginRequest prop if provided (for tests), otherwise use React Query
-    if (loginRequest) {
-      loginRequest(payload);
-    } else {
-      loginUser(payload, {
-        onSuccess: (data) => {
-          setLoginResult(data);
-          setLoginError({ errorCode: '', context: {} }); // Clear errors on success
-        },
-        onError: (transformedError) => {
-          // Error is already transformed by the hook
-          setLoginError(transformedError);
-        },
-      });
-    }
+    loginUser(payload, {
+      onSuccess: (data) => {
+        setLoginResult(data);
+        setLoginError({ errorCode: '', context: {} }); // Clear errors on success
+      },
+      onError: (errorData) => {
+        setLoginError(errorData);
+      },
+    });
   };
 
   const handleOnChange = (event) => {
@@ -244,6 +194,7 @@ const LoginPage = ({
       name,
       value,
     } = event.target;
+    // Save to context for persistence across tab switches
     setFormFields(prevState => ({
       ...prevState,
       [name]: value,
@@ -261,15 +212,13 @@ const LoginPage = ({
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
 
-  const actualThirdPartyAuthApiStatus = propThirdPartyAuthApiStatus || thirdPartyAuthApiStatus;
-
   const {
     provider,
     skipHintedLogin,
   } = getTpaProvider(tpaHint, providers, secondaryProviders);
 
   if (tpaHint) {
-    if (actualThirdPartyAuthApiStatus === PENDING_STATE) {
+    if (thirdPartyAuthApiStatus === PENDING_STATE) {
       return <Skeleton height={36} />;
     }
 
@@ -343,7 +292,7 @@ const LoginPage = ({
             type="submit"
             variant="brand"
             className="login-button-width"
-            state={submitState || (isLoggingIn ? PENDING_STATE : 'default')}
+            state={(isLoggingIn ? PENDING_STATE : 'default')}
             labels={{
               default: formatMessage(messages['sign.in.button']),
               pending: 'pending',
@@ -365,7 +314,7 @@ const LoginPage = ({
             providers={providers}
             secondaryProviders={secondaryProviders}
             handleInstitutionLogin={handleInstitutionLogin}
-            thirdPartyAuthApiStatus={actualThirdPartyAuthApiStatus}
+            thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
             isLoginPage
           />
         </Form>
@@ -377,29 +326,6 @@ const LoginPage = ({
 LoginPage.propTypes = {
   institutionLogin: PropTypes.bool.isRequired,
   handleInstitutionLogin: PropTypes.func.isRequired,
-  // Redux compatibility props
-  loginRequest: PropTypes.func,
-  loginResult: PropTypes.shape({
-    success: PropTypes.bool,
-    redirectUrl: PropTypes.string,
-  }),
-  loginErrorCode: PropTypes.string,
-  loginFormData: PropTypes.shape({
-    formFields: PropTypes.shape({
-      emailOrUsername: PropTypes.string,
-      password: PropTypes.string,
-    }),
-    errors: PropTypes.shape({
-      emailOrUsername: PropTypes.string,
-      password: PropTypes.string,
-    }),
-  }),
-  submitState: PropTypes.string,
-  thirdPartyAuthApiStatus: PropTypes.string,
-  shouldBackupState: PropTypes.bool,
-  showResetPasswordSuccessBanner: PropTypes.bool,
-  dismissPasswordResetBanner: PropTypes.func,
-  backupLoginFormBegin: PropTypes.func,
 };
 
 export default LoginPage;
