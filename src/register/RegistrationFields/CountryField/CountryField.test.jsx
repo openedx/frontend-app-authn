@@ -1,15 +1,21 @@
-import { Provider } from 'react-redux';
+import React from 'react';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+
+import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
 
 import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 import { CountryField } from '../index';
 
-const mockStore = configureStore();
+// Mock the useRegisterContext hook
+jest.mock('../../components/RegisterContext', () => ({
+  ...jest.requireActual('../../components/RegisterContext'),
+  useRegisterContext: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -29,26 +35,39 @@ jest.mock('react-router-dom', () => {
 
 describe('CountryField', () => {
   let props = {};
-  let store = {};
+  let queryClient;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
-  );
-
-  const routerWrapper = children => (
-    <Router>
-      {children}
-    </Router>
-  );
-
-  const initialState = {
-    register: {},
+  const renderWrapper = (children) => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <Router>
+            <RegisterProvider>
+              {children}
+            </RegisterProvider>
+          </Router>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+    
+    // Setup default mock for useRegisterContext
+    useRegisterContext.mockReturnValue({
+      clearRegistrationBackendError: jest.fn(),
+      backendCountryCode: '',
+    });
     props = {
       countryList: [{
         [COUNTRY_CODE_KEY]: 'PK',
@@ -80,7 +99,7 @@ describe('CountryField', () => {
     };
 
     it('should run country field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, {
@@ -95,7 +114,7 @@ describe('CountryField', () => {
     });
 
     it('should run country field validation when country name is invalid', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, {
@@ -110,7 +129,7 @@ describe('CountryField', () => {
     });
 
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
       const countryInput = container.querySelector('input[name="country"]');
       const dropdownArrowIcon = container.querySelector('.btn-icon.pgn__form-autosuggest__icon-button');
 
@@ -123,7 +142,7 @@ describe('CountryField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, { target: { value: '', name: 'country' } });
@@ -133,7 +152,7 @@ describe('CountryField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.focus(countryInput);
@@ -142,16 +161,14 @@ describe('CountryField', () => {
       expect(props.handleErrorChange).toHaveBeenCalledWith('country', '');
     });
 
-    it('should update state from country code present in redux store', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          backendCountryCode: 'PK',
-        },
+    it('should update state from country code present in context', () => {
+      // Mock the context to return a country code
+      useRegisterContext.mockReturnValue({
+        clearRegistrationBackendError: jest.fn(),
+        backendCountryCode: 'PK',
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
 
       container.querySelector('input[name="country"]');
       expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
@@ -162,7 +179,7 @@ describe('CountryField', () => {
     });
 
     it('should set option on dropdown menu item click', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
 
       const dropdownButton = container.querySelector('.pgn__form-autosuggest__icon-button');
       fireEvent.click(dropdownButton);
@@ -178,9 +195,7 @@ describe('CountryField', () => {
     });
 
     it('should set value on change', () => {
-      const { container } = render(
-        routerWrapper(reduxWrapper(<CountryField {...props} />)),
-      );
+      const { container } = render(renderWrapper(<CountryField {...props} />));
 
       const countryInput = container.querySelector('input[name="country"]');
       fireEvent.change(countryInput, { target: { value: 'pak', name: 'country' } });
@@ -198,7 +213,7 @@ describe('CountryField', () => {
         errorMessage: 'country error message',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
+      const { container } = render(renderWrapper(<CountryField {...props} />));
 
       const feedbackElement = container.querySelector('div[feedback-for="country"]');
       expect(feedbackElement).toBeTruthy();

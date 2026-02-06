@@ -99,21 +99,21 @@ const ProgressiveProfilingInner = (props) => {
     } else {
       configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     }
-  }, [registrationEmbedded, thirdPartyAuthMutation, queryParams?.next]);
+  }, [registrationEmbedded, queryParams?.next]); // Remove fetchThirdPartyAuth and setThirdPartyAuthContextSuccess from deps
 
   useEffect(() => {
     const registrationResponse = location.state?.registrationResult;
     if (registrationResponse) {
       setRegistrationResult(registrationResponse);
       setFormFieldData({
-        fields: location.state?.optionalFields.fields,
-        extendedProfile: location.state?.optionalFields.extended_profile,
+        fields: location.state?.optionalFields.fields || {},
+        extendedProfile: location.state?.optionalFields.extended_profile || [],
       });
     }
-  }, [location.state]);
+  }, [location.state?.registrationResult, location.state?.optionalFields]);
 
   useEffect(() => {
-    if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
+    if (registrationEmbedded && welcomePageContext && Object.keys(welcomePageContext).includes('fields')) {
       setFormFieldData({
         fields: welcomePageContext.fields,
         extendedProfile: welcomePageContext.extended_profile,
@@ -121,7 +121,7 @@ const ProgressiveProfilingInner = (props) => {
       const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : getConfig().SEARCH_CATALOG_URL;
       setRegistrationResult({ redirectUrl: nextUrl });
     }
-  }, [registrationEmbedded, welcomePageContext]);
+  }, [registrationEmbedded, welcomePageContext?.fields, welcomePageContext?.extended_profile, welcomePageContext?.nextUrl]);
 
   useEffect(() => {
     if (authenticatedUser?.userId) {

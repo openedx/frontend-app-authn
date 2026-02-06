@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
 import { fireEvent, render } from '@testing-library/react';
 

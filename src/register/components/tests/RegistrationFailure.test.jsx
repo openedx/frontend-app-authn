@@ -1,4 +1,4 @@
-import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { mergeConfig } from '@edx/frontend-platform';
 import {
@@ -6,13 +6,15 @@ import {
 } from '@edx/frontend-platform/i18n';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
 import RegistrationPage from '../../RegistrationPage';
 import RegistrationFailureMessage from '../RegistrationFailure';
+import { useRegistration, useFieldValidations } from '../../data/api.hook.ts';
+import { useRegisterContext } from '../RegisterContext.tsx';
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext.tsx';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -22,8 +24,24 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('@edx/frontend-platform/logging', () => ({
+  logError: jest.fn(),
+  logInfo: jest.fn(),
+}));
 
-const mockStore = configureStore();
+// Mock React Query hooks
+jest.mock('../../data/api.hook.ts', () => ({
+  useRegistration: jest.fn(),
+  useFieldValidations: jest.fn(),
+}));
+jest.mock('../RegisterContext.tsx', () => ({
+  RegisterProvider: ({ children }) => children,
+  useRegisterContext: jest.fn(),
+}));
+jest.mock('../../../common-components/components/ThirdPartyAuthContext.tsx', () => ({
+  ThirdPartyAuthProvider: ({ children }) => children,
+  useThirdPartyAuthContext: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -48,7 +66,7 @@ describe('RegistrationFailure', () => {
   });
 
   let props = {};
-  let store = {};
+  let queryClient;
   const registrationFormData = {
     configurableFormFields: {
       marketingEmailsOptIn: true,
@@ -64,10 +82,12 @@ describe('RegistrationFailure', () => {
     },
   };
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
+  const renderWrapper = children => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        {children}
+      </IntlProvider>
+    </QueryClientProvider>
   );
 
   const routerWrapper = children => (
@@ -76,35 +96,75 @@ describe('RegistrationFailure', () => {
     </Router>
   );
 
-  const thirdPartyAuthContext = {
-    currentProvider: null,
-    finishAuthUrl: null,
-    providers: [],
-    secondaryProviders: [],
-    pipelineUserDetails: null,
-    countryCode: null,
+  const mockRegisterContext = {
+    registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+    registrationError: {},
+    registrationFormData,
+    usernameSuggestions: [],
+    validations: null,
+    submitState: 'default',
+    userPipelineDataLoaded: false,
+    validationApiRateLimited: false,
+    shouldBackupState: false,
+    backendValidations: null,
+    backendCountryCode: '',
+    setValidationsSuccess: jest.fn(),
+    setValidationsFailure: jest.fn(),
+    clearUsernameSuggestions: jest.fn(),
+    clearRegistrationBackendError: jest.fn(),
+    updateRegistrationFormData: jest.fn(),
+    setRegistrationResult: jest.fn(),
+    setBackendCountryCode: jest.fn(),
   };
 
-  const initialState = {
-    register: {
-      registrationResult: { success: false, redirectUrl: '' },
-      registrationError: {},
-      registrationFormData,
-      usernameSuggestions: [],
+  const mockThirdPartyAuthContext = {
+    fieldDescriptions: {},
+    optionalFields: {
+      fields: {},
+      extended_profile: [],
     },
-    commonComponents: {
-      thirdPartyAuthApiStatus: null,
-      thirdPartyAuthContext,
-      fieldDescriptions: {},
-      optionalFields: {
-        fields: {},
-        extended_profile: [],
-      },
+    thirdPartyAuthApiStatus: null,
+    thirdPartyAuthContext: {
+      autoSubmitRegForm: false,
+      currentProvider: null,
+      finishAuthUrl: null,
+      countryCode: null,
+      providers: [],
+      secondaryProviders: [],
+      pipelineUserDetails: null,
+      errorMessage: null,
+      welcomePageRedirectUrl: null,
     },
+    setThirdPartyAuthContextBegin: jest.fn(),
+    setThirdPartyAuthContextSuccess: jest.fn(),
+    setThirdPartyAuthContextFailure: jest.fn(),
+    clearThirdPartyAuthErrorMessage: jest.fn(),
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+    
+    // Setup default mocks
+    useRegistration.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
+    });
+    
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+    
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+    
+    useFieldValidations.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
+    });
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -134,7 +194,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -150,7 +210,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -169,7 +229,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -188,7 +248,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -198,17 +258,14 @@ describe('RegistrationFailure', () => {
     });
 
     it('should display error message based on the error code returned by API', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            errorCode: INTERNAL_SERVER_ERROR,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          errorCode: INTERNAL_SERVER_ERROR,
         },
       });
 
-      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const validationError = screen.queryByText('An error has occurred. Try refreshing the page, or check your internet connection.');
 
       expect(validationError).not.toBeNull();

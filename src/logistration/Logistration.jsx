@@ -22,6 +22,7 @@ import {
 } from '../data/utils';
 import LoginComponentSlot from '../plugin-slots/LoginComponentSlot';
 import { RegistrationPage } from '../register';
+import { backupRegistrationForm } from '../register/data/actions';
 import { RegisterProvider } from '../register/components/RegisterContext.tsx';
 
 const LogistrationPageInner = ({

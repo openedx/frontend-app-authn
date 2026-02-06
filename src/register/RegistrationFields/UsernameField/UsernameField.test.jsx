@@ -1,14 +1,24 @@
-import { Provider } from 'react-redux';
-
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { fireEvent, render } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
-import { clearRegistrationBackendError, clearUsernameSuggestions, fetchRealtimeValidations } from '../../data/actions';
+import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
 import { UsernameField } from '../index';
 
-const mockStore = configureStore();
+// Mock the useFieldValidations hook
+const mockMutate = jest.fn();
+jest.mock('../../data/api.hook', () => ({
+  useFieldValidations: () => ({
+    mutate: mockMutate,
+  }),
+}));
+
+// Mock the useRegisterContext hook
+jest.mock('../../components/RegisterContext', () => ({
+  ...jest.requireActual('../../components/RegisterContext'),
+  useRegisterContext: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -28,28 +38,44 @@ jest.mock('react-router-dom', () => {
 
 describe('UsernameField', () => {
   let props = {};
-  let store = {};
+  let queryClient;
+  let mockRegisterContext;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
-  );
-
-  const routerWrapper = children => (
-    <Router>
-      {children}
-    </Router>
-  );
-
-  const initialState = {
-    register: {
-      usernameSuggestions: [],
-    },
+  const renderWrapper = (children) => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <Router>
+            <RegisterProvider>
+              {children}
+            </RegisterProvider>
+          </Router>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
+    mockRegisterContext = {
+      usernameSuggestions: [],
+      validationApiRateLimited: false,
+      setValidationsSuccess: jest.fn(),
+      setValidationsFailure: jest.fn(),
+      clearUsernameSuggestions: jest.fn(),
+      clearRegistrationBackendError: jest.fn(),
+      registrationFormData: {},
+      validationErrors: {},
+    };
+
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+
     props = {
       name: 'username',
       value: '',
@@ -63,6 +89,7 @@ describe('UsernameField', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    mockMutate.mockClear();
   });
 
   describe('Test Username Field', () => {
@@ -71,7 +98,7 @@ describe('UsernameField', () => {
     };
 
     it('should run username field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.blur(usernameField, { target: { value: '', name: 'username' } });
@@ -84,7 +111,7 @@ describe('UsernameField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.blur(usernameField, { target: { value: 'user#', name: 'username' } });
@@ -97,7 +124,7 @@ describe('UsernameField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.focus(usernameField, { target: { value: '', name: 'username' } });
@@ -110,7 +137,7 @@ describe('UsernameField', () => {
     });
 
     it('should remove space from field on focus if space exists', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.focus(usernameField, { target: { value: ' ', name: 'username' } });
@@ -122,18 +149,17 @@ describe('UsernameField', () => {
     });
 
     it('should call backend validation api on blur event, if frontend validations have passed', () => {
-      store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       // Enter a valid username so that frontend validations are passed
       fireEvent.blur(usernameField, { target: { value: 'test', name: 'username' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ username: 'test' }));
+      expect(mockMutate).toHaveBeenCalledWith({ username: 'test' });
     });
 
     it('should remove space from the start of username on change', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       const usernameField = container.querySelector('input#username');
       fireEvent.change(usernameField, { target: { value: ' test-user', name: 'username' } });
 
@@ -144,7 +170,7 @@ describe('UsernameField', () => {
     });
 
     it('should not set username if it is more than 30 character long', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.change(usernameField, { target: { value: 'why_this_is_not_valid_username_', name: 'username' } });
@@ -153,23 +179,18 @@ describe('UsernameField', () => {
     });
 
     it('should clear username suggestions when username field is focused in', () => {
-      store.dispatch = jest.fn(store.dispatch);
-
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.focus(usernameField);
 
-      expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
+      expect(mockRegisterContext.clearUsernameSuggestions).toHaveBeenCalled();
     });
 
     it('should show username suggestions in case of conflict with an existing username', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
 
       props = {
@@ -177,18 +198,15 @@ describe('UsernameField', () => {
         errorMessage: 'It looks like this username is already taken',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
       expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should show username suggestions when they are populated in redux', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
 
       props = {
@@ -196,18 +214,15 @@ describe('UsernameField', () => {
         value: ' ',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
       expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should show username suggestions even if there is an error in field', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
 
       props = {
@@ -216,21 +231,18 @@ describe('UsernameField', () => {
         errorMessage: 'username error',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       const usernameSuggestions = container.querySelectorAll('button.username-suggestions--chip');
       expect(usernameSuggestions.length).toEqual(3);
     });
 
     it('should put space in username field if suggestions are populated in redux', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
 
-      render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      render(renderWrapper(<UsernameField {...props} />));
       expect(props.handleChange).toHaveBeenCalledTimes(1);
       expect(props.handleChange).toHaveBeenCalledWith(
         { target: { name: 'username', value: ' ' } },
@@ -238,12 +250,9 @@ describe('UsernameField', () => {
     });
 
     it('should set suggestion as username by clicking on it', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
 
       props = {
@@ -251,7 +260,7 @@ describe('UsernameField', () => {
         value: ' ',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       const usernameSuggestion = container.querySelector('.username-suggestions--chip');
       fireEvent.click(usernameSuggestion);
       expect(props.handleChange).toHaveBeenCalledTimes(1);
@@ -261,58 +270,47 @@ describe('UsernameField', () => {
     });
 
     it('should clear username suggestions when close icon is clicked', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          usernameSuggestions: ['test_1', 'test_12', 'test_123'],
-        },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        usernameSuggestions: ['test_1', 'test_12', 'test_123'],
       });
-      store.dispatch = jest.fn(store.dispatch);
 
       props = {
         ...props,
         value: ' ',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
       let closeButton = container.querySelector('button.username-suggestions__close__button');
       fireEvent.click(closeButton);
-      expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
+      expect(mockRegisterContext.clearUsernameSuggestions).toHaveBeenCalled();
 
       props = {
         ...props,
         errorMessage: 'username error',
       };
 
-      render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      render(renderWrapper(<UsernameField {...props} />));
       closeButton = container.querySelector('button.username-suggestions__close__button');
       fireEvent.click(closeButton);
-      expect(store.dispatch).toHaveBeenCalledWith(clearUsernameSuggestions());
+      expect(mockRegisterContext.clearUsernameSuggestions).toHaveBeenCalled();
     });
 
     it('should clear the registration validation error on focus on field', () => {
-      store.dispatch = jest.fn(store.dispatch);
-
       const usernameError = 'It looks like this username is already taken';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            username: [{ userMessage: usernameError }],
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        validationErrors: {
+          username: [{ userMessage: usernameError }],
         },
       });
 
-      store.dispatch = jest.fn(store.dispatch);
-
-      const { container } = render(routerWrapper(reduxWrapper(<UsernameField {...props} />)));
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
 
       const usernameField = container.querySelector('input#username');
       fireEvent.focus(usernameField, { target: { value: 'test', name: 'username' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('username'));
+      expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('username');
     });
   });
 });
