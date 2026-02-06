@@ -9,9 +9,12 @@
     "type": "git",
     "url": "git+https://github.com/openedx/frontend-app-authn.git"
   },
-  "main": "src/index.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./app.scss": "./dist/app.scss"
+  },
   "files": [
-    "/src"
+    "/dist"
   ],
   "browserslist": [
     "extends @edx/browserslist-config"
@@ -21,10 +24,13 @@
     "*.scss"
   ],
   "scripts": {
+    "build": "make build",
+    "clean": "make clean",
     "dev": "PORT=1999 PUBLIC_PATH=/authn openedx dev",
     "i18n_extract": "openedx formatjs extract",
     "lint": "openedx lint .",
     "lint:fix": "openedx lint --fix .",
+    "prepack": "npm run build",
     "snapshot": "openedx test --updateSnapshot",
     "test": "openedx test --coverage --passWithNoTests"
   },
@@ -68,10 +74,11 @@
     "eslint-plugin-import": "2.31.0",
     "jest": "^29.7.0",
     "react-test-renderer": "^18.3.1",
-    "ts-jest": "^29.4.0"
+    "ts-jest": "^29.4.0",
+    "tsc-alias": "^1.8.16"
   },
   "peerDependencies": {
-    "@openedx/frontend-base": "^1.0.0-alpha.8",
+    "@openedx/frontend-base": "^1.0.0-alpha.13",
     "@openedx/paragon": "^23",
     "react": "^18",
     "react-dom": "^18",
