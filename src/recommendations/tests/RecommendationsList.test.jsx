@@ -1,21 +1,39 @@
-import { Provider } from 'react-redux';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { render } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter } from 'react-router-dom';
 
 import mockedProductData from './mockedData';
 import RecommendationList from '../RecommendationsList';
 
-const mockStore = configureStore();
+// Setup React Query client for tests
+const createTestQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 describe('RecommendationsListTests', () => {
-  const store = mockStore({});
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
-  );
+  let queryClient;
+
+  const renderWithProviders = (children) => {
+    queryClient = createTestQueryClient();
+    
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en" messages={{}}>
+          <MemoryRouter>
+            {children}
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
+  };
 
   it('should render the product card', () => {
     const props = {
@@ -23,7 +41,7 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const { container } = render(reduxWrapper(<RecommendationList {...props} />));
+    const { container } = renderWithProviders(<RecommendationList {...props} />);
 
     const recommendationCards = container.querySelectorAll('.recommendation-card');
     expect(recommendationCards.length).toEqual(mockedProductData.length);
@@ -35,7 +53,7 @@ describe('RecommendationsListTests', () => {
       userId: 1234567,
     };
 
-    const { getByText } = render(reduxWrapper(<RecommendationList {...props} />));
+    const { getByText } = renderWithProviders(<RecommendationList {...props} />);
 
     const firstFooterContent = getByText('1 Course');
     const secondFooterContent = getByText('2 Courses');

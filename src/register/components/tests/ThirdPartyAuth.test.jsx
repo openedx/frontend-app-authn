@@ -1,4 +1,4 @@
-import { Provider } from 'react-redux';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import {
@@ -6,12 +6,14 @@ import {
 } from '@edx/frontend-platform/i18n';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../../../data/constants';
 import RegistrationPage from '../../RegistrationPage';
+import { useRegistration, useFieldValidations } from '../../data/api.hook.ts';
+import { useRegisterContext } from '../RegisterContext.tsx';
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext.tsx';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -21,8 +23,24 @@ jest.mock('@edx/frontend-platform/i18n', () => ({
   ...jest.requireActual('@edx/frontend-platform/i18n'),
   getLocale: jest.fn(),
 }));
+jest.mock('@edx/frontend-platform/logging', () => ({
+  logError: jest.fn(),
+  logInfo: jest.fn(),
+}));
 
-const mockStore = configureStore();
+// Mock React Query hooks
+jest.mock('../../data/api.hook.ts', () => ({
+  useRegistration: jest.fn(),
+  useFieldValidations: jest.fn(),
+}));
+jest.mock('../RegisterContext.tsx', () => ({
+  RegisterProvider: ({ children }) => children,
+  useRegisterContext: jest.fn(),
+}));
+jest.mock('../../../common-components/components/ThirdPartyAuthContext.tsx', () => ({
+  ThirdPartyAuthProvider: ({ children }) => children,
+  useThirdPartyAuthContext: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -48,7 +66,7 @@ describe('ThirdPartyAuth', () => {
   });
 
   let props = {};
-  let store = {};
+  let queryClient;
   const registrationFormData = {
     configurableFormFields: {
       marketingEmailsOptIn: true,
@@ -64,9 +82,11 @@ describe('ThirdPartyAuth', () => {
     },
   };
 
-  const reduxWrapper = children => (
+  const renderWrapper = children => (
     <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
     </IntlProvider>
   );
 
@@ -76,35 +96,76 @@ describe('ThirdPartyAuth', () => {
     </Router>
   );
 
-  const thirdPartyAuthContext = {
-    currentProvider: null,
-    finishAuthUrl: null,
-    providers: [],
-    secondaryProviders: [],
-    pipelineUserDetails: null,
-    countryCode: null,
+  const mockThirdPartyAuthContext = {
+    fieldDescriptions: {},
+    optionalFields: {
+      fields: {},
+      extended_profile: [],
+    },
+    thirdPartyAuthApiStatus: null,
+    thirdPartyAuthContext: {
+      autoSubmitRegForm: false,
+      currentProvider: null,
+      finishAuthUrl: null,
+      countryCode: null,
+      providers: [],
+      secondaryProviders: [],
+      pipelineUserDetails: null,
+      errorMessage: null,
+      welcomePageRedirectUrl: null,
+    },
+    setThirdPartyAuthContextBegin: jest.fn(),
+    setThirdPartyAuthContextSuccess: jest.fn(),
+    setThirdPartyAuthContextFailure: jest.fn(),
+    clearThirdPartyAuthErrorMessage: jest.fn(),
   };
 
-  const initialState = {
-    register: {
-      registrationResult: { success: false, redirectUrl: '' },
-      registrationError: {},
-      registrationFormData,
-      usernameSuggestions: [],
-    },
-    commonComponents: {
-      thirdPartyAuthApiStatus: null,
-      thirdPartyAuthContext,
-      fieldDescriptions: {},
-      optionalFields: {
-        fields: {},
-        extended_profile: [],
-      },
-    },
+  const mockRegisterContext = {
+    registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+    registrationError: {},
+    registrationFormData,
+    usernameSuggestions: [],
+    validations: null,
+    submitState: 'default',
+    userPipelineDataLoaded: false,
+    validationApiRateLimited: false,
+    shouldBackupState: false,
+    backendValidations: null,
+    backendCountryCode: '',
+    setValidationsSuccess: jest.fn(),
+    setValidationsFailure: jest.fn(),
+    clearUsernameSuggestions: jest.fn(),
+    clearRegistrationBackendError: jest.fn(),
+    updateRegistrationFormData: jest.fn(),
+    setRegistrationResult: jest.fn(),
+    setBackendCountryCode: jest.fn(),
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+    
+    // Setup default mocks
+    useRegistration.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
+    });
+    
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+    
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+    
+    useFieldValidations.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
+    });
+    
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -143,19 +204,16 @@ describe('ThirdPartyAuth', () => {
     };
 
     it('should not display password field when current provider is present', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            currentProvider: ssoProvider.name,
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          currentProvider: ssoProvider.name,
         },
       });
 
       const { queryByLabelText } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />, { store })),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const passwordField = queryByLabelText('Password');
@@ -164,15 +222,11 @@ describe('ThirdPartyAuth', () => {
     });
 
     it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [ssoProvider],
-          },
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [ssoProvider],
         },
       });
 
@@ -180,7 +234,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
       const tpaButton = container.querySelector(`button#${ssoProvider.id}`);
 
@@ -191,12 +245,9 @@ describe('ThirdPartyAuth', () => {
     });
 
     it('should display skeleton if tpa_hint is true and thirdPartyAuthContext is pending', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: PENDING_STATE,
-        },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthApiStatus: PENDING_STATE,
       });
 
       delete window.location;
@@ -205,7 +256,7 @@ describe('ThirdPartyAuth', () => {
         search: `?next=/dashboard&tpa_hint=${ssoProvider.id}`,
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const skeletonElement = container.querySelector('.react-loading-skeleton');
 
       expect(skeletonElement).toBeTruthy();
@@ -213,15 +264,11 @@ describe('ThirdPartyAuth', () => {
 
     it('should render icon if icon classes are missing in providers', () => {
       ssoProvider.iconClass = null;
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [ssoProvider],
-          },
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [ssoProvider],
         },
       });
 
@@ -229,7 +276,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
-      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const iconElement = container.querySelector(`button#${ssoProvider.id} div span.pgn__icon`);
 
       expect(iconElement).toBeTruthy();
@@ -237,62 +284,51 @@ describe('ThirdPartyAuth', () => {
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
       secondaryProviders.skipHintedLogin = true;
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            secondaryProviders: [secondaryProviders],
-          },
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          secondaryProviders: [secondaryProviders],
         },
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
 
-      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       expect(window.location.href).toEqual(getConfig().LMS_BASE_URL + secondaryProviders.registerUrl);
     });
 
     it('should render regular tpa button for invalid tpa_hint value', () => {
       const expectedMessage = `${ssoProvider.name}`;
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [ssoProvider],
-          },
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [ssoProvider],
         },
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
 
-      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const providerButton = container.querySelector(`button#${ssoProvider.id} span#provider-name`);
 
       expect(providerButton.textContent).toEqual(expectedMessage);
     });
 
     it('should show single sign on provider button', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [ssoProvider],
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [ssoProvider],
         },
       });
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />, { store })),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
@@ -301,19 +337,16 @@ describe('ThirdPartyAuth', () => {
     });
 
     it('should show single sign on provider button', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [ssoProvider],
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [ssoProvider],
         },
       });
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const buttonsWithId = container.querySelectorAll(`button#${ssoProvider.id}`);
@@ -327,24 +360,21 @@ describe('ThirdPartyAuth', () => {
         institutionLogin: true,
       };
 
-      const { getByText } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      const { getByText } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const headingElement = getByText('Register with institution/campus credentials');
       expect(headingElement).toBeTruthy();
     });
 
     it('should redirect to social auth provider url on SSO button click', () => {
       const registerUrl = '/auth/login/apple-id/?auth_entry=register&next=/dashboard';
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            providers: [{
-              ...ssoProvider,
-              registerUrl,
-            }],
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          providers: [{
+            ...ssoProvider,
+            registerUrl,
+          }],
         },
       });
 
@@ -352,7 +382,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL };
 
       const { container } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const ssoButton = container.querySelector('button#oa2-apple-id');
@@ -363,48 +393,46 @@ describe('ThirdPartyAuth', () => {
 
     it('should redirect to finishAuthUrl upon successful registration via SSO', () => {
       const authCompleteUrl = '/auth/complete/google-oauth2/';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
+      
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: '',
+          authenticatedUser: null,
         },
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            finishAuthUrl: authCompleteUrl,
-          },
+      });
+      
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          finishAuthUrl: authCompleteUrl,
         },
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
 
-      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     });
 
     // ******** test alert messages ********
 
     it('should match third party auth alert', () => {
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            currentProvider: 'Apple',
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          currentProvider: 'Apple',
         },
       });
 
       const expectedMessage = `${'You\'ve successfully signed into Apple! We just need a little more information before '
                               + 'you start learning with '}${ getConfig().SITE_NAME }.`;
 
-      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const tpaAlert = container.querySelector('#tpa-alert p');
       expect(tpaAlert.textContent).toEqual(expectedMessage);
     });
@@ -413,29 +441,25 @@ describe('ThirdPartyAuth', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
 
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          backendCountryCode: 'PK',
-          userPipelineDataLoaded: false,
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            currentProvider: null,
-            pipelineUserDetails: {},
-            errorMessage: 'An error occurred',
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        backendCountryCode: 'PK',
+        userPipelineDataLoaded: false,
+      });
+      
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          currentProvider: null,
+          pipelineUserDetails: {},
+          errorMessage: 'An error occurred',
         },
       });
 
-      store.dispatch = jest.fn(store.dispatch);
-
       const { container } = render(
-        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const alertHeading = container.querySelector('div.alert-heading');

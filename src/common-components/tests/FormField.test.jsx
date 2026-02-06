@@ -1,14 +1,20 @@
-import { Provider } from 'react-redux';
+import React from 'react';
 
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
-import { fetchRealtimeValidations } from '../../register/data/actions';
 import FormGroup from '../FormGroup';
 import PasswordField from '../PasswordField';
+import { RegisterProvider } from '../../register/components/RegisterContext';
+import { useFieldValidations } from '../../register/data/api.hook';
+
+// Mock the useFieldValidations hook
+jest.mock('../../register/data/api.hook', () => ({
+  useFieldValidations: jest.fn(),
+}));
 
 describe('FormGroup', () => {
   const props = {
@@ -35,36 +41,55 @@ describe('FormGroup', () => {
 });
 
 describe('PasswordField', () => {
-  const mockStore = configureStore();
   let props = {};
-  let store = {};
+  let queryClient;
+  let mockMutate;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
-    </IntlProvider>
-  );
 
-  const initialState = {
-    register: {
-      validationApiRateLimited: false,
-    },
+  const renderWrapper = (children) => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <MemoryRouter>
+            <RegisterProvider>
+              {children}
+            </RegisterProvider>
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
+
+    mockMutate = jest.fn();
+    useFieldValidations.mockReturnValue({
+      mutate: mockMutate,
+      isPending: false,
+    });
+
     props = {
       floatingLabel: 'Password',
       name: 'password',
       value: 'password123',
       handleFocus: jest.fn(),
     };
+
+    jest.clearAllMocks();
   });
 
   it('should show/hide password on icon click', () => {
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = getByLabelText('Password');
 
     const showPasswordButton = getByLabelText('Show password');
@@ -77,7 +102,7 @@ describe('PasswordField', () => {
   });
 
   it('should show password requirement tooltip on focus', async () => {
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = getByLabelText('Password');
     jest.useFakeTimers();
     await act(async () => {
@@ -94,7 +119,7 @@ describe('PasswordField', () => {
       ...props,
       value: '',
     };
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = getByLabelText('Password');
     jest.useFakeTimers();
     await act(async () => {
@@ -117,7 +142,7 @@ describe('PasswordField', () => {
   });
 
   it('should update password requirement checks', async () => {
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = getByLabelText('Password');
     jest.useFakeTimers();
     await act(async () => {
@@ -140,7 +165,7 @@ describe('PasswordField', () => {
   });
 
   it('should not run validations when blur is fired on password icon click', () => {
-    const { container, getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { container, getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = container.querySelector('input[name="password"]');
 
     const passwordIcon = getByLabelText('Show password');
@@ -161,7 +186,7 @@ describe('PasswordField', () => {
       ...props,
       handleBlur: jest.fn(),
     };
-    const { container } = render(reduxWrapper(<PasswordField {...props} />));
+    const { container } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = container.querySelector('input[name="password"]');
 
     fireEvent.blur(passwordInput, {
@@ -179,7 +204,7 @@ describe('PasswordField', () => {
       ...props,
       handleErrorChange: jest.fn(),
     };
-    const { container } = render(reduxWrapper(<PasswordField {...props} />));
+    const { container } = render(renderWrapper(<PasswordField {...props} />));
     const passwordInput = container.querySelector('input[name="password"]');
 
     fireEvent.blur(passwordInput, {
@@ -202,7 +227,7 @@ describe('PasswordField', () => {
       handleErrorChange: jest.fn(),
     };
 
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
 
     const passwordIcon = getByLabelText('Show password');
 
@@ -222,7 +247,7 @@ describe('PasswordField', () => {
       handleErrorChange: jest.fn(),
     };
 
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
 
     const passwordIcon = getByLabelText('Show password');
 
@@ -241,12 +266,11 @@ describe('PasswordField', () => {
   });
 
   it('should run backend validations when frontend validations pass on blur when rendered from register page', () => {
-    store.dispatch = jest.fn(store.dispatch);
     props = {
       ...props,
       handleErrorChange: jest.fn(),
     };
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
     const passwordField = getByLabelText('Password');
     fireEvent.blur(passwordField, {
       target: {
@@ -255,18 +279,17 @@ describe('PasswordField', () => {
       },
     });
 
-    expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ password: 'password123' }));
+    expect(mockMutate).toHaveBeenCalledWith({ password: 'password123' });
   });
 
   it('should use password value from prop when password icon is focused out (blur due to icon)', () => {
-    store.dispatch = jest.fn(store.dispatch);
     props = {
       ...props,
       value: 'testPassword',
       handleErrorChange: jest.fn(),
       handleBlur: jest.fn(),
     };
-    const { getByLabelText } = render(reduxWrapper(<PasswordField {...props} />));
+    const { getByLabelText } = render(renderWrapper(<PasswordField {...props} />));
 
     const passwordIcon = getByLabelText('Show password');
 

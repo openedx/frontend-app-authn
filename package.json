@@ -70,7 +70,9 @@
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
+    "@edx/typescript-config": "^1.1.0",
     "@openedx/frontend-build": "^14.6.2",
+    "@testing-library/jest-dom": "^6.9.1",
     "babel-plugin-formatjs": "10.5.41",
     "eslint-plugin-import": "2.32.0",
     "glob": "7.2.3",

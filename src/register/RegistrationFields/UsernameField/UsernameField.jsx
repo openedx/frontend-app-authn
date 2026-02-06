@@ -75,7 +75,7 @@ const UsernameField = (props) => {
       handleErrorChange('username', fieldError);
     } else if (!validationApiRateLimited) {
       // dispatch(fetchRealtimeValidations({ username }));
-      fieldValidationsMutation.mutate({ username: value });
+      fieldValidationsMutation.mutate({ username });
     }
   };
 
