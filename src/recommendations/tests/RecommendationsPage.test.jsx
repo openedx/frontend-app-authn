@@ -1,19 +1,18 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { useMediaQuery } from '@openedx/paragon';
-import { fireEvent, render, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, fireEvent, render } from '@testing-library/react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
+import { useRegisterContext } from '../../register/components/RegisterContext';
 import { PERSONALIZED } from '../data/constants';
 import useAlgoliaRecommendations from '../data/hooks/useAlgoliaRecommendations';
 import mockedRecommendedProducts from '../data/tests/mockedData';
 import RecommendationsPage from '../RecommendationsPage';
 import { eventNames, getProductMapping } from '../track';
-import { useRegisterContext } from '../../register/components/RegisterContext';
 
 // Setup React Query client for tests
 const createTestQueryClient = () => new QueryClient({
@@ -64,10 +63,10 @@ describe('RecommendationsPageTests', () => {
     redirectUrl,
     success: true,
   };
-  
+
   const renderWithProviders = (children) => {
     queryClient = createTestQueryClient();
-    
+
     return render(
       <QueryClientProvider client={queryClient}>
         <IntlProvider locale="en" messages={{}}>
@@ -75,18 +74,9 @@ describe('RecommendationsPageTests', () => {
             {children}
           </MemoryRouter>
         </IntlProvider>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   };
-
-  const mockUseLocation = () => (
-    useLocation.mockReturnValue({
-      state: {
-        registrationResult,
-        userId: 111,
-      },
-    })
-  );
 
   const mockUseRegisterContext = (registrationResult = null, backendCountryCode = 'US') => {
     useRegisterContext.mockReturnValue({
@@ -118,7 +108,7 @@ describe('RecommendationsPageTests', () => {
       recommendations: mockedRecommendedProducts,
       isLoading: false,
     });
-    
+
     // Mock window.location with getter and setter for href
     delete window.location;
     window.location = {
@@ -127,7 +117,7 @@ describe('RecommendationsPageTests', () => {
       reload: jest.fn(),
       replace: jest.fn(),
     };
-    
+
     // Mock the href property with getter and setter
     Object.defineProperty(window.location, 'href', {
       get: () => window.location._href || '',
@@ -144,11 +134,11 @@ describe('RecommendationsPageTests', () => {
       set: setHref,
       configurable: true,
     });
-    
+
     act(() => {
       renderWithProviders(<RecommendationsPage />);
     });
-    
+
     expect(setHref).toHaveBeenCalledWith(dashboardUrl);
   });
 
@@ -160,18 +150,18 @@ describe('RecommendationsPageTests', () => {
       set: setHref,
       configurable: true,
     });
-    
+
     // This test needs registrationResult to get past the first redirect check
     mockUseRegisterContext(registrationResult);
     useAlgoliaRecommendations.mockReturnValue({
-      recommendations: [],  // Empty recommendations array
+      recommendations: [], // Empty recommendations array
       isLoading: false,
     });
-    
+
     act(() => {
       renderWithProviders(<RecommendationsPage />);
     });
-    
+
     expect(setHref).toHaveBeenCalledWith(redirectUrl);
   });
 
@@ -183,7 +173,7 @@ describe('RecommendationsPageTests', () => {
       set: setHref,
       configurable: true,
     });
-    
+
     mockUseRegisterContext(registrationResult);
     jest.useFakeTimers();
     let container;
@@ -195,7 +185,7 @@ describe('RecommendationsPageTests', () => {
       fireEvent.click(skipButton);
       jest.advanceTimersByTime(300);
     });
-    
+
     expect(setHref).toHaveBeenCalledWith(redirectUrl);
   });
 
@@ -253,7 +243,7 @@ describe('RecommendationsPageTests', () => {
 
   it('should fire recommendations viewed event', () => {
     mockUseRegisterContext(registrationResult);
-    mockLocationState(111);  // Provide userId
+    mockLocationState(111); // Provide userId
     useAlgoliaRecommendations.mockReturnValue({
       recommendations: mockedRecommendedProducts,
       isLoading: false,

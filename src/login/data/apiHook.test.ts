@@ -1,17 +1,15 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
 import { logError, logInfo } from '@edx/frontend-platform/logging';
 import { camelCaseObject } from '@edx/frontend-platform/utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
 
 import * as api from './api';
-import { 
-  useLogin,
-  FORBIDDEN_REQUEST,
+import {
   INTERNAL_SERVER_ERROR,
-  TPA_AUTHENTICATION_FAILURE,
-  INVALID_FORM
+  INVALID_FORM,
+  useLogin,
 } from './apiHook';
 
 // Mock the dependencies
@@ -41,7 +39,7 @@ const createWrapper = () => {
       mutations: { retry: false },
     },
   });
-  
+
   return function TestWrapper({ children }: { children: React.ReactNode }) {
     return React.createElement(QueryClientProvider, { client: queryClient }, children);
   };
@@ -104,7 +102,7 @@ describe('useLogin', () => {
       emailOrUsername: ['This field is required'],
       password: ['Password is too weak'],
     };
-    
+
     const mockError = {
       response: {
         status: 400,
@@ -139,7 +137,7 @@ describe('useLogin', () => {
       email_or_username: 'testuser@example.com',
       password: 'password123',
     };
-    
+
     const timeoutError = new Error('Request timeout');
     timeoutError.name = 'TimeoutError';
 
@@ -187,7 +185,6 @@ describe('useLogin', () => {
     expect(mockLogInfo).toHaveBeenCalledWith('Login successful', mockResponse);
     expect(result.current.data).toEqual(mockResponse);
   });
-
 
   it('should handle login with empty credentials', async () => {
     const mockLoginData = {

@@ -1,5 +1,4 @@
-import { getConfig } from '@edx/frontend-platform';
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import * as QueryString from 'query-string';
 
@@ -21,7 +20,8 @@ jest.mock('query-string', () => ({
 
 const mockGetConfig = getConfig as jest.MockedFunction<typeof getConfig>;
 const mockCamelCaseObject = camelCaseObject as jest.MockedFunction<typeof camelCaseObject>;
-const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as jest.MockedFunction<typeof getAuthenticatedHttpClient>;
+const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as
+jest.MockedFunction<typeof getAuthenticatedHttpClient>;
 const mockQueryStringify = QueryString.stringify as jest.MockedFunction<typeof QueryString.stringify>;
 
 describe('login api', () => {
@@ -73,7 +73,7 @@ describe('login api', () => {
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         expectedUrl,
         `stringified=${JSON.stringify(mockCredentials)}`,
-        expectedConfig
+        expectedConfig,
       );
       expect(mockCamelCaseObject).toHaveBeenCalledWith({
         redirectUrl: 'http://localhost:18000/courses',
@@ -105,7 +105,6 @@ describe('login api', () => {
       expect(result).toEqual(expectedResult);
     });
 
-
     it('should properly stringify credentials using QueryString', async () => {
       const complexCredentials = {
         email_or_username: 'user@example.com',
@@ -123,7 +122,7 @@ describe('login api', () => {
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         expectedUrl,
         `stringified=${JSON.stringify(complexCredentials)}`,
-        expectedConfig
+        expectedConfig,
       );
     });
 
@@ -139,7 +138,7 @@ describe('login api', () => {
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           isPublic: true,
-        }
+        },
       );
     });
 
@@ -202,7 +201,7 @@ describe('login api', () => {
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         expectedUrl,
         `stringified=${JSON.stringify(emptyCredentials)}`,
-        expectedConfig
+        expectedConfig,
       );
     });
   });

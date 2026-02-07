@@ -40,6 +40,8 @@ import { useLoginContext } from './components/LoginContext';
 const LoginPage = ({
   institutionLogin,
   handleInstitutionLogin,
+  showResetPasswordSuccessBanner: propShowResetPasswordSuccessBanner = false,
+  dismissPasswordResetBanner,
 }) => {
   // Context for third-party auth
   const {
@@ -68,7 +70,7 @@ const LoginPage = ({
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin();
 
   // Local UI state (migrated from Redux)
-  const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(false);
+  const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
   const {
     providers,
     currentProvider,
@@ -326,6 +328,8 @@ const LoginPage = ({
 LoginPage.propTypes = {
   institutionLogin: PropTypes.bool.isRequired,
   handleInstitutionLogin: PropTypes.func.isRequired,
+  showResetPasswordSuccessBanner: PropTypes.bool,
+  dismissPasswordResetBanner: PropTypes.func,
 };
 
 export default LoginPage;

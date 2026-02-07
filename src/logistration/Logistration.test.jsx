@@ -1,14 +1,12 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { IntlProvider } from '@edx/frontend-platform/i18n';
-import { configure } from '@edx/frontend-platform/i18n';
-import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import Logistration from './Logistration';
+import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -37,20 +35,20 @@ jest.mock('@edx/frontend-platform', () => ({
 
 // Mock the apiHook to prevent logging errors
 jest.mock('../common-components/data/apiHook', () => ({
-  useLoginMutation: jest.fn(() => ({ 
-    mutate: jest.fn(), 
+  useLoginMutation: jest.fn(() => ({
+    mutate: jest.fn(),
     isLoading: false,
-    error: null 
+    error: null,
   })),
-  useThirdPartyAuthMutation: jest.fn(() => ({ 
-    mutate: jest.fn(), 
+  useThirdPartyAuthMutation: jest.fn(() => ({
+    mutate: jest.fn(),
     isLoading: false,
-    error: null 
+    error: null,
   })),
-  useThirdPartyAuthContext: jest.fn(() => ({ 
-    mutate: jest.fn(), 
+  useThirdPartyAuthContext: jest.fn(() => ({
+    mutate: jest.fn(),
     isLoading: false,
-    error: null 
+    error: null,
   })),
 }));
 
@@ -305,7 +303,7 @@ describe('Logistration', () => {
 
   it('should clear tpa context errorMessage tab click', () => {
     const { container } = render(renderWrapper(<Logistration />));
-    
+
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     // Verify the TPA context error clearing function was called
     expect(mockClearThirdPartyAuthErrorMessage).toHaveBeenCalled();

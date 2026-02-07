@@ -1,6 +1,6 @@
 import { IntlProvider } from '@edx/frontend-platform/i18n';
-import { fireEvent, render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
@@ -41,19 +41,17 @@ describe('NameField', () => {
   let queryClient;
   let mockRegisterContext;
 
-  const renderWrapper = (children) => {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <IntlProvider locale="en">
-          <Router>
-            <RegisterProvider>
-              {children}
-            </RegisterProvider>
-          </Router>
-        </IntlProvider>
-      </QueryClientProvider>
-    );
-  };
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <Router>
+          <RegisterProvider>
+            {children}
+          </RegisterProvider>
+        </Router>
+      </IntlProvider>
+    </QueryClientProvider>
+  );
 
   beforeEach(() => {
     queryClient = new QueryClient({
@@ -138,7 +136,6 @@ describe('NameField', () => {
         shouldFetchUsernameSuggestions: true,
       };
       const { container } = render(renderWrapper(<NameField {...props} />));
-
       const nameInput = container.querySelector('input#name');
       // Enter a valid name so that frontend validations are passed
       fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
@@ -148,7 +145,6 @@ describe('NameField', () => {
 
     it('should clear the registration validation error on focus on field', () => {
       const nameError = 'temp error';
-      
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         validationErrors: {
@@ -157,9 +153,7 @@ describe('NameField', () => {
       });
 
       const { container } = render(renderWrapper(<NameField {...props} />));
-
       const nameInput = container.querySelector('input#name');
-
       fireEvent.focus(nameInput, { target: { value: 'test', name: 'name' } });
 
       expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('name');

@@ -1,3 +1,24 @@
+import { getConfig, mergeConfig } from '@edx/frontend-platform';
+import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  fireEvent, render, screen,
+} from '@testing-library/react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+
+import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
+import {
+  AUTHN_PROGRESSIVE_PROFILING,
+  COMPLETE_STATE, 
+  DEFAULT_REDIRECT_URL,
+  EMBEDDED,
+  PENDING_STATE,
+  RECOMMENDATIONS,
+} from '../../data/constants';
+import ProgressiveProfiling from '../ProgressiveProfiling';
+
 // Mock functions defined first to prevent initialization errors
 const mockFetchThirdPartyAuth = jest.fn();
 const mockSaveUserProfile = jest.fn();
@@ -27,33 +48,6 @@ const mockOptionalFields = {
   },
   extended_profile: ['company'],
 };
-
-import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
-import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
-import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
-import {
-  fireEvent, render, screen,
-} from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-
-import { 
-  AUTHN_PROGRESSIVE_PROFILING, 
-  DEFAULT_REDIRECT_URL, 
-  RECOMMENDATIONS, 
-  EMBEDDED, 
-  PENDING_STATE, 
-  COMPLETE_STATE 
-} from '../../data/constants';
-import ProgressiveProfiling from '../ProgressiveProfiling';
-import * as progressive from '../data/service';
-import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
-
-const { saveUserProfile } = progressive;
-
 // Get the mocked version of the hook
 const mockUseThirdPartyAuthContext = jest.mocked(useThirdPartyAuthContext);
 
@@ -71,7 +65,7 @@ jest.mock('../../common-components/components/ThirdPartyAuthContext', () => ({
   useThirdPartyAuthContext: jest.fn(),
 }));
 
-// Mock context providers  
+// Mock context providers
 jest.mock('../components/ProgressiveProfilingContext', () => ({
   ProgressiveProfilingProvider: ({ children }) => children,
   useProgressiveProfilingContext: () => ({
@@ -109,26 +103,25 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
 }));
-jest.mock('react-router-dom', () => {
-  const mockNavigation = jest.fn();
+// Create mock function outside to access it directly
+const mockNavigate = jest.fn();
 
+jest.mock('react-router-dom', () => {
   // eslint-disable-next-line react/prop-types
   const Navigate = ({ to }) => {
-    mockNavigation(to);
+    mockNavigate(to);
     return <div />;
   };
 
   return {
     ...jest.requireActual('react-router-dom'),
     Navigate,
-    mockNavigate: mockNavigation,
     useLocation: jest.fn(),
   };
 });
 
 describe('ProgressiveProfilingTests', () => {
   let queryClient;
-  const mockNavigate = require('react-router-dom').mockNavigate;
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const registrationResult = { redirectUrl: getConfig().LMS_BASE_URL + DEFAULT_REDIRECT_URL, success: true };
@@ -146,7 +139,7 @@ describe('ProgressiveProfilingTests', () => {
 
   const renderWithProviders = (children) => {
     queryClient = createTestQueryClient();
-    
+
     return render(
       <QueryClientProvider client={queryClient}>
         <IntlProvider locale="en" messages={{}}>
@@ -154,7 +147,7 @@ describe('ProgressiveProfilingTests', () => {
             {children}
           </MemoryRouter>
         </IntlProvider>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   };
 
@@ -180,14 +173,14 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
     getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123', name: 'Test User' });
-    
+
     // Reset mocks first
     jest.clearAllMocks();
     mockNavigate.mockClear();
     mockFetchThirdPartyAuth.mockClear();
     mockSaveUserProfile.mockClear();
     mockSetThirdPartyAuthContextSuccess.mockClear();
-    
+
     // Configure mock for useThirdPartyAuthContext AFTER clearing mocks
     mockUseThirdPartyAuthContext.mockReturnValue({
       thirdPartyAuthApiStatus: COMPLETE_STATE,
@@ -216,7 +209,7 @@ describe('ProgressiveProfilingTests', () => {
       SITE_NAME: 'Test Site',
     });
 
-    const { getByText, container } = renderWithProviders(<ProgressiveProfiling />);
+    const { getByText } = renderWithProviders(<ProgressiveProfiling />);
 
     const learnMoreButton = getByText('Learn more about how we use this information.');
 
@@ -251,7 +244,7 @@ describe('ProgressiveProfilingTests', () => {
       BASE_URL: 'http://localhost:1995',
       SITE_NAME: 'Test Site',
     });
-    
+
     renderWithProviders(<ProgressiveProfiling />);
 
     expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
@@ -304,7 +297,7 @@ describe('ProgressiveProfilingTests', () => {
       data: {
         gender: 'm',
         extended_profile: [{ field_name: 'company', field_value: 'test company' }],
-      }
+      },
     };
     mergeConfig({
       LMS_BASE_URL: 'http://localhost:18000',
@@ -360,7 +353,7 @@ describe('ProgressiveProfilingTests', () => {
 
     it('should redirect to recommendations page if recommendations are enabled', () => {
       const { container } = renderWithProviders(<ProgressiveProfiling shouldRedirect />);
-      
+
       // The component should show 'Next' button text and automatically trigger redirect
       const nextButton = container.querySelector('button.btn-brand');
       expect(nextButton.textContent).toEqual('Next');
@@ -399,7 +392,7 @@ describe('ProgressiveProfilingTests', () => {
       useLocation.mockReturnValue({
         state: {},
       });
-      
+
       // Configure mock for useThirdPartyAuthContext for embedded tests
       mockUseThirdPartyAuthContext.mockReturnValue({
         thirdPartyAuthApiStatus: COMPLETE_STATE,
@@ -436,7 +429,7 @@ describe('ProgressiveProfilingTests', () => {
         setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
         optionalFields: {},
       });
-      
+
       const { container } = renderWithProviders(<ProgressiveProfiling />);
 
       const tpaSpinnerElement = container.querySelector('#tpa-spinner');
@@ -509,7 +502,7 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      const { container } = renderWithProviders(<ProgressiveProfiling shouldRedirect />);
+      renderWithProviders(<ProgressiveProfiling shouldRedirect />);
       const submitButton = screen.getByText('Submit');
       fireEvent.click(submitButton);
       expect(window.location.href).toBe(redirectUrl);

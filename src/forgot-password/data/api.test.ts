@@ -16,7 +16,8 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 jest.mock('form-urlencoded', () => jest.fn());
 
 const mockGetConfig = getConfig as jest.MockedFunction<typeof getConfig>;
-const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as jest.MockedFunction<typeof getAuthenticatedHttpClient>;
+const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as
+jest.MockedFunction<typeof getAuthenticatedHttpClient>;
 const mockFormurlencoded = formurlencoded as jest.MockedFunction<typeof formurlencoded>;
 
 describe('forgot-password api', () => {
@@ -44,11 +45,11 @@ describe('forgot-password api', () => {
     };
 
     it('should send forgot password request successfully', async () => {
-      const mockResponse = { 
-        data: { 
+      const mockResponse = {
+        data: {
           message: 'Password reset email sent successfully',
-          success: true 
-        } 
+          success: true,
+        },
       };
       mockHttpClient.post.mockResolvedValueOnce(mockResponse);
 
@@ -66,11 +67,11 @@ describe('forgot-password api', () => {
 
     it('should handle empty email address', async () => {
       const emptyEmail = '';
-      const mockResponse = { 
-        data: { 
+      const mockResponse = {
+        data: {
           message: 'Email is required',
-          success: false 
-        } 
+          success: false,
+        }
       };
       mockHttpClient.post.mockResolvedValueOnce(mockResponse);
 
@@ -80,11 +81,10 @@ describe('forgot-password api', () => {
       expect(mockHttpClient.post).toHaveBeenCalledWith(
         expectedUrl,
         `encoded=${JSON.stringify({ email: emptyEmail })}`,
-        expectedConfig
+        expectedConfig,
       );
       expect(result).toEqual(mockResponse.data);
     });
-
 
     it('should handle network errors without response', async () => {
       const networkError = new Error('Network Error');
@@ -109,10 +109,10 @@ describe('forgot-password api', () => {
     });
 
     it('should handle response with no data field', async () => {
-      const mockResponse = { 
+      const mockResponse = {
         // No data field
         status: 200,
-        statusText: 'OK'
+        statusText: 'OK',
       };
       mockHttpClient.post.mockResolvedValueOnce(mockResponse);
 
@@ -125,12 +125,12 @@ describe('forgot-password api', () => {
       const expectedData = {
         message: 'Password reset email sent successfully',
         success: true,
-        timestamp: '2026-02-05T10:00:00Z'
+        timestamp: '2026-02-05T10:00:00Z',
       };
-      const mockResponse = { 
+      const mockResponse = {
         data: expectedData,
         status: 200,
-        headers: {}
+        headers: {},
       };
       mockHttpClient.post.mockResolvedValueOnce(mockResponse);
 
