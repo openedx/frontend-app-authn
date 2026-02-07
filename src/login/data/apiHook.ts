@@ -9,8 +9,14 @@ export const INTERNAL_SERVER_ERROR = 'internal-server-error';
 export const TPA_AUTHENTICATION_FAILURE = 'tpa-authentication-failure';
 export const INVALID_FORM = 'invalid-form-fields';
 
+// Type definitions
+interface LoginData {
+  email_or_username: string;
+  password: string;
+}
+
 const useLogin = () => useMutation({
-  mutationFn: async (loginData) => {
+  mutationFn: async (loginData: LoginData) => {
     try {
       return await login(loginData);
     } catch (error) {

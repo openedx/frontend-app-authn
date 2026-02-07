@@ -1,5 +1,5 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ describe('RecommendationsListTests', () => {
 
   const renderWithProviders = (children) => {
     queryClient = createTestQueryClient();
-    
+
     return render(
       <QueryClientProvider client={queryClient}>
         <IntlProvider locale="en" messages={{}}>
@@ -31,7 +31,7 @@ describe('RecommendationsListTests', () => {
             {children}
           </MemoryRouter>
         </IntlProvider>
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   };
 

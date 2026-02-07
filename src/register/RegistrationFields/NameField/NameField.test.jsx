@@ -157,7 +157,6 @@ describe('NameField', () => {
         shouldFetchUsernameSuggestions: true,
       };
       const { container } = render(renderWrapper(<NameField {...props} />));
-
       const nameInput = container.querySelector('input#name');
       // Enter a valid name so that frontend validations are passed
       fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
@@ -175,9 +174,7 @@ describe('NameField', () => {
       });
 
       const { container } = render(renderWrapper(<NameField {...props} />));
-
       const nameInput = container.querySelector('input#name');
-
       fireEvent.focus(nameInput, { target: { value: 'test', name: 'name' } });
 
       expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('name');

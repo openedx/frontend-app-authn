@@ -43,19 +43,17 @@ describe('EmailField', () => {
   let mockMutate;
   let mockRegisterContext;
 
-  const renderWrapper = (children) => {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <IntlProvider locale="en">
-          <Router>
-            <RegisterProvider>
-              {children}
-            </RegisterProvider>
-          </Router>
-        </IntlProvider>
-      </QueryClientProvider>
-    );
-  };
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <Router>
+          <RegisterProvider>
+            {children}
+          </RegisterProvider>
+        </Router>
+      </IntlProvider>
+    </QueryClientProvider>
+  );
 
   beforeEach(() => {
     queryClient = new QueryClient({
@@ -88,7 +86,7 @@ describe('EmailField', () => {
       },
       setEmailSuggestionContext: jest.fn(),
     };
-    
+
     useRegisterContext.mockReturnValue(mockRegisterContext);
     props = {
       name: 'email',

@@ -1,21 +1,21 @@
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
-import { INTERNAL_SERVER_ERROR } from '../data/constants';
-import LoginPage from '../LoginPage';
-import { useLogin } from '../data/apiHook';
-import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../../common-components/data/apiHook';
 import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../../common-components/data/apiHook';
+import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
 import { RegisterProvider } from '../../register/components/RegisterContext';
 import { LoginProvider } from '../components/LoginContext';
+import { useLogin } from '../data/apiHook';
+import { INTERNAL_SERVER_ERROR } from '../data/constants';
+import LoginPage from '../LoginPage';
 
 // Mock React Query hooks
 jest.mock('../data/apiHook');
@@ -38,7 +38,7 @@ describe('LoginPage', () => {
   let queryClient;
 
   const emptyFieldValidation = { emailOrUsername: 'Enter your username or email', password: 'Enter your password' };
-  
+
   const queryWrapper = children => (
     <QueryClientProvider client={queryClient}>
       <IntlProvider locale="en">
@@ -121,11 +121,11 @@ describe('LoginPage', () => {
   it('should submit form for valid input', () => {
     render(queryWrapper(<LoginPage {...props} />));
 
-    fireEvent.change(screen.getByLabelText(/username or email/i), { 
-      target: { value: 'test', name: 'emailOrUsername' } 
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 'test', name: 'emailOrUsername' },
     });
-    fireEvent.change(screen.getByLabelText('Password'), { 
-      target: { value: 'test-password', name: 'password' } 
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'test-password', name: 'password' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
@@ -140,19 +140,18 @@ describe('LoginPage', () => {
     expect(props.loginRequest).not.toHaveBeenCalled();
   });
 
-  // Note: Reset password banner is now handled internally by LoginContext
-  // This test verifies the banner can be shown and functions properly
-  it('should show and hide reset password banner', () => {
-    // This would need to be set through context or component state
-    // For now, we'll just verify the banner functionality works when present
-    render(queryWrapper(<LoginPage {...props} />));
-    
-    // The banner behavior is now managed internally
-    // We can test that the form submits properly regardless
+  it('should dismiss reset password banner on form submission', () => {
+    const mockDismissPasswordResetBanner = jest.fn();
+    const propsWithBanner = {
+      ...props,
+      showResetPasswordSuccessBanner: true,
+      dismissPasswordResetBanner: mockDismissPasswordResetBanner,
+    };
+
+    render(queryWrapper(<LoginPage {...propsWithBanner} />));
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
-    // Form submission should work
-    expect(props.loginRequest).toHaveBeenCalledTimes(0); // Empty form won't call login
+    expect(mockDismissPasswordResetBanner).toHaveBeenCalled();
   });
 
   // ******** test login form validations ********
@@ -160,11 +159,11 @@ describe('LoginPage', () => {
   it('should match state for invalid email (less than 2 characters), on form submission', () => {
     render(queryWrapper(<LoginPage {...props} />));
 
-    fireEvent.change(screen.getByLabelText('Password'), { 
-      target: { value: 'test', name: 'password' } 
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'test', name: 'password' },
     });
-    fireEvent.change(screen.getByLabelText(/username or email/i), { 
-      target: { value: 't', name: 'emailOrUsername' } 
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 't', name: 'emailOrUsername' }
     });
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
@@ -186,8 +185,8 @@ describe('LoginPage', () => {
   it('should run frontend validations for emailOrUsername field on form submission', () => {
     const { container } = render(queryWrapper(<LoginPage {...props} />));
 
-    fireEvent.change(screen.getByLabelText(/username or email/i), { 
-      target: { value: 't', name: 'emailOrUsername' } 
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 't', name: 'emailOrUsername' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
@@ -380,25 +379,25 @@ describe('LoginPage', () => {
     mockLoginMutate.mockImplementation((payload, { onError }) => {
       onError({ errorCode: INTERNAL_SERVER_ERROR, context: {} });
     });
-    
+
     useLogin.mockReturnValue({
       mutate: mockLoginMutate,
       isPending: false,
     });
 
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     // Fill in valid form data
     fireEvent.change(screen.getByLabelText(/username or email/i), {
-      target: { value: 'test@example.com', name: 'emailOrUsername' }
+      target: { value: 'test@example.com', name: 'emailOrUsername' },
     });
     fireEvent.change(screen.getByLabelText('Password'), {
-      target: { value: 'password123', name: 'password' }
+      target: { value: 'password123', name: 'password' },
     });
-    
+
     // Submit form
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    
+
     // The error should be handled by the login hook
     expect(mockLoginMutate).toHaveBeenCalled();
   });
@@ -412,8 +411,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     const expectedMessage = `${'You have successfully signed into Apple, but your Apple account does not have a '
-                            + 'linked '}${ getConfig().SITE_NAME } account. To link your accounts, sign in now using your ${
-                             getConfig().SITE_NAME } password.`;
+                            + 'linked '}${ getConfig().SITE_NAME } account. To link your accounts, sign in now using your ${getConfig().SITE_NAME } password.`;
 
     render(queryWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
@@ -429,7 +427,7 @@ describe('LoginPage', () => {
       errorMessage: 'An error occurred',
     };
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
-    
+
     render(queryWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
       '',
@@ -440,10 +438,10 @@ describe('LoginPage', () => {
   // Form validation errors are now handled by context
   it('should show form validation error', () => {
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     // Submit form without filling fields
     fireEvent.click(screen.getByText('Sign in'));
-    
+
     // Should show validation errors
     expect(screen.getByText('Please fill in the fields below.')).toBeDefined();
   });
@@ -456,14 +454,14 @@ describe('LoginPage', () => {
     mockLoginMutate.mockImplementation((payload, { onSuccess }) => {
       onSuccess({ success: true, redirectUrl: 'https://test.com/testing-dashboard/' });
     });
-    
+
     useLogin.mockReturnValue({
       mutate: mockLoginMutate,
       isPending: false,
     });
 
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     // Fill in valid form data
     fireEvent.change(screen.getByLabelText('Username or email'), {
       target: { value: 'test@example.com', name: 'emailOrUsername' }
@@ -471,10 +469,10 @@ describe('LoginPage', () => {
     fireEvent.change(screen.getByLabelText('Password'), {
       target: { value: 'password123', name: 'password' }
     });
-    
+
     // Submit form
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    
+
     expect(mockLoginMutate).toHaveBeenCalled();
   });
 
@@ -489,9 +487,9 @@ describe('LoginPage', () => {
     mockLoginMutate.mockImplementation((payload, { onSuccess }) => {
       onSuccess({ success: true, redirectUrl: '' });
     });
-    
+
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     // The component should handle SSO success
     expect(mockThirdPartyAuthContext.thirdPartyAuthContext.finishAuthUrl).toBe('/auth/complete/google-oauth2/');
   });
@@ -524,7 +522,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     // Verify the finish auth URL is available
     expect(mockThirdPartyAuthContext.thirdPartyAuthContext.finishAuthUrl).toBe(finishAuthUrl);
   });
@@ -649,17 +647,15 @@ describe('LoginPage', () => {
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'login');
   });
 
-  // Form state persistence is now automatic via sessionStorage in LoginContext
-  // This test verifies the form fields work properly
   it('should handle form field changes', () => {
     render(queryWrapper(<LoginPage {...props} />));
-    
+
     const emailInput = screen.getByLabelText(/username or email/i);
     const passwordInput = screen.getByLabelText('Password');
-    
+
     fireEvent.change(emailInput, { target: { value: 'test@example.com', name: 'emailOrUsername' } });
     fireEvent.change(passwordInput, { target: { value: 'password123', name: 'password' } });
-    
+
     expect(emailInput.value).toBe('test@example.com');
     expect(passwordInput.value).toBe('password123');
   });
@@ -678,11 +674,11 @@ describe('LoginPage', () => {
 
   it('should persist and load form fields using sessionStorage', () => {
     const { container, rerender } = render(queryWrapper(<LoginPage {...props} />));
-    fireEvent.change(container.querySelector('input#emailOrUsername'), { 
-      target: { value: 'john_doe', name: 'emailOrUsername' } 
+    fireEvent.change(container.querySelector('input#emailOrUsername'), {
+      target: { value: 'john_doe', name: 'emailOrUsername' },
     });
-    fireEvent.change(container.querySelector('input#password'), { 
-      target: { value: 'test-password', name: 'password' } 
+    fireEvent.change(container.querySelector('input#password'), {
+      target: { value: 'test-password', name: 'password' },
     });
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');

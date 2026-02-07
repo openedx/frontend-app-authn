@@ -1,14 +1,11 @@
-import React from 'react';
-
 import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
-
 import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
+import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
 import { CountryField } from '../index';
 
 // Mock the useRegisterContext hook
@@ -37,19 +34,17 @@ describe('CountryField', () => {
   let props = {};
   let queryClient;
 
-  const renderWrapper = (children) => {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <IntlProvider locale="en">
-          <Router>
-            <RegisterProvider>
-              {children}
-            </RegisterProvider>
-          </Router>
-        </IntlProvider>
-      </QueryClientProvider>
-    );
-  };
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <Router>
+          <RegisterProvider>
+            {children}
+          </RegisterProvider>
+        </Router>
+      </IntlProvider>
+    </QueryClientProvider>
+  );
 
   beforeEach(() => {
     queryClient = new QueryClient({
@@ -62,7 +57,6 @@ describe('CountryField', () => {
         },
       },
     });
-    
     // Setup default mock for useRegisterContext
     useRegisterContext.mockReturnValue({
       clearRegistrationBackendError: jest.fn(),
@@ -214,7 +208,6 @@ describe('CountryField', () => {
       };
 
       const { container } = render(renderWrapper(<CountryField {...props} />));
-
       const feedbackElement = container.querySelector('div[feedback-for="country"]');
       expect(feedbackElement).toBeTruthy();
       expect(feedbackElement.textContent).toEqual('country error message');

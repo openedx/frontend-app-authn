@@ -1,4 +1,3 @@
-import React from 'react';
 import { mergeConfig } from '@edx/frontend-platform';
 import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,10 +6,9 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { INTERNAL_SERVER_ERROR, LOGIN_PAGE, COMPLETE_STATE, FORBIDDEN_STATE } from '../../data/constants';
-import { PASSWORD_RESET } from '../../reset-password/data/constants';
-import ForgotPasswordPage from '../ForgotPasswordPage';
+import { LOGIN_PAGE } from '../../data/constants';
 import { useForgotPassword } from '../data/apiHook';
+import ForgotPasswordPage from '../ForgotPasswordPage';
 
 const mockedNavigator = jest.fn();
 
@@ -24,7 +22,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigator,
 }));
 
-// Mock the useForgotPassword hook
 jest.mock('../data/apiHook', () => ({
   useForgotPassword: jest.fn(),
 }));
@@ -50,7 +47,6 @@ describe('ForgotPasswordPage', () => {
       if (mutateImplementation && typeof mutateImplementation === 'function') {
         mutateImplementation(email, callbacks);
       }
-      // Default behavior - do nothing (successful submission)
     });
     mockIsPending = isPending;
 
@@ -103,9 +99,6 @@ describe('ForgotPasswordPage', () => {
     // Clear mock calls between tests
     jest.clearAllMocks();
   });
-  const findByTextContent = (container, text) => Array.from(container.querySelectorAll('*')).find(
-    element => element.textContent === text,
-  );
 
   it('not should display need other help signing in button', () => {
     const { queryByTestId } = render(renderWrapper(<ForgotPasswordPage />));
@@ -152,12 +145,12 @@ describe('ForgotPasswordPage', () => {
       const alertElements = container.querySelectorAll('.alert-danger');
       if (alertElements.length > 0) {
         const validationErrors = alertElements[0].textContent;
-        expect(validationErrors).toContain('We were unable to contact you');
+        expect(validationErrors).toBe(expectedMessage);
       }
     });
   });
 
-  it('should display empty email validation message', async () => {
+  it('should display empty email validation message', () => {
     const validationMessage = 'We were unable to contact you.Enter your email below.';
     const { container } = render(renderWrapper(<ForgotPasswordPage />));
 
@@ -182,7 +175,7 @@ describe('ForgotPasswordPage', () => {
       const alertElements = container.querySelectorAll('.alert-danger');
       if (alertElements.length > 0) {
         const validationErrors = alertElements[0].textContent;
-        expect(validationErrors).toContain('Your previous request is in progress');
+        expect(validationErrors).toBe(rateLimitMessage);
       }
     });
   });
@@ -208,28 +201,19 @@ describe('ForgotPasswordPage', () => {
     // No error assertions needed as we're just testing stability
   });
 
-  it('should display validation error message when invalid email is submitted', async () => {
+  it('should display validation error message when invalid email is submitted', () => {
     const validationMessage = 'Enter your email';
     const { container } = render(renderWrapper(<ForgotPasswordPage />));
-    
-    const emailInput = screen.getByLabelText('Email');
     const submitButton = screen.getByText('Submit');
-    
-    // Submit empty form to trigger validation
     fireEvent.click(submitButton);
-    
     const validationElement = container.querySelector('.pgn__form-text-invalid');
-    expect(validationElement).not.toBeNull();
+    expect(validationElement.textContent).toEqual(validationMessage);
   });
 
   it('should not cause errors when focus event occurs', () => {
     render(renderWrapper(<ForgotPasswordPage />));
     const emailInput = screen.getByLabelText('Email');
-
-    // Simply test that focus event doesn't cause errors
     fireEvent.focus(emailInput);
-
-    // No error assertions needed as we're just testing stability
   });
 
   it('should not display error message initially', async () => {
@@ -240,16 +224,11 @@ describe('ForgotPasswordPage', () => {
 
   it('should display success message after email is sent', async () => {
     const testEmail = 'test@example.com';
-    
-    // Create component with complete status and email to simulate success state
     const { container } = render(renderWrapper(<ForgotPasswordPage />, {
       status: 'complete',
     }));
-
-    // Manually set the banner email state by triggering a form submission first
     const emailInput = screen.getByLabelText('Email');
     const submitButton = screen.getByText('Submit');
-    
     fireEvent.change(emailInput, { target: { value: testEmail } });
     fireEvent.click(submitButton);
 
@@ -264,7 +243,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should call mutation on form submission with valid email', async () => {
-    const { container } = render(renderWrapper(<ForgotPasswordPage />));
+    render(renderWrapper(<ForgotPasswordPage />));
 
     const emailInput = screen.getByLabelText('Email');
     const submitButton = screen.getByText('Submit');
@@ -286,7 +265,7 @@ describe('ForgotPasswordPage', () => {
       onSuccess({}, email);
     };
 
-    const { container } = render(renderWrapper(<ForgotPasswordPage />, {
+    render(renderWrapper(<ForgotPasswordPage />, {
       mutateImplementation: successMutation,
     }));
 
@@ -310,8 +289,6 @@ describe('ForgotPasswordPage', () => {
     const navElement = container.querySelector('nav');
     const anchorElement = navElement.querySelector('a');
     fireEvent.click(anchorElement);
-
-    // The component uses updatePathWithQueryParams which can add query params
     expect(mockedNavigator).toHaveBeenCalledWith(expect.stringContaining(LOGIN_PAGE));
   });
 });

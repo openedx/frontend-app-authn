@@ -1,4 +1,6 @@
-import { createContext, FC, ReactNode, useContext, useMemo, useState, useCallback } from 'react';
+import {
+  createContext, FC, ReactNode, useContext, useMemo, useState,
+} from 'react';
 
 interface LoginContextType {
   error: string | null;
@@ -36,7 +38,6 @@ export const LoginProvider: FC<LoginProviderProps> = ({ children }) => {
     errors,
     setErrors,
   }), [formFields, errorCode, errors]);
-
 
   return (
     <LoginContext.Provider value={contextValue}>

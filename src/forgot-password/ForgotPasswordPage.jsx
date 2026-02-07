@@ -12,7 +12,6 @@ import {
   Tabs,
 } from '@openedx/paragon';
 import { ChevronLeft } from '@openedx/paragon/icons';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +20,7 @@ import ForgotPasswordAlert from './ForgotPasswordAlert';
 import messages from './messages';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
-import { DEFAULT_STATE, LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
+import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
 const ForgotPasswordPage = () => {
@@ -36,7 +35,7 @@ const ForgotPasswordPage = () => {
   const [formErrors, setFormErrors] = useState('');
   const [validationError, setValidationError] = useState('');
   const [status, setStatus] = useState(null);
-  
+
   // React Query hook for forgot password
   const { mutate: sendForgotPassword, isPending: isSending } = useForgotPassword();
 

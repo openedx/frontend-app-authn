@@ -6,10 +6,10 @@ import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-import FormGroup from '../FormGroup';
-import PasswordField from '../PasswordField';
 import { RegisterProvider } from '../../register/components/RegisterContext';
 import { useFieldValidations } from '../../register/data/api.hook';
+import FormGroup from '../FormGroup';
+import PasswordField from '../PasswordField';
 
 // Mock the useFieldValidations hook
 jest.mock('../../register/data/api.hook', () => ({
@@ -45,20 +45,17 @@ describe('PasswordField', () => {
   let queryClient;
   let mockMutate;
 
-
-  const renderWrapper = (children) => {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <IntlProvider locale="en">
-          <MemoryRouter>
-            <RegisterProvider>
-              {children}
-            </RegisterProvider>
-          </MemoryRouter>
-        </IntlProvider>
-      </QueryClientProvider>
-    );
-  };
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <RegisterProvider>
+            {children}
+          </RegisterProvider>
+        </MemoryRouter>
+      </IntlProvider>
+    </QueryClientProvider>
+  );
 
   beforeEach(() => {
     queryClient = new QueryClient({
