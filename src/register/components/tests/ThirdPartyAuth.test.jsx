@@ -1,19 +1,18 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../../../data/constants';
+import { useFieldValidations, useRegistration } from '../../data/api.hook';
 import RegistrationPage from '../../RegistrationPage';
-import { useRegistration, useFieldValidations } from '../../data/api.hook.ts';
-import { useRegisterContext } from '../RegisterContext.tsx';
-import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext.tsx';
+import { useRegisterContext } from '../RegisterContext';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -148,24 +147,21 @@ describe('ThirdPartyAuth', () => {
         mutations: { retry: false },
       },
     });
-    
     // Setup default mocks
     useRegistration.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
       error: null,
     });
-    
+
     useRegisterContext.mockReturnValue(mockRegisterContext);
-    
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
-    
     useFieldValidations.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
       error: null,
     });
-    
+
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -393,7 +389,6 @@ describe('ThirdPartyAuth', () => {
 
     it('should redirect to finishAuthUrl upon successful registration via SSO', () => {
       const authCompleteUrl = '/auth/complete/google-oauth2/';
-      
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationResult: {
@@ -402,7 +397,7 @@ describe('ThirdPartyAuth', () => {
           authenticatedUser: null,
         },
       });
-      
+
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthContext: {
@@ -446,7 +441,7 @@ describe('ThirdPartyAuth', () => {
         backendCountryCode: 'PK',
         userPipelineDataLoaded: false,
       });
-      
+
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,

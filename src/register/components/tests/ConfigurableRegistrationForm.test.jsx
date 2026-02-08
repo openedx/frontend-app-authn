@@ -1,18 +1,17 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import { mergeConfig } from '@edx/frontend-platform';
 import {
   getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
+import { useFieldValidations, useRegistration } from '../../data/api.hook';
 import { FIELDS } from '../../data/constants';
 import RegistrationPage from '../../RegistrationPage';
 import ConfigurableRegistrationForm from '../ConfigurableRegistrationForm';
-import { useRegistration, useFieldValidations } from '../../data/api.hook.ts';
-import { useRegisterContext } from '../RegisterContext.tsx';
-import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext.tsx';
+import { useRegisterContext } from '../RegisterContext';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -150,18 +149,16 @@ describe('ConfigurableRegistrationForm', () => {
         mutations: { retry: false },
       },
     });
-    
+
     // Setup default mocks
     useRegistration.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
       error: null,
     });
-    
+
     useRegisterContext.mockReturnValue(mockRegisterContext);
-    
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
-    
     useFieldValidations.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
@@ -283,7 +280,6 @@ describe('ConfigurableRegistrationForm', () => {
       });
       getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
-      
       useThirdPartyAuthContext.mockReturnValue({
         currentProvider: null,
         platformName: '',
@@ -330,7 +326,6 @@ describe('ConfigurableRegistrationForm', () => {
         isLoading: false,
         error: null,
       });
-      
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         fieldDescriptions: {
@@ -343,9 +338,8 @@ describe('ConfigurableRegistrationForm', () => {
         setThirdPartyAuthContextFailure: jest.fn(),
         setEmailSuggestionContext: jest.fn(),
       });
-      
-      const { getByLabelText, container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
 
+      const { getByLabelText, container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       populateRequiredFields(getByLabelText, payload);
 
       const professionInput = getByLabelText('Profession');
@@ -568,7 +562,6 @@ describe('ConfigurableRegistrationForm', () => {
 
     it('should run validations for configurable focused field on form submission', () => {
       const professionError = 'Enter your profession';
-      
       useThirdPartyAuthContext.mockReturnValue({
         currentProvider: null,
         platformName: '',

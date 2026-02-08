@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
-import { login } from './api';
 import { camelCaseObject } from '@edx/frontend-platform/utils';
+import { useMutation } from '@tanstack/react-query';
+
+import { login } from './api';
 
 // Error constants
 export const FORBIDDEN_REQUEST = 'forbidden-request';
@@ -21,10 +22,10 @@ const useLogin = () => useMutation({
       return await login(loginData);
     } catch (error) {
       let transformedError = { errorCode: INTERNAL_SERVER_ERROR, context: {} };
-      
+
       if (error.response) {
         const { status } = error.response;
-        
+
         if (status === 400) {
           // Validation errors - include the response data in camelCase
           transformedError = {
@@ -42,7 +43,7 @@ const useLogin = () => useMutation({
       } else {
         logError('Login failed with network error', error);
       }
-      
+
       // Throw the transformed error
       throw transformedError;
     }

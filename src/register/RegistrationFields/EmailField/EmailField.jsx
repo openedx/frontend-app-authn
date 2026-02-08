@@ -68,7 +68,7 @@ const EmailField = (props) => {
       handleErrorChange('confirm_email', confirmEmailError);
     }
     setEmailSuggestionContext(suggestion.suggestion, suggestion.type);
-    //dispatch(setEmailSuggestionInStore(suggestion));
+    // dispatch(setEmailSuggestionInStore(suggestion));
     setEmailSuggestion(suggestion);
 
     if (fieldError) {
@@ -81,7 +81,7 @@ const EmailField = (props) => {
   const handleOnFocus = () => {
     handleErrorChange('email', '');
     clearRegistrationBackendError('email');
-    //dispatch(clearRegistrationBackendError('email'));
+    // dispatch(clearRegistrationBackendError('email'));
   };
 
   const handleSuggestionClick = (event) => {

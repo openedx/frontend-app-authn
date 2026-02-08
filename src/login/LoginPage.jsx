@@ -17,8 +17,8 @@ import {
   ThirdPartyAuthAlert,
 } from '../common-components';
 import AccountActivationMessage from './AccountActivationMessage';
-import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext.tsx';
-import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../common-components/data/apiHook.ts'; // rename this
+import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import { PENDING_STATE, RESET_PAGE } from '../data/constants';
@@ -30,12 +30,11 @@ import {
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
-// import { backupLoginFormBegin } from './data/actions';
-import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
+import { useLoginContext } from './components/LoginContext';
 import { useLogin } from './data/apiHook';
+import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
-import { useLoginContext } from './components/LoginContext';
 
 const LoginPage = ({
   institutionLogin,
@@ -71,6 +70,7 @@ const LoginPage = ({
 
   // Local UI state (migrated from Redux)
   const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
+
   const {
     providers,
     currentProvider,
@@ -242,7 +242,7 @@ const LoginPage = ({
       />
     );
   }
-  
+
   return (
     <>
       <Helmet>

@@ -11,18 +11,17 @@ import {
   Tabs,
 } from '@openedx/paragon';
 import { ChevronLeft } from '@openedx/paragon/icons';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useValidateToken, useResetPassword } from './data/apiHook';
+import BaseContainer from '../base-container';
+import { validatePassword } from './data/api';
+import { useResetPassword, useValidateToken } from './data/apiHook';
 import {
   FORM_SUBMISSION_ERROR, PASSWORD_RESET, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
 } from './data/constants';
-import { validatePassword } from './data/api';
 import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
-import BaseContainer from '../base-container';
 import { PasswordField } from '../common-components';
 import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
@@ -241,8 +240,10 @@ const ResetPasswordPage = () => {
   return null;
 };
 
-ResetPasswordPage.defaultProps = {};
-
-ResetPasswordPage.propTypes = {};
+ResetPasswordPage.defaultProps = {
+  status: null,
+  token: null,
+  errorMsg: null,
+};
 
 export default ResetPasswordPage;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
@@ -10,9 +10,9 @@ import {
 import PropTypes from 'prop-types';
 
 import messages from './messages';
+import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import { useRegisterContext } from '../register/components/RegisterContext';
 import { useFieldValidations } from '../register/data/api.hook';
-import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import { validatePasswordField } from '../register/data/utils';
 
 const PasswordField = (props) => {

@@ -9,7 +9,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
-import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../../common-components/data/apiHook';
+import { useThirdPartyAuthHook } from '../../common-components/data/apiHook';
 import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
 import { RegisterProvider } from '../../register/components/RegisterContext';
 import { LoginProvider } from '../components/LoginContext';
@@ -163,7 +163,7 @@ describe('LoginPage', () => {
       target: { value: 'test', name: 'password' },
     });
     fireEvent.change(screen.getByLabelText(/username or email/i), {
-      target: { value: 't', name: 'emailOrUsername' }
+      target: { value: 't', name: 'emailOrUsername' },
     });
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
@@ -464,10 +464,10 @@ describe('LoginPage', () => {
 
     // Fill in valid form data
     fireEvent.change(screen.getByLabelText('Username or email'), {
-      target: { value: 'test@example.com', name: 'emailOrUsername' }
+      target: { value: 'test@example.com', name: 'emailOrUsername' },
     });
     fireEvent.change(screen.getByLabelText('Password'), {
-      target: { value: 'password123', name: 'password' }
+      target: { value: 'password123', name: 'password' },
     });
 
     // Submit form

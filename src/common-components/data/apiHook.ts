@@ -1,13 +1,14 @@
-import { useMutation } from '@tanstack/react-query';
 import { logError, logInfo } from '@edx/frontend-platform/logging';
+import { useMutation } from '@tanstack/react-query';
+
 import { getThirdPartyAuthContext } from './api';
 
 // Error constants
 export const THIRD_PARTY_AUTH_ERROR = 'third-party-auth-error';
 
-const useThirdPartyAuthContext = () => useMutation({
+const useThirdPartyAuthHook = () => useMutation({
   mutationFn: getThirdPartyAuthContext,
-  onSuccess: (data) => {
+  onSuccess: () => {
     logInfo('Third party auth context fetched successfully');
   },
   onError: (error) => {
@@ -16,5 +17,5 @@ const useThirdPartyAuthContext = () => useMutation({
 });
 
 export {
-  useThirdPartyAuthContext,
+  useThirdPartyAuthHook,
 };

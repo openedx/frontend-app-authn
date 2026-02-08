@@ -1,20 +1,19 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import { mergeConfig } from '@edx/frontend-platform';
 import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
+import { useFieldValidations, useRegistration } from '../../data/api.hook';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
 import RegistrationPage from '../../RegistrationPage';
+import { useRegisterContext } from '../RegisterContext';
 import RegistrationFailureMessage from '../RegistrationFailure';
-import { useRegistration, useFieldValidations } from '../../data/api.hook.ts';
-import { useRegisterContext } from '../RegisterContext.tsx';
-import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext.tsx';
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -148,18 +147,16 @@ describe('RegistrationFailure', () => {
         mutations: { retry: false },
       },
     });
-    
+
     // Setup default mocks
     useRegistration.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
       error: null,
     });
-    
+
     useRegisterContext.mockReturnValue(mockRegisterContext);
-    
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
-    
     useFieldValidations.mockReturnValue({
       mutate: jest.fn(),
       isLoading: false,
