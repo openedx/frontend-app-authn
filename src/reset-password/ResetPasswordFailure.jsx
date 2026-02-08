@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
@@ -24,7 +22,7 @@ const ResetPasswordFailure = (props) => {
       break;
     case PASSWORD_VALIDATION_ERROR:
       errorMessage = errorMsg;
-     break;
+      break;
     case FORM_SUBMISSION_ERROR:
       errorMessage = formatMessage(messages['reset.password.form.submission.error']);
       break;

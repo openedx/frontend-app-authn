@@ -11,7 +11,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
-import { useRegistration } from './data/api.hook.ts';
+import { useRegistration } from './data/api.hook';
 import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
@@ -27,19 +27,17 @@ import {
   RedirectLogistration,
   ThirdPartyAuthAlert,
 } from '../common-components';
-// TODO: check this names
-import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext.tsx';
-import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../common-components/data/apiHook.ts';
-
+import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE, DEFAULT_STATE
+  COMPLETE_STATE, DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
-import { useRegisterContext } from './components/RegisterContext.tsx';
+import { useRegisterContext } from './components/RegisterContext';
 /**
  * Inner Registration Page component that uses the context
  */

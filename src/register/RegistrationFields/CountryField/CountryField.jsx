@@ -5,9 +5,8 @@ import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@op
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { useRegisterContext } from '../../components/RegisterContext';
 import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
-
+import { useRegisterContext } from '../../components/RegisterContext';
 import messages from '../../messages';
 
 /**
@@ -43,7 +42,7 @@ const CountryField = (props) => {
     selectionId: selectedCountry.countryCode,
   };
 
-  //const backendCountryCode = useSelector(state => state.register.backendCountryCode);
+  // const backendCountryCode = useSelector(state => state.register.backendCountryCode);
 
   useEffect(() => {
     if (backendCountryCode && backendCountryCode !== selectedCountry?.countryCode) {
@@ -86,7 +85,7 @@ const CountryField = (props) => {
   const handleOnFocus = (event) => {
     handleErrorChange('country', '');
     // dispatch(clearRegistrationBackendError('country'));
-    clearRegistrationBackendError('country')
+    clearRegistrationBackendError('country');
     onFocusHandler(event);
   };
 

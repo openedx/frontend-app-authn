@@ -14,17 +14,16 @@ import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
-import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext.tsx';
+import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
+import { LoginProvider } from '../login/components/LoginContext';
 import LoginComponentSlot from '../plugin-slots/LoginComponentSlot';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
-import { RegisterProvider } from '../register/components/RegisterContext.tsx';
-import { LoginProvider } from '../login/components/LoginContext';
+import { RegisterProvider } from '../register/components/RegisterContext';
 
 const LogistrationPageInner = ({
   selectedPage,

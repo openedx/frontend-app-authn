@@ -34,7 +34,7 @@ const RegistrationFailureMessage = (props) => {
   switch (errorCode) {
     case INTERNAL_SERVER_ERROR:
       errorMessage = formatMessage(messages['registration.request.server.error']);
-     break;
+      break;
     case FORBIDDEN_REQUEST:
       errorMessage = formatMessage(messages['registration.rate.limit.error']);
       break;

@@ -26,14 +26,14 @@ import messages from './messages';
 import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
-import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import { useSaveUserProfile } from './data/apiHook';
-import { useThirdPartyAuthContext as useThirdPartyAuthHook } from '../common-components/data/apiHook';
+import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import {
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
-  FAILURE_STATE,
   DEFAULT_STATE,
+  FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
 import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
@@ -59,13 +59,13 @@ const ProgressiveProfilingInner = (props) => {
   const { mutate: fetchThirdPartyAuth, isPending: isFetchingAuth } = useThirdPartyAuthHook();
 
   const {
-     submitState,
-     showError,
+    submitState,
+    showError,
   } = useProgressiveProfilingContext();
-  
+
   // Hook for saving user profile
   const saveUserProfileMutation = useSaveUserProfile();
-  
+
   const location = useLocation();
   const registrationEmbedded = isHostAvailableInQueryParams();
 
@@ -99,7 +99,7 @@ const ProgressiveProfilingInner = (props) => {
     } else {
       configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     }
-  }, [registrationEmbedded, queryParams?.next]); // Remove fetchThirdPartyAuth and setThirdPartyAuthContextSuccess from deps
+  }, [registrationEmbedded, queryParams?.next]);
 
   useEffect(() => {
     const registrationResponse = location.state?.registrationResult;

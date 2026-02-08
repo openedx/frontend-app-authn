@@ -85,8 +85,6 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     }
   }, [registrationFormData.configurableFormFields.country]);
 
-
-
   const setEmailSuggestionContext = useCallback((suggestion: string, type: string) => {
     setRegistrationFormData((prevData: any) => ({
       ...prevData,

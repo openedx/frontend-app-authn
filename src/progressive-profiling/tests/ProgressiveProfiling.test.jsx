@@ -11,7 +11,7 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
 import {
   AUTHN_PROGRESSIVE_PROFILING,
-  COMPLETE_STATE, 
+  COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
   EMBEDDED,
   PENDING_STATE,
@@ -56,7 +56,7 @@ jest.mock('../data/apiHook', () => ({
 }));
 
 jest.mock('../../common-components/data/apiHook', () => ({
-  useThirdPartyAuthContext: () => mockThirdPartyAuthMutation,
+  useThirdPartyAuthHook: () => mockThirdPartyAuthMutation,
 }));
 
 // Mock the ThirdPartyAuthContext module

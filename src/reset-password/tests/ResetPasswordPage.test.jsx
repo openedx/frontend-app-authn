@@ -280,7 +280,7 @@ describe('ResetPasswordPage', () => {
 
     renderWithProviders();
 
-    // Look for spinner by class since it doesn't have role="status" 
+    // Look for spinner by class since it doesn't have role="status"
     const spinnerElement = document.querySelector('.spinner-border');
     expect(spinnerElement).toBeInTheDocument();
     expect(mockValidateToken).toHaveBeenCalledWith(
@@ -293,7 +293,7 @@ describe('ResetPasswordPage', () => {
   });
 
   it('should redirect the user to Reset password email screen ', async () => {
-    // Mock an error scenario that would cause PASSWORD_RESET_ERROR  
+    // Mock an error scenario that would cause PASSWORD_RESET_ERROR
     // Since this component doesn't directly set PASSWORD_RESET_ERROR,
     // we need to mock the behavior differently
     mockValidateToken.mockImplementation((tokenValue, { onError }) => {

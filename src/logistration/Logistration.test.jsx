@@ -26,7 +26,7 @@ jest.mock('@edx/frontend-platform', () => ({
       iconClass: 'fa-university',
       iconImage: null,
       loginUrl: '/auth/login/saml-test_university/?auth_entry=login&next=%2Fdashboard',
-      registerUrl: '/auth/login/saml-test_university/?auth_entry=register&next=%2Fdashboard'
+      registerUrl: '/auth/login/saml-test_university/?auth_entry=register&next=%2Fdashboard',
     }],
     TPA_HINT: '',
     TPA_PROVIDER_ID: '',
@@ -45,7 +45,7 @@ jest.mock('../common-components/data/apiHook', () => ({
     isLoading: false,
     error: null,
   })),
-  useThirdPartyAuthContext: jest.fn(() => ({
+  useThirdPartyAuthHook: jest.fn(() => ({
     mutate: jest.fn(),
     isLoading: false,
     error: null,
@@ -90,7 +90,7 @@ jest.mock('../common-components/components/ThirdPartyAuthContext.tsx', () => ({
         skipHintedLogin: false,
         skipRegistrationForm: false,
         loginUrl: '/auth/login/facebook-oauth2/?auth_entry=login&next=%2Fdashboard',
-        registerUrl: '/auth/login/facebook-oauth2/?auth_entry=register&next=%2Fdashboard'
+        registerUrl: '/auth/login/facebook-oauth2/?auth_entry=register&next=%2Fdashboard',
       }],
       secondaryProviders: [{
         id: 'saml-test',
@@ -100,7 +100,7 @@ jest.mock('../common-components/components/ThirdPartyAuthContext.tsx', () => ({
         skipHintedLogin: false,
         skipRegistrationForm: false,
         loginUrl: '/auth/login/tpa-saml/?auth_entry=login&next=%2Fdashboard',
-        registerUrl: '/auth/login/tpa-saml/?auth_entry=register&next=%2Fdashboard'
+        registerUrl: '/auth/login/tpa-saml/?auth_entry=register&next=%2Fdashboard',
       }],
       pipelineUserDetails: null,
       errorMessage: null,
