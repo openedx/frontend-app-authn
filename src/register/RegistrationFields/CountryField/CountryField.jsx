@@ -29,7 +29,6 @@ const CountryField = (props) => {
     onFocusHandler,
   } = props;
   const { formatMessage } = useIntl();
-  // const dispatch = useDispatch();
 
   const {
     clearRegistrationBackendError,
@@ -41,8 +40,6 @@ const CountryField = (props) => {
     selectionValue: selectedCountry.displayValue,
     selectionId: selectedCountry.countryCode,
   };
-
-  // const backendCountryCode = useSelector(state => state.register.backendCountryCode);
 
   useEffect(() => {
     if (backendCountryCode && backendCountryCode !== selectedCountry?.countryCode) {
@@ -84,7 +81,6 @@ const CountryField = (props) => {
 
   const handleOnFocus = (event) => {
     handleErrorChange('country', '');
-    // dispatch(clearRegistrationBackendError('country'));
     clearRegistrationBackendError('country');
     onFocusHandler(event);
   };

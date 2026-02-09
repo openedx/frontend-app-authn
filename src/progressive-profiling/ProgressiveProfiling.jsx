@@ -40,12 +40,6 @@ import { FormFieldRenderer } from '../field-renderer';
 
 const ProgressiveProfilingInner = () => {
   const { formatMessage } = useIntl();
-  // const {
-  //   //submitState, // done
-  //   //showError, // done
-  //   // welcomePageContext,
-  //   welcomePageContextApiStatus, //
-  // } = props;
   const {
     thirdPartyAuthApiStatus,
     setThirdPartyAuthContextSuccess,
@@ -308,18 +302,6 @@ const ProgressiveProfilingInner = () => {
   );
 };
 
-// const mapStateToProps = state => {
-//   const welcomePageStore = state.welcomePage;
-
-//   return {
-//     shouldRedirect: welcomePageStore.success,
-//     showError: welcomePageStore.showError,
-//     submitState: welcomePageStore.submitState,
-//     welcomePageContext: welcomePageContextSelector(state),
-//     welcomePageContextApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
-//   };
-// };
-
 const ProgressiveProfiling = (props) => (
   <ThirdPartyAuthProvider>
     <ProgressiveProfilingProvider>
@@ -329,11 +311,3 @@ const ProgressiveProfiling = (props) => (
 );
 
 export default ProgressiveProfiling;
-
-// export default connect(
-//   mapStateToProps,
-//   {
-//     saveUserProfile,
-//     getFieldDataFromBackend: getThirdPartyAuthContext,
-//   },
-// )(ProgressiveProfiling);

@@ -97,10 +97,6 @@ const RegistrationPage = (props) => {
   } = props;
 
   const backendRegistrationError = registrationError;
-  // useSelector(state => state.register.registrationError);
-
-  // React query for registration API
-  // new function from hook
   const registrationMutation = useRegistration({
     onSuccess: (data) => {
       setRegistrationResult(data);
@@ -112,24 +108,9 @@ const RegistrationPage = (props) => {
   });
 
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
-  // Use context state for registrationResult instead of Redux - removed backup functionality
-  // const userPipelineDataLoaded = useSelector(state => state.register.userPipelineDataLoaded);
   const submitState = registrationMutation.isLoading ? PENDING_STATE : DEFAULT_STATE;
-
-  // const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
-  // const optionalFields = useSelector(state => state.commonComponents.optionalFields);
-  // const thirdPartyAuthApiStatus = useSelector(state => state.commonComponents.thirdPartyAuthApiStatus);
-  // const autoSubmitRegForm = useSelector(state => state.commonComponents.thirdPartyAuthContext.autoSubmitRegForm);
-  // const thirdPartyAuthErrorMessage = useSelector(state => state.commonComponents.thirdPartyAuthContext.errorMessage);
-  // const finishAuthUrl = useSelector(state => state.commonComponents.thirdPartyAuthContext.finishAuthUrl);
-  // const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
-  // const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
-  // const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
-  // const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
-
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
-
   // Initialize form state from local backedUpFormData
   const backedUpFormData = registrationFormData;
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
@@ -158,7 +139,6 @@ const RegistrationPage = (props) => {
           ...prevState, name, username, email,
         }));
         setUserPipelineDataLoaded(true);
-        // dispatch(setUserPipelineDataLoaded(true));
       }
     }
   }, [ // eslint-disable-line react-hooks/exhaustive-deps
@@ -227,7 +207,6 @@ const RegistrationPage = (props) => {
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     if (backendRegistrationError[name]) {
       clearRegistrationBackendError(name);
-      // dispatch(clearRegistrationBackendError(name));
     }
     // Clear context registration errors
     if (registrationError.errorCode) {
@@ -287,7 +266,6 @@ const RegistrationPage = (props) => {
     );
     setErrors({ ...fieldErrors });
     setEmailSuggestionContext(emailSuggestion.suggestion, emailSuggestion.type);
-    // dispatch(setEmailSuggestionInStore(emailSuggestion));
 
     // returning if not valid
     if (!isValid) {

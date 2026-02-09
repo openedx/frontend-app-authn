@@ -25,7 +25,6 @@ const NameField = (props) => {
     clearRegistrationBackendError,
   } = useRegisterContext();
 
-  // const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
   const fieldValidationsMutation = useFieldValidations({
     onSuccess: (data) => {
       setValidationsSuccess(data);
@@ -46,7 +45,6 @@ const NameField = (props) => {
       handleErrorChange('name', fieldError);
     } else if (shouldFetchUsernameSuggestions && !validationApiRateLimited) {
       fieldValidationsMutation.mutate({ name: value });
-      // dispatch(fetchRealtimeValidations({ name: value }));
     }
   };
 

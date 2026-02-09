@@ -17,8 +17,6 @@ import { validatePasswordField } from '../register/data/utils';
 
 const PasswordField = (props) => {
   const { formatMessage } = useIntl();
-
-  // const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
   const [isPasswordHidden, setHiddenTrue, setHiddenFalse] = useToggle(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -65,7 +63,6 @@ const PasswordField = (props) => {
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
-        // dispatch(fetchRealtimeValidations({ password: passwordValue }));
         fieldValidationsMutation.mutate({ password: passwordValue });
       }
     }
@@ -81,7 +78,6 @@ const PasswordField = (props) => {
     }
     if (props.handleErrorChange) {
       props.handleErrorChange('password', '');
-      // dispatch(clearRegistrationBackendError('password'));
       clearRegistrationBackendError('password');
     }
     setTimeout(() => setShowTooltip(props.showRequirements && true), 150);

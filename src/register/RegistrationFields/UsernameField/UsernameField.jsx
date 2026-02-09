@@ -25,7 +25,6 @@ import messages from '../../messages';
  */
 const UsernameField = (props) => {
   const { formatMessage } = useIntl();
-  // const dispatch = useDispatch();
 
   const {
     value,
@@ -55,9 +54,6 @@ const UsernameField = (props) => {
     },
   });
 
-  // const usernameSuggestions = useSelector(state => state.register.usernameSuggestions);
-  // const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
-
   /**
    * We need to remove the placeholder from the field, adding a space will do that.
    * This is needed because we are placing the username suggestions on top of the field.
@@ -74,7 +70,6 @@ const UsernameField = (props) => {
     if (fieldError) {
       handleErrorChange('username', fieldError);
     } else if (!validationApiRateLimited) {
-      // dispatch(fetchRealtimeValidations({ username }));
       fieldValidationsMutation.mutate({ username });
     }
   };
@@ -92,7 +87,6 @@ const UsernameField = (props) => {
 
   const handleOnFocus = (event) => {
     const username = event.target.value;
-    // dispatch(clearUsernameSuggestions());
     clearUsernameSuggestions();
     // If we added a space character to username field to display the suggestion
     // remove it before user enters the input. This is to ensure user doesn't
