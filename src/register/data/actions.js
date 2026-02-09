@@ -1,4 +1,4 @@
-//TODO: Delete this file
+// TODO: Delete this file
 // import { AsyncActionType } from '../../data/utils';
 
 // export const BACKUP_REGISTRATION_DATA = new AsyncActionType('REGISTRATION', 'BACKUP_REGISTRATION_DATA');

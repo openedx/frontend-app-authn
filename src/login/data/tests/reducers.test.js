@@ -1,4 +1,5 @@
 // TODO: Delete this file
+test('deprecated – to be removed', () => {});
 // import { getConfig } from '@edx/frontend-platform';
 
 // import { DEFAULT_REDIRECT_URL, DEFAULT_STATE, PENDING_STATE } from '../../../data/constants';

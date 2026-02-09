@@ -1,4 +1,5 @@
 // TODO: Delete this file
+test('deprecated – to be removed', () => {});
 // import {
 //   FORGOT_PASSWORD_PERSIST_FORM_DATA,
 // } from '../actions';

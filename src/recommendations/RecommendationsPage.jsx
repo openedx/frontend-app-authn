@@ -32,7 +32,6 @@ const RecommendationsPageInner = () => {
   const location = useLocation();
 
   // const registrationResponse = location.state?.registrationResult;
-  // todo: check infinite redirect because is ""
   const registrationResponse = registrationResult;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];

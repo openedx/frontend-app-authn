@@ -17,7 +17,6 @@ import {
   StatefulButton,
 } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
@@ -32,7 +31,6 @@ import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import {
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
-  DEFAULT_STATE,
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
@@ -40,7 +38,7 @@ import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
 import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
 
-const ProgressiveProfilingInner = (props) => {
+const ProgressiveProfilingInner = () => {
   const { formatMessage } = useIntl();
   // const {
   //   //submitState, // done
@@ -56,8 +54,7 @@ const ProgressiveProfilingInner = (props) => {
 
   const welcomePageContext = optionalFields;
   // Hook for third-party auth API call
-  const { mutate: fetchThirdPartyAuth, isPending: isFetchingAuth } = useThirdPartyAuthHook();
-
+  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
   const {
     submitState,
     showError,
@@ -92,13 +89,11 @@ const ProgressiveProfilingInner = (props) => {
             data.thirdPartyAuthContext,
           );
         },
-        onError: (error) => {
-          // Handle error if needed
-        },
-      }); // TODO: check this
+      });
     } else {
       configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registrationEmbedded, queryParams?.next]);
 
   useEffect(() => {
@@ -121,7 +116,9 @@ const ProgressiveProfilingInner = (props) => {
       const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : getConfig().SEARCH_CATALOG_URL;
       setRegistrationResult({ redirectUrl: nextUrl });
     }
-  }, [registrationEmbedded, welcomePageContext?.fields, welcomePageContext?.extended_profile, welcomePageContext?.nextUrl]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registrationEmbedded, welcomePageContext?.fields,
+    welcomePageContext?.extended_profile, welcomePageContext?.nextUrl]);
 
   useEffect(() => {
     if (authenticatedUser?.userId) {
@@ -223,6 +220,8 @@ const ProgressiveProfilingInner = (props) => {
     );
   });
 
+  const shouldRedirect = !!registrationResult.redirectUrl;
+
   return (
     <BaseContainer showWelcomeBanner fullName={authenticatedUser?.fullName || authenticatedUser?.name}>
       <Helmet>
@@ -231,13 +230,13 @@ const ProgressiveProfilingInner = (props) => {
         </title>
       </Helmet>
       <ProgressiveProfilingPageModal isOpen={showModal} redirectUrl={registrationResult.redirectUrl} />
-      {(props.shouldRedirect && welcomePageContext.nextUrl) && (
+      {(shouldRedirect && welcomePageContext.nextUrl) && (
         <RedirectLogistration
           success
           redirectUrl={registrationResult.redirectUrl}
         />
       )}
-      {props.shouldRedirect && (
+      {shouldRedirect && (
         <RedirectLogistration
           success
           redirectUrl={registrationResult.redirectUrl}
@@ -307,35 +306,6 @@ const ProgressiveProfilingInner = (props) => {
       </div>
     </BaseContainer>
   );
-};
-
-ProgressiveProfilingInner.propTypes = {
-  authenticatedUser: PropTypes.shape({
-    username: PropTypes.string,
-    userId: PropTypes.number,
-    fullName: PropTypes.string,
-  }),
-  showError: PropTypes.bool,
-  shouldRedirect: PropTypes.bool,
-  submitState: PropTypes.string,
-  welcomePageContext: PropTypes.shape({
-    extended_profile: PropTypes.arrayOf(PropTypes.string),
-    fields: PropTypes.shape({}),
-    nextUrl: PropTypes.string,
-  }),
-  welcomePageContextApiStatus: PropTypes.string,
-  // Actions
-  getFieldDataFromBackend: PropTypes.func.isRequired,
-  saveUserProfile: PropTypes.func.isRequired,
-};
-
-ProgressiveProfilingInner.defaultProps = {
-  authenticatedUser: {},
-  shouldRedirect: false,
-  showError: false,
-  submitState: DEFAULT_STATE,
-  welcomePageContext: {},
-  welcomePageContextApiStatus: PENDING_STATE,
 };
 
 // const mapStateToProps = state => {

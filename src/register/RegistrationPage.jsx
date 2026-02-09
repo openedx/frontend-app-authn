@@ -71,7 +71,7 @@ const RegistrationPage = (props) => {
     registrationError,
     setUserPipelineDataLoaded,
     setEmailSuggestionContext,
-    updateRegistrationFormData, // Add this function to save form changes back to context
+    updateRegistrationFormData,
     setRegistrationResult,
     setRegistrationError,
     userPipelineDataLoaded,
@@ -81,7 +81,7 @@ const RegistrationPage = (props) => {
 
   // Hook for third-party auth API call
 
-  const { mutate: fetchThirdPartyAuth, isPending: isFetchingAuth } = useThirdPartyAuthHook();
+  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
 
   const registrationEmbedded = isHostAvailableInQueryParams();
   const platformName = getConfig().SITE_NAME;
@@ -114,7 +114,7 @@ const RegistrationPage = (props) => {
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
   // Use context state for registrationResult instead of Redux - removed backup functionality
   // const userPipelineDataLoaded = useSelector(state => state.register.userPipelineDataLoaded);
-  const submitState = registrationMutation.isLoading ? PENDING_STATE : DEFAULT_STATE; // todo: check if it needs default
+  const submitState = registrationMutation.isLoading ? PENDING_STATE : DEFAULT_STATE;
 
   // const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
   // const optionalFields = useSelector(state => state.commonComponents.optionalFields);
@@ -158,7 +158,7 @@ const RegistrationPage = (props) => {
           ...prevState, name, username, email,
         }));
         setUserPipelineDataLoaded(true);
-        //dispatch(setUserPipelineDataLoaded(true));
+        // dispatch(setUserPipelineDataLoaded(true));
       }
     }
   }, [ // eslint-disable-line react-hooks/exhaustive-deps
@@ -186,14 +186,14 @@ const RegistrationPage = (props) => {
           // saving countryCode to registration context
           setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
         },
-        onError: (error) => {
+        onError: () => {
           setThirdPartyAuthContextFailure();
         },
       });
       setFormStartTime(Date.now());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formStartTime, queryParams, tpaHint, setThirdPartyAuthContextBegin]);
-
 
   // Handle backend validation errors from context
   useEffect(() => {
@@ -240,8 +240,8 @@ const RegistrationPage = (props) => {
     // Save to context for persistence across tab switches
     updateRegistrationFormData({
       formFields: newFormFields,
-      errors: errors,
-      configurableFormFields: configurableFormFields,
+      errors,
+      configurableFormFields,
     });
   };
 
@@ -266,7 +266,6 @@ const RegistrationPage = (props) => {
   };
 
   const registerUser = () => {
-    debugger;
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
 

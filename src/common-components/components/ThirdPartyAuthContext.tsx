@@ -1,4 +1,8 @@
-import { createContext, FC, ReactNode, useContext, useMemo, useState, useCallback } from 'react';
+import {
+  createContext, FC, ReactNode, useCallback, useContext, useMemo, useState,
+} from 'react';
+
+import { COMPLETE_STATE, FAILURE_STATE, PENDING_STATE } from '../../data/constants';
 
 interface ThirdPartyAuthContextType {
   fieldDescriptions: any;
@@ -19,7 +23,7 @@ interface ThirdPartyAuthContextType {
     welcomePageRedirectUrl: string | null;
   };
   setThirdPartyAuthContextBegin: () => void;
-  setThirdPartyAuthContextSuccess: (fieldDescriptions: any, optionalFields: any, thirdPartyAuthContext: any) => void;
+  setThirdPartyAuthContextSuccess: (fieldDescData: any, optionalFieldsData: any, contextData: any) => void;
   setThirdPartyAuthContextFailure: () => void;
   clearThirdPartyAuthErrorMessage: () => void;
 }
@@ -51,14 +55,14 @@ export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ childr
 
   // Function to handle begin state - mirrors THIRD_PARTY_AUTH_CONTEXT.BEGIN
   const setThirdPartyAuthContextBegin = useCallback(() => {
-    setThirdPartyAuthApiStatus('pending'); // todo: use enum
+    setThirdPartyAuthApiStatus(PENDING_STATE);
   }, []);
 
   // Function to handle success - mirrors THIRD_PARTY_AUTH_CONTEXT.SUCCESS
-  const setThirdPartyAuthContextSuccess = useCallback((fieldDescriptions: any, optionalFields: any, thirdPartyAuthContext: any) => {
-    setFieldDescriptions(fieldDescriptions?.fields || {});
-    setOptionalFields(optionalFields || { fields: {}, extended_profile: [] });
-    setThirdPartyAuthContext(thirdPartyAuthContext || {
+  const setThirdPartyAuthContextSuccess = useCallback((fieldDescData, optionalFieldsData, contextData) => {
+    setFieldDescriptions(fieldDescData?.fields || {});
+    setOptionalFields(optionalFieldsData || { fields: {}, extended_profile: [] });
+    setThirdPartyAuthContext(contextData || {
       autoSubmitRegForm: false,
       currentProvider: null,
       finishAuthUrl: null,
@@ -69,12 +73,12 @@ export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ childr
       errorMessage: null,
       welcomePageRedirectUrl: null,
     });
-    setThirdPartyAuthApiStatus('complete');
+    setThirdPartyAuthApiStatus(COMPLETE_STATE);
   }, []);
 
   // Function to handle failure - mirrors THIRD_PARTY_AUTH_CONTEXT.FAILURE
   const setThirdPartyAuthContextFailure = useCallback(() => {
-    setThirdPartyAuthApiStatus('failure');
+    setThirdPartyAuthApiStatus(FAILURE_STATE);
     setThirdPartyAuthContext(prev => ({
       ...prev,
       errorMessage: null,
@@ -83,7 +87,7 @@ export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ childr
 
   // Function to clear error message - mirrors THIRD_PARTY_AUTH_CONTEXT_CLEAR_ERROR_MSG
   const clearThirdPartyAuthErrorMessage = useCallback(() => {
-    setThirdPartyAuthApiStatus('pending');
+    setThirdPartyAuthApiStatus(PENDING_STATE);
     setThirdPartyAuthContext(prev => ({
       ...prev,
       errorMessage: null,

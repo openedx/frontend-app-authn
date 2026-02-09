@@ -44,7 +44,7 @@ const ResetPasswordPage = () => {
   const [errorCode, setErrorCode] = useState(null);
 
   // React Query hooks
-  const { mutate: validateResetToken, isPending: isValidating } = useValidateToken();
+  const { mutate: validateResetToken } = useValidateToken();
   const { mutate: resetUserPassword, isPending: isResetting } = useResetPassword();
 
   useEffect(() => {

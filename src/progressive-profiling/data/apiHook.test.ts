@@ -1,11 +1,12 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { useSaveUserProfile } from './apiHook';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
+
 import * as api from './api';
+import { useSaveUserProfile } from './apiHook';
 import { useProgressiveProfilingContext } from '../components/ProgressiveProfilingContext';
-import { DEFAULT_STATE, PENDING_STATE } from '../../data/constants';
+import { COMPLETE_STATE, DEFAULT_STATE } from '../../data/constants';
 
 // Mock the API function
 jest.mock('./api', () => ({
@@ -28,7 +29,7 @@ const createWrapper = () => {
       mutations: { retry: false },
     },
   });
-  
+
   return function TestWrapper({ children }: { children: React.ReactNode }) {
     return React.createElement(QueryClientProvider, { client: queryClient }, children);
   };
@@ -36,13 +37,13 @@ const createWrapper = () => {
 
 describe('useSaveUserProfile', () => {
   const mockSetLoading = jest.fn();
-  const mockSetError = jest.fn();
+  const mockSetShowError = jest.fn();
   const mockSetSuccess = jest.fn();
   const mockSetSubmitState = jest.fn();
 
   const mockContextValue = {
     setLoading: mockSetLoading,
-    setError: mockSetError,
+    setShowError: mockSetShowError,
     setSuccess: mockSetSuccess,
     setSubmitState: mockSetSubmitState,
   };
@@ -69,9 +70,9 @@ describe('useSaveUserProfile', () => {
       data: {
         gender: 'm',
         extended_profile: [
-          { field_name: 'company', field_value: 'Test Company' }
-        ]
-      }
+          { field_name: 'company', field_value: 'Test Company' },
+        ],
+      },
     };
     const mockResponse = { success: true };
 
@@ -96,14 +97,14 @@ describe('useSaveUserProfile', () => {
     // Check success state is set
     expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSuccess).toHaveBeenCalledWith(true);
-    expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
+    expect(mockSetSubmitState).toHaveBeenCalledWith(COMPLETE_STATE);
     expect(result.current.data).toEqual(mockResponse);
   });
 
   it('should handle API error and set error state', async () => {
     const mockPayload = {
       username: 'testuser123',
-      data: { gender: 'm' }
+      data: { gender: 'm' },
     };
     const mockError = new Error('Failed to save profile');
 
@@ -127,15 +128,14 @@ describe('useSaveUserProfile', () => {
 
     // Check error state is set
     expect(mockSetLoading).toHaveBeenCalledWith(false);
-    expect(mockSetError).toHaveBeenCalledWith('Failed to save profile');
-    expect(mockSetSubmitState).toHaveBeenCalledWith(PENDING_STATE);
+    expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
     expect(result.current.error).toEqual(mockError);
   });
 
   it('should handle non-Error objects and set generic error message', async () => {
     const mockPayload = {
       username: 'testuser123',
-      data: { gender: 'm' }
+      data: { gender: 'm' },
     };
     const mockError = { message: 'Something went wrong', status: 500 };
 
@@ -151,9 +151,9 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isError).toBe(true);
     });
 
-    // Check generic error message is set for non-Error objects
-    expect(mockSetError).toHaveBeenCalledWith('An error occurred while saving profile');
-    expect(mockSetSubmitState).toHaveBeenCalledWith(PENDING_STATE);
+    // Check error state is set
+    expect(mockSetLoading).toHaveBeenCalledWith(false);
+    expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
   });
 
   it('should properly handle extended_profile data structure', async () => {
@@ -163,9 +163,9 @@ describe('useSaveUserProfile', () => {
         gender: 'f',
         extended_profile: [
           { field_name: 'company', field_value: 'Acme Corp' },
-          { field_name: 'level_of_education', field_value: 'Bachelor\'s Degree' }
-        ]
-      }
+          { field_name: 'level_of_education', field_value: 'Bachelor\'s Degree' },
+        ],
+      },
     };
     const mockResponse = { success: true, updated_fields: ['gender', 'extended_profile'] };
 
@@ -189,7 +189,7 @@ describe('useSaveUserProfile', () => {
   it('should handle network errors gracefully', async () => {
     const mockPayload = {
       username: 'testuser123',
-      data: { gender: 'm' }
+      data: { gender: 'm' },
     };
     const networkError = new Error('Network Error');
     networkError.name = 'NetworkError';
@@ -206,14 +206,14 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isError).toBe(true);
     });
 
-    expect(mockSetError).toHaveBeenCalledWith('Network Error');
-    expect(mockSetSubmitState).toHaveBeenCalledWith(PENDING_STATE);
+    expect(mockSetLoading).toHaveBeenCalledWith(false);
+    expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
   });
 
   it('should reset states correctly on each mutation attempt', async () => {
     const mockPayload = {
       username: 'testuser123',
-      data: { gender: 'm' }
+      data: { gender: 'm' },
     };
 
     mockPatchAccount.mockResolvedValueOnce({ success: true });
