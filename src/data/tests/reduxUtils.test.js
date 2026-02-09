@@ -1,5 +1,5 @@
 // delete this file
-
+test('deprecated – to be removed', () => {});
 // import AsyncActionType from '../utils/reduxUtils';
 
 // describe('AsyncActionType', () => {

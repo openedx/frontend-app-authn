@@ -89,7 +89,7 @@ const ForgotPasswordPage = () => {
           setBannerEmail(emailUsed);
           setFormErrors('');
         },
-        onError: (error) => {
+        onError: () => {
           if (error.response && error.response.status === 403) {
             setStatus('forbidden');
           } else {

@@ -78,9 +78,9 @@ describe('RecommendationsPageTests', () => {
     );
   };
 
-  const mockUseRegisterContext = (registrationResult = null, backendCountryCode = 'US') => {
+  const mockUseRegisterContext = (regResult = null, backendCountryCode = 'US') => {
     useRegisterContext.mockReturnValue({
-      registrationResult,
+      registrationResult: regResult,
       backendCountryCode,
     });
   };
@@ -109,7 +109,7 @@ describe('RecommendationsPageTests', () => {
       isLoading: false,
     });
 
-    // Mock window.location with getter and setter for href
+    let mockHref = '';
     delete window.location;
     window.location = {
       href: '',
@@ -120,8 +120,8 @@ describe('RecommendationsPageTests', () => {
 
     // Mock the href property with getter and setter
     Object.defineProperty(window.location, 'href', {
-      get: () => window.location._href || '',
-      set: (value) => { window.location._href = value; },
+      get: () => mockHref,
+      set: (value) => { mockHref = value; },
       configurable: true,
     });
   });

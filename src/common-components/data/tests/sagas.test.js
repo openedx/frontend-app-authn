@@ -1,4 +1,5 @@
 // TODO: Delete this file
+test('deprecated – to be removed', () => {});
 // import { runSaga } from 'redux-saga';
 
 // import { setCountryFromThirdPartyAuthContext } from '../../../register/data/actions';

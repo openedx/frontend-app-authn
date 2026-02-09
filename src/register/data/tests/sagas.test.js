@@ -1,4 +1,5 @@
 // TODO: Delete this file
+test('deprecated – to be removed', () => {});
 // import { camelCaseObject } from '@edx/frontend-platform';
 // import { runSaga } from 'redux-saga';
 
@@ -164,7 +165,8 @@
 //       },
 //     };
 
-//     const registerRequest = jest.spyOn(api, 'registerRequest').mockImplementation(() => Promise.reject(registerErrorResponse));
+// const registerRequest = jest.spyOn(api, 'registerRequest').mockImplementation(() =>
+// Promise.reject(registerErrorResponse));
 
 //     const dispatched = [];
 //     await runSaga(

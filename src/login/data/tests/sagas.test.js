@@ -1,4 +1,5 @@
 // TODO: Delete this file
+test('deprecated – to be removed', () => {});
 // import { camelCaseObject } from '@edx/frontend-platform';
 // import { runSaga } from 'redux-saga';
 
@@ -21,7 +22,7 @@
 //   };
 
 //   const testErrorResponse = async (loginErrorResponse, expectedLogFunc, expectedDispatchers) => {
-//     const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
+//    const loginRequest = jest.spyOn(api, 'loginRequest').mockImplementation(() => Promise.reject(loginErrorResponse));
 
 //     const dispatched = [];
 //     await runSaga(

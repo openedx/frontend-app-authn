@@ -61,7 +61,7 @@ const LoginPage = ({
   } = useLoginContext();
 
   // Hook for third-party auth API call
-  const { mutate: fetchThirdPartyAuth, isPending: isFetchingAuth } = useThirdPartyAuthHook();
+  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
 
   // React Query for server state
   const [loginResult, setLoginResult] = useState({ success: false, redirectUrl: '' });
@@ -69,7 +69,8 @@ const LoginPage = ({
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin();
 
   // Local UI state (migrated from Redux)
-  const [showResetPasswordSuccessBanner, setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
+  const [showResetPasswordSuccessBanner,
+    setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
 
   const {
     providers,
@@ -104,11 +105,10 @@ const LoginPage = ({
           data.thirdPartyAuthContext,
         );
       },
-      onError: (error) => {
+      onError: () => {
         setThirdPartyAuthContextFailure();
       },
     });
-    // check this eslint, I put it because is the way to avoid initial infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParams, tpaHint, setThirdPartyAuthContextBegin]);
 
@@ -120,6 +120,7 @@ const LoginPage = ({
         context: { ...loginError.context },
       }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginError.errorCode, loginError.context]);
 
   useEffect(() => {
@@ -132,6 +133,7 @@ const LoginPage = ({
         },
       }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [thirdPartyErrorMessage]);
 
   const validateFormFields = (payload) => {

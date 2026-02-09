@@ -171,7 +171,7 @@ describe('Logistration', () => {
   });
 
   it('should do nothing when user clicks on the same tab (login/register) again', () => {
-    const { container } = render(renderWrapper(<Logistration />));
+    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
     // While staying on the registration form, clicking the register tab again
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
 

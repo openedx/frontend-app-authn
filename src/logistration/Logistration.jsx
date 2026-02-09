@@ -177,6 +177,11 @@ const LogistrationPageInner = ({
     </BaseContainer>
   );
 };
+
+LogistrationPageInner.propTypes = {
+  selectedPage: PropTypes.string.isRequired,
+};
+
 /**
  * Main Logistration Page component wrapped with providers
  */
@@ -189,13 +194,5 @@ const LogistrationPage = (props) => (
     </RegisterProvider>
   </ThirdPartyAuthProvider>
 );
-
-LogistrationPage.propTypes = {
-  selectedPage: PropTypes.string,
-};
-
-LogistrationPage.defaultProps = {
-  selectedPage: REGISTER_PAGE,
-};
 
 export default LogistrationPage;

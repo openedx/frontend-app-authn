@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import { patchAccount } from './api';
-import { useProgressiveProfilingContext } from '../components/ProgressiveProfilingContext';
-import {
-  DEFAULT_STATE, PENDING_STATE,
-} from '../../data/constants';
 
+import { patchAccount } from './api';
+import {
+  DEFAULT_STATE, COMPLETE_STATE,
+} from '../../data/constants';
+import { useProgressiveProfilingContext } from '../components/ProgressiveProfilingContext';
 
 interface SaveUserProfilePayload {
   username: string;
@@ -17,7 +17,7 @@ interface UseSaveUserProfileOptions {
 }
 
 const useSaveUserProfile = (options: UseSaveUserProfileOptions = {}) => {
-  const { setLoading, setError, setSuccess, setSubmitState } = useProgressiveProfilingContext();
+  const { setLoading, setSuccess, setSubmitState } = useProgressiveProfilingContext();
   return useMutation({
     mutationFn: async ({ username, data }: SaveUserProfilePayload) => {
       return await patchAccount(username, data);
@@ -30,7 +30,7 @@ const useSaveUserProfile = (options: UseSaveUserProfileOptions = {}) => {
       // Set success state (equivalent to saveUserProfileSuccess)
       setLoading(false);
       setSuccess(true);
-      setSubmitState(DEFAULT_STATE);
+      setSubmitState(COMPLETE_STATE);
       if (options.onSuccess) {
         options.onSuccess(data);
       }
@@ -38,8 +38,7 @@ const useSaveUserProfile = (options: UseSaveUserProfileOptions = {}) => {
     onError: (error) => {
       // Set error state (equivalent to saveUserProfileFailure)
       setLoading(false);
-      setError(error instanceof Error ? error.message : 'An error occurred while saving profile');
-      setSubmitState(PENDING_STATE);
+      setSubmitState(DEFAULT_STATE);
       if (options.onError) {
         options.onError(error);
       }
