@@ -25,7 +25,6 @@ import messages from '../../messages';
  */
 const EmailField = (props) => {
   const { formatMessage } = useIntl();
-  // const dispatch = useDispatch();
 
   const {
     setValidationsSuccess,
@@ -50,9 +49,7 @@ const EmailField = (props) => {
       setValidationsFailure();
     },
   });
-  // todo: check this part
-  // const backedUpFormData = useSelector(state => state.register.registrationFormData);
-  // const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+
   const backedUpFormData = registrationFormData;
   const [emailSuggestion, setEmailSuggestion] = useState({ ...backedUpFormData?.emailSuggestion });
 
@@ -68,7 +65,6 @@ const EmailField = (props) => {
       handleErrorChange('confirm_email', confirmEmailError);
     }
     setEmailSuggestionContext(suggestion.suggestion, suggestion.type);
-    // dispatch(setEmailSuggestionInStore(suggestion));
     setEmailSuggestion(suggestion);
 
     if (fieldError) {
@@ -81,7 +77,6 @@ const EmailField = (props) => {
   const handleOnFocus = () => {
     handleErrorChange('email', '');
     clearRegistrationBackendError('email');
-    // dispatch(clearRegistrationBackendError('email'));
   };
 
   const handleSuggestionClick = (event) => {

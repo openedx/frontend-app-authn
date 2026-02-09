@@ -29,12 +29,6 @@ const LogistrationPageInner = ({
   selectedPage,
 }) => {
   const tpaHint = getTpaHint();
-  // const tpaProviders = useSelector(tpaProvidersSelector);
-  // const dispatch = useDispatch();
-  // const {
-  //   providers,
-  //   secondaryProviders,
-  // } = tpaProviders;
   const {
     thirdPartyAuthContext,
     clearThirdPartyAuthErrorMessage,
@@ -81,14 +75,7 @@ const LogistrationPageInner = ({
       return;
     }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    // dispatch(clearThirdPartyAuthContextErrorMessage());
     clearThirdPartyAuthErrorMessage();
-    // this is not needned anymore since we are using context
-    // if (tabKey === LOGIN_PAGE) {
-    //   dispatch(backupRegistrationForm());
-    // } else if (tabKey === REGISTER_PAGE) {
-    //   dispatch(backupLoginForm());
-    // }
     setKey(tabKey);
   };
 
