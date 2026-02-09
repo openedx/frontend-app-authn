@@ -1,6 +1,6 @@
 {
   "name": "@openedx/frontend-app-authn",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Frontend authentication",
   "engines": {
     "node": "^24.12"
