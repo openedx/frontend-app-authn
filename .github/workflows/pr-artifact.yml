@@ -111,32 +111,42 @@ jobs:
             ---
             🤖 This comment is automatically generated when the PR is created or updated.`;
             
-            // Check if we already commented
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-            
-            const botComment = comments.find(comment => 
-              comment.user.type === 'Bot' && 
-              comment.body.includes('📦 PR Build Artifact Available')
-            );
-            
-            if (botComment) {
-              // Update existing comment
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body: comment
-              });
-            } else {
-              // Create new comment
-              await github.rest.issues.createComment({
+            try {
+              // Check if we already commented
+              const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body: comment
               });
+              
+              const botComment = comments.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('📦 PR Build Artifact Available')
+              );
+              
+              if (botComment) {
+                // Update existing comment
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: comment
+                });
+                console.log('✅ Updated existing PR comment with artifact info');
+              } else {
+                // Create new comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: comment
+                });
+                console.log('✅ Posted new PR comment with artifact info');
+              }
+            } catch (error) {
+              console.log('⚠️ Cannot comment on PR (likely due to fork permissions)');
+              console.log(`📦 Artifact created: ${packageFile}`);
+              console.log(`🔗 Download from: ${artifactUrl}`);
+              console.log(`📋 To install: npm install /path/to/${packageFile}`);
+              console.log('ℹ️ Copy the above info to your PR description or comment manually');
             }
