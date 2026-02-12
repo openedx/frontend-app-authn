@@ -8,7 +8,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 
 import { useRegisterContext } from './components/RegisterContext';
-import { useFieldValidations, useRegistration } from './data/api.hook';
+import { useFieldValidations, useRegistration } from './data/apiHook';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
 import RegistrationPage from './RegistrationPage';
 import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';

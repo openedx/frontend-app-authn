@@ -1,9 +1,8 @@
-import { getConfig } from '@edx/frontend-platform';
-import { camelCaseObject } from '@edx/frontend-platform';
+import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import * as QueryString from 'query-string';
 
-const login = async ( creds ) => {
+const login = async (creds) => {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,

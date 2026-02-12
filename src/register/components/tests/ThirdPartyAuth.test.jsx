@@ -10,7 +10,7 @@ import { useThirdPartyAuthContext } from '../../../common-components/components/
 import {
   COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
 } from '../../../data/constants';
-import { useFieldValidations, useRegistration } from '../../data/api.hook';
+import { useFieldValidations, useRegistration } from '../../data/apiHook';
 import RegistrationPage from '../../RegistrationPage';
 import { useRegisterContext } from '../RegisterContext';
 

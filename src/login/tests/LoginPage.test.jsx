@@ -111,8 +111,6 @@ describe('LoginPage', () => {
     props = {
       institutionLogin: false,
       handleInstitutionLogin: jest.fn(),
-      // Legacy props for backward compatibility
-      loginRequest: jest.fn(),
     };
   });
 
@@ -133,11 +131,11 @@ describe('LoginPage', () => {
     expect(mockLoginMutate).toHaveBeenCalledWith({ email_or_username: 'test', password: 'test-password' }, expect.any(Object));
   });
 
-  it('should not call loginRequest on empty form submission', () => {
+  it('should not call login mutation on empty form submission', () => {
     render(queryWrapper(<LoginPage {...props} />));
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    expect(props.loginRequest).not.toHaveBeenCalled();
+    expect(mockLoginMutate).not.toHaveBeenCalled();
   });
 
   it('should dismiss reset password banner on form submission', () => {

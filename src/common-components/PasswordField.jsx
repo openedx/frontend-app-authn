@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import messages from './messages';
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import { useRegisterContext } from '../register/components/RegisterContext';
-import { useFieldValidations } from '../register/data/api.hook';
+import { useFieldValidations } from '../register/data/apiHook';
 import { validatePasswordField } from '../register/data/utils';
 
 const PasswordField = (props) => {

@@ -7,7 +7,7 @@ import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
 import { RegisterProvider } from '../../register/components/RegisterContext';
-import { useFieldValidations } from '../../register/data/api.hook';
+import { useFieldValidations } from '../../register/data/apiHook';
 import FormGroup from '../FormGroup';
 import PasswordField from '../PasswordField';
 

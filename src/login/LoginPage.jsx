@@ -56,8 +56,6 @@ const LoginPage = ({
     setFormFields,
     errors,
     setErrors,
-    setErrorCode,
-    errorCode,
   } = useLoginContext();
 
   // Hook for third-party auth API call
@@ -65,13 +63,26 @@ const LoginPage = ({
 
   // React Query for server state
   const [loginResult, setLoginResult] = useState({ success: false, redirectUrl: '' });
-  const [loginError, setLoginError] = useState({ errorCode: '', context: {} });
-  const { mutate: loginUser, isPending: isLoggingIn } = useLogin();
+  const [errorCode, setErrorCode] = useState({
+    type: '',
+    count: 0,
+    context: {},
+  });
+  const { mutate: loginUser, isPending: isLoggingIn } = useLogin({
+    onSuccess: (data) => {
+      setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
+    },
+    onError: (formattedError) => {
+      setErrorCode({
+        type: formattedError.type,
+        count: errorCode.count + 1,
+        context: formattedError.context,
+      });
+    },
+  });
 
-  // Local UI state (migrated from Redux)
   const [showResetPasswordSuccessBanner,
     setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
-
   const {
     providers,
     currentProvider,
@@ -111,17 +122,6 @@ const LoginPage = ({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParams, tpaHint, setThirdPartyAuthContextBegin]);
-
-  useEffect(() => {
-    if (loginError.errorCode) {
-      setErrorCode(prevState => ({
-        type: loginError.errorCode,
-        count: prevState.count + 1,
-        context: { ...loginError.context },
-      }));
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loginError.errorCode, loginError.context]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {
@@ -182,15 +182,7 @@ const LoginPage = ({
       password: formData.password,
       ...queryParams,
     };
-    loginUser(payload, {
-      onSuccess: (data) => {
-        setLoginResult(data);
-        setLoginError({ errorCode: '', context: {} }); // Clear errors on success
-      },
-      onError: (errorData) => {
-        setLoginError(errorData);
-      },
-    });
+    loginUser(payload);
   };
 
   const handleOnChange = (event) => {

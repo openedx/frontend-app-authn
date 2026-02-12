@@ -52,7 +52,7 @@ const LogistrationPageInner = ({
       authService.getCsrfTokenService()
         .getCsrfToken(getConfig().LMS_BASE_URL);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (disablePublicAccountCreation) {

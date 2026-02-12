@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import validateUsername from './validator';
 import { FormGroup } from '../../../common-components';
 import { useRegisterContext } from '../../components/RegisterContext';
-import { useFieldValidations } from '../../data/api.hook';
+import { useFieldValidations } from '../../data/apiHook';
 import messages from '../../messages';
 
 /**

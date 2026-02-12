@@ -76,10 +76,10 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     setBannerEmail(email);
 
-    const error = getValidationMessage(email);
-    if (error) {
-      setFormErrors(error);
-      setValidationError(error);
+    const validateError = getValidationMessage(email);
+    if (validateError) {
+      setFormErrors(validateError);
+      setValidationError(validateError);
       windowScrollTo({ left: 0, top: 0, behavior: 'smooth' });
     } else {
       setFormErrors('');
@@ -89,7 +89,7 @@ const ForgotPasswordPage = () => {
           setBannerEmail(emailUsed);
           setFormErrors('');
         },
-        onError: () => {
+        onError: (error) => {
           if (error.response && error.response.status === 403) {
             setStatus('forbidden');
           } else {

@@ -5,7 +5,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
-import { useFieldValidations } from '../../data/api.hook';
+import { useFieldValidations } from '../../data/apiHook';
 import { EmailField } from '../index';
 
 // Mock the useRegisterContext hook

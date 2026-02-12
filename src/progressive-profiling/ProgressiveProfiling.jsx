@@ -40,6 +40,7 @@ import { FormFieldRenderer } from '../field-renderer';
 
 const ProgressiveProfilingInner = () => {
   const { formatMessage } = useIntl();
+
   const {
     thirdPartyAuthApiStatus,
     setThirdPartyAuthContextSuccess,
@@ -52,6 +53,7 @@ const ProgressiveProfilingInner = () => {
   const {
     submitState,
     showError,
+    success,
   } = useProgressiveProfilingContext();
 
   // Hook for saving user profile
@@ -214,7 +216,7 @@ const ProgressiveProfilingInner = () => {
     );
   });
 
-  const shouldRedirect = !!registrationResult.redirectUrl;
+  const shouldRedirect = success;
 
   return (
     <BaseContainer showWelcomeBanner fullName={authenticatedUser?.fullName || authenticatedUser?.name}>

@@ -2,11 +2,21 @@ import {
   createContext, FC, ReactNode, useContext, useMemo, useState,
 } from 'react';
 
+export interface FormFields {
+  emailOrUsername: string;
+  password: string;
+}
+
+export interface FormErrors {
+  emailOrUsername: string;
+  password: string;
+}
+
 interface LoginContextType {
-  error: string | null;
-  setError: (error: string | null) => void;
-  isLoading: boolean;
-  setIsLoading: (isLoading: boolean) => void;
+  formFields: FormFields;
+  setFormFields: (fields: FormFields) => void;
+  errors: FormErrors;
+  setErrors: (errors: FormErrors) => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -20,11 +30,6 @@ export const LoginProvider: FC<LoginProviderProps> = ({ children }) => {
     emailOrUsername: '',
     password: '',
   });
-  const [errorCode, setErrorCode] = useState({
-    type: '',
-    count: 0,
-    context: {},
-  });
   const [errors, setErrors] = useState({
     emailOrUsername: '',
     password: '',
@@ -33,11 +38,9 @@ export const LoginProvider: FC<LoginProviderProps> = ({ children }) => {
   const contextValue = useMemo(() => ({
     formFields,
     setFormFields,
-    errorCode,
-    setErrorCode,
     errors,
     setErrors,
-  }), [formFields, errorCode, errors]);
+  }), [formFields, errors]);
 
   return (
     <LoginContext.Provider value={contextValue}>
