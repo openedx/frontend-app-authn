@@ -8,11 +8,30 @@ import { MemoryRouter } from 'react-router-dom';
 import Logistration from './Logistration';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 
+// Mock the navigate function
+const mockNavigate = jest.fn();
+const mockGetCsrfToken = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  Navigate: ({ to }) => {
+    mockNavigate(to);
+    return null;
+  },
+}));
+
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
 }));
-jest.mock('@edx/frontend-platform/auth');
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthService: () => ({
+    getCsrfTokenService: () => ({
+      getCsrfToken: mockGetCsrfToken,
+    }),
+  }),
+}));
 jest.mock('@edx/frontend-platform', () => ({
   ...jest.requireActual('@edx/frontend-platform'),
   getConfig: jest.fn(() => ({
@@ -138,6 +157,8 @@ describe('Logistration', () => {
   beforeEach(() => {
     // Avoid jest open handle error
     jest.clearAllMocks();
+    mockNavigate.mockClear();
+    mockGetCsrfToken.mockClear();
 
     // Configure i18n for testing
     configure({
@@ -300,7 +321,33 @@ describe('Logistration', () => {
     const { container } = render(renderWrapper(<Logistration />));
 
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
-    // Verify the TPA context error clearing function was called
     expect(mockClearThirdPartyAuthErrorMessage).toHaveBeenCalled();
+  });
+
+  it('should call authService getCsrfTokenService on component mount', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    expect(mockGetCsrfToken).toHaveBeenCalledWith(getConfig().LMS_BASE_URL);
+  });
+
+  it('should send correct page events for login and register when handling institution login', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    const institutionButton = screen.getByText('Institution/campus credentials');
+    fireEvent.click(institutionButton);
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    const { container: registerContainer } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    const registerInstitutionButton = registerContainer.querySelector('#institution-login');
+    if (registerInstitutionButton) {
+      fireEvent.click(registerInstitutionButton);
+      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    }
+  });
+
+  it('should handle institution login with string parameters correctly', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    const institutionButton = screen.getByText('Institution/campus credentials');
+    sendPageEvent.mockClear();
+    fireEvent.click(institutionButton);
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
   });
 });

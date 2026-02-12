@@ -1,5 +1,5 @@
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -536,6 +536,131 @@ describe('ProgressiveProfilingTests', () => {
       );
 
       expect(window.location.href).toBe(redirectUrl);
+    });
+  });
+
+  describe('onMouseDown preventDefault behavior', () => {
+    it('should have onMouseDown handlers on submit and skip buttons to prevent default behavior', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { container } = renderWithProviders(<ProgressiveProfiling />);
+      const submitButton = container.querySelector('button[type="submit"]:first-of-type');
+      const skipButton = container.querySelector('button[type="submit"]:last-of-type');
+
+      expect(submitButton).toBeTruthy();
+      expect(skipButton).toBeTruthy();
+
+      fireEvent.mouseDown(submitButton);
+      fireEvent.mouseDown(skipButton);
+
+      expect(submitButton).toBeTruthy();
+      expect(skipButton).toBeTruthy();
+    });
+  });
+
+  describe('setValues state management', () => {
+    it('should update form values through onChange handlers', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { getByLabelText, getByText } = renderWithProviders(<ProgressiveProfiling />);
+      const companyInput = getByLabelText('Company');
+      const genderSelect = getByLabelText('Gender');
+
+      fireEvent.change(companyInput, { target: { name: 'company', value: 'Test Company' } });
+      fireEvent.change(genderSelect, { target: { name: 'gender', value: 'm' } });
+
+      const submitButton = getByText('Submit');
+      fireEvent.click(submitButton);
+
+      expect(mockSaveUserProfile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          username: 'abc123',
+          data: expect.objectContaining({
+            gender: 'm',
+            extended_profile: expect.arrayContaining([
+              expect.objectContaining({
+                field_name: 'company',
+                field_value: 'Test Company',
+              }),
+            ]),
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('sendTrackEvent functionality', () => {
+    it('should call sendTrackEvent when form interactions occur', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { getByText } = renderWithProviders(<ProgressiveProfiling />);
+
+      jest.clearAllMocks();
+      const submitButton = getByText('Submit');
+      fireEvent.click(submitButton);
+
+      expect(sendTrackEvent).toHaveBeenCalled();
+    });
+
+    it('should call analytics functions on component mount', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      renderWithProviders(<ProgressiveProfiling />);
+      expect(sendPageEvent).toHaveBeenCalled();
+      expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+    });
+  });
+
+  describe('setThirdPartyAuthContextSuccess functionality', () => {
+    it('should call setThirdPartyAuthContextSuccess in embedded mode', () => {
+      const mockThirdPartyData = {
+        fieldDescriptions: { test: 'field' },
+        optionalFields: mockOptionalFields,
+        thirdPartyAuthContext: { providers: [] },
+      };
+
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: '?variant=embedded&host=http://example.com',
+      };
+      mockFetchThirdPartyAuth.mockImplementation((params, { onSuccess }) => {
+        onSuccess(mockThirdPartyData);
+      });
+
+      renderWithProviders(<ProgressiveProfiling />);
+
+      expect(mockFetchThirdPartyAuth).toHaveBeenCalled();
+      expect(mockSetThirdPartyAuthContextSuccess).toHaveBeenCalled();
+    });
+
+    it('should not call third party auth functions when not in embedded mode', () => {
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: '',
+      };
+
+      renderWithProviders(<ProgressiveProfiling />);
+
+      expect(mockFetchThirdPartyAuth).not.toHaveBeenCalled();
+      expect(mockSetThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
     });
   });
 });

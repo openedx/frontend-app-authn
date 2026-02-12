@@ -4,14 +4,13 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/apiHook';
 import { UsernameField } from '../index';
 
 // Mock the useFieldValidations hook
 const mockMutate = jest.fn();
 jest.mock('../../data/apiHook', () => ({
-  useFieldValidations: () => ({
-    mutate: mockMutate,
-  }),
+  useFieldValidations: jest.fn(),
 }));
 
 // Mock the useRegisterContext hook
@@ -61,6 +60,10 @@ describe('UsernameField', () => {
       },
     });
 
+    useFieldValidations.mockReturnValue({
+      mutate: mockMutate,
+    });
+
     mockRegisterContext = {
       usernameSuggestions: [],
       validationApiRateLimited: false,
@@ -88,6 +91,7 @@ describe('UsernameField', () => {
   afterEach(() => {
     jest.clearAllMocks();
     mockMutate.mockClear();
+    useFieldValidations.mockClear();
   });
 
   describe('Test Username Field', () => {
@@ -201,7 +205,7 @@ describe('UsernameField', () => {
       expect(usernameSuggestions.length).toEqual(3);
     });
 
-    it('should show username suggestions when they are populated in redux', () => {
+    it('should show username suggestions when they are populated', () => {
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         usernameSuggestions: ['test_1', 'test_12', 'test_123'],
@@ -234,7 +238,7 @@ describe('UsernameField', () => {
       expect(usernameSuggestions.length).toEqual(3);
     });
 
-    it('should put space in username field if suggestions are populated in redux', () => {
+    it('should put space in username field if suggestions are populated', () => {
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         usernameSuggestions: ['test_1', 'test_12', 'test_123'],
@@ -304,11 +308,57 @@ describe('UsernameField', () => {
       });
 
       const { container } = render(renderWrapper(<UsernameField {...props} />));
-
       const usernameField = container.querySelector('input#username');
       fireEvent.focus(usernameField, { target: { value: 'test', name: 'username' } });
 
       expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('username');
+    });
+
+    it('should call setValidationsSuccess when field validation API succeeds', () => {
+      let capturedOnSuccess;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnSuccess = callbacks.onSuccess;
+        return {
+          mutate: mockMutate,
+        };
+      });
+
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
+      const usernameField = container.querySelector('input#username');
+      fireEvent.blur(usernameField, { target: { value: 'testuser', name: 'username' } });
+      const mockValidationData = { username: { isValid: true } };
+      capturedOnSuccess(mockValidationData);
+
+      expect(mockRegisterContext.setValidationsSuccess).toHaveBeenCalledWith(mockValidationData);
+    });
+
+    it('should call setValidationsFailure when field validation API fails', () => {
+      let capturedOnError;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnError = callbacks.onError;
+        return {
+          mutate: mockMutate,
+        };
+      });
+
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
+      const usernameField = container.querySelector('input#username');
+      fireEvent.blur(usernameField, { target: { value: 'testuser', name: 'username' } });
+      capturedOnError();
+
+      expect(mockRegisterContext.setValidationsFailure).toHaveBeenCalledWith();
+    });
+
+    it('should not call field validation API when validation is rate limited', () => {
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        validationApiRateLimited: true,
+      });
+
+      const { container } = render(renderWrapper(<UsernameField {...props} />));
+      const usernameField = container.querySelector('input#username');
+      fireEvent.blur(usernameField, { target: { value: 'testuser', name: 'username' } });
+      expect(mockMutate).not.toHaveBeenCalled();
     });
   });
 });
