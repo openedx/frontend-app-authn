@@ -4,7 +4,7 @@ import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
 
 import { useRegisterContext } from './components/RegisterContext';
@@ -675,6 +675,92 @@ describe('RegistrationPage', () => {
       window.location = { href: getConfig().BASE_URL };
       render(renderWrapper(<RegistrationPage {...props} />));
       expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+    });
+
+    it('should prevent default on mouseDown event for registration button', () => {
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+      const registerButton = container.querySelector('button.register-button');
+
+      const preventDefaultSpy = jest.fn();
+      const event = new Event('mousedown', { bubbles: true });
+      event.preventDefault = preventDefaultSpy;
+
+      registerButton.dispatchEvent(event);
+
+      expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('should call setRegistrationResult and setRegistrationError on successful registration', () => {
+      const mockResponse = {
+        success: true,
+        redirectUrl: 'https://test.com/dashboard',
+        authenticatedUser: { username: 'testuser' },
+      };
+
+      let registrationOptions = null;
+      useRegistration.mockImplementation((options) => {
+        registrationOptions = options;
+        return {
+          mutate: jest.fn(),
+          isPending: false,
+        };
+      });
+
+      const mockSetRegistrationResult = jest.fn();
+      const mockSetRegistrationError = jest.fn();
+
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        setRegistrationResult: mockSetRegistrationResult,
+        setRegistrationError: mockSetRegistrationError,
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+
+      if (registrationOptions && registrationOptions.onSuccess) {
+        registrationOptions.onSuccess(mockResponse);
+      }
+
+      expect(mockSetRegistrationResult).toHaveBeenCalledWith(mockResponse);
+      expect(mockSetRegistrationError).toHaveBeenCalledWith({});
+    });
+
+    it('should call setThirdPartyAuthContextSuccess and setBackendCountryCode on successful third party auth', async () => {
+      const mockSetThirdPartyAuthContextSuccess = jest.fn();
+      const mockSetBackendCountryCode = jest.fn();
+
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+      });
+
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        setBackendCountryCode: mockSetBackendCountryCode,
+      });
+
+      useThirdPartyAuthHook.mockReturnValue({
+        mutate: jest.fn().mockImplementation((data, { onSuccess }) => {
+          if (onSuccess) {
+            onSuccess({
+              fieldDescriptions: {},
+              optionalFields: { fields: {}, extended_profile: [] },
+              thirdPartyAuthContext: { countryCode: 'US' },
+            });
+          }
+        }),
+        isPending: false,
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+      await waitFor(() => {
+        expect(mockSetThirdPartyAuthContextSuccess).toHaveBeenCalledWith(
+          {},
+          { fields: {}, extended_profile: [] },
+          { countryCode: 'US' },
+        );
+        expect(mockSetBackendCountryCode).toHaveBeenCalledWith('US');
+      });
     });
 
     it('should populate form with pipeline user details', () => {

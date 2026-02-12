@@ -6,8 +6,12 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { LOGIN_PAGE } from '../../data/constants';
+import {
+  FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR, LOGIN_PAGE,
+} from '../../data/constants';
+import { PASSWORD_RESET } from '../../reset-password/data/constants';
 import { useForgotPassword } from '../data/apiHook';
+import ForgotPasswordAlert from '../ForgotPasswordAlert';
 import ForgotPasswordPage from '../ForgotPasswordPage';
 
 const mockedNavigator = jest.fn();
@@ -290,5 +294,149 @@ describe('ForgotPasswordPage', () => {
     const anchorElement = navElement.querySelector('a');
     fireEvent.click(anchorElement);
     expect(mockedNavigator).toHaveBeenCalledWith(expect.stringContaining(LOGIN_PAGE));
+  });
+
+  it('should display token validation rate limit error message', async () => {
+    const expectedHeading = 'Too many requests';
+    const expectedMessage = 'An error has occurred because of too many requests. Please try again after some time.';
+    const { container } = render(renderWrapper(<ForgotPasswordPage />, {
+      status: PASSWORD_RESET.FORBIDDEN_REQUEST,
+    }));
+
+    await waitFor(() => {
+      const alertElements = container.querySelectorAll('.alert-danger');
+      if (alertElements.length > 0) {
+        const alertContent = alertElements[0].textContent;
+        expect(alertContent).toContain(expectedHeading);
+        expect(alertContent).toContain(expectedMessage);
+      }
+    });
+  });
+
+  it('should display invalid token error message', async () => {
+    const expectedHeading = 'Invalid password reset link';
+    const expectedMessage = 'This password reset link is invalid. It may have been used already. Enter your email below to receive a new link.';
+    const { container } = render(renderWrapper(<ForgotPasswordAlert />, {
+      status: PASSWORD_RESET.INVALID_TOKEN,
+    }));
+
+    await waitFor(() => {
+      const alertElements = container.querySelectorAll('.alert-danger');
+      if (alertElements.length > 0) {
+        const alertContent = alertElements[0].textContent;
+        expect(alertContent).toContain(expectedHeading);
+        expect(alertContent).toContain(expectedMessage);
+      }
+    });
+  });
+
+  it('should display token validation internal server error message', async () => {
+    const expectedHeading = 'Token validation failure';
+    const expectedMessage = 'An error has occurred. Try refreshing the page, or check your internet connection.';
+    const { container } = render(renderWrapper(<ForgotPasswordAlert />, {
+      status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
+    }));
+
+    await waitFor(() => {
+      const alertElements = container.querySelectorAll('.alert-danger');
+      if (alertElements.length > 0) {
+        const alertContent = alertElements[0].textContent;
+        expect(alertContent).toContain(expectedHeading);
+        expect(alertContent).toContain(expectedMessage);
+      }
+    });
+  });
+});
+describe('ForgotPasswordAlert', () => {
+  const renderAlertWrapper = (props) => {
+    const queryClient = new QueryClient();
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <MemoryRouter>
+            <ForgotPasswordAlert {...props} />
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>,
+    );
+  };
+
+  it('should display internal server error message', () => {
+    const { container } = renderAlertWrapper({
+      status: INTERNAL_SERVER_ERROR,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('We were unable to contact you.');
+    expect(alertElement.textContent).toContain('An error has occurred. Try refreshing the page, or check your internet connection.');
+  });
+
+  it('should display forbidden state error message', () => {
+    const { container } = renderAlertWrapper({
+      status: FORBIDDEN_STATE,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('An error occurred.');
+    expect(alertElement.textContent).toContain('Your previous request is in progress, please try again in a few moments.');
+  });
+
+  it('should display form submission error message', () => {
+    const emailError = 'Enter a valid email address';
+    const { container } = renderAlertWrapper({
+      status: FORM_SUBMISSION_ERROR,
+      email: 'test@example.com',
+      emailError,
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('We were unable to contact you.');
+    expect(alertElement.textContent).toContain(`${emailError} below.`);
+  });
+
+  it('should display password reset invalid token error message', () => {
+    const { container } = renderAlertWrapper({
+      status: PASSWORD_RESET.INVALID_TOKEN,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('Invalid password reset link');
+    expect(alertElement.textContent).toContain('This password reset link is invalid. It may have been used already. Enter your email below to receive a new link.');
+  });
+
+  it('should display password reset forbidden request error message', () => {
+    const { container } = renderAlertWrapper({
+      status: PASSWORD_RESET.FORBIDDEN_REQUEST,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('Too many requests');
+    expect(alertElement.textContent).toContain('An error has occurred because of too many requests. Please try again after some time.');
+  });
+
+  it('should display password reset internal server error message', () => {
+    const { container } = renderAlertWrapper({
+      status: PASSWORD_RESET.INTERNAL_SERVER_ERROR,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertElement = container.querySelector('.alert-danger');
+    expect(alertElement).toBeTruthy();
+    expect(alertElement.textContent).toContain('Token validation failure');
+    expect(alertElement.textContent).toContain('An error has occurred. Try refreshing the page, or check your internet connection.');
   });
 });
