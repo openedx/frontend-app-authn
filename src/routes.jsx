@@ -1,5 +1,3 @@
-import { Navigate } from 'react-router';
-
 import { EmbeddedRegistrationRoute, NotFoundPage, UnAuthOnlyRoute } from './common-components';
 import { LOGIN_PAGE } from './data/constants';
 import { ForgotPasswordPage } from './forgot-password';
@@ -8,12 +6,13 @@ import { ProgressiveProfiling } from './progressive-profiling';
 import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
 
-import Main from './Main';
-
 const routes = [
   {
     id: 'org.openedx.frontend.route.authn.main',
-    Component: Main,
+    async lazy() {
+      const module = await import('./Main');
+      return { Component: module.default };
+    },
     children: [
       {
         path: 'register-embedded',
