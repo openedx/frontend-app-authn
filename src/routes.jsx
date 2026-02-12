@@ -1,5 +1,3 @@
-import { Navigate } from 'react-router';
-
 import { EmbeddedRegistrationRoute, NotFoundPage, UnAuthOnlyRoute } from './common-components';
 import { LOGIN_PAGE } from './data/constants';
 import { ForgotPasswordPage } from './forgot-password';
@@ -7,7 +5,6 @@ import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
 import { RegistrationPage } from './register';
 import { ResetPasswordPage } from './reset-password';
-import { Component } from 'react';
 
 const routes = [
   {
