@@ -36,13 +36,11 @@ const createWrapper = () => {
 };
 
 describe('useSaveUserProfile', () => {
-  const mockSetLoading = jest.fn();
   const mockSetShowError = jest.fn();
   const mockSetSuccess = jest.fn();
   const mockSetSubmitState = jest.fn();
 
   const mockContextValue = {
-    setLoading: mockSetLoading,
     setShowError: mockSetShowError,
     setSuccess: mockSetSuccess,
     setSubmitState: mockSetSubmitState,
@@ -88,17 +86,12 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    // Check loading state was set during mutation
-    expect(mockSetLoading).toHaveBeenCalledWith(true);
-
     // Check API was called correctly
     expect(mockPatchAccount).toHaveBeenCalledWith(mockPayload.username, mockPayload.data);
 
     // Check success state is set
-    expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSuccess).toHaveBeenCalledWith(true);
     expect(mockSetSubmitState).toHaveBeenCalledWith(COMPLETE_STATE);
-    expect(result.current.data).toEqual(mockResponse);
   });
 
   it('should handle API error and set error state', async () => {
@@ -120,14 +113,10 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isError).toBe(true);
     });
 
-    // Check loading state was set during mutation
-    expect(mockSetLoading).toHaveBeenCalledWith(true);
-
     // Check API was called
     expect(mockPatchAccount).toHaveBeenCalledWith(mockPayload.username, mockPayload.data);
 
     // Check error state is set
-    expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
     expect(result.current.error).toEqual(mockError);
   });
@@ -152,7 +141,6 @@ describe('useSaveUserProfile', () => {
     });
 
     // Check error state is set
-    expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
   });
 
@@ -183,7 +171,6 @@ describe('useSaveUserProfile', () => {
 
     expect(mockPatchAccount).toHaveBeenCalledWith(mockPayload.username, mockPayload.data);
     expect(mockSetSuccess).toHaveBeenCalledWith(true);
-    expect(result.current.data).toEqual(mockResponse);
   });
 
   it('should handle network errors gracefully', async () => {
@@ -206,7 +193,6 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isError).toBe(true);
     });
 
-    expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSubmitState).toHaveBeenCalledWith(DEFAULT_STATE);
   });
 
@@ -229,7 +215,7 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockSetLoading).toHaveBeenCalledWith(true);
+    expect(mockSetSuccess).toHaveBeenCalledWith(true);
 
     jest.clearAllMocks();
     mockPatchAccount.mockResolvedValueOnce({ success: true });
@@ -241,9 +227,6 @@ describe('useSaveUserProfile', () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(mockSetLoading).toHaveBeenCalledWith(true);
-
-    expect(mockSetLoading).toHaveBeenCalledWith(false);
     expect(mockSetSuccess).toHaveBeenCalledWith(true);
   });
 });

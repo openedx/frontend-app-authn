@@ -12,7 +12,7 @@ import FormGroup from '../FormGroup';
 import PasswordField from '../PasswordField';
 
 // Mock the useFieldValidations hook
-jest.mock('../../register/data/api.hook', () => ({
+jest.mock('../../register/data/apiHook', () => ({
   useFieldValidations: jest.fn(),
 }));
 

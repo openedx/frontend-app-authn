@@ -79,17 +79,43 @@ describe('LoginPage', () => {
 
     // Mock the login hook
     mockLoginMutate = jest.fn();
-    useLogin.mockReturnValue({
+    mockLoginMutate.mockRejected = false; // Reset flag
+    const loginMutation = {
       mutate: mockLoginMutate,
       isPending: false,
-    });
+    };
+    useLogin.mockImplementation((options) => ({
+      ...loginMutation,
+      mutate: jest.fn().mockImplementation((data) => {
+        // Call the mocked function for testing assertions
+        mockLoginMutate(data);
+        // Simulate can call success or error based on test needs
+        if (options?.onSuccess && !mockLoginMutate.mockRejected) {
+          options.onSuccess({ redirectUrl: 'https://test.com/dashboard' });
+        }
+      }),
+    }));
 
     // Mock the third party auth hook
     mockThirdPartyAuthMutate = jest.fn();
-    useThirdPartyAuthHook.mockReturnValue({
+    const thirdPartyAuthMutation = {
       mutate: mockThirdPartyAuthMutate,
       isPending: false,
-    });
+    };
+    useThirdPartyAuthHook.mockImplementation((options) => ({
+      ...thirdPartyAuthMutation,
+      mutate: jest.fn().mockImplementation((data) => {
+        mockThirdPartyAuthMutate(data);
+        if (options?.onSuccess) {
+          // Simulate successful third party auth response
+          options.onSuccess({
+            thirdPartyAuthContext: {},
+            fieldDescriptions: {},
+            optionalFields: { fields: {}, extended_profile: [] },
+          });
+        }
+      }),
+    }));
 
     // Mock the third party auth context
     mockThirdPartyAuthContext = {
@@ -128,7 +154,7 @@ describe('LoginPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(mockLoginMutate).toHaveBeenCalledWith({ email_or_username: 'test', password: 'test-password' }, expect.any(Object));
+    expect(mockLoginMutate).toHaveBeenCalledWith({ email_or_username: 'test', password: 'test-password' });
   });
 
   it('should not call login mutation on empty form submission', () => {
@@ -373,10 +399,17 @@ describe('LoginPage', () => {
   // Login error handling is now managed by React Query hooks and context
   // We'll test that error messages appear when login fails
   it('should show error message when login fails', async () => {
-    // Mock the login hook to return an error
-    mockLoginMutate.mockImplementation((payload, { onError }) => {
-      onError({ errorCode: INTERNAL_SERVER_ERROR, context: {} });
-    });
+    // Mock the login hook to simulate error
+    mockLoginMutate.mockRejected = true;
+    useLogin.mockImplementation((options) => ({
+      mutate: jest.fn().mockImplementation((data) => {
+        mockLoginMutate(data);
+        if (options?.onError) {
+          options.onError({ type: INTERNAL_SERVER_ERROR, context: {}, count: 0 });
+        }
+      }),
+      isPending: false,
+    }));
 
     useLogin.mockReturnValue({
       mutate: mockLoginMutate,
@@ -449,9 +482,15 @@ describe('LoginPage', () => {
   // Login success and redirection is now handled by React Query hooks
   it('should handle successful login', () => {
     // Mock successful login
-    mockLoginMutate.mockImplementation((payload, { onSuccess }) => {
-      onSuccess({ success: true, redirectUrl: 'https://test.com/testing-dashboard/' });
-    });
+    useLogin.mockImplementation((options) => ({
+      mutate: jest.fn().mockImplementation((data) => {
+        mockLoginMutate(data);
+        if (options?.onSuccess) {
+          options.onSuccess({ success: true, redirectUrl: 'https://test.com/testing-dashboard/' });
+        }
+      }),
+      isPending: false,
+    }));
 
     useLogin.mockReturnValue({
       mutate: mockLoginMutate,

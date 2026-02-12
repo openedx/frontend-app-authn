@@ -51,7 +51,7 @@ jest.mock('../data/api', () => ({
 }));
 
 // Mock register validation hooks that PasswordField uses
-jest.mock('../../register/data/api.hook', () => ({
+jest.mock('../../register/data/apiHook', () => ({
   useFieldValidations: () => ({
     validateUsername: jest.fn(),
     validateEmail: jest.fn(),

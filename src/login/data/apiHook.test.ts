@@ -95,12 +95,18 @@ describe('useLogin', () => {
       password: 'password123',
     };
     const mockErrorResponse = {
-      email_or_username: ['This field is required'],
-      password: ['Password is too weak'],
+      errorCode: INVALID_FORM,
+      context: {
+        email_or_username: ['This field is required'],
+        password: ['Password is too weak'],
+      },
     };
     const mockCamelCasedResponse = {
-      emailOrUsername: ['This field is required'],
-      password: ['Password is too weak'],
+      errorCode: INVALID_FORM,
+      context: {
+        emailOrUsername: ['This field is required'],
+        password: ['Password is too weak'],
+      },
     };
 
     const mockError = {
@@ -110,10 +116,16 @@ describe('useLogin', () => {
       },
     };
 
-    mockLogin.mockRejectedValueOnce(mockError);
-    mockCamelCaseObject.mockReturnValueOnce(mockCamelCasedResponse);
+    // Mock onError callback to test formatted error
+    const mockOnError = jest.fn();
 
-    const { result } = renderHook(() => useLogin(), {
+    mockLogin.mockRejectedValueOnce(mockError);
+    mockCamelCaseObject.mockReturnValueOnce({
+      status: 400,
+      data: mockCamelCasedResponse,
+    });
+
+    const { result } = renderHook(() => useLogin({ onError: mockOnError }), {
       wrapper: createWrapper(),
     });
 
@@ -124,11 +136,18 @@ describe('useLogin', () => {
     });
 
     expect(mockLogin).toHaveBeenCalledWith(mockLoginData);
-    expect(mockCamelCaseObject).toHaveBeenCalledWith(mockErrorResponse);
+    expect(mockCamelCaseObject).toHaveBeenCalledWith({
+      status: 400,
+      data: mockErrorResponse,
+    });
     expect(mockLogInfo).toHaveBeenCalledWith('Login failed with validation error', mockError);
-    expect(result.current.error).toEqual({
-      errorCode: INVALID_FORM,
-      context: mockCamelCasedResponse,
+    expect(mockOnError).toHaveBeenCalledWith({
+      type: INVALID_FORM,
+      context: {
+        emailOrUsername: ['This field is required'],
+        password: ['Password is too weak'], 
+      },
+      count: 0,
     });
   });
 
@@ -141,9 +160,12 @@ describe('useLogin', () => {
     const timeoutError = new Error('Request timeout');
     timeoutError.name = 'TimeoutError';
 
+    // Mock onError callback to test formatted error
+    const mockOnError = jest.fn();
+
     mockLogin.mockRejectedValueOnce(timeoutError);
 
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useLogin({ onError: mockOnError }), {
       wrapper: createWrapper(),
     });
 
@@ -153,10 +175,11 @@ describe('useLogin', () => {
       expect(result.current.isError).toBe(true);
     });
 
-    expect(mockLogError).toHaveBeenCalledWith('Login failed with network error', timeoutError);
-    expect(result.current.error).toEqual({
-      errorCode: INTERNAL_SERVER_ERROR,
+    expect(mockLogError).toHaveBeenCalledWith('Login failed', timeoutError);
+    expect(mockOnError).toHaveBeenCalledWith({
+      type: INTERNAL_SERVER_ERROR,
       context: {},
+      count: 0,
     });
   });
 

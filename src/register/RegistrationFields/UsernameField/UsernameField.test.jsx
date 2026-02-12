@@ -8,7 +8,7 @@ import { UsernameField } from '../index';
 
 // Mock the useFieldValidations hook
 const mockMutate = jest.fn();
-jest.mock('../../data/api.hook', () => ({
+jest.mock('../../data/apiHook', () => ({
   useFieldValidations: () => ({
     mutate: mockMutate,
   }),
