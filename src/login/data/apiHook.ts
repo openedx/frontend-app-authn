@@ -16,43 +16,54 @@ interface LoginData {
   password: string;
 }
 
-const useLogin = () => useMutation({
-  mutationFn: async (loginData: LoginData) => {
-    try {
-      return await login(loginData);
-    } catch (error) {
-      let transformedError = { errorCode: INTERNAL_SERVER_ERROR, context: {} };
+interface LoginResponse {
+  redirectUrl?: string;
+}
 
-      if (error.response) {
-        const { status } = error.response;
+interface UseLoginOptions {
+  onSuccess?: (data: LoginResponse) => void;
+  onError?: (error: unknown) => void;
+}
 
-        if (status === 400) {
-          // Validation errors - include the response data in camelCase
-          transformedError = {
-            errorCode: INVALID_FORM,
-            context: camelCaseObject(error.response.data || {}),
-          };
-          logInfo('Login failed with validation error', error);
-        } else if (status === 403) {
-          transformedError = { errorCode: FORBIDDEN_REQUEST, context: {} };
-          logInfo('Login failed with forbidden error', error);
-        } else {
-          transformedError = { errorCode: INTERNAL_SERVER_ERROR, context: {} };
-          logError('Login failed with server error', error);
-        }
-      } else {
-        logError('Login failed with network error', error);
-      }
-
-      // Throw the transformed error
-      throw transformedError;
+const useLogin = (options: UseLoginOptions = {}) => useMutation<LoginResponse, unknown, LoginData>({
+  mutationFn: async (loginData: LoginData) => login(loginData) as Promise<LoginResponse>,
+  onSuccess: (data: LoginResponse) => {
+    logInfo('Login successful', data);
+    if (options.onSuccess) {
+      options.onSuccess(data);
     }
   },
-  onSuccess: (data) => {
-    logInfo('Login successful', data);
+  onError: (error: unknown) => {
+    logError('Login failed', error);
+    let formattedError = {
+      type: INTERNAL_SERVER_ERROR,
+      context: {},
+      count: 0,
+    };
+    if (error && typeof error === 'object' && 'response' in error && error.response) {
+      const response = error.response as { status?: number; data?: unknown };
+      const { status, data } = camelCaseObject(response);
+      if (data && typeof data === 'object') {
+        const errorData = data as { errorCode?: string; context?: { failureCount?: number } };
+        formattedError = {
+          type: errorData.errorCode || FORBIDDEN_REQUEST,
+          context: errorData.context || {},
+          count: errorData.context?.failureCount || 0,
+        };
+        if (status === 400) {
+          logInfo('Login failed with validation error', error);
+        } else if (status === 403) {
+          logInfo('Login failed with forbidden error', error);
+        } else {
+          logError('Login failed with server error', error);
+        }
+      }
+    }
+    if (options.onError) {
+      options.onError(formattedError);
+    }
   },
 });
-
 export {
   useLogin,
 };

@@ -7,7 +7,7 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
-import { useFieldValidations, useRegistration } from '../../data/api.hook';
+import { useFieldValidations, useRegistration } from '../../data/apiHook';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';

@@ -11,7 +11,7 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
-import { useRegistration } from './data/api.hook';
+import { useRegistration } from './data/apiHook';
 import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
@@ -108,7 +108,7 @@ const RegistrationPage = (props) => {
   });
 
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
-  const submitState = registrationMutation.isLoading ? PENDING_STATE : DEFAULT_STATE;
+  const submitState = registrationMutation.isPending ? PENDING_STATE : DEFAULT_STATE;
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
   // Initialize form state from local backedUpFormData
@@ -273,7 +273,6 @@ const RegistrationPage = (props) => {
       return;
     }
 
-    // Preparing payload for submission
     payload = prepareRegistrationPayload(
       payload,
       configurableFormFields,

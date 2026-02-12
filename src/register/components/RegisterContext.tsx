@@ -1,93 +1,22 @@
 import {
-  createContext, FC, ReactNode, useCallback, useContext, useMemo, useState,
+  createContext, FC, ReactNode, useCallback, useContext, useMemo, useReducer,
 } from 'react';
 
 import { DEFAULT_STATE } from '../../data/constants';
+import {
+  RegisterContextType, RegisterState, RegistrationFormData, RegistrationResult, ValidationData,
+} from '../types';
 
-export interface AuthenticatedUser {
-  id: number;
-  username: string;
-  email: string;
-  name: string;
-}
+const RegisterContext = createContext<RegisterContextType | null>(null);
 
-export interface EmailSuggestion {
-  suggestion: string;
-  type: string;
-}
-
-export interface RegistrationFormData {
-  configurableFormFields: {
-    marketingEmailsOptIn: boolean;
-    country?: string;
-    [key: string]: any;
-  };
-  formFields: {
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-  };
-  emailSuggestion: EmailSuggestion;
-  errors: {
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-  };
-}
-
-export interface RegistrationResult {
-  success: boolean;
-  redirectUrl: string;
-  authenticatedUser: AuthenticatedUser | null;
-}
-
-export interface ValidationData {
-  validationDecisions: Record<string, string>;
-  usernameSuggestions?: string[];
-}
-
-export interface RegisterContextType {
-  validations: ValidationData | null;
-  submitState: string;
-  userPipelineDataLoaded: boolean;
-  setUserPipelineDataLoaded: (loaded: boolean) => void;
-  usernameSuggestions: string[];
-  validationApiRateLimited: boolean;
-  shouldBackupState: boolean;
-  registrationError: Record<string, Array<{ userMessage: string }>>;
-  registrationFormData: RegistrationFormData;
-  registrationResult: RegistrationResult;
-  backendValidations: Record<string, string> | null;
-  backendCountryCode: string;
-  setValidationsSuccess: (validationData: ValidationData) => void;
-  setValidationsFailure: () => void;
-  clearUsernameSuggestions: () => void;
-  clearRegistrationBackendError: (field: string) => void;
-  updateRegistrationFormData: (newData: Partial<RegistrationFormData>) => void;
-  setRegistrationResult: (result: RegistrationResult) => void;
-  setBackendCountryCode: (countryCode: string) => void;
-  setRegistrationFormData: (data: RegistrationFormData |
-  ((prev: RegistrationFormData) => RegistrationFormData)) => void;
-  setEmailSuggestionContext: (suggestion: string, type: string) => void;
-  setRegistrationError: (error: Record<string, Array<{ userMessage: string }>>) => void;
-}
-
-const RegisterContext = createContext<RegisterContextType | undefined>(undefined);
-
-interface RegisterProviderProps {
-  children: ReactNode;
-}
-
-export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
-  const [validations, setValidations] = useState<ValidationData | null>(null);
-  const [usernameSuggestions, setUsernameSuggestions] = useState<string[]>([]);
-  const [validationApiRateLimited, setValidationApiRateLimited] = useState(false);
-  const [registrationError, setRegistrationError] = useState<Record<string, Array<{ userMessage: string }>>>({});
-  const [registrationResult, setRegistrationResult] = useState<RegistrationResult>({ success: false, redirectUrl: '', authenticatedUser: null });
-  const [backendCountryCode, setBackendCountryCodeState] = useState('');
-  const [registrationFormData, setRegistrationFormData] = useState<RegistrationFormData>({
+const initialState: RegisterState = {
+  validations: null,
+  usernameSuggestions: [],
+  validationApiRateLimited: false,
+  registrationError: {},
+  registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+  backendCountryCode: '',
+  registrationFormData: {
     configurableFormFields: {
       marketingEmailsOptIn: true,
     },
@@ -100,138 +29,194 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     errors: {
       name: '', email: '', username: '', password: '',
     },
-  });
-  const [submitState] = useState(DEFAULT_STATE);
-  const [userPipelineDataLoaded, setUserPipelineDataLoaded] = useState(false);
-  const [shouldBackupState] = useState(false);
+  },
+  submitState: DEFAULT_STATE,
+  userPipelineDataLoaded: false,
+  shouldBackupState: false,
+};
 
-  // Function to handle successful validation - mirrors REGISTER_FORM_VALIDATIONS.SUCCESS
+const registerReducer = (state: RegisterState, action: any): RegisterState => {
+  switch (action.type) {
+    case 'SET_VALIDATIONS_SUCCESS': {
+      const { usernameSuggestions: newUsernameSuggestions, ...validationWithoutUsernameSuggestions } = action.payload;
+      return {
+        ...state,
+        validations: validationWithoutUsernameSuggestions,
+        usernameSuggestions: newUsernameSuggestions || state.usernameSuggestions,
+        validationApiRateLimited: false,
+      };
+    }
+    case 'SET_VALIDATIONS_FAILURE':
+      return {
+        ...state,
+        validationApiRateLimited: true,
+        validations: null,
+      };
+    case 'CLEAR_USERNAME_SUGGESTIONS':
+      return { ...state, usernameSuggestions: [] };
+    case 'CLEAR_REGISTRATION_BACKEND_ERROR': {
+      const { [action.payload]: removedField, ...rest } = state.registrationError;
+      return { ...state, registrationError: rest };
+    }
+    case 'SET_BACKEND_COUNTRY_CODE':
+      return {
+        ...state,
+        backendCountryCode: !state.registrationFormData.configurableFormFields.country
+          ? action.payload
+          : state.backendCountryCode,
+      };
+    case 'SET_EMAIL_SUGGESTION':
+      return {
+        ...state,
+        registrationFormData: {
+          ...state.registrationFormData,
+          emailSuggestion: { suggestion: action.payload.suggestion, type: action.payload.type },
+        },
+      };
+    case 'UPDATE_REGISTRATION_FORM_DATA':
+      return {
+        ...state,
+        registrationFormData: { ...state.registrationFormData, ...action.payload },
+      };
+    case 'SET_REGISTRATION_FORM_DATA':
+      return {
+        ...state,
+        registrationFormData: typeof action.payload === 'function'
+          ? action.payload(state.registrationFormData)
+          : action.payload,
+      };
+    case 'SET_REGISTRATION_RESULT':
+      return { ...state, registrationResult: action.payload };
+    case 'SET_REGISTRATION_ERROR':
+      return { ...state, registrationError: action.payload };
+    case 'SET_USER_PIPELINE_DATA_LOADED':
+      return { ...state, userPipelineDataLoaded: action.payload };
+    default:
+      return state;
+  }
+};
+
+interface RegisterProviderProps {
+  children: ReactNode;
+}
+
+export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
+  const [state, dispatch] = useReducer(registerReducer, initialState);
+
   const setValidationsSuccess = useCallback((validationData: ValidationData) => {
-    const { usernameSuggestions: newUsernameSuggestions, ...validationWithoutUsernameSuggestions } = validationData;
-    setValidations(validationWithoutUsernameSuggestions);
-    setUsernameSuggestions(prev => newUsernameSuggestions || prev);
-    setValidationApiRateLimited(false);
+    dispatch({ type: 'SET_VALIDATIONS_SUCCESS', payload: validationData });
   }, []);
 
-  // Function to handle validation failure - mirrors REGISTER_FORM_VALIDATIONS.FAILURE
   const setValidationsFailure = useCallback(() => {
-    setValidationApiRateLimited(true);
-    setValidations(null);
+    dispatch({ type: 'SET_VALIDATIONS_FAILURE' });
   }, []);
 
   const clearUsernameSuggestions = useCallback(() => {
-    setUsernameSuggestions([]);
+    dispatch({ type: 'CLEAR_USERNAME_SUGGESTIONS' });
   }, []);
 
   const clearRegistrationBackendError = useCallback((field: string) => {
-    setRegistrationError(prevErrors => {
-      const { [field]: removedField, ...rest } = prevErrors;
-      return rest;
-    });
+    dispatch({ type: 'CLEAR_REGISTRATION_BACKEND_ERROR', payload: field });
   }, []);
 
   const setBackendCountryCode = useCallback((countryCode: string) => {
-    // Only set backend country code if configurableFormFields.country doesn't exist
-    // This mirrors the logic in the Redux reducer
-    if (!registrationFormData.configurableFormFields.country) {
-      setBackendCountryCodeState(countryCode);
-    }
-  }, [registrationFormData.configurableFormFields.country]);
-
-  const setEmailSuggestionContext = useCallback((suggestion: string, type: string) => {
-    setRegistrationFormData((prevData: RegistrationFormData) => ({
-      ...prevData,
-      emailSuggestion: { suggestion, type },
-    }));
+    dispatch({ type: 'SET_BACKEND_COUNTRY_CODE', payload: countryCode });
   }, []);
 
-  // Function to update registration form data for persistence across tab switches
+  const setEmailSuggestionContext = useCallback((suggestion: string, type: string) => {
+    dispatch({ type: 'SET_EMAIL_SUGGESTION', payload: { suggestion, type } });
+  }, []);
+
   const updateRegistrationFormData = useCallback((newData: Partial<RegistrationFormData>) => {
-    setRegistrationFormData((prevData: RegistrationFormData) => ({
-      ...prevData,
-      ...newData,
-    }));
+    dispatch({ type: 'UPDATE_REGISTRATION_FORM_DATA', payload: newData });
+  }, []);
+
+  const setRegistrationFormData = useCallback((data: RegistrationFormData |
+  ((prev: RegistrationFormData) => RegistrationFormData)) => {
+    dispatch({ type: 'SET_REGISTRATION_FORM_DATA', payload: data });
+  }, []);
+
+  const setRegistrationResult = useCallback((result: RegistrationResult) => {
+    dispatch({ type: 'SET_REGISTRATION_RESULT', payload: result });
+  }, []);
+
+  const setRegistrationError = useCallback((error: Record<string, Array<{ userMessage: string }>>) => {
+    dispatch({ type: 'SET_REGISTRATION_ERROR', payload: error });
+  }, []);
+
+  const setUserPipelineDataLoaded = useCallback((loaded: boolean) => {
+    dispatch({ type: 'SET_USER_PIPELINE_DATA_LOADED', payload: loaded });
   }, []);
 
   // Process backend validation errors - equivalent to getBackendValidations selector
   const backendValidations = useMemo(() => {
-    if (validations) {
-      return validations.validationDecisions;
+    if (state.validations) {
+      return state.validations.validationDecisions;
     }
 
-    if (registrationError && Object.keys(registrationError).length > 0) {
-      const fields = Object.keys(registrationError).filter(
+    if (state.registrationError && Object.keys(state.registrationError).length > 0) {
+      const fields = Object.keys(state.registrationError).filter(
         (fieldName) => !(['errorCode', 'usernameSuggestions'].includes(fieldName)),
       );
 
       const validationDecisions: Record<string, string> = {};
       fields.forEach(field => {
-        validationDecisions[field] = registrationError[field]?.[0]?.userMessage || '';
+        validationDecisions[field] = state.registrationError[field]?.[0]?.userMessage || '';
       });
       return validationDecisions;
     }
 
     return null;
-  }, [validations, registrationError]);
+  }, [state.validations, state.registrationError]);
 
-  const value = useMemo(() => ({
-    validations,
-    submitState,
-    userPipelineDataLoaded,
+  const contextValue = useMemo(() => ({
+    validations: state.validations,
+    submitState: state.submitState,
+    userPipelineDataLoaded: state.userPipelineDataLoaded,
+    registrationFormData: state.registrationFormData,
+    registrationResult: state.registrationResult,
+    registrationError: state.registrationError,
+    backendCountryCode: state.backendCountryCode,
+    usernameSuggestions: state.usernameSuggestions,
+    validationApiRateLimited: state.validationApiRateLimited,
+    shouldBackupState: state.shouldBackupState,
+    backendValidations,
     setUserPipelineDataLoaded,
-    usernameSuggestions,
-    validationApiRateLimited,
-    shouldBackupState,
     setValidationsSuccess,
     setValidationsFailure,
     clearUsernameSuggestions,
     clearRegistrationBackendError,
-    registrationFormData,
-    registrationResult,
-    registrationError,
-    backendValidations,
-    backendCountryCode,
     setRegistrationFormData,
     setEmailSuggestionContext,
     updateRegistrationFormData,
     setRegistrationResult,
     setBackendCountryCode,
     setRegistrationError,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [
-    validations,
-    submitState,
-    userPipelineDataLoaded,
-    setUserPipelineDataLoaded,
-    usernameSuggestions,
-    validationApiRateLimited,
-    shouldBackupState,
-    setValidationsSuccess,
-    setValidationsFailure,
-    clearUsernameSuggestions,
-    clearRegistrationBackendError,
-    registrationFormData,
-    registrationResult,
-    registrationError,
+    state.validations,
+    state.submitState,
+    state.userPipelineDataLoaded,
+    state.registrationFormData,
+    state.registrationResult,
+    state.registrationError,
+    state.backendCountryCode,
+    state.usernameSuggestions,
+    state.validationApiRateLimited,
+    state.shouldBackupState,
     backendValidations,
-    backendCountryCode,
-    setRegistrationFormData,
-    setEmailSuggestionContext,
-    updateRegistrationFormData,
-    setRegistrationResult,
-    setBackendCountryCode,
-    setRegistrationError,
   ]);
 
   return (
-    <RegisterContext.Provider value={value}>
+    <RegisterContext.Provider value={contextValue}>
       {children}
     </RegisterContext.Provider>
   );
 };
 
-export const useRegisterContext = (): RegisterContextType => {
+export const useRegisterContext = () => {
   const context = useContext(RegisterContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useRegisterContext must be used within a RegisterProvider');
   }
   return context;

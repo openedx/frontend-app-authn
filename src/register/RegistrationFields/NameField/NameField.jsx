@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import validateName from './validator';
 import { FormGroup } from '../../../common-components';
 import { useRegisterContext } from '../../components/RegisterContext';
-import { useFieldValidations } from '../../data/api.hook';
+import { useFieldValidations } from '../../data/apiHook';
 /**
  * Name field wrapper. It accepts following handlers
  * - handleChange for setting value change and
