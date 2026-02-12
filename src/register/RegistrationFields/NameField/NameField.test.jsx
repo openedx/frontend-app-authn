@@ -8,10 +8,17 @@ import { NameField } from '../index';
 
 // Mock the useFieldValidations hook
 const mockMutate = jest.fn();
+let mockOnSuccess;
+let mockOnError;
+
 jest.mock('../../data/apiHook', () => ({
-  useFieldValidations: () => ({
-    mutate: mockMutate,
-  }),
+  useFieldValidations: (callbacks) => {
+    mockOnSuccess = callbacks.onSuccess;
+    mockOnError = callbacks.onError;
+    return {
+      mutate: mockMutate,
+    };
+  },
 }));
 
 // Mock the useRegisterContext hook
@@ -157,6 +164,38 @@ describe('NameField', () => {
       fireEvent.focus(nameInput, { target: { value: 'test', name: 'name' } });
 
       expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('name');
+    });
+
+    it('should call setValidationsSuccess when field validation succeeds', () => {
+      props = {
+        ...props,
+        shouldFetchUsernameSuggestions: true,
+      };
+      const { container } = render(renderWrapper(<NameField {...props} />));
+      const nameInput = container.querySelector('input#name');
+      // Enter a valid name so that frontend validations are passed and API is called
+      fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
+
+      expect(mockMutate).toHaveBeenCalledWith({ name: 'test' });
+      const validationData = { usernameSuggestions: ['test123', 'test456'] };
+      mockOnSuccess(validationData);
+
+      expect(mockRegisterContext.setValidationsSuccess).toHaveBeenCalledWith(validationData);
+    });
+
+    it('should call setValidationsFailure when field validation fails', () => {
+      props = {
+        ...props,
+        shouldFetchUsernameSuggestions: true,
+      };
+      const { container } = render(renderWrapper(<NameField {...props} />));
+      const nameInput = container.querySelector('input#name');
+      fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
+
+      expect(mockMutate).toHaveBeenCalledWith({ name: 'test' });
+      mockOnError();
+
+      expect(mockRegisterContext.setValidationsFailure).toHaveBeenCalledWith();
     });
   });
 });

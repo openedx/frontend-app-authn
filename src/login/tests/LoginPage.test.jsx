@@ -77,7 +77,6 @@ describe('LoginPage', () => {
       },
     });
 
-    // Mock the login hook
     mockLoginMutate = jest.fn();
     mockLoginMutate.mockRejected = false; // Reset flag
     const loginMutation = {
@@ -96,28 +95,22 @@ describe('LoginPage', () => {
       }),
     }));
 
-    // Mock the third party auth hook
     mockThirdPartyAuthMutate = jest.fn();
-    const thirdPartyAuthMutation = {
-      mutate: mockThirdPartyAuthMutate,
-      isPending: false,
-    };
-    useThirdPartyAuthHook.mockImplementation((options) => ({
-      ...thirdPartyAuthMutation,
-      mutate: jest.fn().mockImplementation((data) => {
+    useThirdPartyAuthHook.mockImplementation(() => ({
+      mutate: jest.fn().mockImplementation((data, { onSuccess }) => {
         mockThirdPartyAuthMutate(data);
-        if (options?.onSuccess) {
-          // Simulate successful third party auth response
-          options.onSuccess({
-            thirdPartyAuthContext: {},
+        if (onSuccess) {
+          // Match the structure expected by LoginPage's onSuccess callback
+          onSuccess({
             fieldDescriptions: {},
             optionalFields: { fields: {}, extended_profile: [] },
+            thirdPartyAuthContext: {},
           });
         }
       }),
+      isPending: false,
     }));
 
-    // Mock the third party auth context
     mockThirdPartyAuthContext = {
       thirdPartyAuthApiStatus: null,
       thirdPartyAuthContext: {
@@ -707,8 +700,6 @@ describe('LoginPage', () => {
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   });
 
-  // Form state backup is now automatic via LoginContext sessionStorage
-
   it('should persist and load form fields using sessionStorage', () => {
     const { container, rerender } = render(queryWrapper(<LoginPage {...props} />));
     fireEvent.change(container.querySelector('input#emailOrUsername'), {
@@ -722,5 +713,82 @@ describe('LoginPage', () => {
     rerender(queryWrapper(<LoginPage {...props} />));
     expect(container.querySelector('input#emailOrUsername').value).toEqual('john_doe');
     expect(container.querySelector('input#password').value).toEqual('test-password');
+  });
+
+  it('should prevent default on mouseDown event for sign-in button', () => {
+    const { container } = render(queryWrapper(<LoginPage {...props} />));
+    const signInButton = container.querySelector('#sign-in');
+
+    const preventDefaultSpy = jest.fn();
+    const event = new Event('mousedown', { bubbles: true });
+    event.preventDefault = preventDefaultSpy;
+    signInButton.dispatchEvent(event);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+  });
+
+  it('should call setThirdPartyAuthContextSuccess on successful third party auth fetch', async () => {
+    render(queryWrapper(<LoginPage {...props} />));
+    await waitFor(() => {
+      expect(mockThirdPartyAuthMutate).toHaveBeenCalled();
+    }, { timeout: 1000 });
+    expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).toHaveBeenCalled();
+  });
+
+  it('should call setThirdPartyAuthContextFailure on failed third party auth fetch', async () => {
+    useThirdPartyAuthHook.mockImplementation(() => ({
+      mutate: jest.fn().mockImplementation((data, { onError }) => {
+        mockThirdPartyAuthMutate(data);
+        if (onError) {
+          onError(new Error('Network error'));
+        }
+      }),
+      isPending: false,
+    }));
+    render(queryWrapper(<LoginPage {...props} />));
+    await waitFor(() => {
+      expect(mockThirdPartyAuthContext.setThirdPartyAuthContextFailure).toHaveBeenCalled();
+    });
+  });
+
+  it('should set error code when third party error message is present', async () => {
+    const contextWithError = {
+      ...mockThirdPartyAuthContext,
+      thirdPartyAuthContext: {
+        ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+        errorMessage: 'Third party authentication failed',
+      },
+    };
+    useThirdPartyAuthContext.mockReturnValue(contextWithError);
+
+    const { container } = render(queryWrapper(<LoginPage {...props} />));
+    await waitFor(() => {
+      expect(container.querySelector('.alert-danger, .alert, [role="alert"]')).toBeTruthy();
+    });
+  });
+
+  it('should set error code on login failure', async () => {
+    mockLoginMutate.mockRejected = true;
+    useLogin.mockImplementation((options) => ({
+      mutate: jest.fn().mockImplementation((data) => {
+        mockLoginMutate(data);
+        if (options?.onError) {
+          options.onError({ type: INTERNAL_SERVER_ERROR, context: {}, count: 0 });
+        }
+      }),
+      isPending: false,
+    }));
+
+    const { container } = render(queryWrapper(<LoginPage {...props} />));
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 'test', name: 'emailOrUsername' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'test-password', name: 'password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    await waitFor(() => {
+      expect(container.querySelector('.alert-danger, .alert, [role="alert"]')).toBeTruthy();
+    });
   });
 });
