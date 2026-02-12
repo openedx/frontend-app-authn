@@ -61,11 +61,6 @@ const secondaryProviders = {
   registerUrl: '/auth/login/saml-test_university/?auth_entry=register&next=%2Fdashboard',
 };
 
-// Mock the action creators since we're not using Redux
-jest.mock('../common-components/data/actions', () => ({
-  clearThirdPartyAuthContextErrorMessage: jest.fn(() => ({ type: 'CLEAR_TPA_ERROR_MESSAGE' })),
-}));
-
 // Mock the ThirdPartyAuthContext
 const mockClearThirdPartyAuthErrorMessage = jest.fn();
 
