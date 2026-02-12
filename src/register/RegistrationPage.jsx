@@ -100,7 +100,7 @@ const RegistrationPage = (props) => {
   const registrationMutation = useRegistration({
     onSuccess: (data) => {
       setRegistrationResult(data);
-      setRegistrationError({}); // Clear errors on success
+      setRegistrationError({});
     },
     onError: (errorData) => {
       setRegistrationError(errorData);

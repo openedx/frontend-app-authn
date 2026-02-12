@@ -15,7 +15,7 @@ jest.mock('../../components/RegisterContext', () => ({
 }));
 
 // Mock the useFieldValidations hook
-jest.mock('../../data/api.hook', () => ({
+jest.mock('../../data/apiHook', () => ({
   useFieldValidations: jest.fn(),
 }));
 

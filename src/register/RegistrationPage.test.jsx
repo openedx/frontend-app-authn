@@ -18,7 +18,7 @@ import {
 } from '../data/constants';
 
 // Mock React Query hooks
-jest.mock('./data/api.hook.ts', () => ({
+jest.mock('./data/apiHook', () => ({
   useRegistration: jest.fn(),
   useFieldValidations: jest.fn(),
 }));
@@ -33,7 +33,7 @@ jest.mock('../common-components/components/ThirdPartyAuthContext.tsx', () => ({
   ThirdPartyAuthProvider: ({ children }) => children,
 }));
 
-jest.mock('../common-components/data/apiHook.ts', () => ({
+jest.mock('../common-components/data/apiHook', () => ({
   useThirdPartyAuthHook: jest.fn(),
 }));
 

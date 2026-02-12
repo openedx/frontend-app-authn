@@ -27,7 +27,7 @@ jest.mock('@edx/frontend-platform/logging', () => ({
 }));
 
 // Mock React Query hooks
-jest.mock('../../data/api.hook.ts', () => ({
+jest.mock('../../data/apiHook.ts', () => ({
   useRegistration: jest.fn(),
   useFieldValidations: jest.fn(),
 }));
