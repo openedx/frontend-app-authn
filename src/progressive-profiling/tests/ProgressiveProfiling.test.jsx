@@ -73,11 +73,6 @@ jest.mock('../components/ProgressiveProfilingContext', () => ({
   useProgressiveProfilingContext: jest.fn(),
 }));
 
-// Mock the saveUserProfile function
-jest.mock('../data/service', () => ({
-  saveUserProfile: jest.fn(),
-}));
-
 // Setup React Query client for tests
 const createTestQueryClient = () => new QueryClient({
   defaultOptions: {
