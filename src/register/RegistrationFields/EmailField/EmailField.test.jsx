@@ -256,5 +256,54 @@ describe('EmailField', () => {
         'The email addresses do not match.',
       );
     });
+
+    it('should call setValidationsSuccess when field validation API succeeds', () => {
+      let capturedOnSuccess;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnSuccess = callbacks.onSuccess;
+        return {
+          mutate: mockMutate,
+          isPending: false,
+        };
+      });
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+
+      const mockValidationData = { email: { isValid: true } };
+      capturedOnSuccess(mockValidationData);
+
+      expect(mockRegisterContext.setValidationsSuccess).toHaveBeenCalledWith(mockValidationData);
+    });
+
+    it('should call setValidationsFailure when field validation API fails', () => {
+      let capturedOnError;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnError = callbacks.onError;
+        return {
+          mutate: mockMutate,
+          isPending: false,
+        };
+      });
+
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+      capturedOnError();
+
+      expect(mockRegisterContext.setValidationsFailure).toHaveBeenCalledWith();
+    });
+
+    it('should not call field validation API when validation is rate limited', () => {
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        validationApiRateLimited: true,
+      });
+
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+      expect(mockMutate).not.toHaveBeenCalled();
+    });
   });
 });

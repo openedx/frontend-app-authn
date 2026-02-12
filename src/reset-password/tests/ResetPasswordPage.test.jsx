@@ -360,4 +360,90 @@ describe('ResetPasswordPage', () => {
 
     expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
   });
+
+  it('should handle reset password onError with token_invalid true', async () => {
+    const password = 'test-password-1';
+    mockValidateToken.mockImplementation((tokenValue, { onSuccess }) => {
+      onSuccess({ is_valid: true, token: 'validated-token' });
+    });
+
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('New password')).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText('New password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+
+    fireEvent.change(newPasswordInput, { target: { value: password } });
+    fireEvent.change(confirmPasswordInput, { target: { value: password } });
+
+    const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i });
+    mockResetPassword.mockImplementation((payload, { onError }) => {
+      onError({
+        response: {
+          data: {
+            token_invalid: true,
+            err_msg: 'Token is invalid',
+          },
+        },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(resetPasswordButton);
+    });
+
+    expect(mockResetPassword).toHaveBeenCalledWith(
+      expect.objectContaining({
+        formPayload: { new_password1: password, new_password2: password },
+        token: 'validated-token',
+        params: expect.any(Object),
+      }),
+      expect.objectContaining({
+        onError: expect.any(Function),
+      }),
+    );
+  });
+
+  it('should handle reset password onError with token_invalid false', async () => {
+    const password = 'test-password-1';
+    const errorMessage = 'Password validation failed';
+    mockValidateToken.mockImplementation((tokenValue, { onSuccess }) => {
+      onSuccess({ is_valid: true, token: 'validated-token' });
+    });
+
+    renderWithProviders();
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('New password')).toBeInTheDocument();
+    });
+
+    const newPasswordInput = screen.getByLabelText('New password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm password');
+
+    fireEvent.change(newPasswordInput, { target: { value: password } });
+    fireEvent.change(confirmPasswordInput, { target: { value: password } });
+
+    const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i });
+    mockResetPassword.mockImplementation((payload, { onError }) => {
+      onError({
+        response: {
+          data: {
+            token_invalid: false,
+            err_msg: errorMessage,
+          },
+        },
+      });
+    });
+
+    await act(async () => {
+      fireEvent.click(resetPasswordButton);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/We couldn't reset your password/)).toBeInTheDocument();
+    });
+  });
 });
