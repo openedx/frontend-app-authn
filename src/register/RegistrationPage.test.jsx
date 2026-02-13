@@ -755,6 +755,7 @@ describe('RegistrationPage', () => {
     it('should call setThirdPartyAuthContextSuccess and setBackendCountryCode on successful third party auth', async () => {
       const mockSetThirdPartyAuthContextSuccess = jest.fn();
       const mockSetBackendCountryCode = jest.fn();
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 1000);
 
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
