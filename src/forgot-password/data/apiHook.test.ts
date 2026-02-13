@@ -72,7 +72,6 @@ describe('useForgotPassword', () => {
     });
 
     expect(mockForgotPassword).toHaveBeenCalledWith(testEmail);
-    expect(mockLogInfo).toHaveBeenCalledWith(`Forgot password email sent to ${testEmail}`);
     expect(result.current.data).toEqual(mockResponse);
   });
 
@@ -149,7 +148,6 @@ describe('useForgotPassword', () => {
     });
 
     expect(mockForgotPassword).toHaveBeenCalledWith('');
-    expect(mockLogInfo).toHaveBeenCalledWith('Forgot password email sent to ');
   });
 
   it('should handle email with special characters', async () => {
@@ -172,7 +170,6 @@ describe('useForgotPassword', () => {
     });
 
     expect(mockForgotPassword).toHaveBeenCalledWith(testEmail);
-    expect(mockLogInfo).toHaveBeenCalledWith(`Forgot password email sent to ${testEmail}`);
     expect(result.current.data).toEqual(mockResponse);
   });
 });

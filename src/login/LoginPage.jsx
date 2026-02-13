@@ -58,9 +58,6 @@ const LoginPage = ({
     setErrors,
   } = useLoginContext();
 
-  // Hook for third-party auth API call
-  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
-
   // React Query for server state
   const [loginResult, setLoginResult] = useState({ success: false, redirectUrl: '' });
   const [errorCode, setErrorCode] = useState({
@@ -96,6 +93,11 @@ const LoginPage = ({
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
   const tpaHint = useMemo(() => getTpaHint(), []);
+  const params = { ...queryParams };
+  if (tpaHint) {
+    params.tpa_hint = tpaHint;
+  }
+  const { data, isSuccess, error } = useThirdPartyAuthHook(params);
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
@@ -103,25 +105,19 @@ const LoginPage = ({
 
   // Fetch third-party auth context data
   useEffect(() => {
-    const payload = { ...queryParams };
-    if (tpaHint) {
-      payload.tpa_hint = tpaHint;
-    }
     setThirdPartyAuthContextBegin();
-    fetchThirdPartyAuth(payload, {
-      onSuccess: (data) => {
-        setThirdPartyAuthContextSuccess(
-          data.fieldDescriptions,
-          data.optionalFields,
-          data.thirdPartyAuthContext,
-        );
-      },
-      onError: () => {
-        setThirdPartyAuthContextFailure();
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryParams, tpaHint, setThirdPartyAuthContextBegin]);
+    if (isSuccess && data) {
+      setThirdPartyAuthContextSuccess(
+        data.fieldDescriptions,
+        data.optionalFields,
+        data.thirdPartyAuthContext,
+      );
+    }
+    if (error) {
+      setThirdPartyAuthContextFailure();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tpaHint, queryParams]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {

@@ -33,7 +33,6 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 describe('LoginPage', () => {
   let props = {};
   let mockLoginMutate;
-  let mockThirdPartyAuthMutate;
   let mockThirdPartyAuthContext;
   let queryClient;
 
@@ -95,21 +94,16 @@ describe('LoginPage', () => {
       }),
     }));
 
-    mockThirdPartyAuthMutate = jest.fn();
-    useThirdPartyAuthHook.mockImplementation(() => ({
-      mutate: jest.fn().mockImplementation((data, { onSuccess }) => {
-        mockThirdPartyAuthMutate(data);
-        if (onSuccess) {
-          // Match the structure expected by LoginPage's onSuccess callback
-          onSuccess({
-            fieldDescriptions: {},
-            optionalFields: { fields: {}, extended_profile: [] },
-            thirdPartyAuthContext: {},
-          });
-        }
-      }),
-      isPending: false,
-    }));
+    useThirdPartyAuthHook.mockReturnValue({
+      data: {
+        fieldDescriptions: {},
+        optionalFields: { fields: {}, extended_profile: [] },
+        thirdPartyAuthContext: {},
+      },
+      isSuccess: true,
+      error: null,
+      isLoading: false,
+    });
 
     mockThirdPartyAuthContext = {
       thirdPartyAuthApiStatus: null,
@@ -730,21 +724,17 @@ describe('LoginPage', () => {
   it('should call setThirdPartyAuthContextSuccess on successful third party auth fetch', async () => {
     render(queryWrapper(<LoginPage {...props} />));
     await waitFor(() => {
-      expect(mockThirdPartyAuthMutate).toHaveBeenCalled();
+      expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).toHaveBeenCalled();
     }, { timeout: 1000 });
-    expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).toHaveBeenCalled();
   });
 
   it('should call setThirdPartyAuthContextFailure on failed third party auth fetch', async () => {
-    useThirdPartyAuthHook.mockImplementation(() => ({
-      mutate: jest.fn().mockImplementation((data, { onError }) => {
-        mockThirdPartyAuthMutate(data);
-        if (onError) {
-          onError(new Error('Network error'));
-        }
-      }),
-      isPending: false,
-    }));
+    useThirdPartyAuthHook.mockReturnValue({
+      data: null,
+      isSuccess: false,
+      error: new Error('Network error'),
+      isLoading: false,
+    });
     render(queryWrapper(<LoginPage {...props} />));
     await waitFor(() => {
       expect(mockThirdPartyAuthContext.setThirdPartyAuthContextFailure).toHaveBeenCalled();

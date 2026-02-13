@@ -3,7 +3,7 @@ import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
@@ -399,22 +399,15 @@ describe('ThirdPartyAuth', () => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
     });
 
-    it('should redirect to finishAuthUrl upon successful registration via SSO', async () => {
+    it('should redirect to finishAuthUrl upon successful registration via SSO', () => {
       const authCompleteUrl = '/auth/complete/google-oauth2/';
-      let capturedOnSuccess;
-      useRegistration.mockImplementation(({ onSuccess }) => {
-        capturedOnSuccess = onSuccess;
-        return {
-          mutate: jest.fn(),
-          isPending: false,
-          error: null,
-          isError: false,
-        };
-      });
-
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
-        registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+        registrationResult: {
+          success: true,
+          redirectUrl: '',
+          authenticatedUser: null,
+        },
       });
 
       useThirdPartyAuthContext.mockReturnValue({
@@ -429,15 +422,7 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL };
 
       render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
-      capturedOnSuccess({
-        success: true,
-        redirectUrl: '',
-        authenticatedUser: null,
-      });
-
-      await waitFor(() => {
-        expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
-      });
+      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
     });
 
     // ******** test alert messages ********

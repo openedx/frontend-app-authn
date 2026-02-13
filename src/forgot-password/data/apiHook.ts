@@ -25,7 +25,6 @@ const useForgotPassword = (options: UseForgotPasswordOptions = {}) => useMutatio
     forgotPassword(email)
   ),
   onSuccess: (data: ForgotPasswordResult, email: string) => {
-    logInfo(`Forgot password email sent to ${email}`);
     if (options.onSuccess) {
       options.onSuccess(data, email);
     }
