@@ -30,14 +30,11 @@ const RecommendationsPageInner = () => {
     backendCountryCode,
   } = useRegisterContext();
   const location = useLocation();
-
-  // const registrationResponse = location.state?.registrationResult;
   const registrationResponse = registrationResult;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;
 
-  //  const userCountry = useSelector((state) => state.register.backendCountryCode);
   const userCountry = backendCountryCode;
   const {
     recommendations: algoliaRecommendations,

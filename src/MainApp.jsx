@@ -29,7 +29,13 @@ import './index.scss';
 
 registerIcons();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 const MainApp = () => (
   <QueryClientProvider client={queryClient}>

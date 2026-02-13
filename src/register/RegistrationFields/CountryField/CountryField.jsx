@@ -15,7 +15,7 @@ import messages from '../../messages';
  * - handleErrorChange for setting error
  *
  * It is responsible for
- * - Auto populating country field if backendCountryCode is available in redux
+ * - Auto populating country field if backendCountryCode is available in context
  * - Performing country field validations
  * - clearing error on focus
  * - setting value on change and selection

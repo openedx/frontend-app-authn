@@ -43,7 +43,6 @@ import { useRegisterContext } from './components/RegisterContext';
  */
 const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
-  // const dispatch = useDispatch();
   const {
     fieldDescriptions,
     optionalFields,

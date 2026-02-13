@@ -29,7 +29,6 @@ const ForgotPasswordPage = () => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
 
-  // Local state instead of Redux
   const [email, setEmail] = useState('');
   const [bannerEmail, setBannerEmail] = useState('');
   const [formErrors, setFormErrors] = useState('');

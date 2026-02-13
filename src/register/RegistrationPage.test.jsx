@@ -815,7 +815,7 @@ describe('RegistrationPage', () => {
       );
     });
 
-    it('should update form fields state if updated in redux store', () => {
+    it('should update form fields state if updated', () => {
       // Mock the register context with updated form data
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
