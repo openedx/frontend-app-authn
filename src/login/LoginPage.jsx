@@ -73,11 +73,11 @@ const LoginPage = ({
       setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
     },
     onError: (formattedError) => {
-      setErrorCode({
+      setErrorCode(prev => ({
         type: formattedError.type,
-        count: errorCode.count + 1,
+        count: prev.count + 1,
         context: formattedError.context,
-      });
+      }));
     },
   });
 
@@ -168,11 +168,11 @@ const LoginPage = ({
     const validationErrors = validateFormFields(formData);
     if (validationErrors.emailOrUsername || validationErrors.password) {
       setErrors(validationErrors);
-      setErrorCode({
+      setErrorCode(prev => ({
         type: INVALID_FORM,
-        count: errorCode.count + 1,
+        count: prev.count + 1,
         context: {},
-      });
+      }));
       return;
     }
 

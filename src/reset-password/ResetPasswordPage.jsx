@@ -34,7 +34,6 @@ const ResetPasswordPage = () => {
   const { token } = useParams();
   const navigate = useNavigate();
 
-  // Local state replacing Redux state
   const [status, setStatus] = useState(TOKEN_STATE.PENDING);
   const [validatedToken, setValidatedToken] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
