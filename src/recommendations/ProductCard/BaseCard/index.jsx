@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Badge, Card, Hyperlink } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 

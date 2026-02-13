@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Button, Icon, IconButton } from '@openedx/paragon';
@@ -8,11 +7,8 @@ import PropTypes from 'prop-types';
 
 import validateUsername from './validator';
 import { FormGroup } from '../../../common-components';
-import {
-  clearRegistrationBackendError,
-  clearUsernameSuggestions,
-  fetchRealtimeValidations,
-} from '../../data/actions';
+import { useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/apiHook';
 import messages from '../../messages';
 
 /**
@@ -29,7 +25,6 @@ import messages from '../../messages';
  */
 const UsernameField = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
 
   const {
     value,
@@ -41,8 +36,23 @@ const UsernameField = (props) => {
   let className = '';
   let suggestedUsernameDiv = null;
   let iconButton = null;
-  const usernameSuggestions = useSelector(state => state.register.usernameSuggestions);
-  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+  const {
+    usernameSuggestions,
+    validationApiRateLimited,
+    setValidationsSuccess,
+    setValidationsFailure,
+    clearUsernameSuggestions,
+    clearRegistrationBackendError,
+  } = useRegisterContext();
+
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => {
+      setValidationsSuccess(data);
+    },
+    onError: () => {
+      setValidationsFailure();
+    },
+  });
 
   /**
    * We need to remove the placeholder from the field, adding a space will do that.
@@ -60,7 +70,7 @@ const UsernameField = (props) => {
     if (fieldError) {
       handleErrorChange('username', fieldError);
     } else if (!validationApiRateLimited) {
-      dispatch(fetchRealtimeValidations({ username }));
+      fieldValidationsMutation.mutate({ username });
     }
   };
 
@@ -77,7 +87,7 @@ const UsernameField = (props) => {
 
   const handleOnFocus = (event) => {
     const username = event.target.value;
-    dispatch(clearUsernameSuggestions());
+    clearUsernameSuggestions();
     // If we added a space character to username field to display the suggestion
     // remove it before user enters the input. This is to ensure user doesn't
     // have a space prefixed to the username.
@@ -85,19 +95,19 @@ const UsernameField = (props) => {
       handleChange({ target: { name: 'username', value: '' } });
     }
     handleErrorChange('username', '');
-    dispatch(clearRegistrationBackendError('username'));
+    clearRegistrationBackendError('username');
   };
 
   const handleSuggestionClick = (event, suggestion = '') => {
     event.preventDefault();
     handleErrorChange('username', ''); // clear error
     handleChange({ target: { name: 'username', value: suggestion } }); // to set suggestion as value
-    dispatch(clearUsernameSuggestions());
+    clearUsernameSuggestions();
   };
 
   const handleUsernameSuggestionClose = () => {
     handleChange({ target: { name: 'username', value: '' } }); // to remove space in field
-    dispatch(clearUsernameSuggestions());
+    clearUsernameSuggestions();
   };
 
   const suggestedUsernames = () => (
