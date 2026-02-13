@@ -44,15 +44,10 @@ export interface ValidationData {
 
 export interface RegisterContextType {
   validations: ValidationData | null;
-  submitState: string;
-  userPipelineDataLoaded: boolean;
-  setUserPipelineDataLoaded: (loaded: boolean) => void;
   usernameSuggestions: string[];
   validationApiRateLimited: boolean;
-  shouldBackupState: boolean;
   registrationError: Record<string, Array<{ userMessage: string }>>;
   registrationFormData: RegistrationFormData;
-  registrationResult: RegistrationResult;
   backendValidations: Record<string, string> | null;
   backendCountryCode: string;
   setValidationsSuccess: (validationData: ValidationData) => void;
@@ -60,7 +55,6 @@ export interface RegisterContextType {
   clearUsernameSuggestions: () => void;
   clearRegistrationBackendError: (field: string) => void;
   updateRegistrationFormData: (newData: Partial<RegistrationFormData>) => void;
-  setRegistrationResult: (result: RegistrationResult) => void;
   setBackendCountryCode: (countryCode: string) => void;
   setRegistrationFormData: (data: RegistrationFormData |
   ((prev: RegistrationFormData) => RegistrationFormData)) => void;
@@ -73,10 +67,6 @@ export interface RegisterState {
   usernameSuggestions: string[];
   validationApiRateLimited: boolean;
   registrationError: Record<string, Array<{ userMessage: string }>>;
-  registrationResult: RegistrationResult;
   backendCountryCode: string;
   registrationFormData: RegistrationFormData;
-  submitState: string;
-  userPipelineDataLoaded: boolean;
-  shouldBackupState: boolean;
 }

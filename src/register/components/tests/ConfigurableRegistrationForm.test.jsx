@@ -102,7 +102,6 @@ describe('ConfigurableRegistrationForm', () => {
     submitState: 'default',
     userPipelineDataLoaded: false,
     validationApiRateLimited: false,
-    shouldBackupState: false,
     backendValidations: null,
     backendCountryCode: '',
     setValidationsSuccess: jest.fn(),
