@@ -13,7 +13,7 @@ import {
 } from '@openedx/paragon';
 import { ChevronLeft } from '@openedx/paragon/icons';
 import { Helmet } from 'react-helmet';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useForgotPassword } from './data/apiHook';
 import ForgotPasswordAlert from './ForgotPasswordAlert';
@@ -28,12 +28,12 @@ const ForgotPasswordPage = () => {
   const emailRegex = new RegExp(VALID_EMAIL_REGEX, 'i');
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [bannerEmail, setBannerEmail] = useState('');
   const [formErrors, setFormErrors] = useState('');
   const [validationError, setValidationError] = useState('');
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(location.state?.status || null);
 
   // React Query hook for forgot password
   const { mutate: sendForgotPassword, isPending: isSending } = useForgotPassword();

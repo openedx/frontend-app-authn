@@ -180,8 +180,8 @@ const ResetPasswordPageInner = () => {
   if (status === TOKEN_STATE.PENDING) {
     return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
   }
-  if (status === PASSWORD_RESET_ERROR) {
-    navigate(updatePathWithQueryParams(RESET_PAGE));
+  if (status === PASSWORD_RESET_ERROR || status === PASSWORD_RESET.INVALID_TOKEN) {
+    navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
   }
   if (status === 'success') {
     navigate(updatePathWithQueryParams(LOGIN_PAGE));
