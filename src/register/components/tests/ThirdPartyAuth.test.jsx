@@ -3,7 +3,7 @@ import {
   configure, getLocale, IntlProvider,
 } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
@@ -56,6 +56,11 @@ jest.mock('react-router-dom', () => {
     mockNavigate: mockNavigation,
   };
 });
+
+jest.mock('../../../data/utils', () => ({
+  ...jest.requireActual('../../../data/utils'),
+  getTpaHint: jest.fn(() => null), // Ensure no tpa hint by default
+}));
 
 describe('ThirdPartyAuth', () => {
   mergeConfig({
@@ -128,7 +133,6 @@ describe('ThirdPartyAuth', () => {
     submitState: 'default',
     userPipelineDataLoaded: false,
     validationApiRateLimited: false,
-    shouldBackupState: false,
     backendValidations: null,
     backendCountryCode: '',
     setValidationsSuccess: jest.fn(),
@@ -138,6 +142,8 @@ describe('ThirdPartyAuth', () => {
     updateRegistrationFormData: jest.fn(),
     setRegistrationResult: jest.fn(),
     setBackendCountryCode: jest.fn(),
+    setRegistrationError: jest.fn(),
+    setEmailSuggestionContext: jest.fn(),
   };
 
   beforeEach(() => {
@@ -218,6 +224,8 @@ describe('ThirdPartyAuth', () => {
     });
 
     it('should render tpa button for tpa_hint id matching one of the primary providers', () => {
+      const { getTpaHint } = jest.requireMock('../../../data/utils');
+      getTpaHint.mockReturnValue(ssoProvider.id);
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthContext: {
@@ -235,12 +243,14 @@ describe('ThirdPartyAuth', () => {
       const tpaButton = container.querySelector(`button#${ssoProvider.id}`);
 
       expect(tpaButton).toBeTruthy();
-      expect(tpaButton.textContent).toEqual(ssoProvider.name);
+      expect(tpaButton.textContent).toContain(ssoProvider.name);
       expect(tpaButton.classList.contains('btn-tpa')).toBe(true);
       expect(tpaButton.classList.contains(`btn-${ssoProvider.id}`)).toBe(true);
     });
 
     it('should display skeleton if tpa_hint is true and thirdPartyAuthContext is pending', () => {
+      const { getTpaHint } = jest.requireMock('../../../data/utils');
+      getTpaHint.mockReturnValue(ssoProvider.id);
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthApiStatus: PENDING_STATE,
@@ -279,6 +289,8 @@ describe('ThirdPartyAuth', () => {
     });
 
     it('should render tpa button for tpa_hint id matching one of the secondary providers', () => {
+      const { getTpaHint } = jest.requireMock('../../../data/utils');
+      getTpaHint.mockReturnValue(secondaryProviders.id);
       secondaryProviders.skipHintedLogin = true;
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
@@ -387,15 +399,22 @@ describe('ThirdPartyAuth', () => {
       expect(window.location.href).toBe(getConfig().LMS_BASE_URL + registerUrl);
     });
 
-    it('should redirect to finishAuthUrl upon successful registration via SSO', () => {
+    it('should redirect to finishAuthUrl upon successful registration via SSO', async () => {
       const authCompleteUrl = '/auth/complete/google-oauth2/';
+      let capturedOnSuccess;
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        capturedOnSuccess = onSuccess;
+        return {
+          mutate: jest.fn(),
+          isPending: false,
+          error: null,
+          isError: false,
+        };
+      });
+
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-          redirectUrl: '',
-          authenticatedUser: null,
-        },
+        registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
       });
 
       useThirdPartyAuthContext.mockReturnValue({
@@ -410,7 +429,15 @@ describe('ThirdPartyAuth', () => {
       window.location = { href: getConfig().BASE_URL };
 
       render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
-      expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+      capturedOnSuccess({
+        success: true,
+        redirectUrl: '',
+        authenticatedUser: null,
+      });
+
+      await waitFor(() => {
+        expect(window.location.href).toBe(getConfig().LMS_BASE_URL + authCompleteUrl);
+      });
     });
 
     // ******** test alert messages ********

@@ -2,9 +2,8 @@ import {
   createContext, FC, ReactNode, useCallback, useContext, useMemo, useReducer,
 } from 'react';
 
-import { DEFAULT_STATE } from '../../data/constants';
 import {
-  RegisterContextType, RegisterState, RegistrationFormData, RegistrationResult, ValidationData,
+  RegisterContextType, RegisterState, RegistrationFormData, ValidationData,
 } from '../types';
 
 const RegisterContext = createContext<RegisterContextType | null>(null);
@@ -14,7 +13,6 @@ const initialState: RegisterState = {
   usernameSuggestions: [],
   validationApiRateLimited: false,
   registrationError: {},
-  registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
   backendCountryCode: '',
   registrationFormData: {
     configurableFormFields: {
@@ -30,9 +28,6 @@ const initialState: RegisterState = {
       name: '', email: '', username: '', password: '',
     },
   },
-  submitState: DEFAULT_STATE,
-  userPipelineDataLoaded: false,
-  shouldBackupState: false,
 };
 
 const registerReducer = (state: RegisterState, action: any): RegisterState => {
@@ -85,12 +80,8 @@ const registerReducer = (state: RegisterState, action: any): RegisterState => {
           ? action.payload(state.registrationFormData)
           : action.payload,
       };
-    case 'SET_REGISTRATION_RESULT':
-      return { ...state, registrationResult: action.payload };
     case 'SET_REGISTRATION_ERROR':
       return { ...state, registrationError: action.payload };
-    case 'SET_USER_PIPELINE_DATA_LOADED':
-      return { ...state, userPipelineDataLoaded: action.payload };
     default:
       return state;
   }
@@ -136,19 +127,10 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     dispatch({ type: 'SET_REGISTRATION_FORM_DATA', payload: data });
   }, []);
 
-  const setRegistrationResult = useCallback((result: RegistrationResult) => {
-    dispatch({ type: 'SET_REGISTRATION_RESULT', payload: result });
-  }, []);
-
   const setRegistrationError = useCallback((error: Record<string, Array<{ userMessage: string }>>) => {
     dispatch({ type: 'SET_REGISTRATION_ERROR', payload: error });
   }, []);
 
-  const setUserPipelineDataLoaded = useCallback((loaded: boolean) => {
-    dispatch({ type: 'SET_USER_PIPELINE_DATA_LOADED', payload: loaded });
-  }, []);
-
-  // Process backend validation errors - equivalent to getBackendValidations selector
   const backendValidations = useMemo(() => {
     if (state.validations) {
       return state.validations.validationDecisions;
@@ -171,17 +153,12 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
 
   const contextValue = useMemo(() => ({
     validations: state.validations,
-    submitState: state.submitState,
-    userPipelineDataLoaded: state.userPipelineDataLoaded,
     registrationFormData: state.registrationFormData,
-    registrationResult: state.registrationResult,
     registrationError: state.registrationError,
     backendCountryCode: state.backendCountryCode,
     usernameSuggestions: state.usernameSuggestions,
     validationApiRateLimited: state.validationApiRateLimited,
-    shouldBackupState: state.shouldBackupState,
     backendValidations,
-    setUserPipelineDataLoaded,
     setValidationsSuccess,
     setValidationsFailure,
     clearUsernameSuggestions,
@@ -189,22 +166,26 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     setRegistrationFormData,
     setEmailSuggestionContext,
     updateRegistrationFormData,
-    setRegistrationResult,
     setBackendCountryCode,
     setRegistrationError,
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }), [
     state.validations,
-    state.submitState,
-    state.userPipelineDataLoaded,
     state.registrationFormData,
-    state.registrationResult,
-    state.registrationError,
     state.backendCountryCode,
     state.usernameSuggestions,
     state.validationApiRateLimited,
-    state.shouldBackupState,
+    state.registrationError,
     backendValidations,
+    setValidationsSuccess,
+    setValidationsFailure,
+    clearUsernameSuggestions,
+    clearRegistrationBackendError,
+    setRegistrationFormData,
+    setEmailSuggestionContext,
+    updateRegistrationFormData,
+    setBackendCountryCode,
+    setRegistrationError,
   ]);
 
   return (

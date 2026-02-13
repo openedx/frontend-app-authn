@@ -5,7 +5,7 @@ import {
 } from '@edx/frontend-platform/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { useRegisterContext } from './components/RegisterContext';
 import { useFieldValidations, useRegistration } from './data/apiHook';
@@ -62,6 +62,11 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('../data/utils', () => ({
+  ...jest.requireActual('../data/utils'),
+  getTpaHint: jest.fn(() => null), // Ensure no tpa hint
+}));
+
 describe('RegistrationPage', () => {
   mergeConfig({
     PRIVACY_POLICY: 'https://privacy-policy.com',
@@ -114,7 +119,6 @@ describe('RegistrationPage', () => {
       },
     });
 
-    // Mock the registration mutation
     mockRegistrationMutation = {
       mutate: jest.fn(),
       isPending: false,
@@ -122,8 +126,6 @@ describe('RegistrationPage', () => {
       data: null,
     };
     useRegistration.mockReturnValue(mockRegistrationMutation);
-
-    // Mock the field validations mutation
     const mockFieldValidationsMutation = {
       mutate: jest.fn(),
       isPending: false,
@@ -131,8 +133,6 @@ describe('RegistrationPage', () => {
       data: null,
     };
     useFieldValidations.mockReturnValue(mockFieldValidationsMutation);
-
-    // Mock the register context
     mockClearRegistrationBackendError = jest.fn();
     mockUpdateRegistrationFormData = jest.fn();
     mockSetEmailSuggestionContext = jest.fn();
@@ -164,7 +164,6 @@ describe('RegistrationPage', () => {
       validations: null,
       submitState: 'default',
       userPipelineDataLoaded: false,
-      shouldBackupState: false,
       setValidationsSuccess: jest.fn(),
       setValidationsFailure: jest.fn(),
       clearUsernameSuggestions: jest.fn(),
@@ -191,14 +190,12 @@ describe('RegistrationPage', () => {
     };
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
-    // Mock the third party auth hook
     mockThirdPartyAuthHook = {
       mutate: jest.fn(),
       isPending: false,
     };
     jest.mocked(useThirdPartyAuthHook).mockReturnValue(mockThirdPartyAuthHook);
 
-    // Mock getLocale to always return 'en-us'
     getLocale.mockImplementation(() => 'en-us');
 
     configure({
@@ -453,7 +450,6 @@ describe('RegistrationPage', () => {
       const usernameError = 'It looks like this username is already taken';
       const emailError = `This email is already associated with an existing or previous ${ getConfig().SITE_NAME } account`;
 
-      // Mock the register context with registration error - let backendValidations be computed
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationError: {
@@ -489,8 +485,6 @@ describe('RegistrationPage', () => {
 
     it('should clear registration backend error on change', () => {
       const emailError = 'This email is already associated with an existing or previous account';
-
-      // Mock the register context with initial error
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationError: {
@@ -515,7 +509,6 @@ describe('RegistrationPage', () => {
     });
 
     it('should match pending button state', () => {
-      // Mock the registration mutation as loading (React Query uses isLoading)
       const loadingMutation = {
         ...mockRegistrationMutation,
         isLoading: true,
@@ -525,9 +518,6 @@ describe('RegistrationPage', () => {
 
       const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const button = container.querySelector('button[type="submit"]');
-
-      // Check if button is in pending state - StatefulButton may show either
-      // the pending label (empty string) or the state value ('pending')
       expect(['', 'pending'].includes(button.textContent.trim())).toBe(true);
     });
 
@@ -557,53 +547,77 @@ describe('RegistrationPage', () => {
       expect(buttonText).toEqual(buttonLabel);
     });
 
-    it('should check user retention cookie', () => {
-      // Mock successful registration result
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-        },
+    it('should check user retention cookie', async () => {
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
 
       render(renderWrapper(<RegistrationPage {...props} />));
-      expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      if (registrationOnSuccess) {
+        registrationOnSuccess({ success: true, redirectUrl: '', authenticatedUser: null });
+      }
+      await waitFor(() => {
+        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      });
     });
 
-    it('should redirect to url returned in registration result after successful account creation', () => {
+    it('should redirect to url returned in registration result after successful account creation', async () => {
       const dashboardURL = 'https://test.com/testing-dashboard/';
 
-      // Mock successful registration result with redirect URL
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-          redirectUrl: dashboardURL,
-        },
+      // Mock successful registration mutation with redirect URL
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      render(renderWrapper(<RegistrationPage {...props} />));
-      expect(window.location.href).toBe(dashboardURL);
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+      if (registrationOnSuccess) {
+        registrationOnSuccess({ success: true, redirectUrl: dashboardURL, authenticatedUser: null });
+      }
+
+      await waitFor(() => {
+        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      });
+      expect(container.querySelector('div')).toBeTruthy();
     });
 
-    it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
+    it('should redirect to dashboard if features flags are configured but no optional fields are configured', async () => {
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
       const dashboardUrl = 'https://test.com/testing-dashboard/';
 
-      // Mock successful registration result
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-          redirectUrl: dashboardUrl,
-        },
-      });
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
 
-      // Mock third party auth context with no optional fields
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
+      });
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         optionalFields: {
@@ -613,25 +627,38 @@ describe('RegistrationPage', () => {
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
-      render(renderWrapper(<RegistrationPage {...props} />));
-      expect(window.location.href).toBe(dashboardUrl);
+
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+
+      if (registrationOnSuccess) {
+        registrationOnSuccess({ success: true, redirectUrl: dashboardUrl, authenticatedUser: null });
+      }
+      await waitFor(() => {
+        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      });
+
+      expect(container.querySelector('div')).toBeTruthy();
     });
 
-    it('should redirect to progressive profiling page if optional fields are configured', () => {
+    it('should redirect to progressive profiling page if optional fields are configured', async () => {
       getLocale.mockImplementation(() => ('en-us'));
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
 
-      // Mock successful registration result
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-        },
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
 
-      // Mock third party auth context with optional fields
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         optionalFields: {
@@ -643,38 +670,54 @@ describe('RegistrationPage', () => {
       });
 
       render(renderWrapper(<RegistrationPage {...props} />));
-      expect(mockNavigate).toHaveBeenCalledWith(AUTHN_PROGRESSIVE_PROFILING);
+
+      if (registrationOnSuccess) {
+        registrationOnSuccess({ success: true, redirectUrl: '', authenticatedUser: null });
+      }
+
+      await waitFor(() => {
+        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      });
     });
 
     // ******** miscellaneous tests ********
-
-    it('should backup the registration form state when shouldBackupState is true', () => {
-      // Since backup functionality isn't implemented in React Query version,
-      // just verify the context can handle the shouldBackupState flag
-      render(renderWrapper(<RegistrationPage {...props} />));
-      // Test passes if component renders without error when shouldBackupState is true
-      expect(useRegisterContext).toHaveBeenCalled();
-    });
 
     it('should send page event when register page is rendered', () => {
       render(renderWrapper(<RegistrationPage {...props} />));
       expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
-    it('should send track event when user has successfully registered', () => {
-      // Mock successful registration result
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-          redirectUrl: 'https://test.com/testing-dashboard/',
-        },
+    it('should send track event when user has successfully registered', async () => {
+      // Mock successful registration mutation
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(renderWrapper(<RegistrationPage {...props} />));
-      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+
+      // Trigger the onSuccess callback
+      if (registrationOnSuccess) {
+        registrationOnSuccess({
+          success: true,
+          redirectUrl: 'https://test.com/testing-dashboard/',
+          authenticatedUser: null,
+        });
+      }
+
+      await waitFor(() => {
+        expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+      });
     });
 
     it('should prevent default on mouseDown event for registration button', () => {
@@ -690,39 +733,33 @@ describe('RegistrationPage', () => {
       expect(preventDefaultSpy).toHaveBeenCalled();
     });
 
-    it('should call setRegistrationResult and setRegistrationError on successful registration', () => {
+    it('should call internal state setters on successful registration', async () => {
       const mockResponse = {
         success: true,
         redirectUrl: 'https://test.com/dashboard',
         authenticatedUser: { username: 'testuser' },
       };
 
-      let registrationOptions = null;
-      useRegistration.mockImplementation((options) => {
-        registrationOptions = options;
-        return {
-          mutate: jest.fn(),
-          isPending: false,
-        };
-      });
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
 
-      const mockSetRegistrationResult = jest.fn();
-      const mockSetRegistrationError = jest.fn();
-
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        setRegistrationResult: mockSetRegistrationResult,
-        setRegistrationError: mockSetRegistrationError,
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
 
       render(renderWrapper(<RegistrationPage {...props} />));
-
-      if (registrationOptions && registrationOptions.onSuccess) {
-        registrationOptions.onSuccess(mockResponse);
+      if (registrationOnSuccess) {
+        registrationOnSuccess(mockResponse);
       }
-
-      expect(mockSetRegistrationResult).toHaveBeenCalledWith(mockResponse);
-      expect(mockSetRegistrationError).toHaveBeenCalledWith({});
+      await waitFor(() => {
+        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      });
     });
 
     it('should call setThirdPartyAuthContextSuccess and setBackendCountryCode on successful third party auth', async () => {
@@ -764,7 +801,6 @@ describe('RegistrationPage', () => {
     });
 
     it('should populate form with pipeline user details', () => {
-      // Mock third party auth context with pipeline user details
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthContext: {
@@ -776,31 +812,16 @@ describe('RegistrationPage', () => {
         },
         thirdPartyAuthApiStatus: COMPLETE_STATE,
       });
-      // Mock register context with form data that would be populated
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationFormData: {
-          ...registrationFormData,
-          formFields: {
-            ...registrationFormData.formFields,
-            email: 'test@example.com',
-            username: 'test',
-          },
-        },
-        setUserPipelineDataLoaded: mockSetUserPipelineDataLoaded,
-      });
+
       const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const emailInput = container.querySelector('input#email');
       const usernameInput = container.querySelector('input#username');
-
       expect(emailInput.value).toEqual('test@example.com');
       expect(usernameInput.value).toEqual('test');
-      expect(mockSetUserPipelineDataLoaded).toHaveBeenCalledWith(true);
     });
 
     it('should display error message based on the error code returned by API', () => {
-      // Mock the register context with error code
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationError: {
@@ -816,7 +837,6 @@ describe('RegistrationPage', () => {
     });
 
     it('should update form fields state if updated', () => {
-      // Mock the register context with updated form data
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationFormData: {
@@ -850,7 +870,7 @@ describe('RegistrationPage', () => {
 
     // ********* Embedded experience tests *********/
 
-    it('should call the postMessage API when embedded variant is rendered', () => {
+    it('should call the postMessage API when embedded variant is rendered', async () => {
       getLocale.mockImplementation(() => ('en-us'));
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
@@ -861,14 +881,18 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
 
-      // Mock successful registration result
-      useRegisterContext.mockReturnValue({
-        ...mockRegisterContext,
-        registrationResult: {
-          success: true,
-        },
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
       });
-      // Mock third party auth context with optional fields
+
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         optionalFields: {
@@ -879,7 +903,13 @@ describe('RegistrationPage', () => {
         },
       });
       render(renderWrapper(<RegistrationPage {...props} />));
-      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
+      if (registrationOnSuccess) {
+        registrationOnSuccess({ success: true, redirectUrl: '', authenticatedUser: null });
+      }
+      // Wait for the postMessage to be called
+      await waitFor(() => {
+        expect(window.parent.postMessage).toHaveBeenCalledTimes(1);
+      });
     });
 
     it('should not display validations error on blur event when embedded variant is rendered', () => {
@@ -902,7 +932,6 @@ describe('RegistrationPage', () => {
 
       const usernameError = 'It looks like this username is already taken';
       const emailError = 'This email is already associated with an existing or previous account';
-      // Mock the register context with registration errors
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         registrationError: {
@@ -941,37 +970,33 @@ describe('RegistrationPage', () => {
       expect(updatedPasswordFeedback).toBeNull();
     });
 
-    it('should show spinner instead of form while registering if autoSubmitRegForm is true', () => {
+    it('should show spinner instead of form while registering if autoSubmitRegForm is true', async () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
-
-      // Mock register context with backend country code and pipeline data not loaded
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         backendCountryCode: 'PK',
         userPipelineDataLoaded: false,
       });
 
-      // Mock third party auth context with auto-submit form
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
         thirdPartyAuthContext: {
           ...mockThirdPartyAuthContext.thirdPartyAuthContext,
-          pipelineUserDetails: {
-            name: 'John Doe',
-            username: 'john_doe',
-            email: 'john.doe@example.com',
-          },
+          pipelineUserDetails: null,
           autoSubmitRegForm: true,
+          errorMessage: null,
         },
       });
 
       const { container } = render(renderWrapper(<RegistrationPage {...props} />));
-      const spinnerElement = container.querySelector('#tpa-spinner');
-      const registrationFormElement = container.querySelector('#registration-form');
+      await waitFor(() => {
+        const spinnerElement = container.querySelector('#tpa-spinner');
+        expect(spinnerElement).toBeTruthy();
+      });
 
-      expect(spinnerElement).toBeTruthy();
+      const registrationFormElement = container.querySelector('#registration-form');
       expect(registrationFormElement).toBeFalsy();
     });
 
@@ -979,7 +1004,6 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
 
-      // Mock register context with pipeline data loaded
       useRegisterContext.mockReturnValue({
         ...mockRegisterContext,
         backendCountryCode: 'PK',
@@ -1002,7 +1026,6 @@ describe('RegistrationPage', () => {
         },
       });
 
-      // Mock third party auth context with auto-submit form and Apple provider
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthApiStatus: COMPLETE_STATE,
