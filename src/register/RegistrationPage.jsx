@@ -150,6 +150,9 @@ const RegistrationPage = (props) => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
       setThirdPartyAuthContextBegin();
+      setFormStartTime(Date.now());
+    }
+    if (formStartTime) {
       if (isSuccess && data) {
         setThirdPartyAuthContextSuccess(
           data.fieldDescriptions,
@@ -162,10 +165,9 @@ const RegistrationPage = (props) => {
       if (error) {
         setThirdPartyAuthContextFailure();
       }
-      setFormStartTime(Date.now());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formStartTime, queryParams, tpaHint, setThirdPartyAuthContextBegin]);
+  }, [formStartTime, isSuccess, data, error, setThirdPartyAuthContextBegin]);
 
   // Handle backend validation errors from context
   useEffect(() => {
