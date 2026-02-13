@@ -176,8 +176,4 @@ const ForgotPasswordPage = () => {
   );
 };
 
-ForgotPasswordPage.propTypes = {};
-
-ForgotPasswordPage.defaultProps = {};
-
 export default ForgotPasswordPage;
