@@ -9,6 +9,7 @@ import { ResetPasswordPage } from './reset-password';
 const routes = [
   {
     id: 'org.openedx.frontend.route.authn.main',
+    path: '/authn',
     async lazy() {
       const module = await import('./Main');
       return { Component: module.default };
