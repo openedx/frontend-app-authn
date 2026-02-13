@@ -191,8 +191,10 @@ describe('RegistrationPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     mockThirdPartyAuthHook = {
-      mutate: jest.fn(),
-      isPending: false,
+      data: null,
+      isSuccess: false,
+      error: null,
+      isLoading: false,
     };
     jest.mocked(useThirdPartyAuthHook).mockReturnValue(mockThirdPartyAuthHook);
 
@@ -547,27 +549,32 @@ describe('RegistrationPage', () => {
       expect(buttonText).toEqual(buttonLabel);
     });
 
-    it('should check user retention cookie', async () => {
-      let registrationOnSuccess = null;
-      const successfulMutation = {
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-        data: null,
-      };
-
-      useRegistration.mockImplementation(({ onSuccess }) => {
-        registrationOnSuccess = onSuccess;
-        return successfulMutation;
+    it('should check user retention cookie', () => {
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+        },
       });
 
       render(renderWrapper(<RegistrationPage {...props} />));
-      if (registrationOnSuccess) {
-        registrationOnSuccess({ success: true, redirectUrl: '', authenticatedUser: null });
-      }
-      await waitFor(() => {
-        expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+      expect(document.cookie).toMatch(`${getConfig().USER_RETENTION_COOKIE_NAME}=true`);
+    });
+
+    it('should redirect to url returned in registration result after successful account creation', () => {
+      const dashboardURL = 'https://test.com/testing-dashboard/';
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: dashboardURL,
+        },
       });
+
+      delete window.location;
+      window.location = { href: getConfig().BASE_URL };
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(window.location.href).toBe(dashboardURL);
     });
 
     it('should redirect to url returned in registration result after successful account creation', async () => {
@@ -687,37 +694,20 @@ describe('RegistrationPage', () => {
       expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
-    it('should send track event when user has successfully registered', async () => {
-      // Mock successful registration mutation
-      let registrationOnSuccess = null;
-      const successfulMutation = {
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-        data: null,
-      };
-
-      useRegistration.mockImplementation(({ onSuccess }) => {
-        registrationOnSuccess = onSuccess;
-        return successfulMutation;
+    it('should send track event when user has successfully registered', () => {
+      // Mock successful registration result
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: 'https://test.com/testing-dashboard/',
+        },
       });
 
       delete window.location;
       window.location = { href: getConfig().BASE_URL };
       render(renderWrapper(<RegistrationPage {...props} />));
-
-      // Trigger the onSuccess callback
-      if (registrationOnSuccess) {
-        registrationOnSuccess({
-          success: true,
-          redirectUrl: 'https://test.com/testing-dashboard/',
-          authenticatedUser: null,
-        });
-      }
-
-      await waitFor(() => {
-        expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
-      });
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
     });
 
     it('should prevent default on mouseDown event for registration button', () => {
@@ -777,16 +767,13 @@ describe('RegistrationPage', () => {
       });
 
       useThirdPartyAuthHook.mockReturnValue({
-        mutate: jest.fn().mockImplementation((data, { onSuccess }) => {
-          if (onSuccess) {
-            onSuccess({
-              fieldDescriptions: {},
-              optionalFields: { fields: {}, extended_profile: [] },
-              thirdPartyAuthContext: { countryCode: 'US' },
-            });
-          }
-        }),
-        isPending: false,
+        data: {
+          fieldDescriptions: {},
+          optionalFields: { fields: {}, extended_profile: [] },
+          thirdPartyAuthContext: { countryCode: 'US' },
+        },
+        isSuccess: true,
+        error: null,
       });
 
       render(renderWrapper(<RegistrationPage {...props} />));
@@ -870,7 +857,7 @@ describe('RegistrationPage', () => {
 
     // ********* Embedded experience tests *********/
 
-    it('should call the postMessage API when embedded variant is rendered', async () => {
+    it('should call the postMessage API when embedded variant is rendered', () => {
       getLocale.mockImplementation(() => ('en-us'));
       mergeConfig({
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
@@ -881,18 +868,14 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
 
-      let registrationOnSuccess = null;
-      const successfulMutation = {
-        mutate: jest.fn(),
-        isPending: false,
-        error: null,
-        data: null,
-      };
-      useRegistration.mockImplementation(({ onSuccess }) => {
-        registrationOnSuccess = onSuccess;
-        return successfulMutation;
+      // Mock successful registration result
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+        },
       });
-
+      // Mock third party auth context with optional fields
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         optionalFields: {
@@ -903,13 +886,7 @@ describe('RegistrationPage', () => {
         },
       });
       render(renderWrapper(<RegistrationPage {...props} />));
-      if (registrationOnSuccess) {
-        registrationOnSuccess({ success: true, redirectUrl: '', authenticatedUser: null });
-      }
-      // Wait for the postMessage to be called
-      await waitFor(() => {
-        expect(window.parent.postMessage).toHaveBeenCalledTimes(1);
-      });
+      expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
     });
 
     it('should not display validations error on blur event when embedded variant is rendered', () => {

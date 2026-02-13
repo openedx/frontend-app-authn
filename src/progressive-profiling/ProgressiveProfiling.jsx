@@ -44,12 +44,11 @@ const ProgressiveProfilingInner = () => {
   const {
     thirdPartyAuthApiStatus,
     setThirdPartyAuthContextSuccess,
+    setThirdPartyAuthContextFailure,
     optionalFields,
   } = useThirdPartyAuthContext();
 
   const welcomePageContext = optionalFields;
-  // Hook for third-party auth API call
-  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
   const {
     submitState,
     showError,
@@ -75,17 +74,20 @@ const ProgressiveProfilingInner = () => {
   const [showModal, setShowModal] = useState(false);
   const [showRecommendationsPage, setShowRecommendationsPage] = useState(false);
 
+  const { data, isSuccess, error } = useThirdPartyAuthHook({ is_welcome_page: true, next: queryParams?.next });
+
   useEffect(() => {
     if (registrationEmbedded) {
-      fetchThirdPartyAuth({ is_welcome_page: true, next: queryParams?.next }, {
-        onSuccess: (data) => {
-          setThirdPartyAuthContextSuccess(
-            data.fieldDescriptions,
-            data.optionalFields,
-            data.thirdPartyAuthContext,
-          );
-        },
-      });
+      if (isSuccess && data) {
+        setThirdPartyAuthContextSuccess(
+          data.fieldDescriptions,
+          data.optionalFields,
+          data.thirdPartyAuthContext,
+        );
+      }
+      if (error) {
+        setThirdPartyAuthContextFailure();
+      }
     } else {
       configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     }
@@ -217,7 +219,6 @@ const ProgressiveProfilingInner = () => {
   });
 
   const shouldRedirect = success;
-
   return (
     <BaseContainer showWelcomeBanner fullName={authenticatedUser?.fullName || authenticatedUser?.name}>
       <Helmet>

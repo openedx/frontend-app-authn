@@ -12,6 +12,7 @@ const initialState: RegisterState = {
   validations: null,
   usernameSuggestions: [],
   validationApiRateLimited: false,
+  registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
   registrationError: {},
   backendCountryCode: '',
   registrationFormData: {
@@ -80,6 +81,8 @@ const registerReducer = (state: RegisterState, action: any): RegisterState => {
           ? action.payload(state.registrationFormData)
           : action.payload,
       };
+    case 'SET_REGISTRATION_RESULT':
+      return { ...state, registrationResult: action.payload };
     case 'SET_REGISTRATION_ERROR':
       return { ...state, registrationError: action.payload };
     default:
@@ -122,6 +125,10 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     dispatch({ type: 'UPDATE_REGISTRATION_FORM_DATA', payload: newData });
   }, []);
 
+  const setRegistrationResult = useCallback((result: RegistrationResult) => {
+    dispatch({ type: 'SET_REGISTRATION_RESULT', payload: result });
+  }, []);
+
   const setRegistrationFormData = useCallback((data: RegistrationFormData |
   ((prev: RegistrationFormData) => RegistrationFormData)) => {
     dispatch({ type: 'SET_REGISTRATION_FORM_DATA', payload: data });
@@ -155,6 +162,7 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     validations: state.validations,
     registrationFormData: state.registrationFormData,
     registrationError: state.registrationError,
+    registrationResult: state.registrationResult,
     backendCountryCode: state.backendCountryCode,
     usernameSuggestions: state.usernameSuggestions,
     validationApiRateLimited: state.validationApiRateLimited,
@@ -168,7 +176,7 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     updateRegistrationFormData,
     setBackendCountryCode,
     setRegistrationError,
-
+    setRegistrationResult,
   }), [
     state.validations,
     state.registrationFormData,
@@ -176,6 +184,7 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     state.usernameSuggestions,
     state.validationApiRateLimited,
     state.registrationError,
+    state.registrationResult,
     backendValidations,
     setValidationsSuccess,
     setValidationsFailure,
@@ -186,6 +195,7 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
     updateRegistrationFormData,
     setBackendCountryCode,
     setRegistrationError,
+    setRegistrationResult,
   ]);
 
   return (

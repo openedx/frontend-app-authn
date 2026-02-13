@@ -66,15 +66,15 @@ const RegistrationPage = (props) => {
   const {
     clearRegistrationBackendError,
     registrationFormData,
+    registrationResult,
     registrationError,
     setEmailSuggestionContext,
     updateRegistrationFormData,
     setRegistrationError,
+    setRegistrationResult,
     backendValidations,
     setBackendCountryCode,
   } = useRegisterContext();
-
-  const { mutate: fetchThirdPartyAuth } = useThirdPartyAuthHook();
 
   const registrationEmbedded = isHostAvailableInQueryParams();
   const platformName = getConfig().SITE_NAME;
@@ -88,7 +88,6 @@ const RegistrationPage = (props) => {
     handleInstitutionLogin,
     institutionLogin,
   } = props;
-  const [registrationResult, setRegistrationResult] = useState({ success: false, redirectUrl: '', authenticatedUser: null });
   const backendRegistrationError = registrationError;
   const registrationMutation = useRegistration({
     onSuccess: (data) => {
@@ -142,28 +141,27 @@ const RegistrationPage = (props) => {
     userPipelineDataLoaded,
   ]);
 
+  const params = { ...queryParams, is_register_page: true };
+  if (tpaHint) {
+    params.tpa_hint = tpaHint;
+  }
+  const { data, isSuccess, error } = useThirdPartyAuthHook(params);
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
-      const payload = { ...queryParams, is_register_page: true };
-      if (tpaHint) {
-        payload.tpa_hint = tpaHint;
-      }
       setThirdPartyAuthContextBegin();
-      fetchThirdPartyAuth(payload, {
-        onSuccess: (data) => {
-          setThirdPartyAuthContextSuccess(
-            data.fieldDescriptions,
-            data.optionalFields,
-            data.thirdPartyAuthContext,
-          );
-          // saving countryCode to registration context
-          setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
-        },
-        onError: () => {
-          setThirdPartyAuthContextFailure();
-        },
-      });
+      if (isSuccess && data) {
+        setThirdPartyAuthContextSuccess(
+          data.fieldDescriptions,
+          data.optionalFields,
+          data.thirdPartyAuthContext,
+        );
+        setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
+      }
+
+      if (error) {
+        setThirdPartyAuthContextFailure();
+      }
       setFormStartTime(Date.now());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,22 +215,22 @@ const RegistrationPage = (props) => {
     });
   };
 
-  const handleErrorChange = (fieldName, error) => {
+  const handleErrorChange = (fieldName, errorMessage) => {
     if (registrationEmbedded) {
       setTemporaryErrors(prevErrors => ({
         ...prevErrors,
-        [fieldName]: error,
+        [fieldName]: errorMessage,
       }));
-      if (error === '' && errors[fieldName] !== '') {
+      if (errorMessage === '' && errors[fieldName] !== '') {
         setErrors(prevErrors => ({
           ...prevErrors,
-          [fieldName]: error,
+          [fieldName]: errorMessage,
         }));
       }
     } else {
       setErrors(prevErrors => ({
         ...prevErrors,
-        [fieldName]: error,
+        [fieldName]: errorMessage,
       }));
     }
   };

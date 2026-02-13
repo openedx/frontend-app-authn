@@ -27,8 +27,9 @@ import {
   LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
 } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
+import { RegisterProvider } from '../register/components/RegisterContext';
 
-const ResetPasswordPage = () => {
+const ResetPasswordPageInner = () => {
   const { formatMessage } = useIntl();
   const newPasswordError = formatMessage(messages['password.validation.message']);
   const { token } = useParams();
@@ -54,6 +55,29 @@ const ResetPasswordPage = () => {
       setFormErrors({ newPassword: newPasswordError });
     }
   }, [status, newPasswordError]);
+
+  useEffect(() => {
+    if (token && status === TOKEN_STATE.PENDING) {
+      validateResetToken(token, {
+        onSuccess: (data) => {
+          const { is_valid: isValid, token: tokenValue } = data;
+          if (isValid) {
+            setStatus(TOKEN_STATE.VALID);
+            setValidatedToken(tokenValue);
+          } else {
+            setStatus(PASSWORD_RESET.INVALID_TOKEN);
+          }
+        },
+        onError: (error) => {
+          if (error.response?.status === 429) {
+            setStatus(PASSWORD_RESET.FORBIDDEN_REQUEST);
+          } else {
+            setStatus(PASSWORD_RESET.INTERNAL_SERVER_ERROR);
+          }
+        },
+      });
+    }
+  }, [token, status, validateResetToken]);
 
   const validatePasswordFromBackend = async (password) => {
     let errorMessage = '';
@@ -154,95 +178,82 @@ const ResetPasswordPage = () => {
   );
 
   if (status === TOKEN_STATE.PENDING) {
-    if (token) {
-      validateResetToken(token, {
-        onSuccess: (data) => {
-          const { is_valid: isValid, token: tokenValue } = data;
-          if (isValid) {
-            setStatus(TOKEN_STATE.VALID);
-            setValidatedToken(tokenValue);
-          } else {
-            setStatus(PASSWORD_RESET.INVALID_TOKEN);
-          }
-        },
-        onError: (error) => {
-          if (error.response?.status === 429) {
-            setStatus(PASSWORD_RESET.FORBIDDEN_REQUEST);
-          } else {
-            setStatus(PASSWORD_RESET.INTERNAL_SERVER_ERROR);
-          }
-        },
-      });
-      return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
-    }
-  } else if (status === PASSWORD_RESET_ERROR) {
+    return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
+  }
+  if (status === PASSWORD_RESET_ERROR) {
     navigate(updatePathWithQueryParams(RESET_PAGE));
-  } else if (status === 'success') {
+  }
+  if (status === 'success') {
     navigate(updatePathWithQueryParams(LOGIN_PAGE));
-  } else {
-    return (
-      <BaseContainer>
-        <div>
-          <Helmet>
-            <title>
-              {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
-            </title>
-          </Helmet>
-          <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
-            <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
-          </Tabs>
-          <div id="main-content" className="main-content">
-            <div className="mw-xs">
-              <ResetPasswordFailure errorCode={errorCode} errorMsg={errorMsg} />
-              <h4>{formatMessage(messages['reset.password'])}</h4>
-              <p className="mb-4">{formatMessage(messages['reset.password.page.instructions'])}</p>
-              <Form id="set-reset-password-form" name="set-reset-password-form">
-                <PasswordField
-                  name="newPassword"
-                  value={newPassword}
-                  handleChange={(e) => setNewPassword(e.target.value)}
-                  handleBlur={handleOnBlur}
-                  handleFocus={handleOnFocus}
-                  errorMessage={formErrors.newPassword}
-                  floatingLabel={formatMessage(messages['new.password.label'])}
-                />
-                <PasswordField
-                  name="confirmPassword"
-                  value={confirmPassword}
-                  handleChange={handleConfirmPasswordChange}
-                  handleFocus={handleOnFocus}
-                  errorMessage={formErrors.confirmPassword}
-                  showRequirements={false}
-                  floatingLabel={formatMessage(messages['confirm.password.label'])}
-                />
-                <StatefulButton
-                  id="submit-new-password"
-                  name="submit-new-password"
-                  type="submit"
-                  variant="brand"
-                  className="reset-password--button"
-                  state={isResetting ? 'pending' : 'default'}
-                  labels={{
-                    default: formatMessage(messages['reset.password']),
-                    pending: '',
-                  }}
-                  onClick={e => handleSubmit(e)}
-                  onMouseDown={(e) => e.preventDefault()}
-                />
-              </Form>
-            </div>
+  }
+
+  return (
+    <BaseContainer>
+      <div>
+        <Helmet>
+          <title>
+            {formatMessage(messages['reset.password.page.title'], { siteName: getConfig().SITE_NAME })}
+          </title>
+        </Helmet>
+        <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
+          <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+        </Tabs>
+        <div id="main-content" className="main-content">
+          <div className="mw-xs">
+            <ResetPasswordFailure errorCode={errorCode} errorMsg={errorMsg} />
+            <h4>{formatMessage(messages['reset.password'])}</h4>
+            <p className="mb-4">{formatMessage(messages['reset.password.page.instructions'])}</p>
+            <Form id="set-reset-password-form" name="set-reset-password-form">
+              <PasswordField
+                name="newPassword"
+                value={newPassword}
+                handleChange={(e) => setNewPassword(e.target.value)}
+                handleBlur={handleOnBlur}
+                handleFocus={handleOnFocus}
+                errorMessage={formErrors.newPassword}
+                floatingLabel={formatMessage(messages['new.password.label'])}
+              />
+              <PasswordField
+                name="confirmPassword"
+                value={confirmPassword}
+                handleChange={handleConfirmPasswordChange}
+                handleFocus={handleOnFocus}
+                errorMessage={formErrors.confirmPassword}
+                showRequirements={false}
+                floatingLabel={formatMessage(messages['confirm.password.label'])}
+              />
+              <StatefulButton
+                id="submit-new-password"
+                name="submit-new-password"
+                type="submit"
+                variant="brand"
+                className="reset-password--button"
+                state={isResetting ? 'pending' : 'default'}
+                labels={{
+                  default: formatMessage(messages['reset.password']),
+                  pending: '',
+                }}
+                onClick={e => handleSubmit(e)}
+                onMouseDown={(e) => e.preventDefault()}
+              />
+            </Form>
           </div>
         </div>
-      </BaseContainer>
-    );
-  }
-  return null;
+      </div>
+    </BaseContainer>
+  );
 };
 
-ResetPasswordPage.defaultProps = {
+ResetPasswordPageInner.defaultProps = {
   status: null,
   token: null,
   errorMsg: null,
 };
+
+const ResetPasswordPage = (props) => (
+  <RegisterProvider>
+    <ResetPasswordPageInner {...props} />
+  </RegisterProvider>
+);
 
 export default ResetPasswordPage;

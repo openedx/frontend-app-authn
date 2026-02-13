@@ -10,8 +10,8 @@ const getThirdPartyAuthContext = async (urlParams : string) => {
 
   const { data } = await getAuthenticatedHttpClient()
     .get(
-    `${getConfig().LMS_BASE_URL}/api/mfe_context`,
-    requestConfig,
+      `${getConfig().LMS_BASE_URL}/api/mfe_context`,
+      requestConfig,
     );
   return {
     fieldDescriptions: data.registrationFields || {},

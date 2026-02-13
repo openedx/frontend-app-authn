@@ -29,10 +29,10 @@ const mockSaveUserProfileMutation = {
   isError: false,
   error: null,
 };
-const mockThirdPartyAuthMutation = {
-  mutate: mockFetchThirdPartyAuth,
-  isPending: false,
-  isError: false,
+const mockThirdPartyAuthHook = {
+  data: null,
+  isLoading: false,
+  isSuccess: false,
   error: null,
 };
 // Create stable mock values to prevent infinite renders
@@ -58,7 +58,7 @@ jest.mock('../data/apiHook', () => ({
 }));
 
 jest.mock('../../common-components/data/apiHook', () => ({
-  useThirdPartyAuthHook: () => mockThirdPartyAuthMutation,
+  useThirdPartyAuthHook: () => mockThirdPartyAuthHook,
 }));
 
 // Mock the ThirdPartyAuthContext module
@@ -189,6 +189,12 @@ describe('ProgressiveProfilingTests', () => {
     mockFetchThirdPartyAuth.mockClear();
     mockSaveUserProfile.mockClear();
     mockSetThirdPartyAuthContextSuccess.mockClear();
+
+    // Reset third party auth hook mock to default state
+    mockThirdPartyAuthHook.data = null;
+    mockThirdPartyAuthHook.isLoading = false;
+    mockThirdPartyAuthHook.isSuccess = false;
+    mockThirdPartyAuthHook.error = null;
 
     // Configure mock for useThirdPartyAuthContext AFTER clearing mocks
     mockUseThirdPartyAuthContext.mockReturnValue({
@@ -640,13 +646,12 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: '?variant=embedded&host=http://example.com',
       };
-      mockFetchThirdPartyAuth.mockImplementation((params, { onSuccess }) => {
-        onSuccess(mockThirdPartyData);
-      });
+      mockThirdPartyAuthHook.data = mockThirdPartyData;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.error = null;
 
       renderWithProviders(<ProgressiveProfiling />);
 
-      expect(mockFetchThirdPartyAuth).toHaveBeenCalled();
       expect(mockSetThirdPartyAuthContextSuccess).toHaveBeenCalled();
     });
 
@@ -657,9 +662,12 @@ describe('ProgressiveProfilingTests', () => {
         search: '',
       };
 
+      mockThirdPartyAuthHook.data = null;
+      mockThirdPartyAuthHook.isSuccess = false;
+      mockThirdPartyAuthHook.error = null;
+
       renderWithProviders(<ProgressiveProfiling />);
 
-      expect(mockFetchThirdPartyAuth).not.toHaveBeenCalled();
       expect(mockSetThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
     });
   });
