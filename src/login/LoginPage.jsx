@@ -7,7 +7,7 @@ import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import {
   FormGroup,
@@ -39,8 +39,6 @@ import messages from './messages';
 const LoginPage = ({
   institutionLogin,
   handleInstitutionLogin,
-  showResetPasswordSuccessBanner: propShowResetPasswordSuccessBanner = false,
-  dismissPasswordResetBanner,
 }) => {
   // Context for third-party auth
   const {
@@ -50,6 +48,7 @@ const LoginPage = ({
     setThirdPartyAuthContextSuccess,
     setThirdPartyAuthContextFailure,
   } = useThirdPartyAuthContext();
+  const location = useLocation();
 
   const {
     formFields,
@@ -79,7 +78,7 @@ const LoginPage = ({
   });
 
   const [showResetPasswordSuccessBanner,
-    setShowResetPasswordSuccessBanner] = useState(propShowResetPasswordSuccessBanner);
+    setShowResetPasswordSuccessBanner] = useState(location.state?.showResetPasswordSuccessBanner || null);
   const {
     providers,
     currentProvider,
@@ -155,9 +154,6 @@ const LoginPage = ({
     event.preventDefault();
     if (showResetPasswordSuccessBanner) {
       setShowResetPasswordSuccessBanner(false);
-      if (dismissPasswordResetBanner) {
-        dismissPasswordResetBanner();
-      }
     }
 
     const formData = { ...formFields };
@@ -318,8 +314,6 @@ const LoginPage = ({
 LoginPage.propTypes = {
   institutionLogin: PropTypes.bool.isRequired,
   handleInstitutionLogin: PropTypes.func.isRequired,
-  showResetPasswordSuccessBanner: PropTypes.bool,
-  dismissPasswordResetBanner: PropTypes.func,
 };
 
 export default LoginPage;

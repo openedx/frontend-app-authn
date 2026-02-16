@@ -184,7 +184,7 @@ const ResetPasswordPageInner = () => {
     navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
   }
   if (status === 'success') {
-    navigate(updatePathWithQueryParams(LOGIN_PAGE));
+    navigate(updatePathWithQueryParams(LOGIN_PAGE), { state: { showResetPasswordSuccessBanner: true } });
   }
 
   return (
