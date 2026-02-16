@@ -335,7 +335,9 @@ describe('ResetPasswordPage', () => {
     fireEvent.click(resetPasswordButton);
 
     await waitFor(() => {
-      expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
+      expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE, {
+        state: { showResetPasswordSuccessBanner: true },
+      });
     });
   });
 

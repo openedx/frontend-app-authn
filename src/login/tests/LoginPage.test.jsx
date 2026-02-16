@@ -152,17 +152,16 @@ describe('LoginPage', () => {
   });
 
   it('should dismiss reset password banner on form submission', () => {
-    const mockDismissPasswordResetBanner = jest.fn();
-    const propsWithBanner = {
-      ...props,
-      showResetPasswordSuccessBanner: true,
-      dismissPasswordResetBanner: mockDismissPasswordResetBanner,
+    delete window.location;
+    window.location = {
+      href: getConfig().BASE_URL.concat(LOGIN_PAGE),
+      search: '?reset=success',
+      pathname: '/login',
     };
 
-    render(queryWrapper(<LoginPage {...propsWithBanner} />));
+    const { container } = render(queryWrapper(<LoginPage {...props} />));
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-
-    expect(mockDismissPasswordResetBanner).toHaveBeenCalled();
+    expect(container.querySelector('.alert-success, [role="alert"].alert-success')).toBeFalsy();
   });
 
   // ******** test login form validations ********
