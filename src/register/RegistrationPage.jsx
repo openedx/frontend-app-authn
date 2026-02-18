@@ -134,7 +134,7 @@ const RegistrationPage = (props) => {
         setUserPipelineDataLoaded(true);
       }
     }
-  }, [ // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
     thirdPartyAuthApiStatus,
     thirdPartyAuthErrorMessage,
     pipelineUserDetails,
@@ -145,7 +145,7 @@ const RegistrationPage = (props) => {
   if (tpaHint) {
     params.tpa_hint = tpaHint;
   }
-  const { data, isSuccess, error } = useThirdPartyAuthHook(params);
+  const { data, isSuccess, error } = useThirdPartyAuthHook(REGISTER_PAGE, params);
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
@@ -166,8 +166,9 @@ const RegistrationPage = (props) => {
         setThirdPartyAuthContextFailure();
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formStartTime, isSuccess, data, error, setThirdPartyAuthContextBegin]);
+  }, [formStartTime, isSuccess, data, error,
+    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess,
+    setBackendCountryCode, setThirdPartyAuthContextFailure]);
 
   // Handle backend validation errors from context
   useEffect(() => {

@@ -21,7 +21,7 @@ import { useThirdPartyAuthContext } from '../common-components/components/ThirdP
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { LOGIN_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -96,7 +96,7 @@ const LoginPage = ({
   if (tpaHint) {
     params.tpa_hint = tpaHint;
   }
-  const { data, isSuccess, error } = useThirdPartyAuthHook(params);
+  const { data, isSuccess, error } = useThirdPartyAuthHook(LOGIN_PAGE, params);
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
@@ -115,8 +115,8 @@ const LoginPage = ({
     if (error) {
       setThirdPartyAuthContextFailure();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tpaHint, queryParams]);
+  }, [tpaHint, queryParams, isSuccess, data, error,
+    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {
