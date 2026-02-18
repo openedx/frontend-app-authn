@@ -29,6 +29,7 @@ import { useSaveUserProfile } from './data/apiHook';
 import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import {
+  AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
   FAILURE_STATE,
@@ -74,7 +75,8 @@ const ProgressiveProfilingInner = () => {
   const [showModal, setShowModal] = useState(false);
   const [showRecommendationsPage, setShowRecommendationsPage] = useState(false);
 
-  const { data, isSuccess, error } = useThirdPartyAuthHook({ is_welcome_page: true, next: queryParams?.next });
+  const { data, isSuccess, error } = useThirdPartyAuthHook(AUTHN_PROGRESSIVE_PROFILING,
+    { is_welcome_page: true, next: queryParams?.next });
 
   useEffect(() => {
     if (registrationEmbedded) {
@@ -91,8 +93,8 @@ const ProgressiveProfilingInner = () => {
     } else {
       configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getConfig() });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [registrationEmbedded, queryParams?.next]);
+  }, [registrationEmbedded, queryParams?.next, isSuccess, data, error,
+    setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
 
   useEffect(() => {
     const registrationResponse = location.state?.registrationResult;

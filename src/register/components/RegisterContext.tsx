@@ -3,7 +3,7 @@ import {
 } from 'react';
 
 import {
-  RegisterContextType, RegisterState, RegistrationFormData, ValidationData,
+  RegisterContextType, RegisterState, RegistrationFormData, RegistrationResult, ValidationData,
 } from '../types';
 
 const RegisterContext = createContext<RegisterContextType | null>(null);

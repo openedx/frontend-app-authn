@@ -83,6 +83,7 @@ const EmailField = (props) => {
     event.preventDefault();
     handleErrorChange('email', '');
     handleChange({ target: { name: 'email', value: emailSuggestion.suggestion } });
+    setEmailSuggestion({ suggestion: '', type: '' });
     setEmailSuggestionContext({ suggestion: '', type: '' });
   };
 

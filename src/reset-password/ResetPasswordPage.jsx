@@ -244,12 +244,6 @@ const ResetPasswordPageInner = () => {
   );
 };
 
-ResetPasswordPageInner.defaultProps = {
-  status: null,
-  token: null,
-  errorMsg: null,
-};
-
 const ResetPasswordPage = (props) => (
   <RegisterProvider>
     <ResetPasswordPageInner {...props} />
