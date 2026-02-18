@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { mergeConfig } from '@edx/frontend-platform';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { render } from '@testing-library/react';
