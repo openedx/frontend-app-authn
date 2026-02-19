@@ -23,7 +23,7 @@ const LargeLayout = () => {
     || '';
 
   const siteName = getConfig().SITE_NAME;
-  const baseLogoSrc = getConfig().LOGO_WHITE_URL || getConfig().LOGO_URL;
+  const baseLogoSrc = getConfig().LOGO_WHITE_URL || getConfig().LOGO_URL; 
 
   return (
     <div className="w-50 d-flex">
