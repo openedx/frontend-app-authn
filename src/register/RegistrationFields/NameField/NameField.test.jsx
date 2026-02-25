@@ -6,7 +6,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
+import messages from '../../messages';
 import { NameField } from '../index';
+import { MAX_FULL_NAME_LENGTH } from './validator';
 
 const mockStore = configureStore();
 
@@ -89,6 +91,25 @@ describe('NameField', () => {
       expect(props.handleErrorChange).toHaveBeenCalledWith(
         'name',
         'Enter a valid name',
+      );
+    });
+
+    it('should validate for full name length', () => {
+      const longName = `
+        5cnx16mn7qTSbtiha1W473ZtV5prGBCEtNrfLkqizJirf
+        v5kbzBpLRbdh7FY5qujb8viQ9zPziE1fWnbFu5tj4FXaY5GDESvVwjQkE
+        txUPE3r9mk4HYcSfXVJPWAWRuK2LJZycZWDm0BMFLZ63YdyQAZhjyvjn7
+        SCqKjSHDx7mgwFp35PF4CxwtwNLxY11eqf5F88wQ9k2JQ9U8uKSFyTKCM
+        A456CGA5KjUugYdT1qKdvvnXtaQr8WA87m9jpe16
+      `;
+      const { container } = render(routerWrapper(reduxWrapper(<NameField {...props} />)));
+      const nameInput = container.querySelector('input#name');
+      fireEvent.blur(nameInput, { target: { value: longName, name: 'name' } });
+
+      expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
+      expect(props.handleErrorChange).toHaveBeenCalledWith(
+        'name',
+        messages['name.validation.length.message'].defaultMessage.replace('{limit}', MAX_FULL_NAME_LENGTH),
       );
     });
 
