@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Hyperlink, Image } from '@openedx/paragon';

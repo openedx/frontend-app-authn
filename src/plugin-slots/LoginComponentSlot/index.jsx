@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PluginSlot } from '@openedx/frontend-plugin-framework';
 import PropTypes from 'prop-types';
 

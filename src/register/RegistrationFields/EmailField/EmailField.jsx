@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { Alert, Icon } from '@openedx/paragon';
@@ -8,11 +7,8 @@ import PropTypes from 'prop-types';
 
 import validateEmail from './validator';
 import { FormGroup } from '../../../common-components';
-import {
-  clearRegistrationBackendError,
-  fetchRealtimeValidations,
-  setEmailSuggestionInStore,
-} from '../../data/actions';
+import { useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/apiHook';
 import messages from '../../messages';
 
 /**
@@ -29,7 +25,15 @@ import messages from '../../messages';
  */
 const EmailField = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
+
+  const {
+    setValidationsSuccess,
+    setValidationsFailure,
+    validationApiRateLimited,
+    clearRegistrationBackendError,
+    registrationFormData,
+    setEmailSuggestionContext,
+  } = useRegisterContext();
 
   const {
     handleChange,
@@ -37,9 +41,16 @@ const EmailField = (props) => {
     confirmEmailValue,
   } = props;
 
-  const backedUpFormData = useSelector(state => state.register.registrationFormData);
-  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => {
+      setValidationsSuccess(data);
+    },
+    onError: () => {
+      setValidationsFailure();
+    },
+  });
 
+  const backedUpFormData = registrationFormData;
   const [emailSuggestion, setEmailSuggestion] = useState({ ...backedUpFormData?.emailSuggestion });
 
   useEffect(() => {
@@ -53,20 +64,19 @@ const EmailField = (props) => {
     if (confirmEmailError) {
       handleErrorChange('confirm_email', confirmEmailError);
     }
-
-    dispatch(setEmailSuggestionInStore(suggestion));
+    setEmailSuggestionContext(suggestion.suggestion, suggestion.type);
     setEmailSuggestion(suggestion);
 
     if (fieldError) {
       handleErrorChange('email', fieldError);
     } else if (!validationApiRateLimited) {
-      dispatch(fetchRealtimeValidations({ email: value }));
+      fieldValidationsMutation.mutate({ email: value });
     }
   };
 
   const handleOnFocus = () => {
     handleErrorChange('email', '');
-    dispatch(clearRegistrationBackendError('email'));
+    clearRegistrationBackendError('email');
   };
 
   const handleSuggestionClick = (event) => {
@@ -74,6 +84,7 @@ const EmailField = (props) => {
     handleErrorChange('email', '');
     handleChange({ target: { name: 'email', value: emailSuggestion.suggestion } });
     setEmailSuggestion({ suggestion: '', type: '' });
+    setEmailSuggestionContext({ suggestion: '', type: '' });
   };
 
   const handleSuggestionClosed = () => setEmailSuggestion({ suggestion: '', type: '' });

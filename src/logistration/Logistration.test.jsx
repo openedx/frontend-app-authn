@@ -1,108 +1,166 @@
-import { Provider } from 'react-redux';
-
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
 
 import Logistration from './Logistration';
-import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
-import {
-  COMPLETE_STATE, LOGIN_PAGE, REGISTER_PAGE,
-} from '../data/constants';
-import { backupLoginForm } from '../login/data/actions';
-import { backupRegistrationForm } from '../register/data/actions';
+import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+
+// Mock the navigate function
+const mockNavigate = jest.fn();
+const mockGetCsrfToken = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate,
+  Navigate: ({ to }) => {
+    mockNavigate(to);
+    return null;
+  },
+}));
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
 }));
-jest.mock('@edx/frontend-platform/auth');
+jest.mock('@edx/frontend-platform/auth', () => ({
+  getAuthService: () => ({
+    getCsrfTokenService: () => ({
+      getCsrfToken: mockGetCsrfToken,
+    }),
+  }),
+}));
+jest.mock('@edx/frontend-platform', () => ({
+  ...jest.requireActual('@edx/frontend-platform'),
+  getConfig: jest.fn(() => ({
+    ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
+    DISABLE_ENTERPRISE_LOGIN: 'true',
+    SHOW_REGISTRATION_LINKS: 'true',
+    PROVIDERS: [],
+    SECONDARY_PROVIDERS: [{
+      id: 'saml-test_university',
+      name: 'Test University',
+      iconClass: 'fa-university',
+      iconImage: null,
+      loginUrl: '/auth/login/saml-test_university/?auth_entry=login&next=%2Fdashboard',
+      registerUrl: '/auth/login/saml-test_university/?auth_entry=register&next=%2Fdashboard',
+    }],
+    TPA_HINT: '',
+    TPA_PROVIDER_ID: '',
+  })),
+}));
 
-const mockStore = configureStore();
+// Mock the apiHook to prevent logging errors
+jest.mock('../common-components/data/apiHook', () => ({
+  useLoginMutation: jest.fn(() => ({
+    mutate: jest.fn(),
+    isLoading: false,
+    error: null,
+  })),
+  useThirdPartyAuthMutation: jest.fn(() => ({
+    mutate: jest.fn(),
+    isLoading: false,
+    error: null,
+  })),
+  useThirdPartyAuthHook: jest.fn(() => ({
+    mutate: jest.fn(),
+    isLoading: false,
+    error: null,
+  })),
+}));
+
+const secondaryProviders = {
+  id: 'saml-test_university',
+  name: 'Test University',
+  iconClass: 'fa-university',
+  iconImage: null,
+  loginUrl: '/auth/login/saml-test_university/?auth_entry=login&next=%2Fdashboard',
+  registerUrl: '/auth/login/saml-test_university/?auth_entry=register&next=%2Fdashboard',
+};
+
+// Mock the ThirdPartyAuthContext
+const mockClearThirdPartyAuthErrorMessage = jest.fn();
+
+jest.mock('../common-components/components/ThirdPartyAuthContext.tsx', () => ({
+  useThirdPartyAuthContext: jest.fn(() => ({
+    fieldDescriptions: {},
+    optionalFields: {
+      fields: {},
+      extended_profile: [],
+    },
+    thirdPartyAuthApiStatus: null,
+    thirdPartyAuthContext: {
+      autoSubmitRegForm: false,
+      currentProvider: null,
+      finishAuthUrl: null,
+      countryCode: null,
+      providers: [{
+        id: 'oa2-facebook',
+        name: 'Facebook',
+        iconClass: 'fa-facebook',
+        iconImage: null,
+        skipHintedLogin: false,
+        skipRegistrationForm: false,
+        loginUrl: '/auth/login/facebook-oauth2/?auth_entry=login&next=%2Fdashboard',
+        registerUrl: '/auth/login/facebook-oauth2/?auth_entry=register&next=%2Fdashboard',
+      }],
+      secondaryProviders: [{
+        id: 'saml-test',
+        name: 'Test University',
+        iconClass: 'fa-sign-in',
+        iconImage: null,
+        skipHintedLogin: false,
+        skipRegistrationForm: false,
+        loginUrl: '/auth/login/tpa-saml/?auth_entry=login&next=%2Fdashboard',
+        registerUrl: '/auth/login/tpa-saml/?auth_entry=register&next=%2Fdashboard',
+      }],
+      pipelineUserDetails: null,
+      errorMessage: null,
+      welcomePageRedirectUrl: null,
+    },
+    setThirdPartyAuthContextBegin: jest.fn(),
+    setThirdPartyAuthContextSuccess: jest.fn(),
+    setThirdPartyAuthContextFailure: jest.fn(),
+    clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
+  })),
+  ThirdPartyAuthProvider: ({ children }) => children,
+}));
+
+let queryClient;
 
 describe('Logistration', () => {
-  let store = {};
+  const renderWrapper = (children) => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
 
-  const secondaryProviders = {
-    id: 'saml-test',
-    name: 'Test University',
-    loginUrl: '/dummy-auth',
-    registerUrl: '/dummy_auth',
-  };
-
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
-    </IntlProvider>
-  );
-
-  const initialState = {
-    register: {
-      registrationFormData: {
-        configurableFormFields: {
-          marketingEmailsOptIn: true,
-        },
-        formFields: {
-          name: '',
-          email: '',
-          username: '',
-          password: '',
-        },
-        emailSuggestion: {
-          suggestion: '',
-          type: '',
-        },
-        errors: {
-          name: '',
-          email: '',
-          username: '',
-          password: '',
-        },
-      },
-      registrationResult: {
-        success: false,
-        redirectUrl: '',
-      },
-      registrationError: {},
-      usernameSuggestions: [],
-      validationApiRateLimited: false,
-    },
-    commonComponents: {
-      thirdPartyAuthContext: {
-        providers: [],
-        secondaryProviders: [],
-      },
-    },
-    login: {
-      loginResult: {
-        success: false,
-        redirectUrl: '',
-      },
-      loginFormData: {
-        formFields: {
-          emailOrUsername: '', password: '',
-        },
-        errors: {
-          emailOrUsername: '', password: '',
-        },
-      },
-    },
+    return (
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <MemoryRouter>
+            {children}
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
-    jest.mock('@edx/frontend-platform/auth', () => ({
-      getAuthenticatedUser: jest.fn(() => ({
-        userId: 3,
-        username: 'test-user',
-      })),
-    }));
+    // Avoid jest open handle error
+    jest.clearAllMocks();
+    mockNavigate.mockClear();
+    mockGetCsrfToken.mockClear();
 
+    // Configure i18n for testing
     configure({
       loggingService: { logError: jest.fn() },
       config: {
@@ -111,10 +169,25 @@ describe('Logistration', () => {
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
+
+    // Set up default configuration for tests
+    mergeConfig({
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+      ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
+      SHOW_REGISTRATION_LINKS: 'true',
+      TPA_HINT: '',
+      TPA_PROVIDER_ID: '',
+      THIRD_PARTY_AUTH_HINT: '',
+      PROVIDERS: [secondaryProviders],
+      SECONDARY_PROVIDERS: [secondaryProviders],
+      CURRENT_PROVIDER: null,
+      FINISHED_AUTH_PROVIDERS: [],
+      DISABLE_TPA_ON_FORM: false,
+    });
   });
 
   it('should do nothing when user clicks on the same tab (login/register) again', () => {
-    const { container } = render(reduxWrapper(<Logistration />));
+    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
     // While staying on the registration form, clicking the register tab again
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
 
@@ -126,14 +199,14 @@ describe('Logistration', () => {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
-    const { container } = render(reduxWrapper(<Logistration />));
+    const { container } = render(renderWrapper(<Logistration />));
 
     expect(container.querySelector('RegistrationPage')).toBeDefined();
   });
 
   it('should render login page', () => {
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<Logistration {...props} />));
+    const { container } = render(renderWrapper(<Logistration {...props} />));
 
     expect(container.querySelector('LoginPage')).toBeDefined();
   });
@@ -144,18 +217,18 @@ describe('Logistration', () => {
     });
 
     let props = { selectedPage: LOGIN_PAGE };
-    const { rerender } = render(reduxWrapper(<Logistration {...props} />));
+    const { rerender } = render(renderWrapper(<Logistration {...props} />));
 
-    // verifying sign in heading
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    // verifying sign in tab
+    expect(screen.getByRole('tab', { name: 'Sign in' })).toBeDefined();
 
     // register page is still accessible when SHOW_REGISTRATION_LINKS is false
     // but it needs to be accessed directly
     props = { selectedPage: REGISTER_PAGE };
-    rerender(reduxWrapper(<Logistration {...props} />));
+    rerender(renderWrapper(<Logistration {...props} />));
 
-    // verifying register heading
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Register');
+    // verifying register button
+    expect(screen.getByRole('button', { name: 'Create an account for free' })).toBeDefined();
   });
 
   it('should render only login page when public account creation is disabled', () => {
@@ -165,24 +238,11 @@ describe('Logistration', () => {
       SHOW_REGISTRATION_LINKS: 'true',
     });
 
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        thirdPartyAuthContext: {
-          currentProvider: null,
-          finishAuthUrl: null,
-          providers: [],
-          secondaryProviders: [secondaryProviders],
-        },
-        thirdPartyAuthApiStatus: COMPLETE_STATE,
-      },
-    });
-
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<Logistration {...props} />));
+    const { container } = render(renderWrapper(<Logistration {...props} />));
 
-    // verifying sign in heading for institution login false
-    expect(screen.getByRole('heading', { level: 3 }).textContent).toEqual('Sign in');
+    // verifying sign in tab for institution login false
+    expect(screen.getByRole('tab', { name: 'Sign in' })).toBeDefined();
 
     // verifying tabs heading for institution login true
     fireEvent.click(screen.getByRole('link'));
@@ -195,21 +255,8 @@ describe('Logistration', () => {
       ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
     });
 
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        thirdPartyAuthContext: {
-          currentProvider: null,
-          finishAuthUrl: null,
-          providers: [],
-          secondaryProviders: [secondaryProviders],
-        },
-        thirdPartyAuthApiStatus: COMPLETE_STATE,
-      },
-    });
-
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<Logistration {...props} />));
+    render(renderWrapper(<Logistration {...props} />));
     expect(screen.getByText('Institution/campus credentials')).toBeDefined();
 
     // on clicking "Institution/campus credentials" button, it should display institution login page
@@ -226,21 +273,8 @@ describe('Logistration', () => {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        thirdPartyAuthContext: {
-          currentProvider: null,
-          finishAuthUrl: null,
-          providers: [],
-          secondaryProviders: [secondaryProviders],
-        },
-        thirdPartyAuthApiStatus: COMPLETE_STATE,
-      },
-    });
-
     const props = { selectedPage: LOGIN_PAGE };
-    render(reduxWrapper(<Logistration {...props} />));
+    render(renderWrapper(<Logistration {...props} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
 
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
@@ -256,23 +290,10 @@ describe('Logistration', () => {
       DISABLE_ENTERPRISE_LOGIN: 'true',
     });
 
-    store = mockStore({
-      ...initialState,
-      commonComponents: {
-        thirdPartyAuthContext: {
-          currentProvider: null,
-          finishAuthUrl: null,
-          providers: [],
-          secondaryProviders: [secondaryProviders],
-        },
-        thirdPartyAuthApiStatus: COMPLETE_STATE,
-      },
-    });
-
     delete window.location;
     window.location = { hostname: getConfig().SITE_NAME, href: getConfig().BASE_URL };
 
-    render(reduxWrapper(<Logistration />));
+    render(renderWrapper(<Logistration />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
@@ -281,25 +302,52 @@ describe('Logistration', () => {
     });
   });
 
-  it('should fire action to backup registration form on tab click', () => {
-    store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<Logistration />));
+  it('should switch to login tab when login tab is clicked', () => {
+    const { container } = render(renderWrapper(<Logistration />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationForm());
+    // Verify the tab switch occurred - check for active login tab
+    expect(container.querySelector('a[data-rb-event-key="/login"].active')).toBeTruthy();
   });
 
-  it('should fire action to backup login form on tab click', () => {
-    store.dispatch = jest.fn(store.dispatch);
+  it('should switch to register tab when register tab is clicked', () => {
     const props = { selectedPage: LOGIN_PAGE };
-    const { container } = render(reduxWrapper(<Logistration {...props} />));
+    const { container } = render(renderWrapper(<Logistration {...props} />));
     fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(backupLoginForm());
+    // Verify the tab switch occurred - check for active register tab
+    expect(container.querySelector('a[data-rb-event-key="/register"].active')).toBeTruthy();
   });
 
   it('should clear tpa context errorMessage tab click', () => {
-    store.dispatch = jest.fn(store.dispatch);
-    const { container } = render(reduxWrapper(<Logistration />));
+    const { container } = render(renderWrapper(<Logistration />));
+
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
-    expect(store.dispatch).toHaveBeenCalledWith(clearThirdPartyAuthContextErrorMessage());
+    expect(mockClearThirdPartyAuthErrorMessage).toHaveBeenCalled();
+  });
+
+  it('should call authService getCsrfTokenService on component mount', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    expect(mockGetCsrfToken).toHaveBeenCalledWith(getConfig().LMS_BASE_URL);
+  });
+
+  it('should send correct page events for login and register when handling institution login', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    const institutionButton = screen.getByText('Institution/campus credentials');
+    fireEvent.click(institutionButton);
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    const { container: registerContainer } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    const registerInstitutionButton = registerContainer.querySelector('#institution-login');
+    if (registerInstitutionButton) {
+      fireEvent.click(registerInstitutionButton);
+      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+    }
+  });
+
+  it('should handle institution login with string parameters correctly', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    const institutionButton = screen.getByText('Institution/campus credentials');
+    sendPageEvent.mockClear();
+    fireEvent.click(institutionButton);
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
   });
 });

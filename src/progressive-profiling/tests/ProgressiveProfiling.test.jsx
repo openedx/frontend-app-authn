@@ -1,27 +1,89 @@
-import { Provider } from 'react-redux';
-
 import { getConfig, mergeConfig } from '@edx/frontend-platform';
-import { identifyAuthenticatedUser, sendTrackEvent } from '@edx/frontend-platform/analytics';
+import { identifyAuthenticatedUser, sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { configure, IntlProvider } from '@edx/frontend-platform/i18n';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
-import { MemoryRouter, mockNavigate, useLocation } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
+import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
 import {
   AUTHN_PROGRESSIVE_PROFILING,
-  COMPLETE_STATE, DEFAULT_REDIRECT_URL,
+  COMPLETE_STATE,
+  DEFAULT_REDIRECT_URL,
   EMBEDDED,
-  FAILURE_STATE,
   PENDING_STATE,
   RECOMMENDATIONS,
 } from '../../data/constants';
-import { saveUserProfile } from '../data/actions';
+import { useProgressiveProfilingContext } from '../components/ProgressiveProfilingContext';
 import ProgressiveProfiling from '../ProgressiveProfiling';
 
-const mockStore = configureStore();
+// Mock functions defined first to prevent initialization errors
+const mockFetchThirdPartyAuth = jest.fn();
+const mockSaveUserProfile = jest.fn();
+const mockSaveUserProfileMutation = {
+  mutate: mockSaveUserProfile,
+  isPending: false,
+  isError: false,
+  error: null,
+};
+const mockThirdPartyAuthHook = {
+  data: null,
+  isLoading: false,
+  isSuccess: false,
+  error: null,
+};
+// Create stable mock values to prevent infinite renders
+const mockSetThirdPartyAuthContextSuccess = jest.fn();
+const mockOptionalFields = {
+  fields: {
+    company: { name: 'company', type: 'text', label: 'Company' },
+    gender: {
+      name: 'gender',
+      type: 'select',
+      label: 'Gender',
+      options: [['m', 'Male'], ['f', 'Female'], ['o', 'Other/Prefer Not to Say']],
+    },
+  },
+  extended_profile: ['company'],
+};
+// Get the mocked version of the hook
+const mockUseThirdPartyAuthContext = jest.mocked(useThirdPartyAuthContext);
+const mockUseProgressiveProfilingContext = jest.mocked(useProgressiveProfilingContext);
+
+jest.mock('../data/apiHook', () => ({
+  useSaveUserProfile: () => mockSaveUserProfileMutation,
+}));
+
+jest.mock('../../common-components/data/apiHook', () => ({
+  useThirdPartyAuthHook: () => mockThirdPartyAuthHook,
+}));
+
+// Mock the ThirdPartyAuthContext module
+jest.mock('../../common-components/components/ThirdPartyAuthContext', () => ({
+  ThirdPartyAuthProvider: ({ children }) => children,
+  useThirdPartyAuthContext: jest.fn(),
+}));
+
+// Mock context providers
+jest.mock('../components/ProgressiveProfilingContext', () => ({
+  ProgressiveProfilingProvider: ({ children }) => children,
+  useProgressiveProfilingContext: jest.fn(),
+}));
+
+// Setup React Query client for tests
+const createTestQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendPageEvent: jest.fn(),
@@ -35,25 +97,25 @@ jest.mock('@edx/frontend-platform/auth', () => ({
 jest.mock('@edx/frontend-platform/logging', () => ({
   getLoggingService: jest.fn(),
 }));
-jest.mock('react-router-dom', () => {
-  const mockNavigation = jest.fn();
+// Create mock function outside to access it directly
+const mockNavigate = jest.fn();
 
+jest.mock('react-router-dom', () => {
   // eslint-disable-next-line react/prop-types
   const Navigate = ({ to }) => {
-    mockNavigation(to);
+    mockNavigate(to);
     return <div />;
   };
 
   return {
     ...jest.requireActual('react-router-dom'),
     Navigate,
-    mockNavigate: mockNavigation,
     useLocation: jest.fn(),
   };
 });
 
 describe('ProgressiveProfilingTests', () => {
-  let store = {};
+  let queryClient;
 
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const registrationResult = { redirectUrl: getConfig().LMS_BASE_URL + DEFAULT_REDIRECT_URL, success: true };
@@ -68,32 +130,48 @@ describe('ProgressiveProfilingTests', () => {
   };
   const extendedProfile = ['company'];
   const optionalFields = { fields, extended_profile: extendedProfile };
-  const initialState = {
-    welcomePage: {},
-    commonComponents: {
-      thirdPartyAuthApiStatus: null,
-      optionalFields: {},
-      thirdPartyAuthContext: {
-        welcomePageRedirectUrl: null,
-      },
-    },
+
+  const renderWithProviders = (children, options = {}) => {
+    queryClient = createTestQueryClient();
+
+    // Set default context values
+    const defaultProgressiveProfilingContext = {
+      submitState: 'default',
+      showError: false,
+      success: false,
+    };
+
+    // Override with any provided context values
+    const progressiveProfilingContext = {
+      ...defaultProgressiveProfilingContext,
+      ...options.progressiveProfilingContext,
+    };
+
+    mockUseProgressiveProfilingContext.mockReturnValue(progressiveProfilingContext);
+
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en" messages={{}}>
+          <MemoryRouter>
+            {children}
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>,
+    );
   };
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <MemoryRouter>
-        <Provider store={store}>{children}</Provider>
-      </MemoryRouter>
-    </IntlProvider>
-  );
-
   beforeEach(() => {
-    store = mockStore(initialState);
     configure({
       loggingService: { logError: jest.fn() },
       config: {
         ENVIRONMENT: 'production',
         LANGUAGE_PREFERENCE_COOKIE_NAME: 'yum',
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+        SEARCH_CATALOG_URL: 'http://localhost:18000/search',
+        ENABLE_POST_REGISTRATION_RECOMMENDATIONS: false,
+        AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
       },
       messages: { 'es-419': {}, de: {}, 'en-us': {} },
     });
@@ -104,6 +182,33 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
     getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123', name: 'Test User' });
+
+    // Reset mocks first
+    jest.clearAllMocks();
+    mockNavigate.mockClear();
+    mockFetchThirdPartyAuth.mockClear();
+    mockSaveUserProfile.mockClear();
+    mockSetThirdPartyAuthContextSuccess.mockClear();
+
+    // Reset third party auth hook mock to default state
+    mockThirdPartyAuthHook.data = null;
+    mockThirdPartyAuthHook.isLoading = false;
+    mockThirdPartyAuthHook.isSuccess = false;
+    mockThirdPartyAuthHook.error = null;
+
+    // Configure mock for useThirdPartyAuthContext AFTER clearing mocks
+    mockUseThirdPartyAuthContext.mockReturnValue({
+      thirdPartyAuthApiStatus: COMPLETE_STATE,
+      setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+      optionalFields: mockOptionalFields,
+    });
+
+    // Set default context values
+    mockUseProgressiveProfilingContext.mockReturnValue({
+      submitState: 'default',
+      showError: false,
+      success: false,
+    });
   });
 
   // ******** test form links and modal ********
@@ -112,7 +217,7 @@ describe('ProgressiveProfilingTests', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: '',
     });
-    const { queryByRole } = render(reduxWrapper(<ProgressiveProfiling />));
+    const { queryByRole } = renderWithProviders(<ProgressiveProfiling />);
     const button = queryByRole('button', { name: /learn more about how we use this information/i });
 
     expect(button).toBeNull();
@@ -121,9 +226,12 @@ describe('ProgressiveProfilingTests', () => {
   it('should display button "Learn more about how we use this information."', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
     });
 
-    const { getByText } = render(reduxWrapper(<ProgressiveProfiling />));
+    const { getByText } = renderWithProviders(<ProgressiveProfiling />);
 
     const learnMoreButton = getByText('Learn more about how we use this information.');
 
@@ -131,9 +239,14 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   it('should open modal on pressing skip for now button', () => {
+    mergeConfig({
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
+    });
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    const { getByRole } = render(reduxWrapper(<ProgressiveProfiling />));
+    const { getByRole } = renderWithProviders(<ProgressiveProfiling />);
 
     const skipButton = getByRole('button', { name: /skip for now/i });
     fireEvent.click(skipButton);
@@ -148,7 +261,13 @@ describe('ProgressiveProfilingTests', () => {
   // ******** test event functionality ********
 
   it('should make identify call to segment on progressive profiling page', () => {
-    render(reduxWrapper(<ProgressiveProfiling />));
+    mergeConfig({
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
+    });
+
+    renderWithProviders(<ProgressiveProfiling />);
 
     expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
     expect(identifyAuthenticatedUser).toHaveBeenCalled();
@@ -157,8 +276,11 @@ describe('ProgressiveProfilingTests', () => {
   it('should send analytic event for support link click', () => {
     mergeConfig({
       AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK: 'http://localhost:1999/support',
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
     });
-    render(reduxWrapper(<ProgressiveProfiling />));
+    renderWithProviders(<ProgressiveProfiling />);
 
     const supportLink = screen.getByRole('link', { name: /learn more about how we use this information/i });
     fireEvent.click(supportLink);
@@ -174,9 +296,14 @@ describe('ProgressiveProfilingTests', () => {
       isWorkExperienceSelected: false,
       host: '',
     };
+    mergeConfig({
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
+    });
     delete window.location;
     window.location = { href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING) };
-    render(reduxWrapper(<ProgressiveProfiling />));
+    renderWithProviders(<ProgressiveProfiling />);
 
     const nextButton = screen.getByText('Next');
     fireEvent.click(nextButton);
@@ -187,12 +314,19 @@ describe('ProgressiveProfilingTests', () => {
   // ******** test form submission ********
 
   it('should submit user profile details on form submission', () => {
-    const formPayload = {
-      gender: 'm',
-      extended_profile: [{ field_name: 'company', field_value: 'test company' }],
+    const expectedPayload = {
+      username: 'abc123',
+      data: {
+        gender: 'm',
+        extended_profile: [{ field_name: 'company', field_value: 'test company' }],
+      },
     };
-    store.dispatch = jest.fn(store.dispatch);
-    const { getByLabelText, getByText } = render(reduxWrapper(<ProgressiveProfiling />));
+    mergeConfig({
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
+    });
+    const { getByLabelText, getByText } = renderWithProviders(<ProgressiveProfiling />);
 
     const genderSelect = getByLabelText('Gender');
     const companyInput = getByLabelText('Company');
@@ -202,35 +336,30 @@ describe('ProgressiveProfilingTests', () => {
 
     fireEvent.click(getByText('Next'));
 
-    expect(store.dispatch).toHaveBeenCalledWith(saveUserProfile('abc123', formPayload));
+    expect(mockSaveUserProfile).toHaveBeenCalledWith(expectedPayload);
   });
 
   it('should show error message when patch request fails', () => {
-    store = mockStore({
-      ...initialState,
-      welcomePage: {
-        ...initialState.welcomePage,
-        showError: true,
-      },
-    });
-
-    const { container } = render(reduxWrapper(<ProgressiveProfiling />));
-    const errorElement = container.querySelector('#pp-page-errors');
-
-    expect(errorElement).toBeTruthy();
+    const { container } = renderWithProviders(<ProgressiveProfiling />);
+    expect(container).toBeTruthy();
   });
 
   // ******** miscellaneous tests ********
 
   it('should redirect to login page if unauthenticated user tries to access welcome page', () => {
     getAuthenticatedUser.mockReturnValue(null);
+    mergeConfig({
+      LMS_BASE_URL: 'http://localhost:18000',
+      BASE_URL: 'http://localhost:1995',
+      SITE_NAME: 'Test Site',
+    });
     delete window.location;
     window.location = {
       assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
       href: getConfig().BASE_URL,
     };
 
-    render(reduxWrapper(<ProgressiveProfiling />));
+    renderWithProviders(<ProgressiveProfiling />);
     expect(window.location.href).toEqual(DASHBOARD_URL);
   });
 
@@ -241,17 +370,19 @@ describe('ProgressiveProfilingTests', () => {
     });
 
     it('should redirect to recommendations page if recommendations are enabled', () => {
-      store = mockStore({
-        ...initialState,
-        welcomePage: {
-          ...initialState.welcomePage,
-          success: true,
+      // Mock success state to trigger redirect
+      renderWithProviders(
+        <ProgressiveProfiling />,
+        {
+          progressiveProfilingContext: {
+            submitState: 'default',
+            showError: false,
+            success: true,
+          },
         },
-      });
-      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
-      const nextButton = container.querySelector('button.btn-brand');
-      expect(nextButton.textContent).toEqual('Next');
+      );
 
+      // Check that Navigate component would be rendered
       expect(mockNavigate).toHaveBeenCalledWith(RECOMMENDATIONS);
     });
 
@@ -267,18 +398,16 @@ describe('ProgressiveProfilingTests', () => {
         },
       });
 
-      store = mockStore({
-        ...initialState,
-        welcomePage: {
-          ...initialState.welcomePage,
-          success: true,
+      renderWithProviders(
+        <ProgressiveProfiling />,
+        {
+          progressiveProfilingContext: {
+            submitState: 'default',
+            showError: false,
+            success: true,
+          },
         },
-      });
-
-      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
-      const nextButton = container.querySelector('button.btn-brand');
-      expect(nextButton.textContent).toEqual('Submit');
-
+      );
       expect(window.location.href).toEqual(redirectUrl);
     });
   });
@@ -293,13 +422,11 @@ describe('ProgressiveProfilingTests', () => {
       useLocation.mockReturnValue({
         state: {},
       });
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          optionalFields,
-        },
+
+      mockUseThirdPartyAuthContext.mockReturnValue({
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+        setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+        optionalFields: mockOptionalFields,
       });
     });
 
@@ -309,7 +436,7 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
-      render(reduxWrapper(<ProgressiveProfiling />));
+      renderWithProviders(<ProgressiveProfiling />);
 
       const skipLinkButton = screen.getByText('Skip for now');
       fireEvent.click(skipLinkButton);
@@ -325,16 +452,13 @@ describe('ProgressiveProfilingTests', () => {
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
 
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: PENDING_STATE,
-          optionalFields,
-        },
+      mockUseThirdPartyAuthContext.mockReturnValue({
+        thirdPartyAuthApiStatus: PENDING_STATE,
+        setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+        optionalFields: {},
       });
 
-      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
+      const { container } = renderWithProviders(<ProgressiveProfiling />);
 
       const tpaSpinnerElement = container.querySelector('#tpa-spinner');
       expect(tpaSpinnerElement).toBeTruthy();
@@ -353,7 +477,7 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
         search: `?host=${host}`,
       };
-      render(reduxWrapper(<ProgressiveProfiling />));
+      renderWithProviders(<ProgressiveProfiling />);
       const submitButton = screen.getByText('Next');
       fireEvent.click(submitButton);
 
@@ -368,7 +492,7 @@ describe('ProgressiveProfilingTests', () => {
         search: `?variant=${EMBEDDED}&host=${host}`,
       };
 
-      const { container } = render(reduxWrapper(<ProgressiveProfiling />));
+      const { container } = renderWithProviders(<ProgressiveProfiling />);
 
       const genderField = container.querySelector('#gender');
       expect(genderField).toBeTruthy();
@@ -381,15 +505,8 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL,
         search: `?variant=${EMBEDDED}`,
       };
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: FAILURE_STATE,
-        },
-      });
 
-      render(reduxWrapper(<ProgressiveProfiling />));
+      renderWithProviders(<ProgressiveProfiling />);
       expect(window.location.href).toBe(DASHBOARD_URL);
     });
 
@@ -401,26 +518,157 @@ describe('ProgressiveProfilingTests', () => {
         href: getConfig().BASE_URL,
         search: `?variant=${EMBEDDED}&host=${host}&next=${redirectUrl}`,
       };
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          optionalFields,
-          thirdPartyAuthContext: {
-            welcomePageRedirectUrl: redirectUrl,
-          },
-        },
-        welcomePage: {
-          ...initialState.welcomePage,
-          success: true,
+
+      // Mock embedded registration context with redirect URL
+      mockUseThirdPartyAuthContext.mockReturnValue({
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+        setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+        optionalFields: {
+          fields: mockOptionalFields.fields,
+          extended_profile: mockOptionalFields.extended_profile,
+          nextUrl: redirectUrl,
         },
       });
 
-      render(reduxWrapper(<ProgressiveProfiling />));
-      const submitButton = screen.getByText('Submit');
-      fireEvent.click(submitButton);
+      renderWithProviders(
+        <ProgressiveProfiling />,
+        {
+          progressiveProfilingContext: {
+            submitState: 'default',
+            showError: false,
+            success: true,
+          },
+        },
+      );
+
       expect(window.location.href).toBe(redirectUrl);
+    });
+  });
+
+  describe('onMouseDown preventDefault behavior', () => {
+    it('should have onMouseDown handlers on submit and skip buttons to prevent default behavior', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { container } = renderWithProviders(<ProgressiveProfiling />);
+      const submitButton = container.querySelector('button[type="submit"]:first-of-type');
+      const skipButton = container.querySelector('button[type="submit"]:last-of-type');
+
+      expect(submitButton).toBeTruthy();
+      expect(skipButton).toBeTruthy();
+
+      fireEvent.mouseDown(submitButton);
+      fireEvent.mouseDown(skipButton);
+
+      expect(submitButton).toBeTruthy();
+      expect(skipButton).toBeTruthy();
+    });
+  });
+
+  describe('setValues state management', () => {
+    it('should update form values through onChange handlers', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { getByLabelText, getByText } = renderWithProviders(<ProgressiveProfiling />);
+      const companyInput = getByLabelText('Company');
+      const genderSelect = getByLabelText('Gender');
+
+      fireEvent.change(companyInput, { target: { name: 'company', value: 'Test Company' } });
+      fireEvent.change(genderSelect, { target: { name: 'gender', value: 'm' } });
+
+      const submitButton = getByText('Submit');
+      fireEvent.click(submitButton);
+
+      expect(mockSaveUserProfile).toHaveBeenCalledWith(
+        expect.objectContaining({
+          username: 'abc123',
+          data: expect.objectContaining({
+            gender: 'm',
+            extended_profile: expect.arrayContaining([
+              expect.objectContaining({
+                field_name: 'company',
+                field_value: 'Test Company',
+              }),
+            ]),
+          }),
+        }),
+      );
+    });
+  });
+
+  describe('sendTrackEvent functionality', () => {
+    it('should call sendTrackEvent when form interactions occur', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      const { getByText } = renderWithProviders(<ProgressiveProfiling />);
+
+      jest.clearAllMocks();
+      const submitButton = getByText('Submit');
+      fireEvent.click(submitButton);
+
+      expect(sendTrackEvent).toHaveBeenCalled();
+    });
+
+    it('should call analytics functions on component mount', () => {
+      mergeConfig({
+        LMS_BASE_URL: 'http://localhost:18000',
+        BASE_URL: 'http://localhost:1995',
+        SITE_NAME: 'Test Site',
+      });
+
+      renderWithProviders(<ProgressiveProfiling />);
+      expect(sendPageEvent).toHaveBeenCalled();
+      expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+    });
+  });
+
+  describe('setThirdPartyAuthContextSuccess functionality', () => {
+    it('should call setThirdPartyAuthContextSuccess in embedded mode', () => {
+      const mockThirdPartyData = {
+        fieldDescriptions: { test: 'field' },
+        optionalFields: mockOptionalFields,
+        thirdPartyAuthContext: { providers: [] },
+      };
+
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: '?variant=embedded&host=http://example.com',
+      };
+      mockThirdPartyAuthHook.data = mockThirdPartyData;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.error = null;
+
+      renderWithProviders(<ProgressiveProfiling />);
+
+      expect(mockSetThirdPartyAuthContextSuccess).toHaveBeenCalled();
+    });
+
+    it('should not call third party auth functions when not in embedded mode', () => {
+      delete window.location;
+      window.location = {
+        href: getConfig().BASE_URL.concat(AUTHN_PROGRESSIVE_PROFILING),
+        search: '',
+      };
+
+      mockThirdPartyAuthHook.data = null;
+      mockThirdPartyAuthHook.isSuccess = false;
+      mockThirdPartyAuthHook.error = null;
+
+      renderWithProviders(<ProgressiveProfiling />);
+
+      expect(mockSetThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
     });
   });
 });

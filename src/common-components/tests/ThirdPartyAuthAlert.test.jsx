@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import renderer from 'react-test-renderer';
 

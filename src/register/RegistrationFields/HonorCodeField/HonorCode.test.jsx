@@ -9,7 +9,8 @@ describe('HonorCodeTest', () => {
     PRIVACY_POLICY: 'http://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'http://tos-and-honot-code.com',
   });
-  // eslint-disable-next-line no-unused-vars
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let value = false;
 
   const changeHandler = (e) => {

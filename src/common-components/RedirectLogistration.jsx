@@ -22,7 +22,6 @@ const RedirectLogistration = (props) => {
     host,
   } = props;
   let finalRedirectUrl = '';
-
   if (success) {
     // If we're in a third party auth pipeline, we must complete the pipeline
     // once user has successfully logged in. Otherwise, redirect to the specified redirect url.

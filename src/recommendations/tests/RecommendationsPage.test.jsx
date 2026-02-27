@@ -1,24 +1,39 @@
-import { Provider } from 'react-redux';
-
 import { getConfig } from '@edx/frontend-platform';
 import { sendTrackEvent } from '@edx/frontend-platform/analytics';
 import { IntlProvider } from '@edx/frontend-platform/i18n';
 import { useMediaQuery } from '@openedx/paragon';
-import { fireEvent, render } from '@testing-library/react';
-import { useLocation } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { act, fireEvent, render } from '@testing-library/react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { DEFAULT_REDIRECT_URL } from '../../data/constants';
+import { useRegisterContext } from '../../register/components/RegisterContext';
 import { PERSONALIZED } from '../data/constants';
 import useAlgoliaRecommendations from '../data/hooks/useAlgoliaRecommendations';
 import mockedRecommendedProducts from '../data/tests/mockedData';
 import RecommendationsPage from '../RecommendationsPage';
 import { eventNames, getProductMapping } from '../track';
 
-const mockStore = configureStore();
+// Setup React Query client for tests
+const createTestQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
 
 jest.mock('@edx/frontend-platform/analytics', () => ({
   sendTrackEvent: jest.fn(),
+}));
+
+jest.mock('@edx/frontend-platform', () => ({
+  getConfig: jest.fn(() => ({
+    LMS_BASE_URL: 'http://localhost:18000',
+  })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -33,8 +48,13 @@ jest.mock('@openedx/paragon', () => ({
 
 jest.mock('../data/hooks/useAlgoliaRecommendations', () => jest.fn());
 
+jest.mock('../../register/components/RegisterContext', () => ({
+  ...jest.requireActual('../../register/components/RegisterContext'),
+  useRegisterContext: jest.fn(),
+}));
+
 describe('RecommendationsPageTests', () => {
-  let store = {};
+  let queryClient;
 
   const dashboardUrl = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const redirectUrl = getConfig().LMS_BASE_URL.concat('/course-about-page-url');
@@ -43,65 +63,136 @@ describe('RecommendationsPageTests', () => {
     redirectUrl,
     success: true,
   };
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
-  );
 
-  const mockUseLocation = () => (
+  const renderWithProviders = (children) => {
+    queryClient = createTestQueryClient();
+
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en" messages={{}}>
+          <MemoryRouter>
+            {children}
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>,
+    );
+  };
+
+  const mockUseRegisterContext = (regResult = null, backendCountryCode = 'US') => {
+    useRegisterContext.mockReturnValue({
+      registrationResult: regResult,
+      backendCountryCode,
+    });
+  };
+
+  const mockLocationState = (userId = 111) => {
     useLocation.mockReturnValue({
+      pathname: '/recommendations',
       state: {
-        registrationResult,
-        userId: 111,
-      },
-    })
-  );
-
-  beforeEach(() => {
-    store = mockStore({
-      register: {
-        backendCountryCode: 'PK',
+        userId,
       },
     });
+  };
+
+  beforeEach(() => {
     useLocation.mockReturnValue({
       state: {},
+    });
+
+    useRegisterContext.mockReturnValue({
+      registrationResult: null,
+      backendCountryCode: 'US',
     });
 
     useAlgoliaRecommendations.mockReturnValue({
       recommendations: mockedRecommendedProducts,
       isLoading: false,
     });
+
+    let mockHref = '';
+    delete window.location;
+    window.location = {
+      href: '',
+      assign: jest.fn(),
+      reload: jest.fn(),
+      replace: jest.fn(),
+    };
+
+    // Mock the href property with getter and setter
+    Object.defineProperty(window.location, 'href', {
+      get: () => mockHref,
+      set: (value) => { mockHref = value; },
+      configurable: true,
+    });
   });
 
   it('should redirect to dashboard if user is not coming from registration workflow', () => {
-    render(reduxWrapper(<RecommendationsPage />));
-    expect(window.location.href).toEqual(dashboardUrl);
+    const originalLocationHref = window.location.href;
+    const setHref = jest.fn();
+    Object.defineProperty(window.location, 'href', {
+      get: () => originalLocationHref,
+      set: setHref,
+      configurable: true,
+    });
+
+    act(() => {
+      renderWithProviders(<RecommendationsPage />);
+    });
+
+    expect(setHref).toHaveBeenCalledWith(dashboardUrl);
   });
 
   it('should redirect user if no personalized recommendations are available', () => {
+    const originalLocationHref = window.location.href;
+    const setHref = jest.fn();
+    Object.defineProperty(window.location, 'href', {
+      get: () => originalLocationHref,
+      set: setHref,
+      configurable: true,
+    });
+
+    // This test needs registrationResult to get past the first redirect check
+    mockUseRegisterContext(registrationResult);
     useAlgoliaRecommendations.mockReturnValue({
-      recommendations: [],
+      recommendations: [], // Empty recommendations array
       isLoading: false,
     });
-    render(reduxWrapper(<RecommendationsPage />));
-    expect(window.location.href).toEqual(dashboardUrl);
+
+    act(() => {
+      renderWithProviders(<RecommendationsPage />);
+    });
+
+    expect(setHref).toHaveBeenCalledWith(redirectUrl);
   });
 
   it('should redirect user if they click "Skip for now" button', () => {
-    mockUseLocation();
+    const originalLocationHref = window.location.href;
+    const setHref = jest.fn();
+    Object.defineProperty(window.location, 'href', {
+      get: () => originalLocationHref,
+      set: setHref,
+      configurable: true,
+    });
+
+    mockUseRegisterContext(registrationResult);
     jest.useFakeTimers();
-    const { container } = render(reduxWrapper(<RecommendationsPage />));
+    let container;
+    act(() => {
+      ({ container } = renderWithProviders(<RecommendationsPage />));
+    });
     const skipButton = container.querySelector('.pgn__stateful-btn-state-default');
-    fireEvent.click(skipButton);
-    jest.advanceTimersByTime(300);
-    expect(window.location.href).toEqual(redirectUrl);
+    act(() => {
+      fireEvent.click(skipButton);
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(setHref).toHaveBeenCalledWith(redirectUrl);
   });
 
   it('should display recommendations small layout for small screen', () => {
-    mockUseLocation();
+    mockUseRegisterContext(registrationResult);
     useMediaQuery.mockReturnValue(true);
-    const { container } = render(reduxWrapper(<RecommendationsPage />));
+    const { container } = renderWithProviders(<RecommendationsPage />);
 
     const recommendationsSmallLayout = container.querySelector('#recommendations-small-layout');
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
@@ -111,9 +202,9 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display recommendations large layout for large screen', () => {
-    mockUseLocation();
+    mockUseRegisterContext(registrationResult);
     useMediaQuery.mockReturnValue(false);
-    const { container } = render(reduxWrapper(<RecommendationsPage />));
+    const { container } = renderWithProviders(<RecommendationsPage />);
 
     const pgnCollapsible = container.querySelector('.pgn_collapsible');
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
@@ -123,13 +214,13 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display skeletons if recommendations are loading for large screen', () => {
-    mockUseLocation();
+    mockUseRegisterContext(registrationResult);
     useMediaQuery.mockReturnValue(false);
     useAlgoliaRecommendations.mockReturnValueOnce({
       recommendations: [],
       isLoading: true,
     });
-    const { container } = render(reduxWrapper(<RecommendationsPage />));
+    const { container } = renderWithProviders(<RecommendationsPage />);
 
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
 
@@ -137,13 +228,13 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display skeletons if recommendations are loading for small screen', () => {
-    mockUseLocation();
+    mockUseRegisterContext(registrationResult);
     useMediaQuery.mockReturnValue(true);
     useAlgoliaRecommendations.mockReturnValueOnce({
       recommendations: [],
       isLoading: true,
     });
-    const { container } = render(reduxWrapper(<RecommendationsPage />));
+    const { container } = renderWithProviders(<RecommendationsPage />);
 
     const reactLoadingSkeleton = container.querySelector('.react-loading-skeleton');
 
@@ -151,14 +242,15 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should fire recommendations viewed event', () => {
-    mockUseLocation();
+    mockUseRegisterContext(registrationResult);
+    mockLocationState(111); // Provide userId
     useAlgoliaRecommendations.mockReturnValue({
       recommendations: mockedRecommendedProducts,
       isLoading: false,
     });
 
     useMediaQuery.mockReturnValue(false);
-    render(reduxWrapper(<RecommendationsPage />));
+    renderWithProviders(<RecommendationsPage />);
 
     expect(sendTrackEvent).toBeCalled();
     expect(sendTrackEvent).toHaveBeenCalledWith(

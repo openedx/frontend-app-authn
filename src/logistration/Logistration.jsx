@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -15,30 +14,31 @@ import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
-import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
-import {
-  tpaProvidersSelector,
-} from '../common-components/data/selectors';
+import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
-import { backupLoginForm } from '../login/data/actions';
+import { LoginProvider } from '../login/components/LoginContext';
 import LoginComponentSlot from '../plugin-slots/LoginComponentSlot';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
+import { RegisterProvider } from '../register/components/RegisterContext';
 
-const Logistration = ({
+const LogistrationPageInner = ({
   selectedPage,
 }) => {
   const tpaHint = getTpaHint();
-  const tpaProviders = useSelector(tpaProvidersSelector);
-  const dispatch = useDispatch();
+  const {
+    thirdPartyAuthContext,
+    clearThirdPartyAuthErrorMessage,
+  } = useThirdPartyAuthContext();
+
   const {
     providers,
     secondaryProviders,
-  } = tpaProviders;
+  } = thirdPartyAuthContext;
+
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
@@ -52,7 +52,7 @@ const Logistration = ({
       authService.getCsrfTokenService()
         .getCsrfToken(getConfig().LMS_BASE_URL);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (disablePublicAccountCreation) {
@@ -67,7 +67,6 @@ const Logistration = ({
     } else {
       sendPageEvent('login_and_registration', e.target.dataset.eventName);
     }
-
     setInstitutionLogin(!institutionLogin);
   };
 
@@ -76,12 +75,7 @@ const Logistration = ({
       return;
     }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    dispatch(clearThirdPartyAuthContextErrorMessage());
-    if (tabKey === LOGIN_PAGE) {
-      dispatch(backupRegistrationForm());
-    } else if (tabKey === REGISTER_PAGE) {
-      dispatch(backupLoginForm());
-    }
+    clearThirdPartyAuthErrorMessage();
     setKey(tabKey);
   };
 
@@ -171,12 +165,21 @@ const Logistration = ({
   );
 };
 
-Logistration.propTypes = {
-  selectedPage: PropTypes.string,
+LogistrationPageInner.propTypes = {
+  selectedPage: PropTypes.string.isRequired,
 };
 
-Logistration.defaultProps = {
-  selectedPage: REGISTER_PAGE,
-};
+/**
+ * Main Logistration Page component wrapped with providers
+ */
+const LogistrationPage = (props) => (
+  <ThirdPartyAuthProvider>
+    <RegisterProvider>
+      <LoginProvider>
+        <LogistrationPageInner {...props} />
+      </LoginProvider>
+    </RegisterProvider>
+  </ThirdPartyAuthProvider>
+);
 
-export default Logistration;
+export default LogistrationPage;

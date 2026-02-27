@@ -1,0 +1,12 @@
+{
+  "extends": "@edx/typescript-config",
+  "compilerOptions": {
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
+    "rootDir": ".",
+    "outDir": "dist"
+  },
+  "include": ["*.js", ".eslintrc.js", "src/**/*", "plugins/**/*", "jest.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}
