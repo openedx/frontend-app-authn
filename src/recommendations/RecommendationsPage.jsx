@@ -26,11 +26,10 @@ const RecommendationsPageInner = () => {
   const { formatMessage } = useIntl();
   const isExtraSmall = useMediaQuery({ maxWidth: breakpoints.extraSmall.maxWidth - 1 });
   const {
-    registrationResult,
     backendCountryCode,
   } = useRegisterContext();
   const location = useLocation();
-  const registrationResponse = registrationResult;
+  const registrationResponse = location.state?.registrationResult;
   const DASHBOARD_URL = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
   const educationLevel = EDUCATION_LEVEL_MAPPING[location.state?.educationLevel];
   const userId = location.state?.userId;

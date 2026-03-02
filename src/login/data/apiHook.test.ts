@@ -7,10 +7,9 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import * as api from './api';
 import {
-  INTERNAL_SERVER_ERROR,
-  INVALID_FORM,
   useLogin,
 } from './apiHook';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
 
 // Mock the dependencies
 jest.mock('@edx/frontend-platform/logging', () => ({
@@ -89,20 +88,20 @@ describe('useLogin', () => {
     expect(result.current.data).toEqual(mockResponse);
   });
 
-  it('should handle 400 validation error and transform to INVALID_FORM', async () => {
+  it('should handle 400 validation error and transform to FORBIDDEN_REQUEST', async () => {
     const mockLoginData = {
       email_or_username: '',
       password: 'password123',
     };
     const mockErrorResponse = {
-      errorCode: INVALID_FORM,
+      errorCode: FORBIDDEN_REQUEST,
       context: {
         email_or_username: ['This field is required'],
         password: ['Password is too weak'],
       },
     };
     const mockCamelCasedResponse = {
-      errorCode: INVALID_FORM,
+      errorCode: FORBIDDEN_REQUEST,
       context: {
         emailOrUsername: ['This field is required'],
         password: ['Password is too weak'],
@@ -142,10 +141,10 @@ describe('useLogin', () => {
     });
     expect(mockLogInfo).toHaveBeenCalledWith('Login failed with validation error', mockError);
     expect(mockOnError).toHaveBeenCalledWith({
-      type: INVALID_FORM,
+      type: FORBIDDEN_REQUEST,
       context: {
         emailOrUsername: ['This field is required'],
-        password: ['Password is too weak'], 
+        password: ['Password is too weak'],
       },
       count: 0,
     });

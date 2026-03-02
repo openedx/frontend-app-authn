@@ -116,9 +116,7 @@ const ProgressiveProfilingInner = () => {
       const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : getConfig().SEARCH_CATALOG_URL;
       setRegistrationResult({ redirectUrl: nextUrl });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [registrationEmbedded, welcomePageContext?.fields,
-    welcomePageContext?.extended_profile, welcomePageContext?.nextUrl]);
+  }, [registrationEmbedded, welcomePageContext]);
 
   useEffect(() => {
     if (authenticatedUser?.userId) {

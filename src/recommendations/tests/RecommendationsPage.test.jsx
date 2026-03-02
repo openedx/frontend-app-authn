@@ -78,18 +78,12 @@ describe('RecommendationsPageTests', () => {
     );
   };
 
-  const mockUseRegisterContext = (regResult = null, backendCountryCode = 'US') => {
-    useRegisterContext.mockReturnValue({
-      registrationResult: regResult,
-      backendCountryCode,
-    });
-  };
-
-  const mockLocationState = (userId = 111) => {
+  const mockLocationState = () => {
     useLocation.mockReturnValue({
       pathname: '/recommendations',
       state: {
-        userId,
+        registrationResult,
+        userId: 111,
       },
     });
   };
@@ -100,7 +94,6 @@ describe('RecommendationsPageTests', () => {
     });
 
     useRegisterContext.mockReturnValue({
-      registrationResult: null,
       backendCountryCode: 'US',
     });
 
@@ -143,16 +136,6 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should redirect user if no personalized recommendations are available', () => {
-    const originalLocationHref = window.location.href;
-    const setHref = jest.fn();
-    Object.defineProperty(window.location, 'href', {
-      get: () => originalLocationHref,
-      set: setHref,
-      configurable: true,
-    });
-
-    // This test needs registrationResult to get past the first redirect check
-    mockUseRegisterContext(registrationResult);
     useAlgoliaRecommendations.mockReturnValue({
       recommendations: [], // Empty recommendations array
       isLoading: false,
@@ -162,35 +145,24 @@ describe('RecommendationsPageTests', () => {
       renderWithProviders(<RecommendationsPage />);
     });
 
-    expect(setHref).toHaveBeenCalledWith(redirectUrl);
+    expect(window.location.href).toEqual(dashboardUrl);
   });
 
   it('should redirect user if they click "Skip for now" button', () => {
-    const originalLocationHref = window.location.href;
-    const setHref = jest.fn();
-    Object.defineProperty(window.location, 'href', {
-      get: () => originalLocationHref,
-      set: setHref,
-      configurable: true,
-    });
-
-    mockUseRegisterContext(registrationResult);
+    mockLocationState();
     jest.useFakeTimers();
     let container;
     act(() => {
       ({ container } = renderWithProviders(<RecommendationsPage />));
     });
     const skipButton = container.querySelector('.pgn__stateful-btn-state-default');
-    act(() => {
-      fireEvent.click(skipButton);
-      jest.advanceTimersByTime(300);
-    });
-
-    expect(setHref).toHaveBeenCalledWith(redirectUrl);
+    fireEvent.click(skipButton);
+    jest.advanceTimersByTime(300);
+    expect(window.location.href).toEqual(redirectUrl);
   });
 
   it('should display recommendations small layout for small screen', () => {
-    mockUseRegisterContext(registrationResult);
+    mockLocationState();
     useMediaQuery.mockReturnValue(true);
     const { container } = renderWithProviders(<RecommendationsPage />);
 
@@ -202,7 +174,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display recommendations large layout for large screen', () => {
-    mockUseRegisterContext(registrationResult);
+    mockLocationState();
     useMediaQuery.mockReturnValue(false);
     const { container } = renderWithProviders(<RecommendationsPage />);
 
@@ -214,7 +186,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display skeletons if recommendations are loading for large screen', () => {
-    mockUseRegisterContext(registrationResult);
+    mockLocationState();
     useMediaQuery.mockReturnValue(false);
     useAlgoliaRecommendations.mockReturnValueOnce({
       recommendations: [],
@@ -228,7 +200,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should display skeletons if recommendations are loading for small screen', () => {
-    mockUseRegisterContext(registrationResult);
+    mockLocationState();
     useMediaQuery.mockReturnValue(true);
     useAlgoliaRecommendations.mockReturnValueOnce({
       recommendations: [],
@@ -242,8 +214,7 @@ describe('RecommendationsPageTests', () => {
   });
 
   it('should fire recommendations viewed event', () => {
-    mockUseRegisterContext(registrationResult);
-    mockLocationState(111); // Provide userId
+    mockLocationState(111);
     useAlgoliaRecommendations.mockReturnValue({
       recommendations: mockedRecommendedProducts,
       isLoading: false,

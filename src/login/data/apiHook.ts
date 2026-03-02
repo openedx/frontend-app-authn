@@ -3,12 +3,7 @@ import { camelCaseObject } from '@edx/frontend-platform/utils';
 import { useMutation } from '@tanstack/react-query';
 
 import { login } from './api';
-
-// Error constants
-export const FORBIDDEN_REQUEST = 'forbidden-request';
-export const INTERNAL_SERVER_ERROR = 'internal-server-error';
-export const TPA_AUTHENTICATION_FAILURE = 'tpa-authentication-failure';
-export const INVALID_FORM = 'invalid-form-fields';
+import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
 
 // Type definitions
 interface LoginData {

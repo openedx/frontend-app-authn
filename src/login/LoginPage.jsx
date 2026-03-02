@@ -128,7 +128,6 @@ const LoginPage = ({
         },
       }));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [thirdPartyErrorMessage]);
 
   const validateFormFields = (payload) => {
