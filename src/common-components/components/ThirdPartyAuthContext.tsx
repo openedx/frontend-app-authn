@@ -12,6 +12,7 @@ interface ThirdPartyAuthContextType {
   };
   thirdPartyAuthApiStatus: string | null;
   thirdPartyAuthContext: {
+    platformName: string | null;
     autoSubmitRegForm: boolean;
     currentProvider: string | null;
     finishAuthUrl: string | null;
@@ -42,6 +43,7 @@ export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ childr
   });
   const [thirdPartyAuthApiStatus, setThirdPartyAuthApiStatus] = useState<string | null>(null);
   const [thirdPartyAuthContext, setThirdPartyAuthContext] = useState({
+    platformName: null,
     autoSubmitRegForm: false,
     currentProvider: null,
     finishAuthUrl: null,
@@ -63,6 +65,7 @@ export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ childr
     setFieldDescriptions(fieldDescData?.fields || {});
     setOptionalFields(optionalFieldsData || { fields: {}, extended_profile: [] });
     setThirdPartyAuthContext(contextData || {
+      platformName: null,
       autoSubmitRegForm: false,
       currentProvider: null,
       finishAuthUrl: null,
