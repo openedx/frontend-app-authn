@@ -1,0 +1,152 @@
+name: Build PR Artifact
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - frontend-base
+
+jobs:
+  build-artifact:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Package
+        run: npm run build
+
+      - name: Create NPM Package
+        run: |
+          # Update version with PR info for unique identification
+          npm version --no-git-tag-version "$(npm pkg get version | tr -d '"')-pr${{ github.event.number }}+$(git rev-parse --short HEAD)"
+          
+          # Create the package
+          npm pack
+          
+          # Get the package filename
+          PACKAGE_FILE=$(ls *.tgz | head -n1)
+          echo "PACKAGE_FILE=$PACKAGE_FILE" >> $GITHUB_ENV
+          echo "PACKAGE_NAME=$(echo $PACKAGE_FILE | sed 's/.tgz$//')" >> $GITHUB_ENV
+
+      - name: Upload Package Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package-pr-${{ github.event.number }}
+          path: "*.tgz"
+          retention-days: 30
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Get package info from package.json
+            const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const packageName = packageJson.name;
+            const packageFile = process.env.PACKAGE_FILE;
+            const packageNameWithVersion = process.env.PACKAGE_NAME;
+            
+            const runId = context.runId;
+            const artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId}`;
+            
+            const comment = `## 📦 PR Build Artifact Available
+            
+            A build artifact has been created for this PR and is available for testing.
+            
+            ### Package Details
+            - **Package**: \`${packageName}\`
+            - **Version**: \`${packageNameWithVersion}\`
+            - **Artifact**: [Download from workflow run](${artifactUrl})
+            
+            ### How to test this PR:
+            
+            #### Option 1: Download and install locally
+            1. [Download the artifact](${artifactUrl}) from the workflow run
+            2. Extract the \`.tgz\` file
+            3. Install in your project:
+               \`\`\`bash
+               npm install /path/to/${packageFile}
+               \`\`\`
+            
+            #### Option 2: Install directly from GitHub (requires GitHub CLI)
+            \`\`\`bash
+            # Download the artifact
+            gh run download ${runId} --repo ${context.repo.owner}/${context.repo.repo} --name npm-package-pr-${{ github.event.number }}
+            
+            # Install the package
+            npm install ./${packageFile}
+            \`\`\`
+            
+            #### Option 3: Test in package.json
+            You can temporarily modify your \`package.json\` to point to the extracted package:
+            \`\`\`json
+            {
+              "dependencies": {
+                "${packageName}": "file:./path/to/extracted/package"
+              }
+            }
+            \`\`\`
+            
+            ### Notes
+            - This artifact will be available for 30 days
+            - The version includes the PR number and commit hash for easy identification
+            - Make sure to test all the exported functionality from the package
+            
+            ---
+            🤖 This comment is automatically generated when the PR is created or updated.`;
+            
+            try {
+              // Check if we already commented
+              const { data: comments } = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+              });
+              
+              const botComment = comments.find(comment => 
+                comment.user.type === 'Bot' && 
+                comment.body.includes('📦 PR Build Artifact Available')
+              );
+              
+              if (botComment) {
+                // Update existing comment
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: botComment.id,
+                  body: comment
+                });
+                console.log('✅ Updated existing PR comment with artifact info');
+              } else {
+                // Create new comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body: comment
+                });
+                console.log('✅ Posted new PR comment with artifact info');
+              }
+            } catch (error) {
+              console.log('⚠️ Cannot comment on PR (likely due to fork permissions)');
+              console.log(`📦 Artifact created: ${packageFile}`);
+              console.log(`🔗 Download from: ${artifactUrl}`);
+              console.log(`📋 To install: npm install /path/to/${packageFile}`);
+              console.log('ℹ️ Copy the above info to your PR description or comment manually');
+            }
