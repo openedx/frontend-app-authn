@@ -1,7 +1,4 @@
-import React, {
-  useEffect, useMemo, useState,
-} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { sendPageEvent, sendTrackEvent } from '@edx/frontend-platform/analytics';
@@ -14,18 +11,11 @@ import Skeleton from 'react-loading-skeleton';
 
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import RegistrationFailure from './components/RegistrationFailure';
-import {
-  backupRegistrationFormBegin,
-  clearRegistrationBackendError,
-  registerNewUser,
-  setEmailSuggestionInStore,
-  setUserPipelineDataLoaded,
-} from './data/actions';
+import { useRegistration } from './data/apiHook';
 import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
 } from './data/constants';
-import getBackendValidations from './data/selectors';
 import {
   isFormValid, prepareRegistrationPayload,
 } from './data/utils';
@@ -37,22 +27,54 @@ import {
   RedirectLogistration,
   ThirdPartyAuthAlert,
 } from '../common-components';
-import { getThirdPartyAuthContext as getRegistrationDataFromBackend } from '../common-components/data/actions';
+import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
 import {
-  COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
+  COMPLETE_STATE, DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE,
 } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
-
+import { useRegisterContext } from './components/RegisterContext';
 /**
- * Main Registration Page component
+ * Inner Registration Page component that uses the context
  */
 const RegistrationPage = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
+  const {
+    fieldDescriptions,
+    optionalFields,
+    thirdPartyAuthApiStatus,
+    thirdPartyAuthContext,
+    setThirdPartyAuthContextBegin,
+    setThirdPartyAuthContextSuccess,
+    setThirdPartyAuthContextFailure,
+  } = useThirdPartyAuthContext();
+
+  const {
+    autoSubmitRegForm,
+    currentProvider,
+    finishAuthUrl,
+    pipelineUserDetails,
+    providers,
+    secondaryProviders,
+    errorMessage: thirdPartyAuthErrorMessage,
+  } = thirdPartyAuthContext;
+
+  const {
+    clearRegistrationBackendError,
+    registrationFormData,
+    registrationResult,
+    registrationError,
+    setEmailSuggestionContext,
+    updateRegistrationFormData,
+    setRegistrationError,
+    setRegistrationResult,
+    backendValidations,
+    setBackendCountryCode,
+  } = useRegisterContext();
 
   const registrationEmbedded = isHostAvailableInQueryParams();
   const platformName = getConfig().SITE_NAME;
@@ -66,30 +88,24 @@ const RegistrationPage = (props) => {
     handleInstitutionLogin,
     institutionLogin,
   } = props;
+  const backendRegistrationError = registrationError;
+  const registrationMutation = useRegistration({
+    onSuccess: (data) => {
+      setRegistrationResult(data);
+      setRegistrationError({});
+    },
+    onError: (errorData) => {
+      setRegistrationError(errorData);
+    },
+  });
 
-  const backedUpFormData = useSelector(state => state.register.registrationFormData);
-  const registrationError = useSelector(state => state.register.registrationError);
-  const registrationErrorCode = registrationError?.errorCode;
-  const registrationResult = useSelector(state => state.register.registrationResult);
-  const shouldBackupState = useSelector(state => state.register.shouldBackupState);
-  const userPipelineDataLoaded = useSelector(state => state.register.userPipelineDataLoaded);
-  const submitState = useSelector(state => state.register.submitState);
-
-  const fieldDescriptions = useSelector(state => state.commonComponents.fieldDescriptions);
-  const optionalFields = useSelector(state => state.commonComponents.optionalFields);
-  const thirdPartyAuthApiStatus = useSelector(state => state.commonComponents.thirdPartyAuthApiStatus);
-  const autoSubmitRegForm = useSelector(state => state.commonComponents.thirdPartyAuthContext.autoSubmitRegForm);
-  const thirdPartyAuthErrorMessage = useSelector(state => state.commonComponents.thirdPartyAuthContext.errorMessage);
-  const finishAuthUrl = useSelector(state => state.commonComponents.thirdPartyAuthContext.finishAuthUrl);
-  const currentProvider = useSelector(state => state.commonComponents.thirdPartyAuthContext.currentProvider);
-  const providers = useSelector(state => state.commonComponents.thirdPartyAuthContext.providers);
-  const secondaryProviders = useSelector(state => state.commonComponents.thirdPartyAuthContext.secondaryProviders);
-  const pipelineUserDetails = useSelector(state => state.commonComponents.thirdPartyAuthContext.pipelineUserDetails);
-
-  const backendValidations = useSelector(getBackendValidations);
+  const [userPipelineDataLoaded, setUserPipelineDataLoaded] = useState(false);
+  const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
+  const submitState = registrationMutation.isPending ? PENDING_STATE : DEFAULT_STATE;
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
-
+  // Initialize form state from local backedUpFormData
+  const backedUpFormData = registrationFormData;
   const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
   const [configurableFormFields, setConfigurableFormFields] = useState({ ...backedUpFormData.configurableFormFields });
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
@@ -97,7 +113,6 @@ const RegistrationPage = (props) => {
   const [formStartTime, setFormStartTime] = useState(null);
   // temporary error state for embedded experience because we don't want to show errors on blur
   const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
-
   const { cta, host } = queryParams;
   const buttonLabel = cta
     ? formatMessage(messages['create.account.cta.button'], { label: cta })
@@ -116,42 +131,46 @@ const RegistrationPage = (props) => {
         setFormFields(prevState => ({
           ...prevState, name, username, email,
         }));
-        dispatch(setUserPipelineDataLoaded(true));
+        setUserPipelineDataLoaded(true);
       }
     }
-  }, [ // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
     thirdPartyAuthApiStatus,
     thirdPartyAuthErrorMessage,
     pipelineUserDetails,
     userPipelineDataLoaded,
   ]);
 
+  const params = { ...queryParams, is_register_page: true };
+  if (tpaHint) {
+    params.tpa_hint = tpaHint;
+  }
+  const { data, isSuccess, error } = useThirdPartyAuthHook(REGISTER_PAGE, params);
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
-      const payload = { ...queryParams, is_register_page: true };
-      if (tpaHint) {
-        payload.tpa_hint = tpaHint;
-      }
-      dispatch(getRegistrationDataFromBackend(payload));
+      setThirdPartyAuthContextBegin();
       setFormStartTime(Date.now());
     }
-  }, [dispatch, formStartTime, queryParams, tpaHint]);
+    if (formStartTime) {
+      if (isSuccess && data) {
+        setThirdPartyAuthContextSuccess(
+          data.fieldDescriptions,
+          data.optionalFields,
+          data.thirdPartyAuthContext,
+        );
+        setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
+      }
 
-  /**
-   * Backup the registration form in redux when register page is toggled.
-   */
-  useEffect(() => {
-    if (shouldBackupState) {
-      dispatch(backupRegistrationFormBegin({
-        ...backedUpFormData,
-        configurableFormFields: { ...configurableFormFields },
-        formFields: { ...formFields },
-        errors: { ...errors },
-      }));
+      if (error) {
+        setThirdPartyAuthContextFailure();
+      }
     }
-  }, [shouldBackupState, configurableFormFields, formFields, errors, dispatch, backedUpFormData]);
+  }, [formStartTime, isSuccess, data, error,
+    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess,
+    setBackendCountryCode, setThirdPartyAuthContextFailure]);
 
+  // Handle backend validation errors from context
   useEffect(() => {
     if (backendValidations) {
       if (registrationEmbedded) {
@@ -172,7 +191,6 @@ const RegistrationPage = (props) => {
     if (registrationResult.success) {
       // This event is used by GTM
       sendTrackEvent('edx.bi.user.account.registered.client', {});
-
       // This is used by the "User Retention Rate Event" on GTM
       setCookie(getConfig().USER_RETENTION_COOKIE_NAME, true);
     }
@@ -181,29 +199,41 @@ const RegistrationPage = (props) => {
   const handleOnChange = (event) => {
     const { name } = event.target;
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-    if (registrationError[name]) {
-      dispatch(clearRegistrationBackendError(name));
+    if (backendRegistrationError[name]) {
+      clearRegistrationBackendError(name);
+    }
+    // Clear context registration errors
+    if (registrationError.errorCode) {
+      setRegistrationError({});
     }
     setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
-    setFormFields(prevState => ({ ...prevState, [name]: value }));
+    // Update local state
+    const newFormFields = { ...formFields, [name]: value };
+    setFormFields(newFormFields);
+    // Save to context for persistence across tab switches
+    updateRegistrationFormData({
+      formFields: newFormFields,
+      errors,
+      configurableFormFields,
+    });
   };
 
-  const handleErrorChange = (fieldName, error) => {
+  const handleErrorChange = (fieldName, errorMessage) => {
     if (registrationEmbedded) {
       setTemporaryErrors(prevErrors => ({
         ...prevErrors,
-        [fieldName]: error,
+        [fieldName]: errorMessage,
       }));
-      if (error === '' && errors[fieldName] !== '') {
+      if (errorMessage === '' && errors[fieldName] !== '') {
         setErrors(prevErrors => ({
           ...prevErrors,
-          [fieldName]: error,
+          [fieldName]: errorMessage,
         }));
       }
     } else {
       setErrors(prevErrors => ({
         ...prevErrors,
-        [fieldName]: error,
+        [fieldName]: errorMessage,
       }));
     }
   };
@@ -219,7 +249,6 @@ const RegistrationPage = (props) => {
     if (flags.autoGeneratedUsernameEnabled) {
       delete payload.username;
     }
-
     // Validating form data before submitting
     const { isValid, fieldErrors, emailSuggestion } = isFormValid(
       payload,
@@ -229,7 +258,12 @@ const RegistrationPage = (props) => {
       formatMessage,
     );
     setErrors({ ...fieldErrors });
-    dispatch(setEmailSuggestionInStore(emailSuggestion));
+    updateRegistrationFormData({
+      formFields,
+      errors: fieldErrors,
+      configurableFormFields,
+    });
+    setEmailSuggestionContext(emailSuggestion.suggestion, emailSuggestion.type);
 
     // returning if not valid
     if (!isValid) {
@@ -237,16 +271,14 @@ const RegistrationPage = (props) => {
       return;
     }
 
-    // Preparing payload for submission
     payload = prepareRegistrationPayload(
       payload,
       configurableFormFields,
       flags.showMarketingEmailOptInCheckbox,
       totalRegistrationTime,
       queryParams);
-
-    // making register call
-    dispatch(registerNewUser(payload));
+    // making register call with React Query
+    registrationMutation.mutate(payload);
   };
 
   const handleSubmit = (e) => {
@@ -385,7 +417,6 @@ const RegistrationPage = (props) => {
             </Form>
           </div>
         )}
-
       </>
     );
   };
@@ -408,7 +439,6 @@ const RegistrationPage = (props) => {
 
 RegistrationPage.propTypes = {
   institutionLogin: PropTypes.bool,
-  // Actions
   handleInstitutionLogin: PropTypes.func,
 };
 

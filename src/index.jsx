@@ -1,7 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React, { StrictMode } from 'react';
+import { StrictMode } from 'react';
 
 import {
   APP_INIT_ERROR, APP_READY, initialize, mergeConfig, subscribe,

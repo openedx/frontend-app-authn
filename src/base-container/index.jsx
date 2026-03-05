@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
 import { breakpoints } from '@openedx/paragon';
 import classNames from 'classnames';

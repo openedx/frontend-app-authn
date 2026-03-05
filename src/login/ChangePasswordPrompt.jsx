@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
@@ -26,7 +26,7 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
       }
     },
   };
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const [isOpen, open, close] = useToggle(true, handlers);
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
