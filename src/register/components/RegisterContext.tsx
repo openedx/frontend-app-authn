@@ -139,10 +139,6 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
   }, []);
 
   const backendValidations = useMemo(() => {
-    if (state.validations) {
-      return state.validations.validationDecisions;
-    }
-
     if (state.registrationError && Object.keys(state.registrationError).length > 0) {
       const fields = Object.keys(state.registrationError).filter(
         (fieldName) => !(['errorCode', 'usernameSuggestions'].includes(fieldName)),
@@ -153,6 +149,10 @@ export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {
         validationDecisions[field] = state.registrationError[field]?.[0]?.userMessage || '';
       });
       return validationDecisions;
+    }
+
+    if (state.validations) {
+      return state.validations.validationDecisions;
     }
 
     return null;
