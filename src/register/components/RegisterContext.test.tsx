@@ -322,6 +322,37 @@ describe('RegisterContext', () => {
       });
     });
 
+    it('should prioritize registrationError over validations for backendValidations', () => {
+      const { result } = renderHook(() => useRegisterContext(), { wrapper });
+
+      // Simulate inline validation (on blur) setting validations
+      act(() => {
+        result.current.setValidationsSuccess({
+          validationDecisions: {
+            password: '',
+            username: '',
+          },
+        });
+      });
+
+      expect(result.current.backendValidations).toEqual({
+        password: '',
+        username: '',
+      });
+
+      // Simulate form submission returning a registration error
+      act(() => {
+        result.current.setRegistrationError({
+          errorCode: [{ userMessage: 'validation-error' }],
+          password: [{ userMessage: 'The password is too similar to the username.' }],
+        });
+      });
+
+      expect(result.current.backendValidations).toEqual({
+        password: 'The password is too similar to the username.',
+      });
+    });
+
     it('should return null for backendValidations when neither validations nor registrationError exist', () => {
       const { result } = renderHook(() => useRegisterContext(), { wrapper });
       expect(result.current.backendValidations).toBe(null);
