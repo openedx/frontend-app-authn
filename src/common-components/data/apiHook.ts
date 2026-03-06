@@ -10,6 +10,7 @@ const useThirdPartyAuthHook = (pageId, payload) => useQuery({
   queryKey: ThirdPartyAuthQueryKeys.byPage(pageId),
   queryFn: () => getThirdPartyAuthContext(payload),
   retry: false,
+  staleTime: 5 * 60 * 1000, // 5 minutes — TPA context is effectively static per session
 });
 
 export {
