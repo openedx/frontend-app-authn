@@ -77,7 +77,7 @@ const ProgressiveProfilingInner = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { data, isSuccess, error } = useThirdPartyAuthHook(AUTHN_PROGRESSIVE_PROFILING,
-    { is_welcome_page: true, next: queryParams?.next });
+    { is_welcome_page: true, next: queryParams?.next }, { enabled: registrationEmbedded });
 
   useEffect(() => {
     if (registrationEmbedded) {
