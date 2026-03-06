@@ -1,5 +1,5 @@
 import {
-  createContext, FC, ReactNode, useContext, useMemo, useState,
+  createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useMemo, useState,
 } from 'react';
 
 export interface FormFields {
@@ -14,9 +14,9 @@ export interface FormErrors {
 
 interface LoginContextType {
   formFields: FormFields,
-  setFormFields: (fields: FormFields) => void,
+  setFormFields: Dispatch<SetStateAction<FormFields>>,
   errors: FormErrors,
-  setErrors: (errors: FormErrors) => void,
+  setErrors: Dispatch<SetStateAction<FormErrors>>,
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
