@@ -176,14 +176,17 @@ const ResetPasswordPageInner = () => {
     </div>
   );
 
+  useEffect(() => {
+    if (status === PASSWORD_RESET_ERROR || status === PASSWORD_RESET.INVALID_TOKEN) {
+      navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
+    }
+    if (status === 'success') {
+      navigate(updatePathWithQueryParams(LOGIN_PAGE), { state: { showResetPasswordSuccessBanner: true } });
+    }
+  }, [status, navigate]);
+
   if (status === TOKEN_STATE.PENDING) {
     return <Spinner animation="border" variant="primary" className="spinner--position-centered" />;
-  }
-  if (status === PASSWORD_RESET_ERROR || status === PASSWORD_RESET.INVALID_TOKEN) {
-    navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
-  }
-  if (status === 'success') {
-    navigate(updatePathWithQueryParams(LOGIN_PAGE), { state: { showResetPasswordSuccessBanner: true } });
   }
 
   return (
