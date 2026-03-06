@@ -100,11 +100,11 @@ const LoginPage = ({
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
-  }, []);
-
-  // Fetch third-party auth context data
-  useEffect(() => {
     setThirdPartyAuthContextBegin();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sync third-party auth context data
+  useEffect(() => {
     if (isSuccess && data) {
       setThirdPartyAuthContextSuccess(
         data.fieldDescriptions,
@@ -116,7 +116,7 @@ const LoginPage = ({
       setThirdPartyAuthContextFailure();
     }
   }, [tpaHint, queryParams, isSuccess, data, error,
-    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
+    setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {
