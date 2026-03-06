@@ -1,17 +1,18 @@
-import { Provider } from 'react-redux';
-
 import {
-  configureI18n, getLocale, IntlProvider, mergeAppConfig
+  CurrentAppProvider, IntlProvider, mergeAppConfig,
 } from '@openedx/frontend-base';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter } from 'react-router-dom';
 
+import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
+import { appId } from '../../../constants';
+import { useFieldValidations, useRegistration } from '../../data/apiHook';
 import {
   FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR, TPA_AUTHENTICATION_FAILURE, TPA_SESSION_EXPIRED,
 } from '../../data/constants';
-import { appId } from '../../../constants';
 import RegistrationPage from '../../RegistrationPage';
+import { useRegisterContext } from '../RegisterContext';
 import RegistrationFailureMessage from '../RegistrationFailure';
 
 jest.mock('@openedx/frontend-base', () => ({
@@ -21,7 +22,32 @@ jest.mock('@openedx/frontend-base', () => ({
   getLocale: jest.fn(),
 }));
 
-const mockStore = configureStore();
+// eslint-disable-next-line import/first
+import { getLocale } from '@openedx/frontend-base';
+
+// Mock React Query hooks
+jest.mock('../../data/apiHook', () => ({
+  useRegistration: jest.fn(),
+  useFieldValidations: jest.fn(),
+}));
+jest.mock('../RegisterContext', () => ({
+  RegisterProvider: ({ children }) => children,
+  useRegisterContext: jest.fn(),
+  useRegisterContextOptional: jest.fn(),
+}));
+jest.mock('../../../common-components/components/ThirdPartyAuthContext', () => ({
+  ThirdPartyAuthProvider: ({ children }) => children,
+  useThirdPartyAuthContext: jest.fn(),
+}));
+
+jest.mock('../../../common-components/data/apiHook', () => ({
+  useThirdPartyAuthHook: jest.fn().mockReturnValue({
+    data: null,
+    isSuccess: false,
+    error: null,
+    isLoading: false,
+  }),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -46,7 +72,7 @@ describe('RegistrationFailure', () => {
   });
 
   let props = {};
-  let store = {};
+  let queryClient;
   const registrationFormData = {
     configurableFormFields: {
       marketingEmailsOptIn: true,
@@ -62,49 +88,87 @@ describe('RegistrationFailure', () => {
     },
   };
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
+  const renderWrapper = children => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <CurrentAppProvider appId={appId}>
+          {children}
+        </CurrentAppProvider>
+      </IntlProvider>
+    </QueryClientProvider>
   );
 
   const routerWrapper = children => (
-    <Router>
+    <MemoryRouter>
       {children}
-    </Router>
+    </MemoryRouter>
   );
 
-  const thirdPartyAuthContext = {
-    currentProvider: null,
-    finishAuthUrl: null,
-    providers: [],
-    secondaryProviders: [],
-    pipelineUserDetails: null,
-    countryCode: null,
+  const mockRegisterContext = {
+    registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+    registrationError: {},
+    registrationFormData,
+    usernameSuggestions: [],
+    validations: null,
+    submitState: 'default',
+    userPipelineDataLoaded: false,
+    validationApiRateLimited: false,
+    backendValidations: null,
+    backendCountryCode: '',
+    setValidationsSuccess: jest.fn(),
+    setValidationsFailure: jest.fn(),
+    clearUsernameSuggestions: jest.fn(),
+    clearRegistrationBackendError: jest.fn(),
+    updateRegistrationFormData: jest.fn(),
+    setRegistrationResult: jest.fn(),
+    setBackendCountryCode: jest.fn(),
   };
 
-  const initialState = {
-    register: {
-      registrationResult: { success: false, redirectUrl: '' },
-      registrationError: {},
-      registrationFormData,
-      usernameSuggestions: [],
+  const mockThirdPartyAuthContext = {
+    fieldDescriptions: {},
+    optionalFields: {
+      fields: {},
+      extended_profile: [],
     },
-    commonComponents: {
-      thirdPartyAuthApiStatus: null,
-      thirdPartyAuthContext,
-      fieldDescriptions: {},
-      optionalFields: {
-        fields: {},
-        extended_profile: [],
-      },
+    thirdPartyAuthApiStatus: null,
+    thirdPartyAuthContext: {
+      autoSubmitRegForm: false,
+      currentProvider: null,
+      finishAuthUrl: null,
+      countryCode: null,
+      providers: [],
+      secondaryProviders: [],
+      pipelineUserDetails: null,
+      errorMessage: null,
+      welcomePageRedirectUrl: null,
     },
+    setThirdPartyAuthContextBegin: jest.fn(),
+    setThirdPartyAuthContextSuccess: jest.fn(),
+    setThirdPartyAuthContextFailure: jest.fn(),
+    clearThirdPartyAuthErrorMessage: jest.fn(),
   };
 
   beforeEach(() => {
-    store = mockStore(initialState);
-    configureI18n({
-      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
+    // Setup default mocks
+    useRegistration.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
+    });
+
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+    useFieldValidations.mockReturnValue({
+      mutate: jest.fn(),
+      isLoading: false,
+      error: null,
     });
     props = {
       handleInstitutionLogin: jest.fn(),
@@ -127,7 +191,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -143,7 +207,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -162,7 +226,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -181,7 +245,7 @@ describe('RegistrationFailure', () => {
         failureCount: 0,
       };
 
-      const { container } = render(reduxWrapper(<RegistrationFailureMessage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationFailureMessage {...props} />));
 
       const alertHeading = container.querySelectorAll('div.alert-heading');
       expect(alertHeading.length).toEqual(1);
@@ -191,17 +255,14 @@ describe('RegistrationFailure', () => {
     });
 
     it('should display error message based on the error code returned by API', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            errorCode: INTERNAL_SERVER_ERROR,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          errorCode: INTERNAL_SERVER_ERROR,
         },
       });
 
-      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
+      render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const validationError = screen.queryByText('An error has occurred. Try refreshing the page, or check your internet connection.');
 
       expect(validationError).not.toBeNull();

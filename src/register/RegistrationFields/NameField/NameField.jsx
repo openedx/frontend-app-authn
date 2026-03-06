@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
-
 import { useIntl } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
-import { FormGroup } from '../../../common-components';
-import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
 import validateName from './validator';
+import { FormGroup } from '../../../common-components';
+import { useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/apiHook';
 
 /**
  * Name field wrapper. It accepts following handlers
@@ -20,9 +19,21 @@ import validateName from './validator';
  */
 const NameField = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
+  const {
+    setValidationsSuccess,
+    setValidationsFailure,
+    validationApiRateLimited,
+    clearRegistrationBackendError,
+  } = useRegisterContext();
 
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => {
+      setValidationsSuccess(data);
+    },
+    onError: () => {
+      setValidationsFailure();
+    },
+  });
   const {
     handleErrorChange,
     shouldFetchUsernameSuggestions,
@@ -34,13 +45,13 @@ const NameField = (props) => {
     if (fieldError) {
       handleErrorChange('name', fieldError);
     } else if (shouldFetchUsernameSuggestions && !validationApiRateLimited) {
-      dispatch(fetchRealtimeValidations({ name: value }));
+      fieldValidationsMutation.mutate({ name: value });
     }
   };
 
   const handleOnFocus = () => {
     handleErrorChange('name', '');
-    dispatch(clearRegistrationBackendError('name'));
+    clearRegistrationBackendError('name');
   };
 
   return (
