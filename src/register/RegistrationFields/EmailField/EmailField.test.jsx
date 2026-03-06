@@ -1,14 +1,25 @@
-import { Provider } from 'react-redux';
-
-import { getSiteConfig, IntlProvider } from '@openedx/frontend-base';
+import {
+  CurrentAppProvider, getSiteConfig, IntlProvider,
+} from '@openedx/frontend-base';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter } from 'react-router-dom';
 
-import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
+import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
+import { useFieldValidations } from '../../data/apiHook';
+import { appId } from '../../../constants';
 import { EmailField } from '../index';
 
-const mockStore = configureStore();
+// Mock the useRegisterContext hook
+jest.mock('../../components/RegisterContext', () => ({
+  ...jest.requireActual('../../components/RegisterContext'),
+  useRegisterContext: jest.fn(),
+}));
+
+// Mock the useFieldValidations hook
+jest.mock('../../data/apiHook', () => ({
+  useFieldValidations: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -28,33 +39,57 @@ jest.mock('react-router-dom', () => {
 
 describe('EmailField', () => {
   let props = {};
-  let store = {};
+  let queryClient;
+  let mockMutate;
+  let mockRegisterContext;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <CurrentAppProvider appId={appId}>
+            <RegisterProvider>
+              {children}
+            </RegisterProvider>
+          </CurrentAppProvider>
+        </MemoryRouter>
+      </IntlProvider>
+    </QueryClientProvider>
   );
 
-  const routerWrapper = children => (
-    <Router>
-      {children}
-    </Router>
-  );
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+        mutations: {
+          retry: false,
+        },
+      },
+    });
 
-  const initialState = {
-    register: {
+    mockMutate = jest.fn();
+    useFieldValidations.mockReturnValue({
+      mutate: mockMutate,
+      isPending: false,
+    });
+
+    mockRegisterContext = {
+      setValidationsSuccess: jest.fn(),
+      setValidationsFailure: jest.fn(),
+      validationApiRateLimited: false,
+      clearRegistrationBackendError: jest.fn(),
       registrationFormData: {
         emailSuggestion: {
           suggestion: 'example@gmail.com',
           type: 'warning',
         },
       },
-    },
-  };
+      setEmailSuggestionContext: jest.fn(),
+    };
 
-  beforeEach(() => {
-    store = mockStore(initialState);
+    useRegisterContext.mockReturnValue(mockRegisterContext);
     props = {
       name: 'email',
       value: '',
@@ -77,7 +112,7 @@ describe('EmailField', () => {
     };
 
     it('should run email field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: '', name: 'email' } });
@@ -89,7 +124,7 @@ describe('EmailField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'ab', name: 'email' } });
@@ -102,7 +137,7 @@ describe('EmailField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.focus(emailInput, { target: { value: '', name: 'email' } });
@@ -115,18 +150,17 @@ describe('EmailField', () => {
     });
 
     it('should call backend validation api on blur event, if frontend validations have passed', () => {
-      store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       // Enter a valid email so that frontend validations are passed
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ email: 'test@gmail.com' }));
+      expect(mockMutate).toHaveBeenCalledWith({ email: 'test@gmail.com' });
     });
 
     it('should give email suggestions for common service provider domain typos', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@yopmail.com', name: 'email' } });
@@ -136,7 +170,7 @@ describe('EmailField', () => {
     });
 
     it('should be able to click on email suggestions and set it as value', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@yopmail.com', name: 'email' } });
@@ -151,7 +185,7 @@ describe('EmailField', () => {
     });
 
     it('should give error for common top level domain mistakes', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail.mistake', name: 'email' } });
@@ -161,7 +195,7 @@ describe('EmailField', () => {
     });
 
     it('should give error and suggestion for invalid email', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail', name: 'email' } });
@@ -177,30 +211,25 @@ describe('EmailField', () => {
     });
 
     it('should clear the registration validation error on focus on field', () => {
-      store.dispatch = jest.fn(store.dispatch);
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            errorCode: 'duplicate-email',
-            email: [{ userMessage: `This email is already associated with an existing or previous ${getSiteConfig().siteName} account` }],
-          },
+      // Mock context with registration error
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          errorCode: 'duplicate-email',
+          email: [{ userMessage: `This email is already associated with an existing or previous ${getSiteConfig().siteName} account` }],
         },
       });
 
-      store.dispatch = jest.fn(store.dispatch);
-
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.focus(emailInput, { target: { value: 'a@gmail.com', name: 'email' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('email'));
+      expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('email');
     });
 
     it('should clear email suggestions when close icon is clicked', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail.mistake', name: 'email' } });
@@ -221,7 +250,7 @@ describe('EmailField', () => {
         confirmEmailValue: 'confirmEmail@yopmail.com',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
+      const { container } = render(renderWrapper(<EmailField {...props} />));
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'differentEmail@yopmail.com', name: 'email' } });
 
@@ -230,6 +259,55 @@ describe('EmailField', () => {
         'confirm_email',
         'The email addresses do not match.',
       );
+    });
+
+    it('should call setValidationsSuccess when field validation API succeeds', () => {
+      let capturedOnSuccess;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnSuccess = callbacks.onSuccess;
+        return {
+          mutate: mockMutate,
+          isPending: false,
+        };
+      });
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+
+      const mockValidationData = { email: { isValid: true } };
+      capturedOnSuccess(mockValidationData);
+
+      expect(mockRegisterContext.setValidationsSuccess).toHaveBeenCalledWith(mockValidationData);
+    });
+
+    it('should call setValidationsFailure when field validation API fails', () => {
+      let capturedOnError;
+      useFieldValidations.mockImplementation((callbacks) => {
+        capturedOnError = callbacks.onError;
+        return {
+          mutate: mockMutate,
+          isPending: false,
+        };
+      });
+
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+      capturedOnError();
+
+      expect(mockRegisterContext.setValidationsFailure).toHaveBeenCalledWith();
+    });
+
+    it('should not call field validation API when validation is rate limited', () => {
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        validationApiRateLimited: true,
+      });
+
+      const { container } = render(renderWrapper(<EmailField {...props} />));
+      const emailInput = container.querySelector('input#email');
+      fireEvent.blur(emailInput, { target: { value: 'test@gmail.com', name: 'email' } });
+      expect(mockMutate).not.toHaveBeenCalled();
     });
   });
 });

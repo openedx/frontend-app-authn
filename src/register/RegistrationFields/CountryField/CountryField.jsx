@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@openedx/frontend-base';
 import { FormAutosuggest, FormAutosuggestOption, FormControlFeedback } from '@openedx/paragon';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { clearRegistrationBackendError } from '../../data/actions';
-import messages from '../../messages';
 import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
+import { useRegisterContext } from '../../components/RegisterContext';
+import messages from '../../messages';
 
 /**
  * Country field wrapper. It accepts following handlers
@@ -16,7 +15,7 @@ import validateCountryField, { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './v
  * - handleErrorChange for setting error
  *
  * It is responsible for
- * - Auto populating country field if backendCountryCode is available in redux
+ * - Auto populating country field if backendCountryCode is available in context
  * - Performing country field validations
  * - clearing error on focus
  * - setting value on change and selection
@@ -30,15 +29,17 @@ const CountryField = (props) => {
     onFocusHandler,
   } = props;
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
+
+  const {
+    clearRegistrationBackendError,
+    backendCountryCode,
+  } = useRegisterContext();
 
   const countryFieldValue = {
     userProvidedText: selectedCountry.displayValue,
     selectionValue: selectedCountry.displayValue,
     selectionId: selectedCountry.countryCode,
   };
-
-  const backendCountryCode = useSelector(state => state.register.backendCountryCode);
 
   useEffect(() => {
     if (backendCountryCode && backendCountryCode !== selectedCountry?.countryCode) {
@@ -73,25 +74,19 @@ const CountryField = (props) => {
     const { value } = event.target;
 
     const { error } = validateCountryField(
-      value.trim(),
-      countryList,
-      formatMessage(messages['empty.country.field.error']),
-      formatMessage(messages['invalid.country.field.error'])
+      value.trim(), countryList, formatMessage(messages['empty.country.field.error']), formatMessage(messages['invalid.country.field.error']),
     );
     handleErrorChange('country', error);
   };
 
   const handleOnFocus = (event) => {
     handleErrorChange('country', '');
-    dispatch(clearRegistrationBackendError('country'));
+    clearRegistrationBackendError('country');
     onFocusHandler(event);
   };
 
   const handleOnChange = (value) => {
-    onChangeHandler(
-      { target: { name: 'country' } },
-      { countryCode: value.selectionId, displayValue: value.userProvidedText }
-    );
+    onChangeHandler({ target: { name: 'country' } }, { countryCode: value.selectionId, displayValue: value.userProvidedText });
 
     // We have put this check because proviously we also had onSelected event handler and we call
     // the onBlur on that event handler but now there is no such handler and we only have
