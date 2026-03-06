@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 
-import { CurrentAppProvider, configureI18n, getSiteConfig, injectIntl, IntlProvider } from '@openedx/frontend-base';
+import { CurrentAppProvider, configureI18n, getSiteConfig, IntlProvider } from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
@@ -26,7 +26,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 initializeMockServices();
-const IntlResetPasswordPage = injectIntl(ResetPasswordPage);
 const mockStore = configureStore();
 const token = '1c-bmjdkc-5e60e084cf8113048ca7';
 
@@ -85,7 +84,7 @@ describe('ResetPasswordPage', () => {
     });
 
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     const newPasswordInput = screen.getByLabelText('New password');
     const confirmPasswordInput = screen.getByLabelText('Confirm password');
 
@@ -110,7 +109,7 @@ describe('ResetPasswordPage', () => {
         status: TOKEN_STATE.VALID,
       },
     });
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     const resetPasswordButton = screen.getByRole('button', { name: /Reset password/i, id: 'submit-new-password' });
     fireEvent.click(resetPasswordButton);
 
@@ -134,7 +133,7 @@ describe('ResetPasswordPage', () => {
         status: TOKEN_STATE.VALID,
       },
     });
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     const confirmPasswordInput = screen.getByLabelText('Confirm password');
     fireEvent.change(confirmPasswordInput, { target: { value: 'password-mismatch' } });
 
@@ -153,7 +152,7 @@ describe('ResetPasswordPage', () => {
       },
     });
 
-    const { container } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ResetPasswordPage {...props} />));
 
     const alertElements = container.querySelectorAll('.alert-danger');
     const rateLimitError = alertElements[0].textContent;
@@ -169,7 +168,7 @@ describe('ResetPasswordPage', () => {
       },
     });
 
-    const { container } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ResetPasswordPage {...props} />));
     const alertElements = container.querySelectorAll('.alert-danger');
     const internalServerError = alertElements[0].textContent;
     expect(internalServerError).toBe(validationMessage);
@@ -178,7 +177,7 @@ describe('ResetPasswordPage', () => {
   // ******** miscellaneous tests ********
 
   it('should call validation on password field when blur event fires', () => {
-    const resetPasswordPage = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const resetPasswordPage = render(reduxWrapper(<ResetPasswordPage {...props} />));
     const expectedText = 'Password criteria has not been metPassword must contain at least 8 characters, at least one letter, and at least one number';
     const newPasswordInput = resetPasswordPage.container.querySelector('input#newPassword');
     newPasswordInput.value = 'test-password';
@@ -198,7 +197,7 @@ describe('ResetPasswordPage', () => {
     };
     useParams.mockReturnValue({ token });
 
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
 
     expect(store.dispatch).toHaveBeenCalledWith(validateToken(token));
 
@@ -209,19 +208,19 @@ describe('ResetPasswordPage', () => {
       status:
         PASSWORD_RESET_ERROR,
     };
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     expect(mockNavigate).toHaveBeenCalledWith(RESET_PAGE);
   });
   it('should redirect the user to root url of the application ', async () => {
     props = {
       status: SUCCESS,
     };
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     expect(mockNavigate).toHaveBeenCalledWith(LOGIN_PAGE);
   });
 
   it('shows spinner during token validation', () => {
-    render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    render(reduxWrapper(<ResetPasswordPage {...props} />));
     const spinnerElement = document.getElementsByClassName('div.spinner-header');
 
     expect(spinnerElement).toBeTruthy();
@@ -230,7 +229,7 @@ describe('ResetPasswordPage', () => {
   // ******** redirection tests ********
 
   it('by clicking on sign in tab should redirect onto login page', async () => {
-    const { getByText } = render(reduxWrapper(<IntlResetPasswordPage {...props} />));
+    const { getByText } = render(reduxWrapper(<ResetPasswordPage {...props} />));
 
     const signInTab = getByText('Sign in');
 
