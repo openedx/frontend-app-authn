@@ -56,16 +56,26 @@ describe('Logistration', () => {
           marketingEmailsOptIn: true,
         },
         formFields: {
-          name: '', email: '', username: '', password: '',
+          name: '',
+          email: '',
+          username: '',
+          password: '',
         },
         emailSuggestion: {
-          suggestion: '', type: '',
+          suggestion: '',
+          type: '',
         },
         errors: {
-          name: '', email: '', username: '', password: '',
+          name: '',
+          email: '',
+          username: '',
+          password: '',
         },
       },
-      registrationResult: { success: false, redirectUrl: '' },
+      registrationResult: {
+        success: false,
+        redirectUrl: '',
+      },
       registrationError: {},
       usernameSuggestions: [],
       validationApiRateLimited: false,
@@ -77,7 +87,18 @@ describe('Logistration', () => {
       },
     },
     login: {
-      loginResult: { success: false, redirectUrl: '' },
+      loginResult: {
+        success: false,
+        redirectUrl: '',
+      },
+      loginFormData: {
+        formFields: {
+          emailOrUsername: '', password: '',
+        },
+        errors: {
+          emailOrUsername: '', password: '',
+        },
+      },
     },
   };
 
