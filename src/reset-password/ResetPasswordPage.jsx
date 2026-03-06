@@ -93,28 +93,27 @@ const ResetPasswordPageInner = () => {
   };
 
   const validateInput = (name, value) => {
+    let fieldError = '';
     switch (name) {
       case 'newPassword':
         if (!value || !LETTER_REGEX.test(value) || !NUMBER_REGEX.test(value) || value.length < 8) {
-          formErrors.newPassword = formatMessage(messages['password.validation.message']);
+          fieldError = formatMessage(messages['password.validation.message']);
         } else {
           validatePasswordFromBackend(value);
         }
         break;
       case 'confirmPassword':
         if (!value) {
-          formErrors.confirmPassword = formatMessage(messages['confirm.your.password']);
+          fieldError = formatMessage(messages['confirm.your.password']);
         } else if (value !== newPassword) {
-          formErrors.confirmPassword = formatMessage(messages['passwords.do.not.match']);
-        } else {
-          formErrors.confirmPassword = '';
+          fieldError = formatMessage(messages['passwords.do.not.match']);
         }
         break;
       default:
         break;
     }
-    setFormErrors({ ...formErrors });
-    return !Object.values(formErrors).some(x => (x !== ''));
+    setFormErrors((prev) => ({ ...prev, [name]: fieldError }));
+    return !fieldError;
   };
 
   const handleOnBlur = (event) => {
@@ -130,7 +129,7 @@ const ResetPasswordPageInner = () => {
   };
 
   const handleOnFocus = (e) => {
-    setFormErrors({ ...formErrors, [e.target.name]: '' });
+    setFormErrors((prev) => ({ ...prev, [e.target.name]: '' }));
   };
 
   const handleSubmit = (e) => {
