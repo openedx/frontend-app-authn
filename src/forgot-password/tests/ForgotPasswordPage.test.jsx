@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 
 import {
-  configureI18n, injectIntl, IntlProvider, mergeAppConfig
+  configureI18n, IntlProvider, mergeAppConfig
 } from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
@@ -32,7 +32,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedNavigator,
 }));
 
-const IntlForgotPasswordPage = injectIntl(ForgotPasswordPage);
 const mockStore = configureStore();
 
 const initialState = {
@@ -74,7 +73,7 @@ describe('ForgotPasswordPage', () => {
   );
 
   it('not should display need other help signing in button', () => {
-    const { queryByTestId } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { queryByTestId } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const forgotPasswordButton = queryByTestId('forgot-password');
     expect(forgotPasswordButton).toBeNull();
   });
@@ -83,14 +82,14 @@ describe('ForgotPasswordPage', () => {
     mergeAppConfig(appId, {
       LOGIN_ISSUE_SUPPORT_LINK: '/support',
     });
-    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const forgotPasswordButton = screen.findByText('Need help signing in?');
     expect(forgotPasswordButton).toBeDefined();
   });
 
   it('should display email validation error message', async () => {
     const validationMessage = 'We were unable to contact you.Enter a valid email address below.';
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const emailInput = screen.getByLabelText('Email');
 
@@ -111,7 +110,7 @@ describe('ForgotPasswordPage', () => {
     const expectedMessage = 'We were unable to contact you.'
       + 'An error has occurred. Try refreshing the page, or check your internet connection.';
 
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const alertElements = container.querySelectorAll('.alert-danger');
     const validationErrors = alertElements[0].textContent;
@@ -120,7 +119,7 @@ describe('ForgotPasswordPage', () => {
 
   it('should display empty email validation message', async () => {
     const validationMessage = 'We were unable to contact you.Enter your email below.';
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const submitButton = screen.getByText('Submit');
     fireEvent.click(submitButton);
@@ -137,7 +136,7 @@ describe('ForgotPasswordPage', () => {
       forgotPassword: { status: 'forbidden' },
     });
 
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const alertElements = container.querySelectorAll('.alert-danger');
     const validationErrors = alertElements[0].textContent;
@@ -145,7 +144,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should not display any error message on change event', () => {
-    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const emailInput = screen.getByLabelText('Email');
 
@@ -168,7 +167,7 @@ describe('ForgotPasswordPage', () => {
     };
 
     store.dispatch = jest.fn(store.dispatch);
-    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const emailInput = screen.getByLabelText('Email');
 
     fireEvent.blur(emailInput);
@@ -183,7 +182,7 @@ describe('ForgotPasswordPage', () => {
       emailValidationError: validationMessage,
       email: '',
     };
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const validationElement = container.querySelector('.pgn__form-text-invalid');
     expect(validationElement.textContent).toEqual(validationMessage);
   });
@@ -201,7 +200,7 @@ describe('ForgotPasswordPage', () => {
 
     store.dispatch = jest.fn(store.dispatch);
 
-    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const emailInput = screen.getByLabelText('Email');
 
     fireEvent.focus(emailInput);
@@ -215,7 +214,7 @@ describe('ForgotPasswordPage', () => {
       emailValidationError: '',
       email: '',
     };
-    render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const errorElement = screen.queryByTestId('email-invalid-feedback');
     expect(errorElement).toBeNull();
   });
@@ -232,7 +231,7 @@ describe('ForgotPasswordPage', () => {
       + 'receive a password reset message after 1 minute, verify that you entered the correct email address,'
       + ' or check your spam folder. If you need further assistance, contact technical support.';
 
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const successElement = findByTextContent(container, successMessage);
 
     expect(successElement).toBeDefined();
@@ -250,7 +249,7 @@ describe('ForgotPasswordPage', () => {
       + 'This password reset link is invalid. It may have been used already. '
       + 'Enter your email below to receive a new link.';
 
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
     const successElement = findByTextContent(container, successMessage);
 
     expect(successElement).toBeDefined();
@@ -258,7 +257,7 @@ describe('ForgotPasswordPage', () => {
   });
 
   it('should redirect onto login page', async () => {
-    const { container } = render(reduxWrapper(<IntlForgotPasswordPage {...props} />));
+    const { container } = render(reduxWrapper(<ForgotPasswordPage {...props} />));
 
     const navElement = container.querySelector('nav');
     const anchorElement = navElement.querySelector('a');

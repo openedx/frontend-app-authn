@@ -1,4 +1,4 @@
-import { CurrentAppProvider, injectIntl, IntlProvider, mergeAppConfig } from '@openedx/frontend-base';
+import { CurrentAppProvider, IntlProvider, mergeAppConfig } from '@openedx/frontend-base';
 import {
   render, screen,
 } from '@testing-library/react';
@@ -8,7 +8,6 @@ import { appId } from '../../constants';
 import { ACCOUNT_ACTIVATION_MESSAGE } from '../data/constants';
 import AccountActivationMessage from '../AccountActivationMessage';
 
-const IntlAccountActivationMessage = injectIntl(AccountActivationMessage);
 const providerWrapper = children => (
   <IntlProvider locale="en">
     <CurrentAppProvider appId={appId}>
@@ -26,7 +25,7 @@ describe('AccountActivationMessage', () => {
 
   it('should match account already activated message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
     ));
 
     const expectedMessage = 'This account has already been activated.';
@@ -39,7 +38,7 @@ describe('AccountActivationMessage', () => {
 
   it('should match account activated success message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
     ));
 
     const expectedMessage = 'Success! You have activated your account.'
@@ -54,7 +53,7 @@ describe('AccountActivationMessage', () => {
 
   it('should match account activation error message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
     ));
 
     const expectedMessage = 'Your account could not be activated'
@@ -68,7 +67,7 @@ describe('AccountActivationMessage', () => {
 
   it('should not display anything for invalid message type', () => {
     const { container } = render(providerWrapper(
-      <IntlAccountActivationMessage messageType="invalid-message" />
+      <AccountActivationMessage messageType="invalid-message" />
     ));
 
     const accountActivationMessage = container.querySelectorAll('#account-activation-message');
@@ -85,7 +84,7 @@ describe('EmailConfirmationMessage', () => {
 
   it('should match email already confirmed message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
     ));
 
     const expectedMessage = 'This account has already been activated.';
@@ -98,7 +97,7 @@ describe('EmailConfirmationMessage', () => {
 
   it('should match email confirmation success message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
     ));
     const expectedMessage = 'Success! You have activated your account.You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.';
 
@@ -110,7 +109,7 @@ describe('EmailConfirmationMessage', () => {
 
   it('should match email confirmation error message', () => {
     render(providerWrapper(
-      <IntlAccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
     ));
     const expectedMessage = 'Your account could not be activated'
       + 'Something went wrong, please contact support to resolve this issue.';

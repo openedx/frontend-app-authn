@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 
-import { getSiteConfig, injectIntl, IntlProvider } from '@openedx/frontend-base';
+import { getSiteConfig, IntlProvider } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -8,7 +8,6 @@ import configureStore from 'redux-mock-store';
 import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
 import { EmailField } from '../index';
 
-const IntlEmailField = injectIntl(EmailField);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -78,7 +77,7 @@ describe('EmailField', () => {
     };
 
     it('should run email field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: '', name: 'email' } });
@@ -90,7 +89,7 @@ describe('EmailField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'ab', name: 'email' } });
@@ -103,7 +102,7 @@ describe('EmailField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.focus(emailInput, { target: { value: '', name: 'email' } });
@@ -117,7 +116,7 @@ describe('EmailField', () => {
 
     it('should call backend validation api on blur event, if frontend validations have passed', () => {
       store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       // Enter a valid email so that frontend validations are passed
       const emailInput = container.querySelector('input#email');
@@ -127,7 +126,7 @@ describe('EmailField', () => {
     });
 
     it('should give email suggestions for common service provider domain typos', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@yopmail.com', name: 'email' } });
@@ -137,7 +136,7 @@ describe('EmailField', () => {
     });
 
     it('should be able to click on email suggestions and set it as value', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@yopmail.com', name: 'email' } });
@@ -152,7 +151,7 @@ describe('EmailField', () => {
     });
 
     it('should give error for common top level domain mistakes', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail.mistake', name: 'email' } });
@@ -162,7 +161,7 @@ describe('EmailField', () => {
     });
 
     it('should give error and suggestion for invalid email', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail', name: 'email' } });
@@ -192,7 +191,7 @@ describe('EmailField', () => {
 
       store.dispatch = jest.fn(store.dispatch);
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.focus(emailInput, { target: { value: 'a@gmail.com', name: 'email' } });
@@ -201,7 +200,7 @@ describe('EmailField', () => {
     });
 
     it('should clear email suggestions when close icon is clicked', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'john@gmail.mistake', name: 'email' } });
@@ -222,7 +221,7 @@ describe('EmailField', () => {
         confirmEmailValue: 'confirmEmail@yopmail.com',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlEmailField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<EmailField {...props} />)));
       const emailInput = container.querySelector('input#email');
       fireEvent.blur(emailInput, { target: { value: 'differentEmail@yopmail.com', name: 'email' } });
 

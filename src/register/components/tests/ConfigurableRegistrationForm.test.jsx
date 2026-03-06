@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 
 import {
-  CurrentAppProvider, getLocale, injectIntl, IntlProvider, mergeAppConfig
+  CurrentAppProvider, getLocale, IntlProvider, mergeAppConfig
 } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -25,8 +25,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }));
 
-const IntlConfigurableRegistrationForm = injectIntl(ConfigurableRegistrationForm);
-const IntlRegistrationPage = injectIntl(RegistrationPage);
 const mockStore = configureStore();
 
 describe('ConfigurableRegistrationForm', () => {
@@ -143,7 +141,7 @@ describe('ConfigurableRegistrationForm', () => {
       };
 
       render(routerWrapper(reduxWrapper(
-        <IntlConfigurableRegistrationForm {...props} />,
+        <ConfigurableRegistrationForm {...props} />,
       )));
 
       expect(document.querySelector('#profession')).toBeTruthy();
@@ -168,7 +166,7 @@ describe('ConfigurableRegistrationForm', () => {
       };
 
       render(routerWrapper(reduxWrapper(
-        <IntlConfigurableRegistrationForm {...props} />,
+        <ConfigurableRegistrationForm {...props} />,
       )));
 
       expect(props.setFormFields).toHaveBeenCalledTimes(2);
@@ -195,7 +193,7 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       expect(document.querySelector('#profession')).toBeTruthy();
       expect(document.querySelector('#tos')).toBeTruthy();
     });
@@ -227,7 +225,7 @@ describe('ConfigurableRegistrationForm', () => {
       };
 
       store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
 
       populateRequiredFields(getByLabelText, payload);
 
@@ -262,7 +260,7 @@ describe('ConfigurableRegistrationForm', () => {
         },
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const submitButton = container.querySelector('button.btn-brand');
 
       fireEvent.click(submitButton);
@@ -288,7 +286,7 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
       fireEvent.change(countryInput, { target: { value: 'Pak', name: 'country' } });
       fireEvent.blur(countryInput, { target: { value: 'Pak', name: 'country' } });
@@ -313,7 +311,7 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
 
       const emailInput = getByLabelText('Email');
       const confirmEmailInput = getByLabelText('Confirm Email');
@@ -349,7 +347,7 @@ describe('ConfigurableRegistrationForm', () => {
           },
         },
       });
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<RegistrationPage {...props} />)));
 
       populateRequiredFields(getByLabelText, formPayload, true);
       fireEvent.change(
@@ -384,7 +382,7 @@ describe('ConfigurableRegistrationForm', () => {
       });
 
       const { getByLabelText, container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(reduxWrapper(<RegistrationPage {...props} />)),
       );
 
       const professionInput = getByLabelText('Profession');

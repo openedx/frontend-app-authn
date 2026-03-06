@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 
-import { injectIntl, IntlProvider } from '@openedx/frontend-base';
+import { IntlProvider } from '@openedx/frontend-base';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
@@ -8,7 +8,6 @@ import configureStore from 'redux-mock-store';
 import { CountryField } from '../index';
 import { COUNTRY_CODE_KEY, COUNTRY_DISPLAY_KEY } from './validator';
 
-const IntlCountryField = injectIntl(CountryField);
 const mockStore = configureStore();
 
 jest.mock('react-router-dom', () => {
@@ -76,7 +75,7 @@ describe('CountryField', () => {
     };
 
     it('should run country field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, {
@@ -91,7 +90,7 @@ describe('CountryField', () => {
     });
 
     it('should run country field validation when country name is invalid', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, {
@@ -106,7 +105,7 @@ describe('CountryField', () => {
     });
 
     it('should not run country field validation when onBlur is fired by drop-down arrow icon click', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
       const dropdownArrowIcon = container.querySelector('.btn-icon.pgn__form-autosuggest__icon-button');
 
@@ -119,7 +118,7 @@ describe('CountryField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.blur(countryInput, { target: { value: '', name: 'country' } });
@@ -129,7 +128,7 @@ describe('CountryField', () => {
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
       const countryInput = container.querySelector('input[name="country"]');
 
       fireEvent.focus(countryInput);
@@ -147,7 +146,7 @@ describe('CountryField', () => {
         },
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
 
       container.querySelector('input[name="country"]');
       expect(props.onChangeHandler).toHaveBeenCalledTimes(1);
@@ -158,7 +157,7 @@ describe('CountryField', () => {
     });
 
     it('should set option on dropdown menu item click', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
 
       const dropdownButton = container.querySelector('.pgn__form-autosuggest__icon-button');
       fireEvent.click(dropdownButton);
@@ -175,7 +174,7 @@ describe('CountryField', () => {
 
     it('should set value on change', () => {
       const { container } = render(
-        routerWrapper(reduxWrapper(<IntlCountryField {...props} />)),
+        routerWrapper(reduxWrapper(<CountryField {...props} />)),
       );
 
       const countryInput = container.querySelector('input[name="country"]');
@@ -194,7 +193,7 @@ describe('CountryField', () => {
         errorMessage: 'country error message',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlCountryField {...props} />)));
+      const { container } = render(routerWrapper(reduxWrapper(<CountryField {...props} />)));
 
       const feedbackElement = container.querySelector('div[feedback-for="country"]');
       expect(feedbackElement).toBeTruthy();
