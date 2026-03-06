@@ -1,7 +1,7 @@
 import { IntlProvider } from '@openedx/frontend-base';
 import renderer from 'react-test-renderer';
 
-import { REGISTER_PAGE } from '../../data/constants';
+import { PENDING_STATE, REGISTER_PAGE } from '../../data/constants';
 import ThirdPartyAuthAlert from '../ThirdPartyAuthAlert';
 
 describe('ThirdPartyAuthAlert', () => {
@@ -27,6 +27,21 @@ describe('ThirdPartyAuthAlert', () => {
     props = {
       ...props,
       referrer: REGISTER_PAGE,
+    };
+
+    const tree = renderer.create(
+      <IntlProvider locale="en">
+        <ThirdPartyAuthAlert {...props} />
+      </IntlProvider>,
+    ).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('renders skeleton for pending third-party auth', () => {
+    props = {
+      ...props,
+      thirdPartyAuthApiStatus: PENDING_STATE,
+      isThirdPartyAuthActive: true,
     };
 
     const tree = renderer.create(
