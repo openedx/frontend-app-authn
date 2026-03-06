@@ -126,6 +126,11 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid name',
     description: 'Validation message that appears when fullname contain URL',
   },
+  'name.validation.length.message': {
+    id: 'registration.name.validation.length.message',
+    defaultMessage: 'Full name cannot be longer than {limit} characters',
+    description: 'Validation message that appears when the full name exceeds the character limit',
+  },
   'password.validation.message': {
     id: 'password.validation.message',
     defaultMessage: 'Password criteria has not been met',
@@ -161,6 +166,11 @@ const messages = defineMessages({
     id: 'registration.tpa.session.expired',
     defaultMessage: 'Registration using {provider} has timed out.',
     description: 'Error message that appears when a user has not registered in the required timeframe for the registration method they chose.',
+  },
+  'registration.forbidden.username': {
+    id: 'registration.forbidden.username',
+    defaultMessage: 'Usernames can\'t include words that could be mistaken for course roles. Please choose a different username.',
+    description: 'Error message when a user tries to register with a username that contains forbidden words',
   },
   'registration.tpa.authentication.failure': {
     id: 'registration.tpa.authentication.failure',

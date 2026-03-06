@@ -1,4 +1,4 @@
-import { getSiteConfig, injectIntl, IntlProvider } from '@openedx/frontend-base';
+import { getSiteConfig, IntlProvider } from '@openedx/frontend-base';
 import {
   fireEvent, render, screen,
 } from '@testing-library/react';
@@ -8,7 +8,6 @@ import { MemoryRouter } from 'react-router-dom';
 import { RESET_PAGE } from '../../data/constants';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
-const IntlChangePasswordPrompt = injectIntl(ChangePasswordPrompt);
 const mockedNavigator = jest.fn();
 
 jest.mock('react-router-dom', () => ({
@@ -41,7 +40,7 @@ describe('ChangePasswordPromptTests', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <IntlChangePasswordPrompt {...props} />
+          <ChangePasswordPrompt {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );
@@ -58,7 +57,7 @@ describe('ChangePasswordPromptTests', () => {
     render(
       <IntlProvider locale="en">
         <MemoryRouter>
-          <IntlChangePasswordPrompt {...props} />
+          <ChangePasswordPrompt {...props} />
         </MemoryRouter>
       </IntlProvider>,
     );

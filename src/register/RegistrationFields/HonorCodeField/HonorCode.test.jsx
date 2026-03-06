@@ -1,12 +1,10 @@
 import {
-  CurrentAppProvider, getSiteConfig, injectIntl, IntlProvider, mergeAppConfig
+  CurrentAppProvider, getSiteConfig, IntlProvider, mergeAppConfig
 } from '@openedx/frontend-base';
 import { render } from '@testing-library/react';
 
 import { appId } from '../../../constants';
 import { HonorCode } from '../index';
-
-const IntlHonorCode = injectIntl(HonorCode);
 
 const providerWrapper = children => (
   <IntlProvider locale="en">
@@ -35,7 +33,7 @@ describe('HonorCodeTest', () => {
   it('should render error msg if honor code is not checked', () => {
     const errorMessage = `You must agree to the ${getSiteConfig().siteName} Honor Code`;
     const { container } = render(providerWrapper(
-      <IntlHonorCode
+      <HonorCode
         errorMessage={errorMessage}
         onChangeHandler={changeHandler}
       />
@@ -48,7 +46,7 @@ describe('HonorCodeTest', () => {
   it('should render Honor code field', () => {
     const expectedMsg = `I agree to the ${getSiteConfig().siteName}\u00a0Honor Codein a new tab`;
     const { container } = render(providerWrapper(
-      <IntlHonorCode onChangeHandler={changeHandler} />
+      <HonorCode onChangeHandler={changeHandler} />
     ));
 
     const honorCodeField = container.querySelector('#honor-code');
@@ -59,7 +57,7 @@ describe('HonorCodeTest', () => {
 
   it('should render Terms of Service and Honor code field', () => {
     const { container } = render(providerWrapper(
-      <IntlHonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
+      <HonorCode fieldType="tos_and_honor_code" onChangeHandler={changeHandler} />
     ));
     const expectedMsg = 'By creating an account, you agree to the Terms of Service and Honor Code and you '
       + `acknowledge that ${getSiteConfig().siteName} and each Member process your personal data in `

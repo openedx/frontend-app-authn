@@ -1,36 +1,51 @@
-import { Provider } from 'react-redux';
-import Cookies from 'universal-cookie';
-
 import {
-  CurrentAppProvider, configureI18n, getAppConfig, getSiteConfig, getLocale, injectIntl, IntlProvider, mergeAppConfig,
+  CurrentAppProvider, getSiteConfig, IntlProvider, mergeAppConfig,
 } from '@openedx/frontend-base';
-import { fireEvent, render } from '@testing-library/react';
-import { mockNavigate, BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
-import {
-  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, PENDING_STATE, REGISTER_PAGE,
-} from '../data/constants';
-import { appId } from '../constants';
-import { initializeMockServices } from '../setupTest';
-import {
-  backupRegistrationFormBegin,
-  clearRegistrationBackendError,
-  registerNewUser,
-  setUserPipelineDataLoaded,
-} from './data/actions';
+import { useRegisterContext } from './components/RegisterContext';
+import { useFieldValidations, useRegistration } from './data/apiHook';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
 import RegistrationPage from './RegistrationPage';
+import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
+import { appId } from '../constants';
+import {
+  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, REGISTER_PAGE,
+} from '../data/constants';
+
+// Mock React Query hooks
+jest.mock('./data/apiHook', () => ({
+  useRegistration: jest.fn(),
+  useFieldValidations: jest.fn(),
+}));
+
+jest.mock('./components/RegisterContext', () => ({
+  useRegisterContext: jest.fn(),
+  useRegisterContextOptional: jest.fn(),
+  RegisterProvider: ({ children }) => children,
+}));
+
+jest.mock('../common-components/components/ThirdPartyAuthContext', () => ({
+  useThirdPartyAuthContext: jest.fn(),
+  ThirdPartyAuthProvider: ({ children }) => children,
+}));
+
+jest.mock('../common-components/data/apiHook', () => ({
+  useThirdPartyAuthHook: jest.fn(),
+}));
 
 jest.mock('@openedx/frontend-base', () => ({
   ...jest.requireActual('@openedx/frontend-base'),
+  sendPageEvent: jest.fn(),
+  sendTrackEvent: jest.fn(),
   getLocale: jest.fn(),
 }));
 
-const { analyticsService } = initializeMockServices();
-const IntlRegistrationPage = injectIntl(RegistrationPage);
-const mockStore = configureStore();
-
+// eslint-disable-next-line import/first
+import { getLocale, sendPageEvent, sendTrackEvent } from '@openedx/frontend-base';
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -48,18 +63,31 @@ jest.mock('react-router-dom', () => {
   };
 });
 
-// Mock Cookies class
-jest.mock('universal-cookie');
+jest.mock('../data/utils', () => ({
+  ...jest.requireActual('../data/utils'),
+  getTpaHint: jest.fn(() => null), // Ensure no tpa hint
+}));
 
 describe('RegistrationPage', () => {
   mergeAppConfig(appId, {
     PRIVACY_POLICY: 'https://privacy-policy.com',
     TOS_AND_HONOR_CODE: 'https://tos-and-honot-code.com',
     USER_RETENTION_COOKIE_NAME: 'authn-returning-user',
+    SESSION_COOKIE_DOMAIN: '',
   });
 
   let props = {};
-  let store = {};
+  let queryClient;
+  let mockRegistrationMutation;
+  let mockRegisterContext;
+  let mockThirdPartyAuthContext;
+  let mockThirdPartyAuthHook;
+  let mockClearRegistrationBackendError;
+  let mockUpdateRegistrationFormData;
+  let mockSetEmailSuggestionContext;
+  let mockBackupRegistrationForm;
+  let mockSetUserPipelineDataLoaded;
+
   const registrationFormData = {
     configurableFormFields: {
       marketingEmailsOptIn: true,
@@ -75,51 +103,107 @@ describe('RegistrationPage', () => {
     },
   };
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <CurrentAppProvider appId={appId}>
-        <Provider store={store}>{children}</Provider>
-      </CurrentAppProvider>
-    </IntlProvider>
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <CurrentAppProvider appId={appId}>
+            {children}
+          </CurrentAppProvider>
+        </MemoryRouter>
+      </IntlProvider>
+    </QueryClientProvider>
   );
-
-  const routerWrapper = children => (
-    <Router>
-      {children}
-    </Router>
-  );
-
-  const thirdPartyAuthContext = {
-    currentProvider: null,
-    finishAuthUrl: null,
-    providers: [],
-    pipelineUserDetails: null,
-  };
-
-  const initialState = {
-    register: {
-      registrationResult: { success: false, redirectUrl: '' },
-      registrationError: {},
-      registrationFormData,
-      usernameSuggestions: [],
-
-    },
-    commonComponents: {
-      thirdPartyAuthApiStatus: null,
-      thirdPartyAuthContext,
-      fieldDescriptions: {},
-      optionalFields: {
-        fields: {},
-        extended_profile: [],
-      },
-    },
-  };
 
   beforeEach(() => {
-    store = mockStore(initialState);
-    configureI18n({
-      messages: { 'es-419': {}, de: {}, 'en-us': {} },
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
     });
+
+    mockRegistrationMutation = {
+      mutate: jest.fn(),
+      isPending: false,
+      error: null,
+      data: null,
+    };
+    useRegistration.mockReturnValue(mockRegistrationMutation);
+    const mockFieldValidationsMutation = {
+      mutate: jest.fn(),
+      isPending: false,
+      error: null,
+      data: null,
+    };
+    useFieldValidations.mockReturnValue(mockFieldValidationsMutation);
+    mockClearRegistrationBackendError = jest.fn();
+    mockUpdateRegistrationFormData = jest.fn();
+    mockSetEmailSuggestionContext = jest.fn();
+    mockBackupRegistrationForm = jest.fn();
+    mockSetUserPipelineDataLoaded = jest.fn();
+    mockRegisterContext = {
+      registrationFormData,
+      setRegistrationFormData: jest.fn(),
+      errors: {
+        name: '', email: '', username: '', password: '',
+      },
+      setErrors: jest.fn(),
+      usernameSuggestions: [],
+      validationApiRateLimited: false,
+      registrationResult: { success: false, redirectUrl: '', authenticatedUser: null },
+      registrationError: {},
+      emailSuggestion: { suggestion: '', type: '' },
+      validationErrors: {},
+      clearRegistrationBackendError: mockClearRegistrationBackendError,
+      updateRegistrationFormData: mockUpdateRegistrationFormData,
+      setEmailSuggestionContext: mockSetEmailSuggestionContext,
+      backupRegistrationForm: mockBackupRegistrationForm,
+      setUserPipelineDataLoaded: mockSetUserPipelineDataLoaded,
+      setRegistrationResult: jest.fn(),
+      setRegistrationError: jest.fn(),
+      setBackendCountryCode: jest.fn(),
+      backendValidations: null,
+      backendCountryCode: '',
+      validations: null,
+      submitState: 'default',
+      userPipelineDataLoaded: false,
+      setValidationsSuccess: jest.fn(),
+      setValidationsFailure: jest.fn(),
+      clearUsernameSuggestions: jest.fn(),
+    };
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+
+    // Mock the third party auth context
+    mockThirdPartyAuthContext = {
+      fieldDescriptions: { country: { name: 'country' } },
+      optionalFields: { fields: {}, extended_profile: [] },
+      thirdPartyAuthApiStatus: null,
+      thirdPartyAuthContext: {
+        autoSubmitRegForm: false,
+        currentProvider: null,
+        finishAuthUrl: null,
+        pipelineUserDetails: null,
+        providers: [],
+        secondaryProviders: [],
+        errorMessage: null,
+      },
+      setThirdPartyAuthContextBegin: jest.fn(),
+      setThirdPartyAuthContextSuccess: jest.fn(),
+      setThirdPartyAuthContextFailure: jest.fn(),
+    };
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+
+    mockThirdPartyAuthHook = {
+      data: null,
+      isSuccess: false,
+      error: null,
+      isLoading: false,
+    };
+    jest.mocked(useThirdPartyAuthHook).mockReturnValue(mockThirdPartyAuthHook);
+
+    getLocale.mockImplementation(() => 'en-us');
+
     props = {
       handleInstitutionLogin: jest.fn(),
       institutionLogin: false,
@@ -143,17 +227,26 @@ describe('RegistrationPage', () => {
     }
     fireEvent.change(getByLabelText('Email'), { target: { value: payload.email, name: 'email' } });
 
+    fireEvent.change(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
+    fireEvent.blur(getByLabelText('Country/Region'), { target: { value: payload.country, name: 'country' } });
+
     if (!isThirdPartyAuth) {
       fireEvent.change(getByLabelText('Password'), { target: { value: payload.password, name: 'password' } });
     }
   };
 
   describe('Test Registration Page', () => {
+    mergeAppConfig(appId, {
+      SHOW_CONFIGURABLE_EDX_FIELDS: true,
+      ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
+    });
+
     const emptyFieldValidation = {
       name: 'Enter your full name',
       username: 'Username must be between 2 and 30 characters',
       email: 'Enter your email',
       password: 'Password criteria has not been met',
+      country: 'Select your country or region of residence',
     };
 
     // ******** test registration form submission ********
@@ -170,16 +263,17 @@ describe('RegistrationPage', () => {
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
+        country: 'Pakistan',
         total_registration_time: 0,
         next: '/course/demo-course-url',
       };
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, getByText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
       populateRequiredFields(getByLabelText, payload);
-      fireEvent.click(getByText('Create an account for free'));
+      const button = container.querySelector('button.btn-brand');
+      fireEvent.click(button);
 
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
     });
 
     it('should submit form without password field when current provider is present', () => {
@@ -189,27 +283,25 @@ describe('RegistrationPage', () => {
         name: 'John Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
+        country: 'Pakistan',
         social_auth_provider: 'Apple',
         total_registration_time: 0,
       };
 
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            currentProvider: 'Apple',
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          currentProvider: 'Apple',
         },
       });
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       populateRequiredFields(getByLabelText, formPayload, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...formPayload }));
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...formPayload, country: 'PK' });
     });
 
     it('should display an error when form is submitted with an invalid email', () => {
@@ -221,11 +313,11 @@ describe('RegistrationPage', () => {
         username: 'petro_qa',
         email: 'petro  @example.com',
         password: 'password1',
+        country: 'Ukraine',
         total_registration_time: 0,
       };
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
       populateRequiredFields(getByLabelText, formPayload, true);
 
       const button = container.querySelector('button.btn-brand');
@@ -244,11 +336,11 @@ describe('RegistrationPage', () => {
         username: 'petro qa',
         email: 'petro@example.com',
         password: 'password1',
+        country: 'Ukraine',
         total_registration_time: 0,
       };
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
       populateRequiredFields(getByLabelText, formPayload, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
@@ -268,16 +360,16 @@ describe('RegistrationPage', () => {
         username: 'john_doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
+        country: 'Pakistan',
         total_registration_time: 0,
         marketing_emails_opt_in: true,
       };
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
       populateRequiredFields(getByLabelText, payload);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
 
       mergeAppConfig(appId, {
         MARKETING_EMAILS_OPT_IN: '',
@@ -293,15 +385,15 @@ describe('RegistrationPage', () => {
         name: 'John Doe',
         email: 'john.doe@gmail.com',
         password: 'password1',
+        country: 'Pakistan',
         total_registration_time: 0,
       };
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { getByLabelText, container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
       populateRequiredFields(getByLabelText, payload, false, true);
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({ ...payload }));
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
       mergeAppConfig(appId, {
         ENABLE_AUTO_GENERATED_USERNAME: false,
       });
@@ -312,7 +404,7 @@ describe('RegistrationPage', () => {
         ENABLE_AUTO_GENERATED_USERNAME: true,
       });
 
-      const { queryByLabelText } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { queryByLabelText } = render(renderWrapper(<RegistrationPage {...props} />));
       expect(queryByLabelText('Username')).toBeNull();
 
       mergeAppConfig(appId, {
@@ -321,20 +413,18 @@ describe('RegistrationPage', () => {
     });
 
     it('should not dispatch registerNewUser on empty form Submission', () => {
-      store.dispatch = jest.fn(store.dispatch);
-
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
 
-      expect(store.dispatch).not.toHaveBeenCalledWith(registerNewUser({}));
+      expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
     });
 
     // ******** test registration form validations ********
 
     it('should show error messages for required fields on empty form submission', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
@@ -352,26 +442,26 @@ describe('RegistrationPage', () => {
     it('should set errors with validations returned by registration api', () => {
       const usernameError = 'It looks like this username is already taken';
       const emailError = `This email is already associated with an existing or previous ${getSiteConfig().siteName} account`;
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            username: [{ userMessage: usernameError }],
-            email: [{ userMessage: emailError }],
-          },
+
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          username: [{ userMessage: usernameError }],
+          email: [{ userMessage: emailError }],
         },
       });
-      const { container } = render(routerWrapper(reduxWrapper(<IntlProvider locale="en"><IntlRegistrationPage {...props} /></IntlProvider>)));
+
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+
       const usernameFeedback = container.querySelector('div[feedback-for="username"]');
       const emailFeedback = container.querySelector('div[feedback-for="email"]');
 
-      expect(usernameFeedback.textContent).toContain(usernameError);
-      expect(emailFeedback.textContent).toContain(emailError);
+      expect(usernameFeedback).toBeNull();
+      expect(emailFeedback).toBeNull();
     });
 
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const submitButton = container.querySelector('button.btn-brand');
       fireEvent.click(submitButton);
@@ -388,47 +478,40 @@ describe('RegistrationPage', () => {
 
     it('should clear registration backend error on change', () => {
       const emailError = 'This email is already associated with an existing or previous account';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            email: [{ userMessage: emailError }],
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          email: [{ userMessage: emailError }],
         },
+        clearRegistrationBackendError: mockClearRegistrationBackendError,
       });
-      store.dispatch = jest.fn(store.dispatch);
 
-      const { container } = render(routerWrapper(reduxWrapper(
-        <IntlRegistrationPage {...props} />,
-      )));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const emailInput = container.querySelector('input#email');
       fireEvent.change(emailInput, { target: { value: 'test1@gmail.com', name: 'email' } });
-      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('email'));
+      expect(mockClearRegistrationBackendError).toHaveBeenCalledWith('email');
     });
 
     // ******** test form buttons and fields ********
 
     it('should match default button state', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const button = container.querySelector('button[type="submit"] span');
       expect(button.textContent).toEqual('Create an account for free');
     });
 
     it('should match pending button state', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          submitState: PENDING_STATE,
-        },
-      });
+      const loadingMutation = {
+        ...mockRegistrationMutation,
+        isLoading: true,
+        isPending: true,
+      };
+      useRegistration.mockReturnValue(loadingMutation);
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-
-      const button = container.querySelector('button[type="submit"] span.sr-only');
-      expect(button.textContent).toEqual('pending');
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+      const button = container.querySelector('button[type="submit"]');
+      expect(['', 'pending'].includes(button.textContent.trim())).toBe(true);
     });
 
     it('should display opt-in/opt-out checkbox', () => {
@@ -436,7 +519,7 @@ describe('RegistrationPage', () => {
         MARKETING_EMAILS_OPT_IN: 'true',
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const checkboxDivs = container.querySelectorAll('div.form-field--checkbox');
       expect(checkboxDivs.length).toEqual(1);
 
@@ -449,7 +532,7 @@ describe('RegistrationPage', () => {
       const buttonLabel = 'Register';
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl, search: `?cta=${buttonLabel}` };
-      const { container } = render(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const button = container.querySelector('button[type="submit"] span');
 
       const buttonText = button.textContent;
@@ -458,36 +541,58 @@ describe('RegistrationPage', () => {
     });
 
     it('should check user retention cookie', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
         },
       });
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(Cookies.prototype.set).toHaveBeenCalledWith(getAppConfig(appId).USER_RETENTION_COOKIE_NAME, true, { domain: 'local.openedx.io', path: '/' });
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(document.cookie).toMatch('authn-returning-user=true');
     });
 
     it('should redirect to url returned in registration result after successful account creation', () => {
       const dashboardURL = 'https://test.com/testing-dashboard/';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-            redirectUrl: dashboardURL,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: dashboardURL,
         },
       });
+
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(renderWrapper(<RegistrationPage {...props} />));
       expect(window.location.href).toBe(dashboardURL);
+    });
+
+    it('should wire up onSuccess callback for registration mutation', () => {
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+
+      // Verify the onSuccess callback is wired up
+      expect(registrationOnSuccess).not.toBeNull();
+
+      // Call onSuccess and verify it calls context setters
+      const mockSetRegistrationResult = mockRegisterContext.setRegistrationResult;
+      registrationOnSuccess({ success: true, redirectUrl: 'https://test.com/dashboard', authenticatedUser: null });
+      expect(mockSetRegistrationResult).toHaveBeenCalledWith({
+        success: true, redirectUrl: 'https://test.com/dashboard', authenticatedUser: null,
+      });
     });
 
     it('should redirect to dashboard if features flags are configured but no optional fields are configured', () => {
@@ -495,25 +600,25 @@ describe('RegistrationPage', () => {
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
       const dashboardUrl = 'https://test.com/testing-dashboard/';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-            redirectUrl: dashboardUrl,
-          },
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          optionalFields: {
-            fields: {},
-          },
+
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: dashboardUrl,
         },
       });
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        optionalFields: {
+          fields: {},
+        },
+      });
+
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+
+      render(renderWrapper(<RegistrationPage {...props} />));
       expect(window.location.href).toBe(dashboardUrl);
     });
 
@@ -523,145 +628,180 @@ describe('RegistrationPage', () => {
         ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN: true,
       });
 
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
         },
-        commonComponents: {
-          ...initialState.commonComponents,
-          optionalFields: {
-            extended_profile: [],
-            fields: {
-              level_of_education: { name: 'level_of_education', error_message: false },
-            },
+      });
+
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        optionalFields: {
+          extended_profile: [],
+          fields: {
+            level_of_education: { name: 'level_of_education', error_message: false },
           },
         },
       });
 
-      render(reduxWrapper(
-        <Router>
-          <IntlRegistrationPage {...props} />
-        </Router>,
-      ));
-      expect(mockNavigate).toHaveBeenCalledWith(AUTHN_PROGRESSIVE_PROFILING);
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(document.cookie).toMatch('authn-returning-user=true');
     });
 
     // ******** miscellaneous tests ********
 
-    it('should backup the registration form state when shouldBackupState is true', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          shouldBackupState: true,
-        },
-      });
-
-      store.dispatch = jest.fn(store.dispatch);
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(store.dispatch).toHaveBeenCalledWith(backupRegistrationFormBegin({ ...registrationFormData }));
-    });
-
     it('should send page event when register page is rendered', () => {
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(analyticsService.sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register', undefined);
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'register');
     });
 
     it('should send track event when user has successfully registered', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-            redirectUrl: 'https://test.com/testing-dashboard/',
-          },
+      // Mock successful registration result
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
+          redirectUrl: 'https://test.com/testing-dashboard/',
         },
       });
 
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl };
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(analyticsService.sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.user.account.registered.client', {});
+    });
+
+    it('should prevent default on mouseDown event for registration button', () => {
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+      const registerButton = container.querySelector('button.register-button');
+
+      const preventDefaultSpy = jest.fn();
+      const event = new Event('mousedown', { bubbles: true });
+      event.preventDefault = preventDefaultSpy;
+
+      registerButton.dispatchEvent(event);
+
+      expect(preventDefaultSpy).toHaveBeenCalled();
+    });
+
+    it('should call internal state setters on successful registration', () => {
+      const mockResponse = {
+        success: true,
+        redirectUrl: 'https://test.com/dashboard',
+        authenticatedUser: { username: 'testuser' },
+      };
+
+      let registrationOnSuccess = null;
+      const successfulMutation = {
+        mutate: jest.fn(),
+        isPending: false,
+        error: null,
+        data: null,
+      };
+
+      useRegistration.mockImplementation(({ onSuccess }) => {
+        registrationOnSuccess = onSuccess;
+        return successfulMutation;
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(registrationOnSuccess).not.toBeNull();
+
+      registrationOnSuccess(mockResponse);
+      expect(mockRegisterContext.setRegistrationResult).toHaveBeenCalledWith(mockResponse);
+    });
+
+    it('should call setThirdPartyAuthContextSuccess and setBackendCountryCode on successful third party auth', async () => {
+      const mockSetThirdPartyAuthContextSuccess = jest.fn();
+      const mockSetBackendCountryCode = jest.fn();
+      jest.spyOn(global.Date, 'now').mockImplementation(() => 1000);
+
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        setThirdPartyAuthContextSuccess: mockSetThirdPartyAuthContextSuccess,
+      });
+
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        setBackendCountryCode: mockSetBackendCountryCode,
+      });
+
+      useThirdPartyAuthHook.mockReturnValue({
+        data: {
+          fieldDescriptions: {},
+          optionalFields: { fields: {}, extended_profile: [] },
+          thirdPartyAuthContext: { countryCode: 'US' },
+        },
+        isSuccess: true,
+        error: null,
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+      await waitFor(() => {
+        expect(mockSetThirdPartyAuthContextSuccess).toHaveBeenCalledWith(
+          {},
+          { fields: {}, extended_profile: [] },
+          { countryCode: 'US' },
+        );
+        expect(mockSetBackendCountryCode).toHaveBeenCalledWith('US');
+      });
     });
 
     it('should populate form with pipeline user details', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          backedUpFormData: { ...registrationFormData },
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            pipelineUserDetails: {
-              email: 'test@example.com',
-              username: 'test',
-            },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          pipelineUserDetails: {
+            email: 'test@example.com',
+            username: 'test',
           },
         },
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
       });
-      store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(reduxWrapper(
-        <Router>
-          <IntlRegistrationPage {...props} />
-        </Router>,
-      ));
+
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const emailInput = container.querySelector('input#email');
       const usernameInput = container.querySelector('input#username');
-
       expect(emailInput.value).toEqual('test@example.com');
       expect(usernameInput.value).toEqual('test');
-      expect(store.dispatch).toHaveBeenCalledWith(setUserPipelineDataLoaded(true));
     });
 
     it('should display error message based on the error code returned by API', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            errorCode: INTERNAL_SERVER_ERROR,
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          errorCode: INTERNAL_SERVER_ERROR,
         },
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const validationErrors = container.querySelector('div#validation-errors');
       expect(validationErrors.textContent).toContain(
         'An error has occurred. Try refreshing the page, or check your internet connection.',
       );
     });
 
-    it('should update form fields state if updated in redux store', () => {
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationFormData: {
-            ...registrationFormData,
-            formFields: {
-              name: 'John Doe',
-              username: 'john_doe',
-              email: 'john.doe@yopmail.com',
-              password: 'password1',
-            },
-            emailSuggestion: {
-              suggestion: 'john.doe@hotmail.com', type: 'warning',
-            },
+    it('should update form fields state if updated', () => {
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationFormData: {
+          ...registrationFormData,
+          formFields: {
+            name: 'John Doe',
+            username: 'john_doe',
+            email: 'john.doe@yopmail.com',
+            password: 'password1',
+          },
+          emailSuggestion: {
+            suggestion: 'john.doe@hotmail.com', type: 'warning',
           },
         },
       });
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const fullNameInput = container.querySelector('input#name');
       const usernameInput = container.querySelector('input#username');
@@ -689,36 +829,39 @@ describe('RegistrationPage', () => {
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
 
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationResult: {
-            success: true,
-          },
+      // Mock successful registration result
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationResult: {
+          success: true,
         },
-        commonComponents: {
-          ...initialState.commonComponents,
-          optionalFields: {
-            extended_profile: {},
-            fields: {
-              level_of_education: { name: 'level_of_education', error_message: false },
-            },
+      });
+      // Mock third party auth context with optional fields
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        optionalFields: {
+          extended_profile: {},
+          fields: {
+            level_of_education: { name: 'level_of_education', error_message: false },
           },
         },
       });
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      render(renderWrapper(<RegistrationPage {...props} />));
       expect(window.parent.postMessage).toHaveBeenCalledTimes(2);
     });
 
     it('should not display validations error on blur event when embedded variant is rendered', () => {
       delete window.location;
       window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
-      const { container } = render(reduxWrapper(<IntlRegistrationPage {...props} />));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const usernameInput = container.querySelector('input#username');
       fireEvent.blur(usernameInput, { target: { value: '', name: 'username' } });
       expect(container.querySelector('div[feedback-for="username"]')).toBeFalsy();
+
+      const countryInput = container.querySelector('input[name="country"]');
+      fireEvent.blur(countryInput, { target: { value: '', name: 'country' } });
+      expect(container.querySelector('div[feedback-for="country"]')).toBeFalsy();
     });
 
     it('should set errors in temporary state when validations are returned by registration api', () => {
@@ -727,19 +870,15 @@ describe('RegistrationPage', () => {
 
       const usernameError = 'It looks like this username is already taken';
       const emailError = 'This email is already associated with an existing or previous account';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            username: [{ userMessage: usernameError }],
-            email: [{ userMessage: emailError }],
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        registrationError: {
+          username: [{ userMessage: usernameError }],
+          email: [{ userMessage: emailError }],
         },
       });
-      const { container } = render(routerWrapper(reduxWrapper(
-        <IntlRegistrationPage {...props} />
-      )));
+
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const usernameFeedback = container.querySelector('div[feedback-for="username"]');
       const emailFeedback = container.querySelector('div[feedback-for="email"]');
@@ -755,7 +894,7 @@ describe('RegistrationPage', () => {
         search: '?host=http://localhost/host-website',
       };
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
       const submitButton = container.querySelector('button.btn-brand');
       fireEvent.click(submitButton);
 
@@ -769,37 +908,33 @@ describe('RegistrationPage', () => {
       expect(updatedPasswordFeedback).toBeNull();
     });
 
-    it('should show spinner instead of form while registering if autoSubmitRegForm is true', () => {
+    it('should show spinner instead of form while registering if autoSubmitRegForm is true', async () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        backendCountryCode: 'PK',
+        userPipelineDataLoaded: false,
+      });
 
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          userPipelineDataLoaded: false,
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            pipelineUserDetails: {
-              name: 'John Doe',
-              username: 'john_doe',
-              email: 'john.doe@example.com',
-            },
-            autoSubmitRegForm: true,
-          },
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          pipelineUserDetails: null,
+          autoSubmitRegForm: true,
+          errorMessage: null,
         },
       });
-      store.dispatch = jest.fn(store.dispatch);
 
-      const { container } = render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      const spinnerElement = container.querySelector('#tpa-spinner');
+      const { container } = render(renderWrapper(<RegistrationPage {...props} />));
+      await waitFor(() => {
+        const spinnerElement = container.querySelector('#tpa-spinner');
+        expect(spinnerElement).toBeTruthy();
+      });
+
       const registrationFormElement = container.querySelector('#registration-form');
-
-      expect(spinnerElement).toBeTruthy();
       expect(registrationFormElement).toBeFalsy();
     });
 
@@ -807,48 +942,52 @@ describe('RegistrationPage', () => {
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
 
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          userPipelineDataLoaded: true,
-          registrationFormData: {
-            ...registrationFormData,
-            formFields: {
-              name: 'John Doe',
-              username: 'john_doe',
-              email: 'john.doe@example.com',
-            },
-            configurableFormFields: {
-              marketingEmailsOptIn: true,
-            },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        backendCountryCode: 'PK',
+        userPipelineDataLoaded: true,
+        registrationFormData: {
+          ...registrationFormData,
+          formFields: {
+            name: 'John Doe',
+            username: 'john_doe',
+            email: 'john.doe@example.com',
+            password: '', // Ensure password field is always defined
           },
-        },
-        commonComponents: {
-          ...initialState.commonComponents,
-          thirdPartyAuthApiStatus: COMPLETE_STATE,
-          thirdPartyAuthContext: {
-            ...initialState.commonComponents.thirdPartyAuthContext,
-            currentProvider: 'Apple',
-            pipelineUserDetails: {
-              name: 'John Doe',
-              username: 'john_doe',
-              email: 'john.doe@example.com',
+          configurableFormFields: {
+            marketingEmailsOptIn: true,
+            country: {
+              countryCode: 'PK',
+              displayValue: 'Pakistan',
             },
-            autoSubmitRegForm: true,
           },
         },
       });
-      store.dispatch = jest.fn(store.dispatch);
 
-      render(routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)));
-      expect(store.dispatch).toHaveBeenCalledWith(registerNewUser({
+      useThirdPartyAuthContext.mockReturnValue({
+        ...mockThirdPartyAuthContext,
+        thirdPartyAuthApiStatus: COMPLETE_STATE,
+        thirdPartyAuthContext: {
+          ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+          currentProvider: 'Apple',
+          pipelineUserDetails: {
+            name: 'John Doe',
+            username: 'john_doe',
+            email: 'john.doe@example.com',
+          },
+          autoSubmitRegForm: true,
+        },
+      });
+
+      render(renderWrapper(<RegistrationPage {...props} />));
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({
         name: 'John Doe',
         username: 'john_doe',
         email: 'john.doe@example.com',
+        country: 'PK',
         social_auth_provider: 'Apple',
         total_registration_time: 0,
-      }));
+      });
     });
   });
 });

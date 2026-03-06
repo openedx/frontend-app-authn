@@ -1,15 +1,36 @@
-import { Provider } from 'react-redux';
-
-import { injectIntl, IntlProvider } from '@openedx/frontend-base';
+import {
+  CurrentAppProvider, IntlProvider,
+} from '@openedx/frontend-base';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import configureStore from 'redux-mock-store';
+import { MemoryRouter } from 'react-router-dom';
 
-import { clearRegistrationBackendError, fetchRealtimeValidations } from '../../data/actions';
+import { MAX_FULL_NAME_LENGTH } from './validator';
+import { RegisterProvider, useRegisterContext } from '../../components/RegisterContext';
+import { appId } from '../../../constants';
+import messages from '../../messages';
 import { NameField } from '../index';
 
-const IntlNameField = injectIntl(NameField);
-const mockStore = configureStore();
+// Mock the useFieldValidations hook
+const mockMutate = jest.fn();
+let mockOnSuccess;
+let mockOnError;
+
+jest.mock('../../data/apiHook', () => ({
+  useFieldValidations: (callbacks) => {
+    mockOnSuccess = callbacks.onSuccess;
+    mockOnError = callbacks.onError;
+    return {
+      mutate: mockMutate,
+    };
+  },
+}));
+
+// Mock the useRegisterContext hook
+jest.mock('../../components/RegisterContext', () => ({
+  ...jest.requireActual('../../components/RegisterContext'),
+  useRegisterContext: jest.fn(),
+}));
 
 jest.mock('react-router-dom', () => {
   const mockNavigation = jest.fn();
@@ -29,26 +50,42 @@ jest.mock('react-router-dom', () => {
 
 describe('NameField', () => {
   let props = {};
-  let store = {};
+  let queryClient;
+  let mockRegisterContext;
 
-  const reduxWrapper = children => (
-    <IntlProvider locale="en">
-      <Provider store={store}>{children}</Provider>
-    </IntlProvider>
+  const renderWrapper = (children) => (
+    <QueryClientProvider client={queryClient}>
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <CurrentAppProvider appId={appId}>
+            <RegisterProvider>
+              {children}
+            </RegisterProvider>
+          </CurrentAppProvider>
+        </MemoryRouter>
+      </IntlProvider>
+    </QueryClientProvider>
   );
-
-  const routerWrapper = children => (
-    <Router>
-      {children}
-    </Router>
-  );
-
-  const initialState = {
-    register: {},
-  };
 
   beforeEach(() => {
-    store = mockStore(initialState);
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: { retry: false },
+        mutations: { retry: false },
+      },
+    });
+
+    mockRegisterContext = {
+      setValidationsSuccess: jest.fn(),
+      setValidationsFailure: jest.fn(),
+      validationApiRateLimited: false,
+      clearRegistrationBackendError: jest.fn(),
+      registrationFormData: {},
+      validationErrors: {},
+    };
+
+    useRegisterContext.mockReturnValue(mockRegisterContext);
+
     props = {
       name: 'name',
       value: '',
@@ -62,13 +99,14 @@ describe('NameField', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    mockMutate.mockClear();
   });
 
   describe('Test Name Field', () => {
     const fieldValidation = { name: 'Enter your full name' };
 
     it('should run name field validation when onBlur is fired', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(renderWrapper(<NameField {...props} />));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.blur(nameInput, { target: { value: '', name: 'name' } });
@@ -81,7 +119,7 @@ describe('NameField', () => {
     });
 
     it('should update errors for frontend validations', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(renderWrapper(<NameField {...props} />));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.blur(nameInput, { target: { value: 'https://invalid-name.com', name: 'name' } });
@@ -93,8 +131,27 @@ describe('NameField', () => {
       );
     });
 
+    it('should validate for full name length', () => {
+      const longName = `
+        5cnx16mn7qTSbtiha1W473ZtV5prGBCEtNrfLkqizJirf
+        v5kbzBpLRbdh7FY5qujb8viQ9zPziE1fWnbFu5tj4FXaY5GDESvVwjQkE
+        txUPE3r9mk4HYcSfXVJPWAWRuK2LJZycZWDm0BMFLZ63YdyQAZhjyvjn7
+        SCqKjSHDx7mgwFp35PF4CxwtwNLxY11eqf5F88wQ9k2JQ9U8uKSFyTKCM
+        A456CGA5KjUugYdT1qKdvvnXtaQr8WA87m9jpe16
+      `;
+      const { container } = render(renderWrapper(<NameField {...props} />));
+      const nameInput = container.querySelector('input#name');
+      fireEvent.blur(nameInput, { target: { value: longName, name: 'name' } });
+
+      expect(props.handleErrorChange).toHaveBeenCalledTimes(1);
+      expect(props.handleErrorChange).toHaveBeenCalledWith(
+        'name',
+        messages['name.validation.length.message'].defaultMessage.replace('{limit}', MAX_FULL_NAME_LENGTH),
+      );
+    });
+
     it('should clear error on focus', () => {
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
+      const { container } = render(renderWrapper(<NameField {...props} />));
 
       const nameInput = container.querySelector('input#name');
       fireEvent.focus(nameInput, { target: { value: '', name: 'name' } });
@@ -107,40 +164,64 @@ describe('NameField', () => {
     });
 
     it('should call backend validation api on blur event, if frontend validations have passed', () => {
-      store.dispatch = jest.fn(store.dispatch);
       props = {
         ...props,
         shouldFetchUsernameSuggestions: true,
       };
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
-
+      const { container } = render(renderWrapper(<NameField {...props} />));
       const nameInput = container.querySelector('input#name');
       // Enter a valid name so that frontend validations are passed
       fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(fetchRealtimeValidations({ name: 'test' }));
+      expect(mockMutate).toHaveBeenCalledWith({ name: 'test' });
     });
 
     it('should clear the registration validation error on focus on field', () => {
       const nameError = 'temp error';
-      store = mockStore({
-        ...initialState,
-        register: {
-          ...initialState.register,
-          registrationError: {
-            name: [{ userMessage: nameError }],
-          },
+      useRegisterContext.mockReturnValue({
+        ...mockRegisterContext,
+        validationErrors: {
+          name: [{ userMessage: nameError }],
         },
       });
 
-      store.dispatch = jest.fn(store.dispatch);
-      const { container } = render(routerWrapper(reduxWrapper(<IntlNameField {...props} />)));
-
+      const { container } = render(renderWrapper(<NameField {...props} />));
       const nameInput = container.querySelector('input#name');
-
       fireEvent.focus(nameInput, { target: { value: 'test', name: 'name' } });
 
-      expect(store.dispatch).toHaveBeenCalledWith(clearRegistrationBackendError('name'));
+      expect(mockRegisterContext.clearRegistrationBackendError).toHaveBeenCalledWith('name');
+    });
+
+    it('should call setValidationsSuccess when field validation succeeds', () => {
+      props = {
+        ...props,
+        shouldFetchUsernameSuggestions: true,
+      };
+      const { container } = render(renderWrapper(<NameField {...props} />));
+      const nameInput = container.querySelector('input#name');
+      // Enter a valid name so that frontend validations are passed and API is called
+      fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
+
+      expect(mockMutate).toHaveBeenCalledWith({ name: 'test' });
+      const validationData = { usernameSuggestions: ['test123', 'test456'] };
+      mockOnSuccess(validationData);
+
+      expect(mockRegisterContext.setValidationsSuccess).toHaveBeenCalledWith(validationData);
+    });
+
+    it('should call setValidationsFailure when field validation fails', () => {
+      props = {
+        ...props,
+        shouldFetchUsernameSuggestions: true,
+      };
+      const { container } = render(renderWrapper(<NameField {...props} />));
+      const nameInput = container.querySelector('input#name');
+      fireEvent.blur(nameInput, { target: { value: 'test', name: 'name' } });
+
+      expect(mockMutate).toHaveBeenCalledWith({ name: 'test' });
+      mockOnError();
+
+      expect(mockRegisterContext.setValidationsFailure).toHaveBeenCalledWith();
     });
   });
 });

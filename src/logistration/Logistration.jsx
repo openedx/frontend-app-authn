@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 
 import {
   useAppConfig, getAuthService, getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
@@ -14,26 +13,30 @@ import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import BaseContainer from '../base-container';
-import { clearThirdPartyAuthContextErrorMessage } from '../common-components/data/actions';
-import {
-  tpaProvidersSelector,
-} from '../common-components/data/selectors';
+import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import messages from '../common-components/messages';
 import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
-import { LoginPage } from '../login';
-import { backupLoginForm } from '../login/data/actions';
+import { LoginProvider } from '../login/components/LoginContext';
 import { RegistrationPage } from '../register';
-import { backupRegistrationForm } from '../register/data/actions';
+import { RegisterProvider } from '../register/components/RegisterContext';
+import LoginComponentSlot from '../slots/LoginComponentSlot';
 
-const Logistration = (props) => {
-  const { selectedPage, tpaProviders } = props;
+const LogistrationPageInner = ({
+  selectedPage,
+}) => {
   const tpaHint = getTpaHint();
   const {
-    providers, secondaryProviders,
-  } = tpaProviders;
+    thirdPartyAuthContext,
+    clearThirdPartyAuthErrorMessage,
+  } = useThirdPartyAuthContext();
+
+  const {
+    providers,
+    secondaryProviders,
+  } = thirdPartyAuthContext;
   const { formatMessage } = useIntl();
   const [institutionLogin, setInstitutionLogin] = useState(false);
   const [key, setKey] = useState('');
@@ -44,9 +47,10 @@ const Logistration = (props) => {
   useEffect(() => {
     const authService = getAuthService();
     if (authService) {
-      authService.getCsrfTokenService().getCsrfToken(getSiteConfig().lmsBaseUrl);
+      authService.getCsrfTokenService()
+        .getCsrfToken(getSiteConfig().lmsBaseUrl);
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (disablePublicAccountCreation) {
@@ -61,7 +65,6 @@ const Logistration = (props) => {
     } else {
       sendPageEvent('login_and_registration', e.target.dataset.eventName);
     }
-
     setInstitutionLogin(!institutionLogin);
   };
 
@@ -70,12 +73,7 @@ const Logistration = (props) => {
       return;
     }
     sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
-    props.clearThirdPartyAuthContextErrorMessage();
-    if (tabKey === LOGIN_PAGE) {
-      props.backupRegistrationForm();
-    } else if (tabKey === REGISTER_PAGE) {
-      props.backupLoginForm();
-    }
+    clearThirdPartyAuthErrorMessage();
     setKey(tabKey);
   };
 
@@ -110,7 +108,10 @@ const Logistration = (props) => {
                 {!institutionLogin && (
                   <h3 className="mb-4.5">{formatMessage(messages['logistration.sign.in'])}</h3>
                 )}
-                <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                <LoginComponentSlot
+                  institutionLogin={institutionLogin}
+                  handleInstitutionLogin={handleInstitutionLogin}
+                />
               </div>
             </>
           )
@@ -123,7 +124,11 @@ const Logistration = (props) => {
                   </Tabs>
                 )
                 : (!isValidTpaHint() && !hideRegistrationLink && (
-                  <Tabs defaultActiveKey={selectedPage} id="controlled-tab" onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}>
+                  <Tabs
+                    defaultActiveKey={selectedPage}
+                    id="controlled-tab"
+                    onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}
+                  >
                     <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
                     <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
                   </Tabs>
@@ -138,7 +143,12 @@ const Logistration = (props) => {
                   </h3>
                 )}
                 {selectedPage === LOGIN_PAGE
-                  ? <LoginPage institutionLogin={institutionLogin} handleInstitutionLogin={handleInstitutionLogin} />
+                  ? (
+                    <LoginComponentSlot
+                      institutionLogin={institutionLogin}
+                      handleInstitutionLogin={handleInstitutionLogin}
+                    />
+                  )
                   : (
                     <RegistrationPage
                       institutionLogin={institutionLogin}
@@ -153,37 +163,21 @@ const Logistration = (props) => {
   );
 };
 
-Logistration.propTypes = {
-  selectedPage: PropTypes.string,
-  backupLoginForm: PropTypes.func.isRequired,
-  backupRegistrationForm: PropTypes.func.isRequired,
-  clearThirdPartyAuthContextErrorMessage: PropTypes.func.isRequired,
-  tpaProviders: PropTypes.shape({
-    providers: PropTypes.arrayOf(PropTypes.shape({})),
-    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
-  }),
+LogistrationPageInner.propTypes = {
+  selectedPage: PropTypes.string.isRequired,
 };
 
-Logistration.defaultProps = {
-  tpaProviders: {
-    providers: [],
-    secondaryProviders: [],
-  },
-};
+/**
+ * Main Logistration Page component wrapped with providers
+ */
+const LogistrationPage = (props) => (
+  <ThirdPartyAuthProvider>
+    <RegisterProvider>
+      <LoginProvider>
+        <LogistrationPageInner {...props} />
+      </LoginProvider>
+    </RegisterProvider>
+  </ThirdPartyAuthProvider>
+);
 
-Logistration.defaultProps = {
-  selectedPage: REGISTER_PAGE,
-};
-
-const mapStateToProps = state => ({
-  tpaProviders: tpaProvidersSelector(state),
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    backupLoginForm,
-    backupRegistrationForm,
-    clearThirdPartyAuthContextErrorMessage,
-  },
-)(Logistration);
+export default LogistrationPage;

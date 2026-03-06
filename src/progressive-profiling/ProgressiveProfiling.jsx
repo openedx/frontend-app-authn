@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 
 import {
   AxiosJwtAuthService,
   configureAuth,
-  useAppConfig,
   getAuthenticatedUser,
-  getSiteConfig,
   getLoggingService,
+  getSiteConfig,
   identifyAuthenticatedUser,
   sendPageEvent,
   sendTrackEvent,
   snakeCaseObject,
-  useIntl
+  useAppConfig,
+  useIntl,
 } from '@openedx/frontend-base';
 import {
   Alert,
@@ -22,41 +21,49 @@ import {
   StatefulButton,
 } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
-import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
+import { ProgressiveProfilingProvider, useProgressiveProfilingContext } from './components/ProgressiveProfilingContext';
+import messages from './messages';
+import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 import BaseContainer from '../base-container';
 import { RedirectLogistration } from '../common-components';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
+import { useSaveUserProfile } from './data/apiHook';
+import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import {
+  AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE,
   DEFAULT_REDIRECT_URL,
-  DEFAULT_STATE,
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
 import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
 import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
-import { saveUserProfile } from './data/actions';
-import { welcomePageContextSelector } from './data/selectors';
-import messages from './messages';
-import ProgressiveProfilingPageModal from './ProgressiveProfilingPageModal';
 
-const ProgressiveProfiling = (props) => {
+const ProgressiveProfilingInner = () => {
   const { formatMessage } = useIntl();
+  const appConfig = useAppConfig();
+
   const {
-    getFieldDataFromBackend,
+    thirdPartyAuthApiStatus,
+    setThirdPartyAuthContextSuccess,
+    setThirdPartyAuthContextFailure,
+    optionalFields,
+  } = useThirdPartyAuthContext();
+
+  const welcomePageContext = optionalFields;
+  const {
     submitState,
     showError,
-    welcomePageContext,
-    welcomePageContextApiStatus,
-  } = props;
-  const {
-    SEARCH_CATALOG_URL,
-    AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK
-  } = useAppConfig();
+    success,
+  } = useProgressiveProfilingContext();
+
+  // Hook for saving user profile
+  const saveUserProfileMutation = useSaveUserProfile();
+
   const location = useLocation();
   const registrationEmbedded = isHostAvailableInQueryParams();
 
@@ -69,35 +76,48 @@ const ProgressiveProfiling = (props) => {
   const [values, setValues] = useState({});
   const [showModal, setShowModal] = useState(false);
 
+  const { data, isSuccess, error } = useThirdPartyAuthHook(AUTHN_PROGRESSIVE_PROFILING,
+    { is_welcome_page: true, next: queryParams?.next }, { enabled: registrationEmbedded });
+
   useEffect(() => {
     if (registrationEmbedded) {
-      getFieldDataFromBackend({ is_welcome_page: true, next: queryParams?.next });
+      if (isSuccess && data) {
+        setThirdPartyAuthContextSuccess(
+          data.fieldDescriptions,
+          data.optionalFields,
+          data.thirdPartyAuthContext,
+        );
+      }
+      if (error) {
+        setThirdPartyAuthContextFailure();
+      }
     } else {
-      configureAuth(AxiosJwtAuthService, { mockLoggingService: getLoggingService(), config: getSiteConfig() });
+      configureAuth(AxiosJwtAuthService, { loggingService: getLoggingService(), config: getSiteConfig() });
     }
-  }, [registrationEmbedded, getFieldDataFromBackend, queryParams?.next]);
+  }, [registrationEmbedded, queryParams?.next, isSuccess, data, error,
+    setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
 
   useEffect(() => {
     const registrationResponse = location.state?.registrationResult;
     if (registrationResponse) {
       setRegistrationResult(registrationResponse);
       setFormFieldData({
-        fields: location.state?.optionalFields.fields,
-        extendedProfile: location.state?.optionalFields.extended_profile,
+        fields: location.state?.optionalFields.fields || {},
+        extendedProfile: location.state?.optionalFields.extended_profile || [],
       });
     }
-  }, [location.state]);
+  }, [location.state?.registrationResult, location.state?.optionalFields]);
 
   useEffect(() => {
-    if (registrationEmbedded && Object.keys(welcomePageContext).includes('fields')) {
+    if (registrationEmbedded && welcomePageContext && Object.keys(welcomePageContext).includes('fields')) {
       setFormFieldData({
         fields: welcomePageContext.fields,
         extendedProfile: welcomePageContext.extended_profile,
       });
-      const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : SEARCH_CATALOG_URL;
+      const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : appConfig.SEARCH_CATALOG_URL;
       setRegistrationResult({ redirectUrl: nextUrl });
     }
-  }, [registrationEmbedded, welcomePageContext]);
+  }, [registrationEmbedded, welcomePageContext, appConfig.SEARCH_CATALOG_URL]);
 
   useEffect(() => {
     if (authenticatedUser?.userId) {
@@ -109,8 +129,8 @@ const ProgressiveProfiling = (props) => {
   if (
     !authenticatedUser
     || !(location.state?.registrationResult || registrationEmbedded)
-    || welcomePageContextApiStatus === FAILURE_STATE
-    || (welcomePageContextApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
+    || thirdPartyAuthApiStatus === FAILURE_STATE
+    || (thirdPartyAuthApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
     const DASHBOARD_URL = getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
     global.location.assign(DASHBOARD_URL);
@@ -129,7 +149,7 @@ const ProgressiveProfiling = (props) => {
         delete payload[fieldName];
       });
     }
-    props.saveUserProfile(authenticatedUser.username, snakeCaseObject(payload));
+    saveUserProfileMutation.mutate({ username: authenticatedUser.username, data: snakeCaseObject(payload) });
 
     sendTrackEvent(
       'edx.bi.welcome.page.submit.clicked',
@@ -176,23 +196,16 @@ const ProgressiveProfiling = (props) => {
     );
   });
 
+  const shouldRedirect = success;
   return (
     <BaseContainer showWelcomeBanner fullName={authenticatedUser?.fullName || authenticatedUser?.name}>
       <Helmet>
-        <title>{formatMessage(
-          messages['progressive.profiling.page.title'],
-          { siteName: getSiteConfig().siteName }
-        )}
+        <title>{formatMessage(messages['progressive.profiling.page.title'],
+          { siteName: getSiteConfig().siteName })}
         </title>
       </Helmet>
       <ProgressiveProfilingPageModal isOpen={showModal} redirectUrl={registrationResult.redirectUrl} />
-      {(props.shouldRedirect && welcomePageContext.nextUrl) && (
-        <RedirectLogistration
-          success
-          redirectUrl={registrationResult.redirectUrl}
-        />
-      )}
-      {props.shouldRedirect && (
+      {shouldRedirect && (
         <RedirectLogistration
           success
           redirectUrl={registrationResult.redirectUrl}
@@ -201,7 +214,7 @@ const ProgressiveProfiling = (props) => {
         />
       )}
       <div className="mw-xs m-4 pp-page-content">
-        {registrationEmbedded && welcomePageContextApiStatus === PENDING_STATE ? (
+        {registrationEmbedded && thirdPartyAuthApiStatus === PENDING_STATE ? (
           <Spinner animation="border" variant="primary" id="tpa-spinner" />
         ) : (
           <>
@@ -216,12 +229,12 @@ const ProgressiveProfiling = (props) => {
             ) : null}
             <Form>
               {formFields}
-              {(AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
+              {(appConfig.AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK) && (
                 <span className="pp-page__support-link">
                   <Hyperlink
                     isInline
                     variant="muted"
-                    destination={AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
+                    destination={appConfig.AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK}
                     target="_blank"
                     showLaunchIcon={false}
                     onClick={() => (sendTrackEvent('edx.bi.welcome.page.support.link.clicked'))}
@@ -263,51 +276,12 @@ const ProgressiveProfiling = (props) => {
   );
 };
 
-ProgressiveProfiling.propTypes = {
-  authenticatedUser: PropTypes.shape({
-    username: PropTypes.string,
-    userId: PropTypes.number,
-    fullName: PropTypes.string,
-  }),
-  showError: PropTypes.bool,
-  shouldRedirect: PropTypes.bool,
-  submitState: PropTypes.string,
-  welcomePageContext: PropTypes.shape({
-    extended_profile: PropTypes.arrayOf(PropTypes.string),
-    fields: PropTypes.shape({}),
-    nextUrl: PropTypes.string,
-  }),
-  welcomePageContextApiStatus: PropTypes.string,
-  // Actions
-  getFieldDataFromBackend: PropTypes.func.isRequired,
-  saveUserProfile: PropTypes.func.isRequired,
-};
+const ProgressiveProfiling = (props) => (
+  <ThirdPartyAuthProvider>
+    <ProgressiveProfilingProvider>
+      <ProgressiveProfilingInner {...props} />
+    </ProgressiveProfilingProvider>
+  </ThirdPartyAuthProvider>
+);
 
-ProgressiveProfiling.defaultProps = {
-  authenticatedUser: {},
-  shouldRedirect: false,
-  showError: false,
-  submitState: DEFAULT_STATE,
-  welcomePageContext: {},
-  welcomePageContextApiStatus: PENDING_STATE,
-};
-
-const mapStateToProps = state => {
-  const welcomePageStore = state.welcomePage;
-
-  return {
-    shouldRedirect: welcomePageStore.success,
-    showError: welcomePageStore.showError,
-    submitState: welcomePageStore.submitState,
-    welcomePageContext: welcomePageContextSelector(state),
-    welcomePageContextApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  {
-    saveUserProfile,
-    getFieldDataFromBackend: getThirdPartyAuthContext,
-  },
-)(ProgressiveProfiling);
+export default ProgressiveProfiling;

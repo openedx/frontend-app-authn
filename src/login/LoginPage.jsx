@@ -1,16 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { connect } from 'react-redux';
 
 import {
-  getSiteConfig, injectIntl, sendPageEvent, sendTrackEvent, useIntl
+  getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
 } from '@openedx/frontend-base';
-import {
-  Form, StatefulButton,
-} from '@openedx/paragon';
+import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
 import Skeleton from 'react-loading-skeleton';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import {
   FormGroup,
@@ -19,13 +16,12 @@ import {
   RedirectLogistration,
   ThirdPartyAuthAlert,
 } from '../common-components';
-import { getThirdPartyAuthContext } from '../common-components/data/actions';
-import { thirdPartyAuthContextSelector } from '../common-components/data/selectors';
+import AccountActivationMessage from './AccountActivationMessage';
+import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
+import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import {
-  DEFAULT_STATE, PENDING_STATE, RESET_PAGE,
-} from '../data/constants';
+import { LOGIN_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -34,81 +30,93 @@ import {
   updatePathWithQueryParams,
 } from '../data/utils';
 import ResetPasswordSuccess from '../reset-password/ResetPasswordSuccess';
-import AccountActivationMessage from './AccountActivationMessage';
-import {
-  backupLoginFormBegin,
-  dismissPasswordResetBanner,
-  loginRequest,
-} from './data/actions';
+import { useLoginContext } from './components/LoginContext';
+import { useLogin } from './data/apiHook';
 import { INVALID_FORM, TPA_AUTHENTICATION_FAILURE } from './data/constants';
 import LoginFailureMessage from './LoginFailure';
 import messages from './messages';
 
-const LoginPage = (props) => {
+const LoginPage = ({
+  institutionLogin,
+  handleInstitutionLogin,
+}) => {
+  // Context for third-party auth
   const {
-    backedUpFormData,
-    loginErrorCode,
-    loginErrorContext,
-    loginResult,
-    shouldBackupState,
-    thirdPartyAuthContext: {
-      providers,
-      currentProvider,
-      secondaryProviders,
-      finishAuthUrl,
-      platformName,
-      errorMessage: thirdPartyErrorMessage,
-    },
     thirdPartyAuthApiStatus,
-    institutionLogin,
-    showResetPasswordSuccessBanner,
-    submitState,
-    // Actions
-    backupFormState,
-    handleInstitutionLogin,
-    getTPADataFromBackend,
-  } = props;
+    thirdPartyAuthContext,
+    setThirdPartyAuthContextBegin,
+    setThirdPartyAuthContextSuccess,
+    setThirdPartyAuthContextFailure,
+  } = useThirdPartyAuthContext();
+  const location = useLocation();
+
+  const {
+    formFields,
+    setFormFields,
+    errors,
+    setErrors,
+  } = useLoginContext();
+
+  // React Query for server state
+  const [loginResult, setLoginResult] = useState({ success: false, redirectUrl: '' });
+  const [errorCode, setErrorCode] = useState({
+    type: '',
+    count: 0,
+    context: {},
+  });
+  const { mutate: loginUser, isPending: isLoggingIn } = useLogin({
+    onSuccess: (data) => {
+      setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
+    },
+    onError: (formattedError) => {
+      setErrorCode(prev => ({
+        type: formattedError.type,
+        count: prev.count + 1,
+        context: formattedError.context,
+      }));
+    },
+  });
+
+  const [showResetPasswordSuccessBanner,
+    setShowResetPasswordSuccessBanner] = useState(location.state?.showResetPasswordSuccessBanner || null);
+  const {
+    providers,
+    currentProvider,
+    secondaryProviders,
+    finishAuthUrl,
+    platformName,
+    errorMessage: thirdPartyErrorMessage,
+  } = thirdPartyAuthContext;
   const { formatMessage } = useIntl();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
 
-  const [formFields, setFormFields] = useState({ ...backedUpFormData.formFields });
-  const [errorCode, setErrorCode] = useState({ type: '', count: 0, context: {} });
-  const [errors, setErrors] = useState({ ...backedUpFormData.errors });
-  const tpaHint = getTpaHint();
+  const tpaHint = useMemo(() => getTpaHint(), []);
+  const params = { ...queryParams };
+  if (tpaHint) {
+    params.tpa_hint = tpaHint;
+  }
+  const { data, isSuccess, error } = useThirdPartyAuthHook(LOGIN_PAGE, params);
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
-  }, []);
+    setThirdPartyAuthContextBegin();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Sync third-party auth context data
   useEffect(() => {
-    const payload = { ...queryParams };
-    if (tpaHint) {
-      payload.tpa_hint = tpaHint;
+    if (isSuccess && data) {
+      setThirdPartyAuthContextSuccess(
+        data.fieldDescriptions,
+        data.optionalFields,
+        data.thirdPartyAuthContext,
+      );
     }
-    getTPADataFromBackend(payload);
-  }, [getTPADataFromBackend, queryParams, tpaHint]);
-  /**
-   * Backup the login form in redux when login page is toggled.
-   */
-  useEffect(() => {
-    if (shouldBackupState) {
-      backupFormState({
-        formFields: { ...formFields },
-        errors: { ...errors },
-      });
+    if (error) {
+      setThirdPartyAuthContextFailure();
     }
-  }, [shouldBackupState, formFields, errors, backupFormState]);
-
-  useEffect(() => {
-    if (loginErrorCode) {
-      setErrorCode(prevState => ({
-        type: loginErrorCode,
-        count: prevState.count + 1,
-        context: { ...loginErrorContext },
-      }));
-    }
-  }, [loginErrorCode, loginErrorContext]);
+  }, [tpaHint, queryParams, isSuccess, data, error,
+    setThirdPartyAuthContextSuccess, setThirdPartyAuthContextFailure]);
 
   useEffect(() => {
     if (thirdPartyErrorMessage) {
@@ -123,7 +131,10 @@ const LoginPage = (props) => {
   }, [thirdPartyErrorMessage]);
 
   const validateFormFields = (payload) => {
-    const { emailOrUsername, password } = payload;
+    const {
+      emailOrUsername,
+      password,
+    } = payload;
     const fieldErrors = { ...errors };
 
     if (emailOrUsername === '') {
@@ -141,14 +152,18 @@ const LoginPage = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (showResetPasswordSuccessBanner) {
-      props.dismissPasswordResetBanner();
+      setShowResetPasswordSuccessBanner(false);
     }
 
     const formData = { ...formFields };
     const validationErrors = validateFormFields(formData);
     if (validationErrors.emailOrUsername || validationErrors.password) {
-      setErrors({ ...validationErrors });
-      setErrorCode(prevState => ({ type: INVALID_FORM, count: prevState.count + 1, context: {} }));
+      setErrors(validationErrors);
+      setErrorCode(prev => ({
+        type: INVALID_FORM,
+        count: prev.count + 1,
+        context: {},
+      }));
       return;
     }
 
@@ -158,23 +173,36 @@ const LoginPage = (props) => {
       password: formData.password,
       ...queryParams,
     };
-    props.loginRequest(payload);
+    loginUser(payload);
   };
 
   const handleOnChange = (event) => {
-    const { name, value } = event.target;
-    setFormFields(prevState => ({ ...prevState, [name]: value }));
+    const {
+      name,
+      value,
+    } = event.target;
+    // Save to context for persistence across tab switches
+    setFormFields(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleOnFocus = (event) => {
     const { name } = event.target;
-    setErrors(prevErrors => ({ ...prevErrors, [name]: '' }));
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
   const trackForgotPasswordLinkClick = () => {
     sendTrackEvent('edx.bi.password-reset_form.toggled', { category: 'user-engagement' });
   };
 
-  const { provider, skipHintedLogin } = getTpaProvider(tpaHint, providers, secondaryProviders);
+  const {
+    provider,
+    skipHintedLogin,
+  } = getTpaProvider(tpaHint, providers, secondaryProviders);
 
   if (tpaHint) {
     if (thirdPartyAuthApiStatus === PENDING_STATE) {
@@ -250,10 +278,10 @@ const LoginPage = (props) => {
             type="submit"
             variant="brand"
             className="login-button-width"
-            state={submitState}
+            state={(isLoggingIn ? PENDING_STATE : 'default')}
             labels={{
               default: formatMessage(messages['sign.in.button']),
-              pending: '',
+              pending: 'pending',
             }}
             onClick={handleSubmit}
             onMouseDown={(event) => event.preventDefault()}
@@ -281,88 +309,9 @@ const LoginPage = (props) => {
   );
 };
 
-const mapStateToProps = state => {
-  const loginPageState = state.login;
-  return {
-    backedUpFormData: loginPageState.loginFormData,
-    loginErrorCode: loginPageState.loginErrorCode,
-    loginErrorContext: loginPageState.loginErrorContext,
-    loginResult: loginPageState.loginResult,
-    shouldBackupState: loginPageState.shouldBackupState,
-    showResetPasswordSuccessBanner: loginPageState.showResetPasswordSuccessBanner,
-    submitState: loginPageState.submitState,
-    thirdPartyAuthContext: thirdPartyAuthContextSelector(state),
-    thirdPartyAuthApiStatus: state.commonComponents.thirdPartyAuthApiStatus,
-  };
-};
-
 LoginPage.propTypes = {
-  backedUpFormData: PropTypes.shape({
-    formFields: PropTypes.shape({}),
-    errors: PropTypes.shape({}),
-  }),
-  loginErrorCode: PropTypes.string,
-  loginErrorContext: PropTypes.shape({
-    email: PropTypes.string,
-    redirectUrl: PropTypes.string,
-    context: PropTypes.shape({}),
-  }),
-  loginResult: PropTypes.shape({
-    redirectUrl: PropTypes.string,
-    success: PropTypes.bool,
-  }),
-  shouldBackupState: PropTypes.bool,
-  showResetPasswordSuccessBanner: PropTypes.bool,
-  submitState: PropTypes.string,
-  thirdPartyAuthApiStatus: PropTypes.string,
   institutionLogin: PropTypes.bool.isRequired,
-  thirdPartyAuthContext: PropTypes.shape({
-    currentProvider: PropTypes.string,
-    errorMessage: PropTypes.string,
-    platformName: PropTypes.string,
-    providers: PropTypes.arrayOf(PropTypes.shape({})),
-    secondaryProviders: PropTypes.arrayOf(PropTypes.shape({})),
-    finishAuthUrl: PropTypes.string,
-  }),
-  // Actions
-  backupFormState: PropTypes.func.isRequired,
-  dismissPasswordResetBanner: PropTypes.func.isRequired,
-  loginRequest: PropTypes.func.isRequired,
-  getTPADataFromBackend: PropTypes.func.isRequired,
   handleInstitutionLogin: PropTypes.func.isRequired,
 };
 
-LoginPage.defaultProps = {
-  backedUpFormData: {
-    formFields: {
-      emailOrUsername: '', password: '',
-    },
-    errors: {
-      emailOrUsername: '', password: '',
-    },
-  },
-  loginErrorCode: null,
-  loginErrorContext: {},
-  loginResult: {},
-  shouldBackupState: false,
-  showResetPasswordSuccessBanner: false,
-  submitState: DEFAULT_STATE,
-  thirdPartyAuthApiStatus: PENDING_STATE,
-  thirdPartyAuthContext: {
-    currentProvider: null,
-    errorMessage: null,
-    finishAuthUrl: null,
-    providers: [],
-    secondaryProviders: [],
-  },
-};
-
-export default connect(
-  mapStateToProps,
-  {
-    backupFormState: backupLoginFormBegin,
-    dismissPasswordResetBanner,
-    loginRequest,
-    getTPADataFromBackend: getThirdPartyAuthContext,
-  },
-)(injectIntl(LoginPage));
+export default LoginPage;
