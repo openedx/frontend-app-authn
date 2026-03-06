@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { useIntl } from '@openedx/frontend-base';
 import {
@@ -11,17 +10,34 @@ import {
 import PropTypes from 'prop-types';
 
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
-import { clearRegistrationBackendError, fetchRealtimeValidations } from '../register/data/actions';
+import { useRegisterContextOptional } from '../register/components/RegisterContext';
+import { useFieldValidations } from '../register/data/apiHook';
 import { validatePasswordField } from '../register/data/utils';
 import messages from './messages';
 
+const noopFn = () => {};
+
 const PasswordField = (props) => {
   const { formatMessage } = useIntl();
-  const dispatch = useDispatch();
-
-  const validationApiRateLimited = useSelector(state => state.register.validationApiRateLimited);
   const [isPasswordHidden, setHiddenTrue, setHiddenFalse] = useToggle(true);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const registerContext = useRegisterContextOptional();
+  const {
+    setValidationsSuccess = noopFn,
+    setValidationsFailure = noopFn,
+    validationApiRateLimited = false,
+    clearRegistrationBackendError = noopFn,
+  } = registerContext || {};
+
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => {
+      setValidationsSuccess(data);
+    },
+    onError: () => {
+      setValidationsFailure();
+    },
+  });
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
@@ -50,7 +66,7 @@ const PasswordField = (props) => {
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
-        dispatch(fetchRealtimeValidations({ password: passwordValue }));
+        fieldValidationsMutation.mutate({ password: passwordValue });
       }
     }
   };
@@ -65,7 +81,7 @@ const PasswordField = (props) => {
     }
     if (props.handleErrorChange) {
       props.handleErrorChange('password', '');
-      dispatch(clearRegistrationBackendError('password'));
+      clearRegistrationBackendError('password');
     }
     setTimeout(() => setShowTooltip(props.showRequirements && true), 150);
   };
