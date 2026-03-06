@@ -17,7 +17,7 @@ import BaseContainer from '../base-container';
 import { validatePassword } from './data/api';
 import { useResetPassword, useValidateToken } from './data/apiHook';
 import {
-  FORM_SUBMISSION_ERROR, PASSWORD_RESET, PASSWORD_RESET_ERROR, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
+  FORM_SUBMISSION_ERROR, PASSWORD_RESET, PASSWORD_VALIDATION_ERROR, TOKEN_STATE,
 } from './data/constants';
 import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
@@ -47,7 +47,7 @@ const ResetPasswordPageInner = () => {
   const { mutate: resetUserPassword, isPending: isResetting } = useResetPassword();
 
   useEffect(() => {
-    if (status !== TOKEN_STATE.PENDING && status !== PASSWORD_RESET_ERROR) {
+    if (status !== TOKEN_STATE.PENDING) {
       setErrorCode(status);
     }
     if (status === PASSWORD_VALIDATION_ERROR) {
@@ -176,7 +176,7 @@ const ResetPasswordPageInner = () => {
   );
 
   useEffect(() => {
-    if (status === PASSWORD_RESET_ERROR || status === PASSWORD_RESET.INVALID_TOKEN) {
+    if (status === PASSWORD_RESET.INVALID_TOKEN) {
       navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
     }
     if (status === 'success') {

@@ -289,7 +289,7 @@ describe('ResetPasswordPage', () => {
   });
 
   it('should redirect the user to Reset password email screen ', async () => {
-    // Mock an error scenario that would cause PASSWORD_RESET_ERROR
+    // Mock an error scenario that triggers an error state
     mockValidateToken.mockImplementation((tokenValue, { onError }) => {
       onError({
         response: {
