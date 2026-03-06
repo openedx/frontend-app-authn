@@ -182,6 +182,10 @@ describe('EmailField', () => {
       expect(props.handleChange).toHaveBeenCalledWith(
         { target: { name: 'email', value: 'john@hotmail.com' } },
       );
+      expect(mockRegisterContext.setEmailSuggestionContext).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.any(String),
+      );
     });
 
     it('should give error for common top level domain mistakes', () => {
