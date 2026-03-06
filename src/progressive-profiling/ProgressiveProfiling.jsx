@@ -205,12 +205,6 @@ const ProgressiveProfilingInner = () => {
         </title>
       </Helmet>
       <ProgressiveProfilingPageModal isOpen={showModal} redirectUrl={registrationResult.redirectUrl} />
-      {(shouldRedirect && welcomePageContext.nextUrl) && (
-        <RedirectLogistration
-          success
-          redirectUrl={registrationResult.redirectUrl}
-        />
-      )}
       {shouldRedirect && (
         <RedirectLogistration
           success
