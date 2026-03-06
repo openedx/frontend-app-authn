@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  getSiteConfig, injectIntl, sendPageEvent, sendTrackEvent, useIntl
+  getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
 } from '@openedx/frontend-base';
 import {
   Form, StatefulButton,
@@ -365,4 +365,4 @@ export default connect(
     loginRequest,
     getTPADataFromBackend: getThirdPartyAuthContext,
   },
-)(injectIntl(LoginPage));
+)(LoginPage);
