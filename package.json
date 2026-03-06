@@ -78,7 +78,7 @@
     "tsc-alias": "^1.8.16"
   },
   "peerDependencies": {
-    "@openedx/frontend-base": "^1.0.0-alpha.13",
+    "@openedx/frontend-base": "^1.0.0-alpha.14",
     "@openedx/paragon": "^23",
     "react": "^18",
     "react-dom": "^18",
