@@ -16,6 +16,9 @@
   "files": [
     "/dist"
   ],
+  "workspaces": [
+    "packages/*"
+  ],
   "browserslist": [
     "extends @edx/browserslist-config"
   ],
@@ -25,14 +28,19 @@
   ],
   "scripts": {
     "build": "make build",
+    "build:packages": "make build-packages",
     "clean": "make clean",
+    "clean:packages": "make clean-packages",
     "dev": "PORT=1999 PUBLIC_PATH=/authn openedx dev",
+    "dev:site": "npm run dev",
+    "dev:packages": "make dev-packages",
     "i18n_extract": "openedx formatjs extract",
     "lint": "openedx lint .",
     "lint:fix": "openedx lint --fix .",
-    "prepack": "npm run build",
+    "prepack": "npm run clean && npm run build",
     "snapshot": "openedx test --updateSnapshot",
-    "test": "openedx test --coverage --passWithNoTests"
+    "test": "openedx test --coverage --passWithNoTests",
+    "watch:build": "nodemon --exec 'npm run build'"
   },
   "author": "Open edX",
   "license": "AGPL-3.0",
@@ -68,9 +76,11 @@
     "babel-plugin-formatjs": "10.5.38",
     "eslint-plugin-import": "2.31.0",
     "jest": "^29.7.0",
+    "nodemon": "^3.1.14",
     "react-test-renderer": "^18.3.1",
     "ts-jest": "^29.4.0",
-    "tsc-alias": "^1.8.16"
+    "tsc-alias": "^1.8.16",
+    "turbo": "^2.8.16"
   },
   "peerDependencies": {
     "@openedx/frontend-base": "^1.0.0-alpha.14",
