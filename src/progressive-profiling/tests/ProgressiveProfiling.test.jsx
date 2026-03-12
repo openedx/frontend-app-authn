@@ -5,6 +5,7 @@ import {
   identifyAuthenticatedUser,
   IntlProvider,
   mergeAppConfig,
+  sendPageEvent,
   sendTrackEvent,
 } from '@openedx/frontend-base';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -515,6 +516,7 @@ describe('ProgressiveProfilingTests', () => {
     it('should call analytics functions on component mount', () => {
       renderWithProviders(<ProgressiveProfiling />);
       expect(identifyAuthenticatedUser).toHaveBeenCalledWith(3);
+      expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'welcome');
     });
   });
 
