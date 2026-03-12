@@ -36,7 +36,6 @@ const createWrapper = () => {
 };
 
 describe('useSaveUserProfile', () => {
-  const mockSetShowError = jest.fn();
   const mockSetSuccess = jest.fn();
   const mockSetSubmitState = jest.fn();
 
@@ -45,7 +44,7 @@ describe('useSaveUserProfile', () => {
     showError: false,
     success: false,
     setLoading: jest.fn(),
-    setShowError: mockSetShowError,
+    setShowError: jest.fn(),
     setSuccess: mockSetSuccess,
     setSubmitState: mockSetSubmitState,
     clearState: jest.fn(),

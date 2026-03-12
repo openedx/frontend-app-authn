@@ -39,12 +39,7 @@ jest.mock('../../../common-components/components/ThirdPartyAuthContext', () => (
 }));
 
 jest.mock('../../../common-components/data/apiHook', () => ({
-  useThirdPartyAuthHook: jest.fn().mockReturnValue({
-    data: null,
-    isSuccess: false,
-    error: null,
-    isLoading: false,
-  }),
+  useThirdPartyAuthHook: jest.fn(() => ({})),
 }));
 
 jest.mock('react-router-dom', () => {

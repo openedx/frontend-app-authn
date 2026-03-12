@@ -46,30 +46,29 @@ jest.mock('../register/data/apiHook', () => ({
 // Mock the ThirdPartyAuthContext
 const mockClearThirdPartyAuthErrorMessage = jest.fn();
 
+const mockDefaultThirdPartyAuthContextValue = {
+  fieldDescriptions: {},
+  optionalFields: { fields: {}, extended_profile: [] },
+  thirdPartyAuthApiStatus: null,
+  thirdPartyAuthContext: {
+    autoSubmitRegForm: false,
+    currentProvider: null,
+    finishAuthUrl: null,
+    countryCode: null,
+    providers: [],
+    secondaryProviders: [],
+    pipelineUserDetails: null,
+    errorMessage: null,
+    welcomePageRedirectUrl: null,
+  },
+  setThirdPartyAuthContextBegin: jest.fn(),
+  setThirdPartyAuthContextSuccess: jest.fn(),
+  setThirdPartyAuthContextFailure: jest.fn(),
+  clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
+};
+
 jest.mock('../common-components/components/ThirdPartyAuthContext.tsx', () => ({
-  useThirdPartyAuthContext: jest.fn(() => ({
-    fieldDescriptions: {},
-    optionalFields: {
-      fields: {},
-      extended_profile: [],
-    },
-    thirdPartyAuthApiStatus: null,
-    thirdPartyAuthContext: {
-      autoSubmitRegForm: false,
-      currentProvider: null,
-      finishAuthUrl: null,
-      countryCode: null,
-      providers: [],
-      secondaryProviders: [],
-      pipelineUserDetails: null,
-      errorMessage: null,
-      welcomePageRedirectUrl: null,
-    },
-    setThirdPartyAuthContextBegin: jest.fn(),
-    setThirdPartyAuthContextSuccess: jest.fn(),
-    setThirdPartyAuthContextFailure: jest.fn(),
-    clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
-  })),
+  useThirdPartyAuthContext: jest.fn(() => mockDefaultThirdPartyAuthContextValue),
   ThirdPartyAuthProvider: ({ children }) => children,
 }));
 
@@ -185,29 +184,16 @@ describe('Logistration', () => {
     // Update the mock to include secondary providers
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
     useThirdPartyAuthContext.mockReturnValue({
-      fieldDescriptions: {},
-      optionalFields: { fields: {}, extended_profile: [] },
-      thirdPartyAuthApiStatus: null,
+      ...mockDefaultThirdPartyAuthContextValue,
       thirdPartyAuthContext: {
-        autoSubmitRegForm: false,
-        currentProvider: null,
-        finishAuthUrl: null,
-        countryCode: null,
-        providers: [],
+        ...mockDefaultThirdPartyAuthContextValue.thirdPartyAuthContext,
         secondaryProviders: [{
           id: 'saml-test',
           name: 'Test University',
           loginUrl: '/dummy-auth',
           registerUrl: '/dummy_auth',
         }],
-        pipelineUserDetails: null,
-        errorMessage: null,
-        welcomePageRedirectUrl: null,
       },
-      setThirdPartyAuthContextBegin: jest.fn(),
-      setThirdPartyAuthContextSuccess: jest.fn(),
-      setThirdPartyAuthContextFailure: jest.fn(),
-      clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
     });
 
     const props = { selectedPage: LOGIN_PAGE };
@@ -230,29 +216,16 @@ describe('Logistration', () => {
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
     useThirdPartyAuthContext.mockReturnValue({
-      fieldDescriptions: {},
-      optionalFields: { fields: {}, extended_profile: [] },
-      thirdPartyAuthApiStatus: null,
+      ...mockDefaultThirdPartyAuthContextValue,
       thirdPartyAuthContext: {
-        autoSubmitRegForm: false,
-        currentProvider: null,
-        finishAuthUrl: null,
-        countryCode: null,
-        providers: [],
+        ...mockDefaultThirdPartyAuthContextValue.thirdPartyAuthContext,
         secondaryProviders: [{
           id: 'saml-test',
           name: 'Test University',
           loginUrl: '/dummy-auth',
           registerUrl: '/dummy_auth',
         }],
-        pipelineUserDetails: null,
-        errorMessage: null,
-        welcomePageRedirectUrl: null,
       },
-      setThirdPartyAuthContextBegin: jest.fn(),
-      setThirdPartyAuthContextSuccess: jest.fn(),
-      setThirdPartyAuthContextFailure: jest.fn(),
-      clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
     });
 
     const props = { selectedPage: LOGIN_PAGE };
@@ -274,29 +247,16 @@ describe('Logistration', () => {
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
     useThirdPartyAuthContext.mockReturnValue({
-      fieldDescriptions: {},
-      optionalFields: { fields: {}, extended_profile: [] },
-      thirdPartyAuthApiStatus: null,
+      ...mockDefaultThirdPartyAuthContextValue,
       thirdPartyAuthContext: {
-        autoSubmitRegForm: false,
-        currentProvider: null,
-        finishAuthUrl: null,
-        countryCode: null,
-        providers: [],
+        ...mockDefaultThirdPartyAuthContextValue.thirdPartyAuthContext,
         secondaryProviders: [{
           id: 'saml-test',
           name: 'Test University',
           loginUrl: '/dummy-auth',
           registerUrl: '/dummy_auth',
         }],
-        pipelineUserDetails: null,
-        errorMessage: null,
-        welcomePageRedirectUrl: null,
       },
-      setThirdPartyAuthContextBegin: jest.fn(),
-      setThirdPartyAuthContextSuccess: jest.fn(),
-      setThirdPartyAuthContextFailure: jest.fn(),
-      clearThirdPartyAuthErrorMessage: mockClearThirdPartyAuthErrorMessage,
     });
 
     delete window.location;
