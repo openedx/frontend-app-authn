@@ -292,4 +292,75 @@ describe('Logistration', () => {
     fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
     expect(mockClearThirdPartyAuthErrorMessage).toHaveBeenCalled();
   });
+
+  it('should call authService getCsrfTokenService on component mount', () => {
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    expect(mockGetCsrfToken).toHaveBeenCalledWith(getSiteConfig().lmsBaseUrl);
+  });
+
+  it('should send correct page events for login and register when handling institution login', () => {
+    mergeAppConfig(appId, {
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+      ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
+    });
+
+    const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
+    useThirdPartyAuthContext.mockReturnValue({
+      ...mockDefaultThirdPartyAuthContextValue,
+      thirdPartyAuthContext: {
+        ...mockDefaultThirdPartyAuthContextValue.thirdPartyAuthContext,
+        secondaryProviders: [{
+          id: 'saml-test',
+          name: 'Test University',
+          loginUrl: '/dummy-auth',
+          registerUrl: '/dummy_auth',
+        }],
+      },
+    });
+
+    // Login page
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    fireEvent.click(screen.getByText('Institution/campus credentials'));
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+
+    // Register page
+    sendPageEvent.mockClear();
+    render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    fireEvent.click(screen.getByText('Institution/campus credentials'));
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+
+    mergeAppConfig(appId, {
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
+
+  it('should handle institution login with string parameters correctly', () => {
+    mergeAppConfig(appId, {
+      DISABLE_ENTERPRISE_LOGIN: 'true',
+    });
+
+    const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
+    useThirdPartyAuthContext.mockReturnValue({
+      ...mockDefaultThirdPartyAuthContextValue,
+      thirdPartyAuthContext: {
+        ...mockDefaultThirdPartyAuthContextValue.thirdPartyAuthContext,
+        secondaryProviders: [{
+          id: 'saml-test',
+          name: 'Test University',
+          loginUrl: '/dummy-auth',
+          registerUrl: '/dummy_auth',
+        }],
+      },
+    });
+
+    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    sendPageEvent.mockClear();
+    fireEvent.click(screen.getByText('Institution/campus credentials'));
+    expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
+    expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
+
+    mergeAppConfig(appId, {
+      DISABLE_ENTERPRISE_LOGIN: '',
+    });
+  });
 });

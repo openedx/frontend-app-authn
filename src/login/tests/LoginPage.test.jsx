@@ -689,4 +689,105 @@ describe('LoginPage', () => {
       expect(container.querySelector('.alert-danger, .alert, [role="alert"]')).toBeTruthy();
     });
   });
+
+  // ******** test reset password banner ********
+
+  it('should dismiss reset password banner on form submission', () => {
+    const wrapper = (children) => (
+      <QueryClientProvider client={queryClient}>
+        <IntlProvider locale="en">
+          <MemoryRouter initialEntries={[{ pathname: '/login', state: { showResetPasswordSuccessBanner: true } }]}>
+            <CurrentAppProvider appId={appId}>
+              <RegisterProvider>
+                <LoginProvider>
+                  {children}
+                </LoginProvider>
+              </RegisterProvider>
+            </CurrentAppProvider>
+          </MemoryRouter>
+        </IntlProvider>
+      </QueryClientProvider>
+    );
+
+    const { container } = render(wrapper(<LoginPage {...props} />));
+    // Banner should be visible initially
+    expect(container.querySelector('#reset-password-success')).toBeTruthy();
+
+    // Submit the form
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+
+    // Banner should be dismissed
+    expect(container.querySelector('#reset-password-success')).toBeFalsy();
+  });
+
+  // ******** test SSO redirect ********
+
+  it('should redirect to finish auth URL on SSO login success', () => {
+    const finishAuthUrl = '/auth/complete/google-oauth2/';
+    mockThirdPartyAuthContext.thirdPartyAuthContext = {
+      ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+      finishAuthUrl,
+    };
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+
+    useLogin.mockImplementation((options) => ({
+      mutate: jest.fn().mockImplementation((data) => {
+        mockLoginMutate(data);
+        if (options?.onSuccess) {
+          options.onSuccess({ redirectUrl: '' });
+        }
+      }),
+      isPending: false,
+    }));
+
+    delete window.location;
+    window.location = { href: getSiteConfig().baseUrl };
+
+    render(queryWrapper(<LoginPage {...props} />));
+
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 'test@example.com', name: 'emailOrUsername' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123', name: 'password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+
+    expect(window.location.href).toBe(getSiteConfig().lmsBaseUrl + finishAuthUrl);
+  });
+
+  it('should use redirectUrl when it includes finishAuthUrl', () => {
+    const finishAuthUrl = '/auth/complete/google-oauth2/';
+    const redirectUrl = 'https://test.com/auth/complete/google-oauth2/?next=/dashboard';
+    mockThirdPartyAuthContext.thirdPartyAuthContext = {
+      ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+      finishAuthUrl,
+    };
+    useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
+
+    useLogin.mockImplementation((options) => ({
+      mutate: jest.fn().mockImplementation((data) => {
+        mockLoginMutate(data);
+        if (options?.onSuccess) {
+          options.onSuccess({ redirectUrl });
+        }
+      }),
+      isPending: false,
+    }));
+
+    delete window.location;
+    window.location = { href: getSiteConfig().baseUrl };
+
+    render(queryWrapper(<LoginPage {...props} />));
+
+    fireEvent.change(screen.getByLabelText(/username or email/i), {
+      target: { value: 'test@example.com', name: 'emailOrUsername' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123', name: 'password' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+
+    expect(window.location.href).toBe(redirectUrl);
+  });
 });
