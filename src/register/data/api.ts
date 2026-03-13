@@ -1,4 +1,4 @@
-import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 const registerNewUserApi = async (registrationInformation) => {
@@ -14,7 +14,7 @@ const registerNewUserApi = async (registrationInformation) => {
     });
 
   return {
-    redirectUrl: data.redirect_url || `${getSiteConfig().lmsBaseUrl}/dashboard`,
+    redirectUrl: data.redirect_url || getUrlByRouteRole('org.openedx.frontend.role.dashboard'),
     success: data.success || false,
     authenticatedUser: data.authenticated_user,
   };

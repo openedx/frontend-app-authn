@@ -59,6 +59,9 @@ const RedirectLogistration = (props) => {
       );
     }
 
+    if (finalRedirectUrl.startsWith('/')) {
+      return <Navigate to={finalRedirectUrl} replace />;
+    }
     window.location.href = finalRedirectUrl;
   }
 

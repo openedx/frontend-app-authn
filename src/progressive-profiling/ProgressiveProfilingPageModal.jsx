@@ -1,17 +1,23 @@
 import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import messages from './messages';
 
 const ProgressiveProfilingPageModal = (props) => {
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
   const { isOpen, redirectUrl } = props;
   const platformName = getSiteConfig().siteName;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = redirectUrl;
+    if (redirectUrl.startsWith('/')) {
+      navigate(redirectUrl);
+    } else {
+      window.location.href = redirectUrl;
+    }
   };
 
   return (

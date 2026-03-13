@@ -266,7 +266,6 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Pakistan',
         total_registration_time: 0,
-        next: '/course/demo-course-url',
       };
 
       const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
@@ -274,7 +273,7 @@ describe('RegistrationPage', () => {
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
 
-      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
+      expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK', next: '/course/demo-course-url' });
     });
 
     it('should submit form without password field when current provider is present', () => {
