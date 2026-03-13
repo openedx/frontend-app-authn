@@ -1,4 +1,4 @@
-import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 import { getFieldsValidations, registerNewUserApi } from './api';
@@ -8,6 +8,7 @@ jest.mock('@openedx/frontend-base', () => ({
   getSiteConfig: jest.fn(),
   getAuthenticatedHttpClient: jest.fn(),
   getHttpClient: jest.fn(),
+  getUrlByRouteRole: jest.fn(),
 }));
 
 jest.mock('query-string', () => ({
@@ -18,6 +19,7 @@ describe('API Functions', () => {
   let mockAuthenticatedHttpClient: any;
   let mockHttpClient: any;
   let mockGetSiteConfig: any;
+  let mockGetUrlByRouteRole: any;
   let mockStringify: any;
 
   beforeEach(() => {
@@ -28,6 +30,7 @@ describe('API Functions', () => {
       post: jest.fn(),
     };
     mockGetSiteConfig = getSiteConfig as jest.MockedFunction<typeof getSiteConfig>;
+    mockGetUrlByRouteRole = getUrlByRouteRole as jest.MockedFunction<typeof getUrlByRouteRole>;
     mockStringify = QueryString.stringify as jest.MockedFunction<typeof QueryString.stringify>;
 
     (getAuthenticatedHttpClient as jest.MockedFunction<typeof getAuthenticatedHttpClient>)
@@ -38,6 +41,8 @@ describe('API Functions', () => {
     mockGetSiteConfig.mockReturnValue({
       lmsBaseUrl: 'http://localhost:18000',
     });
+
+    mockGetUrlByRouteRole.mockReturnValue('http://localhost:18000/dashboard');
 
     mockStringify.mockImplementation((obj) => Object.keys(obj).map(key => `${key}=${obj[key]}`).join('&'));
   });
