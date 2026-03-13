@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
-  getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
+  fetchAuthenticatedUser, hydrateAuthenticatedUser, getSiteConfig, sendPageEvent, sendTrackEvent, useIntl,
 } from '@openedx/frontend-base';
 import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
@@ -65,8 +65,16 @@ const LoginPage = ({
     context: {},
   });
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin({
-    onSuccess: (data) => {
-      setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
+    onSuccess: async (data) => {
+      if (localNextPath) {
+        await fetchAuthenticatedUser({ forceRefresh: true });
+        setLoginResult({ success: true, redirectUrl: localNextPath });
+        // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
+        // SPA navigation, so the header picks up the full user profile (avatar, etc.)
+        hydrateAuthenticatedUser();
+      } else {
+        setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
+      }
     },
     onError: (formattedError) => {
       setErrorCode(prev => ({
@@ -90,6 +98,7 @@ const LoginPage = ({
   const { formatMessage } = useIntl();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const localNextPath = queryParams.next?.startsWith('/') ? queryParams.next : null;
 
   const tpaHint = useMemo(() => getTpaHint(), []);
   const params = { ...queryParams };
