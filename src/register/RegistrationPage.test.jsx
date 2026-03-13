@@ -44,6 +44,8 @@ jest.mock('@openedx/frontend-base', () => ({
   getLocale: jest.fn(),
 }));
 
+// jest.mock() must be called before importing the mocked module's members,
+// so this import intentionally comes after the mock declaration above.
 // eslint-disable-next-line import/first
 import { getLocale, sendPageEvent, sendTrackEvent } from '@openedx/frontend-base';
 

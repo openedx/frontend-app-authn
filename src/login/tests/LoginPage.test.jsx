@@ -30,6 +30,8 @@ jest.mock('@openedx/frontend-base', () => ({
   getAuthService: jest.fn(),
 }));
 
+// jest.mock() must be called before importing the mocked module's members,
+// so this import intentionally comes after the mock declaration above.
 // eslint-disable-next-line import/first
 import { sendPageEvent, sendTrackEvent } from '@openedx/frontend-base';
 
