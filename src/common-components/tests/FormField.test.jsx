@@ -1,18 +1,10 @@
 import { IntlProvider } from '@openedx/frontend-base';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
 
 import FormGroup from '../FormGroup';
 import PasswordField from '../PasswordField';
 
-// Mock the register apiHook to prevent actual mutations
-const mockFieldValidationsMutate = jest.fn();
-jest.mock('../../register/data/apiHook', () => ({
-  useFieldValidations: () => ({ mutate: mockFieldValidationsMutate, isPending: false }),
-  useRegistration: () => ({ mutate: jest.fn(), isPending: false }),
-}));
 
 describe('FormGroup', () => {
   const props = {
@@ -40,23 +32,14 @@ describe('FormGroup', () => {
 
 describe('PasswordField', () => {
   let props = {};
-  let queryClient;
 
   const wrapper = children => (
-    <QueryClientProvider client={queryClient}>
-      <IntlProvider locale="en">
-        <MemoryRouter>
-          {children}
-        </MemoryRouter>
-      </IntlProvider>
-    </QueryClientProvider>
+    <IntlProvider locale="en">
+      {children}
+    </IntlProvider>
   );
 
   beforeEach(() => {
-    queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
-    });
-    mockFieldValidationsMutate.mockClear();
     props = {
       floatingLabel: 'Password',
       name: 'password',
@@ -243,9 +226,11 @@ describe('PasswordField', () => {
   });
 
   it('should run backend validations when frontend validations pass on blur when rendered from register page', () => {
+    const mockValidateField = jest.fn();
     props = {
       ...props,
       handleErrorChange: jest.fn(),
+      validateField: mockValidateField,
     };
     const { getByLabelText } = render(wrapper(<PasswordField {...props} />));
     const passwordField = getByLabelText('Password');
@@ -256,7 +241,7 @@ describe('PasswordField', () => {
       },
     });
 
-    expect(mockFieldValidationsMutate).toHaveBeenCalledWith({ password: 'password123' });
+    expect(mockValidateField).toHaveBeenCalledWith({ password: 'password123' });
   });
 
   it('should use password value from prop when password icon is focused out (blur due to icon)', () => {

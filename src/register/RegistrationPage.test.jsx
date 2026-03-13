@@ -24,7 +24,6 @@ jest.mock('./data/apiHook', () => ({
 
 jest.mock('./components/RegisterContext', () => ({
   useRegisterContext: jest.fn(),
-  useRegisterContextOptional: jest.fn(),
   RegisterProvider: ({ children }) => children,
 }));
 

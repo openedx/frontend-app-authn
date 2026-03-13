@@ -213,10 +213,3 @@ export const useRegisterContext = () => {
   }
   return context;
 };
-
-/**
- * Optional version of useRegisterContext that returns null when outside a RegisterProvider.
- * Useful for components like PasswordField that are shared across login, registration,
- * and reset-password flows.
- */
-export const useRegisterContextOptional = () => useContext(RegisterContext);

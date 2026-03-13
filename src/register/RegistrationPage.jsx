@@ -15,7 +15,7 @@ import Skeleton from 'react-loading-skeleton';
 import ConfigurableRegistrationForm from './components/ConfigurableRegistrationForm';
 import { useRegisterContext } from './components/RegisterContext';
 import RegistrationFailure from './components/RegistrationFailure';
-import { useRegistration } from './data/apiHook';
+import { useFieldValidations, useRegistration } from './data/apiHook';
 import {
   FORM_SUBMISSION_ERROR,
   TPA_AUTHENTICATION_FAILURE,
@@ -76,9 +76,17 @@ const RegistrationPage = (props) => {
     updateRegistrationFormData,
     setRegistrationError,
     setRegistrationResult,
+    setValidationsSuccess,
+    setValidationsFailure,
+    validationApiRateLimited,
     backendValidations,
     setBackendCountryCode,
   } = useRegisterContext();
+
+  const fieldValidationsMutation = useFieldValidations({
+    onSuccess: (data) => { setValidationsSuccess(data); },
+    onError: () => { setValidationsFailure(); },
+  });
 
   const registrationEmbedded = isHostAvailableInQueryParams();
   const platformName = getSiteConfig().siteName;
@@ -395,6 +403,9 @@ const RegistrationPage = (props) => {
                   handleErrorChange={handleErrorChange}
                   errorMessage={errors.password}
                   floatingLabel={formatMessage(messages['registration.password.label'])}
+                  clearRegistrationBackendError={clearRegistrationBackendError}
+                  validateField={fieldValidationsMutation.mutate}
+                  validationApiRateLimited={validationApiRateLimited}
                 />
               )}
               <ConfigurableRegistrationForm

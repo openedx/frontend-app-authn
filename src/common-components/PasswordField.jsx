@@ -10,8 +10,6 @@ import {
 import PropTypes from 'prop-types';
 
 import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
-import { useRegisterContextOptional } from '../register/components/RegisterContext';
-import { useFieldValidations } from '../register/data/apiHook';
 import { validatePasswordField } from '../register/data/utils';
 import messages from './messages';
 
@@ -22,22 +20,11 @@ const PasswordField = (props) => {
   const [isPasswordHidden, setHiddenTrue, setHiddenFalse] = useToggle(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const registerContext = useRegisterContextOptional();
   const {
-    setValidationsSuccess = noopFn,
-    setValidationsFailure = noopFn,
     validationApiRateLimited = false,
     clearRegistrationBackendError = noopFn,
-  } = registerContext || {};
-
-  const fieldValidationsMutation = useFieldValidations({
-    onSuccess: (data) => {
-      setValidationsSuccess(data);
-    },
-    onError: () => {
-      setValidationsFailure();
-    },
-  });
+    validateField = noopFn,
+  } = props;
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
@@ -66,7 +53,7 @@ const PasswordField = (props) => {
       if (fieldError) {
         props.handleErrorChange('password', fieldError);
       } else if (!validationApiRateLimited) {
-        fieldValidationsMutation.mutate({ password: passwordValue });
+        validateField({ password: passwordValue });
       }
     }
   };
@@ -171,6 +158,9 @@ PasswordField.defaultProps = {
   showRequirements: true,
   showScreenReaderText: true,
   autoComplete: null,
+  clearRegistrationBackendError: noopFn,
+  validateField: noopFn,
+  validationApiRateLimited: false,
 };
 
 PasswordField.propTypes = {
@@ -186,6 +176,9 @@ PasswordField.propTypes = {
   value: PropTypes.string.isRequired,
   autoComplete: PropTypes.string,
   showScreenReaderText: PropTypes.bool,
+  clearRegistrationBackendError: PropTypes.func,
+  validateField: PropTypes.func,
+  validationApiRateLimited: PropTypes.bool,
 };
 
 export default PasswordField;
