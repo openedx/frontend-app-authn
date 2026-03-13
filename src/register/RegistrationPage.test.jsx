@@ -266,7 +266,6 @@ describe('RegistrationPage', () => {
         password: 'password1',
         country: 'Pakistan',
         total_registration_time: 0,
-        next: '/course/demo-course-url',
       };
 
       const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
@@ -274,6 +273,7 @@ describe('RegistrationPage', () => {
       const button = container.querySelector('button.btn-brand');
       fireEvent.click(button);
 
+      // Relative `next` param is stripped from the API payload (handled locally via SPA navigation)
       expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
     });
 

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
+  fetchAuthenticatedUser,
+  hydrateAuthenticatedUser,
   useAppConfig,
   getSiteConfig,
   sendPageEvent, sendTrackEvent,
@@ -108,8 +110,16 @@ const RegistrationPage = (props) => {
 
   const backendRegistrationError = registrationError;
   const registrationMutation = useRegistration({
-    onSuccess: (data) => {
-      setRegistrationResult(data);
+    onSuccess: async (data) => {
+      if (localNextPath) {
+        await fetchAuthenticatedUser({ forceRefresh: true });
+        setRegistrationResult({ ...data, redirectUrl: localNextPath });
+        // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
+        // SPA navigation, so the header picks up the full user profile (avatar, etc.)
+        hydrateAuthenticatedUser();
+      } else {
+        setRegistrationResult(data);
+      }
       setRegistrationError({});
     },
     onError: (errorData) => {
@@ -121,6 +131,7 @@ const RegistrationPage = (props) => {
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
   const submitState = registrationMutation.isPending ? PENDING_STATE : DEFAULT_STATE;
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
+  const localNextPath = queryParams.next?.startsWith('/') ? queryParams.next : null;
   const tpaHint = useMemo(() => getTpaHint(), []);
   // Initialize form state from local backedUpFormData
   const backedUpFormData = registrationFormData;
@@ -292,12 +303,15 @@ const RegistrationPage = (props) => {
     }
 
     // Preparing payload for submission
+    const registrationQueryParams = localNextPath
+      ? Object.fromEntries(Object.entries(queryParams).filter(([key]) => key !== 'next'))
+      : queryParams;
     payload = prepareRegistrationPayload(
       payload,
       configurableFormFields,
       flags.showMarketingEmailOptInCheckbox,
       totalRegistrationTime,
-      queryParams,
+      registrationQueryParams,
     );
 
     // making register call with React Query
