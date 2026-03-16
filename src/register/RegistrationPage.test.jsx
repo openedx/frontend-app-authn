@@ -11,10 +11,8 @@ import { INTERNAL_SERVER_ERROR } from './data/constants';
 import RegistrationPage from './RegistrationPage';
 import { useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
-import { appId } from '../constants';
-import {
-  AUTHN_PROGRESSIVE_PROFILING, COMPLETE_STATE, REGISTER_PAGE,
-} from '../data/constants';
+import { appId, registerPath, welcomePath } from '../constants';
+import { COMPLETE_STATE } from '../data/constants';
 
 // Mock React Query hooks
 jest.mock('./data/apiHook', () => ({
@@ -41,6 +39,7 @@ jest.mock('@openedx/frontend-base', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
   getLocale: jest.fn(),
+  getUrlByRouteRole: jest.fn(() => '/dashboard'),
 }));
 
 // jest.mock() must be called before importing the mocked module's members,
@@ -827,7 +826,7 @@ describe('RegistrationPage', () => {
       window.parent.postMessage = jest.fn();
 
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', welcomePath), search: '?host=http://localhost/host-website' };
 
       // Mock successful registration result
       useRegisterContext.mockReturnValue({
@@ -852,7 +851,7 @@ describe('RegistrationPage', () => {
 
     it('should not display validations error on blur event when embedded variant is rendered', () => {
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', registerPath), search: '?host=http://localhost/host-website' };
       const { container } = render(renderWrapper(<RegistrationPage {...props} />));
 
       const usernameInput = container.querySelector('input#username');
@@ -866,7 +865,7 @@ describe('RegistrationPage', () => {
 
     it('should set errors in temporary state when validations are returned by registration api', () => {
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: '?host=http://localhost/host-website' };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', registerPath), search: '?host=http://localhost/host-website' };
 
       const usernameError = 'It looks like this username is already taken';
       const emailError = 'This email is already associated with an existing or previous account';
@@ -890,7 +889,7 @@ describe('RegistrationPage', () => {
     it('should clear error on focus for embedded experience also', () => {
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(REGISTER_PAGE),
+        href: getSiteConfig().baseUrl.concat('/', registerPath),
         search: '?host=http://localhost/host-website',
       };
 

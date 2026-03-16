@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getSiteConfig, useIntl } from '@openedx/frontend-base';
+import { getSiteConfig, getUrlByRouteRole, useIntl } from '@openedx/frontend-base';
 import {
   Form,
   Icon,
@@ -22,9 +22,8 @@ import {
 import messages from './messages';
 import ResetPasswordFailure from './ResetPasswordFailure';
 import { PasswordField } from '../common-components';
-import {
-  LETTER_REGEX, LOGIN_PAGE, NUMBER_REGEX, RESET_PAGE,
-} from '../data/constants';
+import { loginPath, loginRole, resetPasswordRole } from '../constants';
+import { LETTER_REGEX, NUMBER_REGEX } from '../data/constants';
 import { getAllPossibleQueryParams, updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 import { RegisterProvider } from '../register/components/RegisterContext';
 
@@ -177,10 +176,10 @@ const ResetPasswordPageInner = () => {
 
   useEffect(() => {
     if (status === PASSWORD_RESET.INVALID_TOKEN) {
-      navigate(updatePathWithQueryParams(RESET_PAGE), { state: { status } });
+      navigate(updatePathWithQueryParams(getUrlByRouteRole(resetPasswordRole)), { state: { status } });
     }
     if (status === 'success') {
-      navigate(updatePathWithQueryParams(LOGIN_PAGE), { state: { showResetPasswordSuccessBanner: true } });
+      navigate(updatePathWithQueryParams(getUrlByRouteRole(loginRole)), { state: { showResetPasswordSuccessBanner: true } });
     }
   }, [status, navigate]);
 
@@ -196,8 +195,8 @@ const ResetPasswordPageInner = () => {
             {formatMessage(messages['reset.password.page.title'], { siteName: getSiteConfig().siteName })}
           </title>
         </Helmet>
-        <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
-          <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+        <Tabs activeKey="" id="controlled-tab" onSelect={() => navigate(updatePathWithQueryParams(getUrlByRouteRole(loginRole)))}>
+          <Tab title={tabTitle} eventKey={loginPath} />
         </Tabs>
         <div id="main-content" className="main-content">
           <div className="mw-xs">

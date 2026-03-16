@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
 import {
-  useAppConfig, getAuthService, getSiteConfig, sendPageEvent, sendTrackEvent, useIntl
+  useAppConfig, getAuthService, getSiteConfig, getUrlByRouteRole,
+  sendPageEvent, sendTrackEvent, useIntl,
 } from '@openedx/frontend-base';
 import {
   Icon,
@@ -15,7 +16,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import BaseContainer from '../base-container';
 import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import messages from '../common-components/messages';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { loginPath, loginRole, registerPath, registerRole } from '../constants';
 import {
   getTpaHint, getTpaProvider, updatePathWithQueryParams,
 } from '../data/utils';
@@ -54,14 +55,14 @@ const LogistrationPageInner = ({
 
   useEffect(() => {
     if (disablePublicAccountCreation) {
-      navigate(updatePathWithQueryParams(LOGIN_PAGE));
+      navigate(updatePathWithQueryParams(getUrlByRouteRole(loginRole)));
     }
   }, [navigate, disablePublicAccountCreation]);
 
   const handleInstitutionLogin = (e) => {
     sendTrackEvent('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });
     if (typeof e === 'string') {
-      sendPageEvent('login_and_registration', e === '/login' ? 'login' : 'register');
+      sendPageEvent('login_and_registration', e === loginPath ? 'login' : 'register');
     } else {
       sendPageEvent('login_and_registration', e.target.dataset.eventName);
     }
@@ -72,7 +73,7 @@ const LogistrationPageInner = ({
     if (tabKey === currentTab) {
       return;
     }
-    sendTrackEvent(`edx.bi.${tabKey.replace('/', '')}_form.toggled`, { category: 'user-engagement' });
+    sendTrackEvent(`edx.bi.${tabKey}_form.toggled`, { category: 'user-engagement' });
     clearThirdPartyAuthErrorMessage();
     setKey(tabKey);
   };
@@ -81,7 +82,7 @@ const LogistrationPageInner = ({
     <div className="d-flex">
       <Icon src={ChevronLeft} className="left-icon" />
       <span className="ml-2">
-        {selectedPage === LOGIN_PAGE
+        {selectedPage === loginPath
           ? formatMessage(messages['logistration.sign.in'])
           : formatMessage(messages['logistration.register'])}
       </span>
@@ -101,7 +102,7 @@ const LogistrationPageInner = ({
             <>
               {institutionLogin && (
                 <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                  <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+                  <Tab title={tabTitle} eventKey={loginPath} />
                 </Tabs>
               )}
               <div id="main-content" className="main-content">
@@ -120,7 +121,7 @@ const LogistrationPageInner = ({
               {institutionLogin
                 ? (
                   <Tabs defaultActiveKey="" id="controlled-tab" onSelect={handleInstitutionLogin}>
-                    <Tab title={tabTitle} eventKey={selectedPage === LOGIN_PAGE ? LOGIN_PAGE : REGISTER_PAGE} />
+                    <Tab title={tabTitle} eventKey={selectedPage === loginPath ? loginPath : registerPath} />
                   </Tabs>
                 )
                 : (!isValidTpaHint() && !hideRegistrationLink && (
@@ -129,20 +130,20 @@ const LogistrationPageInner = ({
                     id="controlled-tab"
                     onSelect={(tabKey) => handleOnSelect(tabKey, selectedPage)}
                   >
-                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={REGISTER_PAGE} />
-                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={LOGIN_PAGE} />
+                    <Tab title={formatMessage(messages['logistration.register'])} eventKey={registerPath} />
+                    <Tab title={formatMessage(messages['logistration.sign.in'])} eventKey={loginPath} />
                   </Tabs>
                 ))}
               {key && (
-                <Navigate to={updatePathWithQueryParams(key)} replace />
+                <Navigate to={updatePathWithQueryParams(getUrlByRouteRole(key === loginPath ? loginRole : registerRole))} replace />
               )}
               <div id="main-content" className="main-content">
                 {!institutionLogin && !isValidTpaHint() && hideRegistrationLink && (
                   <h3 className="mb-4.5">
-                    {formatMessage(messages[selectedPage === LOGIN_PAGE ? 'logistration.sign.in' : 'logistration.register'])}
+                    {formatMessage(messages[selectedPage === loginPath ? 'logistration.sign.in' : 'logistration.register'])}
                   </h3>
                 )}
-                {selectedPage === LOGIN_PAGE
+                {selectedPage === loginPath
                   ? (
                     <LoginComponentSlot
                       institutionLogin={institutionLogin}

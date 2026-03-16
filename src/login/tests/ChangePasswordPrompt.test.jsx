@@ -5,10 +5,14 @@ import {
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-import { RESET_PAGE } from '../../data/constants';
 import ChangePasswordPrompt from '../ChangePasswordPrompt';
 
 const mockedNavigator = jest.fn();
+
+jest.mock('@openedx/frontend-base', () => ({
+  ...jest.requireActual('@openedx/frontend-base'),
+  getUrlByRouteRole: jest.fn(() => '/mock-url'),
+}));
 
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom')),
@@ -69,6 +73,6 @@ describe('ChangePasswordPromptTests', () => {
       ));
     });
 
-    expect(mockedNavigator).toHaveBeenCalledWith(RESET_PAGE);
+    expect(mockedNavigator).toHaveBeenCalledWith('/mock-url');
   });
 });

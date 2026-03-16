@@ -4,7 +4,8 @@ import { Icon } from '@openedx/paragon';
 import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
-import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { loginPath } from '../constants';
+import { SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
 
 const SocialAuthProviders = (props) => {
@@ -24,7 +25,7 @@ const SocialAuthProviders = (props) => {
       key={provider.id}
       type="button"
       className={`btn-social btn-${provider.id} ${index % 2 === 0 ? 'mr-3' : ''}`}
-      data-provider-url={referrer === LOGIN_PAGE ? provider.loginUrl : provider.registerUrl}
+      data-provider-url={referrer === loginPath ? provider.loginUrl : provider.registerUrl}
       onClick={handleSubmit}
     >
       {provider.iconImage ? (
@@ -43,7 +44,7 @@ const SocialAuthProviders = (props) => {
         )}
       <span id="provider-name" className="notranslate mr-auto pl-2" aria-hidden="true">{provider.name}</span>
       <span className="sr-only">
-        {referrer === LOGIN_PAGE
+        {referrer === loginPath
           ? formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
           : formatMessage(messages['sso.create.account.using'], { providerName: provider.name })}
       </span>
@@ -55,7 +56,7 @@ const SocialAuthProviders = (props) => {
 };
 
 SocialAuthProviders.defaultProps = {
-  referrer: LOGIN_PAGE,
+  referrer: loginPath,
   socialAuthProviders: [],
 };
 

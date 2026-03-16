@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getSiteConfig, useIntl } from '@openedx/frontend-base';
+import { getUrlByRouteRole, useIntl } from '@openedx/frontend-base';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@openedx/paragon';
@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { DEFAULT_REDIRECT_URL, RESET_PAGE } from '../data/constants';
+import { dashboardRole, resetPasswordRole } from '../constants';
 import { updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
 import messages from './messages';
@@ -21,7 +21,12 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
       if (variant === 'block') {
         setRedirectToResetPasswordPage(true);
       } else {
-        window.location.href = redirectUrl || getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
+        const url = redirectUrl || getUrlByRouteRole(dashboardRole);
+        if (url.startsWith('/')) {
+          navigate(url);
+        } else {
+          window.location.href = url;
+        }
       }
     },
   };
@@ -32,7 +37,7 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
 
   useEffect(() => {
     if (redirectToResetPasswordPage) {
-      navigate(updatePathWithQueryParams(RESET_PAGE));
+      navigate(updatePathWithQueryParams(getUrlByRouteRole(resetPasswordRole)));
     }
   }, [redirectToResetPasswordPage, navigate]);
 
@@ -68,7 +73,7 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
               'btn btn-primary',
               { 'w-100': isMobileView },
             )}
-            to={updatePathWithQueryParams(RESET_PAGE)}
+            to={updatePathWithQueryParams(getUrlByRouteRole(resetPasswordRole))}
           >
             {formatMessage(messages['password.security.redirect.to.reset.password.button'])}
           </Link>

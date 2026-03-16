@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
-import { PAGE_NOT_FOUND } from '../data/constants';
+import { notFoundPath } from '../constants';
 import { isHostAvailableInQueryParams } from '../data/utils';
 
 /**
@@ -16,7 +16,7 @@ const EmbeddedRegistrationRoute = ({ children }) => {
     return children;
   }
 
-  return <Navigate to={PAGE_NOT_FOUND} replace />;
+  return <Navigate to={`../${notFoundPath}`} replace />;
 };
 
 EmbeddedRegistrationRoute.propTypes = {

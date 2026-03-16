@@ -7,9 +7,9 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { appId } from '../../constants';
+import { appId, loginPath } from '../../constants';
 import {
-  FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR, LOGIN_PAGE,
+  FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR,
 } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
 import { useForgotPassword } from '../data/apiHook';
@@ -26,6 +26,7 @@ jest.mock('@openedx/frontend-base', () => ({
     userId: 3,
     username: 'test-user',
   })),
+  getUrlByRouteRole: jest.fn(() => '/login'),
 }));
 jest.mock('react-router-dom', () => ({
   ...(jest.requireActual('react-router-dom')),
@@ -286,7 +287,7 @@ describe('ForgotPasswordPage', () => {
     const navElement = container.querySelector('nav');
     const anchorElement = navElement.querySelector('a');
     fireEvent.click(anchorElement);
-    expect(mockedNavigator).toHaveBeenCalledWith(expect.stringContaining(LOGIN_PAGE));
+    expect(mockedNavigator).toHaveBeenCalledWith(expect.stringContaining(loginPath));
   });
 
   it('should display token validation rate limit error message', async () => {

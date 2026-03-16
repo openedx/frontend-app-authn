@@ -1,7 +1,8 @@
 import { IntlProvider } from '@openedx/frontend-base';
 import renderer from 'react-test-renderer';
 
-import { PENDING_STATE, REGISTER_PAGE } from '../../data/constants';
+import { registerPath } from '../../constants';
+import { PENDING_STATE } from '../../data/constants';
 import ThirdPartyAuthAlert from '../ThirdPartyAuthAlert';
 
 describe('ThirdPartyAuthAlert', () => {
@@ -26,7 +27,7 @@ describe('ThirdPartyAuthAlert', () => {
   it('should match register page third party auth alert message snapshot', () => {
     props = {
       ...props,
-      referrer: REGISTER_PAGE,
+      referrer: registerPath,
     };
 
     const tree = renderer.create(

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { fetchAuthenticatedUser, getAuthenticatedUser, getSiteConfig } from '@openedx/frontend-base';
+import { fetchAuthenticatedUser, getAuthenticatedUser, getUrlByRouteRole } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
+import { Navigate } from 'react-router-dom';
 
-import {
-  DEFAULT_REDIRECT_URL,
-} from '../data/constants';
+import { dashboardRole } from '../constants';
 
 /**
  * This wrapper redirects the requester to our default redirect url if they are
@@ -24,8 +23,7 @@ const UnAuthOnlyRoute = ({ children }) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
-      global.location.href = getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
-      return null;
+      return <Navigate to={getUrlByRouteRole(dashboardRole)} replace />;
     }
 
     return children;

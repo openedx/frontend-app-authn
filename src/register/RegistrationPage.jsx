@@ -37,9 +37,8 @@ import { useThirdPartyAuthContext } from '../common-components/components/ThirdP
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import {
-  COMPLETE_STATE, DEFAULT_STATE, PENDING_STATE, REGISTER_PAGE,
-} from '../data/constants';
+import { registerPath } from '../constants';
+import { COMPLETE_STATE, DEFAULT_STATE, PENDING_STATE } from '../data/constants';
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
@@ -174,7 +173,7 @@ const RegistrationPage = (props) => {
   if (tpaHint) {
     params.tpa_hint = tpaHint;
   }
-  const { data, isSuccess, error } = useThirdPartyAuthHook(REGISTER_PAGE, params);
+  const { data, isSuccess, error } = useThirdPartyAuthHook(registerPath, params);
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
@@ -365,7 +364,7 @@ const RegistrationPage = (props) => {
             <ThirdPartyAuthAlert
               currentProvider={currentProvider}
               platformName={platformName}
-              referrer={REGISTER_PAGE}
+              referrer={registerPath}
             />
             <RegistrationFailure
               errorCode={errorCode.type}

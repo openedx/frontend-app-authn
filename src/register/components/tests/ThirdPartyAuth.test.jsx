@@ -6,10 +6,8 @@ import { fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../../common-components/components/ThirdPartyAuthContext';
-import { appId } from '../../../constants';
-import {
-  COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
-} from '../../../data/constants';
+import { appId, loginPath, registerPath } from '../../../constants';
+import { COMPLETE_STATE, PENDING_STATE } from '../../../data/constants';
 import { useFieldValidations, useRegistration } from '../../data/apiHook';
 import RegistrationPage from '../../RegistrationPage';
 import { useRegisterContext } from '../RegisterContext';
@@ -19,6 +17,7 @@ jest.mock('@openedx/frontend-base', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
   getLocale: jest.fn(),
+  getUrlByRouteRole: jest.fn(() => '/mock-url'),
 }));
 
 // jest.mock() must be called before importing the mocked module's members,
@@ -237,7 +236,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
       const { container } = render(
         routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
@@ -260,7 +259,7 @@ describe('ThirdPartyAuth', () => {
 
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(LOGIN_PAGE),
+        href: getSiteConfig().baseUrl.concat('/', loginPath),
         search: `?next=/dashboard&tpa_hint=${ssoProvider.id}`,
       };
 
@@ -281,7 +280,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', registerPath), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
       ssoProvider.iconImage = null;
 
       const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
@@ -303,7 +302,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(REGISTER_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', registerPath), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
 
       render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       expect(window.location.href).toEqual(getSiteConfig().lmsBaseUrl + secondaryProviders.registerUrl);
@@ -320,7 +319,7 @@ describe('ThirdPartyAuth', () => {
       });
 
       delete window.location;
-      window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
+      window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: '?next=/dashboard&tpa_hint=invalid' };
 
       const { container } = render(routerWrapper(renderWrapper(<RegistrationPage {...props} />)));
       const providerButton = container.querySelector(`button#${ssoProvider.id} span#provider-name`);

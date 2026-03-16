@@ -11,7 +11,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
 import { useThirdPartyAuthHook } from '../../common-components/data/apiHook';
 import { appId } from '../../constants';
-import { COMPLETE_STATE, LOGIN_PAGE, PENDING_STATE } from '../../data/constants';
+import { loginPath } from '../../constants';
+import { COMPLETE_STATE, PENDING_STATE } from '../../data/constants';
 import { RegisterProvider } from '../../register/components/RegisterContext';
 import { LoginProvider } from '../components/LoginContext';
 import { useLogin } from '../data/apiHook';
@@ -28,6 +29,7 @@ jest.mock('@openedx/frontend-base', () => ({
   sendPageEvent: jest.fn(),
   sendTrackEvent: jest.fn(),
   getAuthService: jest.fn(),
+  getUrlByRouteRole: jest.fn(() => '/mock-url'),
 }));
 
 // jest.mock() must be called before importing the mocked module's members,
@@ -467,7 +469,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
     render(queryWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
@@ -489,7 +491,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?next=/dashboard&tpa_hint=${ssoProvider.id}` };
 
     const { container } = render(queryWrapper(<LoginPage {...props} />));
     expect(container.querySelector('.react-loading-skeleton')).toBeTruthy();
@@ -505,7 +507,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?next=/dashboard&tpa_hint=${secondaryProviders.id}` };
     secondaryProviders.iconImage = null;
 
     render(queryWrapper(<LoginPage {...props} />));
@@ -521,7 +523,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: '?next=/dashboard&tpa_hint=invalid' };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: '?next=/dashboard&tpa_hint=invalid' };
 
     const { container } = render(queryWrapper(<LoginPage {...props} />));
     expect(container.querySelector(`#${ssoProvider.id}`).querySelector('#provider-name').textContent).toEqual(`${ssoProvider.name}`);
@@ -545,7 +547,7 @@ describe('LoginPage', () => {
     });
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?tpa_hint=${ssoProvider.id}` };
 
     render(queryWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
@@ -566,7 +568,7 @@ describe('LoginPage', () => {
     useThirdPartyAuthContext.mockReturnValue(mockThirdPartyAuthContext);
 
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(LOGIN_PAGE), search: `?tpa_hint=${ssoProvider.id}` };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', loginPath), search: `?tpa_hint=${ssoProvider.id}` };
 
     render(queryWrapper(<LoginPage {...props} />));
     expect(screen.getByText(
@@ -698,7 +700,7 @@ describe('LoginPage', () => {
     const wrapper = (children) => (
       <QueryClientProvider client={queryClient}>
         <IntlProvider locale="en">
-          <MemoryRouter initialEntries={[{ pathname: '/login', state: { showResetPasswordSuccessBanner: true } }]}>
+          <MemoryRouter initialEntries={[{ pathname: `/${loginPath}`, state: { showResetPasswordSuccessBanner: true } }]}>
             <CurrentAppProvider appId={appId}>
               <RegisterProvider>
                 <LoginProvider>

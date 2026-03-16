@@ -1,13 +1,15 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
+import { useAppConfig, getSiteConfig, getUrlByRouteRole, useIntl } from '@openedx/frontend-base';
 import {
   Button, Form,
   Icon,
 } from '@openedx/paragon';
 import { Login } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-import { LOGIN_PAGE, SUPPORTED_ICON_CLASSES } from '../data/constants';
+import { loginRole } from '../constants';
+import { SUPPORTED_ICON_CLASSES } from '../data/constants';
 import messages from './messages';
 
 /**
@@ -15,6 +17,7 @@ import messages from './messages';
  * */
 const EnterpriseSSO = (props) => {
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
   const tpaProvider = props.provider;
   const hideRegistrationLink = useAppConfig().ALLOW_PUBLIC_ACCOUNT_CREATION === false
     || useAppConfig().SHOW_REGISTRATION_LINKS === false;
@@ -26,7 +29,7 @@ const EnterpriseSSO = (props) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    window.location.href = LOGIN_PAGE;
+    navigate(getUrlByRouteRole(loginRole));
   };
 
   if (tpaProvider) {

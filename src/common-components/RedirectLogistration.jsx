@@ -1,10 +1,9 @@
-import { useAppConfig, getSiteConfig } from '@openedx/frontend-base';
+import { useAppConfig, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
-import {
-  AUTHN_PROGRESSIVE_PROFILING, REDIRECT,
-} from '../data/constants';
+import { welcomeRole } from '../constants';
+import { REDIRECT } from '../data/constants';
 import { setCookie } from '../data/utils';
 
 const RedirectLogistration = (props) => {
@@ -48,7 +47,7 @@ const RedirectLogistration = (props) => {
       const registrationResult = { redirectUrl: finalRedirectUrl, success };
       return (
         <Navigate
-          to={AUTHN_PROGRESSIVE_PROFILING}
+          to={getUrlByRouteRole(welcomeRole)}
           state={{
             registrationResult,
             optionalFields,

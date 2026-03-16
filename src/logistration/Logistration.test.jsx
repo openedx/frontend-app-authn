@@ -6,7 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { appId } from '../constants';
-import { LOGIN_PAGE, REGISTER_PAGE } from '../data/constants';
+import { loginPath, registerPath } from '../constants';
 import Logistration from './Logistration';
 
 // Mock the navigate function
@@ -26,6 +26,7 @@ jest.mock('@openedx/frontend-base', () => ({
       getCsrfToken: mockGetCsrfToken,
     }),
   })),
+  getUrlByRouteRole: jest.fn(() => '/mock-url'),
 }));
 
 // Mock the apiHook to prevent actual API calls
@@ -112,9 +113,9 @@ describe('Logistration', () => {
       SHOW_REGISTRATION_LINKS: true,
     });
 
-    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    const { container } = render(renderWrapper(<Logistration selectedPage={registerPath} />));
     // While staying on the registration form, clicking the register tab again
-    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="register"]'));
 
     expect(sendTrackEvent).not.toHaveBeenCalled();
   });
@@ -124,13 +125,13 @@ describe('Logistration', () => {
       ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
-    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    const { container } = render(renderWrapper(<Logistration selectedPage={registerPath} />));
 
     expect(container.querySelector('RegistrationPage')).toBeDefined();
   });
 
   it('should render login page', () => {
-    const props = { selectedPage: LOGIN_PAGE };
+    const props = { selectedPage: loginPath };
     const { container } = render(renderWrapper(<Logistration {...props} />));
 
     expect(container.querySelector('LoginPage')).toBeDefined();
@@ -142,7 +143,7 @@ describe('Logistration', () => {
       SHOW_REGISTRATION_LINKS: false,
     });
 
-    let props = { selectedPage: LOGIN_PAGE };
+    let props = { selectedPage: loginPath };
     const { rerender } = render(renderWrapper(<Logistration {...props} />));
 
     // verifying sign in heading
@@ -150,7 +151,7 @@ describe('Logistration', () => {
 
     // register page is still accessible when SHOW_REGISTRATION_LINKS is false
     // but it needs to be accessed directly
-    props = { selectedPage: REGISTER_PAGE };
+    props = { selectedPage: registerPath };
     rerender(renderWrapper(<Logistration {...props} />));
 
     // verifying register heading
@@ -164,7 +165,7 @@ describe('Logistration', () => {
       SHOW_REGISTRATION_LINKS: 'true',
     });
 
-    const props = { selectedPage: LOGIN_PAGE };
+    const props = { selectedPage: loginPath };
     const { container } = render(renderWrapper(<Logistration {...props} />));
 
     // verifying sign in heading for institution login false
@@ -196,7 +197,7 @@ describe('Logistration', () => {
       },
     });
 
-    const props = { selectedPage: LOGIN_PAGE };
+    const props = { selectedPage: loginPath };
     render(renderWrapper(<Logistration {...props} />));
     expect(screen.getByText('Institution/campus credentials')).toBeDefined();
 
@@ -228,7 +229,7 @@ describe('Logistration', () => {
       },
     });
 
-    const props = { selectedPage: LOGIN_PAGE };
+    const props = { selectedPage: loginPath };
     render(renderWrapper(<Logistration {...props} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
 
@@ -262,7 +263,7 @@ describe('Logistration', () => {
     delete window.location;
     window.location = { hostname: getSiteConfig().siteName, href: getSiteConfig().baseUrl };
 
-    render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    render(renderWrapper(<Logistration selectedPage={registerPath} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(screen.getByText('Test University')).toBeDefined();
 
@@ -272,29 +273,29 @@ describe('Logistration', () => {
   });
 
   it('should switch to login tab when login tab is clicked', () => {
-    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
-    fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
+    const { container } = render(renderWrapper(<Logistration selectedPage={registerPath} />));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="login"]'));
     // Verify the tab switch occurred
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.login_form.toggled', { category: 'user-engagement' });
   });
 
   it('should switch to register tab when register tab is clicked', () => {
-    const props = { selectedPage: LOGIN_PAGE };
+    const props = { selectedPage: loginPath };
     const { container } = render(renderWrapper(<Logistration {...props} />));
-    fireEvent.click(container.querySelector('a[data-rb-event-key="/register"]'));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="register"]'));
     // Verify the tab switch occurred
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.register_form.toggled', { category: 'user-engagement' });
   });
 
   it('should clear tpa context errorMessage tab click', () => {
-    const { container } = render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    const { container } = render(renderWrapper(<Logistration selectedPage={registerPath} />));
 
-    fireEvent.click(container.querySelector('a[data-rb-event-key="/login"]'));
+    fireEvent.click(container.querySelector('a[data-rb-event-key="login"]'));
     expect(mockClearThirdPartyAuthErrorMessage).toHaveBeenCalled();
   });
 
   it('should call authService getCsrfTokenService on component mount', () => {
-    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    render(renderWrapper(<Logistration selectedPage={loginPath} />));
     expect(mockGetCsrfToken).toHaveBeenCalledWith(getSiteConfig().lmsBaseUrl);
   });
 
@@ -319,13 +320,13 @@ describe('Logistration', () => {
     });
 
     // Login page
-    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    render(renderWrapper(<Logistration selectedPage={loginPath} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     // Register page
     sendPageEvent.mockClear();
-    render(renderWrapper(<Logistration selectedPage={REGISTER_PAGE} />));
+    render(renderWrapper(<Logistration selectedPage={registerPath} />));
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
@@ -353,7 +354,7 @@ describe('Logistration', () => {
       },
     });
 
-    render(renderWrapper(<Logistration selectedPage={LOGIN_PAGE} />));
+    render(renderWrapper(<Logistration selectedPage={loginPath} />));
     sendPageEvent.mockClear();
     fireEvent.click(screen.getByText('Institution/campus credentials'));
     expect(sendTrackEvent).toHaveBeenCalledWith('edx.bi.institution_login_form.toggled', { category: 'user-engagement' });

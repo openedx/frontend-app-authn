@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
-  fetchAuthenticatedUser, hydrateAuthenticatedUser, getSiteConfig, sendPageEvent, sendTrackEvent, useIntl,
+  fetchAuthenticatedUser, hydrateAuthenticatedUser, getSiteConfig, getUrlByRouteRole,
+  sendPageEvent, sendTrackEvent, useIntl,
 } from '@openedx/frontend-base';
 import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
@@ -21,7 +22,8 @@ import { useThirdPartyAuthContext } from '../common-components/components/ThirdP
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
 import EnterpriseSSO from '../common-components/EnterpriseSSO';
 import ThirdPartyAuth from '../common-components/ThirdPartyAuth';
-import { LOGIN_PAGE, PENDING_STATE, RESET_PAGE } from '../data/constants';
+import { loginPath, resetPasswordRole } from '../constants';
+import { PENDING_STATE } from '../data/constants';
 import {
   getActivationStatus,
   getAllPossibleQueryParams,
@@ -105,7 +107,7 @@ const LoginPage = ({
   if (tpaHint) {
     params.tpa_hint = tpaHint;
   }
-  const { data, isSuccess, error } = useThirdPartyAuthHook(LOGIN_PAGE, params);
+  const { data, isSuccess, error } = useThirdPartyAuthHook(loginPath, params);
 
   useEffect(() => {
     sendPageEvent('login_and_registration', 'login');
@@ -299,7 +301,7 @@ const LoginPage = ({
             id="forgot-password"
             name="forgot-password"
             className="btn btn-link font-weight-500 text-body"
-            to={updatePathWithQueryParams(RESET_PAGE)}
+            to={updatePathWithQueryParams(getUrlByRouteRole(resetPasswordRole))}
             onClick={trackForgotPasswordLinkClick}
           >
             {formatMessage(messages['forgot.password'])}
