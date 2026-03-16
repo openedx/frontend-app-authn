@@ -116,6 +116,10 @@ const RegistrationPage = (props) => {
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
         hydrateAuthenticatedUser();
+      } else if (data.redirectUrl?.startsWith('/')) {
+        await fetchAuthenticatedUser({ forceRefresh: true });
+        setRegistrationResult({ ...data, redirectUrl: data.redirectUrl });
+        hydrateAuthenticatedUser();
       } else {
         setRegistrationResult(data);
       }

@@ -1,6 +1,8 @@
 // Utility functions
+import { getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
+import { dashboardRole } from '../../constants';
 import { AUTH_PARAMS } from '../constants';
 
 export const getTpaProvider = (tpaHintProvider, primaryProviders, secondaryProviders) => {
@@ -73,6 +75,19 @@ export const windowScrollTo = (options) => {
   }
 
   return window.scrollTo(options.top, options.left);
+};
+
+/**
+ * Normalize a backend redirect URL: if the backend returns the LMS dashboard
+ * URL (or nothing), replace it with the role-based dashboard URL so that SPA
+ * navigation can be used when the dashboard lives in the same shell.
+ */
+export const normalizeRedirectUrl = (backendUrl) => {
+  const dashboardUrl = getUrlByRouteRole(dashboardRole);
+  const lmsDashboardUrl = `${getSiteConfig().lmsBaseUrl}/dashboard`;
+  return (!backendUrl || backendUrl.startsWith(lmsDashboardUrl))
+    ? dashboardUrl
+    : backendUrl;
 };
 
 export const isHostAvailableInQueryParams = () => {
