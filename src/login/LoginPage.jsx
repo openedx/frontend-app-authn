@@ -68,19 +68,14 @@ const LoginPage = ({
   });
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin({
     onSuccess: async (data) => {
-      if (localNextPath) {
+      const redirectUrl = localNextPath || data.redirectUrl || '';
+      if (redirectUrl.startsWith('/')) {
         await fetchAuthenticatedUser({ forceRefresh: true });
-        setLoginResult({ success: true, redirectUrl: localNextPath });
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
         hydrateAuthenticatedUser();
-      } else if (data.redirectUrl?.startsWith('/')) {
-        await fetchAuthenticatedUser({ forceRefresh: true });
-        setLoginResult({ success: true, redirectUrl: data.redirectUrl });
-        hydrateAuthenticatedUser();
-      } else {
-        setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
       }
+      setLoginResult({ success: true, redirectUrl });
     },
     onError: (formattedError) => {
       setErrorCode(prev => ({

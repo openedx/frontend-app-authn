@@ -110,19 +110,14 @@ const RegistrationPage = (props) => {
   const backendRegistrationError = registrationError;
   const registrationMutation = useRegistration({
     onSuccess: async (data) => {
-      if (localNextPath) {
+      const redirectUrl = localNextPath || data.redirectUrl || '';
+      if (redirectUrl.startsWith('/')) {
         await fetchAuthenticatedUser({ forceRefresh: true });
-        setRegistrationResult({ ...data, redirectUrl: localNextPath });
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
         hydrateAuthenticatedUser();
-      } else if (data.redirectUrl?.startsWith('/')) {
-        await fetchAuthenticatedUser({ forceRefresh: true });
-        setRegistrationResult({ ...data, redirectUrl: data.redirectUrl });
-        hydrateAuthenticatedUser();
-      } else {
-        setRegistrationResult(data);
       }
+      setRegistrationResult({ ...data, redirectUrl });
       setRegistrationError({});
     },
     onError: (errorData) => {
