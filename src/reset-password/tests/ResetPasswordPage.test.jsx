@@ -10,7 +10,6 @@ import { MemoryRouter } from 'react-router-dom';
 
 import BaseContainer from '../../base-container';
 import { appId } from '../../constants';
-import { LOGIN_PAGE } from '../../data/constants';
 import { RegisterProvider } from '../../register/components/RegisterContext';
 import ResetPasswordPage from '../ResetPasswordPage';
 
@@ -40,6 +39,7 @@ jest.mock('@openedx/frontend-base', () => ({
     userId: 3,
     username: 'test-user',
   })),
+  getUrlByRouteRole: jest.fn(() => '/mock-url'),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -329,7 +329,7 @@ describe('ResetPasswordPage', () => {
     fireEvent.click(resetPasswordButton);
 
     await waitFor(() => {
-      expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE, {
+      expect(mockedNavigator).toHaveBeenCalledWith('/mock-url', {
         state: { showResetPasswordSuccessBanner: true },
       });
     });
@@ -354,7 +354,7 @@ describe('ResetPasswordPage', () => {
     const signInTab = screen.getByText('Sign in');
     fireEvent.click(signInTab);
 
-    expect(mockedNavigator).toHaveBeenCalledWith(LOGIN_PAGE);
+    expect(mockedNavigator).toHaveBeenCalledWith('/mock-url');
   });
 
   it('should handle reset password onError with token_invalid true', async () => {

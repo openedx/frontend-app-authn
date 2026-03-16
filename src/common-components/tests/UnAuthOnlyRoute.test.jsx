@@ -9,12 +9,13 @@ import {
 } from 'react-router-dom';
 
 import { UnAuthOnlyRoute } from '..';
-import { REGISTER_PAGE } from '../../data/constants';
+import { registerPath } from '../../constants';
 
 jest.mock('@openedx/frontend-base', () => ({
   ...jest.requireActual('@openedx/frontend-base'),
   getAuthenticatedUser: jest.fn(),
   fetchAuthenticatedUser: jest.fn(),
+  getUrlByRouteRole: jest.fn(() => '/dashboard'),
 }));
 
 const RRD = require('react-router-dom');
@@ -27,7 +28,7 @@ const TestApp = () => (
   <Router>
     <div>
       <Routes>
-        <Route path={REGISTER_PAGE} element={<UnAuthOnlyRoute><span>Register Page</span></UnAuthOnlyRoute>} />
+        <Route path={`/${registerPath}`} element={<UnAuthOnlyRoute><span>Register Page</span></UnAuthOnlyRoute>} />
       </Routes>
     </div>
   </Router>
@@ -35,7 +36,7 @@ const TestApp = () => (
 
 describe('UnAuthOnlyRoute', () => {
   const routerWrapper = () => (
-    <MemoryRouter initialEntries={[REGISTER_PAGE]}>
+    <MemoryRouter initialEntries={[`/${registerPath}`]}>
       <TestApp />
     </MemoryRouter>
   );

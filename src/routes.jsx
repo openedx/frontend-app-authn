@@ -1,5 +1,9 @@
 import { EmbeddedRegistrationRoute, NotFoundPage, UnAuthOnlyRoute } from './common-components';
-import { LOGIN_PAGE } from './data/constants';
+import {
+  confirmPasswordRole, loginPath, loginRole, notFoundPath,
+  passwordResetConfirmPath, registerEmbeddedPath, registerPath, registerRole,
+  resetPath, resetPasswordRole, welcomePath, welcomeRole,
+} from './constants';
 import { ForgotPasswordPage } from './forgot-password';
 import Logistration from './logistration/Logistration';
 import { ProgressiveProfiling } from './progressive-profiling';
@@ -16,58 +20,58 @@ const routes = [
     },
     children: [
       {
-        path: 'register-embedded',
+        path: registerEmbeddedPath,
         element: (
           <EmbeddedRegistrationRoute><RegistrationPage /></EmbeddedRegistrationRoute>
         ),
       },
       {
-        path: 'login',
+        path: loginPath,
         handle: {
-          role: 'org.openedx.frontend.role.login',
+          role: loginRole,
         },
         element: (
-          <UnAuthOnlyRoute><Logistration selectedPage={LOGIN_PAGE} /></UnAuthOnlyRoute>
+          <UnAuthOnlyRoute><Logistration selectedPage={loginPath} /></UnAuthOnlyRoute>
         ),
       },
       {
-        path: 'register',
+        path: registerPath,
         handle: {
-          role: 'org.openedx.frontend.role.register',
+          role: registerRole,
         },
         element: (
           <UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>
         ),
       },
       {
-        path: 'reset',
+        path: resetPath,
         handle: {
-          role: 'org.openedx.frontend.role.resetPassword',
+          role: resetPasswordRole,
         },
         element: (
           <UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>
         ),
       },
       {
-        path: 'password_reset_confirm/:token',
+        path: `${passwordResetConfirmPath}/:token`,
         handle: {
-          role: 'org.openedx.frontend.role.confirmPassword',
+          role: confirmPasswordRole,
         },
         element: (
           <ResetPasswordPage />
         ),
       },
       {
-        path: 'welcome',
+        path: welcomePath,
         handle: {
-          role: 'org.openedx.frontend.role.welcome',
+          role: welcomeRole,
         },
         element: (
           <ProgressiveProfiling />
         ),
       },
       {
-        path: 'notfound',
+        path: notFoundPath,
         element: (
           <NotFoundPage />
         ),

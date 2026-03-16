@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import {
-  getSiteConfig, sendPageEvent, sendTrackEvent, useAppConfig, useIntl,
+  getSiteConfig, getUrlByRouteRole, sendPageEvent, sendTrackEvent, useAppConfig, useIntl,
 } from '@openedx/frontend-base';
 import {
   Form,
@@ -20,7 +20,8 @@ import ForgotPasswordAlert from './ForgotPasswordAlert';
 import messages from './messages';
 import BaseContainer from '../base-container';
 import { FormGroup } from '../common-components';
-import { LOGIN_PAGE, VALID_EMAIL_REGEX } from '../data/constants';
+import { loginPath, loginRole } from '../constants';
+import { VALID_EMAIL_REGEX } from '../data/constants';
 import { updatePathWithQueryParams, windowScrollTo } from '../data/utils';
 
 const ForgotPasswordPage = () => {
@@ -115,8 +116,8 @@ const ForgotPasswordPage = () => {
         </title>
       </Helmet>
       <div>
-        <Tabs activeKey="" id="controlled-tab" onSelect={(key) => navigate(updatePathWithQueryParams(key))}>
-          <Tab title={tabTitle} eventKey={LOGIN_PAGE} />
+        <Tabs activeKey="" id="controlled-tab" onSelect={() => navigate(updatePathWithQueryParams(getUrlByRouteRole(loginRole)))}>
+          <Tab title={tabTitle} eventKey={loginPath} />
         </Tabs>
         <div id="main-content" className="main-content">
           <Form id="forget-password-form" name="forget-password-form" className="mw-xs">

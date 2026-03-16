@@ -6,6 +6,7 @@ import {
   getAuthenticatedUser,
   getLoggingService,
   getSiteConfig,
+  getUrlByRouteRole,
   identifyAuthenticatedUser,
   sendPageEvent,
   sendTrackEvent,
@@ -22,7 +23,7 @@ import {
 } from '@openedx/paragon';
 import { Error } from '@openedx/paragon/icons';
 import { Helmet } from 'react-helmet';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { ProgressiveProfilingProvider, useProgressiveProfilingContext } from './components/ProgressiveProfilingContext';
 import messages from './messages';
@@ -32,10 +33,9 @@ import { RedirectLogistration } from '../common-components';
 import { useSaveUserProfile } from './data/apiHook';
 import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
+import { dashboardRole, welcomePath } from '../constants';
 import {
-  AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE,
-  DEFAULT_REDIRECT_URL,
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
@@ -76,7 +76,7 @@ const ProgressiveProfilingInner = () => {
   const [values, setValues] = useState({});
   const [showModal, setShowModal] = useState(false);
 
-  const { data, isSuccess, error } = useThirdPartyAuthHook(AUTHN_PROGRESSIVE_PROFILING,
+  const { data, isSuccess, error } = useThirdPartyAuthHook(welcomePath,
     { is_welcome_page: true, next: queryParams?.next }, { enabled: registrationEmbedded });
 
   useEffect(() => {
@@ -132,8 +132,11 @@ const ProgressiveProfilingInner = () => {
     || thirdPartyAuthApiStatus === FAILURE_STATE
     || (thirdPartyAuthApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
-    const DASHBOARD_URL = getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
-    global.location.assign(DASHBOARD_URL);
+    const dashboardUrl = getUrlByRouteRole(dashboardRole);
+    if (dashboardUrl.startsWith('/')) {
+      return <Navigate to={dashboardUrl} replace />;
+    }
+    window.location.href = dashboardUrl;
     return null;
   }
 

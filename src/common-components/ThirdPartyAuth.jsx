@@ -7,9 +7,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
-import {
-  ENTERPRISE_LOGIN_URL, LOGIN_PAGE, PENDING_STATE, REGISTER_PAGE,
-} from '../data/constants';
+import { loginPath, registerPath } from '../constants';
+import { ENTERPRISE_LOGIN_URL, PENDING_STATE } from '../data/constants';
 import messages from './messages';
 
 import {
@@ -75,7 +74,7 @@ const ThirdPartyAuth = (props) => {
             <div className="row m-0">
               <SocialAuthProviders
                 socialAuthProviders={providers}
-                referrer={isLoginPage ? LOGIN_PAGE : REGISTER_PAGE}
+                referrer={isLoginPage ? loginPath : registerPath}
               />
             </div>
           )}

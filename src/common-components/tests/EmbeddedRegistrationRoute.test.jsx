@@ -1,43 +1,27 @@
-/* eslint-disable import/no-import-module-exports */
-/* eslint-disable react/function-component-definition */
-
 import { getSiteConfig } from '@openedx/frontend-base';
-import { render } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
+import { render, waitFor } from '@testing-library/react';
 import {
-  MemoryRouter, Route, BrowserRouter as Router, Routes,
+  MemoryRouter, Navigate, Outlet, Route, Routes,
 } from 'react-router-dom';
 
-import { PAGE_NOT_FOUND, REGISTER_EMBEDDED_PAGE } from '../../data/constants';
+import { notFoundPath, registerEmbeddedPath } from '../../constants';
 import EmbeddedRegistrationRoute from '../EmbeddedRegistrationRoute';
-
-const RRD = require('react-router-dom');
-// Just render plain div with its children
-// eslint-disable-next-line react/prop-types
-RRD.BrowserRouter = ({ children }) => <div>{children}</div>;
-module.exports = RRD;
-
-const TestApp = () => (
-  <Router>
-    <div>
-      <Routes>
-        <Route
-          path={REGISTER_EMBEDDED_PAGE}
-          element={<EmbeddedRegistrationRoute><span>Embedded Register Page</span></EmbeddedRegistrationRoute>}
-        />
-        <Route
-          path={PAGE_NOT_FOUND}
-          element={<span>Page not found</span>}
-        />
-      </Routes>
-    </div>
-  </Router>
-);
 
 describe('EmbeddedRegistrationRoute', () => {
   const routerWrapper = () => (
-    <MemoryRouter initialEntries={[REGISTER_EMBEDDED_PAGE]}>
-      <TestApp />
+    <MemoryRouter initialEntries={[`/authn/${registerEmbeddedPath}`]}>
+      <Routes>
+        <Route path="/authn" element={<Outlet />}>
+          <Route
+            path={registerEmbeddedPath}
+            element={<EmbeddedRegistrationRoute><span>Embedded Register Page</span></EmbeddedRegistrationRoute>}
+          />
+          <Route
+            path={notFoundPath}
+            element={<span>Page not found</span>}
+          />
+        </Route>
+      </Routes>
     </MemoryRouter>
   );
 
@@ -46,30 +30,25 @@ describe('EmbeddedRegistrationRoute', () => {
   });
 
   it('should not render embedded register page if host query param is not available in the url', async () => {
-    let embeddedRegistrationPage = null;
-    await act(async () => {
-      const { container } = await render(routerWrapper());
-      embeddedRegistrationPage = container;
-    });
+    const { container } = render(routerWrapper());
 
-    const renderedPage = embeddedRegistrationPage.querySelector('span');
-    expect(renderedPage.textContent).toBe('Page not found');
+    await waitFor(() => {
+      const renderedPage = container.querySelector('span');
+      expect(renderedPage).not.toBeNull();
+      expect(renderedPage.textContent).toBe('Page not found');
+    });
   });
 
-  it('should render embedded register page if host query param is available in the url (embedded)', async () => {
+  it('should render embedded register page if host query param is available in the url (embedded)', () => {
     delete window.location;
     window.location = {
-      href: getSiteConfig().baseUrl.concat(REGISTER_EMBEDDED_PAGE),
+      href: getSiteConfig().baseUrl.concat('/', registerEmbeddedPath),
       search: '?host=http://localhost/host-websit',
     };
 
-    let embeddedRegistrationPage = null;
-    await act(async () => {
-      const { container } = await render(routerWrapper());
-      embeddedRegistrationPage = container;
-    });
+    const { container } = render(routerWrapper());
 
-    const renderedPage = embeddedRegistrationPage.querySelector('span');
+    const renderedPage = container.querySelector('span');
     expect(renderedPage).toBeTruthy();
     expect(renderedPage.textContent).toBe('Embedded Register Page');
   });

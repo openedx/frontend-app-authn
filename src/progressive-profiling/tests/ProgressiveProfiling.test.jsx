@@ -15,11 +15,9 @@ import {
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { useThirdPartyAuthContext } from '../../common-components/components/ThirdPartyAuthContext';
-import { appId } from '../../constants';
+import { appId, welcomePath } from '../../constants';
 import {
-  AUTHN_PROGRESSIVE_PROFILING,
   COMPLETE_STATE,
-  DEFAULT_REDIRECT_URL,
   EMBEDDED,
   PENDING_STATE,
 } from '../../data/constants';
@@ -99,6 +97,7 @@ jest.mock('@openedx/frontend-base', () => ({
   configureAuth: jest.fn(),
   getAuthenticatedUser: jest.fn(),
   getLoggingService: jest.fn(),
+  getUrlByRouteRole: jest.fn(() => '/dashboard'),
 }));
 
 // Create mock function outside to access it directly
@@ -121,8 +120,8 @@ jest.mock('react-router-dom', () => {
 describe('ProgressiveProfilingTests', () => {
   let queryClient;
 
-  const DASHBOARD_URL = getSiteConfig().lmsBaseUrl.concat(DEFAULT_REDIRECT_URL);
-  const registrationResult = { redirectUrl: getSiteConfig().lmsBaseUrl + DEFAULT_REDIRECT_URL, success: true };
+  const DASHBOARD_URL = '/dashboard';
+  const registrationResult = { redirectUrl: DASHBOARD_URL, success: true };
   const fields = {
     company: { name: 'company', type: 'text', label: 'Company' },
     gender: {
@@ -229,7 +228,7 @@ describe('ProgressiveProfilingTests', () => {
 
   it('should open modal on pressing skip for now button', () => {
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING) };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', welcomePath) };
     const { getByRole } = renderWithProviders(<ProgressiveProfiling />);
 
     const skipButton = getByRole('button', { name: /skip for now/i });
@@ -272,7 +271,7 @@ describe('ProgressiveProfilingTests', () => {
       host: '',
     };
     delete window.location;
-    window.location = { href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING) };
+    window.location = { href: getSiteConfig().baseUrl.concat('/', welcomePath) };
     renderWithProviders(<ProgressiveProfiling />);
 
     const nextButton = screen.getByText('Submit');
@@ -313,14 +312,9 @@ describe('ProgressiveProfilingTests', () => {
 
   it('should redirect to login page if unauthenticated user tries to access welcome page', () => {
     getAuthenticatedUser.mockReturnValue(null);
-    delete window.location;
-    window.location = {
-      assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-      href: getSiteConfig().baseUrl,
-    };
 
     renderWithProviders(<ProgressiveProfiling />);
-    expect(window.location.href).toEqual(DASHBOARD_URL);
+    expect(mockNavigate).toHaveBeenCalledWith(DASHBOARD_URL);
   });
 
   describe('Embedded Form Workflow Test', () => {
@@ -344,7 +338,7 @@ describe('ProgressiveProfilingTests', () => {
     it('should set host property value embedded host for on ramp experience for skip link event', () => {
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING),
+        href: getSiteConfig().baseUrl.concat('/', welcomePath),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
       renderWithProviders(<ProgressiveProfiling />);
@@ -359,7 +353,7 @@ describe('ProgressiveProfilingTests', () => {
       delete window.location;
       window.location = {
         assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
-        href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING),
+        href: getSiteConfig().baseUrl.concat('/', welcomePath),
         search: `?host=${host}&variant=${EMBEDDED}`,
       };
 
@@ -385,7 +379,7 @@ describe('ProgressiveProfilingTests', () => {
       };
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING),
+        href: getSiteConfig().baseUrl.concat('/', welcomePath),
         search: `?host=${host}`,
       };
       renderWithProviders(<ProgressiveProfiling />);
@@ -412,13 +406,12 @@ describe('ProgressiveProfilingTests', () => {
     it('should redirect to dashboard if API call to get form field fails', () => {
       delete window.location;
       window.location = {
-        assign: jest.fn().mockImplementation((value) => { window.location.href = value; }),
         href: getSiteConfig().baseUrl,
         search: `?variant=${EMBEDDED}`,
       };
 
       renderWithProviders(<ProgressiveProfiling />);
-      expect(window.location.href).toBe(DASHBOARD_URL);
+      expect(mockNavigate).toHaveBeenCalledWith(DASHBOARD_URL);
     });
 
     it('should redirect to provided redirect url', () => {
@@ -530,7 +523,7 @@ describe('ProgressiveProfilingTests', () => {
 
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING),
+        href: getSiteConfig().baseUrl.concat('/', welcomePath),
         search: '?variant=embedded&host=http://example.com',
       };
       mockThirdPartyAuthHook.data = mockThirdPartyData;
@@ -545,7 +538,7 @@ describe('ProgressiveProfilingTests', () => {
     it('should not call third party auth functions when not in embedded mode', () => {
       delete window.location;
       window.location = {
-        href: getSiteConfig().baseUrl.concat(AUTHN_PROGRESSIVE_PROFILING),
+        href: getSiteConfig().baseUrl.concat('/', welcomePath),
         search: '',
       };
 
