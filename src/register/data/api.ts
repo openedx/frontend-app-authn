@@ -1,5 +1,7 @@
-import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
+import { getAuthenticatedHttpClient, getHttpClient, getSiteConfig } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
+
+import { normalizeRedirectUrl } from '../../data/utils';
 
 const registerNewUserApi = async (registrationInformation) => {
   const requestConfig = {
@@ -14,7 +16,7 @@ const registerNewUserApi = async (registrationInformation) => {
     });
 
   return {
-    redirectUrl: data.redirect_url || getUrlByRouteRole('org.openedx.frontend.role.dashboard'),
+    redirectUrl: normalizeRedirectUrl(data.redirect_url || ''),
     success: data.success || false,
     authenticatedUser: data.authenticated_user,
   };

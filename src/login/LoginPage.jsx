@@ -74,6 +74,10 @@ const LoginPage = ({
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
         hydrateAuthenticatedUser();
+      } else if (data.redirectUrl?.startsWith('/')) {
+        await fetchAuthenticatedUser({ forceRefresh: true });
+        setLoginResult({ success: true, redirectUrl: data.redirectUrl });
+        hydrateAuthenticatedUser();
       } else {
         setLoginResult({ success: true, redirectUrl: data.redirectUrl || '' });
       }

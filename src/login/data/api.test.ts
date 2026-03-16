@@ -170,12 +170,13 @@ describe('login api', () => {
         extra_data: { some: 'value' },
       };
       const mockResponse = { data: mockResponseData };
+      // normalizeRedirectUrl replaces the LMS dashboard URL with the role-based one
       const expectedCamelCaseInput = {
-        redirectUrl: 'http://localhost:18000/dashboard',
+        redirectUrl: '/dashboard',
         success: true,
       };
       const expectedResult = {
-        redirectUrl: 'http://localhost:18000/dashboard',
+        redirectUrl: '/dashboard',
         success: true,
       };
 
