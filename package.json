@@ -32,7 +32,7 @@
     "clean": "make clean",
     "clean:packages": "make clean-packages",
     "dev": "PORT=1999 PUBLIC_PATH=/authn openedx dev",
-    "dev:site": "npm run dev",
+    "dev:site": "make dev-site",
     "dev:packages": "make dev-packages",
     "i18n_extract": "openedx formatjs extract",
     "lint": "openedx lint .",

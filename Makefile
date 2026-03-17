@@ -23,14 +23,22 @@ requirements:
 turbo.json: turbo.site.json
 	cp $< $@
 
+# NPM doesn't bin-link workspace packages during install, so it must be done manually.
+bin-link:
+	[ -f packages/frontend-base/package.json ] && npm rebuild --ignore-scripts @openedx/frontend-base || true
+
 build-packages: turbo.json
 	$(TURBO) run build; rm -f turbo.json
+	$(MAKE) bin-link
 
 clean-packages: turbo.json
 	$(TURBO) run clean; rm -f turbo.json
 
 dev-packages: turbo.json
 	$(TURBO) run watch:build dev:site; rm -f turbo.json
+
+dev-site: bin-link
+	npm run dev
 
 clean:
 	rm -rf dist
