@@ -132,7 +132,7 @@ const ProgressiveProfilingInner = () => {
     || thirdPartyAuthApiStatus === FAILURE_STATE
     || (thirdPartyAuthApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
-    const dashboardUrl = getUrlByRouteRole(dashboardRole);
+    const dashboardUrl = getUrlByRouteRole(dashboardRole) || '/';
     if (dashboardUrl.startsWith('/')) {
       return <Navigate to={dashboardUrl} replace />;
     }

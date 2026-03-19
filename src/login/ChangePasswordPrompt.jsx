@@ -21,7 +21,7 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
       if (variant === 'block') {
         setRedirectToResetPasswordPage(true);
       } else {
-        const url = redirectUrl || getUrlByRouteRole(dashboardRole);
+        const url = redirectUrl || getUrlByRouteRole(dashboardRole) || '/';
         if (url.startsWith('/')) {
           navigate(url);
         } else {

@@ -83,7 +83,7 @@ export const windowScrollTo = (options) => {
  * navigation can be used when the dashboard lives in the same shell.
  */
 export const normalizeRedirectUrl = (backendUrl) => {
-  const dashboardUrl = getUrlByRouteRole(dashboardRole);
+  const dashboardUrl = getUrlByRouteRole(dashboardRole) || '/';
   const lmsDashboardUrl = `${getSiteConfig().lmsBaseUrl}/dashboard`;
   return (!backendUrl || backendUrl.startsWith(lmsDashboardUrl))
     ? dashboardUrl
