@@ -23,7 +23,7 @@ const UnAuthOnlyRoute = ({ children }) => {
 
   if (isReady) {
     if (authUser && authUser.username) {
-      return <Navigate to={getUrlByRouteRole(dashboardRole)} replace />;
+      return <Navigate to={getUrlByRouteRole(dashboardRole) || '/'} replace />;
     }
 
     return children;
