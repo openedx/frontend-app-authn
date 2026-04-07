@@ -57,16 +57,8 @@ detect_changed_source_translations:
 	# Checking for changed translations...
 	git diff --exit-code $(i18n)
 
-pull_translations:
-	rm -rf src/i18n/messages
-	mkdir src/i18n/messages
-	cd src/i18n/messages \
-	  && atlas pull $(ATLAS_OPTIONS) \
-	           translations/paragon/src/i18n/messages:paragon \
-	           translations/frontend-platform/src/i18n/messages:frontend-platform \
-	           translations/frontend-app-authn/src/i18n/messages:frontend-app-authn
-
-	$(intl_imports) paragon frontend-platform frontend-app-authn
+pull_translations: | requirements
+	npm run translations:pull
 
 # This target is used by Travis.
 validate-no-uncommitted-package-lock-changes:
