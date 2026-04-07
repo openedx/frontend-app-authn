@@ -46,7 +46,8 @@
     "prepack": "npm run clean && npm run build",
     "snapshot": "openedx test --updateSnapshot",
     "test": "openedx test --coverage --passWithNoTests",
-    "watch:build": "nodemon --exec 'npm run build'"
+    "watch:build": "nodemon --exec 'npm run build'",
+    "translations:pull": "openedx translations:pull"
   },
   "author": "Open edX",
   "license": "AGPL-3.0",
