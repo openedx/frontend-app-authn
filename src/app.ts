@@ -1,10 +1,12 @@
 import { App } from '@openedx/frontend-base';
 import { appId } from './constants';
+import provides from './provides';
 import routes from './routes';
 
 const app: App = {
   appId,
   routes,
+  provides,
   config: {
     ACTIVATION_EMAIL_SUPPORT_LINK: null,
     ALLOW_PUBLIC_ACCOUNT_CREATION: true,
