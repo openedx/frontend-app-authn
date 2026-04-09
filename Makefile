@@ -50,7 +50,7 @@ extract_translations: | requirements
 	npm run i18n_extract
 
 pull_translations: | requirements
-	npm run translations:pull
+	npm run translations:pull -- --atlas-options="$(ATLAS_OPTIONS)"
 
 # This target is used by Travis.
 validate-no-uncommitted-package-lock-changes:
