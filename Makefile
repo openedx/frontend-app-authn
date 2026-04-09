@@ -1,8 +1,5 @@
 TURBO = TURBO_TELEMETRY_DISABLED=1 turbo --dangerously-disable-package-manager-check
 
-intl_imports = ./node_modules/.bin/intl-imports.js
-i18n = ./src/i18n
-
 precommit:
 	npm run lint
 	npm audit
@@ -51,11 +48,6 @@ build:
 extract_translations: | requirements
 	# Pulling display strings from source files into src/i18n/transifex_input.json...
 	npm run i18n_extract
-
-# Despite the name, we actually need this target to detect changes in the incoming translated message files as well.
-detect_changed_source_translations:
-	# Checking for changed translations...
-	git diff --exit-code $(i18n)
 
 pull_translations: | requirements
 	npm run translations:pull
