@@ -28,7 +28,7 @@ const routes = [
       {
         path: loginPath,
         handle: {
-          role: loginRole,
+          roles: [loginRole],
         },
         element: (
           <UnAuthOnlyRoute><Logistration selectedPage={loginPath} /></UnAuthOnlyRoute>
@@ -37,7 +37,7 @@ const routes = [
       {
         path: registerPath,
         handle: {
-          role: registerRole,
+          roles: [registerRole],
         },
         element: (
           <UnAuthOnlyRoute><Logistration /></UnAuthOnlyRoute>
@@ -46,7 +46,7 @@ const routes = [
       {
         path: resetPath,
         handle: {
-          role: resetPasswordRole,
+          roles: [resetPasswordRole],
         },
         element: (
           <UnAuthOnlyRoute><ForgotPasswordPage /></UnAuthOnlyRoute>
@@ -55,7 +55,7 @@ const routes = [
       {
         path: `${passwordResetConfirmPath}/:token`,
         handle: {
-          role: confirmPasswordRole,
+          roles: [confirmPasswordRole],
         },
         element: (
           <ResetPasswordPage />
@@ -64,7 +64,7 @@ const routes = [
       {
         path: welcomePath,
         handle: {
-          role: welcomeRole,
+          roles: [welcomeRole],
         },
         element: (
           <ProgressiveProfiling />
