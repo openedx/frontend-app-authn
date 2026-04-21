@@ -6,7 +6,7 @@ import {
   registerIcons,
 } from './common-components';
 
-import './sass/_style.scss';
+import './style.scss';
 
 registerIcons();
 

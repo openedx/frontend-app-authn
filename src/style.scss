@@ -1,10 +1,12 @@
+@use "@openedx/paragon/styles/css/core/custom-media-breakpoints.css";
+
 // Load component based styles
-@use "_base_component.scss";
-@use "_registration.scss";
-@use "_reset_password.scss";
-@use "_progressive_profiling_page.scss";
-@use "_login_page.scss";
-@use "_forgot_password.scss";
+@use "./sass/base_component";
+@use "./sass/registration";
+@use "./sass/reset_password";
+@use "./sass/progressive_profiling_page";
+@use "./sass/login_page";
+@use "./sass/forgot_password";
 
 //
 // ----------------------------
