@@ -59,7 +59,7 @@
   margin-bottom: 0.5rem;
   font-weight: 700;
 
-  @media (-pgn-size-breakpoint-max-width-xl) {
+  @media (--pgn-size-breakpoint-max-width-xl) {
     font-size: 1.375rem;
     line-height: 1.75rem;
   }
@@ -71,7 +71,7 @@
 }
 
 .large-screen-left-container {
-  @media (-pgn-size-breakpoint-max-width-xl) {
+  @media (--pgn-size-breakpoint-max-width-xl) {
     flex: 0 0 25%;
     max-width: 25%;
   }

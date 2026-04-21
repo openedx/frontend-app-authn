@@ -2,7 +2,7 @@ import { EnvironmentTypes, SiteConfig } from '@openedx/frontend-base';
 
 import { authnApp } from './src';
 
-import './src/app.scss';
+import '@openedx/frontend-base/shell/style';
 
 const siteConfig: SiteConfig = {
   siteId: 'authn-dev',
