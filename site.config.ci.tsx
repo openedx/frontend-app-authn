@@ -5,14 +5,14 @@ import { authnApp } from './src';
 import '@openedx/frontend-base/shell/style';
 
 const siteConfig: SiteConfig = {
-  siteId: 'authn-dev',
-  siteName: 'Authn Dev',
-  baseUrl: 'http://apps.local.openedx.io:8080',
-  lmsBaseUrl: 'http://local.openedx.io:8000',
-  loginUrl: 'http://local.openedx.io:8000/login',
-  logoutUrl: 'http://local.openedx.io:8000/logout',
+  siteId: 'authn-ci',
+  siteName: 'Authn CI',
+  baseUrl: 'http://apps.local.openedx.io',
+  lmsBaseUrl: 'http://local.openedx.io',
+  loginUrl: 'http://local.openedx.io/login',
+  logoutUrl: 'http://local.openedx.io/logout',
 
-  environment: EnvironmentTypes.DEVELOPMENT,
+  environment: EnvironmentTypes.PRODUCTION,
   apps: [
     shellApp,
     headerApp,
