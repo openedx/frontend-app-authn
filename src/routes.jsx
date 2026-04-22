@@ -15,7 +15,7 @@ const routes = [
     id: 'org.openedx.frontend.route.authn.main',
     path: '/authn',
     async lazy() {
-      const module = await import('./Main');
+      const module = await import(/* webpackChunkName: "authn-main" */ './Main');
       return { Component: module.default };
     },
     children: [
