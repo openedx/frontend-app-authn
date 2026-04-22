@@ -45,6 +45,9 @@ build:
 	    cp "$$f" "$$d"; \
 	  done' sh {} +
 
+build-ci:
+	SITE_CONFIG_PATH=site.config.ci.tsx openedx build
+
 extract_translations: | requirements
 	# Pulling display strings from source files into src/i18n/transifex_input.json...
 	npm run i18n_extract
