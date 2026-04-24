@@ -7,6 +7,19 @@ import validateName from '../RegistrationFields/NameField/validator';
 import validateUsername from '../RegistrationFields/UsernameField/validator';
 
 /**
+ * Normalizes a field error_message that may come from the backend as either
+ * a plain string or an object (e.g. { required: "Error text" }).
+ * @param {string|object} errorMessage
+ * @returns {string}
+ */
+export const normalizeErrorMessage = (errorMessage) => {
+  if (typeof errorMessage === 'object' && errorMessage !== null) {
+    return Object.values(errorMessage)[0] || '';
+  }
+  return errorMessage || '';
+};
+
+/**
  * It validates the password field value
  * @param value
  * @param formatMessage
@@ -96,7 +109,7 @@ export const isFormValid = (
     if (key === 'country' && !configurableFormFields?.country?.displayValue) {
       fieldErrors[key] = formatMessage(messages['empty.country.field.error']);
     } else if (!configurableFormFields[key]) {
-      fieldErrors[key] = fieldDescriptions[key].error_message;
+      fieldErrors[key] = normalizeErrorMessage(fieldDescriptions[key].error_message);
     }
     if (fieldErrors[key]) { isValid = false; }
   });
