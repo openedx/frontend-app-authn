@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { FormFieldRenderer } from '../../field-renderer';
 import { FIELDS } from '../data/constants';
 import messages from '../messages';
+import { normalizeErrorMessage } from '../data/utils';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
 
 /**
@@ -97,7 +98,7 @@ const ConfigurableRegistrationForm = (props) => {
     const { name, value } = event.target;
     let error = '';
     if ((!value || !value.trim()) && fieldDescriptions[name]?.error_message) {
-      error = fieldDescriptions[name].error_message;
+      error = normalizeErrorMessage(fieldDescriptions[name].error_message);
     } else if (name === 'confirm_email' && value !== email) {
       error = formatMessage(messages['email.do.not.match']);
     }
