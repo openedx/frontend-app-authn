@@ -57,6 +57,7 @@ const FormFieldRenderer = (props) => {
             as="textarea"
             name={fieldData.name}
             value={value}
+            placeholder={fieldData.placeholder}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
             floatingLabel={fieldData.label}
@@ -79,6 +80,7 @@ const FormFieldRenderer = (props) => {
             className={className}
             name={fieldData.name}
             value={value}
+            placeholder={fieldData.placeholder}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
             floatingLabel={fieldData.label}
@@ -140,6 +142,7 @@ FormFieldRenderer.propTypes = {
     type: PropTypes.string,
     label: PropTypes.string,
     name: PropTypes.string,
+    placeholder: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   }).isRequired,
   onChangeHandler: PropTypes.func.isRequired,
