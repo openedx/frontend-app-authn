@@ -1,20 +1,41 @@
-import { Form, Icon } from '@openedx/paragon';
+import { useState } from 'react';
+
+import { Form, Icon, TransitionReplace } from '@openedx/paragon';
 import { ExpandMore } from '@openedx/paragon/icons';
 import PropTypes from 'prop-types';
 
 const FormFieldRenderer = (props) => {
+  const [hasFocus, setHasFocus] = useState(false);
   let formField = null;
   const {
     className, errorMessage, fieldData, onChangeHandler, isRequired, value,
   } = props;
 
   const handleFocus = (e) => {
+    setHasFocus(true);
     if (props.handleFocus) { props.handleFocus(e); }
   };
 
   const handleOnBlur = (e) => {
+    setHasFocus(false);
     if (props.handleBlur) { props.handleBlur(e); }
   };
+
+  const helpTextFeedback = (
+    <TransitionReplace>
+      {hasFocus && fieldData.instructions ? (
+        <Form.Control.Feedback type="default" key="help-text" className="d-block form-text-size">
+          {fieldData.instructions}
+        </Form.Control.Feedback>
+      ) : <div key="empty" />}
+    </TransitionReplace>
+  );
+
+  const errorFeedback = isRequired && errorMessage ? (
+    <Form.Control.Feedback id={`${fieldData.name}-error`} type="invalid" className="form-text-size" hasIcon={false}>
+      {errorMessage}
+    </Form.Control.Feedback>
+  ) : null;
 
   switch (fieldData.type) {
     case 'select': {
@@ -40,11 +61,7 @@ const FormFieldRenderer = (props) => {
               <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
             ))}
           </Form.Control>
-          {isRequired && errorMessage && (
-            <Form.Control.Feedback id={`${fieldData.name}-error`} type="invalid" className="form-text-size" hasIcon={false}>
-              {errorMessage}
-            </Form.Control.Feedback>
-          )}
+          {errorFeedback}
         </Form.Group>
       );
       break;
@@ -64,11 +81,8 @@ const FormFieldRenderer = (props) => {
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           />
-          {isRequired && errorMessage && (
-            <Form.Control.Feedback id={`${fieldData.name}-error`} type="invalid" className="form-text-size" hasIcon={false}>
-              {errorMessage}
-            </Form.Control.Feedback>
-          )}
+          {helpTextFeedback}
+          {errorFeedback}
         </Form.Group>
       );
       break;
@@ -87,11 +101,8 @@ const FormFieldRenderer = (props) => {
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           />
-          {isRequired && errorMessage && (
-            <Form.Control.Feedback id={`${fieldData.name}-error`} type="invalid" className="form-text-size" hasIcon={false}>
-              {errorMessage}
-            </Form.Control.Feedback>
-          )}
+          {helpTextFeedback}
+          {errorFeedback}
         </Form.Group>
       );
       break;
@@ -112,11 +123,7 @@ const FormFieldRenderer = (props) => {
           >
             {fieldData.label}
           </Form.Checkbox>
-          {isRequired && errorMessage && (
-            <Form.Control.Feedback id={`${fieldData.name}-error`} type="invalid" className="form-text-size" hasIcon={false}>
-              {errorMessage}
-            </Form.Control.Feedback>
-          )}
+          {errorFeedback}
         </Form.Group>
       );
       break;
@@ -143,6 +150,7 @@ FormFieldRenderer.propTypes = {
     label: PropTypes.string,
     name: PropTypes.string,
     placeholder: PropTypes.string,
+    instructions: PropTypes.string,
     options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   }).isRequired,
   onChangeHandler: PropTypes.func.isRequired,
