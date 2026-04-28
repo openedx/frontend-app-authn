@@ -1,4 +1,38 @@
-import { isFormValid } from '../utils';
+import { isFormValid, normalizeErrorMessage } from '../utils';
+
+describe('normalizeErrorMessage', () => {
+  it('should return the error message if it is a string', () => {
+    const errorMessage = 'This field is required';
+    expect(normalizeErrorMessage(errorMessage)).toBe('This field is required');
+  });
+
+  it('should extract the first value from an object error message', () => {
+    const errorMessage = { required: 'This field is required' };
+    expect(normalizeErrorMessage(errorMessage)).toBe('This field is required');
+  });
+
+  it('should handle multiple keys in object and return first value', () => {
+    const errorMessage = { required: 'Required field', min_length: 'Too short' };
+    const result = normalizeErrorMessage(errorMessage);
+    expect(['Required field', 'Too short']).toContain(result);
+  });
+
+  it('should return empty string if error message is null', () => {
+    expect(normalizeErrorMessage(null)).toBe('');
+  });
+
+  it('should return empty string if error message is undefined', () => {
+    expect(normalizeErrorMessage(undefined)).toBe('');
+  });
+
+  it('should return empty string if error message is an empty object', () => {
+    expect(normalizeErrorMessage({})).toBe('');
+  });
+
+  it('should return empty string if error message is an empty string', () => {
+    expect(normalizeErrorMessage('')).toBe('');
+  });
+});
 
 describe('Payload validation', () => {
   let formatMessage;

@@ -607,5 +607,36 @@ describe('ConfigurableRegistrationForm', () => {
 
       expect(professionErrorElement.textContent).toEqual(professionError);
     });
+
+    it('should normalize object-style error messages from backend', () => {
+      const professionErrorMessage = { required: 'Enter your profession' };
+
+      store = mockStore({
+        ...initialState,
+        commonComponents: {
+          ...initialState.commonComponents,
+          fieldDescriptions: {
+            profession: {
+              name: 'profession', type: 'text', label: 'Profession', error_message: professionErrorMessage,
+            },
+          },
+        },
+      });
+
+      const { getByLabelText, container } = render(
+        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+      );
+
+      const professionInput = getByLabelText('Profession');
+      fireEvent.focus(professionInput);
+      fireEvent.blur(professionInput);
+
+      const submitButton = container.querySelector('button.btn-brand');
+      fireEvent.click(submitButton);
+
+      const professionErrorElement = container.querySelector('#profession-error');
+
+      expect(professionErrorElement.textContent).toEqual('Enter your profession');
+    });
   });
 });
