@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import { FormFieldRenderer } from '../../field-renderer';
 import { FIELDS } from '../data/constants';
-import messages from '../messages';
 import { normalizeErrorMessage } from '../data/utils';
+import messages from '../messages';
 import { CountryField, HonorCode, TermsOfService } from '../RegistrationFields';
 
 /**
