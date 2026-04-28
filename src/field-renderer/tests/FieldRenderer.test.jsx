@@ -1,5 +1,5 @@
 import { getConfig } from '@edx/frontend-platform';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import FieldRenderer from '../FieldRenderer';
 
@@ -259,7 +259,7 @@ describe('FieldRendererTests', () => {
     expect(input.maxLength).toEqual(200);
   });
 
-  it('should show help text when field has focus and instructions are provided', () => {
+  it('should show help text when field has focus and instructions are provided', async () => {
     const fieldData = {
       type: 'text',
       label: 'Username',
@@ -282,8 +282,10 @@ describe('FieldRendererTests', () => {
     // Blur the field
     fireEvent.blur(input);
 
-    // Help text should be hidden again
-    expect(container.textContent).not.toContain('Username must be between 2-30 characters');
+    // Help text should be hidden again after transition
+    await waitFor(() => {
+      expect(container.textContent).not.toContain('Username must be between 2-30 characters');
+    });
   });
 
   it('should show help text for textarea when focused', () => {
