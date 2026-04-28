@@ -56,13 +56,14 @@ const FormFieldRenderer = (props) => {
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           >
-            <option key="default" value="">{fieldData.label}</option>
-            {fieldData.options.map(option => (
-              <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
-            ))}
-          </Form.Control>
-          {errorFeedback}
-        </Form.Group>
+          <option key="default" value="">{fieldData.label}</option>
+          {fieldData.options.map(option => (
+            <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
+          ))}
+        </Form.Control>
+        {helpTextFeedback}
+        {errorFeedback}
+      </Form.Group>
       );
       break;
     }
@@ -112,21 +113,22 @@ const FormFieldRenderer = (props) => {
     case 'checkbox': {
       formField = (
         <Form.Group isInvalid={!!(isRequired && errorMessage)}>
-          <Form.Checkbox
-            className={className}
-            id={fieldData.name}
-            checked={!!value}
-            name={fieldData.name}
-            value={value}
-            aria-invalid={isRequired && Boolean(errorMessage)}
-            onChange={(e) => onChangeHandler(e)}
-            onBlur={handleOnBlur}
-            onFocus={handleFocus}
-          >
-            {fieldData.label}
-          </Form.Checkbox>
-          {errorFeedback}
-        </Form.Group>
+        <Form.Checkbox
+          className={className}
+          id={fieldData.name}
+          checked={!!value}
+          name={fieldData.name}
+          value={value}
+          aria-invalid={isRequired && Boolean(errorMessage)}
+          onChange={(e) => onChangeHandler(e)}
+          onBlur={handleOnBlur}
+          onFocus={handleFocus}
+        >
+          {fieldData.label}
+        </Form.Checkbox>
+        {helpTextFeedback}
+        {errorFeedback}
+      </Form.Group>
       );
       break;
     }
