@@ -610,21 +610,40 @@ describe('ConfigurableRegistrationForm', () => {
 
     it('should normalize object-style error messages from backend', () => {
       const professionErrorMessage = { required: 'Enter your profession' };
-
-      store = mockStore({
-        ...initialState,
-        commonComponents: {
-          ...initialState.commonComponents,
-          fieldDescriptions: {
-            profession: {
-              name: 'profession', type: 'text', label: 'Profession', error_message: professionErrorMessage,
-            },
+      useThirdPartyAuthContext.mockReturnValue({
+        currentProvider: null,
+        platformName: '',
+        providers: [],
+        secondaryProviders: [],
+        handleInstitutionLogin: jest.fn(),
+        handleInstitutionLogout: jest.fn(),
+        isInstitutionAuthActive: false,
+        institutionLogin: false,
+        pipelineDetails: {},
+        thirdPartyAuthContext: {
+          autoSubmitRegForm: false,
+          currentProvider: null,
+          finishAuthUrl: null,
+          pipelineUserDetails: null,
+          providers: [],
+          secondaryProviders: [],
+          errorMessage: null,
+        },
+        fieldDescriptions: {
+          profession: {
+            name: 'profession', type: 'text', label: 'Profession', error_message: professionErrorMessage,
           },
         },
+        optionalFields: [],
+        setThirdPartyAuthContextBegin: jest.fn(),
+        setThirdPartyAuthContextSuccess: jest.fn(),
+        setThirdPartyAuthContextFailure: jest.fn(),
+        setEmailSuggestionContext: jest.fn(),
+        clearThirdPartyAuthErrorMessage: jest.fn(),
       });
 
       const { getByLabelText, container } = render(
-        routerWrapper(reduxWrapper(<IntlRegistrationPage {...props} />)),
+        routerWrapper(renderWrapper(<RegistrationPage {...props} />)),
       );
 
       const professionInput = getByLabelText('Profession');
