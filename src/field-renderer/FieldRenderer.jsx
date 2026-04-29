@@ -42,6 +42,10 @@ const FormFieldRenderer = (props) => {
       if (!fieldData.options) {
         return null;
       }
+      const optionsArray = Array.isArray(fieldData.options)
+        ? fieldData.options
+        : Object.entries(fieldData.options);
+
       formField = (
         <Form.Group controlId={fieldData.name} isInvalid={!!(isRequired && errorMessage)}>
           <Form.Control
@@ -56,14 +60,14 @@ const FormFieldRenderer = (props) => {
             onBlur={handleOnBlur}
             onFocus={handleFocus}
           >
-          <option key="default" value="">{fieldData.label}</option>
-          {fieldData.options.map(option => (
-            <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
-          ))}
-        </Form.Control>
-        {helpTextFeedback}
-        {errorFeedback}
-      </Form.Group>
+            <option key="default" value="">{fieldData.label}</option>
+            {optionsArray.map(option => (
+              <option className="data-hj-suppress" key={option[0]} value={option[0]}>{option[1]}</option>
+            ))}
+          </Form.Control>
+          {helpTextFeedback}
+          {errorFeedback}
+        </Form.Group>
       );
       break;
     }
@@ -113,22 +117,22 @@ const FormFieldRenderer = (props) => {
     case 'checkbox': {
       formField = (
         <Form.Group isInvalid={!!(isRequired && errorMessage)}>
-        <Form.Checkbox
-          className={className}
-          id={fieldData.name}
-          checked={!!value}
-          name={fieldData.name}
-          value={value}
-          aria-invalid={isRequired && Boolean(errorMessage)}
-          onChange={(e) => onChangeHandler(e)}
-          onBlur={handleOnBlur}
-          onFocus={handleFocus}
-        >
-          {fieldData.label}
-        </Form.Checkbox>
-        {helpTextFeedback}
-        {errorFeedback}
-      </Form.Group>
+          <Form.Checkbox
+            className={className}
+            id={fieldData.name}
+            checked={!!value}
+            name={fieldData.name}
+            value={value}
+            aria-invalid={isRequired && Boolean(errorMessage)}
+            onChange={(e) => onChangeHandler(e)}
+            onBlur={handleOnBlur}
+            onFocus={handleFocus}
+          >
+            {fieldData.label}
+          </Form.Checkbox>
+          {helpTextFeedback}
+          {errorFeedback}
+        </Form.Group>
       );
       break;
     }
@@ -159,7 +163,10 @@ FormFieldRenderer.propTypes = {
       max_length: PropTypes.number,
       min_length: PropTypes.number,
     }),
-    options: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+    options: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+      PropTypes.objectOf(PropTypes.string),
+    ]),
   }).isRequired,
   onChangeHandler: PropTypes.func.isRequired,
   handleBlur: PropTypes.func,
