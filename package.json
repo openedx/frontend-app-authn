@@ -58,7 +58,7 @@
     "react-router-dom": "6.30.3",
     "react-zendesk": "^0.1.13",
     "regenerator-runtime": "0.14.1",
-    "universal-cookie": "7.2.2"
+    "universal-cookie": "8.1.2"
   },
   "devDependencies": {
     "@edx/browserslist-config": "^1.1.1",
