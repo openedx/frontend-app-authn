@@ -1,6 +1,12 @@
 import { defineMessages } from '@openedx/frontend-base';
 
 const messages = defineMessages({
+  // not found page
+  'error.notfound.page.title': {
+    id: 'error.notfound.page.title',
+    defaultMessage: 'Page Not Found | {siteName}',
+    description: 'Document title for the page-not-found page',
+  },
   // institution login strings
   'institution.login.page.sub.heading': {
     id: 'institution.login.page.sub.heading',
