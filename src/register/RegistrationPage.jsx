@@ -37,6 +37,7 @@ import {
 import {
   getAllPossibleQueryParams, getTpaHint, getTpaProvider, isHostAvailableInQueryParams, setCookie,
 } from '../data/utils';
+import RegisterAdditionalFieldsSlot from '../plugin-slots/RegisterAdditionalFieldsSlot';
 import { useRegisterContext } from './components/RegisterContext';
 /**
  * Inner Registration Page component that uses the context
@@ -390,6 +391,11 @@ const RegistrationPage = (props) => {
                 setFormFields={setConfigurableFormFields}
                 autoSubmitRegisterForm={autoSubmitRegForm}
                 fieldDescriptions={fieldDescriptions}
+              />
+
+              <RegisterAdditionalFieldsSlot
+                formFields={formFields}
+                setFormField={handleOnChange}
               />
               <StatefulButton
                 id="register-user"
