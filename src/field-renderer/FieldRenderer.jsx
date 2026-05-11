@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Form, Icon, TransitionReplace } from '@openedx/paragon';
 import { ExpandMore } from '@openedx/paragon/icons';
@@ -27,7 +27,7 @@ const FormFieldRenderer = (props) => {
         <Form.Control.Feedback type="default" key="help-text" className="d-block form-text-size">
           {fieldData.instructions}
         </Form.Control.Feedback>
-      ) : <div key="empty" />}
+      ) : <React.Fragment key="empty" />}
     </TransitionReplace>
   );
 
@@ -161,7 +161,6 @@ FormFieldRenderer.propTypes = {
     instructions: PropTypes.string,
     restrictions: PropTypes.shape({
       max_length: PropTypes.number,
-      min_length: PropTypes.number,
     }),
     options: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
