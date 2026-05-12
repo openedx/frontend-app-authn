@@ -80,6 +80,7 @@ const FormFieldRenderer = (props) => {
             name={fieldData.name}
             value={value}
             placeholder={fieldData.placeholder}
+            minLength={fieldData.restrictions?.min_length}
             maxLength={fieldData.restrictions?.max_length}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
@@ -101,6 +102,7 @@ const FormFieldRenderer = (props) => {
             name={fieldData.name}
             value={value}
             placeholder={fieldData.placeholder}
+            minLength={fieldData.restrictions?.min_length}
             maxLength={fieldData.restrictions?.max_length}
             aria-invalid={isRequired && Boolean(errorMessage)}
             onChange={(e) => onChangeHandler(e)}
@@ -160,6 +162,7 @@ FormFieldRenderer.propTypes = {
     placeholder: PropTypes.string,
     instructions: PropTypes.string,
     restrictions: PropTypes.shape({
+      min_length: PropTypes.number,
       max_length: PropTypes.number,
     }),
     options: PropTypes.oneOfType([
