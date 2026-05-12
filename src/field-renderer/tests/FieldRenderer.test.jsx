@@ -259,6 +259,74 @@ describe('FieldRendererTests', () => {
     expect(input.maxLength).toEqual(200);
   });
 
+  it('should apply minLength restriction to text field', () => {
+    const fieldData = {
+      type: 'text',
+      label: 'Username',
+      name: 'username-field',
+      restrictions: {
+        min_length: 3,
+      },
+    };
+
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('input#username-field');
+
+    expect(input.minLength).toEqual(3);
+  });
+
+  it('should apply minLength restriction to textarea field', () => {
+    const fieldData = {
+      type: 'textarea',
+      label: 'Goals',
+      name: 'goals-field',
+      restrictions: {
+        min_length: 10,
+      },
+    };
+
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('#goals-field');
+
+    expect(input.minLength).toEqual(10);
+  });
+
+  it('should apply both minLength and maxLength restrictions to text field', () => {
+    const fieldData = {
+      type: 'text',
+      label: 'Username',
+      name: 'username-field',
+      restrictions: {
+        min_length: 3,
+        max_length: 30,
+      },
+    };
+
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('input#username-field');
+
+    expect(input.minLength).toEqual(3);
+    expect(input.maxLength).toEqual(30);
+  });
+
+  it('should apply both minLength and maxLength restrictions to textarea field', () => {
+    const fieldData = {
+      type: 'textarea',
+      label: 'Goals',
+      name: 'goals-field',
+      restrictions: {
+        min_length: 10,
+        max_length: 200,
+      },
+    };
+
+    const { container } = render(<FieldRenderer value={value} fieldData={fieldData} onChangeHandler={changeHandler} />);
+    const input = container.querySelector('#goals-field');
+
+    expect(input.minLength).toEqual(10);
+    expect(input.maxLength).toEqual(200);
+  });
+
   it('should show help text when field has focus and instructions are provided', async () => {
     const fieldData = {
       type: 'text',
