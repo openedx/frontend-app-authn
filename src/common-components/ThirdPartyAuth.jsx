@@ -74,12 +74,10 @@ const ThirdPartyAuth = (props) => {
             />
           )}
           {isSocialAuthActive && (
-            <div className="row m-0">
               <SocialAuthProviders
                 socialAuthProviders={providers}
                 referrer={isLoginPage ? LOGIN_PAGE : REGISTER_PAGE}
               />
-            </div>
           )}
         </>
       )}

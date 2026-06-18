@@ -242,7 +242,7 @@ const LoginPage = ({
           redirectUrl={loginResult.redirectUrl}
           finishAuthUrl={finishAuthUrl}
         />
-        <div className="p-5 border rounded bg-white" style={{ maxWidth: '438px' }}>
+        <div className="main-login-form border rounded bg-white" style={{ maxWidth: '438px' }}>
           <LoginFailureMessage
             errorCode={errorCode.type}
             errorCount={errorCode.count}
@@ -255,7 +255,7 @@ const LoginPage = ({
           <AccountActivationMessage
             messageType={activationMsgType}
           />
-          <div className="d-flex flex-column justify-content-center align-items-center" style={{ gap: "40px" }}>
+          <div className="d-flex flex-column justify-content-center align-items-center" style={{ gap: "48px" }}>
             <img
               src={Logo}
               alt="Logo"
@@ -269,12 +269,9 @@ const LoginPage = ({
               thirdPartyAuthApiStatus={thirdPartyAuthApiStatus}
               isLoginPage
             />
-            <div className="text-slate-600 text-center" style={{fontSize: '14px'}}>
+            <div className="text-slate-600 text-center" style={{fontSize: '14px', width:'90%'}}>
               {formatMessage(messages['login.auth.additional.info'])}
             </div>
-            <button onClick={() => setHideCustomLoginPage(true)} className="btn btn-link  small  text-body" >
-              Switch to default Login
-            </button>
             {appVersion && (
               <div className="text-slate-400 text-center" style={{fontSize: '14px'}}>
                 Version {appVersion}

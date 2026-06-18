@@ -42,7 +42,7 @@ const SocialAuthProviders = (props) => {
               )}
           </div>
         )}
-      <span id="provider-name" className="notranslate mr-auto pl-2" style={{fontSize: '14px'}} aria-hidden="true">{provider.name}</span>
+      <span id="provider-name" className="notranslate pl-2" style={{fontSize: '14px'}} aria-hidden="true">{provider.name}</span>
       <span className="sr-only">
         {referrer === LOGIN_PAGE
           ? formatMessage(messages['sso.sign.in.with'], { providerName: provider.name })
