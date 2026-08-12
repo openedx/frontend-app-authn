@@ -31,7 +31,7 @@ const HonorCode = (props) => {
             platformName: getConfig().SITE_NAME,
             tosAndHonorCode: (
               <Hyperlink
-                className="inline-link"
+                isInline
                 destination={getConfig().TOS_AND_HONOR_CODE || '#'}
                 target="_blank"
                 showLaunchIcon={false}
@@ -41,7 +41,7 @@ const HonorCode = (props) => {
             ),
             privacyPolicy: (
               <Hyperlink
-                className="inline-link"
+                isInline
                 destination={getConfig().PRIVACY_POLICY || '#'}
                 target="_blank"
                 showLaunchIcon={false}
