@@ -2,46 +2,146 @@
 frontend-app-authn
 ##################
 
-|Build Status| |ci-badge| |Codecov| |semantic-release|
+|license-badge| |status-badge| |ci-badge| |codecov-badge| |semantic-release|
+
+Authn is a `frontend-base`_ application: a library that plugs into the Open edX
+frontend shell, rather than a standalone micro-frontend bundled with its own
+webpack build.
+
+.. _frontend-base: https://github.com/openedx/frontend-base
 
 ********
 Purpose
 ********
 
-This is a micro-frontend application responsible for the login, registration and password reset functionality.
-
-**What is the domain of this MFE?**
+This app is responsible for the login, registration and password reset
+functionality, and serves:
 
 - Register page
-
 - Login page
-
 - Forgot password page
-
 - Reset password page
-
 - Progressive profiling page
+
+*********************
+Branches and Releases
+*********************
+
+This app is published to NPM by ``semantic-release``, and its branches follow
+`OEP-10 ADR 0002`_:
+
+``master``
+  Unstable.  Every merge publishes a prerelease on the ``alpha`` dist-tag.
+  Breaking changes land here with no DEPR process and no warning, so it is not
+  supported in production.  All changes, including bug fixes, should target this
+  branch first.
+
+``stable``
+  Carries the newest stable major and owns the ``latest`` dist-tag.  Changes
+  arrive here as backports from ``master``, and no breaking change lands after
+  publication.
+
+``n.x`` and ``n.m.x``
+  Maintenance branches for majors and minors that ``stable`` has moved past.
+  Each owns the dist-tag matching its own name, so consumers select a maintained
+  line by semver range, e.g. ``"1.x"``.
+
+``stable`` is cut, and ``1.0.0`` is the current stable release.  Both
+``.releaserc`` and the ``Release CI`` workflow know the whole layout, including
+the maintenance branch patterns, so a new line starts publishing as soon as it
+is pushed.
+
+This repository is no longer branched or tagged for Open edX releases in its own
+right.  It participates by published version instead, per `OEP-10 ADR 0003`_.
+
+The micro-frontend this app replaces goes on living on `legacy-mfe`_, which is
+where any further ``release/RELEASENAME`` branches for it are cut, for as long as
+a supported release still ships it.  Teak, Ulmo and Verawood all do.
+
+.. _OEP-10 ADR 0002: https://docs.openedx.org/projects/openedx-proposals/en/latest/processes/oep-0010/decisions/0002-frontend-stable-branches.html
+.. _OEP-10 ADR 0003: https://docs.openedx.org/projects/openedx-proposals/en/latest/processes/oep-0010/decisions/0003-frontend-release-strategy.html
+.. _legacy-mfe: https://github.com/openedx/frontend-app-authn/tree/legacy-mfe
 
 ***************
 Getting Started
 ***************
 
-Installation
-============
+Prerequisites
+=============
 
-`Tutor`_ is currently recommended as a development environment for your new MFE. Please refer to the `relevant tutor-mfe documentation`_ to get started using it.
+A running Open edX instance is needed to serve this app's backend APIs.
+`Tutor`_ in development mode is the usual choice, and ``site.config.dev.tsx``
+already points at its default hostnames.
+
+Unlike a micro-frontend, this app is neither built nor served by ``tutor-mfe``.
+The dev server below runs on the host.  Note that ``tutor-mfe`` v22 and later do
+ship this app as a frontend-base application for *deployment*, disabled by
+default; see `Frontend apps`_ in its README to enable it.
 
 .. _Tutor: https://github.com/overhangio/tutor
-.. _relevant tutor-mfe documentation: https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development
+.. _Frontend apps: https://github.com/overhangio/tutor-mfe#frontend-apps
 
-Environment Variables/Setup Notes
-=================================
+Cloning and Startup
+===================
 
-This MFE is configured via environment variables supplied at build time.  All micro-frontends have a shared set of required environment variables, as documented in the Open edX Developer Guide under `Required Environment Variables <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
+1. Clone the repo:
 
-The authentication micro-frontend also requires the following additional variable:
+   ``git clone https://github.com/openedx/frontend-app-authn.git``
 
-.. list-table:: Environment Variables
+2. Use the version of Node specified in the ``.nvmrc`` file.
+
+   Using other major versions of Node *may* work, but is unsupported.  This
+   repository includes an ``.nvmrc`` file to help set the correct Node version
+   via `nvm <https://github.com/nvm-sh/nvm>`_.
+
+3. Install npm dependencies:
+
+   ``cd frontend-app-authn && npm install``
+
+4. Start the dev server:
+
+   ``npm run dev``
+
+The dev server defaults to ``PORT=1999 PUBLIC_PATH=/authn`` (set in the ``dev``
+script in ``package.json``) and is available at
+`http://apps.local.openedx.io:1999/authn <http://apps.local.openedx.io:1999/authn>`_.
+
+Configuration used by the dev server is defined in ``site.config.dev.tsx`` at
+the repo root.
+
+Local Development Against ``frontend-base``
+===========================================
+
+To develop this app and a local checkout of ``frontend-base`` in tandem, use the
+built-in npm workspace support:
+
+.. code-block:: sh
+
+    mkdir -p packages/frontend-base
+    sudo mount --bind /path/to/frontend-base packages/frontend-base
+    npm install
+    npm run dev:packages
+
+Bind mounts are used instead of symlinks because Node resolves symlinks to their
+real paths, which breaks hoisted dependency resolution.  When you are done,
+unmount with ``sudo umount packages/frontend-base``.
+
+Configuration
+=============
+
+This app is no longer configured by build-time environment variables.
+``getAppConfig`` resolves three sources, in order of increasing precedence: the
+app's bundled defaults, the site's ``commonAppConfig``, and the app's ``config``.
+The first is the app author's, at build time; the other two are the operator's,
+the second applying to every app on the site and the third to this app alone.  In
+edx-platform they arrive as ``MFE_CONFIG`` and ``MFE_CONFIG_OVERRIDES['authn']``
+respectively.
+
+The full list of keys and their defaults is the ``config`` block in
+``src/app.ts``.  Most are self-explanatory support links, logo URLs and branding
+strings.  The ones worth describing:
+
+.. list-table::
    :widths: 30 50 20
    :header-rows: 1
 
@@ -49,69 +149,51 @@ The authentication micro-frontend also requires the following additional variabl
      - Description / Usage
      - Example
 
-   * - ``LOGIN_ISSUE_SUPPORT_LINK``
-     - The fully-qualified URL to the login issue support page in the target environment.
-     - ``https://support.example.com``
-
-   * - ``ACTIVATION_EMAIL_SUPPORT_LINK``
-     - The fully-qualified URL to the activation email support page in the target environment.
-     - ``https://support.example.com``
-
-   * - ``PASSWORD_RESET_SUPPORT_LINK``
-     - The fully-qualified URL to the password reset support page in the target environment.
-     - ``https://support.example.com``
-
-   * - ``AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK``
-     - The fully-qualified URL to the progressive profiling support page in the target environment.
-     - ``https://support.example.com``
-
-   * - ``TOS_AND_HONOR_CODE``
-     - The fully-qualified URL to the Honor code page in the target environment.
-     - ``https://example.com/honor``
-
-   * - ``TOS_LINK``
-     - The fully-qualified URL to the Terms of service page in the target environment.
-     - ``https://example.com/tos``
-
-   * - ``PRIVACY_POLICY``
-     - The fully-qualified URL to the Privacy policy page in the target environment.
-     - ``https://example.com/privacy``
-
-   * - ``INFO_EMAIL``
-     - The valid email address for information query regarding the target environment.
-     - ``info@example.com``
-
-   * - ``ENABLE_DYNAMIC_REGISTRATION_FIELDS``
-     - Enables support for configurable registration fields on the MFE. This flag must be enabled to show any required registration field besides the default fields (name, email, username, password).
-     - ``true`` | ``''`` (empty strings are falsy)
-
-   * - ``ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN``
-     - Enables support for progressive profiling. If enabled, users are redirected to a second page where data for optional registration fields can be collected.
-     - ``true`` | ``''`` (empty strings are falsy)
+   * - ``ALLOW_PUBLIC_ACCOUNT_CREATION``
+     - Whether visitors may register themselves.  When false, the registration
+       page and the links to it are hidden.
+     - ``true``
 
    * - ``DISABLE_ENTERPRISE_LOGIN``
-     - Disables the enterprise login from Authn MFE.
-     - ``true`` | ``''`` (empty strings are falsy)
+     - Disables the enterprise login flow.
+     - ``true``
 
-   * - ``MFE_CONFIG_API_URL``
-     - Link of the API to get runtime mfe configuration variables from the site configuration or django settings.
-     - ``/api/v1/mfe_config`` | ``''`` (empty strings are falsy)  
+   * - ``ENABLE_AUTO_GENERATED_USERNAME``
+     - Generates the username from the registration form rather than asking for
+       one.
+     - ``false``
 
-   * - ``APP_ID``
-     - Name of MFE, this will be used by the API to get runtime configurations for the specific micro frontend. For a frontend repo `frontend-app-appName`, use `appName` as APP_ID.
-     - ``authn`` | ``''``
+   * - ``ENABLE_DYNAMIC_REGISTRATION_FIELDS``
+     - Enables configurable registration fields.  Must be enabled to show any
+       registration field besides the defaults (name, email, username,
+       password).
+     - ``false``
 
    * - ``ENABLE_IMAGE_LAYOUT``
-     - Enables the image layout feature within the authn. When set to True, this feature allows the inclusion of images in the base container layout. For more details on configuring this feature, please refer to the `Modifying base container <docs/how_tos/modifying_base_container.rst>`_.
-     - ``true`` | ``''`` (empty strings are falsy)
+     - Allows images in the base container layout.  See `Modifying base
+       container <docs/how_tos/modifying_base_container.rst>`_.
+     - ``false``
 
+   * - ``ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN``
+     - Enables progressive profiling.  If enabled, users are redirected to a
+       second page where data for optional registration fields is collected.
+     - ``false``
 
-edX-specific Environment Variables
-==================================
+   * - ``POST_REGISTRATION_REDIRECT_URL``
+     - Where to send a user after registration, overriding the default route.
+     - ``''``
 
-Furthermore, there are several edX-specific environment variables that enable integrations with closed-source services private to the edX organization, and might be unsupported in Open edX.
+   * - ``SHOW_REGISTRATION_LINKS``
+     - Whether to show links to the registration page from the other pages.
+     - ``true``
 
-.. list-table:: edX-specific Environment Variables
+edX-specific Configuration
+==========================
+
+The following key enables an integration with a closed-source service private to
+the edX organization, and might be unsupported in Open edX.
+
+.. list-table::
    :widths: 30 50 20
    :header-rows: 1
 
@@ -120,11 +202,9 @@ Furthermore, there are several edX-specific environment variables that enable in
      - Example
 
    * - ``MARKETING_EMAILS_OPT_IN``
-     - Enables support for opting in marketing emails that helps us getting user consent for sending marketing emails.
-     - ``true`` | ``''`` (empty strings are falsy)
-
-For more information see the document: `Micro-frontend applications in Open
-edX <https://github.com/overhangio/tutor-mfe?tab=readme-ov-file#mfe-development>`__.
+     - Enables opting in to marketing emails, to capture user consent for
+       sending them.
+     - ``''``
 
 How To Contribute
 =================
@@ -193,12 +273,22 @@ Please see `LICENSE <https://github.com/openedx/frontend-app-authn/blob/master/L
 
 ==============================
 
-.. |Build Status| image:: https://api.travis-ci.com/edx/frontend-app-authn.svg?branch=master
-   :target: https://travis-ci.com/edx/frontend-app-authn
-.. |Codecov| image:: https://img.shields.io/codecov/c/github/edx/frontend-app-authn
-   :target: https://codecov.io/gh/edx/frontend-app-authn
-.. |ci-badge| image:: https://github.com/openedx/edx-developer-docs/actions/workflows/ci.yml/badge.svg
-   :target: https://github.com/openedx/edx-developer-docs/actions/workflows/ci.yml
-   :alt: Continuous Integration
+
+.. |license-badge| image:: https://img.shields.io/github/license/openedx/frontend-app-authn.svg
+    :target: https://github.com/openedx/frontend-app-authn/blob/master/LICENSE
+    :alt: License
+
+.. |status-badge| image:: https://img.shields.io/badge/Status-Maintained-brightgreen
+    :alt: Maintained
+
+.. |ci-badge| image:: https://github.com/openedx/frontend-app-authn/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/openedx/frontend-app-authn/actions/workflows/ci.yml
+    :alt: Continuous Integration
+
+.. |codecov-badge| image:: https://codecov.io/github/openedx/frontend-app-authn/coverage.svg?branch=master
+    :target: https://codecov.io/github/openedx/frontend-app-authn?branch=master
+    :alt: Codecov
+
 .. |semantic-release| image:: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-   :target: https://github.com/semantic-release/semantic-release
+    :target: https://github.com/semantic-release/semantic-release
+    :alt: semantic-release
