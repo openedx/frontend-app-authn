@@ -2,11 +2,11 @@ name: autoupdate
 on:
   push:
     branches:
-      - master
+      - legacy-mfe
   pull_request:
     types: [ labeled ]  
     branches:
-      - master  
+      - legacy-mfe
 jobs:
   autoupdate:
     name: autoupdate
