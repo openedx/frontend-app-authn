@@ -12,7 +12,7 @@ metadata:
       icon: 'Article'
   annotations:
     openedx.org/arch-interest-groups: ""
-    openedx.org/release: "master"
+    openedx.org/release: "legacy-mfe"
 spec:
   owner: group:2u-infinity
   type: 'service'
