@@ -206,29 +206,77 @@ the edX organization, and might be unsupported in Open edX.
        sending them.
      - ``''``
 
-How To Contribute
+
+*****
+Slots
+*****
+
+This app offers slots for operators to customize its pages.  See `src/slots/`_
+for the current list and per-slot READMEs with usage examples.
+
+.. _src/slots/: ./src/slots/
+
+**********
+Developing
+**********
+
+Project Structure
 =================
 
-Contributions are very welcome, and strongly encouraged! We've
-put together `some documentation that describes our contribution process <https://docs.openedx.org/en/latest/developers/references/developer_guide/process/index.html>`_.
+The layout follows the standard `frontend-base app layout`_:
 
-Even though they were written with edx-platform in mind, the guidelines should be followed for Open edX code in general.
+- ``src/app.ts`` - the app definition imported by ``site.config.*.tsx``.
+- ``src/constants.ts`` - the app's ``appId`` and route role identifiers.
+- ``src/index.ts`` - the package's public exports (this is a library).
+- ``src/routes.jsx`` - the app's react-router routes.
+- ``src/Main.tsx`` - the root component for the app's routes.
+- ``src/provides.ts`` - what the app provides to the shell; here, the roles that
+  render its pages chromeless.
+- ``src/slots/`` - the slots this app offers to consumers.
+- ``src/style.scss`` and ``src/sass/`` - app-scoped runtime styles.
 
-PR description template should be automatically applied if you are sending PR from github interface; otherwise you
-can find it it at `PULL_REQUEST_TEMPLATE.md <https://github.com/openedx/frontend-app-authn/blob/master/.github/pull_request_template.md>`_
+Everything else under ``src/`` is a feature directory, one per page or shared
+concern, as described in `ADR 0002: feature based application organization
+<docs/decisions/0002-feature-based-application-organization.rst>`_.
 
-This project is currently accepting all types of contributions, bug fixes and security fixes.
+For more, see the `frontend-base migration how-to`_.
 
+.. _frontend-base app layout: https://github.com/openedx/frontend-base/blob/main/docs/how_tos/migrate-frontend-app.md#src-file-structure
+.. _frontend-base migration how-to: https://github.com/openedx/frontend-base/blob/main/docs/how_tos/migrate-frontend-app.md
+
+Build Process Notes
+===================
+
+**Library build**
+
+``npm run build`` compiles the library into ``dist/`` via ``tsc`` and
+``tsc-alias``, and copies the SCSS across.  This is what gets published and
+consumed by sites.
+
+**CI build**
+
+``npm run build:ci`` runs ``openedx build`` against ``site.config.ci.tsx`` so
+webpack traverses the full app graph.  This catches issues, such as broken
+lazy-loaded imports, that ``tsc`` and Jest would not surface.
+
+Internationalization
+====================
+
+Please refer to the `frontend-base i18n howto`_ for documentation on
+internationalization.
+
+.. _frontend-base i18n howto: https://github.com/openedx/frontend-base/blob/main/docs/how_tos/i18n.rst
+
+************
 Getting Help
-============
+************
 
 If you're having trouble, we have discussion forums at
 https://discuss.openedx.org where you can connect with others in the community.
 
-Our real-time conversations are on Slack. You can request a `Slack
-invitation`_, then join our `community Slack workspace`_.  Because this is a
-frontend repository, the best place to discuss it would be in the `#wg-frontend
-channel`_.
+Our real-time conversations are on Slack. You can request a `Slack invitation`_,
+then join our `community Slack workspace`_.  Because this is a frontend
+repository, the best place to discuss it would be in the `#wg-frontend channel`_.
 
 For anything non-trivial, the best path is to open an issue in this repository
 with as many details about the issue you are facing as you can provide.
@@ -240,39 +288,55 @@ For more information about these options, see the `Getting Help`_ page.
 .. _Slack invitation: https://openedx.org/slack
 .. _community Slack workspace: https://openedx.slack.com/
 .. _#wg-frontend channel: https://openedx.slack.com/archives/C04BM6YC7A6
-.. _Getting Help: https://openedx.org/community/connect
+.. _Getting Help: https://openedx.org/getting-help
 
+*******
+License
+*******
+
+The code in this repository is licensed under the AGPLv3 unless otherwise noted.
+
+Please see `LICENSE <LICENSE>`_ for details.
+
+************
+Contributing
+************
+
+Contributions are very welcome. Please read `How To Contribute`_ for details.
+
+.. _How To Contribute: https://openedx.org/r/how-to-contribute
+
+This project is currently accepting all types of contributions, bug fixes and
+security fixes.
+
+The PR description template should be applied automatically if you open the pull
+request from the GitHub interface; otherwise you can find it at
+`pull_request_template.md <.github/pull_request_template.md>`_.
+
+****************************
 The Open edX Code of Conduct
-============================
-All community members are expected to follow the `Open edX Code of Conduct <https://openedx.org/code-of-conduct/>`_.
+****************************
 
+All community members are expected to follow the `Open edX Code of Conduct`_.
+
+.. _Open edX Code of Conduct: https://openedx.org/code-of-conduct/
+
+******
 People
-======
+******
+
 The assigned maintainers for this component and other project details may be
-found in `Backstage <https://backstage.openedx.org/catalog/default/group/2u-infinity>`_. Backstage pulls this data from the ``catalog-info.yaml``
+found in `Backstage`_. Backstage pulls this data from the ``catalog-info.yaml``
 file in this repo.
 
+.. _Backstage: https://backstage.openedx.org/catalog/default/component/frontend-app-authn
+
+*************************
 Reporting Security Issues
-=========================
+*************************
 
-Please do not report security issues in public. Please email security@openedx.org.
-
-Known Issues
-============
-
-None
-
-License
-=======
-
-The code in this repository is licensed under the GNU Affero General Public License v3.0, unless
-otherwise noted.
-
-Please see `LICENSE <https://github.com/openedx/frontend-app-authn/blob/master/LICENSE>`_ for details.
-
-
-==============================
-
+Please do not report security issues in public, and email security@openedx.org
+instead.
 
 .. |license-badge| image:: https://img.shields.io/github/license/openedx/frontend-app-authn.svg
     :target: https://github.com/openedx/frontend-app-authn/blob/master/LICENSE
