@@ -17,7 +17,14 @@ const siteConfig: SiteConfig = {
     shellApp,
     headerApp,
     footerApp,
-    authnApp,
+    {
+      ...authnApp,
+      config: {
+        INFO_EMAIL: 'info@local.openedx.io',
+        MARKETING_SITE_BASE_URL: 'http://local.openedx.io',
+        SESSION_COOKIE_DOMAIN: 'local.openedx.io',
+      },
+    },
   ],
 };
 

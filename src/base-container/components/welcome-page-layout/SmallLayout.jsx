@@ -1,7 +1,7 @@
-import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
-import { Hyperlink, Image } from '@openedx/paragon';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 
+import BrandLogo from '../BrandLogo';
 import messages from './messages';
 
 const SmallLayout = ({ fullName }) => {
@@ -10,9 +10,7 @@ const SmallLayout = ({ fullName }) => {
   return (
     <div className="min-vw-100 bg-light-200">
       <div className="col-md-12 small-screen-top-stripe" />
-      <Hyperlink destination={useAppConfig().MARKETING_SITE_BASE_URL}>
-        <Image className="logo-small" alt={getSiteConfig().siteName} src={useAppConfig().LOGO_URL} />
-      </Hyperlink>
+      <BrandLogo className="logo-small" variant="default" />
       <div className="d-flex align-items-center m-3.5">
         <div className="small-yellow-line mt-4.5" />
         <div>

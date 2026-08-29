@@ -17,23 +17,24 @@ The base container supports two main versions:
 Enabling the Image Layout
 ---------------------------
 
-To activate the image layout feature, navigate to your .env file and update the configurations:
+The image layout is enabled through app configuration, not a ``.env`` file.  Set
+``ENABLE_IMAGE_LAYOUT`` to ``true`` and supply a banner image per breakpoint,
+either in edx-platform through ``MFE_CONFIG`` or directly on the app in a site
+config::
 
-**Update Configuration**
+    {
+      ...authnApp,
+      config: {
+        ENABLE_IMAGE_LAYOUT: true,
+        BANNER_IMAGE_EXTRA_SMALL: 'https://example.com/banner-xs.jpg',
+        BANNER_IMAGE_SMALL: 'https://example.com/banner-sm.jpg',
+        BANNER_IMAGE_MEDIUM: 'https://example.com/banner-md.jpg',
+        BANNER_IMAGE_LARGE: 'https://example.com/banner-lg.jpg',
+      },
+    }
 
-Locate the ``ENABLE_IMAGE_LAYOUT`` parameter and set its value to  ``true``. Additionally, ensure that the Image configuration settings are provided. Your overall configurations should resemble the following:
+Each banner is optional: where one is not set, that breakpoint falls back to a
+flat background rather than an image.
 
-
-   .. code-block::
-
-      # ***** Image Layout Configuration *****
-      ENABLE_IMAGE_LAYOUT = True  # Set to True to enable image layout feature
-
-      # ***** Base Container Images *****
-      BANNER_IMAGE_LARGE='' # Path to the large banner image
-      BANNER_IMAGE_MEDIUM='' # Path to the medium-sized banner image
-      BANNER_IMAGE_SMALL=''  # Path to the small banner image
-      BANNER_IMAGE_EXTRA_SMALL=''  # Path to the extra-small banner image
-
-
-This allows for the customization and adaptation of the base container layout according to specific requirements.
+This allows for the customization and adaptation of the base container layout
+according to specific requirements.

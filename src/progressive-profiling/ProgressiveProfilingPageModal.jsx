@@ -13,10 +13,12 @@ const ProgressiveProfilingPageModal = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (redirectUrl.startsWith('/')) {
-      navigate(redirectUrl);
+    // With no redirect configured, "continue to the platform" means the site itself.
+    const destination = redirectUrl || getSiteConfig().baseUrl;
+    if (destination.startsWith('/')) {
+      navigate(destination);
     } else {
-      window.location.href = redirectUrl;
+      window.location.href = destination;
     }
   };
 
@@ -52,11 +54,12 @@ const ProgressiveProfilingPageModal = (props) => {
 
 ProgressiveProfilingPageModal.propTypes = {
   isOpen: PropTypes.bool,
-  redirectUrl: PropTypes.string.isRequired,
+  redirectUrl: PropTypes.string,
 };
 
 ProgressiveProfilingPageModal.defaultProps = {
   isOpen: false,
+  redirectUrl: '',
 };
 
 export default ProgressiveProfilingPageModal;

@@ -114,7 +114,7 @@ const ProgressiveProfilingInner = () => {
         fields: welcomePageContext.fields,
         extendedProfile: welcomePageContext.extended_profile,
       });
-      const nextUrl = welcomePageContext.nextUrl ? welcomePageContext.nextUrl : appConfig.SEARCH_CATALOG_URL;
+      const nextUrl = welcomePageContext.nextUrl || appConfig.SEARCH_CATALOG_URL || '';
       setRegistrationResult({ redirectUrl: nextUrl });
     }
   }, [registrationEmbedded, welcomePageContext, appConfig.SEARCH_CATALOG_URL]);

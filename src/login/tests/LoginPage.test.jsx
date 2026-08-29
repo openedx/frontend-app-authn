@@ -253,7 +253,7 @@ describe('LoginPage', () => {
     )).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
@@ -318,7 +318,7 @@ describe('LoginPage', () => {
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
@@ -340,7 +340,7 @@ describe('LoginPage', () => {
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
@@ -364,7 +364,7 @@ describe('LoginPage', () => {
     expect(queryByText('Institution/campus credentials')).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
@@ -529,7 +529,7 @@ describe('LoginPage', () => {
     expect(container.querySelector(`#${ssoProvider.id}`).querySelector('#provider-name').textContent).toEqual(`${ssoProvider.name}`);
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 

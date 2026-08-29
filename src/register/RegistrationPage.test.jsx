@@ -237,7 +237,6 @@ describe('RegistrationPage', () => {
 
   describe('Test Registration Page', () => {
     mergeAppConfig(appId, {
-      SHOW_CONFIGURABLE_EDX_FIELDS: true,
       ENABLE_DYNAMIC_REGISTRATION_FIELDS: true,
     });
 
