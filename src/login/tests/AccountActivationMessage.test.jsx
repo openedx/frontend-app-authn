@@ -65,6 +65,21 @@ describe('AccountActivationMessage', () => {
     ).textContent).toBe(expectedMessage);
   });
 
+  it.each([
+    ['links to support when ACTIVATION_EMAIL_SUPPORT_LINK is set', 'https://support.example.com', 'https://support.example.com'],
+    ['names support as plain text when it is unset', '', null],
+  ])('%s', (_name, supportLink, expectedHref) => {
+    mergeAppConfig(appId, { ACTIVATION_EMAIL_SUPPORT_LINK: supportLink });
+
+    const { container } = render(providerWrapper(
+      <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
+    ));
+
+    expect(container.textContent).toContain('contact support');
+    const link = container.querySelector('#account-activation-message a');
+    expect(link && link.getAttribute('href')).toBe(expectedHref);
+  });
+
   it('should not display anything for invalid message type', () => {
     const { container } = render(providerWrapper(
       <AccountActivationMessage messageType="invalid-message" />

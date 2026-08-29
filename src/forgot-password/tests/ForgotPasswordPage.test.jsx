@@ -9,7 +9,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { appId, loginPath } from '../../constants';
 import {
-  FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR,
+  COMPLETE_STATE, FORBIDDEN_STATE, FORM_SUBMISSION_ERROR, INTERNAL_SERVER_ERROR,
 } from '../../data/constants';
 import { PASSWORD_RESET } from '../../reset-password/data/constants';
 import { useForgotPassword } from '../data/apiHook';
@@ -111,6 +111,23 @@ describe('ForgotPasswordPage', () => {
     render(renderWrapper(<ForgotPasswordPage />));
     const forgotPasswordButton = screen.findByText('Need help signing in?');
     expect(forgotPasswordButton).toBeDefined();
+  });
+
+  it('omits the support address when INFO_EMAIL is unset', () => {
+    mergeAppConfig(appId, { INFO_EMAIL: '' });
+    const { container } = render(renderWrapper(<ForgotPasswordPage />));
+
+    expect(container.textContent).not.toContain('For additional help');
+    expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
+  });
+
+  it('offers the support address when INFO_EMAIL is set', () => {
+    mergeAppConfig(appId, { INFO_EMAIL: 'help@example.com' });
+    const { container } = render(renderWrapper(<ForgotPasswordPage />));
+
+    expect(container.textContent).toContain('For additional help');
+    expect(container.querySelector('a[href="mailto:help@example.com"]').textContent)
+      .toBe('help@example.com');
   });
 
   it('should display email validation error message', async () => {
@@ -356,6 +373,24 @@ describe('ForgotPasswordAlert', () => {
       </QueryClientProvider>,
     );
   };
+
+  it.each([
+    ['links to support when PASSWORD_RESET_SUPPORT_LINK is set', 'https://support.example.com', 'https://support.example.com'],
+    ['names support as plain text when it is unset', '', null],
+  ])('%s', (_name, supportLink, expectedHref) => {
+    mergeAppConfig(appId, { PASSWORD_RESET_SUPPORT_LINK: supportLink });
+
+    const { container } = renderAlertWrapper({
+      status: COMPLETE_STATE,
+      email: 'test@example.com',
+      emailError: '',
+    });
+
+    const alertText = container.querySelector('.alert').textContent;
+    expect(alertText).toContain('contact technical support');
+    const link = container.querySelector('.alert a');
+    expect(link && link.getAttribute('href')).toBe(expectedHref);
+  });
 
   it('should display internal server error message', () => {
     const { container } = renderAlertWrapper({
