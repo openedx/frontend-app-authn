@@ -4,37 +4,37 @@ import { useMutation } from '@tanstack/react-query';
 import { resetPassword, validateToken } from './api';
 
 interface ResetPasswordPayload {
-  formPayload: Record<string, string | boolean>,
-  token: string,
-  params: Record<string, string | boolean>,
+  formPayload: Record<string, string | boolean>;
+  token: string;
+  params: Record<string, string | boolean>;
 }
 
 interface TokenValidationResult {
-  is_valid: boolean,
-  token: string,
+  is_valid: boolean;
+  token: string;
 }
 
 interface ResetPasswordResult {
-  reset_status: boolean,
-  err_msg?: Record<string, string[]>,
-  token_invalid?: boolean,
+  reset_status: boolean;
+  err_msg?: Record<string, string[]>;
+  token_invalid?: boolean;
 }
 
 interface UseValidateTokenOptions {
-  onSuccess?: (data: TokenValidationResult) => void,
-  onError?: (error: Error) => void,
+  onSuccess?: (data: TokenValidationResult) => void;
+  onError?: (error: Error) => void;
 }
 
 interface UseResetPasswordOptions {
-  onSuccess?: (data: ResetPasswordResult) => void,
-  onError?: (error: Error) => void,
+  onSuccess?: (data: ResetPasswordResult) => void;
+  onError?: (error: Error) => void;
 }
 
 interface ApiError extends Error {
   response?: {
-    status: number,
-    data: Record<string, unknown>,
-  },
+    status: number;
+    data: Record<string, unknown>;
+  };
 }
 
 const useValidateToken = (options: UseValidateTokenOptions = {}) => useMutation({

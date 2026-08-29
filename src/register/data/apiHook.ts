@@ -7,34 +7,34 @@ import { INTERNAL_SERVER_ERROR } from './constants';
 type RegistrationPayload = Record<string, unknown>;
 
 interface AuthenticatedUser {
-  username: string,
-  full_name: string,
-  user_id: number,
+  username: string;
+  full_name: string;
+  user_id: number;
 }
 
 interface RegistrationResponse {
-  redirectUrl: string,
-  success: boolean,
-  authenticatedUser: AuthenticatedUser,
+  redirectUrl: string;
+  success: boolean;
+  authenticatedUser: AuthenticatedUser;
 }
 
 interface UseRegistrationOptions {
-  onSuccess?: (data: RegistrationResponse) => void,
-  onError?: (error: unknown) => void,
+  onSuccess?: (data: RegistrationResponse) => void;
+  onError?: (error: unknown) => void;
 }
 
 interface ApiError extends Error {
   response?: {
-    status: number,
-    data?: unknown,
-  },
+    status: number;
+    data?: unknown;
+  };
 }
 
 type FieldValidationsPayload = Record<string, unknown>;
 
 interface UseFieldValidationsOptions {
-  onSuccess?: (data: unknown) => void,
-  onError?: (error: unknown) => void,
+  onSuccess?: (data: unknown) => void;
+  onError?: (error: unknown) => void;
 }
 
 const useRegistration = (options: UseRegistrationOptions = {}) => useMutation({

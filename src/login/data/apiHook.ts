@@ -6,17 +6,17 @@ import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
 
 // Type definitions
 interface LoginData {
-  email_or_username: string,
-  password: string,
+  email_or_username: string;
+  password: string;
 }
 
 interface LoginResponse {
-  redirectUrl?: string,
+  redirectUrl?: string;
 }
 
 interface UseLoginOptions {
-  onSuccess?: (data: LoginResponse) => void,
-  onError?: (error: unknown) => void,
+  onSuccess?: (data: LoginResponse) => void;
+  onError?: (error: unknown) => void;
 }
 
 const useLogin = (options: UseLoginOptions = {}) => useMutation<LoginResponse, unknown, LoginData>({
@@ -35,10 +35,10 @@ const useLogin = (options: UseLoginOptions = {}) => useMutation<LoginResponse, u
       count: 0,
     };
     if (error && typeof error === 'object' && 'response' in error && error.response) {
-      const response = error.response as { status?: number, data?: unknown };
+      const response = error.response as { status?: number; data?: unknown };
       const { status, data } = camelCaseObject(response);
       if (data && typeof data === 'object') {
-        const errorData = data as { errorCode?: string, context?: { failureCount?: number } };
+        const errorData = data as { errorCode?: string; context?: { failureCount?: number } };
         formattedError = {
           type: errorData.errorCode || FORBIDDEN_REQUEST,
           context: errorData.context || {},

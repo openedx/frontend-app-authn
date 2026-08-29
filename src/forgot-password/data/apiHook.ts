@@ -4,20 +4,20 @@ import { useMutation } from '@tanstack/react-query';
 import { forgotPassword } from './api';
 
 interface ForgotPasswordResult {
-  success: boolean,
-  message?: string,
+  success: boolean;
+  message?: string;
 }
 
 interface UseForgotPasswordOptions {
-  onSuccess?: (data: ForgotPasswordResult, email: string) => void,
-  onError?: (error: Error) => void,
+  onSuccess?: (data: ForgotPasswordResult, email: string) => void;
+  onError?: (error: Error) => void;
 }
 
 interface ApiError extends Error {
   response?: {
-    status: number,
-    data: Record<string, unknown>,
-  },
+    status: number;
+    data: Record<string, unknown>;
+  };
 }
 
 const useForgotPassword = (options: UseForgotPasswordOptions = {}) => useMutation({

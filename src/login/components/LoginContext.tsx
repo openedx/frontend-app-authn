@@ -3,26 +3,26 @@ import {
 } from 'react';
 
 export interface FormFields {
-  emailOrUsername: string,
-  password: string,
+  emailOrUsername: string;
+  password: string;
 }
 
 export interface FormErrors {
-  emailOrUsername: string,
-  password: string,
+  emailOrUsername: string;
+  password: string;
 }
 
 interface LoginContextType {
-  formFields: FormFields,
-  setFormFields: Dispatch<SetStateAction<FormFields>>,
-  errors: FormErrors,
-  setErrors: Dispatch<SetStateAction<FormErrors>>,
+  formFields: FormFields;
+  setFormFields: Dispatch<SetStateAction<FormFields>>;
+  errors: FormErrors;
+  setErrors: Dispatch<SetStateAction<FormErrors>>;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
 
 interface LoginProviderProps {
-  children: ReactNode,
+  children: ReactNode;
 }
 
 export const LoginProvider: FC<LoginProviderProps> = ({ children }) => {
