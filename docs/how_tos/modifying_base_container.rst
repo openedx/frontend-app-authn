@@ -19,8 +19,8 @@ Enabling the Image Layout
 
 The image layout is enabled through app configuration, not a ``.env`` file.  Set
 ``ENABLE_IMAGE_LAYOUT`` to ``true`` and supply a banner image per breakpoint,
-either in edx-platform through ``MFE_CONFIG`` or directly on the app in a site
-config::
+either in edx-platform through ``FRONTEND_SITE_CONFIG`` or directly on the app in
+a site config::
 
     {
       ...authnApp,

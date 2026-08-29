@@ -134,24 +134,11 @@ This app is no longer configured by build-time environment variables.
 app's bundled ``defaultConfig``, the site's ``commonAppConfig``, and the app's
 ``config``.  The first is the app author's, at build time; the other two are the
 operator's, the second applying to every app on the site and the third to this
-app alone.  In edx-platform they arrive as ``MFE_CONFIG`` and
-``MFE_CONFIG_OVERRIDES['authn']`` respectively.
+app alone.
 
 Authn bundles three defaults, in ``src/app.ts``:
 ``DISABLE_ENTERPRISE_LOGIN``, ``LOGO_URL`` and ``LOGO_WHITE_URL``.  Every other
-field below is supplied by the operator or not at all, and the app handles
-absence at the point of use.  Because the bundled defaults live in their own
-field, overriding a value no longer means spreading the app's existing config
-back in::
-
-    {
-      ...authnApp,
-      config: {
-        MARKETING_SITE_BASE_URL: 'https://example.com',
-      },
-    }
-
-The fields the app reads, which are its full configuration surface:
+field below is supplied by the operator.
 
 .. list-table::
    :widths: 30 70
