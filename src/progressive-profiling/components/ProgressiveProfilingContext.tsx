@@ -5,21 +5,21 @@ import {
 } from '../../data/constants';
 
 interface ProgressiveProfilingContextType {
-  isLoading: boolean,
-  showError: boolean,
-  success: boolean,
-  submitState?: string,
-  setLoading: (loading: boolean) => void,
-  setShowError: (showError: boolean) => void,
-  setSuccess: (success: boolean) => void,
-  setSubmitState: (state: string) => void,
-  clearState: () => void,
+  isLoading: boolean;
+  showError: boolean;
+  success: boolean;
+  submitState?: string;
+  setLoading: (loading: boolean) => void;
+  setShowError: (showError: boolean) => void;
+  setSuccess: (success: boolean) => void;
+  setSubmitState: (state: string) => void;
+  clearState: () => void;
 }
 
 const ProgressiveProfilingContext = createContext<ProgressiveProfilingContextType | undefined>(undefined);
 
 interface ProgressiveProfilingProviderProps {
-  children: ReactNode,
+  children: ReactNode;
 }
 
 export const ProgressiveProfilingProvider: FC<ProgressiveProfilingProviderProps> = ({ children }) => {

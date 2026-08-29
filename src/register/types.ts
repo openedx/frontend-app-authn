@@ -1,75 +1,75 @@
 export interface AuthenticatedUser {
-  id: number,
-  username: string,
-  email: string,
-  name: string,
+  id: number;
+  username: string;
+  email: string;
+  name: string;
 }
 
 export interface EmailSuggestion {
-  suggestion: string,
-  type: string,
+  suggestion: string;
+  type: string;
 }
 
 export interface RegistrationFormData {
   configurableFormFields: {
-    marketingEmailsOptIn: boolean,
-    country?: string,
-    [key: string]: any,
-  },
+    marketingEmailsOptIn: boolean;
+    country?: string;
+    [key: string]: any;
+  };
   formFields: {
-    name: string,
-    email: string,
-    username: string,
-    password: string,
-  },
-  emailSuggestion: EmailSuggestion,
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+  };
+  emailSuggestion: EmailSuggestion;
   errors: {
-    name: string,
-    email: string,
-    username: string,
-    password: string,
-  },
+    name: string;
+    email: string;
+    username: string;
+    password: string;
+  };
 }
 
 export interface RegistrationResult {
-  success: boolean,
-  redirectUrl: string,
-  authenticatedUser: AuthenticatedUser | null,
+  success: boolean;
+  redirectUrl: string;
+  authenticatedUser: AuthenticatedUser | null;
 }
 
 export interface ValidationData {
-  validationDecisions: Record<string, string>,
-  usernameSuggestions?: string[],
+  validationDecisions: Record<string, string>;
+  usernameSuggestions?: string[];
 }
 
 export interface RegisterContextType {
-  validations: ValidationData | null,
-  usernameSuggestions: string[],
-  validationApiRateLimited: boolean,
-  registrationError: Record<string, { userMessage: string }[]>,
-  registrationFormData: RegistrationFormData,
-  backendValidations: Record<string, string> | null,
-  registrationResult: RegistrationResult,
-  backendCountryCode: string,
-  setValidationsSuccess: (validationData: ValidationData) => void,
-  setValidationsFailure: () => void,
-  clearUsernameSuggestions: () => void,
-  clearRegistrationBackendError: (field: string) => void,
-  updateRegistrationFormData: (newData: Partial<RegistrationFormData>) => void,
-  setRegistrationResult: (result: RegistrationResult) => void,
-  setBackendCountryCode: (countryCode: string) => void,
+  validations: ValidationData | null;
+  usernameSuggestions: string[];
+  validationApiRateLimited: boolean;
+  registrationError: Record<string, { userMessage: string }[]>;
+  registrationFormData: RegistrationFormData;
+  backendValidations: Record<string, string> | null;
+  registrationResult: RegistrationResult;
+  backendCountryCode: string;
+  setValidationsSuccess: (validationData: ValidationData) => void;
+  setValidationsFailure: () => void;
+  clearUsernameSuggestions: () => void;
+  clearRegistrationBackendError: (field: string) => void;
+  updateRegistrationFormData: (newData: Partial<RegistrationFormData>) => void;
+  setRegistrationResult: (result: RegistrationResult) => void;
+  setBackendCountryCode: (countryCode: string) => void;
   setRegistrationFormData: (data: RegistrationFormData |
-    ((prev: RegistrationFormData) => RegistrationFormData)) => void,
-  setEmailSuggestionContext: (suggestion: string, type: string) => void,
-  setRegistrationError: (error: Record<string, { userMessage: string }[]>) => void,
+    ((prev: RegistrationFormData) => RegistrationFormData)) => void;
+  setEmailSuggestionContext: (suggestion: string, type: string) => void;
+  setRegistrationError: (error: Record<string, { userMessage: string }[]>) => void;
 }
 
 export interface RegisterState {
-  validations: ValidationData | null,
-  usernameSuggestions: string[],
-  validationApiRateLimited: boolean,
-  registrationError: Record<string, { userMessage: string }[]>,
-  registrationResult: RegistrationResult,
-  backendCountryCode: string,
-  registrationFormData: RegistrationFormData,
+  validations: ValidationData | null;
+  usernameSuggestions: string[];
+  validationApiRateLimited: boolean;
+  registrationError: Record<string, { userMessage: string }[]>;
+  registrationResult: RegistrationResult;
+  backendCountryCode: string;
+  registrationFormData: RegistrationFormData;
 }

@@ -5,34 +5,34 @@ import {
 import { COMPLETE_STATE, FAILURE_STATE, PENDING_STATE } from '../../data/constants';
 
 interface ThirdPartyAuthContextType {
-  fieldDescriptions: any,
+  fieldDescriptions: any;
   optionalFields: {
-    fields: any,
-    extended_profile: any[],
-  },
-  thirdPartyAuthApiStatus: string | null,
+    fields: any;
+    extended_profile: any[];
+  };
+  thirdPartyAuthApiStatus: string | null;
   thirdPartyAuthContext: {
-    platformName: string | null,
-    autoSubmitRegForm: boolean,
-    currentProvider: string | null,
-    finishAuthUrl: string | null,
-    countryCode: string | null,
-    providers: any[],
-    secondaryProviders: any[],
-    pipelineUserDetails: any | null,
-    errorMessage: string | null,
-    welcomePageRedirectUrl: string | null,
-  },
-  setThirdPartyAuthContextBegin: () => void,
-  setThirdPartyAuthContextSuccess: (fieldDescData: any, optionalFieldsData: any, contextData: any) => void,
-  setThirdPartyAuthContextFailure: () => void,
-  clearThirdPartyAuthErrorMessage: () => void,
+    platformName: string | null;
+    autoSubmitRegForm: boolean;
+    currentProvider: string | null;
+    finishAuthUrl: string | null;
+    countryCode: string | null;
+    providers: any[];
+    secondaryProviders: any[];
+    pipelineUserDetails: any | null;
+    errorMessage: string | null;
+    welcomePageRedirectUrl: string | null;
+  };
+  setThirdPartyAuthContextBegin: () => void;
+  setThirdPartyAuthContextSuccess: (fieldDescData: any, optionalFieldsData: any, contextData: any) => void;
+  setThirdPartyAuthContextFailure: () => void;
+  clearThirdPartyAuthErrorMessage: () => void;
 }
 
 const ThirdPartyAuthContext = createContext<ThirdPartyAuthContextType | undefined>(undefined);
 
 interface ThirdPartyAuthProviderProps {
-  children: ReactNode,
+  children: ReactNode;
 }
 
 export const ThirdPartyAuthProvider: FC<ThirdPartyAuthProviderProps> = ({ children }) => {

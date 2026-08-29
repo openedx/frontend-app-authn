@@ -92,7 +92,7 @@ const registerReducer = (state: RegisterState, action: any): RegisterState => {
 };
 
 interface RegisterProviderProps {
-  children: ReactNode,
+  children: ReactNode;
 }
 
 export const RegisterProvider: FC<RegisterProviderProps> = ({ children }) => {

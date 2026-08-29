@@ -7,13 +7,13 @@ import {
 import { useProgressiveProfilingContext } from '../components/ProgressiveProfilingContext';
 
 interface SaveUserProfilePayload {
-  username: string,
-  data: Record<string, any>,
+  username: string;
+  data: Record<string, any>;
 }
 
 interface UseSaveUserProfileOptions {
-  onSuccess?: () => void,
-  onError?: (error: unknown) => void,
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
 }
 
 const useSaveUserProfile = (options: UseSaveUserProfileOptions = {}) => {
