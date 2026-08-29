@@ -88,10 +88,6 @@ describe('CountryField', () => {
   });
 
   describe('Test Country Field', () => {
-    mergeAppConfig(appId, {
-      SHOW_CONFIGURABLE_EDX_FIELDS: true,
-    });
-
     const emptyFieldValidation = {
       country: 'Select your country or region of residence',
     };

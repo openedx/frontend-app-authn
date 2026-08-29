@@ -131,61 +131,118 @@ Configuration
 
 This app is no longer configured by build-time environment variables.
 ``getAppConfig`` resolves three sources, in order of increasing precedence: the
-app's bundled defaults, the site's ``commonAppConfig``, and the app's ``config``.
-The first is the app author's, at build time; the other two are the operator's,
-the second applying to every app on the site and the third to this app alone.  In
-edx-platform they arrive as ``MFE_CONFIG`` and ``MFE_CONFIG_OVERRIDES['authn']``
-respectively.
+app's bundled ``defaultConfig``, the site's ``commonAppConfig``, and the app's
+``config``.  The first is the app author's, at build time; the other two are the
+operator's, the second applying to every app on the site and the third to this
+app alone.  In edx-platform they arrive as ``MFE_CONFIG`` and
+``MFE_CONFIG_OVERRIDES['authn']`` respectively.
 
-The full list of keys and their defaults is the ``config`` block in
-``src/app.ts``.  Most are self-explanatory support links, logo URLs and branding
-strings.  The ones worth describing:
+Authn bundles three defaults, in ``src/app.ts``:
+``DISABLE_ENTERPRISE_LOGIN``, ``LOGO_URL`` and ``LOGO_WHITE_URL``.  Every other
+field below is supplied by the operator or not at all, and the app handles
+absence at the point of use.  Because the bundled defaults live in their own
+field, overriding a value no longer means spreading the app's existing config
+back in::
+
+    {
+      ...authnApp,
+      config: {
+        MARKETING_SITE_BASE_URL: 'https://example.com',
+      },
+    }
+
+The fields the app reads, which are its full configuration surface:
 
 .. list-table::
-   :widths: 30 50 20
+   :widths: 30 70
    :header-rows: 1
 
    * - Name
      - Description / Usage
-     - Example
+
+   * - ``ACTIVATION_EMAIL_SUPPORT_LINK``
+     - Support page linked from the account-activation error message.  Unset,
+       the message names support as plain text rather than a link.
 
    * - ``ALLOW_PUBLIC_ACCOUNT_CREATION``
-     - Whether visitors may register themselves.  When false, the registration
-       page and the links to it are hidden.
-     - ``true``
+     - Whether visitors may register themselves.  Set it to ``false`` to hide
+       the registration page and the links to it; visitors may register
+       otherwise.
+
+   * - ``AUTHN_PROGRESSIVE_PROFILING_SUPPORT_LINK``
+     - Support page linked from the progressive-profiling form.  Not rendered
+       when unset.
+
+   * - ``BANNER_IMAGE_EXTRA_SMALL``, ``BANNER_IMAGE_SMALL``,
+       ``BANNER_IMAGE_MEDIUM``, ``BANNER_IMAGE_LARGE``
+     - Banner images for the image layout, one per breakpoint.  Where one is
+       unset the banner falls back to a flat background.  Only used when
+       ``ENABLE_IMAGE_LAYOUT`` is on.
 
    * - ``DISABLE_ENTERPRISE_LOGIN``
-     - Disables the enterprise login flow.
-     - ``true``
+     - Disables the enterprise login flow.  Bundled as ``true``; set it to
+       ``false`` to offer enterprise login.
 
    * - ``ENABLE_AUTO_GENERATED_USERNAME``
      - Generates the username from the registration form rather than asking for
        one.
-     - ``false``
 
    * - ``ENABLE_DYNAMIC_REGISTRATION_FIELDS``
      - Enables configurable registration fields.  Must be enabled to show any
        registration field besides the defaults (name, email, username,
        password).
-     - ``false``
 
    * - ``ENABLE_IMAGE_LAYOUT``
      - Allows images in the base container layout.  See `Modifying base
        container <docs/how_tos/modifying_base_container.rst>`_.
-     - ``false``
 
    * - ``ENABLE_PROGRESSIVE_PROFILING_ON_AUTHN``
      - Enables progressive profiling.  If enabled, users are redirected to a
        second page where data for optional registration fields is collected.
-     - ``false``
+
+   * - ``INFO_EMAIL``
+     - Support address offered on the forgot-password page.  The sentence
+       offering it is omitted when unset.
+
+   * - ``LOGIN_ISSUE_SUPPORT_LINK``
+     - Support page linked from the forgot-password form.  Not rendered when
+       unset.
+
+   * - ``LOGO_URL``, ``LOGO_WHITE_URL``
+     - The site logo, in its regular and light-on-dark forms.  Both are bundled
+       with the same default frontend-base uses for the shell header.
+
+   * - ``MARKETING_SITE_BASE_URL``
+     - Marketing site the logo links to.  The logo renders unlinked when unset.
+
+   * - ``PASSWORD_RESET_SUPPORT_LINK``
+     - Support page linked from the password-reset confirmation.  Unset, the
+       message names support as plain text rather than a link.
 
    * - ``POST_REGISTRATION_REDIRECT_URL``
-     - Where to send a user after registration, overriding the default route.
-     - ``''``
+     - Where to send a user after registration, sent to the host page in the
+       embedded-registration flow.
+
+   * - ``PRIVACY_POLICY``, ``TOS_LINK``, ``TOS_AND_HONOR_CODE``
+     - Destinations for the privacy-policy, terms-of-service and honor-code
+       links on the registration form.  Each falls back to ``#`` when unset, so
+       a site collecting agreement to them should set them.
+
+   * - ``SEARCH_CATALOG_URL``
+     - Where to send a learner who finishes progressive profiling with no
+       ``nextUrl`` from the backend.  Falls back to the site itself.
+
+   * - ``SESSION_COOKIE_DOMAIN``
+     - Domain the cookies this app sets are scoped to.  Unset, they are scoped
+       to the host that served the page.
 
    * - ``SHOW_REGISTRATION_LINKS``
-     - Whether to show links to the registration page from the other pages.
-     - ``true``
+     - Whether to show links to the registration page from the other pages.  Set
+       it to ``false`` to hide them; they are shown otherwise.
+
+   * - ``USER_RETENTION_COOKIE_NAME``
+     - Name of the cookie set on successful registration.  No cookie is set when
+       unset.
 
 edX-specific Configuration
 ==========================
@@ -194,17 +251,15 @@ The following key enables an integration with a closed-source service private to
 the edX organization, and might be unsupported in Open edX.
 
 .. list-table::
-   :widths: 30 50 20
+   :widths: 30 70
    :header-rows: 1
 
    * - Name
      - Description / Usage
-     - Example
 
    * - ``MARKETING_EMAILS_OPT_IN``
      - Enables opting in to marketing emails, to capture user consent for
        sending them.
-     - ``''``
 
 
 *****

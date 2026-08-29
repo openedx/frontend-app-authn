@@ -165,12 +165,14 @@ const ForgotPasswordPage = () => {
                 {formatMessage(messages['need.help.sign.in.text'])}
               </Hyperlink>
             )}
-            <p className="mt-5.5 small text-gray-700">
-              {formatMessage(messages['additional.help.text'], { platformName })}
-              <span className="mx-1">
-                <Hyperlink isInline destination={`mailto:${appConfig.INFO_EMAIL}`}>{appConfig.INFO_EMAIL}</Hyperlink>
-              </span>
-            </p>
+            {(appConfig.INFO_EMAIL) && (
+              <p className="mt-5.5 small text-gray-700">
+                {formatMessage(messages['additional.help.text'], { platformName })}
+                <span className="mx-1">
+                  <Hyperlink isInline destination={`mailto:${appConfig.INFO_EMAIL}`}>{appConfig.INFO_EMAIL}</Hyperlink>
+                </span>
+              </p>
+            )}
           </Form>
         </div>
       </div>

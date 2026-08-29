@@ -279,9 +279,6 @@ describe('ConfigurableRegistrationForm', () => {
     });
 
     it('should submit form with fields returned by backend in payload', () => {
-      mergeAppConfig(appId, {
-        SHOW_CONFIGURABLE_EDX_FIELDS: true,
-      });
       getLocale.mockImplementation(() => ('en-us'));
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       useThirdPartyAuthContext.mockReturnValue({

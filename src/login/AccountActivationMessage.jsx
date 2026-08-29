@@ -33,11 +33,15 @@ const AccountActivationMessage = ({ messageType }) => {
       break;
     }
     case ACCOUNT_ACTIVATION_MESSAGE.ERROR: {
-      const supportLink = (
-        <Alert.Link href={useAppConfig().ACTIVATION_EMAIL_SUPPORT_LINK}>
-          {formatMessage(messages['account.activation.support.link'])}
+      // Without a support link configured there is nowhere to point; the sentence
+      // still reads correctly with the phrase as plain text.
+      const activationEmailSupportLink = useAppConfig().ACTIVATION_EMAIL_SUPPORT_LINK;
+      const supportLinkText = formatMessage(messages['account.activation.support.link']);
+      const supportLink = activationEmailSupportLink ? (
+        <Alert.Link href={activationEmailSupportLink}>
+          {supportLinkText}
         </Alert.Link>
-      );
+      ) : supportLinkText;
 
       heading = formatMessage(messages[`account.${activationOrConfirmation}.error.message.title`]);
       activationMessage = (

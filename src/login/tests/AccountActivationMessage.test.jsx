@@ -18,7 +18,7 @@ const providerWrapper = children => (
 
 describe('AccountActivationMessage', () => {
   beforeEach(() => {
-    mergeAppConfig({
+    mergeAppConfig(appId, {
       MARKETING_EMAILS_OPT_IN: '',
     });
   });
@@ -77,8 +77,8 @@ describe('AccountActivationMessage', () => {
 
 describe('EmailConfirmationMessage', () => {
   beforeEach(() => {
-    mergeAppConfig({
-      MARKETING_EMAILS_OPT_IN: 'true',
+    mergeAppConfig(appId, {
+      MARKETING_EMAILS_OPT_IN: true,
     });
   });
 
@@ -87,7 +87,7 @@ describe('EmailConfirmationMessage', () => {
       <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.INFO} />
     ));
 
-    const expectedMessage = 'This account has already been activated.';
+    const expectedMessage = 'This email has already been confirmed.';
 
     expect(screen.getByText(
       '',
@@ -99,7 +99,7 @@ describe('EmailConfirmationMessage', () => {
     render(providerWrapper(
       <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.SUCCESS} />
     ));
-    const expectedMessage = 'Success! You have activated your account.You will now receive email updates and alerts from us related to the courses you are enrolled in. Sign in to continue.';
+    const expectedMessage = 'Success! You have confirmed your email.Sign in to continue.';
 
     expect(screen.getByText(
       '',
@@ -111,7 +111,7 @@ describe('EmailConfirmationMessage', () => {
     render(providerWrapper(
       <AccountActivationMessage messageType={ACCOUNT_ACTIVATION_MESSAGE.ERROR} />
     ));
-    const expectedMessage = 'Your account could not be activated'
+    const expectedMessage = 'Your email could not be confirmed'
       + 'Something went wrong, please contact support to resolve this issue.';
     expect(screen.getByText(
       '',

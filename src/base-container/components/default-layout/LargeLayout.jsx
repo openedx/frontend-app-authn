@@ -1,7 +1,7 @@
-import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
-import { Hyperlink, Image } from '@openedx/paragon';
+import { getSiteConfig, useIntl } from '@openedx/frontend-base';
 import classNames from 'classnames';
 
+import BrandLogo from '../BrandLogo';
 import messages from './messages';
 
 const LargeLayout = () => {
@@ -10,9 +10,7 @@ const LargeLayout = () => {
   return (
     <div className="w-50 d-flex">
       <div className="col-md-9 bg-primary-400">
-        <Hyperlink destination={useAppConfig().MARKETING_SITE_BASE_URL}>
-          <Image className="logo position-absolute" alt={getSiteConfig().siteName} src={useAppConfig().LOGO_WHITE_URL} />
-        </Hyperlink>
+        <BrandLogo className="logo position-absolute" />
         <div className="min-vh-100 d-flex align-items-center">
           <div className={classNames({ 'large-yellow-line mr-n4.5': getSiteConfig().siteName === 'edX' })} />
           <h1

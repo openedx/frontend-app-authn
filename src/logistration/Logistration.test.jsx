@@ -161,8 +161,8 @@ describe('Logistration', () => {
   it('should render only login page when public account creation is disabled', () => {
     mergeAppConfig(appId, {
       ALLOW_PUBLIC_ACCOUNT_CREATION: false,
-      DISABLE_ENTERPRISE_LOGIN: 'true',
-      SHOW_REGISTRATION_LINKS: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
+      SHOW_REGISTRATION_LINKS: true,
     });
 
     const props = { selectedPage: loginPath };
@@ -178,8 +178,8 @@ describe('Logistration', () => {
 
   it('should display institution login option when secondary providers are present', () => {
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: 'true',
-      ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
+      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
     // Update the mock to include secondary providers
@@ -206,13 +206,13 @@ describe('Logistration', () => {
     expect(screen.getByText('Test University')).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
   it('send tracking and page events when institutional login button is clicked', () => {
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
     });
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
@@ -237,13 +237,13 @@ describe('Logistration', () => {
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
   it('should not display institution register button', () => {
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
     });
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
@@ -268,7 +268,7 @@ describe('Logistration', () => {
     expect(screen.getByText('Test University')).toBeDefined();
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
@@ -301,8 +301,8 @@ describe('Logistration', () => {
 
   it('should send correct page events for login and register when handling institution login', () => {
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: 'true',
-      ALLOW_PUBLIC_ACCOUNT_CREATION: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
+      ALLOW_PUBLIC_ACCOUNT_CREATION: true,
     });
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
@@ -331,13 +331,13 @@ describe('Logistration', () => {
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 
   it('should handle institution login with string parameters correctly', () => {
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: 'true',
+      DISABLE_ENTERPRISE_LOGIN: true,
     });
 
     const { useThirdPartyAuthContext } = require('../common-components/components/ThirdPartyAuthContext.tsx');
@@ -361,7 +361,7 @@ describe('Logistration', () => {
     expect(sendPageEvent).toHaveBeenCalledWith('login_and_registration', 'institution_login');
 
     mergeAppConfig(appId, {
-      DISABLE_ENTERPRISE_LOGIN: '',
+      DISABLE_ENTERPRISE_LOGIN: false,
     });
   });
 });

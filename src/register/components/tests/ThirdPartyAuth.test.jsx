@@ -197,9 +197,6 @@ describe('ThirdPartyAuth', () => {
   };
 
   describe('Test Third Party Auth', () => {
-    mergeAppConfig(appId, {
-      SHOW_CONFIGURABLE_EDX_FIELDS: true,
-    });
     getLocale.mockImplementation(() => ('en-us'));
 
     const secondaryProviders = {

@@ -12,6 +12,10 @@ import messages from './messages';
 const ForgotPasswordAlert = (props) => {
   const { formatMessage } = useIntl();
   const { email, emailError } = props;
+  // Without a support link configured there is nowhere to point; the sentence still
+  // reads correctly with the phrase as plain text.
+  const passwordResetSupportLink = useAppConfig().PASSWORD_RESET_SUPPORT_LINK;
+  const supportLinkText = formatMessage(messages['confirmation.support.link']);
   let message = '';
   let heading = formatMessage(messages['forgot.password.error.alert.title']);
   let { status } = props;
@@ -32,11 +36,11 @@ const ForgotPasswordAlert = (props) => {
           description="Forgot password confirmation message"
           values={{
             email: <span className="data-hj-suppress">{email}</span>,
-            supportLink: (
-              <Alert.Link href={useAppConfig().PASSWORD_RESET_SUPPORT_LINK} target="_blank">
-                {formatMessage(messages['confirmation.support.link'])}
+            supportLink: passwordResetSupportLink ? (
+              <Alert.Link href={passwordResetSupportLink} target="_blank">
+                {supportLinkText}
               </Alert.Link>
-            ),
+            ) : supportLinkText,
           }}
         />
       );

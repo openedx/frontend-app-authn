@@ -1,20 +1,19 @@
-import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
-import { Hyperlink, Image } from '@openedx/paragon';
+import { useAppConfig, useIntl } from '@openedx/frontend-base';
 
 import './index.scss';
+import BrandLogo from '../BrandLogo';
 import messages from './messages';
 
 const MediumLayout = () => {
   const { formatMessage } = useIntl();
+  const bannerImage = useAppConfig().BANNER_IMAGE_MEDIUM;
 
   return (
     <div
       className="w-100 mb-3 bg-primary-500 banner__image medium-layout"
-      style={{ backgroundImage: `url(${useAppConfig().BANNER_IMAGE_MEDIUM})` }}
+      style={bannerImage ? { backgroundImage: `url(${bannerImage})` } : undefined}
     >
-      <Hyperlink destination={useAppConfig().MARKETING_SITE_BASE_URL}>
-        <Image className="company-logo" alt={getSiteConfig().siteName} src={useAppConfig().LOGO_WHITE_URL} />
-      </Hyperlink>
+      <BrandLogo className="company-logo" />
       <div className="ml-5 pb-4 pt-4">
         <h1 className="display-2 banner__heading">
           <span className="text-light-500">

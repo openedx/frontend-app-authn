@@ -1,19 +1,18 @@
-import { useAppConfig, getSiteConfig, useIntl } from '@openedx/frontend-base';
-import { Hyperlink, Image } from '@openedx/paragon';
+import { useAppConfig, useIntl } from '@openedx/frontend-base';
 
+import BrandLogo from '../BrandLogo';
 import messages from './messages';
 
 const ExtraSmallLayout = () => {
   const { formatMessage } = useIntl();
+  const bannerImage = useAppConfig().BANNER_IMAGE_EXTRA_SMALL;
 
   return (
     <span
       className="w-100 bg-primary-500 banner__image extra-small-layout"
-      style={{ backgroundImage: `url(${useAppConfig().BANNER_IMAGE_EXTRA_SMALL})` }}
+      style={bannerImage ? { backgroundImage: `url(${bannerImage})` } : undefined}
     >
-      <Hyperlink destination={useAppConfig().MARKETING_SITE_BASE_URL}>
-        <Image className="company-logo" alt={getSiteConfig().siteName} src={useAppConfig().LOGO_WHITE_URL} />
-      </Hyperlink>
+      <BrandLogo className="company-logo" />
       <div className="ml-4.5 mr-1 pb-3.5 pt-3.5">
         <h1 className="banner__heading">
           <span className="text-light-500">
