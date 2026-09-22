@@ -1,4 +1,4 @@
-import { getSiteConfig, useIntl } from '@openedx/frontend-base';
+import { getSiteConfig, isInternalUrl, useIntl } from '@openedx/frontend-base';
 import { ActionRow, Button, ModalDialog } from '@openedx/paragon';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ const ProgressiveProfilingPageModal = (props) => {
     e.preventDefault();
     // With no redirect configured, "continue to the platform" means the site itself.
     const destination = redirectUrl || getSiteConfig().baseUrl;
-    if (destination.startsWith('/')) {
+    if (isInternalUrl(destination)) {
       navigate(destination);
     } else {
       window.location.href = destination;

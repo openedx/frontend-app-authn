@@ -1,4 +1,4 @@
-import { useAppConfig, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
+import { useAppConfig, getSiteConfig, getUrlByRouteRole, isInternalUrl } from '@openedx/frontend-base';
 import PropTypes from 'prop-types';
 import { Navigate } from 'react-router-dom';
 
@@ -58,7 +58,7 @@ const RedirectLogistration = (props) => {
       );
     }
 
-    if (finalRedirectUrl.startsWith('/')) {
+    if (isInternalUrl(finalRedirectUrl)) {
       return <Navigate to={finalRedirectUrl} replace />;
     }
     window.location.href = finalRedirectUrl;

@@ -3,6 +3,7 @@ export {
   getTpaHint,
   getAllPossibleQueryParams,
   getActivationStatus,
+  getDashboardRoute,
   isHostAvailableInQueryParams,
   updatePathWithQueryParams,
   normalizeRedirectUrl,

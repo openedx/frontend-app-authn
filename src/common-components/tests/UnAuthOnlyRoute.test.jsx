@@ -1,7 +1,7 @@
 /* eslint-disable import/no-import-module-exports */
 /* eslint-disable react/function-component-definition */
 
-import { fetchAuthenticatedUser, getAuthenticatedUser } from '@openedx/frontend-base';
+import { fetchAuthenticatedUser, getAuthenticatedUser, resolveRouteByRole } from '@openedx/frontend-base';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import {
@@ -15,7 +15,7 @@ jest.mock('@openedx/frontend-base', () => ({
   ...jest.requireActual('@openedx/frontend-base'),
   getAuthenticatedUser: jest.fn(),
   fetchAuthenticatedUser: jest.fn(),
-  getUrlByRouteRole: jest.fn(() => '/dashboard'),
+  resolveRouteByRole: jest.fn(() => ({ url: '/dashboard', isInternal: true })),
 }));
 
 const RRD = require('react-router-dom');
@@ -70,5 +70,23 @@ describe('UnAuthOnlyRoute', () => {
     });
 
     expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
+  });
+
+  it('should send an authenticated user to an external dashboard with a page load', async () => {
+    const user = { username: 'gonzo' };
+    const dashboardUrl = 'https://lms.example.com/dashboard';
+
+    resolveRouteByRole.mockReturnValueOnce({ url: dashboardUrl, isInternal: false });
+    getAuthenticatedUser.mockReturnValue(user);
+    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
+
+    delete window.location;
+    window.location = { href: '' };
+
+    await act(async () => {
+      await render(routerWrapper());
+    });
+
+    expect(window.location.href).toBe(dashboardUrl);
   });
 });

@@ -6,7 +6,6 @@ import {
   getAuthenticatedUser,
   getLoggingService,
   getSiteConfig,
-  getUrlByRouteRole,
   identifyAuthenticatedUser,
   sendPageEvent,
   sendTrackEvent,
@@ -33,14 +32,14 @@ import { RedirectLogistration } from '../common-components';
 import { useSaveUserProfile } from './data/apiHook';
 import { ThirdPartyAuthProvider, useThirdPartyAuthContext } from '../common-components/components/ThirdPartyAuthContext';
 import { useThirdPartyAuthHook } from '../common-components/data/apiHook';
-import { dashboardRole, welcomePath } from '../constants';
+import { welcomePath } from '../constants';
 import {
   COMPLETE_STATE,
   FAILURE_STATE,
   PENDING_STATE,
 } from '../data/constants';
 import isOneTrustFunctionalCookieEnabled from '../data/oneTrust';
-import { getAllPossibleQueryParams, isHostAvailableInQueryParams } from '../data/utils';
+import { getAllPossibleQueryParams, getDashboardRoute, isHostAvailableInQueryParams } from '../data/utils';
 import { FormFieldRenderer } from '../field-renderer';
 
 const ProgressiveProfilingInner = () => {
@@ -132,11 +131,11 @@ const ProgressiveProfilingInner = () => {
     || thirdPartyAuthApiStatus === FAILURE_STATE
     || (thirdPartyAuthApiStatus === COMPLETE_STATE && !Object.keys(welcomePageContext).includes('fields'))
   ) {
-    const dashboardUrl = getUrlByRouteRole(dashboardRole) || '/';
-    if (dashboardUrl.startsWith('/')) {
-      return <Navigate to={dashboardUrl} replace />;
+    const dashboard = getDashboardRoute();
+    if (dashboard.isInternal) {
+      return <Navigate to={dashboard.url} replace />;
     }
-    window.location.href = dashboardUrl;
+    window.location.href = dashboard.url;
     return null;
   }
 

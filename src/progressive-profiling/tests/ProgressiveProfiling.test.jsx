@@ -5,6 +5,7 @@ import {
   identifyAuthenticatedUser,
   IntlProvider,
   mergeAppConfig,
+  resolveRouteByRole,
   sendPageEvent,
   sendTrackEvent,
 } from '@openedx/frontend-base';
@@ -97,7 +98,7 @@ jest.mock('@openedx/frontend-base', () => ({
   configureAuth: jest.fn(),
   getAuthenticatedUser: jest.fn(),
   getLoggingService: jest.fn(),
-  getUrlByRouteRole: jest.fn(() => '/dashboard'),
+  resolveRouteByRole: jest.fn(() => ({ url: '/dashboard', isInternal: true })),
 }));
 
 // Create mock function outside to access it directly
@@ -173,6 +174,7 @@ describe('ProgressiveProfilingTests', () => {
       },
     });
     getAuthenticatedUser.mockReturnValue({ userId: 3, username: 'abc123', name: 'Test User' });
+    resolveRouteByRole.mockReturnValue({ url: DASHBOARD_URL, isInternal: true });
 
     // Reset mocks first
     jest.clearAllMocks();
@@ -309,6 +311,19 @@ describe('ProgressiveProfilingTests', () => {
   });
 
   // ******** miscellaneous tests ********
+
+  it('should send an unauthenticated user to an external dashboard with a page load', () => {
+    const dashboardUrl = 'https://lms.example.com/dashboard';
+    resolveRouteByRole.mockReturnValue({ url: dashboardUrl, isInternal: false });
+    getAuthenticatedUser.mockReturnValue(null);
+
+    delete window.location;
+    window.location = { href: '', search: '' };
+
+    renderWithProviders(<ProgressiveProfiling />);
+    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(window.location.href).toBe(dashboardUrl);
+  });
 
   it('should redirect to login page if unauthenticated user tries to access welcome page', () => {
     getAuthenticatedUser.mockReturnValue(null);
