@@ -5,6 +5,7 @@ import {
   hydrateAuthenticatedUser,
   useAppConfig,
   getSiteConfig,
+  isInternalUrl,
   sendPageEvent, sendTrackEvent,
   useIntl,
 } from '@openedx/frontend-base';
@@ -111,7 +112,7 @@ const RegistrationPage = (props) => {
   const registrationMutation = useRegistration({
     onSuccess: async (data) => {
       const redirectUrl = localNextPath || data.redirectUrl || '';
-      if (redirectUrl.startsWith('/')) {
+      if (isInternalUrl(redirectUrl)) {
         await fetchAuthenticatedUser({ forceRefresh: true });
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
@@ -129,7 +130,7 @@ const RegistrationPage = (props) => {
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
   const submitState = registrationMutation.isPending ? PENDING_STATE : DEFAULT_STATE;
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const localNextPath = queryParams.next?.startsWith('/') ? queryParams.next : null;
+  const localNextPath = queryParams.next && isInternalUrl(queryParams.next) ? queryParams.next : null;
   const tpaHint = useMemo(() => getTpaHint(), []);
   // Initialize form state from local backedUpFormData
   const backedUpFormData = registrationFormData;

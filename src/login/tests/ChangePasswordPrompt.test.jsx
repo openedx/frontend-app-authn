@@ -12,6 +12,7 @@ const mockedNavigator = jest.fn();
 jest.mock('@openedx/frontend-base', () => ({
   ...jest.requireActual('@openedx/frontend-base'),
   getUrlByRouteRole: jest.fn(() => '/mock-url'),
+  resolveRouteByRole: jest.fn(() => ({ url: '/mock-url', isInternal: true })),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -21,6 +22,10 @@ jest.mock('react-router-dom', () => ({
 
 describe('ChangePasswordPromptTests', () => {
   let props = {};
+
+  beforeEach(() => {
+    mockedNavigator.mockClear();
+  });
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -51,6 +56,23 @@ describe('ChangePasswordPromptTests', () => {
 
     fireEvent.click(screen.getByText('Close'));
     expect(window.location.href).toBe(dashboardUrl);
+  });
+
+  it('[nudge modal] should navigate to the dashboard when there is no redirect url', () => {
+    props = {
+      variant: 'nudge',
+    };
+
+    render(
+      <IntlProvider locale="en">
+        <MemoryRouter>
+          <ChangePasswordPrompt {...props} />
+        </MemoryRouter>
+      </IntlProvider>,
+    );
+
+    fireEvent.click(screen.getByText('Close'));
+    expect(mockedNavigator).toHaveBeenCalledWith('/mock-url');
   });
 
   it('[block modal] should redirect to reset password page when user clicks outside modal', async () => {

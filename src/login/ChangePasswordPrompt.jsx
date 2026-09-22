@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getUrlByRouteRole, useIntl } from '@openedx/frontend-base';
+import { getUrlByRouteRole, isInternalUrl, useIntl } from '@openedx/frontend-base';
 import {
   ActionRow, ModalDialog, useToggle,
 } from '@openedx/paragon';
@@ -8,8 +8,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { dashboardRole, resetPasswordRole } from '../constants';
-import { updatePathWithQueryParams } from '../data/utils';
+import { resetPasswordRole } from '../constants';
+import { getDashboardRoute, updatePathWithQueryParams } from '../data/utils';
 import useMobileResponsive from '../data/utils/useMobileResponsive';
 import messages from './messages';
 
@@ -21,8 +21,8 @@ const ChangePasswordPrompt = ({ variant, redirectUrl }) => {
       if (variant === 'block') {
         setRedirectToResetPasswordPage(true);
       } else {
-        const url = redirectUrl || getUrlByRouteRole(dashboardRole) || '/';
-        if (url.startsWith('/')) {
+        const url = redirectUrl || getDashboardRoute().url;
+        if (isInternalUrl(url)) {
           navigate(url);
         } else {
           window.location.href = url;

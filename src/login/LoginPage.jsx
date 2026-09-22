@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import {
   fetchAuthenticatedUser, hydrateAuthenticatedUser, getSiteConfig, getUrlByRouteRole,
-  sendPageEvent, sendTrackEvent, useIntl,
+  isInternalUrl, sendPageEvent, sendTrackEvent, useIntl,
 } from '@openedx/frontend-base';
 import { Form, StatefulButton } from '@openedx/paragon';
 import PropTypes from 'prop-types';
@@ -69,7 +69,7 @@ const LoginPage = ({
   const { mutate: loginUser, isPending: isLoggingIn } = useLogin({
     onSuccess: async (data) => {
       const redirectUrl = localNextPath || data.redirectUrl || '';
-      if (redirectUrl.startsWith('/')) {
+      if (isInternalUrl(redirectUrl)) {
         await fetchAuthenticatedUser({ forceRefresh: true });
         // Hydrate in the background — publishes AUTHENTICATED_USER_CHANGED after
         // SPA navigation, so the header picks up the full user profile (avatar, etc.)
@@ -99,7 +99,7 @@ const LoginPage = ({
   const { formatMessage } = useIntl();
   const activationMsgType = getActivationStatus();
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
-  const localNextPath = queryParams.next?.startsWith('/') ? queryParams.next : null;
+  const localNextPath = queryParams.next && isInternalUrl(queryParams.next) ? queryParams.next : null;
 
   const tpaHint = useMemo(() => getTpaHint(), []);
   const params = { ...queryParams };

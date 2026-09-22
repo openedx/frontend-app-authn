@@ -1,5 +1,5 @@
 // Utility functions
-import { getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
+import { getSiteConfig, resolveRouteByRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 import { dashboardRole } from '../../constants';
@@ -78,12 +78,18 @@ export const windowScrollTo = (options) => {
 };
 
 /**
+ * The site's dashboard route, falling back to the shell root when no app or
+ * external route provides it.
+ */
+export const getDashboardRoute = () => resolveRouteByRole(dashboardRole) ?? { url: '/', isInternal: true };
+
+/**
  * Normalize a backend redirect URL: if the backend returns the LMS dashboard
  * URL (or nothing), replace it with the role-based dashboard URL so that SPA
  * navigation can be used when the dashboard lives in the same shell.
  */
 export const normalizeRedirectUrl = (backendUrl) => {
-  const dashboardUrl = getUrlByRouteRole(dashboardRole) || '/';
+  const dashboardUrl = getDashboardRoute().url;
   const lmsDashboardUrl = `${getSiteConfig().lmsBaseUrl}/dashboard`;
   return (!backendUrl || backendUrl.startsWith(lmsDashboardUrl))
     ? dashboardUrl

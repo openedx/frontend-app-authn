@@ -1,4 +1,4 @@
-import { camelCaseObject, getAuthenticatedHttpClient, getSiteConfig, getUrlByRouteRole } from '@openedx/frontend-base';
+import { camelCaseObject, getAuthenticatedHttpClient, getSiteConfig, resolveRouteByRole } from '@openedx/frontend-base';
 import * as QueryString from 'query-string';
 
 import { login } from './api';
@@ -7,7 +7,7 @@ import { login } from './api';
 jest.mock('@openedx/frontend-base', () => ({
   getSiteConfig: jest.fn(),
   getAuthenticatedHttpClient: jest.fn(),
-  getUrlByRouteRole: jest.fn(),
+  resolveRouteByRole: jest.fn(),
   camelCaseObject: jest.fn(),
 }));
 
@@ -19,7 +19,7 @@ const mockGetSiteConfig = getSiteConfig as jest.MockedFunction<typeof getSiteCon
 const mockCamelCaseObject = camelCaseObject as jest.MockedFunction<typeof camelCaseObject>;
 const mockGetAuthenticatedHttpClient = getAuthenticatedHttpClient as
 jest.MockedFunction<typeof getAuthenticatedHttpClient>;
-const mockGetUrlByRouteRole = getUrlByRouteRole as jest.MockedFunction<typeof getUrlByRouteRole>;
+const mockResolveRouteByRole = resolveRouteByRole as jest.MockedFunction<typeof resolveRouteByRole>;
 const mockQueryStringify = QueryString.stringify as jest.MockedFunction<typeof QueryString.stringify>;
 
 describe('login api', () => {
@@ -35,7 +35,7 @@ describe('login api', () => {
     jest.clearAllMocks();
     mockGetSiteConfig.mockReturnValue(mockConfig);
     mockGetAuthenticatedHttpClient.mockReturnValue(mockHttpClient as any);
-    mockGetUrlByRouteRole.mockReturnValue('/dashboard');
+    mockResolveRouteByRole.mockReturnValue({ url: '/dashboard', isInternal: true });
     mockCamelCaseObject.mockImplementation((obj) => obj);
     mockQueryStringify.mockImplementation((obj) => `stringified=${JSON.stringify(obj)}`);
   });
