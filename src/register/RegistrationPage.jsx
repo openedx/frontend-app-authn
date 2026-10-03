@@ -126,7 +126,12 @@ const RegistrationPage = (props) => {
     data, isSuccess, isFetching, error,
   } = useThirdPartyAuthHook(REGISTER_PAGE, params);
   const currentContextReady = isSuccess && !isFetching && !error && !!data;
-  const registrationContextPending = flags.showConfigurableRegistrationFields
+  const requiresRegistrationContext = flags.showConfigurableRegistrationFields
+    || !!tpaHint
+    || autoSubmitRegForm
+    || !!currentProvider
+    || !!(pipelineUserDetails && Object.keys(pipelineUserDetails).length);
+  const registrationContextPending = requiresRegistrationContext
     && (!currentContextReady || registrationContextData !== data || thirdPartyAuthApiStatus !== COMPLETE_STATE);
   const submitState = registrationMutation.isPending || registrationContextPending ? PENDING_STATE : DEFAULT_STATE;
   useEffect(() => {

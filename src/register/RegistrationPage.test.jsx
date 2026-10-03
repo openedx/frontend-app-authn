@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { getTpaHint } from '../data/utils';
 import { useRegisterContext } from './components/RegisterContext';
 import { useFieldValidations, useRegistration } from './data/apiHook';
 import { INTERNAL_SERVER_ERROR } from './data/constants';
@@ -280,7 +281,38 @@ describe('RegistrationPage', () => {
       expect(mockRegistrationMutation.mutate).toHaveBeenCalledWith({ ...payload, country: 'PK' });
     });
 
+    it.each([true, false])('requires the current hinted pipeline context with fields disabled (fetching=%s)', (fetching) => {
+      getTpaHint.mockReturnValue('organization-sso');
+      mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+      mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.isFetching = fetching;
+      mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+      const payload = {
+        name: 'John Doe',
+        username: 'john_doe',
+        email: 'john.doe@gmail.com',
+        password: 'password1',
+        country: 'Pakistan',
+        honor_code: true,
+      };
+      const { getByLabelText, container } = render(renderWrapper(<RegistrationPage {...props} />));
+      populateRequiredFields(getByLabelText, payload);
+      fireEvent.click(container.querySelector('button.btn-brand'));
+      if (fetching) {
+        expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+      } else {
+        expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1);
+      }
+      getTpaHint.mockReturnValue(null);
+    });
+
     it('should submit form without password field when current provider is present', () => {
+      // This positive fixture represents a completed current context request.
+      mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.isFetching = false;
+      mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
 
       const formPayload = {
@@ -789,6 +821,11 @@ describe('RegistrationPage', () => {
     });
 
     it('should populate form with pipeline user details', () => {
+      // This positive fixture represents a completed current context request.
+      mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.isFetching = false;
+      mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
       useThirdPartyAuthContext.mockReturnValue({
         ...mockThirdPartyAuthContext,
         thirdPartyAuthContext: {
@@ -979,6 +1016,11 @@ describe('RegistrationPage', () => {
     });
 
     it('should auto register if autoSubmitRegForm is true and pipeline details are loaded', () => {
+      // This positive fixture represents a completed current context request.
+      mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+      mockThirdPartyAuthHook.isSuccess = true;
+      mockThirdPartyAuthHook.isFetching = false;
+      mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
       jest.spyOn(global.Date, 'now').mockImplementation(() => 0);
       getLocale.mockImplementation(() => ('en-us'));
 
@@ -1153,6 +1195,32 @@ describe('RegistrationPage', () => {
     fireEvent.click(container.querySelector('button[type="submit"]'));
     expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
     expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
+  it.each([true, false])('pipeline without configurable fields fetching=%s binds current context', async (fetching) => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false, SHOW_CONFIGURABLE_EDX_FIELDS: false });
+    mockRegisterContext.registrationFormData = {
+      ...registrationFormData,
+      formFields: {
+        name: 'John Doe', username: 'john_doe', email: 'john@example.com', password: 'password1', country: 'PK',
+      },
+    };
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthContext.thirdPartyAuthContext = {
+      ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+      autoSubmitRegForm: true,
+      pipelineUserDetails: { name: 'John Doe', username: 'john_doe', email: 'john@example.com' },
+    };
+    mockThirdPartyAuthHook.isSuccess = true;
+    mockThirdPartyAuthHook.isFetching = fetching;
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    render(renderWrapper(<RegistrationPage {...props} />));
+    if (fetching) {
+      expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+      expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
+    } else {
+      await waitFor(() => expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1));
+    }
     mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
   });
 });
