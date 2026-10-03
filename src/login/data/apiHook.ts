@@ -3,7 +3,7 @@ import { camelCaseObject } from '@edx/frontend-platform/utils';
 import { useMutation } from '@tanstack/react-query';
 
 import { login } from './api';
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
+import { FORBIDDEN_REQUEST, INACTIVE_USER, INTERNAL_SERVER_ERROR } from './constants';
 
 // Type definitions
 interface LoginData {
@@ -28,7 +28,7 @@ const useLogin = (options: UseLoginOptions = {}) => useMutation<LoginResponse, u
       options.onSuccess(data);
     }
   },
-  onError: (error: unknown) => {
+  onError: (error: unknown, loginData: LoginData) => {
     logError('Login failed', error);
     let formattedError = {
       type: INTERNAL_SERVER_ERROR,
@@ -39,10 +39,12 @@ const useLogin = (options: UseLoginOptions = {}) => useMutation<LoginResponse, u
       const response = error.response as { status?: number; data?: unknown };
       const { status, data } = camelCaseObject(response);
       if (data && typeof data === 'object') {
-        const errorData = data as { errorCode?: string; context?: { failureCount?: number } };
+        const errorData = data as { errorCode?: string; context?: { failureCount?: number; email?: string } };
         formattedError = {
           type: errorData.errorCode || FORBIDDEN_REQUEST,
-          context: errorData.context || {},
+          context: errorData.errorCode === INACTIVE_USER
+            ? { ...errorData.context, email: errorData.context?.email || loginData.email_or_username }
+            : errorData.context || {},
           count: errorData.context?.failureCount || 0,
         };
         if (status === 400) {

@@ -9,7 +9,7 @@ import * as api from './api';
 import {
   useLogin,
 } from './apiHook';
-import { FORBIDDEN_REQUEST, INTERNAL_SERVER_ERROR } from './constants';
+import { FORBIDDEN_REQUEST, INACTIVE_USER, INTERNAL_SERVER_ERROR } from './constants';
 
 // Mock the dependencies
 jest.mock('@edx/frontend-platform/logging', () => ({
@@ -232,5 +232,21 @@ describe('useLogin', () => {
 
     expect(result.current.data).toEqual(mockResponse);
     expect(mockLogInfo).toHaveBeenCalledWith('Login successful', mockResponse);
+  });
+  it.each([undefined, null, '', 'backend@example.com'])('keeps the submitted inactive identity unless the backend supplies one (%s)', async (email) => {
+    const onError = jest.fn();
+    mockLogin.mockRejectedValueOnce({
+      response: {
+        status: 400,
+        data: {
+          errorCode: INACTIVE_USER, context: { email },
+        },
+      },
+    });
+    const { result } = renderHook(() => useLogin({ onError }), { wrapper: createWrapper() });
+    result.current.mutate({ email_or_username: 'submitted@example.com', password: 'synthetic-password' });
+    await waitFor(() => expect(onError).toHaveBeenCalled());
+    expect(onError.mock.calls[0][0].context.email).toBe(email || 'submitted@example.com');
+    expect(JSON.stringify(onError.mock.calls)).not.toContain('synthetic-password');
   });
 });

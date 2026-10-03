@@ -42,30 +42,21 @@ describe('UnAuthOnlyRoute', () => {
     jest.clearAllMocks();
   });
 
-  it('should have called with forceRefresh true', async () => {
-    const user = {
-      username: 'gonzo',
-      other: 'data',
-    };
-
+  it('redirects a bootstrapped user without another session refresh', async () => {
+    const user = { username: 'gonzo' };
     getAuthenticatedUser.mockReturnValue(user);
-    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(user));
-
-    await act(async () => {
-      await render(routerWrapper());
-    });
-
-    expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: true });
+    fetchAuthenticatedUser.mockResolvedValue(user);
+    await act(async () => { render(routerWrapper()); });
+    expect(getAuthenticatedUser).toHaveBeenCalled();
+    expect(fetchAuthenticatedUser).not.toHaveBeenCalled();
   });
 
-  it('should have called with forceRefresh false', async () => {
+  it('renders the anonymous registration route without a duplicate refresh', async () => {
     getAuthenticatedUser.mockReturnValue(null);
-    fetchAuthenticatedUser.mockReturnValueOnce(Promise.resolve(null));
-
-    await act(async () => {
-      await render(routerWrapper());
-    });
-
-    expect(fetchAuthenticatedUser).toBeCalledWith({ forceRefresh: false });
+    fetchAuthenticatedUser.mockResolvedValue(null);
+    let view;
+    await act(async () => { view = render(routerWrapper()); });
+    expect(view.getByText('Register Page')).toBeTruthy();
+    expect(fetchAuthenticatedUser).not.toHaveBeenCalled();
   });
 });
