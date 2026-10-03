@@ -1093,4 +1093,66 @@ describe('RegistrationPage', () => {
     expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1);
     mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
   });
+  it.each([false, true])('current cached context fetching=%s controls manual submission', async (fetching) => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: true, SHOW_CONFIGURABLE_EDX_FIELDS: true });
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = 'pending';
+    const payload = {
+      name: 'John Doe', username: 'john_doe', email: 'john@example.com', password: 'password1', country: 'Pakistan',
+    };
+    const { getByLabelText, container, rerender } = render(renderWrapper(<RegistrationPage {...props} />));
+    populateRequiredFields(getByLabelText, payload);
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthHook.isSuccess = true;
+    mockThirdPartyAuthHook.isFetching = fetching;
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    fireEvent.click(container.querySelector('button[type="submit"]'));
+    expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(fetching ? 0 : 1);
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
+
+  it.each([true, false])('cached pipeline context fetching=%s cannot bypass readiness', async (fetching) => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: true, SHOW_CONFIGURABLE_EDX_FIELDS: true });
+    mockRegisterContext.registrationFormData = {
+      ...registrationFormData,
+      formFields: {
+        name: 'John Doe', username: 'john_doe', email: 'john@example.com', password: 'password1', country: 'PK',
+      },
+    };
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthContext.thirdPartyAuthContext = {
+      ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+      autoSubmitRegForm: true,
+      pipelineUserDetails: { name: 'John Doe', username: 'john_doe', email: 'john@example.com' },
+    };
+    mockThirdPartyAuthHook.isSuccess = true;
+    mockThirdPartyAuthHook.isFetching = fetching;
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    render(renderWrapper(<RegistrationPage {...props} />));
+    if (fetching) {
+      expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+      expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
+    } else {
+      await waitFor(() => expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1));
+    }
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
+
+  it('blocks cached context after a failed refetch', async () => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: true, SHOW_CONFIGURABLE_EDX_FIELDS: true });
+    const { getByLabelText, container, rerender } = render(renderWrapper(<RegistrationPage {...props} />));
+    populateRequiredFields(getByLabelText, {
+      name: 'John Doe', username: 'john_doe', email: 'john@example.com', password: 'password1', country: 'Pakistan',
+    });
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthHook.isSuccess = false;
+    mockThirdPartyAuthHook.isFetching = false;
+    mockThirdPartyAuthHook.error = new Error('context unavailable');
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    fireEvent.click(container.querySelector('button[type="submit"]'));
+    expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+    expect(mockThirdPartyAuthContext.setThirdPartyAuthContextSuccess).not.toHaveBeenCalled();
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
 });

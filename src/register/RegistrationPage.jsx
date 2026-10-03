@@ -110,6 +110,7 @@ const RegistrationPage = (props) => {
   const [errors, setErrors] = useState({ ...backedUpFormData.errors });
   const [errorCode, setErrorCode] = useState({ type: '', count: 0 });
   const [formStartTime, setFormStartTime] = useState(null);
+  const [registrationContextData, setRegistrationContextData] = useState(null);
   // temporary error state for embedded experience because we don't want to show errors on blur
   const [temporaryErrors, setTemporaryErrors] = useState({ ...backedUpFormData.errors });
   const { cta, host } = queryParams;
@@ -117,11 +118,45 @@ const RegistrationPage = (props) => {
     ? formatMessage(messages['create.account.cta.button'], { label: cta })
     : formatMessage(messages['create.account.for.free.button']);
 
-  /**
-   * Set the userPipelineDetails data in formFields for only first time
-   */
+  const params = { ...queryParams, is_register_page: true };
+  if (tpaHint) {
+    params.tpa_hint = tpaHint;
+  }
+  const {
+    data, isSuccess, isFetching, error,
+  } = useThirdPartyAuthHook(REGISTER_PAGE, params);
+  const currentContextReady = isSuccess && !isFetching && !error && !!data;
+  const registrationContextPending = flags.showConfigurableRegistrationFields
+    && (!currentContextReady || registrationContextData !== data || thirdPartyAuthApiStatus !== COMPLETE_STATE);
+  const submitState = registrationMutation.isPending || registrationContextPending ? PENDING_STATE : DEFAULT_STATE;
   useEffect(() => {
-    if (!userPipelineDataLoaded && thirdPartyAuthApiStatus === COMPLETE_STATE) {
+    if (formStartTime === null) {
+      sendPageEvent('login_and_registration', 'register');
+      setThirdPartyAuthContextBegin();
+      setFormStartTime(Date.now());
+    }
+    if (formStartTime !== null) {
+      if (currentContextReady) {
+        setThirdPartyAuthContextSuccess(
+          data.fieldDescriptions,
+          data.optionalFields,
+          data.thirdPartyAuthContext,
+        );
+        setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
+        setRegistrationContextData(data);
+      }
+
+      if (error) {
+        setThirdPartyAuthContextFailure();
+      }
+    }
+  }, [formStartTime, currentContextReady, data, error,
+    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess,
+    setBackendCountryCode, setThirdPartyAuthContextFailure]);
+
+  // Populate pipeline fields only after this request's context is applied.
+  useEffect(() => {
+    if (!userPipelineDataLoaded && !registrationContextPending && thirdPartyAuthApiStatus === COMPLETE_STATE) {
       if (thirdPartyAuthErrorMessage) {
         setErrorCode(prevState => ({ type: TPA_AUTHENTICATION_FAILURE, count: prevState.count + 1 }));
       }
@@ -138,39 +173,8 @@ const RegistrationPage = (props) => {
     thirdPartyAuthErrorMessage,
     pipelineUserDetails,
     userPipelineDataLoaded,
+    registrationContextPending,
   ]);
-
-  const params = { ...queryParams, is_register_page: true };
-  if (tpaHint) {
-    params.tpa_hint = tpaHint;
-  }
-  const { data, isSuccess, error } = useThirdPartyAuthHook(REGISTER_PAGE, params);
-  const registrationContextPending = flags.showConfigurableRegistrationFields
-    && (!isSuccess || !data || thirdPartyAuthApiStatus !== COMPLETE_STATE);
-  const submitState = registrationMutation.isPending || registrationContextPending ? PENDING_STATE : DEFAULT_STATE;
-  useEffect(() => {
-    if (!formStartTime) {
-      sendPageEvent('login_and_registration', 'register');
-      setThirdPartyAuthContextBegin();
-      setFormStartTime(Date.now());
-    }
-    if (formStartTime) {
-      if (isSuccess && data) {
-        setThirdPartyAuthContextSuccess(
-          data.fieldDescriptions,
-          data.optionalFields,
-          data.thirdPartyAuthContext,
-        );
-        setBackendCountryCode(data.thirdPartyAuthContext.countryCode);
-      }
-
-      if (error) {
-        setThirdPartyAuthContextFailure();
-      }
-    }
-  }, [formStartTime, isSuccess, data, error,
-    setThirdPartyAuthContextBegin, setThirdPartyAuthContextSuccess,
-    setBackendCountryCode, setThirdPartyAuthContextFailure]);
 
   // Handle backend validation errors from context
   useEffect(() => {
