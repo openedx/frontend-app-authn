@@ -1030,4 +1030,67 @@ describe('RegistrationPage', () => {
       });
     });
   });
+  it.each([null, 'pending', 'failure', COMPLETE_STATE])('blocks registration until this registration context is ready (%s)', async (status) => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: true, SHOW_CONFIGURABLE_EDX_FIELDS: true });
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = status;
+    const payload = {
+      name: 'John Doe',
+      username: 'john_doe',
+      email: 'john@example.com',
+      password: 'password1',
+      country: 'Pakistan',
+    };
+    const { getByLabelText, container, rerender } = render(renderWrapper(<RegistrationPage {...props} />));
+    populateRequiredFields(getByLabelText, payload);
+    expect(container.querySelector('button[type="submit"]').getAttribute('aria-disabled')).toBe('true');
+    fireEvent.click(container.querySelector('button[type="submit"]'));
+    expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthHook.isSuccess = true;
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    expect(container.querySelector('button[type="submit"]').getAttribute('aria-disabled')).toBe('false');
+    fireEvent.click(container.querySelector('button[type="submit"]'));
+    expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1);
+    expect(mockRegistrationMutation.mutate.mock.calls[0][0].country).toBe('PK');
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
+
+  it('defers pipeline auto-submission until the current registration query succeeds', async () => {
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: true, SHOW_CONFIGURABLE_EDX_FIELDS: true });
+    mockRegisterContext.registrationFormData = {
+      ...registrationFormData,
+      formFields: {
+        name: 'John Doe', username: 'john_doe', email: 'john@example.com', password: 'password1', country: 'PK',
+      },
+    };
+    mockThirdPartyAuthContext.thirdPartyAuthApiStatus = COMPLETE_STATE;
+    mockThirdPartyAuthContext.thirdPartyAuthContext = {
+      ...mockThirdPartyAuthContext.thirdPartyAuthContext,
+      autoSubmitRegForm: true,
+      pipelineUserDetails: { name: 'John Doe', username: 'john_doe', email: 'john@example.com' },
+    };
+    const { rerender } = render(renderWrapper(<RegistrationPage {...props} />));
+    expect(mockRegistrationMutation.mutate).not.toHaveBeenCalled();
+    mockThirdPartyAuthHook.isSuccess = true;
+    mockThirdPartyAuthHook.data = { fieldDescriptions: {}, optionalFields: {}, thirdPartyAuthContext: {} };
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    await waitFor(() => expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1));
+    // A context refetch must not repeat a still-pending or completed registration.
+    mockRegistrationMutation.isPending = true;
+    mockThirdPartyAuthHook.isSuccess = false;
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    mockThirdPartyAuthHook.isSuccess = true;
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1);
+    mockRegistrationMutation.isPending = false;
+    mockRegisterContext.registrationResult = { success: true };
+    mockThirdPartyAuthHook.isSuccess = false;
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    mockThirdPartyAuthHook.isSuccess = true;
+    rerender(renderWrapper(<RegistrationPage {...props} />));
+    expect(mockRegistrationMutation.mutate).toHaveBeenCalledTimes(1);
+    mergeConfig({ ENABLE_DYNAMIC_REGISTRATION_FIELDS: false });
+  });
 });

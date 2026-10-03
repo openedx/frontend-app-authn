@@ -101,7 +101,6 @@ const RegistrationPage = (props) => {
 
   const [userPipelineDataLoaded, setUserPipelineDataLoaded] = useState(false);
   const registrationErrorCode = registrationError?.errorCode || backendRegistrationError?.errorCode;
-  const submitState = registrationMutation.isPending ? PENDING_STATE : DEFAULT_STATE;
   const queryParams = useMemo(() => getAllPossibleQueryParams(), []);
   const tpaHint = useMemo(() => getTpaHint(), []);
   // Initialize form state from local backedUpFormData
@@ -146,6 +145,9 @@ const RegistrationPage = (props) => {
     params.tpa_hint = tpaHint;
   }
   const { data, isSuccess, error } = useThirdPartyAuthHook(REGISTER_PAGE, params);
+  const registrationContextPending = flags.showConfigurableRegistrationFields
+    && (!isSuccess || !data || thirdPartyAuthApiStatus !== COMPLETE_STATE);
+  const submitState = registrationMutation.isPending || registrationContextPending ? PENDING_STATE : DEFAULT_STATE;
   useEffect(() => {
     if (!formStartTime) {
       sendPageEvent('login_and_registration', 'register');
@@ -239,6 +241,9 @@ const RegistrationPage = (props) => {
   };
 
   const registerUser = () => {
+    if (registrationContextPending || registrationMutation.isPending || registrationResult?.success) {
+      return;
+    }
     const totalRegistrationTime = (Date.now() - formStartTime) / 1000;
     let payload = { ...formFields };
 
@@ -290,7 +295,9 @@ const RegistrationPage = (props) => {
     if (autoSubmitRegForm && userPipelineDataLoaded) {
       registerUser();
     }
-  }, [autoSubmitRegForm, userPipelineDataLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [ // eslint-disable-line react-hooks/exhaustive-deps
+    autoSubmitRegForm, userPipelineDataLoaded, registrationContextPending,
+  ]);
 
   const renderForm = () => {
     if (institutionLogin) {

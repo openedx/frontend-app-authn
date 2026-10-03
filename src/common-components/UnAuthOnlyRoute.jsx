@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
-
 import { getConfig } from '@edx/frontend-platform';
-import { fetchAuthenticatedUser, getAuthenticatedUser } from '@edx/frontend-platform/auth';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,26 +11,13 @@ import {
  * already authenticated.
  */
 const UnAuthOnlyRoute = ({ children }) => {
-  const [authUser, setAuthUser] = useState({});
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    fetchAuthenticatedUser({ forceRefresh: !!getAuthenticatedUser() }).then((authenticatedUser) => {
-      setAuthUser(authenticatedUser);
-      setIsReady(true);
-    });
-  }, []);
-
-  if (isReady) {
-    if (authUser && authUser.username) {
-      global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
-      return null;
-    }
-
-    return children;
+  // MainApp mounts after APP_READY, when initialize() has resolved authentication.
+  const authUser = getAuthenticatedUser();
+  if (authUser && authUser.username) {
+    global.location.href = getConfig().LMS_BASE_URL.concat(DEFAULT_REDIRECT_URL);
+    return null;
   }
-
-  return null;
+  return children;
 };
 
 UnAuthOnlyRoute.propTypes = {
