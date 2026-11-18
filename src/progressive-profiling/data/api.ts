@@ -7,7 +7,7 @@ const patchAccount = async (username, commitValues) => {
 
   await getAuthenticatedHttpClient()
     .patch(
-      `${getSiteConfig().lmsBaseUrl}/api/user/v1/accounts/${username}`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v2/accounts/${username}/`,
       commitValues,
       requestConfig,
     )

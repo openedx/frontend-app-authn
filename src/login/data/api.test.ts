@@ -45,7 +45,7 @@ describe('login api', () => {
       email_or_username: 'testuser@example.com',
       password: 'password123',
     };
-    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v2/account/login_session/`;
+    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v2/login_sessions/`;
     const expectedConfig = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       isPublic: true,

@@ -33,7 +33,7 @@ describe('reset-password api', () => {
 
   describe('validateToken', () => {
     const mockToken = 'test-token-123';
-    const expectedUrl = `${mockConfig.lmsBaseUrl}/user_api/v1/account/password_reset/token/validate/`;
+    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v2/password_reset_token_validations/`;
     const expectedConfig = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     };
@@ -175,7 +175,7 @@ describe('reset-password api', () => {
     const mockPayload = {
       password: 'testpassword123',
     };
-    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v1/validation/registration`;
+    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v2/registration_validations/`;
     const expectedConfig = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     };

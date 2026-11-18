@@ -8,7 +8,7 @@ const validateToken = async (token: string) => {
 
   const { data } = await getHttpClient()
     .post(
-      `${getSiteConfig().lmsBaseUrl}/user_api/v1/account/password_reset/token/validate/`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v2/password_reset_token_validations/`,
       formurlencoded({ token }),
       requestConfig,
     )
@@ -42,7 +42,7 @@ const validatePassword = async (payload) => {
   };
   const { data } = await getHttpClient()
     .post(
-      `${getSiteConfig().lmsBaseUrl}/api/user/v1/validation/registration`,
+      `${getSiteConfig().lmsBaseUrl}/api/user/v2/registration_validations/`,
       formurlencoded(payload),
       requestConfig,
     )

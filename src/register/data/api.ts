@@ -8,7 +8,7 @@ const registerNewUserApi = async (registrationInformation) => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
   };
-  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v2/account/registration/`;
+  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v2/registrations/`;
   const { data } = await getAuthenticatedHttpClient()
     .post(url, QueryString.stringify(registrationInformation), requestConfig)
     .catch((e: any) => {
@@ -26,7 +26,7 @@ const getFieldsValidations = async (formPayload) => {
   const requestConfig = {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   };
-  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v1/validation/registration`;
+  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v2/registration_validations/`;
   const { data } = await getHttpClient()
     .post(
       url, QueryString.stringify(formPayload), requestConfig)

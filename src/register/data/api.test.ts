@@ -76,7 +76,7 @@ describe('API Functions', () => {
       const result = await registerNewUserApi(mockRegistrationInfo);
 
       expect(mockAuthenticatedHttpClient.post).toHaveBeenCalledWith(
-        'http://localhost:18000/api/user/v2/account/registration/',
+        'http://localhost:18000/api/user/v2/registrations/',
         'username=testuser&email=test@example.com&password=testpassword&name=Test User',
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -155,7 +155,7 @@ describe('API Functions', () => {
       const result = await getFieldsValidations(mockFormPayload);
 
       expect(mockHttpClient.post).toHaveBeenCalledWith(
-        'http://localhost:18000/api/user/v1/validation/registration',
+        'http://localhost:18000/api/user/v2/registration_validations/',
         'username=testuser&email=test@example.com',
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

@@ -35,7 +35,7 @@ describe('progressive-profiling api', () => {
         { field_name: 'level_of_education', field_value: 'Bachelor\'s Degree' },
       ],
     };
-    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v1/accounts/${mockUsername}`;
+    const expectedUrl = `${mockConfig.lmsBaseUrl}/api/user/v2/accounts/${mockUsername}/`;
     const expectedConfig = {
       headers: { 'Content-Type': 'application/merge-patch+json' },
     };
@@ -96,7 +96,7 @@ describe('progressive-profiling api', () => {
       await patchAccount(differentUsername, mockCommitValues);
 
       expect(mockHttpClient.patch).toHaveBeenCalledWith(
-        `${mockConfig.lmsBaseUrl}/api/user/v1/accounts/${differentUsername}`,
+        `${mockConfig.lmsBaseUrl}/api/user/v2/accounts/${differentUsername}/`,
         mockCommitValues,
         expectedConfig,
       );
@@ -155,7 +155,7 @@ describe('progressive-profiling api', () => {
       await patchAccount(null, mockCommitValues);
 
       expect(mockHttpClient.patch).toHaveBeenCalledWith(
-        `${mockConfig.lmsBaseUrl}/api/user/v1/accounts/null`,
+        `${mockConfig.lmsBaseUrl}/api/user/v2/accounts/null/`,
         mockCommitValues,
         expectedConfig,
       );
