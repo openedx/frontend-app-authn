@@ -8,7 +8,7 @@ const login = async (creds) => {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     isPublic: true,
   };
-  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v2/account/login_session/`;
+  const url = `${getSiteConfig().lmsBaseUrl}/api/user/v2/login_sessions/`;
   const { data } = await getAuthenticatedHttpClient()
     .post(url, QueryString.stringify(creds), requestConfig);
   return camelCaseObject({
